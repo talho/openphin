@@ -15,7 +15,7 @@ describe PhinOrganization do
       }
       @parent_dn = "ou=APHC"
 
-      @person = PhinPerson.new(:cn => "John Smith",  :sn => "Smith", :organizations => "APHC")
+      @person = PhinPerson.new(:cn => "John Smith",  :sn => "Smith", :organizations => "APHC", :dn => "externalUID=1")
       @person.save!
       @org=PhinOrganization.new({:cn=>"APHC", :ou => "APHC", :dn =>@parent_dn}.merge(valid_attrs))
       @org.uniqueMember=[@person.dn]
@@ -23,7 +23,7 @@ describe PhinOrganization do
 
     end
     after(:all) do
-      PhinPerson.find("John Smith").delete
+      PhinPerson.find(:first, :attribute => 'cn', :value =>"John Smith").delete
       PhinOrganization.find("APHC").delete
     end
     it "should return an array of people from .phin_people" do

@@ -1,0 +1,18 @@
+<h1>Listing phin_people</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% @phin_people.each do |phin_person| %>
+  <tr>
+    <td><%= link_to 'Show', phin_person %></td>
+    <td><%= link_to 'Edit', edit_phin_person_path(phin_person) %></td>
+    <td><%= link_to 'Destroy', phin_person, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New phin_person', new_phin_person_path %>

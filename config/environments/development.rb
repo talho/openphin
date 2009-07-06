@@ -16,3 +16,5 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 PHIN_PARTNER_OID="1.3.6.1.4.1.1"
+PHIN_APP_OID="1"
+PHIN_ENV_OID="1"

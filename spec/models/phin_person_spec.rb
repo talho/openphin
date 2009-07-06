@@ -17,12 +17,13 @@ describe "PhinPerson rules" do
        @valid_attrs = {
           :sn => "Smith",
           :cn => "John Smith",
-          :organizations => "talho"
+          :organizations => "talho",
+          :dn => 'externalUID=1'
        }
       PhinPerson.new(@valid_attrs).save!
     end
     after(:all) do
-      PhinPerson.find("John Smith").delete
+      PhinPerson.find(:first, :attribute => 'cn', :value => "John Smith").delete
     end
     it "should not create a new Person if one already exists" do
 
@@ -30,14 +31,10 @@ describe "PhinPerson rules" do
       p2.save.should be_false
       
     end
-  end
-  describe "mapping to XML" do
-    it "should provide a mapper object through the .mapper method" do
-      p=PhinPerson.new(:cn =>"J S", :sn =>"S", :organizations =>"talho")
-      p.mapper.should_not be_nil
+    it "should not create a new Person without an externalUID set" do
+      p=PhinPerson.new(:sn => "test", :cn =>"fullname", :organizations => "talho", :dn => "givenName=10")
+      p.valid?.should == false
     end
-    it "should have the required properties set on the mapper"
-
   end
-  
+    
 end

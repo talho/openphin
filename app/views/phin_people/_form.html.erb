@@ -1,0 +1,8 @@
+<% form_for(@phin_person) do |f| %>
+  <%= f.error_messages %>
+  <%= f.label(:cn, "Name") %>
+  <%= f.text_field(:cn) %>
+  <p>
+    <%= f.submit 'Save' %>
+  </p>
+<% end %>

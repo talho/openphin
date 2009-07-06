@@ -1,17 +1,21 @@
 # Required Attributes: :cn, :sn, :organizations
 
 class PhinPerson < ActiveLdap::Base
-  ldap_mapping :dn_attribute => "cn", :prefix => "ou=People", :classes => ['PhinPerson']
-  has_many :phinorganizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
-  has_many :jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
-  has_many :phinroles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
+  #TODO test for presence of classes
+  ldap_mapping :dn_attribute => "externalUID", :prefix => "ou=People", :classes => ['PhinPerson','inetUser']
+  has_many :phin_organizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
+  has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
+  has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
 
+  def validate_on_create
+    if externalUID.nil?
+      errors.add(:externalUID, "externalUID cannot be blank")
+    end
+  end
   def alertdevices
     ActiveLdap::Base.search(:base => dn, :filter => '(objectclass=alertCommunicationDevice)', :scope => :one, :attributes => ['cn']).map{|subcn| Device.find(:first, subcn[1]['cn'])}
   end
-  def mapper
-    
-  end
+  
   def to_xml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|

@@ -28,3 +28,5 @@ config.action_view.cache_template_loading            = true
 # config.threadsafe!
 config.gem "activeldap", :lib => "active_ldap"
 PHIN_PARTNER_OID="go find one"
+PHIN_APP_OID="1"
+PHIN_ENV_OID="0"
