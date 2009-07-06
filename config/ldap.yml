@@ -1,0 +1,20 @@
+production:
+  host: "192.168.1.68"
+  port: 389
+  base: "dc=dshs,dc=state,dc=tx,dc=us"
+  bind_dn: "uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot"
+  password: "myldap"
+
+development:
+  host: "192.168.1.68"
+  port: 389
+  base: "dc=talho,dc=org"
+  bind_dn: "uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot"
+  password: "myldap"
+
+test:
+  host: "192.168.1.68"
+  port: 389
+  base: "dc=example,dc=org"
+  bind_dn: "uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot"
+  password: "myldap"
