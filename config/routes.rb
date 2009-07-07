@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :role_requests
+
   map.resources :phin_people
 
   # The priority is based upon order of creation: first created -> highest priority.

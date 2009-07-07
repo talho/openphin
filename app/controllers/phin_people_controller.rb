@@ -40,7 +40,13 @@ class PhinPeopleController < ApplicationController
   # POST /phin_people
   # POST /phin_people.xml
   def create
+    debugger
+    cn= "#{params[:phin_person][:givennname]} #{params[:phin_person][:sn]}"
+    externalUID=params[:phin_person][:mail].to_phin_oid
     @phin_person = PhinPerson.new(params[:phin_person])
+    @phin_person.cn=cn
+    @phin_person.externalUID=externalUID
+    @phin_person.dn="externalUID=#{externalUID}"
 
     respond_to do |format|
       if @phin_person.save

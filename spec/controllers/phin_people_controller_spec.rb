@@ -39,7 +39,29 @@ describe PhinPeopleController do
   end
 
   describe "POST create" do
-    
+    describe "with secure role request" do
+      before(:all) do
+        PhinRole.new(:cn => "Secure Role", :approvalRequired => true).save!
+      end
+      after(:all) do
+        PhinRole.find("Secure Role").delete
+      end
+      it "should not assign the role automatically" do
+        params={
+            "givenName" => "John",
+            "sn" => "Smith",
+            "displayName" => "J S",
+            "description" => "laskjdflk",
+            "mail" => "js@example.org",
+            "preferredLanguage" => "English",
+            "title" => "tester",
+            "roles[]" => "Secure Role"
+        }
+        post :create, :phin_person => params
+        PhinPerson.find(:first, :attribute => "cn", :value => "John Smith").phin_roles.length == 0
+      end
+    end
+
     describe "with valid params" do
       it "assigns a newly created phin_person as @phin_person" do
         PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => true))

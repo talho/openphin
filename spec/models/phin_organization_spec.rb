@@ -15,7 +15,7 @@ describe PhinOrganization do
       }
       @parent_dn = "ou=APHC"
 
-      @person = PhinPerson.new(:cn => "John Smith",  :sn => "Smith", :organizations => "APHC", :dn => "externalUID=1")
+      @person = PhinPerson.new(:cn => "John Smith",  :sn => "Smith", :organizations => "APHC", :dn => "externalUID=#{PHIN_OID_ROOT}.4.1")
       @person.save!
       @org=PhinOrganization.new({:cn=>"APHC", :ou => "APHC", :dn =>@parent_dn}.merge(valid_attrs))
       @org.uniqueMember=[@person.dn]

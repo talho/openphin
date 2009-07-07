@@ -18,3 +18,10 @@ test:
   base: "dc=example,dc=org"
   bind_dn: "uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot"
   password: "myldap"
+
+cucumber:
+  host: "192.168.1.68"
+  port: 389
+  base: "dc=example,dc=org"
+  bind_dn: "uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot"
+  password: "myldap"

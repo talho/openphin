@@ -18,7 +18,7 @@ describe "PhinPerson rules" do
           :sn => "Smith",
           :cn => "John Smith",
           :organizations => "talho",
-          :dn => 'externalUID=1'
+          :dn => "externalUID=#{PHIN_OID_ROOT}.1.1"
        }
       PhinPerson.new(@valid_attrs).save!
     end

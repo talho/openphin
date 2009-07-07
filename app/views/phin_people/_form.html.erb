@@ -15,8 +15,8 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
   <%= f.label(:roles, "Roles") %><br/>
-  <%= f.collection_select(:roles, PhinRole.all, :dn, :cn) %>
-  <%= button_to_function 'Add Role', "jsAddRole()" %>
+  <%= select_tag "phin_roles", options_from_collection_for_select(PhinRole.all, :dn, :cn) %>
+  <%= button_to_function 'Request Role', "jsAddRole()" %>
   <div id="phin_role_list">
     <ul>
     </ul>

@@ -18,23 +18,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
-
-Given /^I am a new user$/ do
-  pending
+require 'sha1'
+module PHIN_support
+  def to_phin_oid(type=1)
+    digest=SHA1::hexdigest(self+Time.now.strftime("%x%X"))
+    "#{PHIN_OID_ROOT}.#{type}.#{digest[0..7].hex}.#{digest[8..15].hex}.#{digest[16..23].hex}.#{digest[24..31].hex}"
+  end
 end
-
-When /^I visit the new user page$/ do
-  visit new_phin_person
-end
-
-When /^fill out the new user form$/ do
-  pending
-end
-
-When /^request a secure role$/ do
-  pending
-end
-
-Then /^the role is not automatically added to my roles$/ do
-  pending
-end
+String.send(:include, PHIN_support)

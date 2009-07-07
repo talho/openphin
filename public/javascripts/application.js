@@ -3,5 +3,11 @@
 
 function jsAddRole()
 {
-  alert('Hello World!');
+    var rselect=$("#phin_roles")[0];
+    var list=$("#phin_role_list ul")[0];
+    $(list).append(
+        "<li><input type='hidden' name='phin_person[roles][]' value='"+
+            $(rselect.options[rselect.selectedIndex]).val()+"'/>"+
+            $(rselect.options[rselect.selectedIndex]).text()+"</li>");
+    
 }
