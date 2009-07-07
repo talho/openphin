@@ -12,10 +12,13 @@ class PhinPerson < ActiveLdap::Base
       errors.add(:externalUID, "externalUID cannot be blank")
     end
   end
+  validates_format_of :externalUID, :with => /\A(#{PHIN_OID_ROOT})+(.\d)/, :on => :create, :message => "externalUID not well formed"
+  validates_format_of :dn, :with => /\A(externalUID=#{PHIN_OID_ROOT}+(.\d))(,#{base})\Z/, :on => :create, :message => "dn not well formed"
+
   def alertdevices
     ActiveLdap::Base.search(:base => dn, :filter => '(objectclass=alertCommunicationDevice)', :scope => :one, :attributes => ['cn']).map{|subcn| Device.find(:first, subcn[1]['cn'])}
   end
-  
+
   def to_xml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
