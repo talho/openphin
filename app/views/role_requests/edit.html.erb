@@ -1,0 +1,24 @@
+<h1>Editing role_request</h1>
+
+<% form_for(@role_request) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :requester_id %><br />
+    <%= f.text_field :requester_id %>
+  </p>
+  <p>
+    <%= f.label :role_id %><br />
+    <%= f.text_field :role_id %>
+  </p>
+  <p>
+    <%= f.label :approver_id %><br />
+    <%= f.text_field :approver_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @role_request %> |
+<%= link_to 'Back', role_requests_path %>

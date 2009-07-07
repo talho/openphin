@@ -1,0 +1,24 @@
+<h1>Listing role_requests</h1>
+
+<table>
+  <tr>
+    <th>Requester</th>
+    <th>Role</th>
+    <th>Approver</th>
+  </tr>
+
+<% @role_requests.each do |role_request| %>
+  <tr>
+    <td><%=h role_request.requester_id %></td>
+    <td><%=h role_request.role_id %></td>
+    <td><%=h role_request.approver_id %></td>
+    <td><%= link_to 'Show', role_request %></td>
+    <td><%= link_to 'Edit', edit_role_request_path(role_request) %></td>
+    <td><%= link_to 'Destroy', role_request, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New role_request', new_role_request_path %>

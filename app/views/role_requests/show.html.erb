@@ -1,0 +1,18 @@
+<p>
+  <b>Requester:</b>
+  <%=h @role_request.requester_id %>
+</p>
+
+<p>
+  <b>Role:</b>
+  <%=h @role_request.role_id %>
+</p>
+
+<p>
+  <b>Approver:</b>
+  <%=h @role_request.approver_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_role_request_path(@role_request) %> |
+<%= link_to 'Back', role_requests_path %>

@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  requester_id: MyString
+  role_id: MyString
+  approver_id: MyString
+
+two:
+  requester_id: MyString
+  role_id: MyString
+  approver_id: MyString
