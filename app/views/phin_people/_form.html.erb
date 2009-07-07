@@ -1,7 +1,26 @@
 <% form_for(@phin_person) do |f| %>
-  <%= f.error_messages %>
-  <%= f.label(:cn, "Name") %>
-  <%= f.text_field(:cn) %>
+  <%= f.error_messages %><br/>
+  <%= f.label(:givenname, "First Name") %><br/>
+  <%= f.text_field(:givenname) %><br/>
+  <%= f.label(:sn, "Last Name") %><br/>
+  <%= f.text_field(:sn) %><br/>
+  <%= f.label(:displayname, "Preferred name to be displayed") %><br/>
+  <%= f.text_field(:displayname) %><br/>
+  <%= f.label(:description, "Description of person") %><br/>
+  <%= f.text_field(:description) %><br/>
+  <%= f.label(:mail, "E-mail address") %><br/>
+  <%= f.text_field(:mail) %><br/>
+  <%= f.label(:preferredlanguage, "Preferred lanaguage") %><br/>
+  <%= f.select(:preferredlanguage, ["English","Spanish"]) %><br/>
+  <%= f.label(:title, "Job title") %><br/>
+  <%= f.text_field(:title) %><br/>
+  <%= f.label(:roles, "Roles") %><br/>
+  <%= f.collection_select(:roles, PhinRole.all, :dn, :cn) %>
+  <%= button_to_function 'Add Role', "jsAddRole()" %>
+  <div id="phin_role_list">
+    <ul>
+    </ul>
+  </div>
   <p>
     <%= f.submit 'Save' %>
   </p>
