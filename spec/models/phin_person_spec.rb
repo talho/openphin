@@ -15,15 +15,9 @@ describe "PhinPerson rules" do
   describe "creating PhinPeople" do
     before(:all) do
        @valid_attrs = {
-          :sn => "Smith",
-          :cn => "John Smith",
-          :organizations => "talho",
-          :dn => "externalUID=#{PHIN_OID_ROOT}.1.1"
+          :last_name => "Smith",
        }
       PhinPerson.new(@valid_attrs).save!
-    end
-    after(:all) do
-      PhinPerson.find(:first, :attribute => 'cn', :value => "John Smith").delete
     end
     it "should not create a new Person if one already exists" do
 

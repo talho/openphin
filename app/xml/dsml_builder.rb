@@ -7,7 +7,7 @@ class DSMLBuilder
       ns="xmlns:dsml".to_sym
       d.dsml(:dsml, ns => "http://www.dsml.org/DSML") do |root|
         root.dsml("directory-entries".to_sym) do
-          entries.each{|e| e.to_xml(root)}
+          entries.each{|e| e.to_dsml(root)}
         end
       end
       

@@ -1,25 +1,21 @@
 # Required Attributes: :cn, :sn, :organizations
 
-class PhinPerson < ActiveLdap::Base
+class PhinPerson < ActiveRecord::Base
   #TODO test for presence of classes
-  ldap_mapping :dn_attribute => "externalUID", :prefix => "ou=People", :classes => ['PhinPerson','inetUser']
-  has_many :phin_organizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
-  has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
-  has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
+  #has_many :phin_organizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
+  #has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
+  #has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
 
-  def validate_on_create
-    if externalUID.nil?
-      errors.add(:externalUID, "externalUID cannot be blank")
-    end
-  end
-  validates_format_of :externalUID, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
-  validates_format_of :dn, :with => /externalUID=#{PHIN_OID_ROOT}+\.\d[\.\d]*,#{base}\Z/, :on => :create, :message => " not well formed"
+  #def validate_on_create
+  #  if externalUID.nil?
+  #    errors.add(:externalUID, "externalUID cannot be blank")
+  #  end
+  #end
+  #validates_format_of :externalUID, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
+  #validates_format_of :dn, :with => /externalUID=#{PHIN_OID_ROOT}+\.\d[\.\d]*,#{base}\Z/, :on => :create, :message => " not well formed"
 
-  def alertdevices
-    ActiveLdap::Base.search(:base => dn, :filter => '(objectclass=alertCommunicationDevice)', :scope => :one, :attributes => ['cn']).map{|subcn| Device.find(:first, subcn[1]['cn'])}
-  end
 
-  def to_xml(builder=nil)
+  def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml:objectclass do |oc|
@@ -56,10 +52,4 @@ class PhinPerson < ActiveLdap::Base
     end
   end
 
-  def encodedID
-    ActiveSupport::Base64.encode64s(id)
-  end
-  def self.find_with_encoded_id(encodedID)
-    PhinPerson.find(ActiveSupport::Base64.decode64(encodedID))
-  end
 end
