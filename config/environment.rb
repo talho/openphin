@@ -39,6 +39,7 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
 
+  config.gem "ruby-net-ldap"
   config.gem "activeldap", :lib => "active_ldap"
   #TODO: add these back in later
   #config.gem "libxslt-ruby"
