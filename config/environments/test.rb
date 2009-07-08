@@ -37,5 +37,5 @@ config.gem "thoughtbot-factory_girl",
 # config.active_record.schema_format = :sql
 PHIN_PARTNER_OID="1.3.6.1.4.1.1"
 PHIN_APP_OID="1"
-PHIN_ENV_OID="2"
-PHIN_OID_ROOT=PHIN_PARTNER_OID+"."+PHIN_APP_OID+"."+PHIN_ENV_OID
+PHIN_ENV_OID="3"
+PHIN_OID_ROOT=PHIN_PARTNER_OID+"."+PHIN_ENV_OID+"."+PHIN_APP_OID
