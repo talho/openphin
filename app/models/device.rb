@@ -1,4 +1,9 @@
 class Device < ActiveRecord::Base
+  belongs_to :phin_person
+
+  def parent
+    :phin_person
+  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?

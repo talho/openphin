@@ -1,6 +1,10 @@
 class PhinJurisdiction < ActiveRecord::Base
    acts_as_nested_set
 
+  def parent
+    PhinJurisdiction.find(parent_id) unless !PhinJurisdiction.exists?(parent_id)
+  end
+
    def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|

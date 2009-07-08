@@ -11,12 +11,10 @@ describe Device do
     PhinJurisdiction.new(@valid_attributes)
   end
   it "should return the parent node when .parent is called" do
-    @parent_dn = "cn=John Smith"
-    @child_dn = "cn=Email,#{@parent_dn}"
-    @parent_node = PhinPerson.new(:dn => @parent_dn)
-    @child_node=Device.new({:dn => @child_dn}) #stub_model(PhinJurisdiction,      :dn => @child_dn)
+    @parent_node = PhinPerson.new(:id => 1, :first_name => "John", :last_name => "Smith")
+    @child_node=Device.new(:id => 2, :phin_person => @parent_node, :name => "Email") #stub_model(PhinJurisdiction,      :dn => @child_dn)
 
-    PhinPerson.should_receive(:find).with("#{@parent_dn},#{@parent_node.base}").and_return(@parent_node)
+    #PhinPerson.should_receive(:find).with(1).and_return(@parent_node)
     @child_node.parent.should_not be_nil
   end
 

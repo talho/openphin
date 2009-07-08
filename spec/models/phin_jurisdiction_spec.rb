@@ -10,15 +10,17 @@ describe PhinJurisdiction do
   it "should create a new instance given valid attributes" do
     PhinJurisdiction.new(@valid_attributes)
   end
+
   it "should return the parent node when .parent is called" do
-    @parent_node = stub_model(PhinJurisdiction, :id => "1", :name => "Parent")
-    PhinJurisdiction.should_receive(:find).with(1).and_return(@parent_node)
-    @child_node=stub_model(PhinJurisdiction, :parent_id => "1", :id => "2", :name => "Child")
+    @parent_node = stub_model(PhinJurisdiction, :id => 1, :name => "Parent")
+    #PhinJurisdiction.should_receive(:find).with(1).and_return(@parent_node)
+    @child_node=stub_model(PhinJurisdiction, :parent => @parent_node, :id => 2, :name => "Child")
     @child_node.parent.should_not be_nil
+    @child_node.parent.should == @parent_node
   end
+  
   it "should return nil for the parent of a root node" do
-    parent_dn="ou=parent_region"
-    parent_node=PhinJurisdiction.new(:dn => parent_dn)
+    parent_node=PhinJurisdiction.new(:id => 3, :name => "Parent")
     parent_node.parent.should be_nil
   end
   #describe "parent/child relationships" do

@@ -5,7 +5,7 @@ describe "/phin_people/new.html.erb" do
   
   before(:each) do
     assigns[:phin_person] = stub_model(PhinPerson,
-      :new_record? => true,:id => "externalUID=1"
+      :new_record? => true,:id => "1"
     )
   end
 

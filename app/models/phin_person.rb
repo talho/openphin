@@ -6,14 +6,14 @@ class PhinPerson < ActiveRecord::Base
   #has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
   #has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
 
-  #def validate_on_create
-  #  if externalUID.nil?
-  #    errors.add(:externalUID, "externalUID cannot be blank")
-  #  end
-  #end
+  validates_uniqueness_of :email
+  validates_presence_of :email
   #validates_format_of :externalUID, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
   #validates_format_of :dn, :with => /externalUID=#{PHIN_OID_ROOT}+\.\d[\.\d]*,#{base}\Z/, :on => :create, :message => " not well formed"
 
+  def name
+    first_name + " " + last_name
+  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
