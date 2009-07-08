@@ -1,4 +1,4 @@
-<% form_for(:phin_person, :url => { :action => "update", :id => @phin_person.encodedID }) do |f| %>
+<% form_for(:phin_person, :url => { :action => "create" }) do |f| #, :id => @phin_person.encodedID%>
   <%= f.error_messages %><br/>
   <%= f.label(:givenname, "First Name") %><br/>
   <%= f.text_field(:givenname) %><br/>
@@ -15,10 +15,16 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
   <%= f.label(:roles, "Roles") %><br/>
-  <%= select_tag "phin_roles", options_from_collection_for_select(PhinRole.all, :dn, :cn) %>
+  <%= select_tag "phin_roles", options_from_collection_for_select(PhinRole.all, :cn, :cn) %>
   <%= button_to_function 'Request Role', "jsAddRole()" %>
   <div id="phin_role_list">
     <ul>
+    <% @phin_person.phin_roles.each do |role| %>
+    <li>
+    	<%= hidden_field_tag "phin_person[phin_roles][]", role.cn %>
+    	<%= role.cn %>
+    </li>
+    <% end %>
     </ul>
   </div>
   <p>

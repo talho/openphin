@@ -6,6 +6,7 @@ class PhinPerson < ActiveLdap::Base
   has_many :phin_organizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
   has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
   has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
+  attr_protected :phin_roles
 
   def validate_on_create
     if externalUID.nil?

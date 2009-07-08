@@ -47,14 +47,40 @@ class PhinPeopleController < ApplicationController
     @phin_person.cn=cn
     @phin_person.externalUID=externalUID
     @phin_person.dn="externalUID=#{externalUID}"
-
-    respond_to do |format|
+    if @phin_person.save
+      params[:phin_person][:phin_roles].each do |role|
+        pr = PhinRole.find(role)
+        if pr.approvalRequired
+          rr = RoleRequest.new
+          rr.requester=@phin_person
+          rr.role = pr
+          rr.save!
+        else
+          if pr.uniqueMember.nil?
+            pr.uniqueMember = [ActiveLdap::DistinguishedName.parse(@phin_person.dn)]
+          elsif pr.uniqueMember.is_a?(Array)
+            pr.uniqueMember << ActiveLdap::DistinguishedName.parse(@phin_person.dn)
+          else
+            pr.uniqueMember = [pr.uniqueMember, ActiveLdap::DistinguishedName.parse(@phin_person.dn)]
+          end
+          pr.save!
+        end
+      end
       if @phin_person.save
-        flash[:notice] = 'PhinPerson was successfully created.'
-        #TODO Fix redirect_to to accept ActiveLdap object
-        format.html { redirect_to(:action => "show", :id => ActiveSupport::Base64.encode64(@phin_person.id)) }
-        format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }
+        respond_to do |format|
+          flash[:notice] = 'PhinPerson was successfully created.'
+          #TODO Fix redirect_to to accept ActiveLdap object
+          format.html { redirect_to(:action => "show", :id => ActiveSupport::Base64.encode64(@phin_person.id)) }
+          format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }
+        end
       else
+        respond_to do |format|
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
         format.html { render :action => "new" }
         format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
       end
