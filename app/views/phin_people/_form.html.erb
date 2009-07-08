@@ -1,4 +1,4 @@
-<% form_for(@phin_person) do |f| %>
+<% form_for(:phin_person, :url => { :action => "update", :id => @phin_person.encodedID }) do |f| %>
   <%= f.error_messages %><br/>
   <%= f.label(:givenname, "First Name") %><br/>
   <%= f.text_field(:givenname) %><br/>

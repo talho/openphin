@@ -14,3 +14,13 @@ module ActiveLdap
     end
   end
 end
+
+module ActiveLdap
+  class Base
+      def array_read_with_symbol(name, force_array=false)
+        array_read_without_symbol(name.to_s, force_array)
+      end
+      alias_method :array_read_without_symbol, :[]
+      alias_method :[], :array_read_with_symbol
+  end
+end

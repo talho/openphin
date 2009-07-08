@@ -54,7 +54,12 @@ class PhinPerson < ActiveLdap::Base
       entry.dsml(:attr, :name => :cn) {|a| a.dsml :value, cn}
 
     end
+  end
 
-    
+  def encodedID
+    ActiveSupport::Base64.encode64s(id)
+  end
+  def self.find_with_encoded_id(encodedID)
+    PhinPerson.find(ActiveSupport::Base64.decode64(encodedID))
   end
 end

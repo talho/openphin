@@ -13,7 +13,7 @@ class PhinPeopleController < ApplicationController
   # GET /phin_people/1
   # GET /phin_people/1.xml
   def show
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = PhinPerson.find_with_encoded_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -34,7 +34,7 @@ class PhinPeopleController < ApplicationController
 
   # GET /phin_people/1/edit
   def edit
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = PhinPerson.find_with_encoded_id(params[:id])
   end
 
   # POST /phin_people
@@ -51,7 +51,8 @@ class PhinPeopleController < ApplicationController
     respond_to do |format|
       if @phin_person.save
         flash[:notice] = 'PhinPerson was successfully created.'
-        format.html { redirect_to(@phin_person) }
+        #TODO Fix redirect_to to accept ActiveLdap object
+        format.html { redirect_to(:action => "show", :id => ActiveSupport::Base64.encode64(@phin_person.id)) }
         format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }
       else
         format.html { render :action => "new" }
@@ -63,7 +64,7 @@ class PhinPeopleController < ApplicationController
   # PUT /phin_people/1
   # PUT /phin_people/1.xml
   def update
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = PhinPerson.find_with_encoded_id(params[:id])
 
     respond_to do |format|
       if @phin_person.update_attributes(params[:phin_person])
@@ -80,7 +81,7 @@ class PhinPeopleController < ApplicationController
   # DELETE /phin_people/1
   # DELETE /phin_people/1.xml
   def destroy
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = PhinPerson.find_with_encoded_id(params[:id])
     @phin_person.destroy
 
     respond_to do |format|
