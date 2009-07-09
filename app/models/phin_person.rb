@@ -10,6 +10,7 @@ class PhinPerson < ActiveRecord::Base
   validates_presence_of :email
   validates_presence_of :phin_oid
   validates_format_of :phin_oid, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
+  
 
   def name
     first_name + " " + last_name

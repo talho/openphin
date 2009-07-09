@@ -13,9 +13,7 @@
 </head>
 <body>
 
-<% form_tag url_for(:action => "person", :controller => "search") do %>
-  <%= text_field :phin_person, :first_name, :autocomplete => "off" %>
-<% end %>
+
 <p style="color: green"><%= flash[:notice] %></p>
 
 <%= yield %>

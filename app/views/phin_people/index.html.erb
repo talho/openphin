@@ -6,6 +6,7 @@
 
 <% @phin_people.each do |phin_person| %>
   <tr>
+    <td><%= phin_person.display_name %></td>
     <td><%= link_to 'Show', phin_person %></td>
     <td><%= link_to 'Edit', edit_phin_person_path(phin_person) %></td>
     <td><%= link_to 'Destroy', phin_person, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -14,5 +15,5 @@
 </table>
 
 <br />
-
+<%= link_to "Search", '/search' %>
 <%= link_to 'New phin_person', new_phin_person_path %>

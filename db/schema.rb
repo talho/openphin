@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(:version => 20090709033558) do
     t.datetime "updated_at"
   end
 
-  create_table "phin_people_phin_roles", :force => true do |t|
+  create_table "phin_people_phin_roles", :id => false, :force => true do |t|
     t.integer "phin_role_id"
     t.integer "phin_person_id"
   end

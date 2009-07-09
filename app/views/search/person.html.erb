@@ -1,2 +1,5 @@
-<h1>Search#person</h1>
-<p>Find me in app/views/search/person.html.erb</p>
+<ul>
+<% @phin_people.each do |person| %>
+    <li><%=link_to person.name, person %></li>
+<% end %>
+</ul>

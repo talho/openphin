@@ -1,5 +1,5 @@
 class PhinPeopleController < ApplicationController
-  auto_complete_for :phin_person, :first_name
+  #auto_complete_for :phin_person, :first_name
   #auto_complete_for :phin_person, :display_name
   #auto_complete_for :phin_person, :last_name
 
@@ -82,15 +82,33 @@ class PhinPeopleController < ApplicationController
   # PUT /phin_people/1.xml
   def update
     @phin_person = PhinPerson.find(params[:id])
-
+    if @phin_person.update_attributes(params[:phin_person])
+      roles=params[:phin_roles]
+      roles.each_value do |r|
+        pr = PhinRole.find(r["id"])
+        if pr.approval_required?
+          flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
+          rr=RoleRequest.new
+          rr.role=pr
+          rr.requester=@phin_person
+          rr.save
+        else
+          @phin_person.phin_roles << pr
+          @phin_person.save
+        end
+      end
+    else
+      error_flag=true
+    end
     respond_to do |format|
-      if @phin_person.update_attributes(params[:phin_person])
-        flash[:notice] = 'PhinPerson was successfully updated.'
-        format.html { redirect_to(@phin_person) }
-        format.xml  { head :ok }
-      else
+      if @phin_person.errors.length > 0
         format.html { render :action => "edit" }
         format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
+      else
+        flash[:notice]= 'PhinPerson was successfully updated.'
+        #TODO Fix redirect_to to accept ActiveLdap object
+        format.html { redirect_to(@phin_person) }
+        format.xml  { render :xml => @phin_person, :status => :updated, :location => @phin_person }
       end
     end
   end
