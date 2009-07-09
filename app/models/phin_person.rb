@@ -10,10 +10,24 @@ class PhinPerson < ActiveRecord::Base
   validates_presence_of :email
   validates_presence_of :phin_oid
   validates_format_of :phin_oid, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
+  
+  auto_complete_for :display_name, :first_name, :last_name
 
   def name
     first_name + " " + last_name
   end
+  
+  #def auto_complete_for_phin_person_display_name
+  #  PhinPerson.find(:display_name => params[:phin_person][:display_name])
+  #end
+
+  #def auto_complete_for_phin_person_first_name
+    
+  #end
+  
+  #def auto_complete_for_phin_person_last_name
+    
+  #end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
