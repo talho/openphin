@@ -31,7 +31,7 @@ Factory.define :phin_jurisdiction do |jur|
   jur.name Factory.next(:jurisdiction_name)
 
 end
-Factory.define :phin_organization do |org|
+Factory.define :phin_organization, :parent => :phin_jurisdiction do |org|
   org.association :internal_jurisdiction, :factory => :phin_jurisdiction
   org.name Factory.next(:jurisdiction_name)
 end

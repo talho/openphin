@@ -45,7 +45,7 @@ describe PhinPeopleController do
       end
       it "should not assign the role automatically" do
         params=Factory.attributes_for(:phin_person)
-        params["phin_roles"]=[PhinRole.find_by_name("Secure Role").id]
+        params["phin_person[phin_roles]"]=[PhinRole.find_by_name("Secure Role").id]
         post :create, :phin_person => params
 
       end
@@ -54,15 +54,18 @@ describe PhinPeopleController do
     describe "with valid params" do
       it "assigns a newly created phin_person as @phin_person" do
         attrs = Factory.attributes_for(:phin_person)
-        PhinPerson.stub!(:new).with( attrs).and_return(mock_phin_person(:save => true))
         post :create, :phin_person => attrs
-        assigns[:phin_person].should equal(mock_phin_person)
+        assigns[:phin_person].first_name.should == attrs[:first_name]
+        assigns[:phin_person].last_name.should == attrs[:last_name] 
+
       end
 
       it "redirects to the created phin_person" do
-        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => true))
-        post :create, :phin_person => {}
-        response.should redirect_to(phin_person_url(mock_phin_person))
+        attrs=Factory.attributes_for(:phin_person)
+        post :create, :phin_person => attrs
+        p=PhinPerson.find_by_email(attrs[:email])
+        p.should_not be_new_record
+        response.should redirect_to(phin_person_url(p))
       end
     end
     
