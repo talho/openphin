@@ -1,5 +1,7 @@
 class PhinOrganization < PhinJurisdiction
   has_one :internal_jurisdiction, :class_name => "PhinJurisdiction"
+  has_and_belongs_to_many :phin_people
+  
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|

@@ -77,7 +77,7 @@ describe PhinPeopleController do
       end
 
       it "re-renders the 'new' template" do
-        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false))
+        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false, :null_object => true))
         post :create, :phin_person => {}
         response.should render_template('new')
       end
