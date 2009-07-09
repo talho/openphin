@@ -40,7 +40,7 @@ class PhinPeopleController < ApplicationController
   # POST /phin_people
   # POST /phin_people.xml
   def create
-    externalUID=params[:phin_person][:email].to_phin_oid
+    externalUID=params[:phin_person][:email].to_phin_oid unless params[:phin_person][:email].nil?
     @phin_person = PhinPerson.new(params[:phin_person])
     @phin_person.phin_oid=externalUID
 

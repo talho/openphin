@@ -53,8 +53,9 @@ describe PhinPeopleController do
 
     describe "with valid params" do
       it "assigns a newly created phin_person as @phin_person" do
-        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => true))
-        post :create, :phin_person => {:these => 'params'}
+        attrs = Factory.attributes_for(:phin_person)
+        PhinPerson.stub!(:new).with( attrs).and_return(mock_phin_person(:save => true))
+        post :create, :phin_person => attrs
         assigns[:phin_person].should equal(mock_phin_person)
       end
 
@@ -67,7 +68,7 @@ describe PhinPeopleController do
     
     describe "with invalid params" do
       it "assigns a newly created but unsaved phin_person as @phin_person" do
-        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => false))
+        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => false, :nil_object => true))
         post :create, :phin_person => {:these => 'params'}
         assigns[:phin_person].should equal(mock_phin_person)
       end
