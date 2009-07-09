@@ -54,7 +54,7 @@ describe PhinPeopleController do
     describe "with valid params" do
       it "assigns a newly created phin_person as @phin_person" do
         attrs = Factory.attributes_for(:phin_person)
-        PhinPerson.stub!(:new).with( attrs).and_return(mock_phin_person(:save => true))
+        PhinPerson.stub!(:new).with( attrs).and_return(mock_phin_person(:save => true, :null_object => true))
         post :create, :phin_person => attrs
         assigns[:phin_person].should equal(mock_phin_person)
       end
@@ -74,7 +74,7 @@ describe PhinPeopleController do
       end
 
       it "re-renders the 'new' template" do
-        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false))
+        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false, :null_object => true))
         post :create, :phin_person => {}
         response.should render_template('new')
       end
