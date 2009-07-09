@@ -40,19 +40,36 @@ class PhinPeopleController < ApplicationController
   # POST /phin_people
   # POST /phin_people.xml
   def create
-    externalUID=params[:phin_person][:email].to_phin_oid unless params[:phin_person][:email].nil?
+    externalUID=params[:phin_person][:email].to_phin_oid unless params[:phin_person][:email].nil?  
     @phin_person = PhinPerson.new(params[:phin_person])
     @phin_person.phin_oid=externalUID
-
+    if @phin_person.save
+      roles=params[:phin_roles]
+      roles.each_value do |r|
+        pr = PhinRole.find(r["id"])
+        if pr.approval_required?
+          flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
+          rr=RoleRequest.new
+          rr.role=pr
+          rr.requester=@phin_person
+          rr.save
+        else
+          @phin_person.phin_roles << pr
+          @phin_person.save
+        end
+      end
+    else
+      error_flag=true
+    end
     respond_to do |format|
-      if @phin_person.save
-        flash[:notice] = 'PhinPerson was successfully created.'
-        #TODO Fix redirect_to to accept ActiveLdap object
-        format.html { redirect_to(@phin_person) }
-        format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }
-      else
+      if @phin_person.errors.length > 0
         format.html { render :action => "new" }
         format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
+      else
+        flash[:notice]+= 'PhinPerson was successfully created.'
+        #TODO Fix redirect_to to accept ActiveLdap object
+        format.html { redirect_to(@phin_person) }
+        format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }  
       end
     end
   end

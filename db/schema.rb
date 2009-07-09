@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(:version => 20090709033558) do
     t.string   "phin_oid"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "approval_required"
+    t.boolean  "approval_required"
   end
 
   create_table "role_requests", :force => true do |t|

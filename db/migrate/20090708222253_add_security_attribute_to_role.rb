@@ -1,6 +1,6 @@
 class AddSecurityAttributeToRole < ActiveRecord::Migration
   def self.up
-    add_column :phin_roles, :approval_required, :string
+    add_column :phin_roles, :approval_required, :boolean
   end
 
   def self.down

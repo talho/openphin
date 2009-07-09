@@ -13,5 +13,6 @@ class CreateDevices < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :devices
   end
 end

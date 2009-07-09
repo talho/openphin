@@ -22,6 +22,6 @@ class CreateJurisdictions < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :jurisdictions
+    drop_table :phin_jurisdictions
   end
 end

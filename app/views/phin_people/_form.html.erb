@@ -15,13 +15,14 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
   <%= f.label(:roles, "Roles") %><br/>
-  <%= select_tag "phin_roles", options_from_collection_for_select(PhinRole.all, :id, :name) %>
+  <%= select_tag "phin_roles_select", options_from_collection_for_select(PhinRole.all, :id, :name) %>
   <%= button_to_function 'Request Role', "jsAddRole()" %>
   <div id="phin_role_list">
     <ul>
-      <% f.fields_for(:phin_roles) do |role_fields| %>
-          <% @phin_person.phin_roles.each do |role| %>
-            <li><%= role_fields.hidden_field :id %><%= role.name %></li>
+      <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
+      <% @phin_person.phin_roles.each_with_index do |role, role_index| %>
+          <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
+            <li><%= role_fields.hidden_field :id, :value => role.id %><%= role.name %></li>
           <% end %>
       <% end %>
     </ul>
