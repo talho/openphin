@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :phin_jurisdictions
+
   map.resources :role_requests
 
   map.resources :phin_people

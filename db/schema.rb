@@ -9,7 +9,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090709033558) do
+ActiveRecord::Schema.define(:version => 20090709210021) do
+
+  create_table "contacts", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "devices", :force => true do |t|
     t.integer "phin_person_id"
@@ -66,18 +71,19 @@ ActiveRecord::Schema.define(:version => 20090709033558) do
     t.datetime "updated_at"
   end
 
-  create_table "phin_people_phin_roles", :id => false, :force => true do |t|
-    t.integer "phin_role_id"
-    t.integer "phin_person_id"
-  end
-
   create_table "phin_roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
     t.string   "phin_oid"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "approval_required"
+    t.string   "approval_required"
+  end
+
+  create_table "role_memberships", :force => true do |t|
+    t.integer "phin_role_id"
+    t.integer "phin_person_id"
+    t.integer "phin_jurisdiction_id"
   end
 
   create_table "role_requests", :force => true do |t|
