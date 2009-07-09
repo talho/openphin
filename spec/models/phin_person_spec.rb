@@ -13,20 +13,15 @@ describe "PhinPerson rules" do
   #  # Do nothing
   #end
   describe "creating PhinPeople" do
-    before(:all) do
-       @valid_attrs = {
-          :last_name => "Smith",
-       }
-      PhinPerson.new(@valid_attrs).save!
-    end
-    it "should not create a new Person if one already exists" do
-      @p1 = stub_model(PhinPerson, :id => 1, :first_name => "John", :last_name => "Smith", :email => "js@example.com")
-      @p1 = stub_model(PhinPerson, :id => 2, :first_name => "John", :last_name => "Smith", :email => "js@example.com")
-      p=PhinPerson.new(@p1)
-      p.save.should be true
-      p=PhinPerson.new(@p2)
-      p.save.should be_false
-      
+    
+    it "should not create a new Person if one already exists with same email" do
+      p1 = Factory(:phin_person)
+      p2=Factory.build(:phin_person, :email => p1.email)
+      p2.valid?.should be_false
+      #p1=stub_model(PhinPerson, :email => "j@e.com")
+      #PhinPerson.stub!(:find).and_return(p1)
+      #p2=PhinPerson.new(:email => "j@e.com")
+      #p2.valid?.should be_false
     end
     it "should not create a new Person without an email attribute" do
       p=PhinPerson.new(:id => 1, :first_name => "John", :last_name => "Smith")

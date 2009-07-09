@@ -2,14 +2,14 @@
 
 class PhinPerson < ActiveRecord::Base
   #TODO test for presence of classes
-  #has_many :phin_organizations, :class_name => "PhinOrganization", :foreign_key => "memberOf", :primary_key => "dn"
-  #has_many :phin_jurisdictions, :class_name => "PhinJurisdiction", :foreign_key => "memberOf", :primary_key => "dn"
-  #has_many :phin_roles, :class_name => "PhinRole", :foreign_key => "memberOf", :primary_key => "dn"
+  has_and_belongs_to_many :phin_organizations
+  has_and_belongs_to_many :phin_jurisdictions 
+  has_and_belongs_to_many :phin_roles
 
   validates_uniqueness_of :email
   validates_presence_of :email
-  #validates_format_of :externalUID, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
-  #validates_format_of :dn, :with => /externalUID=#{PHIN_OID_ROOT}+\.\d[\.\d]*,#{base}\Z/, :on => :create, :message => " not well formed"
+  validates_presence_of :phin_oid
+  validates_format_of :phin_oid, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
 
   def name
     first_name + " " + last_name

@@ -4,10 +4,8 @@ describe "/phin_people/edit.html.erb" do
   include PhinPeopleHelper
   
   before(:each) do  
-    assigns[:phin_person] = @phin_person = stub_model(PhinPerson,
-      :new_record? => false,:id => "externalUID=1", :dn => "externalUID=1",
-      :cn => "John Smith", :sn => "Smith", :organizations => "talho"
-    )
+    assigns[:phin_person] = Factory(:phin_person)
+    
   end
 
   it "renders the edit phin_person form" do

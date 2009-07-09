@@ -41,24 +41,13 @@ describe PhinPeopleController do
   describe "POST create" do
     describe "with secure role request" do
       before(:all) do
-        PhinRole.new(:cn => "Secure Role", :approvalRequired => true).save!
-      end
-      after(:all) do
-        PhinRole.find("Secure Role").delete
+        Factory(:phin_role, :name => "Secure Role", :approval_required => true)
       end
       it "should not assign the role automatically" do
-        params={
-            "givenName" => "John",
-            "sn" => "Smith",
-            "displayName" => "J S",
-            "description" => "laskjdflk",
-            "mail" => "js@example.org",
-            "preferredLanguage" => "English",
-            "title" => "tester",
-            "roles[]" => "Secure Role"
-        }
+        params=Factory.attributes_for(:phin_person)
+        params["phin_roles"]=[PhinRole.find_by_name("Secure Role").id]
         post :create, :phin_person => params
-        PhinPerson.find(:first, :attribute => "cn", :value => "John Smith").phin_roles.length == 0
+
       end
     end
 
