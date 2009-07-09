@@ -11,3 +11,9 @@ function jsAddRole()
             $(rselect.options[rselect.selectedIndex]).text()+"</li>");
     
 }
+
+$(document).ready(function() {  
+  $("input#phin_person_first_name").autocomplete({
+    ajax: "auto_complete_for_phin_person_first_name" 
+  })
+});

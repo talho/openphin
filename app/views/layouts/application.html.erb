@@ -8,14 +8,13 @@
   <%= stylesheet_link_tag 'scaffold' %>
   <%= javascript_include_tag 'jquery', 'application' %>
   <%= stylesheet_link_tag 'jquery.ui.autocomplete' %>
-  <%= javascript_include_tag 'jquery.min', 'jquery.dimensions.min', 'jquery.templating', 'jquery.ui.autocomplete.ext', 
+  <%= javascript_include_tag 'jquery.templating', 'jquery.ui.autocomplete.ext', 
     'jquery.ui.autocomplete', :cache => 'jquery' %>
 </head>
 <body>
 
-<% form_tag :url => {:method => :post, :action => "person", :controller => :search} do |f| %>
-  <%= text_field_with_auto_complete :phin_person, :person, :autocomplete => "on" %>
-  <%= text_field_with_auto_complete :phin_person, :jurisdiction, :autocomplete => "on" %>
+<% form_tag url_for(:action => "person", :controller => "search") do %>
+  <%= text_field :phin_person, :first_name, :autocomplete => "off" %>
 <% end %>
 <p style="color: green"><%= flash[:notice] %></p>
 

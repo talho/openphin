@@ -1,4 +1,8 @@
 class PhinPeopleController < ApplicationController
+  auto_complete_for :phin_person, :first_name
+  #auto_complete_for :phin_person, :display_name
+  #auto_complete_for :phin_person, :last_name
+
   # GET /phin_people
   # GET /phin_people.xml
   def index
