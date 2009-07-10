@@ -70,7 +70,7 @@ class PhinPeopleController < ApplicationController
         format.html { render :action => "new" }
         format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
       else
-        flash[:notice]+= 'PhinPerson was successfully created.'
+        flash[:notice] = 'PhinPerson was successfully created.'
         #TODO Fix redirect_to to accept ActiveLdap object
         format.html { redirect_to(@phin_person) }
         format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }  
