@@ -1,0 +1,33 @@
+<p>
+  <b>Photo:</b>
+  <%=h @phin_person_profile.photo %>
+</p>
+
+<p>
+  <b>Public:</b>
+  <%=h @phin_person_profile.public %>
+</p>
+
+<p>
+  <b>Credentials:</b>
+  <%=h @phin_person_profile.credentials %>
+</p>
+
+<p>
+  <b>Employer:</b>
+  <%=h @phin_person_profile.employer %>
+</p>
+
+<p>
+  <b>Experience:</b>
+  <%=h @phin_person_profile.experience %>
+</p>
+
+<p>
+  <b>Bio:</b>
+  <%=h @phin_person_profile.bio %>
+</p>
+
+
+<%= link_to 'Edit', edit_phin_person_profile_path(@phin_person_profile) %> |
+<%= link_to 'Back', phin_person_profiles_path %>

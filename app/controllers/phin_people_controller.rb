@@ -50,17 +50,22 @@ class PhinPeopleController < ApplicationController
     if @phin_person.save
       roles=params[:phin_roles]
       roles.each_value do |r|
-        pr = PhinRole.find(r["id"])
-        if pr.approval_required?
-          flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
-          rr=RoleRequest.new
-          rr.role=pr
-          rr.requester=@phin_person
-          rr.save
-        else
-          @phin_person.phin_roles << pr
-          @phin_person.save
-        end
+      pr = PhinRole.find(r["role_id"])
+      pj = r['jurisdiction_id'].empty? ? PhinJurisdiction.find(r["jurisdiction_id"]) : nil 
+      if pr.approval_required?
+        flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
+        rr=RoleRequest.new
+        rr.role=pr
+        rr.phin_jurisdiction = pj if pj
+        rr.requester=@phin_person
+        rr.save
+      else
+        rm=@phin_person.role_memberships.create(:phin_role => pr)
+        rm.phin_jurisdiction = pj if pj
+        @phin_person.save
+      end
+
+
       end
     else
       error_flag=true
@@ -85,16 +90,23 @@ class PhinPeopleController < ApplicationController
     if @phin_person.update_attributes(params[:phin_person])
       roles=params[:phin_roles]
       roles.each_value do |r|
-        pr = PhinRole.find(r["id"])
-        if pr.approval_required?
-          flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
-          rr=RoleRequest.new
-          rr.role=pr
-          rr.requester=@phin_person
-          rr.save
-        else
-          @phin_person.phin_roles << pr
-          @phin_person.save
+
+        if r["_delete"]
+          RoleMembership.destroy(r[:id]) if r[:id]
+        elsif r['id'].nil?
+          pr = PhinRole.find(r["role_id"])
+          pj =  r['jurisdiction_id'].nil? ? PhinJurisdiction.find(r["jurisdiction_id"]) : nil 
+          if pr.approval_required?
+            flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
+            rr=RoleRequest.new
+            rr.role=pr
+            rr.requester=@phin_person
+            rr.save
+          else
+            rm=@phin_person.role_memberships.create(:phin_role => pr)
+            rm.phin_jurisdiction = pj if pj
+            @phin_person.save
+          end
         end
       end
     else

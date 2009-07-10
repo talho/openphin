@@ -4,11 +4,17 @@
 function jsAddRole()
 {
     var rselect=$("#phin_roles_select")[0];
+    var jselect=$("#phin_jurisdictions_select")[0];
     var list=$("#phin_role_list ul")[0];
+    var idx=role_ct++;
     $(list).append(
-        "<li><input type='hidden' name='phin_roles["+(role_ct++)+"][id]' value='"+
+
+        "<li><input type='hidden' name='phin_roles["+(idx)+"][role_id]' value='"+
             $(rselect.options[rselect.selectedIndex]).val()+"'/>"+
-            $(rselect.options[rselect.selectedIndex]).text()+"</li>");
+            "<input type='hidden' name='phin_roles["+(idx)+"][jurisdiction_id]' value='"+
+            $(jselect.options[jselect.selectedIndex]).val()+"'/>"+
+            $(rselect.options[rselect.selectedIndex]).text()+" (" +
+            $(jselect.options[jselect.selectedIndex]).text()+ ")</li>");
     
 }
 

@@ -1,9 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :phin_person_profiles, :as => "profile"
+
   map.resources :phin_jurisdictions
 
   map.resources :role_requests
 
-  map.resources :phin_people
+  map.resources :phin_people do |person|
+    person.resource :phin_person_profile, :as => "profile"
+  end
+  map.resources :phin_roles
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -17,7 +22,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   map.resources :products
-  map.resources :phin_people
   
   # Sample resource route with options:
   #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }

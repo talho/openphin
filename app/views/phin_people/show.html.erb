@@ -1,5 +1,5 @@
 <h3><%=@phin_person.display_name %></h3>
-
+<%= link_to "Public Profile", phin_person_profile_path(@phin_person.profile) if @phin_person.profile %>
 <div>
   <b>Description</b>: <%= @phin_person.description %>
 </div>

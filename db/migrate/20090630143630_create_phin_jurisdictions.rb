@@ -1,4 +1,4 @@
-class CreateJurisdictions < ActiveRecord::Migration
+class CreatePhinJurisdictions < ActiveRecord::Migration
   def self.up
     create_table :phin_jurisdictions do |t|
       t.column :name, :string
