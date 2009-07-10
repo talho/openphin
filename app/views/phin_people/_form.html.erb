@@ -15,16 +15,29 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
     <div>
-  <%= f.label(:roles, "Roles") %><br/>
-  <%= select_tag "phin_roles_select", options_from_collection_for_select(PhinRole.all, :id, :name) %>
-  <%= button_to_function 'Request Role', "jsAddRole()" %>
-      </div>
+      <table>
+        <tr>
+          <td>Role</td><td>Jurisdiction (optional)</td>
+        </tr>
+        <tr>
+          <td>
+
+      <%= select_tag("phin_roles_select", options_for_select(PhinRole.all.collect{ |c| [c.name, c.id] }.insert(0, '')) )%>
+          </td>
+          <td>
+      <%= select_tag "phin_jurisdictions_select", options_for_select(PhinJurisdiction.all.collect{ |c| [c.name, c.id] }.insert(0, '')) %>
+          </td>
+        </tr>
+      <%= button_to_function 'Request Role', "jsAddRole()" %>
+          </table>
+    </div>
   <div id="phin_role_list">
     <ul>
       <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
-      <% @phin_person.phin_roles.each_with_index do |role, role_index| %>
+      <% @phin_person.role_memberships.each_with_index do |role, role_index| %>
           <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
-            <li id="phin_roles_<%= role_index %>"><%= role_fields.hidden_field :id, :value => role.id, :role_arr_id => role_index %><%= role.name %><%= link_to_function "Remove", "remove_role(#{role_index})" %>
+            <li id="phin_roles_<%= role_index %>"><%= role_fields.hidden_field :id, :value => role.phin_role.id, :role_arr_id => role_index %><%= role.phin_role.name %>
+              <%= link_to_function "Remove", "remove_role(#{role_index})" %>
             </li>
           <% end %>
       <% end %>

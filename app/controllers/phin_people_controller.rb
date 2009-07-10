@@ -50,17 +50,23 @@ class PhinPeopleController < ApplicationController
     if @phin_person.save
       roles=params[:phin_roles]
       roles.each_value do |r|
-        pr = PhinRole.find(r["id"])
-        if pr.approval_required?
-          flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
-          rr=RoleRequest.new
-          rr.role=pr
-          rr.requester=@phin_person
-          rr.save
+        if r["_delete"]
+          RoleMembership.destroy(r[:id]) if r[:id]
         else
-          @phin_person.phin_roles << pr
-          @phin_person.save
+          pr = PhinRole.find(r["id"])
+          pj = PhinRole.find(r["jurisdiction_id"])
+          if pr.approval_required?
+            flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
+            rr=RoleRequest.new
+            rr.role=pr
+            rr.requester=@phin_person
+            rr.save
+          else
+            @phin_person.role_memberships.create(:phin_role => pr, :phin_jurisdiction => pj)
+            @phin_person.save
+          end
         end
+
       end
     else
       error_flag=true
@@ -86,6 +92,7 @@ class PhinPeopleController < ApplicationController
       roles=params[:phin_roles]
       roles.each_value do |r|
         pr = PhinRole.find(r["id"])
+        
         if pr.approval_required?
           flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
           rr=RoleRequest.new
@@ -93,7 +100,7 @@ class PhinPeopleController < ApplicationController
           rr.requester=@phin_person
           rr.save
         else
-          @phin_person.phin_roles << pr
+          #@phin_person.role_memberships.build(
           @phin_person.save
         end
       end
