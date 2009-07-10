@@ -22,7 +22,8 @@
       <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
       <% @phin_person.phin_roles.each_with_index do |role, role_index| %>
           <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
-            <li><%= role_fields.hidden_field :id, :value => role.id %><%= role.name %></li>
+            <li><%= role_fields.hidden_field :id, :value => role.id %><%= role.name %><%= link_to "Remove", "remove_role(#{role.id})" %>
+            </li>
           <% end %>
       <% end %>
     </ul>
