@@ -77,10 +77,10 @@ ActiveRecord::Schema.define(:version => 20090709210021) do
     t.string   "phin_oid"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "approval_required"
+    t.boolean  "approval_required"
   end
 
-  create_table "role_memberships", :force => true do |t|
+  create_table "role_memberships", :id => false, :force => true do |t|
     t.integer "phin_role_id"
     t.integer "phin_person_id"
     t.integer "phin_jurisdiction_id"
