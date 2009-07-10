@@ -1,0 +1,20 @@
+<h1>Editing phin_role</h1>
+
+<% form_for(@phin_role) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :approval_required %><br />
+    <%= f.check_box :approval_required %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @phin_role %> |
+<%= link_to 'Back', phin_roles_path %>

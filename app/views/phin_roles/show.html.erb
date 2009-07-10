@@ -1,0 +1,13 @@
+<p>
+  <b>Name:</b>
+  <%=h @phin_role.name %>
+</p>
+
+<p>
+  <b>Approval required:</b>
+  <%=h @phin_role.approval_required %>
+</p>
+
+
+<%= link_to 'Edit', edit_phin_role_path(@phin_role) %> |
+<%= link_to 'Back', phin_roles_path %>

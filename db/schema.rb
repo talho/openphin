@@ -11,11 +11,6 @@
 
 ActiveRecord::Schema.define(:version => 20090709210021) do
 
-  create_table "contacts", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "devices", :force => true do |t|
     t.integer "phin_person_id"
     t.string  "type"

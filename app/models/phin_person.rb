@@ -2,9 +2,10 @@
 
 class PhinPerson < ActiveRecord::Base
   #TODO test for presence of classes
+  has_many :role_memberships
   has_and_belongs_to_many :phin_organizations
-  has_and_belongs_to_many :phin_jurisdictions 
-  has_and_belongs_to_many :phin_roles
+  has_many :phin_jurisdictions, :through => :role_memberships 
+  has_many :phin_roles, :through => :role_memberships
 
   validates_uniqueness_of :email
   validates_presence_of :email

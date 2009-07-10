@@ -14,9 +14,11 @@
   <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
+    <div>
   <%= f.label(:roles, "Roles") %><br/>
   <%= select_tag "phin_roles_select", options_from_collection_for_select(PhinRole.all, :id, :name) %>
   <%= button_to_function 'Request Role', "jsAddRole()" %>
+      </div>
   <div id="phin_role_list">
     <ul>
       <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>

@@ -1,0 +1,22 @@
+<h1>Listing phin_roles</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Approval required</th>
+  </tr>
+
+<% @phin_roles.each do |phin_role| %>
+  <tr>
+    <td><%=h phin_role.name %></td>
+    <td><%=h phin_role.approval_required %></td>
+    <td><%= link_to 'Show', phin_role %></td>
+    <td><%= link_to 'Edit', edit_phin_role_path(phin_role) %></td>
+    <td><%= link_to 'Destroy', phin_role, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New phin_role', new_phin_role_path %>

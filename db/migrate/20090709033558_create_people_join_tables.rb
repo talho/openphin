@@ -3,10 +3,12 @@ class CreatePeopleJoinTables < ActiveRecord::Migration
     create_table :phin_organizations_phin_people do |t|
       t.integer :phin_person_id
       t.integer :phin_organization_id
+      t.timestamps
     end
     create_table :phin_jurisdictions_phin_people do |t|
       t.integer :phin_person_id
       t.integer :phin_jurisdiction_id
+      t.timestamps
     end
   end
 
