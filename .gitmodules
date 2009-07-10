@@ -4,3 +4,6 @@
 [submodule "vendor/plugins/auto_complete_jquery"]
 	path = vendor/plugins/auto_complete_jquery
 	url = git://github.com/chris/auto_complete_jquery.git
+[submodule "vendor/plugins/happymapper"]
+	path = vendor/plugins/happymapper
+	url = git://github.com/jnunemaker/happymapper

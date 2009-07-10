@@ -12,7 +12,7 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory are automatically loaded.
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  config.load_paths +=  [File.join(File.dirname(__FILE__), '../app/xml')] 
 
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
@@ -44,7 +44,7 @@ Rails::Initializer.run do |config|
   #TODO: add these back in later
   #config.gem "libxslt-ruby"
   #config.gem "libxml-ruby"
-  #config.gem "jnunemaker-happymapper"
+  config.gem "jnunemaker-happymapper", :lib => "happymapper"
 
 end
 
