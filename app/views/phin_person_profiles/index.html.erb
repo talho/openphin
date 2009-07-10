@@ -1,0 +1,30 @@
+<h1>Listing phin_person_profiles</h1>
+
+<table>
+  <tr>
+    <th>Photo</th>
+    <th>Public</th>
+    <th>Credentials</th>
+    <th>Employer</th>
+    <th>Experience</th>
+    <th>Bio</th>
+  </tr>
+
+<% @phin_person_profiles.each do |phin_person_profile| %>
+  <tr>
+    <td><%=h phin_person_profile.photo %></td>
+    <td><%=h phin_person_profile.public %></td>
+    <td><%=h phin_person_profile.credentials %></td>
+    <td><%=h phin_person_profile.employer %></td>
+    <td><%=h phin_person_profile.experience %></td>
+    <td><%=h phin_person_profile.bio %></td>
+    <td><%= link_to 'Show', phin_person_profile %></td>
+    <td><%= link_to 'Edit', edit_phin_person_profile_path(phin_person_profile) %></td>
+    <td><%= link_to 'Destroy', phin_person_profile, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New phin_person_profile', new_phin_person_profile_path %>

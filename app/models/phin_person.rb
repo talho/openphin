@@ -6,6 +6,7 @@ class PhinPerson < ActiveRecord::Base
   has_and_belongs_to_many :phin_organizations
   has_many :phin_jurisdictions, :through => :role_memberships 
   has_many :phin_roles, :through => :role_memberships
+  has_one :profile, :class_name => "PhinPersonProfile"
 
   validates_uniqueness_of :email
   validates_presence_of :email

@@ -14,8 +14,13 @@
   <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
+  <% if @phin_person.profile %>
+        <%= link_to "Edit profile", edit_phin_person_profile_path(@phin_person.profile) %>
+  <% else %>
+        Would you like to create your <%= link_to "profile", new_phin_person_phin_person_profile_path(@phin_person) %> now?
+  <% end %>
     <div>
-      <table>
+    <table>
         <tr>
           <td>Role</td><td>Jurisdiction (optional)</td>
         </tr>
@@ -28,7 +33,8 @@
       <%= select_tag "phin_jurisdictions_select", options_for_select(PhinJurisdiction.all.collect{ |c| [c.name, c.id] }.insert(0, '')) %>
           </td>
         </tr>
-      <%= button_to_function 'Request Role', "jsAddRole()" %>
+        <tr><td></td><td><%= button_to_function 'Request Role', "jsAddRole()" %></td></tr>
+
           </table>
     </div>
   <div id="phin_role_list">
@@ -36,7 +42,12 @@
       <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
       <% @phin_person.role_memberships.each_with_index do |role, role_index| %>
           <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
-            <li id="phin_roles_<%= role_index %>"><%= role_fields.hidden_field :id, :value => role.phin_role.id, :role_arr_id => role_index %><%= role.phin_role.name %>
+            <li id="phin_roles_<%= role_index %>">
+              <%= role_fields.hidden_field :id, :value => role.id, :role_arr_id => role_index %>
+              <%= role_fields.hidden_field :role_id, :value => role.phin_role.id, :role_arr_id => role_index %>
+              <%= role_fields.hidden_field :jurisdiction_id, :value => role.phin_jurisdiction ? role.phin_jurisdiction.id : nil,
+                                           :role_arr_id => role_index %>              
+              <%= role.phin_role.name %> <%= "(#{role.phin_jurisdiction.name})" if role.phin_jurisdiction %>
               <%= link_to_function "Remove", "remove_role(#{role_index})" %>
             </li>
           <% end %>

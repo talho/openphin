@@ -4,5 +4,6 @@ class RoleRequest < ActiveRecord::Base
   belongs_to :requester, :class_name => "PhinPerson", :foreign_key => "requester_id"
   belongs_to :approver,  :class_name => "PhinPerson", :foreign_key => "approver_id"
   belongs_to :role, :class_name => "PhinRole", :foreign_key => "role_id"
+  belongs_to :phin_jurisdiction
 
 end
