@@ -4,3 +4,4 @@ config/*.db
 *.log
 .svn
 test
+tmp/*

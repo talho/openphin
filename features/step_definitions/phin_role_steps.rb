@@ -19,22 +19,14 @@
 
 =end
 
-Given /^I am a new user$/ do
-  pending
+Given 'an organization named $name' do |name|
+  Factory(:phin_organization, :name => name)
 end
 
-When /^I visit the new user page$/ do
-  visit new_phin_person
+Given 'a jurisdiction named $name' do |name|
+  Factory(:phin_jurisdiction, :name => name)
 end
 
-When /^fill out the new user form$/ do
-  pending
-end
-
-When /^request a secure role$/ do
-  pending
-end
-
-Then /^the role is not automatically added to my roles$/ do
-  pending
+Given 'a role named $name' do |name|
+  Factory(:phin_role, :name => name)
 end

@@ -24,15 +24,17 @@ Factory.define :phin_person do |pp|
   pp.first_name Factory.next(:username)
   pp.last_name "Smith"
   pp.email {|p| "#{p.first_name}@example.com"}
-  pp.phin_oid {|p| p.first_name.to_phin_oid}
+  pp.password              { "password" }
+  pp.password_confirmation { "password" }
+  pp.email_confirmed { true }
 end
+
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :phin_jurisdiction do |jur|
   jur.name Factory.next(:jurisdiction_name)
 
 end
 Factory.define :phin_organization do |org|
-  org.internal_jurisdiction { |o| o.association(:phin_jurisdiction) }
   org.name Factory.next(:jurisdiction_name)
 end
 Factory.sequence(:rolename) {|r| "role#{r}"}

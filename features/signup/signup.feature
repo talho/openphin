@@ -4,23 +4,21 @@ Feature: Signing up for an account
   As a visitor
   I want to be able to sign up for an account
   
-  Background: 
-    Given the following entities exists:
-      | Organization | Red Cross     |
-      | Jurisdiction | Dallas County |
-      | Role         | Health Alert & Communications Coordinator  |
-      | Language     | English       |
+  Background:
+    Given an organization named Red Cross
+    And a jurisdiction named Dallas County
+    And a role named Health Alert & Communications Coordinator
 
   Scenario: Signing up as a public role
-    Given I'm visiting the site
     When I signup for an account with the following info:
-      | Email          | john@example.com |
+      | field          | value            |
+      | E-mail         | john@example.com |
       | Password       | apples           |
       | Password confirmation | apples    |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | Jurisdiction   | Dallas County    |
+      | What County    | Dallas County    |
       | Preferred language | English      |
     Then I should see "Successfully added your account"
     And I should have the "Public" role

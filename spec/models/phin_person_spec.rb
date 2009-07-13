@@ -1,32 +1,40 @@
 require "spec"
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe "PhinPerson rules" do
+describe PhinPerson do
 
-  ## Called before each example.
-  #before(:each) do
-  #  # Do nothing
-  #end
-  #
-  ## Called after each example.
-  #after(:each) do
-  #  # Do nothing
-  #end
-  describe "creating PhinPeople" do
-    
-    it "should not create a new Person if one already exists with same email" do
-      p1 = Factory(:phin_person)
-      p2=Factory.build(:phin_person, :email => p1.email)
-      p2.valid?.should be_false
-      #p1=stub_model(PhinPerson, :email => "j@e.com")
-      #PhinPerson.stub!(:find).and_return(p1)
-      #p2=PhinPerson.new(:email => "j@e.com")
-      #p2.valid?.should be_false
-    end
-    it "should not create a new Person without an email attribute" do
-      p=PhinPerson.new(:id => 1, :first_name => "John", :last_name => "Smith")
-      p.valid?.should == false
+  it "should be invalid if a Person already exists with same email" do
+    p1 = Factory(:phin_person)
+    p2=Factory.build(:phin_person, :email => p1.email)
+    p2.valid?.should be_false
+  end
+  
+  it "should be invalid without an email" do
+    p=PhinPerson.new(:id => 1, :first_name => "John", :last_name => "Smith")
+    p.valid?.should == false
+  end
+  
+  [:first_name, :last_name, :display_name, :description, :preferred_language, :title].each do |field|
+    it "should make #{field} accessible" do
+      PhinPerson.new(field => 'foo').send(field).should == 'foo'
     end
   end
+  
+  describe "phin_oid" do
+    it "should be generated on create" do
+      Factory(:phin_person).phin_oid.should_not be_blank
+    end
     
+    it "should not change when saving" do
+      person = Factory(:phin_person)
+      lambda {
+        person.update_attributes! :first_name => 'changed'
+      }.should_not change { person.phin_oid }
+    end
+    
+    it "should not allow assignment" do
+      person = Factory(:phin_person)
+      lambda { person.phin_oid = 1 }.should raise_error
+    end
+  end
 end

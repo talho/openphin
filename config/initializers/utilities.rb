@@ -21,7 +21,7 @@
 require 'sha1'
 module PHIN_support
   def to_phin_oid(type=1)
-    digest=SHA1::hexdigest(self+Time.now.strftime("%x%X"))
+    digest=SHA1::hexdigest("#{self}--#{rand}--#{Time.now.to_f}")
     "#{PHIN_OID_ROOT}.#{type}.#{digest[0..7].hex}.#{digest[8..15].hex}.#{digest[16..23].hex}.#{digest[24..31].hex}"
   end
 end

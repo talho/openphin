@@ -44,35 +44,10 @@ class PhinPeopleController < ApplicationController
   # POST /phin_people
   # POST /phin_people.xml
   def create
-    externalUID=params[:phin_person][:email].to_phin_oid unless params[:phin_person][:email].nil?  
     @phin_person = PhinPerson.new(params[:phin_person])
-    if @phin_person.save
-      roles=params[:phin_roles]
-      roles.each_value do |r|
-      pr = PhinRole.find(r["role_id"])
-      pj = r['jurisdiction_id'].blank? ? nil : PhinJurisdiction.find(r["jurisdiction_id"])
-      if pr.approval_required?
-        flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
-        rr=RoleRequest.new
-        rr.role=pr
-        rr.phin_jurisdiction = pj if pj
-        rr.requester=@phin_person
-        rr.save
-      else
-        rm=@phin_person.role_memberships.create(:phin_role => pr)
-        rm.phin_jurisdiction = pj if pj
-        @phin_person.save
-      end
-
-
-      end
-    else
-      error_flag=true
-    end
     respond_to do |format|
-      if @phin_person.valid?
-        flash[:notice] = 'PhinPerson was successfully created.'
-        #TODO Fix redirect_to to accept ActiveLdap object
+      if @phin_person.save
+        flash[:notice] = 'Successfully added your account'
         format.html { redirect_to(@phin_person) }
         format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }  
       else

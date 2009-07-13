@@ -10,33 +10,21 @@
   <%= f.text_field(:description) %><br/>
   <%= f.label(:email, "E-mail address") %><br/>
   <%= f.text_field(:email) %><br/>
-  <%= f.label(:preferred_language, "Preferred lanaguage") %><br/>
+  <%= f.label(:password, "Password") %><br/>
+  <%= f.password_field(:password) %><br/>
+  <%= f.label(:password_confirmation,"Password Confirmation") %><br/>
+  <%= f.password_field(:password_confirmation) %><br/>
+
+
+  <%= f.label(:preferred_language, "Preferred language") %><br/>
   <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
-  <% if @phin_person.profile %>
-        <%= link_to "Edit profile", edit_phin_person_profile_path(@phin_person.profile) %>
-  <% else %>
-        Would you like to create your <%= link_to "profile", new_phin_person_phin_person_profile_path(@phin_person) %> now?
+  
+  <% f.fields_for :role_membership, RoleMembership.new do |r| %>
+    <%= r.label :phin_jurisdiction_id,  "What County are you in?" %><br/>
+    <%= r.collection_select :phin_jurisdiction_id, PhinJurisdiction.all, :id, :name, :include_blank => true %><br/>
   <% end %>
-    <div>
-    <table>
-        <tr>
-          <td>Role</td><td>Jurisdiction (optional)</td>
-        </tr>
-        <tr>
-          <td>
-
-      <%= select_tag("phin_roles_select", options_for_select(PhinRole.all.collect{ |c| [c.name, c.id] }.insert(0, '')) )%>
-          </td>
-          <td>
-      <%= select_tag "phin_jurisdictions_select", options_for_select(PhinJurisdiction.all.collect{ |c| [c.name, c.id] }.insert(0, '')) %>
-          </td>
-        </tr>
-        <tr><td></td><td><%= button_to_function 'Request Role', "jsAddRole()" %></td></tr>
-
-          </table>
-    </div>
   <div id="phin_role_list">
     <ul>
       <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>

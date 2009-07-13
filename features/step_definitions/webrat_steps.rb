@@ -91,6 +91,7 @@ When /^I attach the file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
 end
 
 Then /^I should see "([^\"]*)"$/ do |text|
+  save_and_open_page
   response.should contain(text)
 end
 

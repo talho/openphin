@@ -1,7 +1,8 @@
 # Required Attributes: :cn, :sn, :organizations
 
 class PhinPerson < ActiveRecord::Base
-  #TODO test for presence of classes
+  include Clearance::User
+  
   has_many :role_memberships
   has_and_belongs_to_many :phin_organizations
   has_many :phin_jurisdictions, :through => :role_memberships 
@@ -10,10 +11,11 @@ class PhinPerson < ActiveRecord::Base
 
   validates_uniqueness_of :email
   validates_presence_of :email
-  validates_presence_of :phin_oid
-  validates_format_of :phin_oid, :with => /\A#{PHIN_OID_ROOT}+[\.\d]+/, :on => :create, :message => " not well formed"
   
-
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title
+  
+  before_create :generate_oid
+  
   def name
     first_name + " " + last_name
   end
@@ -29,6 +31,10 @@ class PhinPerson < ActiveRecord::Base
   #def auto_complete_for_phin_person_last_name
     
   #end
+  
+  def phin_oid=(val)
+    raise "PHIN oids should never change"
+  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
@@ -65,6 +71,12 @@ class PhinPerson < ActiveRecord::Base
       entry.dsml(:attr, :name => :cn) {|a| a.dsml :value, cn}
 
     end
+  end
+
+private
+
+  def generate_oid
+    self[:phin_oid] = email.to_phin_oid
   end
 
 end

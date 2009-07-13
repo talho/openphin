@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090710171704) do
+ActiveRecord::Schema.define(:version => 20090713195525) do
 
   create_table "devices", :force => true do |t|
     t.integer "phin_person_id"
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(:version => 20090710171704) do
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "internal_jurisdiction_id"
   end
 
   create_table "phin_jurisdictions_phin_people", :force => true do |t|
@@ -68,7 +67,16 @@ ActiveRecord::Schema.define(:version => 20090710171704) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "encrypted_password", :limit => 128
+    t.string   "salt",               :limit => 128
+    t.string   "token",              :limit => 128
+    t.datetime "token_expires_at"
+    t.boolean  "email_confirmed",                   :default => false, :null => false
   end
+
+  add_index "phin_people", ["email"], :name => "index_phin_people_on_email"
+  add_index "phin_people", ["id", "token"], :name => "index_phin_people_on_id_and_token"
+  add_index "phin_people", ["token"], :name => "index_phin_people_on_token"
 
   create_table "phin_person_profiles", :force => true do |t|
     t.binary   "photo"

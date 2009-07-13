@@ -42,5 +42,9 @@ Rails::Initializer.run do |config|
   #config.gem "libxslt-ruby"
   #config.gem "libxml-ruby"
   config.gem "jnunemaker-happymapper", :lib => "happymapper"
+  config.gem "thoughtbot-clearance",
+    :lib     => 'clearance', 
+    :source  => 'http://gems.github.com', 
+    :version => '0.6.9'
 end
 
