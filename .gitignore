@@ -3,3 +3,4 @@ config/*.db
 *.sqlite3
 *.log
 .svn
+test
