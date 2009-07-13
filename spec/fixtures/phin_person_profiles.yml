@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  photo: 
+  public: false
+  credentials: MyText
+  employer: MyString
+  experience: MyText
+  bio: MyText
+
+two:
+  photo: 
+  public: false
+  credentials: MyText
+  employer: MyString
+  experience: MyText
+  bio: MyText

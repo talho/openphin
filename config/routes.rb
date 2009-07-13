@@ -1,7 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :phin_person_profiles, :as => "profile"
+
+  map.resources :phin_jurisdictions
+
   map.resources :role_requests
 
-  map.resources :phin_people
+  map.resources :phin_people do |person|
+    person.resource :phin_person_profile, :as => "profile"
+  end
+  map.resources :phin_roles
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -15,7 +22,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   map.resources :products
-  map.resources :phin_people
   
   # Sample resource route with options:
   #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
@@ -43,6 +49,11 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing the them or commenting them out if you're using named routes and resources.
+  #map.connect ':controller/auto_complete_for_phin_person_display_name', :action => "auto_complete_for_phin_person_display_name", :format => "json"
+  #map.connect ':controller/auto_complete_for_phin_person_first_name', :action => 'auto_complete_for_phin_person_first_name', :format => 'json'
+  #map.connect ':controller/auto_complete_for_phin_person_last_name', :action => "auto_complete_for_phin_person_last_name", :format => "json"
+  map.auto_complete ':controller/:action', :requirements => { :action => /auto_complete_for_\S+/ }, :conditions => { :method => :get }
+
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

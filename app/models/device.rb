@@ -1,16 +1,11 @@
-class Device < ActiveLdap::Base
-  ldap_mapping :dn_attribute => "cn", :prefix => "ou=People", :classes => ['alertCommunicationDevice']
+class Device < ActiveRecord::Base
+  belongs_to :phin_person
 
   def parent
-    parent_dn=dn.split(",").drop(1).join(',')
-    if parent_dn.split(',').first != prefix
-      parent_node=PhinPerson.find(parent_dn)
-    else
-      nil
-    end
+    :phin_person
   end
 
-  def to_xml(builder=nil)
+  def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|

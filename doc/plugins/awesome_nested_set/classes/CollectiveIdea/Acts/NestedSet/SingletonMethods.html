@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: CollectiveIdea::Acts::NestedSet::SingletonMethods</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">CollectiveIdea::Acts::NestedSet::SingletonMethods</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../../files/vendor/plugins/awesome_nested_set/lib/awesome_nested_set_rb.html">
+                vendor/plugins/awesome_nested_set/lib/awesome_nested_set.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+This acts provides Nested Set functionality. Nested Set is a smart way to
+implement an <em>ordered</em> tree, with the added feature that you can
+select the children and all of their descendants with a single query. The
+drawback is that insertion or move need some complex sql queries. But
+everything is done here by this module!
+</p>
+<p>
+Nested sets are appropriate each time you want either an orderd tree
+(menus, commercial categories) or an efficient way of querying big trees
+(threaded posts).
+</p>
+<h2>API</h2>
+<p>
+Methods names are aligned with acts_as_tree as much as possible, to make
+replacment from one by another easier, except for the creation:
+</p>
+<p>
+in acts_as_tree:
+</p>
+<pre>
+  item.children.create(:name =&gt; &quot;child1&quot;)
+</pre>
+<p>
+in <a href="SingletonMethods.html#M000057">acts_as_nested_set</a>:
+</p>
+<pre>
+  # adds a new item at the &quot;end&quot; of the tree, i.e. with child.left = max(tree.right)+1
+  child = MyClass.new(:name =&gt; &quot;child1&quot;)
+  child.save
+  # now move the item to its right place
+  child.move_to_child_of my_item
+</pre>
+<p>
+You can pass an id or an object to:
+</p>
+<ul>
+<li><tt>move_to_child_of</tt>
+
+</li>
+<li><tt>move_to_right_of</tt>
+
+</li>
+<li><tt>move_to_left_of</tt>
+
+</li>
+</ul>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000057">acts_as_nested_set</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name">Comparable</span>
+        <span class="include-name"><a href="Columns.html">Columns</a></span>
+        <span class="include-name"><a href="InstanceMethods.html">InstanceMethods</a></span>
+      </div>
+    </div>
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
+
+        <div class="method-heading">
+          <a href="#M000057" class="method-signature">
+          <span class="method-name">acts_as_nested_set</span><span class="method-args">(options = {})</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Configuration options are:
+</p>
+<ul>
+<li>+:parent_column+ - specifies the column name to use for keeping the
+position integer (default: parent_id)
+
+</li>
+<li>+:left_column+ - column name for left boundry data, default &quot;lft&quot;
+
+</li>
+<li>+:right_column+ - column name for right boundry data, default
+&quot;rgt&quot;
+
+</li>
+<li>+:scope+ - restricts what is to be considered a list. Given a symbol,
+it&#8216;ll attach &quot;_id&quot; (if it hasn&#8216;t been already) and
+use that as the foreign key restriction. You can also pass an array to
+scope by multiple attributes. Example: <tt><a
+href="SingletonMethods.html#M000057">acts_as_nested_set</a> :scope =&gt;
+[:notable_id, :notable_type]</tt>
+
+</li>
+<li>+:dependent+ - behavior for cascading destroy. If set to :destroy, all the
+child objects are destroyed alongside this object by calling their destroy
+method. If set to :delete_all (default), all the child objects are deleted
+without calling their destroy method.
+
+</li>
+</ul>
+<p>
+See <a
+href="ClassMethods.html">CollectiveIdea::Acts::NestedSet::ClassMethods</a>
+for a list of class methods and <a
+href="InstanceMethods.html">CollectiveIdea::Acts::NestedSet::InstanceMethods</a>
+for a list of instance methods added to <a
+href="SingletonMethods.html#M000057">acts_as_nested_set</a> models
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000057-source">
+<pre>
+    <span class="ruby-comment cmt"># File vendor/plugins/awesome_nested_set/lib/awesome_nested_set.rb, line 54</span>
+54:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">acts_as_nested_set</span>(<span class="ruby-identifier">options</span> = {})
+55:           <span class="ruby-identifier">options</span> = {
+56:             <span class="ruby-identifier">:parent_column</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'parent_id'</span>,
+57:             <span class="ruby-identifier">:left_column</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'lft'</span>,
+58:             <span class="ruby-identifier">:right_column</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'rgt'</span>,
+59:             <span class="ruby-identifier">:dependent</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:delete_all</span>, <span class="ruby-comment cmt"># or :destroy</span>
+60:           }.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)
+61:           
+62:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">!~</span> <span class="ruby-regexp re">/_id$/</span>
+63:             <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>] = <span class="ruby-node">&quot;#{options[:scope]}_id&quot;</span>.<span class="ruby-identifier">intern</span>
+64:           <span class="ruby-keyword kw">end</span>
+65: 
+66:           <span class="ruby-identifier">write_inheritable_attribute</span> <span class="ruby-identifier">:acts_as_nested_set_options</span>, <span class="ruby-identifier">options</span>
+67:           <span class="ruby-identifier">class_inheritable_reader</span> <span class="ruby-identifier">:acts_as_nested_set_options</span>
+68:           
+69:           <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ClassMethods</span>)
+70:             <span class="ruby-identifier">include</span> <span class="ruby-constant">Comparable</span>
+71:             <span class="ruby-identifier">include</span> <span class="ruby-constant">Columns</span>
+72:             <span class="ruby-identifier">include</span> <span class="ruby-constant">InstanceMethods</span>
+73:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">Columns</span>
+74:             <span class="ruby-identifier">extend</span> <span class="ruby-constant">ClassMethods</span>
+75: 
+76:             <span class="ruby-identifier">attr_accessor</span> <span class="ruby-identifier">:skip_before_destroy</span>
+77:           
+78:             <span class="ruby-comment cmt"># no bulk assignment</span>
+79:             <span class="ruby-identifier">attr_protected</span>  <span class="ruby-identifier">left_column_name</span>.<span class="ruby-identifier">intern</span>,
+80:                             <span class="ruby-identifier">right_column_name</span>.<span class="ruby-identifier">intern</span>, 
+81:                             <span class="ruby-identifier">parent_column_name</span>.<span class="ruby-identifier">intern</span>
+82:                           
+83:             <span class="ruby-identifier">before_create</span> <span class="ruby-identifier">:set_default_left_and_right</span>
+84:             <span class="ruby-identifier">before_destroy</span> <span class="ruby-identifier">:destroy_descendants</span>
+85:                           
+86:             <span class="ruby-comment cmt"># no assignment to structure fields</span>
+87:             [<span class="ruby-identifier">left_column_name</span>, <span class="ruby-identifier">right_column_name</span>, <span class="ruby-identifier">parent_column_name</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">column</span><span class="ruby-operator">|</span>
+88:               <span class="ruby-identifier">module_eval</span> <span class="ruby-value str">&quot;def \#{column}=(x)\nraise ActiveRecord::ActiveRecordError, \&quot;Unauthorized assignment to \#{column}: it's an internal field handled by acts_as_nested_set code, use move_to_* methods instead.\&quot;\nend\n&quot;</span>, <span class="ruby-keyword kw">__FILE__</span>, <span class="ruby-keyword kw">__LINE__</span>
+89:             <span class="ruby-keyword kw">end</span>
+90:           
+91:             <span class="ruby-identifier">named_scope</span> <span class="ruby-identifier">:roots</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">parent_column_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">nil</span>}, <span class="ruby-identifier">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">quoted_left_column_name</span>
+92:             <span class="ruby-identifier">named_scope</span> <span class="ruby-identifier">:leaves</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{quoted_right_column_name} - #{quoted_left_column_name} = 1&quot;</span>, <span class="ruby-identifier">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">quoted_left_column_name</span>
+93: 
+94:             <span class="ruby-identifier">define_callbacks</span>(<span class="ruby-value str">&quot;before_move&quot;</span>, <span class="ruby-value str">&quot;after_move&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:define_callbacks</span>)
+95:           <span class="ruby-keyword kw">end</span>
+96:           
+97:         <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

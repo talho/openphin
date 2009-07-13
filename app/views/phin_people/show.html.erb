@@ -1,3 +1,30 @@
+<h3><%=@phin_person.display_name %></h3>
+<%= link_to "Public Profile", phin_person_profile_path(@phin_person.profile) if @phin_person.profile %>
+<div>
+  <b>Description</b>: <%= @phin_person.description %>
+</div>
+<div>
+  <b>Real Name</b>: <%= @phin_person.last_name  %>, <%= @phin_person.first_name %>
 
-<%= link_to 'Edit', url_for(:action => "edit", :id => @phin_person.encodedID) %> |
+</div>
+<div>
+  <b>Title</b>: <%= @phin_person.title %>
+</div>
+<div>
+  <b>Email Address</b> <%= link_to @phin_person.email, "mailto:#{@phin_person.email}" %>
+</div>
+<div>
+  <b>Preferred Language</b>: <%= @phin_person.preferred_language %>
+</div>
+<div>
+  <h4>Roles</h4>
+  <ul>
+    <% @phin_person.phin_roles.each do |role| %>
+        <li><%=role.name %></li>
+    <% end %>
+  </ul>
+</div>
+<p>
+<%= link_to 'Edit', edit_phin_person_path(@phin_person) %> |
 <%= link_to 'Back', phin_people_path %>
+</p>

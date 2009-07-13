@@ -41,50 +41,43 @@ describe PhinPeopleController do
   describe "POST create" do
     describe "with secure role request" do
       before(:all) do
-        PhinRole.new(:cn => "Secure Role", :approvalRequired => true).save!
-      end
-      after(:all) do
-        PhinRole.find("Secure Role").delete
+        Factory(:phin_role, :name => "Secure Role", :approval_required => true)
       end
       it "should not assign the role automatically" do
-        params={
-            "givenName" => "John",
-            "sn" => "Smith",
-            "displayName" => "J S",
-            "description" => "laskjdflk",
-            "mail" => "js@example.org",
-            "preferredLanguage" => "English",
-            "title" => "tester",
-            "roles[]" => "Secure Role"
-        }
+        params=Factory.attributes_for(:phin_person)
+        params["phin_person[phin_roles]"]=[PhinRole.find_by_name("Secure Role").id]
         post :create, :phin_person => params
-        PhinPerson.find(:first, :attribute => "cn", :value => "John Smith").phin_roles.length == 0
+
       end
     end
 
     describe "with valid params" do
       it "assigns a newly created phin_person as @phin_person" do
-        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => true))
-        post :create, :phin_person => {:these => 'params'}
-        assigns[:phin_person].should equal(mock_phin_person)
+        attrs = Factory.attributes_for(:phin_person)
+        post :create, :phin_person => attrs
+        assigns[:phin_person].first_name.should == attrs[:first_name]
+        assigns[:phin_person].last_name.should == attrs[:last_name] 
+
       end
 
       it "redirects to the created phin_person" do
-        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => true))
-        post :create, :phin_person => {}
-        response.should redirect_to(phin_person_url(mock_phin_person))
+        attrs=Factory.attributes_for(:phin_person)
+        post :create, :phin_person => attrs
+        p=PhinPerson.find_by_email(attrs[:email])
+        p.should_not be_new_record
+        response.should redirect_to(phin_person_url(p))
       end
     end
     
     describe "with invalid params" do
       it "assigns a newly created but unsaved phin_person as @phin_person" do
-        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => false))
+        PhinPerson.stub!(:new).with({'these' => 'params'}).and_return(mock_phin_person(:save => false, :nil_object => true))
         post :create, :phin_person => {:these => 'params'}
         assigns[:phin_person].should equal(mock_phin_person)
       end
 
       it "re-renders the 'new' template" do
-        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false))
+        PhinPerson.stub!(:new).and_return(mock_phin_person(:save => false, :null_object => true))
         post :create, :phin_person => {}
         response.should render_template('new')
       end

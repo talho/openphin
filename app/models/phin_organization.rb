@@ -1,8 +1,8 @@
-class PhinOrganization < ActiveLdap::Base
-  ldap_mapping :dn_attribute => "cn", :prefix => "ou=Organizations", :classes => ['top', 'PhinOrganization', "GroupOfUniqueNames"]
-  has_many :phin_people, :class_name => "PhinPerson", :foreign_key => "uniqueMember", :primary_key => "dn"
-
-  def to_xml(builder=nil)
+class PhinOrganization < PhinJurisdiction
+  belongs_to :internal_jurisdiction, :class_name => "PhinJurisdiction"
+  has_and_belongs_to_many :phin_people
+  
+  def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|

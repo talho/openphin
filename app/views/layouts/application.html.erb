@@ -7,8 +7,12 @@
   <title>PhinPeople: <%= controller.action_name %></title>
   <%= stylesheet_link_tag 'scaffold' %>
   <%= javascript_include_tag 'jquery', 'application' %>
+  <%= stylesheet_link_tag 'jquery.ui.autocomplete' %>
+  <%= javascript_include_tag 'jquery.templating', 'jquery.ui.autocomplete.ext', 
+    'jquery.ui.autocomplete', 'jquery.ui', :cache => 'jquery' %>
 </head>
 <body>
+
 
 <p style="color: green"><%= flash[:notice] %></p>
 

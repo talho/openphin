@@ -1,0 +1,35 @@
+<h1>Profile for <%= @phin_person_profile.phin_person.display_name %></h1>
+
+<% form_for(@phin_person_profile) do |f| %>
+  <%= f.error_messages %>
+    <%= f.hidden_field :phin_person_id %>
+  <p>
+    <%= f.label :photo %><br />
+    <%= f.text_field :photo %>
+  </p>
+  <p>
+    <%= f.label :public %><br />
+    <%= f.check_box :public %>
+  </p>
+  <p>
+    <%= f.label :credentials %><br />
+    <%= f.text_area :credentials %>
+  </p>
+  <p>
+    <%= f.label :employer %><br />
+    <%= f.text_field :employer %>
+  </p>
+  <p>
+    <%= f.label :experience %><br />
+    <%= f.text_area :experience %>
+  </p>
+  <p>
+    <%= f.label :bio %><br />
+    <%= f.text_area :bio %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', phin_person_profiles_path %>

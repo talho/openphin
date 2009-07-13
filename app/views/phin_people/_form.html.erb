@@ -1,30 +1,57 @@
-<% form_for(:phin_person, :url => { :action => "create" }) do |f| #, :id => @phin_person.encodedID%>
+<% form_for(@phin_person) do |f| %>
   <%= f.error_messages %><br/>
-  <%= f.label(:givenname, "First Name") %><br/>
-  <%= f.text_field(:givenname) %><br/>
-  <%= f.label(:sn, "Last Name") %><br/>
-  <%= f.text_field(:sn) %><br/>
-  <%= f.label(:displayname, "Preferred name to be displayed") %><br/>
-  <%= f.text_field(:displayname) %><br/>
+  <%= f.label(:first_name, "First Name") %><br/>
+  <%= f.text_field(:first_name) %><br/>
+  <%= f.label(:last_name, "Last Name") %><br/>
+  <%= f.text_field(:last_name) %><br/>
+  <%= f.label(:display_name, "Preferred name to be displayed") %><br/>
+  <%= f.text_field(:display_name) %><br/>
   <%= f.label(:description, "Description of person") %><br/>
   <%= f.text_field(:description) %><br/>
-  <%= f.label(:mail, "E-mail address") %><br/>
-  <%= f.text_field(:mail) %><br/>
-  <%= f.label(:preferredlanguage, "Preferred lanaguage") %><br/>
-  <%= f.select(:preferredlanguage, ["English","Spanish"]) %><br/>
+  <%= f.label(:email, "E-mail address") %><br/>
+  <%= f.text_field(:email) %><br/>
+  <%= f.label(:preferred_language, "Preferred lanaguage") %><br/>
+  <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
-  <%= f.label(:roles, "Roles") %><br/>
-  <%= select_tag "phin_roles", options_from_collection_for_select(PhinRole.all, :cn, :cn) %>
-  <%= button_to_function 'Request Role', "jsAddRole()" %>
+  <% if @phin_person.profile %>
+        <%= link_to "Edit profile", edit_phin_person_profile_path(@phin_person.profile) %>
+  <% else %>
+        Would you like to create your <%= link_to "profile", new_phin_person_phin_person_profile_path(@phin_person) %> now?
+  <% end %>
+    <div>
+    <table>
+        <tr>
+          <td>Role</td><td>Jurisdiction (optional)</td>
+        </tr>
+        <tr>
+          <td>
+
+      <%= select_tag("phin_roles_select", options_for_select(PhinRole.all.collect{ |c| [c.name, c.id] }.insert(0, '')) )%>
+          </td>
+          <td>
+      <%= select_tag "phin_jurisdictions_select", options_for_select(PhinJurisdiction.all.collect{ |c| [c.name, c.id] }.insert(0, '')) %>
+          </td>
+        </tr>
+        <tr><td></td><td><%= button_to_function 'Request Role', "jsAddRole()" %></td></tr>
+
+          </table>
+    </div>
   <div id="phin_role_list">
     <ul>
-    <% @phin_person.phin_roles.each do |role| %>
-    <li>
-    	<%= hidden_field_tag "phin_person[phin_roles][]", role.cn %>
-    	<%= role.cn %>
-    </li>
-    <% end %>
+      <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
+      <% @phin_person.role_memberships.each_with_index do |role, role_index| %>
+          <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
+            <li id="phin_roles_<%= role_index %>">
+              <%= role_fields.hidden_field :id, :value => role.id, :role_arr_id => role_index %>
+              <%= role_fields.hidden_field :role_id, :value => role.phin_role.id, :role_arr_id => role_index %>
+              <%= role_fields.hidden_field :jurisdiction_id, :value => role.phin_jurisdiction ? role.phin_jurisdiction.id : nil,
+                                           :role_arr_id => role_index %>              
+              <%= role.phin_role.name %> <%= "(#{role.phin_jurisdiction.name})" if role.phin_jurisdiction %>
+              <%= link_to_function "Remove", "remove_role(#{role_index})" %>
+            </li>
+          <% end %>
+      <% end %>
     </ul>
   </div>
   <p>

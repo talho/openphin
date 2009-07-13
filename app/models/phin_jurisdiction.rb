@@ -1,31 +1,11 @@
-class PhinJurisdiction < ActiveLdap::Base
-  ldap_mapping :dn_attribute => "cn", :prefix => "ou=Jurisdictions", :classes => ['PhinOrganization']
-  has_many :phinpeople, :class_name => "PhinPerson", :foreign_key => "uniqueMember", :primary_key => "dn"
+class PhinJurisdiction < ActiveRecord::Base
+   acts_as_nested_set
 
-  #TODO: document requirement for a prefix to be configured on installation that maps to an ou for jurisdictions 
   def parent
-    parent_dn=dn.split(",").drop(1).join(',')
-    if parent_dn.split(',').first != prefix
-      parent_node=PhinJurisdiction.find(parent_dn)
-    else
-      nil
-    end
+    PhinJurisdiction.find(parent_id) unless !PhinJurisdiction.exists?(parent_id)
   end
 
-  def jurisdictions(deep=true)
-    if deep
-      #TODO: Restrict :prefix scope to improve performance
-      ActiveLdap::Base.search(:base => dn, :filter => '(objectclass=PhinOrganization)', :scope => :sub, :attributes => ['cn']).map{|subcn| 
-        PhinJurisdiction.find(:first, subcn[1]['cn']) unless subcn[1]['cn'][0] == cn
-      }.compact
-    else
-      #TODO: Restrict :prefix scope to improve performance
-      ActiveLdap::Base.search(:base => dn, :filter => '(objectclass=PhinOrganization)', :scope => :one, :attributes => ['cn']).map{|subcn| PhinJurisdiction.find(:first, subcn[1]['cn'])}
-    end
-  end
-
-
-   def to_xml(builder=nil)
+   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|
