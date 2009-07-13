@@ -4,7 +4,7 @@ describe "/phin_person_profiles/show.html.erb" do
   include PhinPersonProfilesHelper
   before(:each) do
     assigns[:phin_person_profile] = @phin_person_profile = stub_model(PhinPersonProfile,
-      :photo => ,
+      # :photo => ,
       :public => false,
       :credentials => "value for credentials",
       :employer => "value for employer",

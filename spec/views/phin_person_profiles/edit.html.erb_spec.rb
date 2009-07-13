@@ -6,7 +6,7 @@ describe "/phin_person_profiles/edit.html.erb" do
   before(:each) do
     assigns[:phin_person_profile] = @phin_person_profile = stub_model(PhinPersonProfile,
       :new_record? => false,
-      :photo => ,
+      # :photo => ,
       :public => false,
       :credentials => "value for credentials",
       :employer => "value for employer",

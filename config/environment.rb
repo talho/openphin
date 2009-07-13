@@ -38,13 +38,9 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
-  config.gem "ruby-ldap", :lib => "ldap"
-  config.gem "ruby-net-ldap", :lib => "net/ldap"
-  config.gem "activeldap", :lib => "active_ldap"
   #TODO: add these back in later
   #config.gem "libxslt-ruby"
   #config.gem "libxml-ruby"
   config.gem "jnunemaker-happymapper", :lib => "happymapper"
-
 end
 

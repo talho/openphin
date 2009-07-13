@@ -6,7 +6,7 @@ describe "/phin_person_profiles/index.html.erb" do
   before(:each) do
     assigns[:phin_person_profiles] = [
       stub_model(PhinPersonProfile,
-        :photo => ,
+        # :photo => ,
         :public => false,
         :credentials => "value for credentials",
         :employer => "value for employer",
@@ -14,7 +14,7 @@ describe "/phin_person_profiles/index.html.erb" do
         :bio => "value for bio"
       ),
       stub_model(PhinPersonProfile,
-        :photo => ,
+        # :photo => ,
         :public => false,
         :credentials => "value for credentials",
         :employer => "value for employer",
@@ -26,7 +26,7 @@ describe "/phin_person_profiles/index.html.erb" do
 
   it "renders a list of phin_person_profiles" do
     render
-    response.should have_tag("tr>td", .to_s, 2)
+    # response.should have_tag("tr>td", .to_s, 2)
     response.should have_tag("tr>td", false.to_s, 2)
     response.should have_tag("tr>td", "value for credentials".to_s, 2)
     response.should have_tag("tr>td", "value for employer".to_s, 2)
