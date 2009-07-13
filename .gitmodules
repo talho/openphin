@@ -7,3 +7,6 @@
 [submodule "vendor/plugins/happymapper"]
 	path = vendor/plugins/happymapper
 	url = git://github.com/jnunemaker/happymapper
+[submodule "vendor/plugins/seed-fu"]
+	path = vendor/plugins/seed-fu
+	url = git://github.com/mbleigh/seed-fu.git
