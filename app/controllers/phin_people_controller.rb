@@ -50,7 +50,7 @@ class PhinPeopleController < ApplicationController
       roles=params[:phin_roles]
       roles.each_value do |r|
       pr = PhinRole.find(r["role_id"])
-      pj = r['jurisdiction_id'].empty? ? PhinJurisdiction.find(r["jurisdiction_id"]) : nil 
+      pj = r['jurisdiction_id'].blank? ? nil : PhinJurisdiction.find(r["jurisdiction_id"])
       if pr.approval_required?
         flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
         rr=RoleRequest.new
@@ -70,14 +70,14 @@ class PhinPeopleController < ApplicationController
       error_flag=true
     end
     respond_to do |format|
-      if @phin_person.errors.length > 0
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
-      else
+      if @phin_person.valid?
         flash[:notice] = 'PhinPerson was successfully created.'
         #TODO Fix redirect_to to accept ActiveLdap object
         format.html { redirect_to(@phin_person) }
         format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }  
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -108,18 +108,16 @@ class PhinPeopleController < ApplicationController
           end
         end
       end
-    else
-      error_flag=true
     end
     respond_to do |format|
-      if @phin_person.errors.length > 0
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
-      else
+      if @phin_person.valid?
         flash[:notice]= 'PhinPerson was successfully updated.'
         #TODO Fix redirect_to to accept ActiveLdap object
         format.html { redirect_to(@phin_person) }
         format.xml  { render :xml => @phin_person, :status => :updated, :location => @phin_person }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
       end
     end
   end

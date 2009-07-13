@@ -61,7 +61,7 @@ class PhinJurisdictionsController < ApplicationController
     
     respond_to do |format|
       if @phin_jurisdiction.update_attributes(params[:phin_jurisdiction])
-        if params[:phin_jurisdiction][:parent_id]
+        if params[:phin_jurisdiction] && params[:phin_jurisdiction][:parent_id]
           if params[:phin_jurisdiction][:parent_id].empty?
             @phin_jurisdiction.move_to_root
           else
