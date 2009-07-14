@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090714161035) do
+ActiveRecord::Schema.define(:version => 20090714184350) do
 
   create_table "alerts", :force => true do |t|
     t.string   "title"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20090714161035) do
     t.string  "coverage"
     t.boolean "emergency_use"
     t.boolean "home_use"
+    t.text    "options"
   end
 
   create_table "jurisdictions", :force => true do |t|

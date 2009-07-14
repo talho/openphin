@@ -111,4 +111,11 @@ class UsersController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def confirm
+    if u=User.find_by_id_and_token(params[:user_id], params[:token])
+      u.confirm_email!
+    else
+    end
+  end
 end

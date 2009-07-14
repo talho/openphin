@@ -22,10 +22,11 @@ Feature: Signing up for an account
       | Preferred language | English      |
     Then I should see "Successfully added your account"
     And "john@example.com" should have the "Public" role for "Dallas County"
-    And I should have the communication device
+    And "john@example.com" should have the communication device
       | Email | john@example.com | 
-    And I should receive an email confirmation at "john@example.com"
-
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
        
   Scenario: Signing up as a public health professionals
     Given I'm visiting the site

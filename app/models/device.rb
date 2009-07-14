@@ -14,6 +14,8 @@
 
 class Device < ActiveRecord::Base
   belongs_to :user
+  
+  named_scope :email, :conditions => "type = 'Devices::EmailDevice'"
 
   def parent
     :user

@@ -25,6 +25,7 @@
 class User < ActiveRecord::Base
   include Clearance::User
   
+  has_many :devices
   has_many :role_memberships
   has_and_belongs_to_many :organizations
   has_many :jurisdictions, :through => :role_memberships 
@@ -37,6 +38,10 @@ class User < ActiveRecord::Base
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title
   
   before_create :generate_oid
+  before_create :set_confirmation_token
+  before_create :create_default_email_device
+
+  after_create :send_confirmation_email
   
   def name
     first_name + " " + last_name
@@ -100,5 +105,17 @@ private
   def generate_oid
     self[:phin_oid] = email.to_phin_oid
   end
-
+  
+  def create_default_email_device  
+    email = Devices::EmailDevice.new(:email_address => self.email)
+    devices << email
+  end
+  
+  def send_confirmation_email
+    SignupMailer.deliver_confirmation(self)
+  end
+  
+  def set_confirmation_token
+    self.token = ActiveSupport::SecureRandom.hex
+  end
 end
