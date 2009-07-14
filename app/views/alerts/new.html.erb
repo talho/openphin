@@ -1,3 +1,18 @@
 <% form_for @alert do |f|%>
   
+
+  <fieldset>
+    <legend>Jurisdictions</legend>
+    <%= f.select :jurisdictions, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple   %>
+  </fieldset>
+
+  <fieldset>
+    <legend>Limit to Certain Roles</legend>
+    <%= f.select :roles, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+  </fieldset>
+  
+  <fieldset>
+    <legend>Limit to Certain Organizations</legend>
+    <%= f.select :organizations, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+  </fieldset>
 <% end %>
