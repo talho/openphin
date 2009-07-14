@@ -9,6 +9,8 @@ ActionController::Routing::Routes.draw do |map|
     person.resource :phin_person_profile, :as => "profile"
   end
   map.resources :phin_roles
+  
+  map.resources :alerts
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -9,9 +9,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090713195525) do
+ActiveRecord::Schema.define(:version => 20090714153241) do
 
-  create_table "contacts", :force => true do |t|
+  create_table "alerts", :force => true do |t|
+    t.string   "title"
+    t.text     "message"
+    t.string   "severety"
+    t.string   "status"
+    t.boolean  "acknowledge"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -48,13 +53,17 @@ ActiveRecord::Schema.define(:version => 20090713195525) do
   end
 
   create_table "phin_jurisdictions_phin_people", :force => true do |t|
-    t.integer "phin_person_id"
-    t.integer "phin_jurisdiction_id"
+    t.integer  "phin_person_id"
+    t.integer  "phin_jurisdiction_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "phin_organizations_phin_people", :force => true do |t|
-    t.integer "phin_person_id"
-    t.integer "phin_organization_id"
+    t.integer  "phin_person_id"
+    t.integer  "phin_organization_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "phin_people", :force => true do |t|
@@ -98,12 +107,17 @@ ActiveRecord::Schema.define(:version => 20090713195525) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "approval_required"
+    t.boolean  "alerter"
   end
 
-  create_table "role_memberships", :id => false, :force => true do |t|
-    t.integer "phin_role_id"
-    t.integer "phin_person_id"
-    t.integer "phin_jurisdiction_id"
+  add_index "phin_roles", ["alerter"], :name => "index_phin_roles_on_alerter"
+
+  create_table "role_memberships", :force => true do |t|
+    t.integer  "phin_role_id"
+    t.integer  "phin_person_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "phin_jurisdiction_id"
   end
 
   create_table "role_requests", :force => true do |t|

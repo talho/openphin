@@ -11,6 +11,9 @@ module NavigationHelpers
     when /the homepage/
       '/'
     
+    when 'the Alerts page'
+      alerts_path
+      
     # Add more mappings here.
     # Here is a more fancy example:
     #

@@ -23,9 +23,9 @@ Feature: Creating and sending alerts
       | Brandon Keepers | branon.keepers@example.com | Health Officer  | Texas          |
 
     And I am logged in as "john.smith@example.com"
-    And I can send alerts
+    And I am allowed to send alerts
     When I go to the Alerts page
-    And I click "New Alert"
+    And I follow "New Alert"
       
   Scenario: Sending a custom alert directly to a person
     When I fill out the alert form with:

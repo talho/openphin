@@ -33,3 +33,11 @@ Given 'the following people exist:' do |table|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
   end
 end
+
+Given 'I am logged in as "$email"' do |email|
+  @current_user = Factory(:phin_person, :email => email)
+end
+
+Given 'I am allowed to send alerts' do
+  @current_user.role_memberships(:phin_role => Factory(:phin_role, :alerter => true), :phin_jurisdiction => Factory(:phin_jurisdiction))
+end
