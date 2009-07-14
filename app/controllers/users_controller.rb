@@ -45,6 +45,9 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     @user = User.new(params[:user])
+    role_membership=@user.role_memberships.build(params[:role_membership])
+    role_membership.role=Role.find_by_name("Public")
+   
     respond_to do |format|
       if @user.save
         flash[:notice] = 'Successfully added your account'

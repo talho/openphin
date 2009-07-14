@@ -21,7 +21,7 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
   
-  <% f.fields_for :role_membership, RoleMembership.new do |r| %>
+  <% fields_for :role_membership, RoleMembership.new do |r| %>
     <%= r.label :jurisdiction_id,  "What County are you in?" %><br/>
     <%= r.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
   <% end %>
