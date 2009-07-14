@@ -43,18 +43,38 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And "keith@gaddis@example.com" should receive the email:
+    And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
       | body contains | Type: Alert    |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
       
-  Scenario: Sending a sensitive alert should not display body or title
-    When 
-  
-  Scenario: Sending an alert with specified Roles/Jurisdictions scopes alerts to those Roles/Jurisdictions
-  
+  Scenario: Sending a sensitive email alert
+    When I fill out the alert form with:
+      | People | Keith Gaddis |
+      | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Body   | For more details, keep on reading... |
+      | Severity | Moderate |
+      | Status | Actual |
+      | Acknowledgement | <unchecked> |
+      | Communication methods | Email |
+      | Sensitive | <checked> |
+      
+    And I click "Preview Message"
+    Then I should see a preview of the message
+
+    When I click "Send"
+    Then I should see "Successfully sent the alert"
+    And I should be at the logs page
+    And "keith.gaddis@example.com" should receive the email:
+      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
+      | body contains | Status: Actual |
+      | body contains | Type: Alert    |
+      | body contains | Sensitive: use secure means of retrieval |
+      | body does not contain | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body does not contain | For more details, keep on reading... |
+    
   Scenario: Sending an alert to an Organizations sends alerts to all people within those organizations
   
   Scenario: Sending an alert to specific people sends alerts to each person
