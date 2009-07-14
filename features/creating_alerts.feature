@@ -21,22 +21,21 @@ Feature: Creating and sending alerts
       | Keith Gaddis    | keith.gaddis@example.com   | Epidemiologist  | Wise County    |
       | Jason Phipps    | jason.phipps@example.com   | WMD Coordinator | Potter County  |
       | Brandon Keepers | branon.keepers@example.com | Health Officer  | Texas          |
-      
-  Scenario: Sending a custom alert directly to a person
-    Given I am logged in as "john.smith@example.com"
+
+    And I am logged in as "john.smith@example.com"
     And I can send alerts
     When I go to the Alerts page
     And I click "New Alert"
-
-    And I select the People
-      | Keith Gaddis |
-    And I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-    And I fill in "Body" with "For more details, keep on reading..."
-    And I select "Moderate" from "Severity"
-    And I select "Actual" from "Status"
-    And I uncheck "Acknowledgement"
-    And I select the following communication methods:
-      | Email |
+      
+  Scenario: Sending a custom alert directly to a person
+    When I fill out the alert form with:
+      | People | Keith Gaddis |
+      | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Body   | For more details, keep on reading... |
+      | Severity | Moderate |
+      | Status | Actual |
+      | Acknowledgement | <unchecked> |
+      | Communication methods | Email |
       
     And I click "Preview Message"
     Then I should see a preview of the message
@@ -51,7 +50,8 @@ Feature: Creating and sending alerts
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
       
-  Scenario: Sending a sensitive alert
+  Scenario: Sending a sensitive alert should not display body or title
+    When 
   
   Scenario: Sending an alert with specified Roles/Jurisdictions scopes alerts to those Roles/Jurisdictions
   
