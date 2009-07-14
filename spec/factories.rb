@@ -23,6 +23,7 @@ Factory.sequence(:username) {|i| "user#{i}" }
 Factory.define :phin_person do |pp|
   pp.first_name Factory.next(:username)
   pp.last_name "Smith"
+  pp.display_name {|p| "#{p.first_name} #{p.last_name}"}
   pp.email {|p| "#{p.first_name}@example.com"}
   pp.password              { "password" }
   pp.password_confirmation { "password" }

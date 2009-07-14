@@ -19,14 +19,14 @@
 
 =end
 
-Given 'an organization named $name' do |name|
+Given /^a[n]? organization named (\w+)$/ do |name|
   Factory(:phin_organization, :name => name)
 end
 
 Given 'a jurisdiction named $name' do |name|
-  Factory(:phin_jurisdiction, :name => name)
+  PhinJurisdiction.find_by_name(name) || Factory(:phin_jurisdiction, :name => name)
 end
 
 Given 'a role named $name' do |name|
-  Factory(:phin_role, :name => name)
+  PhinRole.find_by_name(name) || Factory(:phin_role, :name => name)
 end

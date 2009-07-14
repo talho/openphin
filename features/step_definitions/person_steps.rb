@@ -21,3 +21,15 @@ Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role
   m = p.role_memberships.find_by_phin_role_id_and_phin_jurisdiction_id(r.id, j.id)
   m.should_not be_nil
 end
+
+Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
+  first_name, last_name = name.split
+  user = Factory(:phin_person, :email => email, :first_name => first_name, :last_name => last_name)
+  user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
+end
+
+Given 'the following people exist:' do |table|
+  table.rows.each do |row|
+    Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
+  end
+end

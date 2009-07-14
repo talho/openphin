@@ -11,6 +11,11 @@
 
 ActiveRecord::Schema.define(:version => 20090713195525) do
 
+  create_table "contacts", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "devices", :force => true do |t|
     t.integer "phin_person_id"
     t.string  "type"
@@ -43,17 +48,13 @@ ActiveRecord::Schema.define(:version => 20090713195525) do
   end
 
   create_table "phin_jurisdictions_phin_people", :force => true do |t|
-    t.integer  "phin_person_id"
-    t.integer  "phin_jurisdiction_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "phin_person_id"
+    t.integer "phin_jurisdiction_id"
   end
 
   create_table "phin_organizations_phin_people", :force => true do |t|
-    t.integer  "phin_person_id"
-    t.integer  "phin_organization_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "phin_person_id"
+    t.integer "phin_organization_id"
   end
 
   create_table "phin_people", :force => true do |t|
@@ -99,12 +100,10 @@ ActiveRecord::Schema.define(:version => 20090713195525) do
     t.boolean  "approval_required"
   end
 
-  create_table "role_memberships", :force => true do |t|
-    t.integer  "phin_role_id"
-    t.integer  "phin_person_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "phin_jurisdiction_id"
+  create_table "role_memberships", :id => false, :force => true do |t|
+    t.integer "phin_role_id"
+    t.integer "phin_person_id"
+    t.integer "phin_jurisdiction_id"
   end
 
   create_table "role_requests", :force => true do |t|
