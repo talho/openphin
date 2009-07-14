@@ -57,8 +57,7 @@ Feature: Signing up for an account
     Given There is no account for "john@example.com"
     When I sign up for an account as "john@example.com"
     Then I should receive an email confirmation at "john@example.com"
-    And my account is pending
-    
+    And my account is pending    
     When I click the confirmation link in the email
     Then I should see "Thanks, you've been confirmed!"
     And my account is active

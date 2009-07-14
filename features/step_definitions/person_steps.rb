@@ -13,3 +13,7 @@ When 'I signup for an account with the following info:' do |table|
   
   click_button 'Save'
 end
+
+Then 'I should have the "$role" role' do |role|
+
+end
