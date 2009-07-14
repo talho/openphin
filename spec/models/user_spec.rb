@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer         not null, primary key
+#  last_name          :string(255)
+#  phin_oid           :string(255)
+#  description        :text
+#  display_name       :string(255)
+#  first_name         :string(255)
+#  email              :string(255)
+#  preferred_language :string(255)
+#  title              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(128)
+#  salt               :string(128)
+#  token              :string(128)
+#  token_expires_at   :datetime
+#  email_confirmed    :boolean         not null
+#
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe User do

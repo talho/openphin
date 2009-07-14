@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: role_requests
+#
+#  id              :integer         not null, primary key
+#  requester_id    :string(255)
+#  role_id         :string(255)
+#  approver_id     :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  jurisdiction_id :integer
+#
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RoleRequest do
