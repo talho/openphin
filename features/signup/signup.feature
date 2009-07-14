@@ -9,7 +9,7 @@ Feature: Signing up for an account
     Given an organization named Red Cross
     And a jurisdiction named Dallas County
     And a role named Public
-    And a role named Health Alert & Communications Coordinator
+    And a role named Health Alert and Communications Coordinator
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
@@ -44,7 +44,6 @@ Feature: Signing up for an account
       | Last name can't be blank |
        
   Scenario: Signing up as a public health professionals
-    Given I'm visiting the site
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | apples           |
@@ -52,13 +51,16 @@ Feature: Signing up for an account
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | Organization   | Red Cross        |
-      | Jurisdiction   | Dallas County    |
-      | Role           | Health Alert & Communications Coordinator |
+      | Are you with any of these organizations | Red Cross        |
+      | What County    | Dallas County    |
+      | What is your role within the health department | Health Alert and Communications Coordinator |
       | Preferred language | English      |
     Then I should see "Successfully added your account"
-    And I should receive an email confirmation at "john@example.com"
-    And I should have the "Health Alert & Communications Coordinator" role    
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+    And "john@example.com" should have the "Public" role for "Dallas County"
+    And "john@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
     And the "Dallas County" administrators are notified that "john@example.com" has signed up
 
     Given I have confirmed my account for "john@example.com"

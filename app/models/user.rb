@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids
   
   before_create :generate_oid
   before_create :set_confirmation_token

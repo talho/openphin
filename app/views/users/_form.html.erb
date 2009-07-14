@@ -24,6 +24,14 @@
   <% fields_for :role_membership, RoleMembership.new do |r| %>
     <%= r.label :jurisdiction_id,  "What County are you in?" %><br/>
     <%= r.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
+    <%= label_tag "health_professional", "Are you a public health professional?" %>
+    <%= check_box_tag "health_professional" %> 
+    <div class='health'>
+      <%= r.label :role_id, "What is your role within the health department?" %><br/>
+      <%= r.collection_select :role_id, Role.all, :id, :name, :include_blank => true %><br/>
+      <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
+      <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
+    </div>
   <% end %>
   <div id="role_list">
     <ul>

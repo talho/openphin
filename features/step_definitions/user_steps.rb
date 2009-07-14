@@ -5,13 +5,14 @@ When 'I signup for an account with the following info:' do |table|
     case field
     when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
       fill_in field, :with => value
-    when 'What County', 'Preferred language'
-      select value, :from => field
+    when 'What County', 'Preferred language', 
+      'What is your role within the health department', 
+      'Are you with any of these organizations'
+        select value, :from => field
     else
       raise "Unknown field: #{field}: Please update this step if you intended to use this field."
     end
   end
-  
   click_button 'Save'
 end
 
