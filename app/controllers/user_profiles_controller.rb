@@ -1,8 +1,8 @@
-class PhinPersonProfilesController < ApplicationController
+class UserProfilesController < ApplicationController
   # GET /phin_person_profiles
   # GET /phin_person_profiles.xml
   def index
-    @phin_person_profiles = PhinPersonProfile.all
+    @phin_person_profiles = UserProfile.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class PhinPersonProfilesController < ApplicationController
   # GET /phin_person_profiles/1
   # GET /phin_person_profiles/1.xml
   def show
-    @phin_person_profile = PhinPersonProfile.find(params[:id])
+    @phin_person_profile = UserProfile.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,9 +25,9 @@ class PhinPersonProfilesController < ApplicationController
   # GET /phin_person_profiles/new.xml
   def new
     if params[:phin_person_id]
-      @phin_person_profile = PhinPerson.find(params[:phin_person_id]).build_profile
+      @phin_person_profile = User.find(params[:phin_person_id]).build_profile
     end
-    @phin_person_profile ||= PhinPersonProfile.new
+    @phin_person_profile ||= UserProfile.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,13 +37,13 @@ class PhinPersonProfilesController < ApplicationController
 
   # GET /phin_person_profiles/1/edit
   def edit
-    @phin_person_profile = PhinPersonProfile.find(params[:id])
+    @phin_person_profile = UserProfile.find(params[:id])
   end
 
   # POST /phin_person_profiles
   # POST /phin_person_profiles.xml
   def create
-    @phin_person_profile = PhinPersonProfile.new(params[:phin_person_profile])
+    @phin_person_profile = UserProfile.new(params[:phin_person_profile])
 
     respond_to do |format|
       if @phin_person_profile.save
@@ -60,7 +60,7 @@ class PhinPersonProfilesController < ApplicationController
   # PUT /phin_person_profiles/1
   # PUT /phin_person_profiles/1.xml
   def update
-    @phin_person_profile = PhinPersonProfile.find(params[:id])
+    @phin_person_profile = UserProfile.find(params[:id])
 
     respond_to do |format|
       if @phin_person_profile.update_attributes(params[:phin_person_profile])
@@ -77,7 +77,7 @@ class PhinPersonProfilesController < ApplicationController
   # DELETE /phin_person_profiles/1
   # DELETE /phin_person_profiles/1.xml
   def destroy
-    @phin_person_profile = PhinPersonProfile.find(params[:id])
+    @phin_person_profile = UserProfile.find(params[:id])
     @phin_person_profile.destroy
 
     respond_to do |format|

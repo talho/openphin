@@ -1,8 +1,8 @@
-class PhinRolesController < ApplicationController
+class RolesController < ApplicationController
   # GET /phin_roles
   # GET /phin_roles.xml
   def index
-    @phin_roles = PhinRole.all
+    @phin_roles = Role.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class PhinRolesController < ApplicationController
   # GET /phin_roles/1
   # GET /phin_roles/1.xml
   def show
-    @phin_role = PhinRole.find(params[:id])
+    @phin_role = Role.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,7 +24,7 @@ class PhinRolesController < ApplicationController
   # GET /phin_roles/new
   # GET /phin_roles/new.xml
   def new
-    @phin_role = PhinRole.new
+    @phin_role = Role.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +34,13 @@ class PhinRolesController < ApplicationController
 
   # GET /phin_roles/1/edit
   def edit
-    @phin_role = PhinRole.find(params[:id])
+    @phin_role = Role.find(params[:id])
   end
 
   # POST /phin_roles
   # POST /phin_roles.xml
   def create
-    @phin_role = PhinRole.new(params[:phin_role])
+    @phin_role = Role.new(params[:phin_role])
 
     respond_to do |format|
       if @phin_role.save
@@ -57,7 +57,7 @@ class PhinRolesController < ApplicationController
   # PUT /phin_roles/1
   # PUT /phin_roles/1.xml
   def update
-    @phin_role = PhinRole.find(params[:id])
+    @phin_role = Role.find(params[:id])
 
     respond_to do |format|
       if @phin_role.update_attributes(params[:phin_role])
@@ -74,7 +74,7 @@ class PhinRolesController < ApplicationController
   # DELETE /phin_roles/1
   # DELETE /phin_roles/1.xml
   def destroy
-    @phin_role = PhinRole.find(params[:id])
+    @phin_role = Role.find(params[:id])
     @phin_role.destroy
 
     respond_to do |format|

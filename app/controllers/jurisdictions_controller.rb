@@ -1,8 +1,8 @@
-class PhinJurisdictionsController < ApplicationController
+class JurisdictionsController < ApplicationController
   # GET /phin_jurisdictions
   # GET /phin_jurisdictions.xml
   def index
-    @phin_jurisdictions = PhinJurisdiction.all
+    @phin_jurisdictions = Jurisdiction.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class PhinJurisdictionsController < ApplicationController
   # GET /phin_jurisdictions/1
   # GET /phin_jurisdictions/1.xml
   def show
-    @phin_jurisdiction = PhinJurisdiction.find(params[:id])
+    @phin_jurisdiction = Jurisdiction.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,7 +24,7 @@ class PhinJurisdictionsController < ApplicationController
   # GET /phin_jurisdictions/new
   # GET /phin_jurisdictions/new.xml
   def new
-    @phin_jurisdiction = PhinJurisdiction.new
+    @phin_jurisdiction = Jurisdiction.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +34,13 @@ class PhinJurisdictionsController < ApplicationController
 
   # GET /phin_jurisdictions/1/edit
   def edit
-    @phin_jurisdiction = PhinJurisdiction.find(params[:id])
+    @phin_jurisdiction = Jurisdiction.find(params[:id])
   end
 
   # POST /phin_jurisdictions
   # POST /phin_jurisdictions.xml
   def create
-    @phin_jurisdiction = PhinJurisdiction.new(params[:phin_jurisdiction])
+    @phin_jurisdiction = Jurisdiction.new(params[:phin_jurisdiction])
 
     respond_to do |format|
       if @phin_jurisdiction.save
@@ -57,7 +57,7 @@ class PhinJurisdictionsController < ApplicationController
   # PUT /phin_jurisdictions/1
   # PUT /phin_jurisdictions/1.xml
   def update
-    @phin_jurisdiction = PhinJurisdiction.find(params[:id])
+    @phin_jurisdiction = Jurisdiction.find(params[:id])
     
     respond_to do |format|
       if @phin_jurisdiction.update_attributes(params[:phin_jurisdiction])
@@ -65,7 +65,7 @@ class PhinJurisdictionsController < ApplicationController
           if params[:phin_jurisdiction][:parent_id].empty?
             @phin_jurisdiction.move_to_root
           else
-            @phin_jurisdiction.move_to_child_of(PhinJurisdiction.find(params[:phin_jurisdiction][:parent_id]))
+            @phin_jurisdiction.move_to_child_of(Jurisdiction.find(params[:phin_jurisdiction][:parent_id]))
           end
         end
         flash[:notice] = 'PhinJurisdiction was successfully updated.'
@@ -81,7 +81,7 @@ class PhinJurisdictionsController < ApplicationController
   # DELETE /phin_jurisdictions/1
   # DELETE /phin_jurisdictions/1.xml
   def destroy
-    @phin_jurisdiction = PhinJurisdiction.find(params[:id])
+    @phin_jurisdiction = Jurisdiction.find(params[:id])
     @phin_jurisdiction.destroy
 
     respond_to do |format|

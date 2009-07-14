@@ -1,4 +1,4 @@
-class PhinPeopleController < ApplicationController
+class UsersController < ApplicationController
   #auto_complete_for :phin_person, :first_name
   #auto_complete_for :phin_person, :display_name
   #auto_complete_for :phin_person, :last_name
@@ -6,7 +6,7 @@ class PhinPeopleController < ApplicationController
   # GET /phin_people
   # GET /phin_people.xml
   def index
-    @phin_people = PhinPerson.all
+    @phin_people = User.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,7 +17,7 @@ class PhinPeopleController < ApplicationController
   # GET /phin_people/1
   # GET /phin_people/1.xml
   def show
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = User.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,7 +28,7 @@ class PhinPeopleController < ApplicationController
   # GET /phin_people/new
   # GET /phin_people/new.xml
   def new
-    @phin_person = PhinPerson.new
+    @phin_person = User.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -38,13 +38,13 @@ class PhinPeopleController < ApplicationController
 
   # GET /phin_people/1/edit
   def edit
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = User.find(params[:id])
   end
 
   # POST /phin_people
   # POST /phin_people.xml
   def create
-    @phin_person = PhinPerson.new(params[:phin_person])
+    @phin_person = User.new(params[:phin_person])
     respond_to do |format|
       if @phin_person.save
         flash[:notice] = 'Successfully added your account'
@@ -60,7 +60,7 @@ class PhinPeopleController < ApplicationController
   # PUT /phin_people/1
   # PUT /phin_people/1.xml
   def update
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = User.find(params[:id])
     if @phin_person.update_attributes(params[:phin_person])
       roles=params[:phin_roles]
       roles.each_value do |r|
@@ -86,7 +86,7 @@ class PhinPeopleController < ApplicationController
     end
     respond_to do |format|
       if @phin_person.valid?
-        flash[:notice]= 'PhinPerson was successfully updated.'
+        flash[:notice]= 'User was successfully updated.'
         #TODO Fix redirect_to to accept ActiveLdap object
         format.html { redirect_to(@phin_person) }
         format.xml  { render :xml => @phin_person, :status => :updated, :location => @phin_person }
@@ -100,7 +100,7 @@ class PhinPeopleController < ApplicationController
   # DELETE /phin_people/1
   # DELETE /phin_people/1.xml
   def destroy
-    @phin_person = PhinPerson.find(params[:id])
+    @phin_person = User.find(params[:id])
     @phin_person.destroy
 
     respond_to do |format|
