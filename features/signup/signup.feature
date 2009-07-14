@@ -12,7 +12,6 @@ Feature: Signing up for an account
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
-      | field          | value            |
       | E-mail         | john@example.com |
       | Password       | apples           |
       | Password confirmation | apples    |
