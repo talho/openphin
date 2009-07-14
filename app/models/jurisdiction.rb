@@ -1,8 +1,8 @@
-class PhinJurisdiction < ActiveRecord::Base
+class Jurisdiction < ActiveRecord::Base
    acts_as_nested_set
 
   def parent
-    PhinJurisdiction.find(parent_id) unless !PhinJurisdiction.exists?(parent_id)
+    Jurisdiction.find(parent_id) unless !Jurisdiction.exists?(parent_id)
   end
 
    def to_dsml(builder=nil)
@@ -12,7 +12,7 @@ class PhinJurisdiction < ActiveRecord::Base
         ocv="oc-value".to_sym
         oc.dsml ocv, "top"
         oc.dsml ocv, "organizationalUnit"
-        oc.dsml ocv, "PhinOrganization"
+        oc.dsml ocv, "Organization"
       end
       entry.dsml(:attr, :name => :cn) {|a| a.dsml :value, cn}
       entry.dsml(:attr, :name => :externalUID) {|a| a.dsml :value, externalUID}

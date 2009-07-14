@@ -20,7 +20,7 @@
 =end
 require 'factory_girl'
 Factory.sequence(:username) {|i| "user#{i}" }
-Factory.define :phin_person do |pp|
+Factory.define :user do |pp|
   pp.first_name Factory.next(:username)
   pp.last_name "Smith"
   pp.display_name {|p| "#{p.first_name} #{p.last_name}"}
@@ -31,15 +31,15 @@ Factory.define :phin_person do |pp|
 end
 
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
-Factory.define :phin_jurisdiction do |jur|
+Factory.define :jurisdiction do |jur|
   jur.name Factory.next(:jurisdiction_name)
 
 end
-Factory.define :phin_organization do |org|
+Factory.define :organization do |org|
   org.name Factory.next(:jurisdiction_name)
 end
 Factory.sequence(:rolename) {|r| "role#{r}"}
-Factory.define :phin_role do |pr|
+Factory.define :role do |pr|
   pr.name Factory.next(:rolename)
   pr.approval_required false
 end

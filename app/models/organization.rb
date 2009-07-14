@@ -1,6 +1,5 @@
-class PhinOrganization < PhinJurisdiction
-  belongs_to :internal_jurisdiction, :class_name => "PhinJurisdiction"
-  has_and_belongs_to_many :phin_people
+class Organization < Jurisdiction
+  has_and_belongs_to_many :users
   
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
@@ -9,7 +8,7 @@ class PhinOrganization < PhinJurisdiction
         ocv="oc-value".to_sym
         oc.dsml ocv, "top"
         oc.dsml ocv, "organizationalUnit"
-        oc.dsml ocv, "PhinOrganization"
+        oc.dsml ocv, "Organization"
       end
       entry.dsml(:attr, :name => :cn) {|a| a.dsml :value, cn}
       entry.dsml(:attr, :name => :externalUID) {|a| a.dsml :value, externalUID}

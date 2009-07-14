@@ -1,87 +1,87 @@
 class UserProfilesController < ApplicationController
-  # GET /phin_person_profiles
-  # GET /phin_person_profiles.xml
+  # GET /user_profiles
+  # GET /user_profiles.xml
   def index
-    @phin_person_profiles = UserProfile.all
+    @user_profiles = UserProfile.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @phin_person_profiles }
+      format.xml  { render :xml => @user_profiles }
     end
   end
 
-  # GET /phin_person_profiles/1
-  # GET /phin_person_profiles/1.xml
+  # GET /user_profiles/1
+  # GET /user_profiles/1.xml
   def show
-    @phin_person_profile = UserProfile.find(params[:id])
+    @user_profile = UserProfile.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @phin_person_profile }
+      format.xml  { render :xml => @user_profile }
     end
   end
 
-  # GET /phin_person_profiles/new
-  # GET /phin_person_profiles/new.xml
+  # GET /user_profiles/new
+  # GET /user_profiles/new.xml
   def new
-    if params[:phin_person_id]
-      @phin_person_profile = User.find(params[:phin_person_id]).build_profile
+    if params[:user_id]
+      @user_profile = User.find(params[:user_id]).build_profile
     end
-    @phin_person_profile ||= UserProfile.new
+    @user_profile ||= UserProfile.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @phin_person_profile }
+      format.xml  { render :xml => @user_profile }
     end
   end
 
-  # GET /phin_person_profiles/1/edit
+  # GET /user_profiles/1/edit
   def edit
-    @phin_person_profile = UserProfile.find(params[:id])
+    @user_profile = UserProfile.find(params[:id])
   end
 
-  # POST /phin_person_profiles
-  # POST /phin_person_profiles.xml
+  # POST /user_profiles
+  # POST /user_profiles.xml
   def create
-    @phin_person_profile = UserProfile.new(params[:phin_person_profile])
+    @user_profile = UserProfile.new(params[:user_profile])
 
     respond_to do |format|
-      if @phin_person_profile.save
-        flash[:notice] = 'PhinPersonProfile was successfully created.'
-        format.html { redirect_to(@phin_person_profile) }
-        format.xml  { render :xml => @phin_person_profile, :status => :created, :location => @phin_person_profile }
+      if @user_profile.save
+        flash[:notice] = 'UserProfile was successfully created.'
+        format.html { redirect_to(@user_profile) }
+        format.xml  { render :xml => @user_profile, :status => :created, :location => @user_profile }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @phin_person_profile.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user_profile.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /phin_person_profiles/1
-  # PUT /phin_person_profiles/1.xml
+  # PUT /user_profiles/1
+  # PUT /user_profiles/1.xml
   def update
-    @phin_person_profile = UserProfile.find(params[:id])
+    @user_profile = UserProfile.find(params[:id])
 
     respond_to do |format|
-      if @phin_person_profile.update_attributes(params[:phin_person_profile])
-        flash[:notice] = 'PhinPersonProfile was successfully updated.'
-        format.html { redirect_to(@phin_person_profile) }
+      if @user_profile.update_attributes(params[:user_profile])
+        flash[:notice] = 'UserProfile was successfully updated.'
+        format.html { redirect_to(@user_profile) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @phin_person_profile.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user_profile.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /phin_person_profiles/1
-  # DELETE /phin_person_profiles/1.xml
+  # DELETE /user_profiles/1
+  # DELETE /user_profiles/1.xml
   def destroy
-    @phin_person_profile = UserProfile.find(params[:id])
-    @phin_person_profile.destroy
+    @user_profile = UserProfile.find(params[:id])
+    @user_profile.destroy
 
     respond_to do |format|
-      format.html { redirect_to(phin_person_profiles_url) }
+      format.html { redirect_to(user_profiles_url) }
       format.xml  { head :ok }
     end
   end

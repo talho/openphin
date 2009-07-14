@@ -18,7 +18,7 @@ Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role
   p=User.find_by_email!(email)
   j = Jurisdiction.find_by_name!(jurisdiction)
   r = Role.find_by_name!(role)
-  m = p.role_memberships.find_by_phin_role_id_and_phin_jurisdiction_id(r.id, j.id)
+  m = p.role_memberships.find_by_role_id_and_jurisdiction_id(r.id, j.id)
   m.should_not be_nil
 end
 

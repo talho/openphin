@@ -1,19 +1,19 @@
-<h1>Listing phin_jurisdictions</h1>
+<h1>Listing jurisdictions</h1>
 
 <table>
   <tr>
   </tr>
 
-<% @phin_jurisdictions.each do |phin_jurisdiction| %>
+<% @jurisdictions.each do |jurisdiction| %>
   <tr>
-    <td><%= phin_jurisdiction.name %></td>
-    <td><%= link_to 'Show', phin_jurisdiction %></td>
-    <td><%= link_to 'Edit', edit_phin_jurisdiction_path(phin_jurisdiction) %></td>
-    <td><%= link_to 'Destroy', phin_jurisdiction, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= jurisdiction.name %></td>
+    <td><%= link_to 'Show', jurisdiction %></td>
+    <td><%= link_to 'Edit', edit_jurisdiction_path(jurisdiction) %></td>
+    <td><%= link_to 'Destroy', jurisdiction, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New phin_jurisdiction', new_phin_jurisdiction_path %>
+<%= link_to 'New jurisdiction', new_jurisdiction_path %>

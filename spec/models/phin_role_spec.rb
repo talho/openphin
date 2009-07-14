@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe PhinRole do
+describe Role do
   before(:each) do
     @valid_attributes = {
       :name => "value for name",
@@ -9,6 +9,6 @@ describe PhinRole do
   end
 
   it "should create a new instance given valid attributes" do
-    PhinRole.create!(@valid_attributes)
+    Role.create!(@valid_attributes)
   end
 end

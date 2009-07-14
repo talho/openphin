@@ -1,3 +1,3 @@
-class PhinPersonProfile < ActiveRecord::Base
-  belongs_to :phin_person
+class UserProfile < ActiveRecord::Base
+  belongs_to :user
 end

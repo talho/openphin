@@ -1,5 +1,5 @@
 class RoleMembership < ActiveRecord::Base
-  belongs_to :phin_role
-  belongs_to :phin_jurisdiction
-  belongs_to :phin_person
+  belongs_to :role
+  belongs_to :jurisdiction
+  belongs_to :user
 end

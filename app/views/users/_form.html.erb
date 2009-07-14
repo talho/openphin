@@ -1,4 +1,4 @@
-<% form_for(@phin_person) do |f| %>
+<% form_for(@user) do |f| %>
   <%= f.error_messages %><br/>
   <%= f.label(:first_name, "First Name") %><br/>
   <%= f.text_field(:first_name) %><br/>
@@ -22,20 +22,20 @@
   <%= f.text_field(:title) %><br/>
   
   <% f.fields_for :role_membership, RoleMembership.new do |r| %>
-    <%= r.label :phin_jurisdiction_id,  "What County are you in?" %><br/>
-    <%= r.collection_select :phin_jurisdiction_id, PhinJurisdiction.all, :id, :name, :include_blank => true %><br/>
+    <%= r.label :jurisdiction_id,  "What County are you in?" %><br/>
+    <%= r.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
   <% end %>
-  <div id="phin_role_list">
+  <div id="role_list">
     <ul>
-      <%= javascript_tag "var role_ct=#{@phin_person.phin_roles.length};" %>
-      <% @phin_person.role_memberships.each_with_index do |role, role_index| %>
-          <% fields_for("phin_roles[#{role_index}]") do |role_fields| %>
-            <li id="phin_roles_<%= role_index %>">
+      <%= javascript_tag "var role_ct=#{@user.roles.length};" %>
+      <% @user.role_memberships.each_with_index do |role, role_index| %>
+          <% fields_for("roles[#{role_index}]") do |role_fields| %>
+            <li id="roles_<%= role_index %>">
               <%= role_fields.hidden_field :id, :value => role.id, :role_arr_id => role_index %>
-              <%= role_fields.hidden_field :role_id, :value => role.phin_role.id, :role_arr_id => role_index %>
-              <%= role_fields.hidden_field :jurisdiction_id, :value => role.phin_jurisdiction ? role.phin_jurisdiction.id : nil,
+              <%= role_fields.hidden_field :role_id, :value => role.role.id, :role_arr_id => role_index %>
+              <%= role_fields.hidden_field :jurisdiction_id, :value => role.jurisdiction ? role.jurisdiction.id : nil,
                                            :role_arr_id => role_index %>              
-              <%= role.phin_role.name %> <%= "(#{role.phin_jurisdiction.name})" if role.phin_jurisdiction %>
+              <%= role.role.name %> <%= "(#{role.jurisdiction.name})" if role.jurisdiction %>
               <%= link_to_function "Remove", "remove_role(#{role_index})" %>
             </li>
           <% end %>

@@ -1,84 +1,84 @@
 class RolesController < ApplicationController
-  # GET /phin_roles
-  # GET /phin_roles.xml
+  # GET /roles
+  # GET /roles.xml
   def index
-    @phin_roles = Role.all
+    @roles = Role.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @phin_roles }
+      format.xml  { render :xml => @roles }
     end
   end
 
-  # GET /phin_roles/1
-  # GET /phin_roles/1.xml
+  # GET /roles/1
+  # GET /roles/1.xml
   def show
-    @phin_role = Role.find(params[:id])
+    @role = Role.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @phin_role }
+      format.xml  { render :xml => @role }
     end
   end
 
-  # GET /phin_roles/new
-  # GET /phin_roles/new.xml
+  # GET /roles/new
+  # GET /roles/new.xml
   def new
-    @phin_role = Role.new
+    @role = Role.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @phin_role }
+      format.xml  { render :xml => @role }
     end
   end
 
-  # GET /phin_roles/1/edit
+  # GET /roles/1/edit
   def edit
-    @phin_role = Role.find(params[:id])
+    @role = Role.find(params[:id])
   end
 
-  # POST /phin_roles
-  # POST /phin_roles.xml
+  # POST /roles
+  # POST /roles.xml
   def create
-    @phin_role = Role.new(params[:phin_role])
+    @role = Role.new(params[:role])
 
     respond_to do |format|
-      if @phin_role.save
-        flash[:notice] = 'PhinRole was successfully created.'
-        format.html { redirect_to(@phin_role) }
-        format.xml  { render :xml => @phin_role, :status => :created, :location => @phin_role }
+      if @role.save
+        flash[:notice] = 'Role was successfully created.'
+        format.html { redirect_to(@role) }
+        format.xml  { render :xml => @role, :status => :created, :location => @role }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @phin_role.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @role.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /phin_roles/1
-  # PUT /phin_roles/1.xml
+  # PUT /roles/1
+  # PUT /roles/1.xml
   def update
-    @phin_role = Role.find(params[:id])
+    @role = Role.find(params[:id])
 
     respond_to do |format|
-      if @phin_role.update_attributes(params[:phin_role])
-        flash[:notice] = 'PhinRole was successfully updated.'
-        format.html { redirect_to(@phin_role) }
+      if @role.update_attributes(params[:role])
+        flash[:notice] = 'Role was successfully updated.'
+        format.html { redirect_to(@role) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @phin_role.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @role.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /phin_roles/1
-  # DELETE /phin_roles/1.xml
+  # DELETE /roles/1
+  # DELETE /roles/1.xml
   def destroy
-    @phin_role = Role.find(params[:id])
-    @phin_role.destroy
+    @role = Role.find(params[:id])
+    @role.destroy
 
     respond_to do |format|
-      format.html { redirect_to(phin_roles_url) }
+      format.html { redirect_to(roles_url) }
       format.xml  { head :ok }
     end
   end

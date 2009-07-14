@@ -20,13 +20,13 @@
 =end
 
 Given /^a[n]? organization named ([^\"]*)$/ do |name|
-  Factory(:phin_organization, :name => name)
+  Factory(:organization, :name => name)
 end
 
 Given 'a jurisdiction named $name' do |name|
-  PhinJurisdiction.find_by_name(name) || Factory(:phin_jurisdiction, :name => name)
+  Jurisdiction.find_by_name(name) || Factory(:jurisdiction, :name => name)
 end
 
 Given 'a role named $name' do |name|
-  PhinRole.find_by_name(name) || Factory(:phin_role, :name => name)
+  Role.find_by_name(name) || Factory(:role, :name => name)
 end

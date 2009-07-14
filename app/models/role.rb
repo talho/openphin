@@ -1,3 +1,3 @@
-class PhinRole < ActiveRecord::Base
+class Role < ActiveRecord::Base
   
 end

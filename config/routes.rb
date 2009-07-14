@@ -1,16 +1,15 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :phin_person_profiles, :as => "profile"
+  map.resources :user_profiles, :as => "profile"
 
-  map.resources :phin_jurisdictions
+  map.resources :jurisdictions
 
   map.resources :role_requests
 
-  map.resources :phin_people do |person|
-    person.resource :phin_person_profile, :as => "profile"
+  map.resources :users do |user|
+    user.resource :user_profile, :as => "profile"
   end
-  map.resources :phin_roles
-  
   map.resources :alerts
+  map.resources :roles
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -1,4 +1,4 @@
-<h1>Listing phin_roles</h1>
+<h1>Listing roles</h1>
 
 <table>
   <tr>
@@ -6,17 +6,17 @@
     <th>Approval required</th>
   </tr>
 
-<% @phin_roles.each do |phin_role| %>
+<% @roles.each do |role| %>
   <tr>
-    <td><%=h phin_role.name %></td>
-    <td><%=h phin_role.approval_required %></td>
-    <td><%= link_to 'Show', phin_role %></td>
-    <td><%= link_to 'Edit', edit_phin_role_path(phin_role) %></td>
-    <td><%= link_to 'Destroy', phin_role, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h role.name %></td>
+    <td><%=h role.approval_required %></td>
+    <td><%= link_to 'Show', role %></td>
+    <td><%= link_to 'Edit', edit_role_path(role) %></td>
+    <td><%= link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New phin_role', new_phin_role_path %>
+<%= link_to 'New role', new_role_path %>

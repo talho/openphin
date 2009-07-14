@@ -1,46 +1,46 @@
-<h3><%=@phin_jurisdiction.name %></h3>
+<h3><%=@jurisdiction.name %></h3>
 <div>
-  <b>Description</b>: <%= @phin_jurisdiction.description %>
+  <b>Description</b>: <%= @jurisdiction.description %>
 </div>
 <div>
-  <b>Fax</b>: <%= @phin_jurisdiction.fax %>
+  <b>Fax</b>: <%= @jurisdiction.fax %>
 </div>
 <div>
-  <b>City</b>: <%= @phin_jurisdiction.locality %>
+  <b>City</b>: <%= @jurisdiction.locality %>
 </div>
 <div>
-  <b>Zip Code</b>: <%= @phin_jurisdiction.postal_code %>
+  <b>Zip Code</b>: <%= @jurisdiction.postal_code %>
 </div>
 <div>
-  <b>State</b>: <%= @phin_jurisdiction.state %>
+  <b>State</b>: <%= @jurisdiction.state %>
 </div>
 <div>
-  <b>Street Address</b>: <%= @phin_jurisdiction.street %>
+  <b>Street Address</b>: <%= @jurisdiction.street %>
 </div>
 <div>
-  <b>Phone Number</b>: <%= @phin_jurisdiction.phone %>
+  <b>Phone Number</b>: <%= @jurisdiction.phone %>
 </div>
 <div>
-  <b>County</b>: <%= @phin_jurisdiction.county %>
+  <b>County</b>: <%= @jurisdiction.county %>
 </div>
 <div>
-  <b>Alerting Jurisdictions</b>: <%= @phin_jurisdiction.alerting_jurisdictions %>
+  <b>Alerting Jurisdictions</b>: <%= @jurisdiction.alerting_jurisdictions %>
 </div>
 <div>
-  <b>Primary Organization Type</b>: <%= @phin_jurisdiction.primary_organization_type %>
+  <b>Primary Organization Type</b>: <%= @jurisdiction.primary_organization_type %>
 </div>
-<h3><%= link_to 'Parent Jurisdiction', phin_jurisdiction_path(@phin_jurisdiction.parent) if !@phin_jurisdiction.root? %></h3>
-<% if !@phin_jurisdiction.leaf? %>
+<h3><%= link_to 'Parent Jurisdiction', jurisdiction_path(@jurisdiction.parent) if !@jurisdiction.root? %></h3>
+<% if !@jurisdiction.leaf? %>
   <div>
     <b>Child Jurisdictions<b>
     <ul>
-      <% @phin_jurisdiction.children.each do |child| %>
+      <% @jurisdiction.children.each do |child| %>
         <li>
-          <%= link_to child.name, phin_jurisdiction_path(child) %>
+          <%= link_to child.name, jurisdiction_path(child) %>
         </li>
       <% end %>
     </ul>
   </div>
 <% end %>
-<%= link_to 'Edit', edit_phin_jurisdiction_path(@phin_jurisdiction) %> |
-<%= link_to 'Back', phin_jurisdictions_path %>
+<%= link_to 'Edit', edit_jurisdiction_path(@jurisdiction) %> |
+<%= link_to 'Back', jurisdictions_path %>

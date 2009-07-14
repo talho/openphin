@@ -1,7 +1,7 @@
 require "spec"
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe PhinPerson do
+describe User do
 
   it "should be invalid if a Person already exists with same email" do
     p1 = Factory(:phin_person)
@@ -10,13 +10,13 @@ describe PhinPerson do
   end
   
   it "should be invalid without an email" do
-    p=PhinPerson.new(:id => 1, :first_name => "John", :last_name => "Smith")
+    p=User.new(:id => 1, :first_name => "John", :last_name => "Smith")
     p.valid?.should == false
   end
   
   [:first_name, :last_name, :display_name, :description, :preferred_language, :title].each do |field|
     it "should make #{field} accessible" do
-      PhinPerson.new(field => 'foo').send(field).should == 'foo'
+      User.new(field => 'foo').send(field).should == 'foo'
     end
   end
   

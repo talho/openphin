@@ -1,7 +1,7 @@
 class SearchController < ApplicationController
   def person
     name=params[:person][:name]
-    @phin_people = PhinPerson.find(:all,
+    @users = User.find(:all,
       :conditions => ["first_name like ? or last_name like ? or display_name like ?", "#{name}%", "#{name}%", "%#{name}%"])
     
   end

@@ -1,110 +1,110 @@
 class UsersController < ApplicationController
-  #auto_complete_for :phin_person, :first_name
-  #auto_complete_for :phin_person, :display_name
-  #auto_complete_for :phin_person, :last_name
+  #auto_complete_for :user, :first_name
+  #auto_complete_for :user, :display_name
+  #auto_complete_for :user, :last_name
 
-  # GET /phin_people
-  # GET /phin_people.xml
+  # GET /users
+  # GET /users.xml
   def index
-    @phin_people = User.all
+    @users = User.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @phin_people }
+      format.xml  { render :xml => @users }
     end
   end
 
-  # GET /phin_people/1
-  # GET /phin_people/1.xml
+  # GET /users/1
+  # GET /users/1.xml
   def show
-    @phin_person = User.find(params[:id])
+    @user = User.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @phin_person }
+      format.xml  { render :xml => @user }
     end
   end
 
-  # GET /phin_people/new
-  # GET /phin_people/new.xml
+  # GET /users/new
+  # GET /users/new.xml
   def new
-    @phin_person = User.new
+    @user = User.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @phin_person }
+      format.xml  { render :xml => @user }
     end
   end
 
-  # GET /phin_people/1/edit
+  # GET /users/1/edit
   def edit
-    @phin_person = User.find(params[:id])
+    @user = User.find(params[:id])
   end
 
-  # POST /phin_people
-  # POST /phin_people.xml
+  # POST /users
+  # POST /users.xml
   def create
-    @phin_person = User.new(params[:phin_person])
+    @user = User.new(params[:user])
     respond_to do |format|
-      if @phin_person.save
+      if @user.save
         flash[:notice] = 'Successfully added your account'
-        format.html { redirect_to(@phin_person) }
-        format.xml  { render :xml => @phin_person, :status => :created, :location => @phin_person }  
+        format.html { redirect_to(@user) }
+        format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /phin_people/1
-  # PUT /phin_people/1.xml
+  # PUT /users/1
+  # PUT /users/1.xml
   def update
-    @phin_person = User.find(params[:id])
-    if @phin_person.update_attributes(params[:phin_person])
-      roles=params[:phin_roles]
+    @user = User.find(params[:id])
+    if @user.update_attributes(params[:user])
+      roles=params[:roles]
       roles.each_value do |r|
 
         if r["_delete"]
           RoleMembership.destroy(r[:id]) if r[:id]
         elsif r['id'].nil?
-          pr = PhinRole.find(r["role_id"])
-          pj =  r['jurisdiction_id'].nil? ? PhinJurisdiction.find(r["jurisdiction_id"]) : nil 
+          pr = Role.find(r["role_id"])
+          pj =  r['jurisdiction_id'].nil? ? Jurisdiction.find(r["jurisdiction_id"]) : nil
           if pr.approval_required?
             flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
             rr=RoleRequest.new
             rr.role=pr
-            rr.requester=@phin_person
+            rr.requester=@user
             rr.save
           else
-            rm=@phin_person.role_memberships.create(:phin_role => pr)
-            rm.phin_jurisdiction = pj if pj
-            @phin_person.save
+            rm=@user.role_memberships.create(:role => pr)
+            rm.jurisdiction = pj if pj
+            @user.save
           end
         end
       end
     end
     respond_to do |format|
-      if @phin_person.valid?
+      if @user.valid?
         flash[:notice]= 'User was successfully updated.'
         #TODO Fix redirect_to to accept ActiveLdap object
-        format.html { redirect_to(@phin_person) }
-        format.xml  { render :xml => @phin_person, :status => :updated, :location => @phin_person }
+        format.html { redirect_to(@user) }
+        format.xml  { render :xml => @user, :status => :updated, :location => @user }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @phin_person.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /phin_people/1
-  # DELETE /phin_people/1.xml
+  # DELETE /users/1
+  # DELETE /users/1.xml
   def destroy
-    @phin_person = User.find(params[:id])
-    @phin_person.destroy
+    @user = User.find(params[:id])
+    @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to(phin_people_url) }
+      format.html { redirect_to(users_url) }
       format.xml  { head :ok }
     end
   end

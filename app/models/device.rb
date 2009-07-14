@@ -1,8 +1,8 @@
 class Device < ActiveRecord::Base
-  belongs_to :phin_person
+  belongs_to :user
 
   def parent
-    :phin_person
+    :user
   end
 
   def to_dsml(builder=nil)

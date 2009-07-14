@@ -22,4 +22,4 @@
   <%= f.label(:primary_organization_type, "Primary Organization Type") %><br/>
   <%= f.text_field(:primary_organization_type) %><br/>
   <br/><%= f.label(:parent_jurisdiction, "Parent Jurisdiction") %> <br/>
-  <%= f.select( :parent_id, nested_set_options(Jurisdiction, @phin_jurisdiction) {|i| "#{'-' * i.level} #{i.name}" }, {:include_blank => true}) %>
+  <%= f.select( :parent_id, nested_set_options(Jurisdiction, @jurisdiction) {|i| "#{'-' * i.level} #{i.name}" }, {:include_blank => true}) %>

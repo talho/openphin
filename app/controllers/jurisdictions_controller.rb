@@ -1,91 +1,91 @@
 class JurisdictionsController < ApplicationController
-  # GET /phin_jurisdictions
-  # GET /phin_jurisdictions.xml
+  # GET /jurisdictions
+  # GET /jurisdictions.xml
   def index
-    @phin_jurisdictions = Jurisdiction.all
+    @jurisdictions = Jurisdiction.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @phin_jurisdictions }
+      format.xml  { render :xml => @jurisdictions }
     end
   end
 
-  # GET /phin_jurisdictions/1
-  # GET /phin_jurisdictions/1.xml
+  # GET /jurisdictions/1
+  # GET /jurisdictions/1.xml
   def show
-    @phin_jurisdiction = Jurisdiction.find(params[:id])
+    @jurisdiction = Jurisdiction.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @phin_jurisdiction }
+      format.xml  { render :xml => @jurisdiction }
     end
   end
 
-  # GET /phin_jurisdictions/new
-  # GET /phin_jurisdictions/new.xml
+  # GET /jurisdictions/new
+  # GET /jurisdictions/new.xml
   def new
-    @phin_jurisdiction = Jurisdiction.new
+    @jurisdiction = Jurisdiction.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @phin_jurisdiction }
+      format.xml  { render :xml => @jurisdiction }
     end
   end
 
-  # GET /phin_jurisdictions/1/edit
+  # GET /jurisdictions/1/edit
   def edit
-    @phin_jurisdiction = Jurisdiction.find(params[:id])
+    @jurisdiction = Jurisdiction.find(params[:id])
   end
 
-  # POST /phin_jurisdictions
-  # POST /phin_jurisdictions.xml
+  # POST /jurisdictions
+  # POST /jurisdictions.xml
   def create
-    @phin_jurisdiction = Jurisdiction.new(params[:phin_jurisdiction])
+    @jurisdiction = Jurisdiction.new(params[:jurisdiction])
 
     respond_to do |format|
-      if @phin_jurisdiction.save
+      if @jurisdiction.save
         flash[:notice] = 'PhinJurisdiction was successfully created.'
-        format.html { redirect_to(@phin_jurisdiction) }
-        format.xml  { render :xml => @phin_jurisdiction, :status => :created, :location => @phin_jurisdiction }
+        format.html { redirect_to(@jurisdiction) }
+        format.xml  { render :xml => @jurisdiction, :status => :created, :location => @jurisdiction }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @phin_jurisdiction.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @jurisdiction.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /phin_jurisdictions/1
-  # PUT /phin_jurisdictions/1.xml
+  # PUT /jurisdictions/1
+  # PUT /jurisdictions/1.xml
   def update
-    @phin_jurisdiction = Jurisdiction.find(params[:id])
+    @jurisdiction = Jurisdiction.find(params[:id])
     
     respond_to do |format|
-      if @phin_jurisdiction.update_attributes(params[:phin_jurisdiction])
-        if params[:phin_jurisdiction] && params[:phin_jurisdiction][:parent_id]
-          if params[:phin_jurisdiction][:parent_id].empty?
-            @phin_jurisdiction.move_to_root
+      if @jurisdiction.update_attributes(params[:jurisdiction])
+        if params[:jurisdiction] && params[:jurisdiction][:parent_id]
+          if params[:jurisdiction][:parent_id].empty?
+            @jurisdiction.move_to_root
           else
-            @phin_jurisdiction.move_to_child_of(Jurisdiction.find(params[:phin_jurisdiction][:parent_id]))
+            @jurisdiction.move_to_child_of(Jurisdiction.find(params[:jurisdiction][:parent_id]))
           end
         end
         flash[:notice] = 'PhinJurisdiction was successfully updated.'
-        format.html { redirect_to(@phin_jurisdiction) }
+        format.html { redirect_to(@jurisdiction) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @phin_jurisdiction.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @jurisdiction.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /phin_jurisdictions/1
-  # DELETE /phin_jurisdictions/1.xml
+  # DELETE /jurisdictions/1
+  # DELETE /jurisdictions/1.xml
   def destroy
-    @phin_jurisdiction = Jurisdiction.find(params[:id])
-    @phin_jurisdiction.destroy
+    @jurisdiction = Jurisdiction.find(params[:id])
+    @jurisdiction.destroy
 
     respond_to do |format|
-      format.html { redirect_to(phin_jurisdictions_url) }
+      format.html { redirect_to(jurisdictions_url) }
       format.xml  { head :ok }
     end
   end

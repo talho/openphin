@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe PhinPersonProfile do
+describe UserProfile do
   before(:each) do
     @valid_attributes = {
       # :photo => ,
@@ -13,6 +13,6 @@ describe PhinPersonProfile do
   end
 
   it "should create a new instance given valid attributes" do
-    PhinPersonProfile.create!(@valid_attributes)
+    UserProfile.create!(@valid_attributes)
   end
 end

@@ -1,8 +1,8 @@
-<h1>Profile for <%= @phin_person_profile.phin_person.display_name %></h1>
+<h1>Profile for <%= @user_profile.user.display_name %></h1>
 
-<% form_for(@phin_person_profile) do |f| %>
+<% form_for(@user_profile) do |f| %>
   <%= f.error_messages %>
-    <%= f.hidden_field :phin_person_id %>
+    <%= f.hidden_field :user_id %>
   <p>
     <%= f.label :photo %><br />
     <%= f.text_field :photo %>
@@ -32,4 +32,4 @@
   </p>
 <% end %>
 
-<%= link_to 'Back', phin_person_profiles_path %>
+<%= link_to 'Back', user_profiles_path %>

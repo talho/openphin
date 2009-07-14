@@ -1,13 +1,13 @@
 # Required Attributes: :cn, :sn, :organizations
 
-class PhinPerson < ActiveRecord::Base
+class User < ActiveRecord::Base
   include Clearance::User
   
   has_many :role_memberships
-  has_and_belongs_to_many :phin_organizations
-  has_many :phin_jurisdictions, :through => :role_memberships 
-  has_many :phin_roles, :through => :role_memberships
-  has_one :profile, :class_name => "PhinPersonProfile"
+  has_and_belongs_to_many :organizations
+  has_many :jurisdictions, :through => :role_memberships 
+  has_many :roles, :through => :role_memberships
+  has_one :profile, :class_name => "UserProfile"
 
   validates_uniqueness_of :email
   validates_presence_of :email
@@ -20,15 +20,15 @@ class PhinPerson < ActiveRecord::Base
     first_name + " " + last_name
   end
   
-  #def auto_complete_for_phin_person_display_name
-  #  PhinPerson.find(:display_name => params[:phin_person][:display_name])
+  #def auto_complete_for_user_display_name
+  #  User.find(:display_name => params[:user][:display_name])
   #end
 
-  #def auto_complete_for_phin_person_first_name
+  #def auto_complete_for_user_first_name
     
   #end
   
-  #def auto_complete_for_phin_person_last_name
+  #def auto_complete_for_user_last_name
     
   #end
   
@@ -45,7 +45,7 @@ class PhinPerson < ActiveRecord::Base
         oc.dsml ocv, "person"
         oc.dsml ocv, "organizationalPerson"
         oc.dsml ocv, "inetOrgPerson"
-        oc.dsml ocv, "PhinPerson"
+        oc.dsml ocv, "User"
 
       end
       entry.dsml(:attr, :name => :cn) {|a| a.dsml :value, mail}
