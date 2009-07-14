@@ -35,7 +35,7 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
   user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
 end
 
-Given 'the following people exist:' do |table|
+Given 'the following users exist:' do |table|
   table.rows.each do |row|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
   end
