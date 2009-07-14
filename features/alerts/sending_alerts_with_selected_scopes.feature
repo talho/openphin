@@ -43,8 +43,8 @@ Feature: Creating and sending alerts
       | Message  | For more details, keep on reading...         |
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
-      | Acknowledgement | <unchecked>                           |
-      | Communication methods | Email                           |
+      | Acknowledge | <unchecked>                               |
+      # | Communication methods | Email                           |
       
     And I click "Preview Message"
     Then I should see a preview of the message

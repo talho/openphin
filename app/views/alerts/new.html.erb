@@ -7,8 +7,13 @@
   
   <%= f.label :status %>
   <%= f.select :status, Alert::Statuses %>
+
+  <%= f.label :severity %>
+  <%= f.select :severity, Alert::Severities %>
+
+  <%= f.label :acknowledge, "Requires acknowledgement" %>
+  <%= f.check_box :acknowledge %>
   
-  #  message     :text
   #  severety    :string(255)
   #  status      :string(255)
   #  acknowledge :boolean

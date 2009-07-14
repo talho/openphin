@@ -21,6 +21,13 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :organizations
   
   Statuses = ['Actual', 'Exercise', 'Test']
+  Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   
   validates_inclusion_of :status, :in => Statuses
+  validates_inclusion_of :severity, :in => Severities
+  
+  def after_initialize
+    self.acknowledge = true if acknowledge.nil?
+  end
+  
 end

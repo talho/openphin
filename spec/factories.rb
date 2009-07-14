@@ -45,11 +45,11 @@ Factory.define :role do |pr|
 end
 
 Factory.define :alert do |m|
+  m.sequence(:title) {|t| "alert#{t}"}
   m.message "alertmessage"
+  m.status 'Test'
+  m.severity 'Moderate'
   #  status      :string(255)
   #  acknowledge :boolean
   #  author_id   :integer
-  #  created_at  :datetime
-  #  updated_at  :datetime
-  m.sequence(:title) {|t| "alert#{t}"}
 end
