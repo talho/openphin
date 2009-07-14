@@ -24,12 +24,12 @@ Feature: Creating and sending alerts
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
       | Jason Phipps    | jason.phipps@example.com | WMD Coordinator | Potter County  |
       | Dan Morrison    | dan.morrison@example.com | Health Officer  | Ottawa County  | 
-    And Texas is the parent organization of:
-      | Dallas County, Tarrant County, Wise County, Potter County |  
-    And Michigan is the parent organization of:
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Tarrant County | Wise County | Potter County |  
+    And Michigan is the parent jurisdiction of:
       | Ottawa County |
     And the following people belong to the Red Cross:
-      | John Smith, Ed McGuyver, Jason Phipps, Dan Morrison |
+      | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison |
       
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
