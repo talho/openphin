@@ -1,3 +1,4 @@
+@signup
 Feature: Signing up for an account
 
   In order to participate in sending and receiving alerts
@@ -12,7 +13,7 @@ Feature: Signing up for an account
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
-      | E-mail         | john@example.com |
+      | Email         | john@example.com |
       | Password       | apples           |
       | Password confirmation | apples    |
       | First name     | John             |
@@ -27,6 +28,20 @@ Feature: Signing up for an account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
+
+  Scenario: Signing up as a public role without required fields should display errors
+    When I signup for an account with the following info:
+      | Email         | <blank> |
+      | Password       | <blank> |
+      | Password confirmation | <blank> |
+      | First name     | <blank>        |
+      | Last name      | <blank>        |
+      | Preferred name | <blank>        |
+    Then I should see:
+      | Email can't be blank |
+      | Password can't be blank |
+      | First name can't be blank |
+      | Last name can't be blank |
        
   Scenario: Signing up as a public health professionals
     Given I'm visiting the site

@@ -23,24 +23,40 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe User do
+  
+  describe "validations" do
+    before(:each) do
+      @user = Factory.build(:user)
+    end
+    
+    it "should be valid" do
+      @user.valid?.should be_true
+    end
+    
+    it "should not be valid without an email" do
+      @user.email = ""
+      @user.valid?.should be_false
+    end
+    
+    it "should not be valid without a first name" do
+      @user.first_name = ""
+      @user.valid?.should be_false
+    end
 
-  it "should be invalid if a Person already exists with same email" do
-    p1 = Factory(:user)
-    p2=Factory.build(:user, :email => p1.email)
-    p2.valid?.should be_false
-  end
-  
-  it "should be invalid without an email" do
-    p=User.new(:id => 1, :first_name => "John", :last_name => "Smith")
-    p.valid?.should == false
-  end
-  
-  [:first_name, :last_name, :display_name, :description, :preferred_language, :title].each do |field|
-    it "should make #{field} accessible" do
-      User.new(field => 'foo').send(field).should == 'foo'
+    it "should not be valid without a last name" do
+      @user.last_name = ""
+      @user.valid?.should be_false
+    end
+
+    it "should be invalid if a Person already exists with same email" do
+      Factory(:user, :email => "joe@example.com")
+      @user.email = "joe@example.com"
+      @user.valid?.should be_false
     end
   end
-  
+
+  should_make_fields_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title
+    
   describe "phin_oid" do
     it "should be generated on create" do
       Factory(:user).phin_oid.should_not be_blank

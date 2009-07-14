@@ -94,6 +94,12 @@ Then /^I should see "([^\"]*)"$/ do |text|
   response.should contain(text)
 end
 
+Then /^I should see:$/ do |table|
+  table.raw.each do |row|
+    response.should contain(row.join)
+  end
+end
+
 Then /^I should not see "([^\"]*)"$/ do |text|
   response.should_not contain(text)
 end

@@ -8,6 +8,7 @@ require 'spec/rails'
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+Dir[File.dirname(__FILE__) + '/macros/*.rb'].each{ |f| require f }
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -48,4 +49,6 @@ Spec::Runner.configure do |config|
   # == Notes
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
+  
+  config.extend SpecHelpers::ModelMacros, :type => [:model]
 end

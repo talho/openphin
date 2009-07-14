@@ -1,13 +1,14 @@
 When 'I signup for an account with the following info:' do |table|
   visit new_user_path
   table.rows_hash.each do |field, value|
+    value = "" if value == "<blank>"
     case field
-    when 'E-mail', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
+    when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
       fill_in field, :with => value
     when 'What County', 'Preferred language'
       select value, :from => field
     else
-      raise "Unknown field: #{field}"
+      raise "Unknown field: #{field}: Please update this step if you intended to use this field."
     end
   end
   
