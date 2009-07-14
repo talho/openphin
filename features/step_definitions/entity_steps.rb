@@ -1,5 +1,5 @@
 Given 'the following entities exists:' do |table|
-  table.rows.each do |row|
-     Given "a #{row[0].downcase} named #{row[1]}"
+  table.rows_hash.each do |key, value|
+     Given "a #{key.downcase} named #{value}"
   end
 end

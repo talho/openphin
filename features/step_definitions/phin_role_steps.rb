@@ -19,7 +19,7 @@
 
 =end
 
-Given /^a[n]? organization named (\w+)$/ do |name|
+Given /^a[n]? organization named ([^\"]*)$/ do |name|
   Factory(:phin_organization, :name => name)
 end
 

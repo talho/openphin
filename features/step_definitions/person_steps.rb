@@ -25,7 +25,7 @@ end
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
   user = Factory(:phin_person, :email => email, :first_name => first_name, :last_name => last_name)
-  user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
+  user.role_memberships.create!(:phin_role => Given("a role named #{role}"), :phin_jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
 end
 
 Given 'the following people exist:' do |table|
