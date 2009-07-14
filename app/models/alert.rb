@@ -19,6 +19,7 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
+  has_many :alert_device_types
   
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
@@ -28,6 +29,17 @@ class Alert < ActiveRecord::Base
   
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
+  end
+  
+  def device_types=(types)
+    alert_device_types.clear
+    types.each do |type|
+      alert_device_types.build :device => type
+    end
+  end
+  
+  def device_types
+    alert_device_types.map(&:device)
   end
   
 end

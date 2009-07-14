@@ -12,6 +12,8 @@ When "I fill out the alert form with:" do |table|
       else
         check 'alert_acknowledge'
       end
+    when 'Communication methods'
+      check value
     else
       fill_in key, :with => value
     end

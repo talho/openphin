@@ -14,26 +14,28 @@
   <%= f.label :acknowledge, "Requires acknowledgement" %>
   <%= f.check_box :acknowledge %>
   
-  #  severety    :string(255)
-  #  status      :string(255)
-  #  acknowledge :boolean
-  #  author_id   :integer
-  #  created_at  :datetime
-  #  updated_at  :datetime
+  <fieldset>
+    <legend>Communication Methods</legend>
+    <% Device::Types.each do |type| %>
+      <%= check_box_tag 'alert[device_types][]', type, nil, :id => "alert_#{dom_class(type)}" %>
+      <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
+    <% end %>
+  </fieldset>
   
-
   <fieldset>
     <legend>Jurisdictions</legend>
-    <%= f.select :jurisdictions, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple   %>
+    <%= f.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple   %>
   </fieldset>
 
   <fieldset>
     <legend>Limit to Certain Roles</legend>
-    <%= f.select :roles, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+    <%= f.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
   </fieldset>
   
   <fieldset>
     <legend>Limit to Certain Organizations</legend>
-    <%= f.select :organizations, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+    <%= f.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
   </fieldset>
+  
+  <%= f.submit "Preview Message" %>
 <% end %>

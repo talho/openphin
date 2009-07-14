@@ -44,9 +44,9 @@ Feature: Creating and sending alerts
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
       | Acknowledge | <unchecked>                               |
-      # | Communication methods | Email                           |
+      | Communication methods | E-mail                           |
       
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"

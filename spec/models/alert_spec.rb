@@ -62,5 +62,33 @@ describe Alert do
       Alert.new(:acknowledge => false).acknowledge?.should == false
     end
   end
+  
+  describe "device_types=" do
+    before do
+      @alert = Factory(:alert)
+    end
+
+    it "should create an association for the given device types" do
+      @alert.device_types = ['Device::EmailDevice']
+      lambda { @alert.save }.should change { @alert.alert_device_types.count }
+    end
+    
+    it "should create an association for the given device types" do
+      @alert.alert_device_types.create! :device => 'Device::EmailDevice'
+      @alert.device_types = []
+      @alert.alert_device_types.count.should == 0
+    end
+  end
+  
+  describe "device_types" do
+    before do
+      @alert = Factory(:alert)
+    end
+
+    it "should return the names of the device types" do
+      @alert.alert_device_types.create! :device => 'Device::EmailDevice'
+      @alert.device_types.should == ['Device::EmailDevice']
+    end
+  end
 
 end

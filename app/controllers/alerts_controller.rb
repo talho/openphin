@@ -6,4 +6,8 @@ class AlertsController < ApplicationController
   def new
     @alert = Alert.new
   end
+  
+  def create
+    @alert = Alert.new params[:alert]
+  end
 end

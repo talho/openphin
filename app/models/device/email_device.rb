@@ -12,8 +12,12 @@
 #  home_use      :boolean
 #
 
-class Devices::EmailDevice < Device
+class Device::EmailDevice < Device
   
   serialize :options
   option_accessor :email_address
+  
+  def self.display_name
+    'E-mail'
+  end
 end
