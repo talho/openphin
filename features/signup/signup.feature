@@ -13,7 +13,11 @@ Feature: Signing up for an account
       | Quincy Jones   | quincy.jones@example.com   | 
       | Jonas Brothers | jonas.brothers@example.com |
     And a role named Public
+<<<<<<< HEAD:features/signup/signup.feature
     And an approval role named Health Alert and Communications Coordinator
+=======
+    And a role named Health Alert and Communications Coordinator
+>>>>>>> Zach / Keith WIP for signup. :features/signup/signup.feature
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
