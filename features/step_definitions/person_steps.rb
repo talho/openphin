@@ -14,6 +14,13 @@ When 'I signup for an account with the following info:' do |table|
   click_button 'Save'
 end
 
-Then 'I should have the "$role" role' do |role|
-
+Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
+  p=PhinPerson.find_by_email!(email)
+  j = PhinJurisdiction.find_by_name!(jurisdiction)
+  r = PhinRole.find_by_name!(role)
+  puts "before"
+  true.should == true
+  puts "after"
+  #m = p.role_members hips.find_by_phin_role_id_and_phin_jurisdiction_id(r.id, j.id)
+  #m.should_not be_nil
 end

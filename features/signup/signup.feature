@@ -7,6 +7,7 @@ Feature: Signing up for an account
   Background:
     Given an organization named Red Cross
     And a jurisdiction named Dallas County
+    And a role named Public
     And a role named Health Alert & Communications Coordinator
 
   Scenario: Signing up as a public role
@@ -21,7 +22,7 @@ Feature: Signing up for an account
       | What County    | Dallas County    |
       | Preferred language | English      |
     Then I should see "Successfully added your account"
-    And I should have the "Public" role
+    And "john@example.com" should have the "Public" role for "Dallas County"
     And I should have the communication device
       | Email | john@example.com | 
     And I should receive an email confirmation at "john@example.com"
@@ -61,6 +62,7 @@ Feature: Signing up for an account
     When I click the confirmation link in the email
     Then I should see "Thanks, you've been confirmed!"
     And my account is active
+
 
     
     

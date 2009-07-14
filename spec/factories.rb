@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
-
+require 'factory_girl'
 Factory.sequence(:username) {|i| "user#{i}" }
 Factory.define :phin_person do |pp|
   pp.first_name Factory.next(:username)
