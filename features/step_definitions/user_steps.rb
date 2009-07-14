@@ -24,8 +24,8 @@ end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
-  user = Factory(:phin_person, :email => email, :first_name => first_name, :last_name => last_name)
-  user.role_memberships.create!(:phin_role => Given("a role named #{role}"), :phin_jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
+  user = Factory(:user, :email => email, :first_name => first_name, :last_name => last_name)
+  user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
 end
 
 Given 'the following people exist:' do |table|
@@ -35,9 +35,9 @@ Given 'the following people exist:' do |table|
 end
 
 Given 'I am logged in as "$email"' do |email|
-  @current_user = Factory(:phin_person, :email => email)
+  @current_user = Factory(:user, :email => email)
 end
 
 Given 'I am allowed to send alerts' do
-  @current_user.role_memberships(:phin_role => Factory(:phin_role, :alerter => true), :phin_jurisdiction => Factory(:phin_jurisdiction))
+  @current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
 end
