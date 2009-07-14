@@ -1,0 +1,9 @@
+Feature: Sending sensitive alerts
+
+  In order to ....
+  As a ...
+  I want to ....
+
+  Scenario: Sending an alert that requires user acknowledgement
+    # acknowledgement shows up in email
+    # Note, talk to Jason on filling this out
