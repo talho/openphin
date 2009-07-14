@@ -5,3 +5,5 @@ config/*.db
 .svn
 test
 tmp/*
+.DS_Store
+.rake_tasks
