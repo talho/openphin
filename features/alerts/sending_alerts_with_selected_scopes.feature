@@ -16,7 +16,7 @@ Feature: Creating and sending alerts
       | Role         | Immunization Director |
       | Role         | Epidemiologist        |
       | Role         | WMD Coordinator       |
-    And the following people exist:
+    And the following users exist:
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Brian Simms     | brian.simms@example.com  | Epidemiologist  | Dallas County  |
       | Ed McGuyver     | ed.mcguyver@example.com  | Public          | Dallas County  |
@@ -24,19 +24,19 @@ Feature: Creating and sending alerts
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
       | Jason Phipps    | jason.phipps@example.com | WMD Coordinator | Potter County  |
       | Dan Morrison    | dan.morrison@example.com | Health Officer  | Ottawa County  | 
-    And Texas is the parent organization of:
-      | Dallas County, Tarrant County, Wise County, Potter County |  
-    And Michigan is the parent organization of:
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Tarrant County | Wise County | Potter County |  
+    And Michigan is the parent jurisdiction of:
       | Ottawa County |
-    And the following people belong to the Red Cross:
-      | John Smith, Ed McGuyver, Jason Phipps, Dan Morrison |
+    And the following users belong to the Red Cross:
+      | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison |
       
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the Alerts page
     And I follow "New Alert"
 
-  Scenario: Sending an alert directly to a person
+  Scenario: Sending an alert directly to a user
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -59,7 +59,7 @@ Feature: Creating and sending alerts
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
 
-  Scenario: Sending an alert to specific people sends alerts to each person
+  Scenario: Sending an alert to specific users sends alerts to each user
     When I fill out the alert form with:
       | People | Keith Gaddis, Dan Morrison |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -75,7 +75,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -83,7 +83,7 @@ Feature: Creating and sending alerts
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
 
-  Scenario: Sending an alert with specified Jurisdictions sends to all people within those Jurisdictions
+  Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
     When I fill out the alert form with:
       | Jurisdictions | Dallas County |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -99,7 +99,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -124,7 +124,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -149,7 +149,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -174,7 +174,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com, jason.phipps@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -201,7 +201,7 @@ Feature: Creating and sending alerts
     When I click "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
-    And the following people should receive the email:
+    And the following users should receive the email:
       | People        | ethan.waldo@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |

@@ -8,6 +8,7 @@
 #  severety    :string(255)
 #  status      :string(255)
 #  acknowledge :boolean
+#  author_id   :integer
 #  created_at  :datetime
 #  updated_at  :datetime
 #
