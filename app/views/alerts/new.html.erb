@@ -1,4 +1,20 @@
 <% form_for @alert do |f|%>
+  <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <%= f.label :message %>
+  <%= f.text_field :message %>
+  
+  <%= f.label :status %>
+  <%= f.select :status, Alert::Statuses %>
+  
+  #  message     :text
+  #  severety    :string(255)
+  #  status      :string(255)
+  #  acknowledge :boolean
+  #  author_id   :integer
+  #  created_at  :datetime
+  #  updated_at  :datetime
   
 
   <fieldset>

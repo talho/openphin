@@ -19,4 +19,8 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
+  
+  Statuses = ['Actual', 'Exercise', 'Test']
+  
+  validates_inclusion_of :status, :in => Statuses
 end

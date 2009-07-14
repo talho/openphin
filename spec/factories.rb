@@ -43,3 +43,13 @@ Factory.define :role do |pr|
   pr.name Factory.next(:rolename)
   pr.approval_required false
 end
+
+Factory.define :alert do |m|
+  m.message "alertmessage"
+  #  status      :string(255)
+  #  acknowledge :boolean
+  #  author_id   :integer
+  #  created_at  :datetime
+  #  updated_at  :datetime
+  m.sequence(:title) {|t| "alert#{t}"}
+end

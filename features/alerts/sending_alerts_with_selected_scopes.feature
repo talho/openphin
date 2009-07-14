@@ -38,13 +38,13 @@ Feature: Creating and sending alerts
 
   Scenario: Sending an alert directly to a user
     When I fill out the alert form with:
-      | People | Keith Gaddis |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | People   | Keith Gaddis                                 |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+      | Message  | For more details, keep on reading...         |
+      | Severity | Moderate                                     |
+      | Status   | Actual                                       |
+      | Acknowledgement | <unchecked>                           |
+      | Communication methods | Email                           |
       
     And I click "Preview Message"
     Then I should see a preview of the message
