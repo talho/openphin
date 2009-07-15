@@ -15,4 +15,4 @@
 	url = git://github.com/emposha/FCBKcomplete.git
 [submodule "vendor/plugins/webrat"]
 	path = vendor/plugins/webrat
-	url = git://github.com/mattmatt/webrat.git
+	url = git://github.com/collectiveidea/webrat.git
