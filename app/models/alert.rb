@@ -52,4 +52,12 @@ class Alert < ActiveRecord::Base
     minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"    
   end
   
+  def deliver
+    # 1 - explode all known users and deliver to them
+    # 2 - deliver to foreign orgs
+    organizations.select(&:foreign).each do |foreign_org|
+      foreign_org.deliver
+    end
+  end
+  
 end

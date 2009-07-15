@@ -58,4 +58,10 @@ class Organization < Jurisdiction
     end
 
   end
+  
+  def deliver
+    raise 'not foreign' unless foreign?
+    # build EDXL
+    # put it
+  end
 end
