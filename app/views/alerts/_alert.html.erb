@@ -1,0 +1,16 @@
+<dl>
+  <dt>Title:</dt>
+  <dd class="title"><%=h @alert.title %></dd>
+
+  <dt>Message:</dt>
+  <dd class="message"><%=simple_format h(@alert.message) %></dd>
+
+  <dt>Severity:</dt>
+  <dd class="severity"><%=h @alert.severity %></dd>
+
+  <dt>Status:</dt>
+  <dd class="status"><%=h @alert.status %></dd>
+
+  <dt>Acknowledge:</dt>
+  <dd class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></dd>
+</dl>

@@ -1,0 +1,9 @@
+<% form_for @alert do |form|%>
+  <div id="preview">
+    <%= render @alert %>
+  </div>
+
+  <%= render form %>
+  
+  <%= form.submit "Send", :name => 'send' %>
+<% end %>

@@ -27,3 +27,7 @@ When "I fill out the alert form with:" do |table|
     end
   end
 end
+
+Then 'I should see a preview of the message' do
+  response.should have_tag('#preview')
+end

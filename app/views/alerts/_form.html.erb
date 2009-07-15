@@ -1,0 +1,42 @@
+  <%= form.label :title %>
+  <%= form.text_field :title %>
+  <%= form.label :message %>
+  <%= form.text_area :message, :rows => 5 %>
+  
+  <%= form.label :status %>
+  <%= form.select :status, Alert::Statuses %>
+
+  <%= form.label :severity %>
+  <%= form.select :severity, Alert::Severities %>
+
+  <%= form.label :acknowledge, "Requires acknowledgement" %>
+  <%= form.check_box :acknowledge %>
+  
+  <fieldset>
+    <legend>Communication Methods</legend>
+    <% Device::Types.each do |type| %>
+      <%= check_box_tag 'alert[device_types][]', type, nil, :id => "alert_#{dom_class(type)}" %>
+      <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
+    <% end %>
+  </fieldset>
+  
+  <fieldset>
+    <legend>Jurisdictions</legend>
+    <%= form.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+  </fieldset>
+
+  <fieldset>
+    <legend>Limit to Certain Roles</legend>
+    <%= form.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+  </fieldset>
+  
+  <fieldset>
+    <legend>Limit to Certain Organizations</legend>
+    <%= form.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+  </fieldset>
+  
+  <fieldset>
+    <legend>People</legend>
+    <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
+    <%= form.select :user_ids, [], {}, :multiple => :multiple %>
+  </fieldset>

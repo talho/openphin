@@ -44,12 +44,12 @@ Feature: Creating and sending alerts
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
       | Acknowledge | <unchecked>                               |
-      | Communication methods | E-mail                           |
+      | Communication methods | E-mail                          |
       
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be at the logs page
     And "keith.gaddis@example.com" should receive the email:
@@ -58,6 +58,36 @@ Feature: Creating and sending alerts
       | body contains | Type: Alert    |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
+
+  Scenario: Previewing an alert
+    When I fill out the alert form with:
+      | People   | Keith Gaddis                                 |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+      | Message  | For more details, keep on reading...         |
+      | Severity | Moderate                                     |
+      | Status   | Actual                                       |
+      | Acknowledge | <unchecked>                               |
+      | Communication methods | E-mail                          |
+    
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | People   | Keith Gaddis                                 |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+      | Message  | For more details, keep on reading...         |
+      | Severity | Moderate                                     |
+      | Status   | Actual                                       |
+      | Acknowledge | No                                        |
+      | Communication methods | E-mail                          |
+    
+    When I press "Edit"
+    And I fill out the alert form with:
+      | Title    | Something Different |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | People   | Keith Gaddis                                 |
+      | Title    | Something Different                          |
+      | Message  | For more details, keep on reading...         |
+      | Acknowledge | No                                        |
 
   Scenario: Sending an alert to specific users sends alerts to each user
     When I fill out the alert form with:
