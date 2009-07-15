@@ -1,38 +1,3 @@
-When 'I signup for an account with the following info:' do |table|
-  visit new_user_path
-  table.rows_hash.each do |field, value|
-    value = "" if value == "<blank>"
-    case field
-    when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
-      fill_in field, :with => value
-    when 'What County', 'Preferred language', 
-      'What is your role within the health department', 
-      'Are you with any of these organizations'
-        select value, :from => field
-    else
-      raise "Unknown field: #{field}: Please update this step if you intended to use this field."
-    end
-  end
-  click_button 'Save'
-end
-
-Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
-  p=User.find_by_email!(email)
-  j = Jurisdiction.find_by_name!(jurisdiction)
-  r = Role.find_by_name!(role)
-  m = p.role_memberships.find_by_role_id_and_jurisdiction_id(r.id, j.id)
-  m.should_not be_nil
-end
-
-Then '"$email" should have the "$role" role request for "$jurisdiction"' do |email, role, jurisdiction|
-  p=User.find_by_email!(email)
-  j = Jurisdiction.find_by_name!(jurisdiction)
-  r = Role.find_by_name!(role)
-  m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)
-  m.should_not be_nil
-end
-
-
 Given "a user named $name" do |name|
   first_name, last_name = name.split
   
@@ -59,3 +24,45 @@ end
 Given 'I am allowed to send alerts' do
   @current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
 end
+
+
+
+When 'I signup for an account with the following info:' do |table|
+  visit new_user_path
+  table.rows_hash.each do |field, value|
+    value = "" if value == "<blank>"
+    case field
+    when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
+      fill_in field, :with => value
+    when 'What County', 'Preferred language', 
+      'What is your role within the health department', 
+      'Are you with any of these organizations'
+        select value, :from => field
+    else
+      raise "Unknown field: #{field}: Please update this step if you intended to use this field."
+    end
+  end
+  click_button 'Save'
+end
+
+
+Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
+  p=User.find_by_email!(email)
+  j = Jurisdiction.find_by_name!(jurisdiction)
+  r = Role.find_by_name!(role)
+  m = p.role_memberships.find_by_role_id_and_jurisdiction_id(r.id, j.id)
+  m.should_not be_nil
+end
+
+Then '"$email" should have the "$role" role request for "$jurisdiction"' do |email, role, jurisdiction|
+  p=User.find_by_email!(email)
+  j = Jurisdiction.find_by_name!(jurisdiction)
+  r = Role.find_by_name!(role)
+  m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)
+  m.should_not be_nil
+end
+
+
+
+
+
