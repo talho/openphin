@@ -4,12 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <% if protect_against_forgery? %>
+    <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
+  <% end %>
   <title>PhinPeople: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'scaffold' %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'application' %>
-  <%= stylesheet_link_tag 'jquery.crossSelect', 'jquery.ui.autocomplete' %>
-  <%= javascript_include_tag 'jquery.templating', 'jquery.ui.autocomplete.ext', 
-    'jquery.ui.autocomplete', 'jquery.ui', :cache => 'jquery' %>
+  <%= stylesheet_link_tag 'scaffold', 'jquery.crossSelect', '/javascripts/FCBKcomplete/style', :cache => true %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.min.js', 'application', :cache => 'jquery' %>
 </head>
 <body>
 

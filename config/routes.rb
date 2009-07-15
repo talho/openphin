@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :role_requests
 
-  map.resources :users do |user|
+  map.resources :users, :collection => {:search => :get} do |user|
     user.resource :user_profile, :as => "profile"
     user.confirmation "/:token", :controller => "users", :action => "confirm"
   end

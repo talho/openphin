@@ -24,18 +24,24 @@
   
   <fieldset>
     <legend>Jurisdictions</legend>
-    <%= f.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple   %>
+    <%= f.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
 
   <fieldset>
     <legend>Limit to Certain Roles</legend>
-    <%= f.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+    <%= f.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
   
   <fieldset>
     <legend>Limit to Certain Organizations</legend>
-    <%= f.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple %>
+    <%= f.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+  </fieldset>
+  
+  <fieldset>
+    <legend>People</legend>
+    <%= f.select :user_ids, [], {}, :multiple => :multiple %>
   </fieldset>
   
   <%= f.submit "Preview Message" %>
+  
 <% end %>

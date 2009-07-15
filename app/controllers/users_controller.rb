@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
-  #auto_complete_for :user, :first_name
-  #auto_complete_for :user, :display_name
-  #auto_complete_for :user, :last_name
-
+  def search
+    @users = User.all #search(params[:q])
+    respond_to do |format|
+      format.json {render :json => @users.map{|u| {:caption => u.name, :value => u.id}} }
+    end
+  end
+  
   # GET /users
   # GET /users.xml
   def index

@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   after_create :send_confirmation_email
   
   def name
-    first_name + " " + last_name
+    display_name.blank? ? first_name + " " + last_name : display_name
   end
   
   #def auto_complete_for_user_display_name
