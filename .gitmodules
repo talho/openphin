@@ -13,3 +13,6 @@
 [submodule "public/javascripts/FCBKcomplete"]
 	path = public/javascripts/FCBKcomplete
 	url = git://github.com/emposha/FCBKcomplete.git
+[submodule "vendor/plugins/webrat"]
+	path = vendor/plugins/webrat
+	url = git://github.com/mattmatt/webrat.git

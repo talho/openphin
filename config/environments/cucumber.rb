@@ -16,7 +16,6 @@ config.action_controller.allow_forgery_protection    = false
 config.action_mailer.delivery_method = :test
 
 config.gem "cucumber",    :lib => false,        :version => ">=0.3.11"
-config.gem "webrat",      :lib => false,        :version => ">=0.4.4"
 config.gem "rspec",       :lib => false,        :version => ">=1.2.7"
 config.gem "rspec-rails", :lib => false,        :version => ">=1.2.7"
 config.gem "thoughtbot-factory_girl",
