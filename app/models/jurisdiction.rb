@@ -24,7 +24,14 @@
 #
 
 class Jurisdiction < ActiveRecord::Base
-   acts_as_nested_set
+  acts_as_nested_set
+  
+  has_many :role_memberships
+  has_many :users, :through => :role_memberships
+
+  def admins
+    users.with_role(Role::ADMIN)
+  end
 
   def parent
     Jurisdiction.find(parent_id) unless !Jurisdiction.exists?(parent_id)

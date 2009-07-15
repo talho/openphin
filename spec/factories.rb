@@ -32,15 +32,14 @@ end
 
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
-  jur.name Factory.next(:jurisdiction_name)
-
+  jur.name { Factory.next(:jurisdiction_name) }
 end
 Factory.define :organization do |org|
-  org.name Factory.next(:jurisdiction_name)
+  org.name { Factory.next(:jurisdiction_name) }
 end
 Factory.sequence(:rolename) {|r| "role#{r}"}
 Factory.define :role do |pr|
-  pr.name Factory.next(:rolename)
+  pr.name { Factory.next(:rolename) }
   pr.approval_required false
 end
 

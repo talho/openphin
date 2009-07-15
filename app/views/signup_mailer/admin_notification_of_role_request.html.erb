@@ -1,0 +1,10 @@
+A user has requested assignment to a role that needs approval from an admin 
+for the jurisdiction <%= @role_request.jurisdiction.name %>
+
+User <%= @role_request.requester.name %> (<%= @role_request.requester.email %>)  is requesting 
+the role <%= @role_request.role.name %>.  You may approve or deny this request at the following link:
+
+<%= role_request_path(@role_request) %>
+
+Please be sure to verify the user's credentials for the role he or she is requesting.  If in doubt,
+it is better to delay or deny the request until you can verify the user.

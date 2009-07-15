@@ -41,13 +41,16 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name
   
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes
-  
+    
   before_create :generate_oid
   before_create :set_confirmation_token
   before_create :create_default_email_device
 
   after_create :assign_public_role
-  after_create :send_confirmation_email
+  
+  named_scope :with_role, lambda {|role| 
+    { :conditions => [ "role_memberships.role_id = ?",  Role.find_by_name(role).id ]}
+  }
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
   
@@ -122,7 +125,6 @@ class User < ActiveRecord::Base
 
 private
 
-  
   def assign_public_role
     if self.role_requests.any?
       self.role_memberships.create!(
@@ -140,11 +142,7 @@ private
     email = Device::EmailDevice.new(:email_address => self.email)
     devices << email
   end
-  
-  def send_confirmation_email
-    SignupMailer.deliver_confirmation(self)
-  end
-  
+    
   def set_confirmation_token
     self.token = ActiveSupport::SecureRandom.hex
   end

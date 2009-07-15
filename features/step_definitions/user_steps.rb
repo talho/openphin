@@ -1,6 +1,5 @@
 Given "a user named $name" do |name|
   first_name, last_name = name.split
-  
   User.find_by_first_name_and_last_name(first_name, last_name) ||
     Factory(:user, :first_name => first_name, :last_name => last_name)
 end
@@ -24,6 +23,22 @@ end
 Given 'I am allowed to send alerts' do
   @current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
 end
+
+Given 'I have confirmed my account for "$email"' do |email|
+  User.find_by_email!(email).confirm_email!
+end
+
+Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
+  role = Role.admin || Factory(:role, :name => Role::ADMIN)
+  jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+  table.raw.each do |row|
+    first_name, last_name = row.first.split(/\s+/)
+    user = Factory(:user, :first_name => first_name, :last_name => last_name, :email => row.last)
+    membership = user.role_memberships.create :role => role, :jurisdiction => jurisdiction, :user => user
+    user.reload.role_memberships.should include(membership)
+  end
+end
+
 
 
 
@@ -61,8 +76,3 @@ Then '"$email" should have the "$role" role request for "$jurisdiction"' do |ema
   m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)
   m.should_not be_nil
 end
-
-
-
-
-

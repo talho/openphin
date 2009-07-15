@@ -8,6 +8,10 @@ Feature: Signing up for an account
   Background:
     Given an organization named Red Cross
     And a jurisdiction named Dallas County
+    And Dallas County has the following administrators:
+      | Bob Jones      | bob.jones@example.com      |
+      | Quincy Jones   | quincy.jones@example.com   | 
+      | Jonas Brothers | jonas.brothers@example.com |
     And a role named Public
     And an approval role named Health Alert and Communications Coordinator
 
@@ -61,8 +65,15 @@ Feature: Signing up for an account
       | body contains | Thanks for signing up |
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Dallas County"
-    And the "Dallas County" administrators are notified that "john@example.com" has signed up
-
+    
+    And the following users should receive the email:
+      | roles         | Dallas County / Admin |
+      | subject       | User requesting role Health Alert and Communications Coordinator in Dallas County |
+      | body contains | requested assignment |
+      | body contains | Jonathan Smith (john@example.com) |
+      | body contains | Health Alert and Communications Coordinator |
+      | body contains | Dallas County |
+    
     Given I have confirmed my account for "john@example.com"
     When I log in as "john@example.com"
     Then I should see "Awaiting Approval"

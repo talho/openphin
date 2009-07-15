@@ -16,3 +16,6 @@
 [submodule "vendor/plugins/webrat"]
 	path = vendor/plugins/webrat
 	url = git://github.com/collectiveidea/webrat.git
+[submodule "vendor/plugins/no-peeping-toms"]
+	path = vendor/plugins/no-peeping-toms
+	url = git://github.com/pat-maddox/no-peeping-toms.git

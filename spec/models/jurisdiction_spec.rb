@@ -48,6 +48,38 @@ describe Jurisdiction do
     parent_node=Jurisdiction.new(:id => 3, :name => "Parent")
     parent_node.parent.should be_nil
   end
+  
+  describe "associations" do
+    it "should have many users through its role memberships" do
+      user1 = Factory(:user)
+      user2 = Factory(:user)
+      unexpected_user = Factory(:user)
+      
+      jurisdiction = Factory(:jurisdiction)
+      other_jurisdiction = Factory(:jurisdiction)
+      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
+      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
+      Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
+      
+      jurisdiction.users.should == [user1, user2]
+    end
+    it "should not include users in child jurisdictions" do
+      user1 = Factory(:user)
+      user2 = Factory(:user)
+      unexpected_user = Factory(:user)
+      
+      jurisdiction = Factory(:jurisdiction)
+      other_jurisdiction = Factory(:jurisdiction)
+      other_jurisdiction.move_to_child_of(jurisdiction)
+      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
+      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
+      Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
+      
+      jurisdiction.users.should == [user1, user2]
+       
+    end
+  end
+  
   #describe "parent/child relationships" do
   #  it "should return an array of child jurisdictions of the active jurisdiction with recursion" do
   #    @root.jurisdictions(true).length.should == 2

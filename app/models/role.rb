@@ -13,5 +13,11 @@
 #
 
 class Role < ActiveRecord::Base
+  ADMIN = "Admin"
+  
+  def self.admin
+    find_by_name ADMIN
+  end
+  
   validates_uniqueness_of :name
 end
