@@ -25,4 +25,46 @@ describe RoleRequest do
   it "should create a new instance given valid attributes" do
     RoleRequest.create!(@valid_attributes)
   end
+  
+  describe "#approve!" do
+    before(:each) do
+      @approver=Factory(:user)
+    end
+    
+    it "should set approver to the passed-in user" do
+      request = Factory(:role_request)
+      request.approve!(@approver)
+      request.approver.should == @approver
+    end 
+
+    it "should create a role membership for the requester" do
+      user = Factory(:user)
+      request = Factory(:role_request)
+      request.approve!(@approver)
+      request.role_membership.should_not be_nil
+    end
+    
+    describe "creating the role membership" do
+      it "should assign the requester to the role membership" do
+        user = Factory(:user)
+        request = Factory(:role_request, :requester => user)
+        request.approve!(@approver)
+        request.role_membership.user.should == user
+      end
+    
+      it "should assign the request's jurisdiction to the role membership" do
+        jurisdiction = Factory(:jurisdiction)
+        request = Factory(:role_request, :jurisdiction => jurisdiction)
+        request.approve!(@approver)
+        request.role_membership.jurisdiction.should == jurisdiction
+      end
+    
+      it "should assign the request's role to the role membership" do
+        role = Factory(:role)
+        request = Factory(:role_request, :role => role)
+        request.approve!(@approver)
+        request.role_membership.role.should == role
+      end 
+    end
+  end
 end

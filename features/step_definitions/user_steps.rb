@@ -39,6 +39,12 @@ Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
   end
 end
 
+Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, role_name|
+  user=User.find_by_email!(user_email)
+  role=Role.find_by_name!(role_name)
+  role_request=user.role_requests.find_by_role_id!(role.id)
+  role_request.approve!(role_request.jurisdiction.admins.first)
+end
 
 
 
@@ -60,6 +66,12 @@ When 'I signup for an account with the following info:' do |table|
   click_button 'Save'
 end
 
+When /^I log in as "([^\"]*)"$/ do |user_email|
+  visit sign_in_path
+  fill_in "Email", :with => user_email
+  fill_in "Password", :with => 'password'
+  click_button "Sign in"
+end
 
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
   p=User.find_by_email!(email)

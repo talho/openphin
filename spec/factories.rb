@@ -61,7 +61,7 @@ Factory.define :role_membership do |m|
 end
 
 Factory.define :role_request do |m|
-  m.association :requester
+  m.requester {|rr| rr.association :user }
   m.association :jurisdiction
   m.association :role
 end

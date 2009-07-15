@@ -19,5 +19,12 @@ class RoleRequest < ActiveRecord::Base
   belongs_to :approver,  :class_name => "User", :foreign_key => "approver_id"
   belongs_to :role, :class_name => "Role", :foreign_key => "role_id"
   belongs_to :jurisdiction
+  has_one :role_membership
 
+  named_scope :unapproved, :conditions => ["approver_id is null"]
+  def approve!(approving_user)
+    self.approver=approving_user
+    create_role_membership(:user => requester, :role => role, :jurisdiction => jurisdiction)
+    save!
+  end
 end

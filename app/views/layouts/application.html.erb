@@ -7,7 +7,7 @@
   <% if protect_against_forgery? %>
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <% end %>
-  <title>PhinPeople: <%= controller.action_name %></title>
+  <title>OpenPHIN: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'scaffold', 'jquery.crossSelect', '/javascripts/FCBKcomplete/style', :cache => true %>
   <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.min.js', 'application', 'alerts', :cache => 'jquery' %>
 </head>

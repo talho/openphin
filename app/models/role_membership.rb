@@ -14,8 +14,8 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :role
   belongs_to :jurisdiction
   belongs_to :user
-  belongs_to :request, :class_name => "RoleRequest"
-  has_one :approver, :through => :request
+  belongs_to :role_request
+  has_one :approver, :through => :role_request
   
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
 end

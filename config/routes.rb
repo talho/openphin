@@ -13,7 +13,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :roles
   map.resources :logs
   
-  map.root :alerts
+  map.root :controller => "dashboard", :action => "index"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -50,8 +50,8 @@ Feature: Signing up for an account
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
       | Email          | john@example.com |
-      | Password       | apples           |
-      | Password confirmation | apples    |
+      | Password       | password         |
+      | Password confirmation | password  |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
@@ -78,7 +78,7 @@ Feature: Signing up for an account
     When I log in as "john@example.com"
     Then I should see "Awaiting Approval"
     
-    Given "john@example.com" has been approved for the role "Health Alert & Communications Coordinator"
+    Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
     Then I should not see "Awaiting Approval" 
 
