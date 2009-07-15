@@ -51,7 +51,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
@@ -79,7 +79,7 @@ Feature: Creating and sending alerts
       | Acknowledge | No                                        |
       | Communication methods | E-mail                          |
     
-    When I press "Edit"
+    When I follow "Edit"
     And I fill out the alert form with:
       | Title    | Something Different |
     And I press "Preview Message"
@@ -102,9 +102,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
@@ -126,9 +126,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
@@ -151,9 +151,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
@@ -176,9 +176,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
@@ -201,9 +201,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com, jason.phipps@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
@@ -228,9 +228,9 @@ Feature: Creating and sending alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And the following users should receive the email:
       | People        | ethan.waldo@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |

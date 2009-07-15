@@ -31,3 +31,9 @@ end
 Then 'I should see a preview of the message' do
   response.should have_tag('#preview')
 end
+
+Then 'I should see a preview of the message with:' do |table|
+  table.rows_hash.each do |key, value|
+    response.should have_tag(".#{key.parameterize('_')}", Regexp.new(value))
+  end
+end

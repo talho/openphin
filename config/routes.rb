@@ -11,6 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :alerts
   map.resources :roles
+  map.resources :logs
   
   map.root :alerts
 

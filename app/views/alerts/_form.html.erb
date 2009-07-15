@@ -38,5 +38,5 @@
   <fieldset>
     <legend>People</legend>
     <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
-    <%= form.select :user_ids, [], {}, :multiple => :multiple %>
+    <%= form.select :user_ids, User.find(form.object.user_ids).map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
   </fieldset>

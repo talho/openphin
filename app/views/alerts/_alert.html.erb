@@ -13,4 +13,11 @@
 
   <dt>Acknowledge:</dt>
   <dd class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></dd>
+
+  <dt>Communication Methods:</dt>
+  <dd class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></dd>
+  
+  <dt>People:</dt>
+  <dd class="people"><%=h @alert.users.map(&:name).to_sentence %></dd>
+  
 </dl>

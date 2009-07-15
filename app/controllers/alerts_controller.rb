@@ -16,7 +16,7 @@ class AlertsController < ApplicationController
     if params[:send]
       @alert.save
       flash[:notice] = "Successfully sent the alert"
-      redirect_to @alert
+      redirect_to logs_path
     end
   end
 end

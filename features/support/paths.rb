@@ -13,6 +13,8 @@ module NavigationHelpers
     
     when 'the Alerts page'
       alerts_path
+    when 'the logs page'
+      logs_path
       
     # Add more page name => path mappings here
     
