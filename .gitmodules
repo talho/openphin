@@ -10,3 +10,6 @@
 [submodule "vendor/plugins/seed-fu"]
 	path = vendor/plugins/seed-fu
 	url = git://github.com/mbleigh/seed-fu.git
+[submodule "public/javascripts/FCBKcomplete"]
+	path = public/javascripts/FCBKcomplete
+	url = git://github.com/emposha/FCBKcomplete.git
