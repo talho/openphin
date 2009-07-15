@@ -4,7 +4,7 @@ When "I fill out the alert form with:" do |table|
     when "People"
       value.split(',').each do |name| 
         user = Given "a user named #{name.strip}"
-        fill_in 'alert_user_ids', :with => user.id
+        fill_in 'alert_user_ids', :with => user.id.to_s
       end
     when 'Status', 'Severity'
       select value, :from => key
@@ -18,11 +18,11 @@ When "I fill out the alert form with:" do |table|
     when 'Communication methods'
       check value
     when /Jurisdiction[s]?/
-      value.split(',').each {|item| select item.strip, :from => 'alert_jurisdiction_ids' }
+      select_multiple value.split(',').map(&:strip), :from => 'alert_jurisdiction_ids'
     when /Role[s]?/
-      value.split(',').each {|item| select item.strip, :from => 'alert_role_ids' }
+      select_multiple value.split(',').map(&:strip), :from => 'alert_role_ids'
     when /Organization[s]?/
-      value.split(',').each {|item| select item.strip, :from => 'alert_organization_ids' }
+      select_multiple value.split(',').map(&:strip), :from => 'alert_organization_ids'
     else
       fill_in key, :with => value
     end

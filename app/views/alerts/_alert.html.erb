@@ -16,7 +16,16 @@
 
   <dt>Communication Methods:</dt>
   <dd class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></dd>
-  
+
+  <dt>Jurisdictions:</dt>
+  <dd class="jurisdictions"><%=h @alert.jurisdictions.map(&:name).to_sentence %></dd>
+
+  <dt>Roles:</dt>
+  <dd class="roles"><%=h @alert.roles.map(&:name).to_sentence %></dd>
+
+  <dt>Organizations:</dt>
+  <dd class="organizations"><%=h @alert.organizations.map(&:name).to_sentence %></dd>
+
   <dt>People:</dt>
   <dd class="people"><%=h @alert.users.map(&:name).to_sentence %></dd>
   

@@ -61,6 +61,9 @@ Feature: Creating and sending alerts
 
   Scenario: Previewing an alert
     When I fill out the alert form with:
+      | Jurisdictions | Dallas County, Potter County            |
+      | Roles | Health Officer, Epidemiologist                  |
+      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
       | Message  | For more details, keep on reading...         |
@@ -71,6 +74,9 @@ Feature: Creating and sending alerts
     
     And I press "Preview Message"
     Then I should see a preview of the message with:
+      | Jurisdictions | Dallas County, Potter County            |
+      | Roles | Health Officer, Epidemiologist                  |
+      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
       | Message  | For more details, keep on reading...         |
@@ -84,10 +90,16 @@ Feature: Creating and sending alerts
       | Title    | Something Different |
     And I press "Preview Message"
     Then I should see a preview of the message with:
+      | Jurisdictions | Dallas County, Potter County            |
+      | Roles | Health Officer, Epidemiologist                  |
+      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | Something Different                          |
       | Message  | For more details, keep on reading...         |
+      | Severity | Moderate                                     |
+      | Status   | Actual                                       |
       | Acknowledge | No                                        |
+      | Communication methods | E-mail                          |
 
   Scenario: Sending an alert to specific users sends alerts to each user
     When I fill out the alert form with:
