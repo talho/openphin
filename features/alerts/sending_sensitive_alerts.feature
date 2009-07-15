@@ -1,8 +1,17 @@
 Feature: Sending sensitive alerts
 
-  In order to ....
-  As a ...
-  I want to ....
+  In order to not cause panic
+  As a user
+  I want to be able to keep sensitive alerts private
+  
+  Background: 
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
+      | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
+    And I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    When I go to the Alerts page
+    And I follow "New Alert"
 
   Scenario: Sending a sensitive email alert
     When I fill out the alert form with:
@@ -18,9 +27,9 @@ Feature: Sending sensitive alerts
     And I press "Preview Message"
     Then I should see a preview of the message
 
-    When I click "Send"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be at the logs page
+    And I should be on the logs page
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |

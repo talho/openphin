@@ -12,6 +12,9 @@
   <%= form.label :acknowledge, "Requires acknowledgement" %>
   <%= form.check_box :acknowledge %>
   
+  <%= form.label :sensitive, "Sensitive (Confidential)" %>
+  <%= form.check_box :sensitive %>
+  
   <fieldset>
     <legend>Communication Methods</legend>
     <% Device::Types.each do |type| %>

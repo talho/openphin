@@ -8,11 +8,12 @@ When "I fill out the alert form with:" do |table|
       end
     when 'Status', 'Severity'
       select value, :from => key
-    when 'Acknowledge'
+    when 'Acknowledge', 'Sensitive'
+      id = "alert_#{key.parameterize('_')}"
       if value == '<unchecked>'
-        uncheck 'alert_acknowledge'
+        uncheck id
       else
-        check 'alert_acknowledge'
+        check id
       end
     when 'Communication methods'
       check value
