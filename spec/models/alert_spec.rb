@@ -52,6 +52,24 @@ describe Alert do
     end
   end
   
+  describe "delivery_time" do
+    [15, 60, 1440, 4320].each do |delivery_time|
+      it "should be valid with #{delivery_time.inspect}" do
+        alert = Factory.build(:alert, :delivery_time => delivery_time)
+        alert.valid?
+        alert.should be_valid
+      end
+    end
+
+    [nil, '', 'Bogus', 0].each do |delivery_time|
+      it "should be invalid with #{delivery_time.inspect}" do
+        alert = Factory.build(:alert, :delivery_time => delivery_time)
+        alert.should_not be_valid
+        alert.errors.on(:delivery_time).should_not be_nil
+      end
+    end
+  end
+  
   describe "acknowledge" do
     it "should default to true" do
       a = Alert.new

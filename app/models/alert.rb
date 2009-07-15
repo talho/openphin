@@ -23,9 +23,11 @@ class Alert < ActiveRecord::Base
   
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
+  DeliveryTimes = [15, 60, 1440, 4320]
   
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
+  validates_inclusion_of :delivery_time, :in => DeliveryTimes
   
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
@@ -40,6 +42,14 @@ class Alert < ActiveRecord::Base
   
   def device_types
     alert_device_types.map(&:device)
+  end
+  
+  def human_delivery_time
+    self.class.human_delivery_time(delivery_time)
+  end
+  
+  def self.human_delivery_time(minutes)
+    minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"    
   end
   
 end

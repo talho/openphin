@@ -48,6 +48,7 @@ Factory.define :alert do |m|
   m.message "alertmessage"
   m.status 'Test'
   m.severity 'Moderate'
+  m.delivery_time 60
   #  status      :string(255)
   #  acknowledge :boolean
   #  author_id   :integer

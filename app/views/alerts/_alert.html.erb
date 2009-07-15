@@ -14,6 +14,9 @@
   <dt>Acknowledge:</dt>
   <dd class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></dd>
 
+  <dt>Delivery Time:</dt>
+  <dd class="delivery_time"><%=h @alert.human_delivery_time %></dd>
+
   <dt>Communication Methods:</dt>
   <dd class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></dd>
 
