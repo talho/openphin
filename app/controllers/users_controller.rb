@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def search
-    @users = User.all #search(params[:q])
+    @users = User.alphabetical.search(params[:q])
     respond_to do |format|
       format.json {render :json => @users.map{|u| {:caption => u.name, :value => u.id}} }
     end

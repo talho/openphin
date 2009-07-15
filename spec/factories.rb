@@ -19,12 +19,12 @@
 
 =end
 require 'factory_girl'
-Factory.sequence(:username) {|i| "user#{i}" }
+
 Factory.define :user do |pp|
-  pp.first_name Factory.next(:username)
+  pp.first_name "John"
   pp.last_name "Smith"
   pp.display_name {|p| "#{p.first_name} #{p.last_name}"}
-  pp.email {|p| "#{p.first_name}@example.com"}
+  pp.sequence(:email) {|i| "user#{i}@example.com" }
   pp.password              { "password" }
   pp.password_confirmation { "password" }
   pp.email_confirmed { true }

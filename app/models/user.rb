@@ -43,6 +43,12 @@ class User < ActiveRecord::Base
 
   after_create :send_confirmation_email
   
+  named_scope :alphabetical, :order => 'last_name, first_name, display_name'
+  
+  def self.search(query)
+    all(:conditions => ['first_name LIKE :query OR last_name LIKE :query OR display_name LIKE :query OR title LIKE :query', {:query => "%#{query}%"}])
+  end
+  
   def name
     display_name.blank? ? first_name + " " + last_name : display_name
   end
