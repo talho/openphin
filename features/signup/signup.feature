@@ -63,7 +63,11 @@ Feature: Signing up for an account
     Then I should see "Thanks, you've been confirmed!"
     And my account is active
 
-
-    
+  Scenario: User signs up with invalid data
+    When I sign up for an account as "invalidemail"
+    And I fill in "Password" with "password"
+    And I fill in "Confirm password" with ""
+    And I press "Sign Up"
+    Then I should see error messages
     
       

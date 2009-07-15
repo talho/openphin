@@ -14,7 +14,11 @@
 <body>
 
 
-<p style="color: green"><%= flash[:notice] %></p>
+<%- [:notice, :success, :failure].each do |type| -%>
+  <%- if flash[type] -%>
+    <p class="<%= type %>"><%= flash[type] %></p>
+  <%- end -%>
+<%- end -%>
 
 <%= yield %>
 

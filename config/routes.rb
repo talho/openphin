@@ -11,6 +11,8 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :alerts
   map.resources :roles
+  
+  map.root :alerts
 
   # The priority is based upon order of creation: first created -> highest priority.
 
