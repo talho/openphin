@@ -18,7 +18,7 @@
   <fieldset>
     <legend>Communication Methods</legend>
     <% Device::Types.each do |type| %>
-      <%= check_box_tag 'alert[device_types][]', type, nil, :id => "alert_#{dom_class(type)}" %>
+      <%= check_box_tag 'alert[device_types][]', type, form.object.device_types.include?(type.to_s), :id => "alert_#{dom_class(type)}" %>
       <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
     <% end %>
   </fieldset>
@@ -32,7 +32,7 @@
     <legend>Limit to Certain Roles</legend>
     <%= form.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
-  
+      
   <fieldset>
     <legend>Limit to Certain Organizations</legend>
     <%= form.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>

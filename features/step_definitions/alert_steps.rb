@@ -35,6 +35,13 @@ end
 
 Then 'I should see a preview of the message with:' do |table|
   table.rows_hash.each do |key, value|
-    response.should have_tag(".#{key.parameterize('_')}", Regexp.new(value))
+    case key
+    when /[Jurisdiction|Role|Organization|People][s]?/
+      value.split(',').each do |item|
+        response.should have_tag(".#{key.parameterize('_')}", Regexp.new(item.strip))
+      end
+    else
+      response.should have_tag(".#{key.parameterize('_')}", Regexp.new(value))
+    end
   end
 end
