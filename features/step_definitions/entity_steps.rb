@@ -37,3 +37,7 @@ Given 'the following users belong to the $name' do |organization_name, table|
     organization.users << user
   end
 end
+
+Given '$name is a foreign Organization' do |name|
+  Organization.find_by_name!(name).update_attribute :foreign, true
+end
