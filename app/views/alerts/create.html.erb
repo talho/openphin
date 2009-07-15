@@ -7,7 +7,7 @@
   <div id="preview">
     <%= render @alert %>
   
-    <%= link_to 'Edit', '#edit' %>
+    <%= link_to 'Edit', '#edit', :class => 'edit' %>
     <%= form.submit "Send", :name => 'send' %>
   </div> 
 <% end %>
