@@ -53,3 +53,15 @@ Factory.define :alert do |m|
   #  acknowledge :boolean
   #  author_id   :integer
 end
+
+Factory.define :role_membership do |m|
+  m.association :user
+  m.association :jurisdiction
+  m.association :role
+end
+
+Factory.define :role_request do |m|
+  m.association :requester
+  m.association :jurisdiction
+  m.association :role
+end

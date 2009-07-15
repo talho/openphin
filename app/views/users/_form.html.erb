@@ -21,7 +21,8 @@
   <%= f.label(:title, "Job title") %><br/>
   <%= f.text_field(:title) %><br/>
   
-  <% fields_for :role_membership, RoleMembership.new do |r| %>
+  <% user.role_requests.build if user.role_requests.empty? %>
+  <% f.fields_for :role_requests do |r| %>
     <%= r.label :jurisdiction_id,  "What County are you in?" %><br/>
     <%= r.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
     <%= label_tag "health_professional", "Are you a public health professional?" %>
@@ -33,23 +34,6 @@
       <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
     </div>
   <% end %>
-  <div id="role_list">
-    <ul>
-      <%= javascript_tag "var role_ct=#{@user.roles.length};" %>
-      <% @user.role_memberships.each_with_index do |role, role_index| %>
-          <% fields_for("roles[#{role_index}]") do |role_fields| %>
-            <li id="roles_<%= role_index %>">
-              <%= role_fields.hidden_field :id, :value => role.id, :role_arr_id => role_index %>
-              <%= role_fields.hidden_field :role_id, :value => role.role.id, :role_arr_id => role_index %>
-              <%= role_fields.hidden_field :jurisdiction_id, :value => role.jurisdiction ? role.jurisdiction.id : nil,
-                                           :role_arr_id => role_index %>              
-              <%= role.role.name %> <%= "(#{role.jurisdiction.name})" if role.jurisdiction %>
-              <%= link_to_function "Remove", "remove_role(#{role_index})" %>
-            </li>
-          <% end %>
-      <% end %>
-    </ul>
-  </div>
   <p>
     <%= f.submit 'Save' %>
   </p>

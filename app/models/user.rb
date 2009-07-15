@@ -27,6 +27,9 @@ class User < ActiveRecord::Base
   
   has_many :devices
   has_many :role_memberships
+  has_many :role_requests, :foreign_key => "requester_id"
+  accepts_nested_attributes_for :role_requests
+  
   has_and_belongs_to_many :organizations
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
@@ -37,12 +40,13 @@ class User < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes
   
   before_create :generate_oid
   before_create :set_confirmation_token
   before_create :create_default_email_device
 
+  after_create :assign_public_role
   after_create :send_confirmation_email
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
@@ -108,7 +112,25 @@ class User < ActiveRecord::Base
     end
   end
 
+  def request_roles
+    role_memberships.each do |rm|
+      if rm.needs_approval?
+        rm.request_approval
+      end
+    end
+  end
+
 private
+
+  
+  def assign_public_role
+    if self.role_requests.any?
+      self.role_memberships.create!(
+        :role => Role.find_by_name("Public"), 
+        :jurisdiction => self.role_requests.first.jurisdiction
+      )
+    end
+  end
 
   def generate_oid
     self[:phin_oid] = email.to_phin_oid

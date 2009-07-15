@@ -15,14 +15,18 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Role do
-  before(:each) do
-    @valid_attributes = {
-      :name => "value for name",
-      :approval_required => false
-    }
-  end
-
-  it "should create a new instance given valid attributes" do
-    Role.create!(@valid_attributes)
+  describe "validations" do
+    before(:each) do
+      @role = Factory.build(:role, :name => "Public")
+    end
+    
+    it "should be valid" do
+      @role.valid?.should be_true
+    end
+    
+    it "should be invalid if a Role already exists with same name" do
+      Factory(:role, :name => "Public")
+      @role.valid?.should be_false
+    end
   end
 end

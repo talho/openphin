@@ -56,6 +56,32 @@ describe User do
   end
 
   should_make_fields_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title
+  
+  describe "creating a user" do
+    before(:each) do
+      Role.find_or_create_by_name("Public")
+    end
+    
+    context "when the user is created with role requests" do
+      it "should create a public role membership for the jurisdiction of the first role request" do
+        jurisdiction = Factory(:jurisdiction)
+        user = Factory.build(:user)
+        user.role_requests = [Factory.build(:role_request, :jurisdiction => jurisdiction, :requester => user)]
+        user.save!
+        public_membership = user.role_memberships.detect{ |membership|
+           membership.jurisdiction == jurisdiction && membership.role == Role.find_by_name!("Public")
+         }
+         public_membership.should_not be_nil
+      end
+    end
+    
+    context "when the user is created without any role requests" do
+      it "should not assign a public role membership" do
+        user = Factory(:user, :role_requests => [])
+        user.role_memberships.should be_empty
+      end
+    end
+  end
     
   describe "phin_oid" do
     it "should be generated on create" do

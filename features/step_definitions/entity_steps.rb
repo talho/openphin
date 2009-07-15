@@ -4,7 +4,7 @@ Given 'the following entities exists:' do |table|
   end
 end
 
-Given /^a[n]? organization named ([^\"]*)$/ do |name|
+Given /^a[n]? organization named (.*)$/ do |name|
   Factory(:organization, :name => name)
 end
 
@@ -14,6 +14,10 @@ end
 
 Given 'a role named $name' do |name|
   Role.find_by_name(name) || Factory(:role, :name => name)
+end
+
+Given 'an approval role named $name' do |name|
+  r = Factory(:role, :name => name, :approval_required => true)
 end
 
 Given '$parent is the parent jurisdiction of:' do |parent_name, table|

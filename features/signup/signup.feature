@@ -9,7 +9,7 @@ Feature: Signing up for an account
     Given an organization named Red Cross
     And a jurisdiction named Dallas County
     And a role named Public
-    And a role named Health Alert and Communications Coordinator
+    And an approval role named Health Alert and Communications Coordinator
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
@@ -60,7 +60,7 @@ Feature: Signing up for an account
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
     And "john@example.com" should have the "Public" role for "Dallas County"
-    And "john@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
+    And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Dallas County"
     And the "Dallas County" administrators are notified that "john@example.com" has signed up
 
     Given I have confirmed my account for "john@example.com"

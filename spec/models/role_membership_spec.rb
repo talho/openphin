@@ -21,4 +21,13 @@ describe RoleMembership do
   it "should create a new instance given valid attributes" do
     RoleMembership.create!(@valid_attributes)
   end
+  
+  it "should be unique for role, jurisdiction, and user" do
+    membership = Factory(:role_membership)
+    bad_membership = Factory.build(:role_membership, 
+      :user => membership.user, 
+      :jurisdiction => membership.jurisdiction, 
+      :role => membership.role)
+    bad_membership.should_not be_valid
+  end
 end
