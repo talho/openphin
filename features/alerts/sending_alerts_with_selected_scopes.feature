@@ -63,13 +63,13 @@ Feature: Creating and sending alerts
     When I fill out the alert form with:
       | People | Keith Gaddis, Dan Morrison |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
       
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"
@@ -87,13 +87,13 @@ Feature: Creating and sending alerts
     When I fill out the alert form with:
       | Jurisdictions | Dallas County |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
   
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"
@@ -112,13 +112,13 @@ Feature: Creating and sending alerts
       | Jurisdictions | Dallas County, Tarrant County |
       | Roles         | Health Officer |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
   
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"
@@ -137,13 +137,13 @@ Feature: Creating and sending alerts
       | Jurisdictions | Dallas County |
       | Organizations | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
   
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"
@@ -162,13 +162,13 @@ Feature: Creating and sending alerts
       | Jurisdictions | Texas |
       | Organizations | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
   
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"
@@ -187,15 +187,15 @@ Feature: Creating and sending alerts
     When I fill out the alert form with:
       | Jurisdiction  | Tarrant County  |
       | Roles         | Health Officer |
-      | Organization  | Texas |
+      | Organization  | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Body   | For more details, keep on reading... |
+      | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledgement | <unchecked> |
-      | Communication methods | Email |
+      | Acknowledge | <unchecked> |
+      | Communication methods | E-mail |
   
-    And I click "Preview Message"
+    And I press "Preview Message"
     Then I should see a preview of the message
 
     When I click "Send"

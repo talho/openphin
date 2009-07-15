@@ -1,5 +1,4 @@
 <% form_for @alert do |f|%>
-  <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
   <%= f.label :title %>
   <%= f.text_field :title %>
   <%= f.label :message %>
@@ -39,6 +38,7 @@
   
   <fieldset>
     <legend>People</legend>
+    <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
     <%= f.select :user_ids, [], {}, :multiple => :multiple %>
   </fieldset>
   
