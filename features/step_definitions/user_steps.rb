@@ -45,12 +45,24 @@ Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, r
   role_request=user.role_requests.find_by_role_id!(role.id)
   role_request.approve!(role_request.jurisdiction.admins.first)
 end
-
-
-
-When 'I signup for an account with the following info:' do |table|
-  visit new_user_path
-  table.rows_hash.each do |field, value|
+def fill_in_signup_form(table = nil)
+  fields={"Email"=> "john@example.com",
+      "Password"=> "password",
+      "Password confirmation"=> "password",
+      "First name"=> "John",
+      "Last name"=> "Smith",
+      "Preferred name"=> "Jonathan Smith",
+      "Are you with any of these organizations"=> "Red Cross",
+      "What County"=> "Dallas County",
+      "What is your role within the health department"=> "Health Alert and Communications Coordinator",
+      "Preferred language"=> "English"
+  }
+  if table.is_a?(Hash)
+    fields.merge!(table)
+  elsif !table.nil?
+    fields.merge!(table.rows_hash)
+  end
+  fields.each do |field, value|
     value = "" if value == "<blank>"
     case field
     when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
@@ -63,7 +75,20 @@ When 'I signup for an account with the following info:' do |table|
       raise "Unknown field: #{field}: Please update this step if you intended to use this field."
     end
   end
+      
+end
+When /^I sign up for an account as "([^\"]*)"$/ do |email|
+  visit new_user_path
+  fill_in_signup_form("Email" => email)
+  click_button "Save"
+end
+
+
+When 'I signup for an account with the following info:' do |table|
+  visit new_user_path
+  fill_in_signup_form(table)
   click_button 'Save'
+
 end
 
 When /^I log in as "([^\"]*)"$/ do |user_email|
@@ -71,6 +96,14 @@ When /^I log in as "([^\"]*)"$/ do |user_email|
   fill_in "Email", :with => user_email
   fill_in "Password", :with => 'password'
   click_button "Sign in"
+end
+
+When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
+  email=ActionMailer::Base.deliveries.last
+  user=User.find_by_email!(user_email)
+  link=user_confirmation_path(user, user.token)
+  email.body.should contain(link)
+  visit link
 end
 
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|

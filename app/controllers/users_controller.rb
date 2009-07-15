@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_before_filter :login_required, :only => [:new, :create, :confirm]
+  
   def search
     @users = User.alphabetical.search(params[:q])
     respond_to do |format|
@@ -53,8 +55,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         SignupMailer.deliver_confirmation(@user)
-        flash[:notice] = 'Successfully added your account'
-        format.html { redirect_to(@user) }
+        format.html 
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
@@ -118,6 +119,8 @@ class UsersController < ApplicationController
   def confirm
     if u=User.find_by_id_and_token(params[:user_id], params[:token])
       u.confirm_email!
+      flash[:notice]="Your account has been confirmed."
+      redirect_back_or dashboard_path
     else
     end
   end

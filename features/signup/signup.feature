@@ -25,7 +25,7 @@ Feature: Signing up for an account
       | Preferred name | Jonathan Smith   |
       | What County    | Dallas County    |
       | Preferred language | English      |
-    Then I should see "Successfully added your account"
+    Then I should see "Thanks for signing up"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the communication device
       | Email | john@example.com | 
@@ -59,7 +59,7 @@ Feature: Signing up for an account
       | What County    | Dallas County    |
       | What is your role within the health department | Health Alert and Communications Coordinator |
       | Preferred language | English      |
-    Then I should see "Successfully added your account"
+    Then I should see "Thanks for signing up"
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
@@ -83,13 +83,12 @@ Feature: Signing up for an account
     Then I should not see "Awaiting Approval" 
 
    Scenario: Confirming a new account 
-    Given There is no account for "john@example.com"
     When I sign up for an account as "john@example.com"
-    Then I should receive an email confirmation at "john@example.com"
-    And my account is pending    
-    When I click the confirmation link in the email
-    Then I should see "Thanks, you've been confirmed!"
-    And my account is active
+    Then "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+    When "john@example.com" clicks the confirmation link in the email
+    Then I should see "Your account has been confirmed."
 
   Scenario: User signs up with invalid data
     When I sign up for an account as "invalidemail"

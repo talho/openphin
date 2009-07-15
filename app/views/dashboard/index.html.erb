@@ -1,4 +1,4 @@
-<% if current_user.role_requests.unapproved.any? %>
+<% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
 <h4>Awaiting Approval<h4>
   <ul>
     <% current_user.role_requests.unapproved.each do |request| %>
