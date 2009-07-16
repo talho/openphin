@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
   has_many :alerts, :foreign_key => 'author_id'
+  has_many :deliveries
   has_one :profile, :class_name => "UserProfile"
 
   validates_uniqueness_of :email
@@ -124,12 +125,6 @@ class User < ActiveRecord::Base
       if rm.needs_approval?
         rm.request_approval
       end
-    end
-  end
-
-  def deliver(alert)
-    devices.select{|device| alert.alert_device_types.map(&:device).include?(device.type) }.each do |device|
-      device.deliver(alert)
     end
   end
   

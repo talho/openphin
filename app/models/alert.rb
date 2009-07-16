@@ -36,6 +36,7 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
   has_many :alert_device_types
+  has_many :deliveries
   
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
@@ -79,7 +80,10 @@ class Alert < ActiveRecord::Base
     user_ids_for_delivery += user_ids    
 
     User.find(user_ids_for_delivery).each do |user|
-      user.send_later(:deliver, self)
+      user.devices.select{|device| alert_device_types.map(&:device).include?(device.type) }.each do |device|      
+        delivery = deliveries.create!(:user => user, :device => device)
+        delivery.deliver
+      end
     end
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)

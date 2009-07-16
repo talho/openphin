@@ -14,6 +14,7 @@
 #
 
 class Device < ActiveRecord::Base
+  has_many :deliveries
   belongs_to :user
   
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
