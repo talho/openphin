@@ -52,6 +52,13 @@ Then 'I should see a preview of the message with:' do |table|
 end
 
 Then "a foreign alert is sent to $name" do |name|
+  When "delayed jobs are processed"
   organization = Organization.find_by_name!(name)
   Dir.entries(organization.phin_ms_queue).size.should == 3 # ./ and ../ are always included
+end
+
+Then "no foreign alert is sent to $name" do |name|
+  When "delayed jobs are processed"
+  organization = Organization.find_by_name!(name)
+  Dir.entries(organization.phin_ms_queue).size.should == 2 # ./ and ../ are always included
 end

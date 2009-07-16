@@ -60,8 +60,10 @@ class Alert < ActiveRecord::Base
   def deliver
     # 1 - explode all known users and deliver to them
     # 2 - deliver to foreign orgs
-    organizations.select(&:foreign).each do |foreign_org|
-      foreign_org.send_later(:deliver, self)
+    if jurisdictions.any?(&:root?)
+      organizations.select(&:foreign).each do |foreign_org|
+        foreign_org.send_later(:deliver, self)
+      end
     end
   end
   

@@ -37,10 +37,25 @@ Feature: Sending cascading alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    
-    When delayed jobs are processed
-    Then a foreign alert is sent to Louisiana State Public Health Department
+    And a foreign alert is sent to Louisiana State Public Health Department
   
+  Scenario: Trying to send cascading alert that should not cascade
+    When I fill out the alert form with:
+      | Jurisdiction | Texas                                    |
+      | Role         | Immunization Director                    |
+      | Organization | Louisiana State Public Health Department |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+      | Message  | For more details, keep on reading...         |
+      | Acknowledge | <unchecked>                               |
+      | Communication methods | E-mail                          |
+
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And no foreign alert is sent to Louisiana State Public Health Department
+
   
   Scenario: Sending an update to a cascading alert
   Scenario: Sending a cancel to a cascading alert
