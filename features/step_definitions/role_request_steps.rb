@@ -42,9 +42,9 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
   #login_as Jurisdiction.find_by_name(juris_name).admins.first
-  visit role_requests_path
+  visit admin_role_requests_path
   response.should have_selector( ".pending_role_requests") do |req|
-req.should have_selector(".requester_email", :content => user_email)
+    req.should have_selector(".requester_email", :content => user_email)
     req.should have_selector(".role", :content => role_name)
     req.should have_selector(".jurisdiction", :content => current_user.jurisdictions.first.name )
     req.should have_selector("a.approve_link[href='#{approve_role_request_path(request)}']")
