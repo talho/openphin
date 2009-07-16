@@ -15,7 +15,7 @@ Feature: Role Requests
       | Bob Jones      | bob.jones@example.com      |
       | Quincy Jones   | quincy.jones@example.com   | 
   
-  Scenario: Public user requests role
+  Scenario: User requests role
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
