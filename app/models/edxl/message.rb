@@ -43,6 +43,7 @@ module EDXL
         message.alerts.each do |alert|
           a = ::Alert.create!(
             :identifier => alert.identifier,
+            :references => alert.references,
             :severity => alert.severity,
             :status => alert.status,
             :delivery_time => alert.delivery_time,
