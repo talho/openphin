@@ -6,7 +6,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-HOST = "openphin.example.com"
+DEFAULT_HOST = "openphin.example.com"
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -42,7 +42,11 @@ Rails::Initializer.run do |config|
   # Run "rake -D time" for a list of tasks for finding time zone names.
   config.time_zone = 'Central Time (US & Canada)'
   
+<<<<<<< HEAD:config/environment.rb
   config.action_mailer.default_url_options = { :host => HOST }  
+=======
+  config.action_mailer.default_url_options = { :host => DEFAULT_HOST }  
+>>>>>>> Added DEFAULT_HOST constant in environment.rb and updated relative paths used by mailers to be full-blown URLs.:config/environment.rb
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
