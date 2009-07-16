@@ -51,14 +51,16 @@ Then 'I should see a preview of the message with:' do |table|
   end
 end
 
-Then "a foreign alert is sent to $name" do |name|
+Then 'a foreign alert "$title" is sent to $name' do |title, name|
   When "delayed jobs are processed"
+  cascade_alert = CascadeAlert.new(Alert.find_by_title(title))
   organization = Organization.find_by_name!(name)
-  Dir.entries(organization.phin_ms_queue).size.should == 3 # ./ and ../ are always included
+  File.exist?(File.join(organization.phin_ms_queue, "#{cascade_alert.distribution_id}.edxl")).should be_true
 end
 
-Then "no foreign alert is sent to $name" do |name|
+Then 'no foreign alert "$title" is sent to $name' do |title, name|
   When "delayed jobs are processed"
+  cascade_alert = CascadeAlert.new(Alert.find_by_title(title))
   organization = Organization.find_by_name!(name)
-  Dir.entries(organization.phin_ms_queue).size.should == 2 # ./ and ../ are always included
+  File.exist?(File.join(organization.phin_ms_queue, "#{cascade_alert.distribution_id}.edxl")).should_not be_true
 end

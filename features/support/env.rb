@@ -18,5 +18,7 @@ require 'webrat/core/matchers'
 
 require "#{Rails.root}/spec/factories"
 
-# Clear out PHIN_MS queue
-FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
+Before do
+  # Clear out PHIN_MS queue
+  FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
+end

@@ -37,7 +37,7 @@ Feature: Sending cascading alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And a foreign alert is sent to Louisiana State Public Health Department
+    And a foreign alert "H1N1 SNS push packs to be delivered tomorrow" is sent to Louisiana State Public Health Department
   
   Scenario: Trying to send cascading alert that should not cascade
     When I fill out the alert form with:
@@ -54,7 +54,7 @@ Feature: Sending cascading alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And no foreign alert is sent to Louisiana State Public Health Department
+    And no foreign alert "H1N1 SNS push packs to be delivered tomorrow" is sent to Louisiana State Public Health Department
 
   
   Scenario: Sending an update to a cascading alert

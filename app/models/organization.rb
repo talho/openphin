@@ -25,7 +25,7 @@
 #  queue                     :string(255)
 #
 
-class Organization < Jurisdiction
+class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
   
   def to_dsml(builder=nil)

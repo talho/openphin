@@ -27,7 +27,6 @@ Given '$parent is the parent jurisdiction of:' do |parent_name, table|
   jurisdictions.each do |name|
     jurisdiction = Given "a jurisdiction named #{name}"
     jurisdiction.move_to_child_of parent
-    debugger
   end
 end
 
