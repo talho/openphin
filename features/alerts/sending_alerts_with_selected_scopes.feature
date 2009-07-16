@@ -17,19 +17,19 @@ Feature: Creating and sending alerts
       | Role         | Epidemiologist        |
       | Role         | WMD Coordinator       |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
-      | Brian Simms     | brian.simms@example.com  | Epidemiologist  | Dallas County  |
-      | Ed McGuyver     | ed.mcguyver@example.com  | Public          | Dallas County  |
-      | Ethan Waldo     | ethan.waldo@example.com  | Health Officer  | Tarrant County |
-      | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
-      | Jason Phipps    | jason.phipps@example.com | WMD Coordinator | Potter County  |
-      | Dan Morrison    | dan.morrison@example.com | Health Officer  | Ottawa County  | 
+      | John Smith      | john.smith@example.com     | Health Officer  | Dallas County  |
+      | Brian Simms     | brian.simms@example.com    | Epidemiologist  | Dallas County  |
+      | Ed McGuyver     | ed.mcguyver@example.com    | Public          | Dallas County  |
+      | Ethan Waldo     | ethan.waldo@example.com    | Health Officer  | Tarrant County |
+      | Keith Gaddis    | keith.gaddis@example.com   | Epidemiologist  | Wise County    |
+      | Jason Phipps    | jason.phipps@example.com   | WMD Coordinator | Potter County  |
+      | Dan Morrison    | dan.morrison@example.com   | Health Officer  | Ottawa County  | 
+      | Brian Ryckbost  | brian.ryckbost@example.com | Health Officer  | Tarrant County |
+      
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |  
-    And Michigan is the parent jurisdiction of:
-      | Ottawa County |
     And the following users belong to the Red Cross:
-      | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison |
+      | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison | Brian Ryckbost |
       
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
@@ -249,10 +249,10 @@ Feature: Creating and sending alerts
     Then I should see "Successfully sent the alert"
     And I should be on the logs page
     And the following users should receive the email:
-      | People        | ethan.waldo@example.com |
+      | People        | brian.ryckbost@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
       | body contains | Type: Alert    |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
-  
+  And "ethan.waldo@example.com" should not receive an email

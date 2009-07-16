@@ -24,6 +24,7 @@
 
 class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
+  has_many :deliveries
   
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
@@ -63,7 +64,6 @@ class Organization < ActiveRecord::Base
     cascade_alert = CascadeAlert.new(alert)
     File.open(File.join(phin_ms_queue, "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
   end
-  handle_asynchronously :deliver
   
   def phin_ms_queue
     FileUtils.mkdir_p File.join(Agency[:phin_ms_base_path], queue)

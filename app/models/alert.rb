@@ -75,17 +75,17 @@ class Alert < ActiveRecord::Base
     # 1 - explode all known users and deliver to them
     find_user_recipients.each do |user|
       user.devices.all(:conditions => {:type => device_types}).each do |device|      
-        delivery = deliveries.create!(:user => user, :device => device)
-        delivery.deliver
+        deliveries.create!(:user => user, :device => device).deliver
       end
     end
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)
-      organizations.select(&:foreign).each do |foreign_org|
-        foreign_org.deliver(self)
+      organizations.select(&:foreign).each do |organization|
+        deliveries.create!(:organization => oranizations).deliver
       end
     end
   end
+  handle_asynchronously :deliver
   
 private
   def set_message_type

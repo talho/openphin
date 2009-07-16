@@ -1,5 +1,9 @@
+<%- if @alert.sensitive? -%>
+Sensitive: use secure means of retrieval
+<%- else -%>
 Title: <%= @alert.title %>
 Status: <%= @alert.status %>
 Type: <%= @alert.message_type %>
 
-<%= @alert.message %>                              
+<%= @alert.message %>
+<%- end -%>

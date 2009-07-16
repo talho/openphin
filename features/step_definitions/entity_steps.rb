@@ -30,7 +30,7 @@ Given '$parent is the parent jurisdiction of:' do |parent_name, table|
   end
 end
 
-Given 'the following users belong to the $name' do |organization_name, table|
+Given 'the following users belong to the $name:' do |organization_name, table|
   organization = Given "an organization named #{organization_name}"
   users = table.raw.first
   users.each do |user_name|
