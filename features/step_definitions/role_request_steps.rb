@@ -60,6 +60,14 @@ When /^I approve "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
   visit approve_admin_role_request_path(request) 
 end
 
+When /^I deny "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
+  request=RoleRequest.find_by_requester_id_and_role_id_and_jurisdiction_id(
+          User.find_by_email!(user_email).id,
+          Role.find_by_name!(role_name).id,
+          current_user.jurisdictions.first.id)
+  visit deny_role_request_path(request)
+end
+
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
   visit admin_role_requests_path
   response.should_not have_selector( ".pending_role_requests") do |req|

@@ -8,7 +8,7 @@ class ApprovalMailer < ActionMailer::Base
 
   def denial(request, admin)
     recipients request.requester.email
-    subject "Request approved"
+    subject "Request denied"
     body :request => request, :admin => admin
   end
 

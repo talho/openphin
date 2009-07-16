@@ -31,8 +31,10 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin denying role requests in their jurisdiction
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    Then I should see "john@example.com" is awaiting approval
-    When I deny "john@example.com"
-    Then "john@example.com" should receive a denial notification email
+    Then I should see "john@example.com" is awaiting approval for "Health Officer"
+    When I deny "john@example.com" in the role "Health Officer"
+    Then "john@example.com" should receive the email:
+      | subject       | Request denied    |
+      | body contains | You have been denied for the assignment of Health Officer in Dallas County |
     And I should not see that "john@example.com" is awaiting approval
         
