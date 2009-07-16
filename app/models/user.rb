@@ -127,6 +127,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def deliver(alert)
+    devices.select{|device| alert.alert_device_types.map(&:device).include?(device.type) }.each do |device|
+      device.deliver(alert)
+    end
+  end
+  
 private
 
   def assign_public_role
@@ -150,4 +156,5 @@ private
   def set_confirmation_token
     self.token = ActiveSupport::SecureRandom.hex
   end
+
 end

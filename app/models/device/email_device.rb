@@ -21,4 +21,8 @@ class Device::EmailDevice < Device
   def self.display_name
     'E-mail'
   end
+  
+  def deliver(alert)
+    AlertMailer.deliver_alert(alert, user, self)
+  end
 end

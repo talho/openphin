@@ -59,6 +59,15 @@ class Alert < ActiveRecord::Base
   
   def deliver
     # 1 - explode all known users and deliver to them
+    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
+    user_ids_for_delivery & roles.map(&:user_ids).flatten unless roles.empty?
+    user_ids_for_delivery & organizations.map(&:user_ids).flatten unless organizations.empty?
+
+    user_ids_for_delivery += user_ids    
+
+    User.find(user_ids_for_delivery).each do |user|
+      user.send_later(:deliver, self)
+    end
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)
       organizations.select(&:foreign).each do |foreign_org|

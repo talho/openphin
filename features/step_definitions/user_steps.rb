@@ -5,8 +5,9 @@ Given "a user named $name" do |name|
 end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
-  user = Given "a user named #{name}"
-  user.update_attributes :email => email
+  first_name, last_name = name.split
+  user = User.find_by_first_name_and_last_name(first_name, last_name) ||
+    Factory(:user, :first_name => first_name, :last_name => last_name, :email => email)
   user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
 end
 

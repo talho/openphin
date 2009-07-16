@@ -12,7 +12,8 @@ Then /^"([^"]+). should have the communication device$/ do |email, table|
 end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
-  email = ActionMailer::Base.deliveries.last
+  When "delayed jobs are processed"
+  email = ActionMailer::Base.deliveries.last 
   email.should_not be_nil
   
   email.to.should == [email_address]
@@ -30,13 +31,16 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
 end
 
 Then /^the following users should receive the email:$/ do |table|
+  When "delayed jobs are processed"
   headers = table.headers
   recipients = if headers.first == "roles"
     jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
     jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
     jurisdiction.users.with_role(role_name)
   end
-    
+  
+  recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
+  
   emails = ActionMailer::Base.deliveries  
 
   recipients.each do |user|
