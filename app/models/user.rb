@@ -18,6 +18,7 @@
 #  token              :string(128)
 #  token_expires_at   :datetime
 #  email_confirmed    :boolean         not null
+#  phone              :string(255)
 #
 
 # Required Attributes: :cn, :sn, :organizations
@@ -33,6 +34,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
+  has_many :alerts, :foreign_key => 'author_id'
   has_one :profile, :class_name => "UserProfile"
 
   validates_uniqueness_of :email

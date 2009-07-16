@@ -21,6 +21,8 @@
 #  type                      :string(255)
 #  created_at                :datetime
 #  updated_at                :datetime
+#  foreign                   :boolean
+#  queue                     :string(255)
 #
 
 class Organization < Jurisdiction
@@ -59,9 +61,13 @@ class Organization < Jurisdiction
 
   end
   
-  def deliver
+  def deliver(alert)
     raise 'not foreign' unless foreign?
-    # build EDXL
-    # put it
+    cascade_alert = CascadeAlert.new(alert)
+    File.open(File.join(phin_ms_queue, "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
+  end
+  
+  def phin_ms_queue
+    FileUtils.mkdir_p File.join(Agency[:phin_ms_base_path], queue)
   end
 end

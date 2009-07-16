@@ -50,3 +50,8 @@ Then 'I should see a preview of the message with:' do |table|
     end
   end
 end
+
+Then "a foreign alert is sent to $name" do |name|
+  organization = Organization.find_by_name!(name)
+  Dir.entries(organization.phin_ms_queue).size.should == 3 # ./ and ../ are always included
+end

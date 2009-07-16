@@ -8,6 +8,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  jurisdiction_id :integer
+#  role_request_id :integer
 #
 
 class RoleMembership < ActiveRecord::Base

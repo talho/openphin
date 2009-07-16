@@ -18,6 +18,7 @@
 #  token              :string(128)
 #  token_expires_at   :datetime
 #  email_confirmed    :boolean         not null
+#  phone              :string(255)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

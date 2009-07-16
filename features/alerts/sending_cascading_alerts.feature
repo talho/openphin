@@ -36,8 +36,10 @@ Feature: Sending cascading alerts
     Then I should see a preview of the message
 
     When I press "Send"
-    Then a foreign alert is sent to Federal
-    And I should see "Successfully sent the alert"
+    Then I should see "Successfully sent the alert"
+    
+    When delayed jobs are processed
+    Then a foreign alert is sent to Louisiana State Public Health Department
   
   
   Scenario: Sending an update to a cascading alert

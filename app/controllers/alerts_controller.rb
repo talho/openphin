@@ -12,9 +12,10 @@ class AlertsController < ApplicationController
   end
   
   def create
-    @alert = Alert.new params[:alert]
+    @alert = current_user.alerts.build params[:alert]
     if params[:send]
       @alert.save
+      @alert.send_later(:deliver)
       flash[:notice] = "Successfully sent the alert"
       redirect_to logs_path
     end

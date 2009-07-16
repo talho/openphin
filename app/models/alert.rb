@@ -2,15 +2,20 @@
 #
 # Table name: alerts
 #
-#  id          :integer         not null, primary key
-#  title       :string(255)
-#  message     :text
-#  severity    :string(255)
-#  status      :string(255)
-#  acknowledge :boolean
-#  author_id   :integer
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id            :integer         not null, primary key
+#  title         :string(255)
+#  message       :text
+#  severity      :string(255)
+#  status        :string(255)
+#  acknowledge   :boolean
+#  author_id     :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#  sensitive     :boolean
+#  delivery_time :integer
+#  sent_at       :datetime
+#  message_type  :string(255)
+#  program_type  :string(255)
 #
 
 class Alert < ActiveRecord::Base
@@ -56,7 +61,7 @@ class Alert < ActiveRecord::Base
     # 1 - explode all known users and deliver to them
     # 2 - deliver to foreign orgs
     organizations.select(&:foreign).each do |foreign_org|
-      foreign_org.deliver
+      foreign_org.send_later(:deliver, self)
     end
   end
   

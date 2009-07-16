@@ -40,7 +40,7 @@ Given 'the following users belong to the $name' do |organization_name, table|
 end
 
 Given '$name is a foreign Organization' do |name|
-  Organization.find_by_name!(name).update_attribute :foreign, true
+  Organization.find_by_name!(name).update_attributes :foreign => true, :queue => name.parameterize
 end
 
 Given '"$name" has the OID "$oid"' do |name, oid|

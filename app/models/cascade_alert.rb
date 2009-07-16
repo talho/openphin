@@ -50,7 +50,7 @@ class CascadeAlert
       xml.combinedConfidentiality confidentiality
       xml.recipientRole do
         xml.valueListUrn 'urn:phin:role'
-        alert.roles.each do
+        alert.roles.each do |role|
           xml.value role.name
         end
       end

@@ -8,6 +8,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  jurisdiction_id :integer
+#  role_request_id :integer
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
