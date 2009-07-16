@@ -42,7 +42,7 @@
     end
     class CapAlert
       include HappyMapper
-      #namespace "ns1"
+      namespace "ns1"
       tag "alert"   
       element :identifier, String, :namespace => "ns1"
       element :sender, String, :namespace => "ns1"

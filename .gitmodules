@@ -16,3 +16,6 @@
 [submodule "vendor/plugins/no-peeping-toms"]
 	path = vendor/plugins/no-peeping-toms
 	url = git://github.com/pat-maddox/no-peeping-toms.git
+[submodule "vendor/plugins/happymapper"]
+	path = vendor/plugins/happymapper
+	url = git://github.com/brandon/happymapper.git
