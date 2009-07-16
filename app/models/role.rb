@@ -22,5 +22,7 @@ class Role < ActiveRecord::Base
     find_by_name ADMIN
   end
   
+  named_scope :user_roles, :conditions => { :user_role => true }
+  
   validates_uniqueness_of :name
 end

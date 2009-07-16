@@ -74,15 +74,15 @@ When /^I log in as "([^\"]*)"$/ do |user_email|
 end
 
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
-  email=ActionMailer::Base.deliveries.last
-  user=User.find_by_email!(user_email)
-  link=user_confirmation_path(user, user.token)
+  email = ActionMailer::Base.deliveries.last
+  user = User.find_by_email!(user_email)
+  link = user_confirmation_url(user, user.token, :host => HOST)
   email.body.should contain(link)
   visit link
 end
 
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
-  p=User.find_by_email!(email)
+  p = User.find_by_email!(email)
   j = Jurisdiction.find_by_name!(jurisdiction)
   r = Role.find_by_name!(role)
   m = p.role_memberships.find_by_role_id_and_jurisdiction_id(r.id, j.id)
@@ -90,7 +90,7 @@ Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role
 end
 
 Then '"$email" should have the "$role" role request for "$jurisdiction"' do |email, role, jurisdiction|
-  p=User.find_by_email!(email)
+  p = User.find_by_email!(email)
   j = Jurisdiction.find_by_name!(jurisdiction)
   r = Role.find_by_name!(role)
   m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)

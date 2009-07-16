@@ -1,9 +1,8 @@
 <% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
-<h4>Awaiting Approval<h4>
-  <ul>
+  <h4>Awaiting Approval<h4>
+  <ul class="pending_role_requests">
     <% current_user.role_requests.unapproved.each do |request| %>
-      <li><%= request.jurisdiction.name %>: <%= request.role.name %></li>
+      <li class="request"><%= request.jurisdiction.name %>: <%= request.role.name %></li>
     <% end %>
   </ul>
-
 <% end %>

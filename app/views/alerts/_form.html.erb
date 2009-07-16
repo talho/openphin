@@ -33,7 +33,8 @@
 
   <fieldset>
     <legend>Limit to Certain Roles</legend>
-    <%= form.select :role_ids, Role.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+    <%= form.label :role_ids, "Roles", :style => "display:none" %>
+    <%= form.select :role_ids, Role.user_roles.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
       
   <fieldset>

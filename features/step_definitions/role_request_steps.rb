@@ -23,15 +23,28 @@ Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_em
                     :requester => user)
 end
 
+Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jurisdiction_name|
+  role = Role.find_by_name!(role_name)
+  jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+  request = current_user.role_requests.unapproved.detect{ |request| request.jurisdiction == jurisdiction && request.role == role }
+  request.should_not be_nil
+  
+  visit dashboard_path
+  response.should have_selector( ".pending_role_requests") do |req|
+    req.should contain(role_name)
+    req.should contain(jurisdiction_name)
+  end
+end
+
 Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_email, role_name|
   request=RoleRequest.find_by_requester_id_and_role_id_and_jurisdiction_id(
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
   #login_as Jurisdiction.find_by_name(juris_name).admins.first
-  visit role_requests_path
+  visit admin_role_requests_path
   response.should have_selector( ".pending_role_requests") do |req|
-req.should have_selector(".requester_email", :content => user_email)
+    req.should have_selector(".requester_email", :content => user_email)
     req.should have_selector(".role", :content => role_name)
     req.should have_selector(".jurisdiction", :content => current_user.jurisdictions.first.name )
     req.should have_selector("a.approve_link[href='#{approve_role_request_path(request)}']")

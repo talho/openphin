@@ -81,8 +81,13 @@ Feature: Signing up for an account
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
     Then I should not see "Awaiting Approval" 
+    
+  Scenario: Signing up should not display system-roles
+    Given there is an system only Admin role
+    When I go to the sign up page
+    Then I should not see "Admin" in the "What is your role within the health department" dropdown
 
-   Scenario: Confirming a new account 
+  Scenario: Confirming a new account 
     When I sign up for an account as "john@example.com"
     Then "john@example.com" should receive the email:
       | subject       | Confirm your email    |

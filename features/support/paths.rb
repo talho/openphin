@@ -12,10 +12,9 @@ module NavigationHelpers
       new_password_path
     when /the request a role page/i
       new_role_request_path
-    
-    when 'the Alerts page'
+    when /the alerts page/i
       alerts_path
-    when 'the logs page'
+    when /the logs page/i
       logs_path
       
     # Add more page name => path mappings here
