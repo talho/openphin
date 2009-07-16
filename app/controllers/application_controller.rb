@@ -23,4 +23,13 @@ class ApplicationController < ActionController::Base
         false
       end
     end
+    
+    def admin_required
+      unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin }
+        flash[:error] = "That resource does not exist or you do not have access to it"
+        redirect_to sign_in_path
+        false
+      end
+    end
+
 end

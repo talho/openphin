@@ -41,14 +41,14 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
-  #login_as Jurisdiction.find_by_name(juris_name).admins.first
+
   visit admin_role_requests_path
   response.should have_selector( ".pending_role_requests") do |req|
     req.should have_selector(".requester_email", :content => user_email)
     req.should have_selector(".role", :content => role_name)
     req.should have_selector(".jurisdiction", :content => current_user.jurisdictions.first.name )
-    req.should have_selector("a.approve_link[href='#{approve_role_request_path(request)}']")
-    req.should have_selector("a.deny_link[href='#{deny_role_request_path(request)}']")
+    req.should have_selector("a.approve_link[href='#{approve_admin_role_request_path(request)}']")
+    req.should have_selector("a.deny_link[href='#{deny_admin_role_request_path(request)}']")
   end
 end
 
@@ -57,12 +57,11 @@ When /^I approve "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
-  visit approve_role_request_path(request) 
+  visit approve_admin_role_request_path(request) 
 end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
-  #login_as Jurisdiction.find_by_name(juris_name).admins.first
-  visit role_requests_path
+  visit admin_role_requests_path
   response.should_not have_selector( ".pending_role_requests") do |req|
     req.should have_selector(".requester_email", :content => user_email)
   end

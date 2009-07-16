@@ -12,8 +12,8 @@
     <td class='requester_email'><%=h role_request.requester.email %></td>
     <td class='role'><%=h role_request.role.name %></td>
     <td class='jurisdiction'><%=h role_request.jurisdiction.name %></td>
-    <td><a href='<%=approve_role_request_path(role_request) %>' class='approve_link'>Approve</a></td>
-    <td><a href='<%=deny_role_request_path(role_request) %>' class='deny_link'>Deny</a></td>
+    <td><a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link'>Approve</a></td>
+    <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link'>Deny</a></td>
   </tr>
 <% end %>
 </table>
