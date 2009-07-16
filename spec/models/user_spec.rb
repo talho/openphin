@@ -82,7 +82,6 @@ describe User do
       end
     end
   end
-
   describe "phin_oid" do
     it "should be generated on create" do
       Factory(:user).phin_oid.should_not be_blank

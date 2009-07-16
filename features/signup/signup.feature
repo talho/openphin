@@ -13,11 +13,7 @@ Feature: Signing up for an account
       | Quincy Jones   | quincy.jones@example.com   | 
       | Jonas Brothers | jonas.brothers@example.com |
     And a role named Public
-<<<<<<< HEAD:features/signup/signup.feature
     And an approval role named Health Alert and Communications Coordinator
-=======
-    And a role named Health Alert and Communications Coordinator
->>>>>>> Zach / Keith WIP for signup. :features/signup/signup.feature
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
@@ -95,10 +91,10 @@ Feature: Signing up for an account
     Then I should see "Your account has been confirmed."
 
   Scenario: User signs up with invalid data
-    When I sign up for an account as "invalidemail"
-    And I fill in "Password" with "password"
-    And I fill in "Confirm password" with ""
-    And I press "Sign Up"
+    When I signup for an account with the following info:
+      | Email          | invalidemail    |
+      | Password       | password        |
+      | Password confirmation | <blank>  |
     Then I should see error messages
     
       

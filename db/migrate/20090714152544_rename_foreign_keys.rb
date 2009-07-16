@@ -7,7 +7,7 @@ class RenameForeignKeys < ActiveRecord::Migration
       t.rename :phin_organization_id, :organization_id
       t.rename :phin_person_id, :user_id
     end
-    
+
     rename_column :user_profiles, :phin_person_id, :user_id
     change_table :role_memberships do |t|
       t.rename :phin_role_id, :role_id
@@ -32,7 +32,7 @@ class RenameForeignKeys < ActiveRecord::Migration
       t.rename :user_id, :phin_person_id
     end
     rename_table :organizations_users, :phin_organizations_phin_people
-    
+
     rename_column :phin_profiles, :user_id, :phin_person_id
     change_table :role_memberships do |t|
       t.rename :role_id , :phin_role_id
