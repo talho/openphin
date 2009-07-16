@@ -73,14 +73,8 @@ class Alert < ActiveRecord::Base
   
   def deliver
     # 1 - explode all known users and deliver to them
-    user_ids_for_delivery = jurisdictions.map(&:self_and_descendants).flatten.map(&:user_ids).flatten
-    user_ids_for_delivery & roles.map(&:user_ids).flatten unless roles.empty?
-    user_ids_for_delivery & organizations.map(&:user_ids).flatten unless organizations.empty?
-
-    user_ids_for_delivery += user_ids    
-
-    User.find(user_ids_for_delivery).each do |user|
-      user.devices.select{|device| alert_device_types.map(&:device).include?(device.type) }.each do |device|      
+    find_user_recipients.each do |user|
+      user.devices.all(:conditions => {:type => device_types}).each do |device|      
         delivery = deliveries.create!(:user => user, :device => device)
         delivery.deliver
       end
@@ -88,7 +82,7 @@ class Alert < ActiveRecord::Base
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)
       organizations.select(&:foreign).each do |foreign_org|
-        foreign_org.send_later(:deliver, self)
+        foreign_org.deliver(self)
       end
     end
   end
@@ -96,5 +90,15 @@ class Alert < ActiveRecord::Base
 private
   def set_message_type
     self.message_type = 'Alert' if self.message_type.blank?
+  end
+  
+  def find_user_recipients
+    user_ids_for_delivery = jurisdictions.map(&:self_and_descendants).flatten.map(&:user_ids).flatten
+    user_ids_for_delivery &= roles.map(&:user_ids).flatten unless roles.empty?
+    user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
+
+    user_ids_for_delivery += user_ids    
+
+    User.find(user_ids_for_delivery)
   end
 end

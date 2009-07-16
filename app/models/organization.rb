@@ -63,6 +63,7 @@ class Organization < ActiveRecord::Base
     cascade_alert = CascadeAlert.new(alert)
     File.open(File.join(phin_ms_queue, "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
   end
+  handle_asynchronously :deliver
   
   def phin_ms_queue
     FileUtils.mkdir_p File.join(Agency[:phin_ms_base_path], queue)
