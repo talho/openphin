@@ -11,17 +11,18 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
 end
 
 Given 'the following users exist:' do |table|
-  table.rows.each do |row|
+  table.raw.each do |row|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
   end
 end
 
 Given 'I am logged in as "$email"' do |email|
-  @current_user = Factory(:user, :email => email)
+  user = User.find_by_email!(email)
+  login_as user
 end
 
 Given 'I am allowed to send alerts' do
-  @current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
+  current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
 end
 
 Given 'I have confirmed my account for "$email"' do |email|
@@ -83,19 +84,14 @@ When /^I sign up for an account as "([^\"]*)"$/ do |email|
   click_button "Save"
 end
 
-
 When 'I signup for an account with the following info:' do |table|
   visit new_user_path
   fill_in_signup_form(table)
   click_button 'Save'
-
 end
 
 When /^I log in as "([^\"]*)"$/ do |user_email|
-  visit sign_in_path
-  fill_in "Email", :with => user_email
-  fill_in "Password", :with => 'password'
-  click_button "Sign in"
+  login_as User.find_by_email!(user_email)
 end
 
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
