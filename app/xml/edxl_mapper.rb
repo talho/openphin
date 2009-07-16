@@ -18,15 +18,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
+
+require 'happymapper'
+
     class CapParameter
       include HappyMapper
-      #namespace :ns1
+      namespace "http://schemas.google.com/analytics/2009"
       element :name, String, :tag => "valueName"
       element :value, String
     end
     class CapInfo
       include HappyMapper
-      #namespace "ns1"
+      namespace "http://schemas.google.com/analytics/2009"
       tag "info"
       element :category, String
       element :event, String
@@ -42,21 +45,21 @@
     end
     class CapAlert
       include HappyMapper
-      namespace "ns1"
+      namespace "http://schemas.google.com/analytics/2009"
       tag "alert"   
-      element :identifier, String, :namespace => "ns1"
-      element :sender, String, :namespace => "ns1"
-      element :sent, DateTime, :namespace => "ns1"
-      element :status, String, :namespace => "ns1"
-      element :message_type, String, :tag => "msgType", :namespace => "ns1"
-      element :references, String, :namespace => "ns1"
-      element :scope, String, :namespace => "ns1"
+      element :identifier, String
+      element :sender, String
+      element :sent, DateTime
+      element :status, String
+      element :message_type, String, :tag => "msgType"
+      element :references, String
+      element :scope, String
       #element :info, CapInfo
     end
     class EmbeddedXmlContent
       include HappyMapper
       tag "embeddedXMLContent"
-      has_one :alert, CapAlert, :namespace => "ns1"
+      has_one :alert, CapAlert
     end
     class XmlContent
       include HappyMapper
