@@ -40,4 +40,6 @@ Feature: Sending cascading alerts
     And I should see "Successfully sent the alert"
   
   
-  
+  Scenario: Sending an update to a cascading alert
+  Scenario: Sending a cancel to a cascading alert
+  Scenario: Requiring acknowledgement to a cascading alert
