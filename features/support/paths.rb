@@ -10,6 +10,8 @@ module NavigationHelpers
       new_session_path
     when /the password reset request page/i
       new_password_path
+    when /the request a role page/i
+      new_role_request_path
     
     when 'the Alerts page'
       alerts_path

@@ -41,11 +41,13 @@ class RoleRequestsController < ApplicationController
   # POST /role_requests.xml
   def create
     @role_request = RoleRequest.new(params[:role_request])
+    @role_request.requester = current_user
 
     respond_to do |format|
       if @role_request.save
-        flash[:notice] = 'RoleRequest was successfully created.'
-        format.html { redirect_to(@role_request) }
+        RoleRequestMailer.deliver_user_notification_of_role_request @role_request
+        flash[:notice] = "Your request to be a #{@role_request.role.name} in #{@role_request.jurisdiction.name} has been submitted"
+        format.html { redirect_to new_role_request_path }
         format.xml  { render :xml => @role_request, :status => :created, :location => @role_request }
       else
         format.html { render :action => "new" }

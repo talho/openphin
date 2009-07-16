@@ -1,22 +1,20 @@
-<h1>New role_request</h1>
+<h1>Request a Role</h1>
 
 <% form_for(@role_request) do |f| %>
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :requester_id %><br />
-    <%= f.text_field :requester_id %>
+    <%= f.label :jurisdiction_id,  "Jurisdiction" %><br/>
+    <%= f.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
   </p>
+
   <p>
-    <%= f.label :role_id %><br />
-    <%= f.text_field :role_id %>
+    <%= f.label :role_id, "Role" %><br/>
+    <%= f.collection_select :role_id, Role.all, :id, :name, :include_blank => true %><br/>
   </p>
+
   <p>
-    <%= f.label :approver_id %><br />
-    <%= f.text_field :approver_id %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
+    <%= f.submit 'Submit Request' %>
   </p>
 <% end %>
 

@@ -16,5 +16,6 @@ Spec::Runner.configure do |config|
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   
   config.extend SpecHelpers::ModelMacros, :type => [:model]
+  config.extend SpecHelpers::ControllerMacros, :type => [:controller]
   config.include SpecHelpers::ControllerHelpers, :type => [:controller]
 end

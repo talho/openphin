@@ -22,6 +22,7 @@ class RoleRequest < ActiveRecord::Base
   has_one :role_membership
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
+  
   def approve!(approving_user)
     self.approver=approving_user
     create_role_membership(:user => requester, :role => role, :jurisdiction => jurisdiction)
