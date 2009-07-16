@@ -2,7 +2,7 @@ class RoleRequestsController < ApplicationController
   # GET /role_requests
   # GET /role_requests.xml
   def index
-    @role_requests = RoleRequest.all
+    @role_requests = RoleRequest.unapproved.in_jurisdictions(current_user.jurisdictions)
 
     respond_to do |format|
       format.html # index.html.erb

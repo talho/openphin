@@ -22,6 +22,9 @@ class RoleRequest < ActiveRecord::Base
   has_one :role_membership
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
+  named_scope :in_jurisdictions, lambda { |jurisdictions|
+    {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
+  }
   
   def approve!(approving_user)
     self.approver=approving_user
