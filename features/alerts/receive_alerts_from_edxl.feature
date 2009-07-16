@@ -14,8 +14,6 @@ Feature: Alerts from EDXL
     And "Texas" has the FIPS code "01091"
     And "Potter County" has the FIPS code "01003"
 
-  Scenario: Receiving an EDXL Acknowledgment
-
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
     Then I see an alert with:
@@ -59,3 +57,12 @@ Feature: Alerts from EDXL
       | identifier | CDC-2006-183 |
       | references | 2.16.840.1.114222.4.20.1.1,CDC-2006-182,2006-11-05T13:02:42.1219Z |
       | message_type | Cancel |
+
+  Scenario: Receiving an EDXL Acknowledgment
+    Given "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
+    And an alert with:
+      | identifier | CDC-2006-183 |
+    When PhinMS delivers the message: PCAAckExample.xml
+    Then the alert "CDC-2006-183" to "Red Cross" should be acknowledged
+    
+
