@@ -26,6 +26,8 @@ Feature: Role Requests
       | Role         | Health Officer |
     
     Then I should see "Your request to be a Health Officer in Dallas County has been submitted"
+    Then I should see I am awaiting approval for Health Officer in Dallas County
+    
     And I should see that I have a pending role request
     And "john.smith@example.com" should receive the email:
       | subject       | Request submitted for Health Officer in Dallas County |
@@ -39,3 +41,10 @@ Feature: Role Requests
       | body contains | Health Officer |
       | body contains | Dallas County  |
     
+  Scenario: Requesting a role should not display system-roles
+    Given there is an system only Admin role
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the request a role page
+    Then I should not see "Admin" in the "Role" dropdown

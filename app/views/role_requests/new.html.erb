@@ -10,7 +10,7 @@
 
   <p>
     <%= f.label :role_id, "Role" %><br/>
-    <%= f.collection_select :role_id, Role.all, :id, :name, :include_blank => true %><br/>
+    <%= f.collection_select :role_id, Role.user_roles, :id, :name, :include_blank => true %><br/>
   </p>
 
   <p>

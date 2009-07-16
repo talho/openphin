@@ -18,6 +18,9 @@ require 'webrat/core/matchers'
 
 require "#{Rails.root}/spec/factories"
 
+# load application-wide fixtures
+Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
+
 Before do
   # Clear out PHIN_MS queue
   FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
