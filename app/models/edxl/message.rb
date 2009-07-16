@@ -32,11 +32,8 @@ module EDXL
     element :distribution_reference, String, :tag => "distributionReference"
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
     has_many :alerts, EDXL::Alert
-    # has_many :fips_codes, String, :tag => 'locCodeUN', :deep => true
-    # has_one :recipient_role, RecipientRole
-    # has_one :explicit_address, ExplicitAddress
-    # has_many :target_areas, TargetArea
-    # has_one :content_object, ContentObject, :tag => "contentObject"
+    has_many :fips_codes, String, :tag => 'locCodeUN', :deep => true
+    has_many :roles, String, :tag => 'recipientRole/value'
     
     def self.parse(xml, options = {})
       returning super do |message|
@@ -63,10 +60,14 @@ module EDXL
             :certainty => alert.certainty,
             :program => alert.program
           )
-          # message.fips_codes.each do |code|
-          #   j = Jurisdiction.find_by_fips_code(code)
-          #   a.jurisdictions << j if j
-          # end
+          message.fips_codes.each do |code|
+            j = Jurisdiction.find_by_fips_code(code)
+            a.jurisdictions << j if j
+          end
+          message.roles.each do |role|
+            role = Role.find_by_name(role.strip)
+            a.roles << role if role
+          end
         end
       end
     end

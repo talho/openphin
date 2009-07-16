@@ -72,6 +72,8 @@ Then 'I see an alert with:' do |table|
     case attr
     when 'jurisdiction'
       alert.jurisdictions.should include(Jurisdiction.find_by_name(value))
+    when 'role'
+      alert.roles.should include(Role.find_by_name(value))
     when 'from_organization'
       alert.from_organization.should == Organization.find_by_name(value)
     when 'delivery_time'
