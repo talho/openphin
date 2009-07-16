@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_
 require 'spec/autorun'
 require 'spec/rails'
 
-Dir[File.dirname(__FILE__) + '/macros/*.rb'].each{ |f| require f }
+Dir[File.dirname(__FILE__) + '/spec_helpers/**/*.rb'].each{ |f| require f }
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -16,4 +16,5 @@ Spec::Runner.configure do |config|
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   
   config.extend SpecHelpers::ModelMacros, :type => [:model]
+  config.include SpecHelpers::ControllerHelpers, :type => [:controller]
 end

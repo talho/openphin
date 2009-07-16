@@ -1,6 +1,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe UsersController do
+describe UsersController, "as a logged in user" do
+  before(:each) do
+    login_as_user
+  end
+  
   describe 'search' do
     before do
       @user1 = Factory(:user, :last_name => 'Smith')
