@@ -19,7 +19,7 @@ class Role < ActiveRecord::Base
   ADMIN = "Admin"
   
   def self.admin
-    find_by_name ADMIN
+    find_by_name! ADMIN
   end
   
   named_scope :user_roles, :conditions => { :user_role => true }
