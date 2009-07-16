@@ -64,3 +64,24 @@ Then 'no foreign alert "$title" is sent to $name' do |title, name|
   organization = Organization.find_by_name!(name)
   File.exist?(File.join(organization.phin_ms_queue, "#{cascade_alert.distribution_id}.edxl")).should_not be_true
 end
+
+Then 'I see an alert with:' do |table|
+  attrs = table.rows_hash
+  alert = Alert.find_by_identifier!(attrs['identifier'])
+  attrs.each do |attr, value|
+    case attr
+    when 'jurisdiction'
+      alert.jurisdictions.should include(Jurisdiction.find_by_name(value))
+    when 'from_organization'
+      alert.from_organization.should == Organization.find_by_name(value)
+    when 'delivery_time'
+      alert.delivery_time.should == value.to_i
+    when 'sent_at'
+      alert.sent_at.should be_close(Time.zone.parse(value), 1)
+    when 'acknowledge'
+      alert.acknowledge.should == (value == 'Yes')
+    else
+      alert.send(attr).should == value
+    end
+  end
+end

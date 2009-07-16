@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: jurisdictions
+# Table name: organizations
 #
 #  id                        :integer         not null, primary key
 #  name                      :string(255)
@@ -15,9 +15,6 @@
 #  county                    :string(255)
 #  alerting_jurisdictions    :string(255)
 #  primary_organization_type :string(255)
-#  parent_id                 :integer
-#  lft                       :integer
-#  rgt                       :integer
 #  type                      :string(255)
 #  created_at                :datetime
 #  updated_at                :datetime

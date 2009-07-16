@@ -1,5 +1,6 @@
 class SplitOrganizationsOutOfJurisdictions < ActiveRecord::Migration
   class Jurisdiction < ActiveRecord::Base
+    set_inheritance_column false
   end
   
   class Organization < ActiveRecord::Base

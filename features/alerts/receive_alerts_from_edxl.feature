@@ -18,7 +18,7 @@ Feature: Alerts from EDXL
       | from_organization_oid  | 2.16.840.1.114222.4.20.1.1 |
       | sent_at | 2006-11-07T21:25:16.5127Z |
       | status  | Test |
-      | type | Alert |
+      | message_type | Alert |
       | scope | Restricted |
       | category | Health |
       | program | HAN |
@@ -31,13 +31,13 @@ Feature: Alerts from EDXL
       | delivery_time | 1440 |
       | jurisdictional_level | StateLocal |
       | program_type | Notification |
-      | jurisdiction | Texas |
-      | jurisdiction | Potter County |
-      | role | Health Officer |
-      | role | Emergency Preparedness Coordinator |
-      | role | Chief Epidemiologist |
-      | role | Communicable/Infectious Disease Coordinators |
-      | role | HAN Coordinator  |
+      # | role | Health Officer |
+      # | role | Emergency Preparedness Coordinator |
+      # | role | Chief Epidemiologist |
+      # | role | Communicable/Infectious Disease Coordinators |
+      # | role | HAN Coordinator  |
+      # | jurisdiction | Texas |
+      # | jurisdiction | Potter County |
   
   Scenario: Recieving an EDXL alert update
   

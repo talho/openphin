@@ -2,24 +2,35 @@
 #
 # Table name: alerts
 #
-#  id            :integer         not null, primary key
-#  title         :string(255)
-#  message       :text
-#  severity      :string(255)
-#  status        :string(255)
-#  acknowledge   :boolean
-#  author_id     :integer
-#  created_at    :datetime
-#  updated_at    :datetime
-#  sensitive     :boolean
-#  delivery_time :integer
-#  sent_at       :datetime
-#  message_type  :string(255)
-#  program_type  :string(255)
+#  id                     :integer         not null, primary key
+#  title                  :string(255)
+#  message                :text
+#  severity               :string(255)
+#  status                 :string(255)
+#  acknowledge            :boolean
+#  author_id              :integer
+#  created_at             :datetime
+#  updated_at             :datetime
+#  sensitive              :boolean
+#  delivery_time          :integer
+#  sent_at                :datetime
+#  message_type           :string(255)
+#  program_type           :string(255)
+#  from_organization_id   :integer
+#  from_organization_name :string(255)
+#  from_organization_oid  :string(255)
+#  identifier             :string(255)
+#  scope                  :string(255)
+#  category               :string(255)
+#  program                :string(255)
+#  urgency                :string(255)
+#  certainty              :string(255)
+#  jurisdictional_level   :string(255)
 #
 
 class Alert < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
+  belongs_to :from_organization, :class_name => 'Organization'
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
