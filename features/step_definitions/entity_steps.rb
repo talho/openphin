@@ -6,7 +6,7 @@ Given 'the following entities exists:' do |table|
 end
 
 Given /^a[n]? organization named (.*)$/ do |name|
-  Factory(:organization, :name => name)
+  Organization.find_by_name(name) || Factory(:organization, :name => name)
 end
 
 Given 'a jurisdiction named $name' do |name|
@@ -41,4 +41,14 @@ end
 
 Given '$name is a foreign Organization' do |name|
   Organization.find_by_name!(name).update_attribute :foreign, true
+end
+
+Given '"$name" has the OID "$oid"' do |name, oid|
+  organization = Given "an organization named #{name}"
+  organization.update_attributes :phin_oid => oid
+end
+
+Given '"$name" has the FIPS code "$code"' do |name, code|
+  jurisdiction = Given "a jurisdiction named #{name}"
+  jurisdiction.update_attributes :fips_code => code
 end

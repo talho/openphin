@@ -1,3 +1,8 @@
+When "PhinMS delivers the message: $filename" do |filename|
+  xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
+  EDXL::Message.parse(xml)
+end
+
 When "I fill out the alert form with:" do |table|
   table.rows_hash.each do |key, value|
     case key

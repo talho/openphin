@@ -10,6 +10,7 @@
 #  coverage      :string(255)
 #  emergency_use :boolean
 #  home_use      :boolean
+#  options       :text
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

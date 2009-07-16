@@ -10,6 +10,7 @@
 #  coverage      :string(255)
 #  emergency_use :boolean
 #  home_use      :boolean
+#  options       :text
 #
 
 class Device::EmailDevice < Device

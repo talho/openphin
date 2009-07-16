@@ -1,15 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require 'edxl_mapper'
-
-describe EDXLMessage do
-  before do
-    @message = EDXLMessage.parse(File.read("#{fixture_path}/PCAMessageExample.xml"))
-  end
-  
-  it "should map distribution_id" do
-    @message.distribution_id.should == 'CDC-2006-183'
-  end
-end
 
 describe ContentObject do
   before do

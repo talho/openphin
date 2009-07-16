@@ -57,7 +57,6 @@
 						<ns1:senderName>Centers for Disease Control and Prevention</ns1:senderName>
 						<ns1:headline>Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees</ns1:headline>
 						<ns1:description>To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus.</ns1:description>
-						<ns1:instruction>Please distribute to health providers and officials within your jurisdiction as deemed appropriate</ns1:instruction>
 						<ns1:parameter>
 							<ns1:valueName>Acknowledge</ns1:valueName>
 							<ns1:value>Yes</ns1:value>
