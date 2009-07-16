@@ -10,7 +10,7 @@ class CascadeAlert
   end
   
   def author
-    [:name, :title, :email, :phone].map{|method| alert.author.send(method) }.join("\n")
+    [:name, :title, :email, :phone].map{|method| alert.author.send(method) }.reject(&:blank?).join("\n")
   end
   
   def agency_name
@@ -39,69 +39,69 @@ class CascadeAlert
   end
     
   def to_edxl
-    edxl = Builder::XmlMarkup.new
-    edxl.instruct!
-    edxl.EDXLDistribution do |root|
-      root.distributionID distribution_id
-      root.senderID sender_id
-      root.dateTimeSent sent_at
-      root.distributionStatus alert.status
-      root.distributionType alert.message_type
-      root.combinedConfidentiality confidentiality
-      root.recipientRole do |recipientRole|
-        recipientRole.valueListUrn 'urn:phin:role'
-        alert.roles.each do |role|
-          recipientRole.value role.name
+    xml = Builder::XmlMarkup.new(:indent => 2)
+    xml.instruct!
+    xml.EDXLDistribution do
+      xml.distributionID distribution_id
+      xml.senderID sender_id
+      xml.dateTimeSent sent_at
+      xml.distributionStatus alert.status
+      xml.distributionType alert.message_type
+      xml.combinedConfidentiality confidentiality
+      xml.recipientRole do
+        xml.valueListUrn 'urn:phin:role'
+        alert.roles.each do
+          xml.value role.name
         end
       end
-      root.distributionReference distribution_reference unless alert.message_type == 'Alert'
-      # root.targetArea do |targetArea|
-      #   targetArea.country 'US'
-      #   alert.jurisdictions.each do |jurisdiction|
-      #     targetArea.locCodeUN jurisdiction.fips_code
+      xml.distributionReference distribution_reference unless alert.message_type == 'Alert'
+      # xml.targetArea do
+      #   xml.country 'US'
+      #   alert.jurisdictions.each do
+      #     xml.locCodeUN jurisdiction.fips_code
       #   end
       # end
-      root.contentObject do |content|
-        content.confidentiality confidentiality
-        content.xmlContent do |xmlContent|
-          xmlContent.embeddedXMLContent do |embeddedXMLContent|
-            embeddedXMLContent.alert(:ns1, "xmlns:ns1".to_sym => 'urn:oasis:names:tc:emergency:cap:1.1') do |cap|
-              cap.identifier distribution_id
-              cap.sender sender_id
-              cap.sent sent_at
-              cap.status alert.status
-              cap.msgType alert.message_type
-              cap.references distribution_reference unless alert.message_type == 'Alert'
-              cap.scope 'Restricted'
-              cap.info do |info|
-                info.category 'Health'
-                info.event 'HAN'
-                info.urgency 'Unknown'
-                info.severity alert.severity
-                info.certainty 'Very Likely'
-                info.senderName agency_name
-                info.headline alert.title
-                info.description alert.message
-                info.contact author
+      xml.contentObject do
+        xml.confidentiality confidentiality
+        xml.xmlContent do
+          xml.embeddedXMLContent do
+            xml.ns1(:alert, "xmlns:ns1".to_sym => 'urn:oasis:names:tc:emergency:cap:1.1') do |cap|
+              xml.ns1 :identifier, distribution_id
+              xml.ns1 :sender, sender_id
+              xml.ns1 :sent, sent_at
+              xml.ns1 :status, alert.status
+              xml.ns1 :msgType, alert.message_type
+              xml.ns1 :references, distribution_reference unless alert.message_type == 'Alert'
+              xml.ns1 :scope, 'Restricted'
+              xml.ns1 :info do |info|
+                xml.ns1 :category, 'Health'
+                xml.ns1 :event, 'HAN'
+                xml.ns1 :urgency, 'Unknown'
+                xml.ns1 :severity, alert.severity
+                xml.ns1 :certainty, 'Very Likely'
+                xml.ns1 :senderName, agency_name
+                xml.ns1 :headline, alert.title
+                xml.ns1 :description, alert.message
+                xml.ns1 :contact, author
                 
-                info.parameter do |p|
-                  p.valueName 'Acknowledge'
-                  p.value yes_no(alert.acknowledge?)
+                xml.ns1 :parameter do
+                  xml.ns1 :valueName, 'Acknowledge'
+                  xml.ns1 :value, yes_no(alert.acknowledge?)
                 end
                 
-                info.parameter do |p|
-                  p.valueName 'DeliveryTime'
-                  p.value alert.delivery_time
+                xml.ns1 :parameter do
+                  xml.ns1 :valueName, 'DeliveryTime'
+                  xml.ns1 :value, alert.delivery_time
                 end
                 
-                info.parameter do |p|
-                  p.valueName 'JurisdictionalLevel'
-                  p.value 'Federal'
+                xml.ns1 :parameter do
+                  xml.ns1 :valueName, 'JurisdictionalLevel'
+                  xml.ns1 :value, 'Federal'
                 end
                 
-                info.parameter do |p|
-                  p.valueName 'ProgramType'
-                  p.value alert.program_type
+                xml.ns1 :parameter do
+                  xml.ns1 :valueName, 'ProgramType'
+                  xml.ns1 :value, alert.program_type
                 end
                
               end
