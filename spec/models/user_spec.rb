@@ -68,9 +68,9 @@ describe User do
         user = Factory.build(:user)
         user.role_requests = [Factory.build(:role_request, :jurisdiction => jurisdiction, :requester => user)]
         user.save!
-        public_membership = user.role_memberships.detect{ |membership|
-           membership.jurisdiction == jurisdiction && membership.role == Role.find_by_name!("Public")
-         }
+        public_membership = user.role_memberships.detect do |membership|
+          membership.jurisdiction == jurisdiction && membership.role == Role.find_by_name!("Public")
+        end
          public_membership.should_not be_nil
       end
     end
@@ -82,6 +82,7 @@ describe User do
       end
     end
   end
+
   describe "phin_oid" do
     it "should be generated on create" do
       Factory(:user).phin_oid.should_not be_blank
@@ -97,6 +98,21 @@ describe User do
     it "should not allow assignment" do
       person = Factory(:user)
       lambda { person.phin_oid = 1 }.should raise_error
+    end
+  end
+  describe "#is_admin_for" do
+    before(:each) do
+      @user = Factory(:user)
+      role = Role.admin || Factory(:role, :name => Role::ADMIN)
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:role_membership, :jurisdiction => @jurisdiction, :role => role, :user => @user)
+    end
+    it "should return true if the user is an admin for the given jurisdiction" do
+      @user.is_admin_for?(@jurisdiction).should == true
+    end
+    it "should return false if the user is not an admin for the given jurisdiction" do
+      j2=Factory(:jurisdiction)
+      @user.is_admin_for?(j2).should == false
     end
   end
 end

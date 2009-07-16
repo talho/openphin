@@ -12,7 +12,7 @@ Then /^"([^"]+). should have the communication device$/ do |email, table|
 end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
-  email = ActionMailer::Base.deliveries.last 
+  email = ActionMailer::Base.deliveries.last
   email.should_not be_nil
   
   email.to.should == [email_address]

@@ -29,6 +29,15 @@ Given 'I have confirmed my account for "$email"' do |email|
   User.find_by_email!(email).confirm_email!
 end
 
+Given "the following administrators exist:" do |table|
+  admin_role=Role.admin || Factory(:role, :name => Role::ADMIN)
+  table.raw.each do |row|
+    admin = Factory(:user, :email => row[0])
+    jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])
+    RoleMembership.create!(:user => admin, :jurisdiction => jurisdiction, :role => admin_role)
+  end
+end
+
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
   role = Role.admin || Factory(:role, :name => Role::ADMIN)
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
@@ -46,38 +55,7 @@ Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, r
   role_request=user.role_requests.find_by_role_id!(role.id)
   role_request.approve!(role_request.jurisdiction.admins.first)
 end
-def fill_in_signup_form(table = nil)
-  fields={"Email"=> "john@example.com",
-      "Password"=> "password",
-      "Password confirmation"=> "password",
-      "First name"=> "John",
-      "Last name"=> "Smith",
-      "Preferred name"=> "Jonathan Smith",
-      "Are you with any of these organizations"=> "Red Cross",
-      "What County"=> "Dallas County",
-      "What is your role within the health department"=> "Health Alert and Communications Coordinator",
-      "Preferred language"=> "English"
-  }
-  if table.is_a?(Hash)
-    fields.merge!(table)
-  elsif !table.nil?
-    fields.merge!(table.rows_hash)
-  end
-  fields.each do |field, value|
-    value = "" if value == "<blank>"
-    case field
-    when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
-      fill_in field, :with => value
-    when 'What County', 'Preferred language', 
-      'What is your role within the health department', 
-      'Are you with any of these organizations'
-        select value, :from => field
-    else
-      raise "Unknown field: #{field}: Please update this step if you intended to use this field."
-    end
-  end
-      
-end
+
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
   fill_in_signup_form("Email" => email)

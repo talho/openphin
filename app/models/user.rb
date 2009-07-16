@@ -56,7 +56,10 @@ class User < ActiveRecord::Base
   def self.search(query)
     all(:conditions => ['first_name LIKE :query OR last_name LIKE :query OR display_name LIKE :query OR title LIKE :query', {:query => "%#{query}%"}])
   end
-  
+
+  def is_admin_for?(jurisdiction)
+    jurisdiction.admins.include?(self)
+  end
   def name
     display_name.blank? ? first_name + " " + last_name : display_name
   end

@@ -9,16 +9,19 @@ Feature: Approving users for roles
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
-    And "admin@dallas.gov" is an Admin for "Dallas County"
-    And "admin@potter.gov" is an Admin for "Potter County"
+    And the following administrators exist:
+      | admin@dallas.gov | Dallas County |
+      | admin@potter.gov | Potter County |
 
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    Then I should see "john@example.com" is awaiting approval
-    When I approve "john@example.com"
-    Then "john@example.com" should receive an approval notification email
-    And I should see "john@example.com" has been approved
+    Then I should see "john@example.com" is awaiting approval for "Health Officer"
+    When I approve "john@example.com" in the role "Health Officer"
+    Then "john@example.com" should receive the email:
+      | subject       | Request approved    |
+      | body contains | You have been approved for the assignment of Health Officer in Dallas County |
+    And I should see "john@example.com has been approved"
     
   Scenario: Jurisdiction Admin approving role requests outside their jurisdiction
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"

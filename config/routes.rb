@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :jurisdictions
 
-  map.resources :role_requests
+  map.resources :role_requests, :member => [:approve, :deny] 
 
   map.resources :users, :collection => {:search => :get} do |user|
     user.resource :user_profile, :as => "profile"

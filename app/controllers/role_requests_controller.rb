@@ -84,4 +84,29 @@ class RoleRequestsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def approve
+    request=RoleRequest.find(params[:id])
+
+    if request
+      if current_user.is_admin_for?(request.jurisdiction)
+        request.approve!(current_user)
+        ApprovalMailer.deliver_approval(request)
+        flash[:notice]="#{request.requester.email} has been approved for the role #{request.role.name}"
+        redirect_to role_requests_path
+      end
+    end
+  end
+  def deny
+    request=RoleRequest.find(params[:role_request_id])
+    if request
+      if current_user.is_admin_for?(request.jurisdiction)
+        request.deny!
+        ApprovalMailer.deliver_denial(request, current_user)
+        flash[:notice]="#{request.requester.email} has been approved for the role #{request.role.name}"
+        redirect_to role_requests_path
+      end
+    end
+  end
+
 end

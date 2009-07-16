@@ -28,4 +28,7 @@ class RoleRequest < ActiveRecord::Base
     create_role_membership(:user => requester, :role => role, :jurisdiction => jurisdiction)
     save!
   end
+  def deny!
+    self.destroy
+  end
 end

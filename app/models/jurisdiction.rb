@@ -29,6 +29,8 @@ class Jurisdiction < ActiveRecord::Base
   has_many :role_memberships
   has_many :users, :through => :role_memberships
 
+  validates_uniqueness_of :name
+  
   def admins
     users.with_role(Role::ADMIN)
   end
