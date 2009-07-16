@@ -113,5 +113,15 @@ describe Alert do
       @alert.device_types.should == ['Device::EmailDevice']
     end
   end
+  
+  describe "message_type" do
+    before do
+      @alert = Factory(:alert)
+    end
+    
+    it "should have a default of 'Alert'" do
+      @alert.message_type.should == 'Alert'
+    end
+  end
 
 end

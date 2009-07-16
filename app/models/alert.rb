@@ -34,6 +34,8 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   
+  before_create :set_message_type
+  
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
   end
@@ -59,7 +61,7 @@ class Alert < ActiveRecord::Base
   
   def deliver
     # 1 - explode all known users and deliver to them
-    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
+    user_ids_for_delivery = jurisdictions.map(&:self_and_descendants).flatten.map(&:user_ids).flatten
     user_ids_for_delivery & roles.map(&:user_ids).flatten unless roles.empty?
     user_ids_for_delivery & organizations.map(&:user_ids).flatten unless organizations.empty?
 
@@ -76,4 +78,8 @@ class Alert < ActiveRecord::Base
     end
   end
   
+private
+  def set_message_type
+    self.message_type = 'Alert' if self.message_type.blank?
+  end
 end
