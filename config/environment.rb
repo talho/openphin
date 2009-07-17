@@ -17,6 +17,7 @@ Rails::Initializer.run do |config|
   config.load_paths += %W(
     #{Rails.root}/app/mailers
     #{Rails.root}/app/observers
+    #{Rails.root}/app/presenters
     #{Rails.root}/app/xml
     #{Rails.root}/app/presenters
   ) 

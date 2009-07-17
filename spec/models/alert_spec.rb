@@ -32,6 +32,99 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Alert do
+
+  describe 'class level builders' do
+    describe '.build_cancellation' do
+      def fields_not_cloned
+        ["id", "updated_at", "created_at", "title", "message_type", "original_alert_id"]
+      end
+      
+      def changeable_fields
+        ["message", "severity", "sensitive"]
+      end
+      
+      it "should build a new alert given an existing alert" do
+        alert = Factory(:alert)
+        new_alert = alert.build_cancellation
+        new_alert.should_not == alert
+        new_alert.new_record?.should be_true
+      end
+      
+      it "should assign the original alert to the existing alert" do
+        alert = Factory(:alert)
+        new_alert = alert.build_cancellation
+        new_alert.original_alert.should == alert
+        new_alert.save!
+        new_alert.reload.original_alert.should == alert
+      end
+      
+      it "should set the message_type to 'cancel'" do
+        alert = Factory(:alert)
+        new_alert = alert.build_cancellation
+        new_alert.message_type.should == "Cancel"
+      end
+      
+      it "should clone values from the existing alert" do
+        alert = Factory(:alert)
+        new_alert = alert.build_cancellation
+        new_alert.attributes.except(*fields_not_cloned).should == alert.attributes.except(*fields_not_cloned)
+      end
+      
+      it "should prefix the title with '[Cancel] -'" do
+        alert = Factory(:alert, :title => "Hey there!")
+        alert.build_cancellation.title.should == "[Cancel] - Hey there!"
+      end
+      
+      it "should allow message to be changed" do
+        alert = Factory(:alert, :message => "test")
+        new_alert = alert.build_cancellation(:message => "Mic check")
+        new_alert.message.should == "Mic check"
+      end
+      
+      it "should allow severity to be changed" do
+        alert = Factory(:alert, :severity => Alert::Severities.first)
+        new_alert = alert.build_cancellation(:severity => Alert::Severities.last)
+        new_alert.severity.should == Alert::Severities.last
+      end
+
+      it "should allow sensitive to be changed" do
+        alert = Factory(:alert, :sensitive => true)
+        new_alert = alert.build_cancellation(:sensitive => false)
+        new_alert.sensitive.should be_false
+      end
+      
+      it "should ignore changes to status" do
+        alert = Factory(:alert, :status => Alert::Statuses.first)
+        new_alert = alert.build_cancellation(:status => Alert::Statuses.last)
+        new_alert.status.should == Alert::Statuses.first
+      end
+      
+      [:references, :category, :urgency, :scope, 
+       :from_organization_name, :delivery_time, :program_type, :jurisdictional_level, 
+       :acknowledge, :from_organization_id, :certainty, :program, :from_organization_oid, 
+       :from_jurisdiction_id, :author_id
+      ].each do |field|
+        it "should ignore changes to #{field}" do
+          old_value, new_value = case Alert.columns_hash[field.to_s].type
+            when :datetime
+              [Date.today, Date.yesterday]
+            when :string, :text
+              ["value1", "value2"]
+            when :integer
+              [15, 60]
+            when :boolean
+              [false, true]
+            else
+              raise "unknown field #{field} or maybe its misspelled?"
+          end
+          alert = Factory(:alert, field => old_value)
+          new_alert = alert.build_cancellation(field => old_value)
+          new_alert.send(field).should == old_value
+        end        
+      end
+
+    end
+  end
   
   describe "status" do
     ['Actual', 'Exercise', 'Test'].each do |status|

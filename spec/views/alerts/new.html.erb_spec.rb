@@ -3,7 +3,8 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe 'alerts/new.html.erb' do
 
   before do
-    @alert = Alert.new
+    template.stub!(:current_user).and_return stub_model(User)
+    @alert = mock_model(Alert).as_null_object
     assigns[:alert] = @alert
     template.stub!(:current_user).and_return(stub_model(User))
   end

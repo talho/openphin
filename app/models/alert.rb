@@ -33,6 +33,7 @@ class Alert < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :from_organization, :class_name => 'Organization'
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
+  belongs_to :original_alert, :class_name => 'Alert'
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
@@ -42,6 +43,7 @@ class Alert < ActiveRecord::Base
   
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
+  MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   DeliveryTimes = [15, 60, 1440, 4320]
   
   validates_inclusion_of :status, :in => Statuses
@@ -49,6 +51,17 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   
   before_create :set_message_type
+  
+  def build_cancellation(attrs={})
+    attrs = attrs.stringify_keys
+    changeable_fields = ["message", "severity", "sensitive"]
+    overwrite_attrs = attrs.slice(*changeable_fields)
+    self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
+      alert.title = "[Cancel] - #{title}"
+      alert.message_type = MessageTypes[:cancel]
+      alert.original_alert = self
+    end
+  end
   
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
@@ -91,7 +104,7 @@ class Alert < ActiveRecord::Base
   
 private
   def set_message_type
-    self.message_type = 'Alert' if self.message_type.blank?
+    self.message_type = MessageTypes[:alert] if self.message_type.blank?
   end
   
   def find_user_recipients

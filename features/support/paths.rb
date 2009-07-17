@@ -22,6 +22,8 @@ module NavigationHelpers
       admin_role_requests_path
     when /the alert log/i
       alerts_path
+    when /cancel the alert/
+      edit_alert_path(Alert.last, :_action => "cancel")
       
     # Add more page name => path mappings here
     

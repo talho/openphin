@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
     user.resource :user_profile, :as => "profile"
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
-  map.resources :alerts
+  map.resources :alerts, :member => { :cancel => :put }
   map.resources :roles
   map.resources :logs
   map.resources :organizations

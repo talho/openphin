@@ -1,0 +1,13 @@
+<% form_for @alert do |form| %>
+  <div id="edit">
+    <%= render form %>
+    <%= form.submit "Preview Message" %>
+  </div>
+  
+  <div id="preview">
+    <%= render @alert %>
+  
+    <%= link_to 'Edit', '#edit', :class => 'edit' %>
+    <%= form.submit "Send", :name => 'send' %>
+  </div> 
+<% end %>

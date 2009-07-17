@@ -4,6 +4,13 @@ Given "an alert with:" do |table|
   Factory(:alert, attributes)
 end
 
+Given "I've sent an alert with:" do |table|
+  visit new_alert_path
+  fill_in_alert_form table
+  click_button "Preview Message"
+  lambda { click_button "Send" }.should change(Alert, :count).by(1)
+end
+
 When "PhinMS delivers the message: $filename" do |filename|
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
   EDXL::Message.parse(xml)
@@ -34,10 +41,10 @@ Then 'I should see a preview of the message with:' do |table|
     case key
     when /(Jurisdiction|Role|Organization|People)s?/
       value.split(',').each do |item|
-        response.should have_tag(".#{key.parameterize('_')}", Regexp.new(item.strip))
+        response.should have_tag(".#{key.parameterize('_')}", Regexp.new(Regexp.escape(item.strip)))
       end
     else
-      response.should have_tag(".#{key.parameterize('_')}", Regexp.new(value))
+      response.should have_tag(".#{key.parameterize('_')}", Regexp.new(Regexp.escape(value)))
     end
   end
 end
