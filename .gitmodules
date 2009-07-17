@@ -22,3 +22,6 @@
 [submodule "vendor/plugins/delayed_job"]
 	path = vendor/plugins/delayed_job
 	url = git://github.com/collectiveidea/delayed_job.git
+[submodule "vendor/plugins/caching_presenter"]
+	path = vendor/plugins/caching_presenter
+	url = git://github.com/mhs/caching_presenter.git

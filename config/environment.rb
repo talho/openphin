@@ -18,6 +18,7 @@ Rails::Initializer.run do |config|
     #{Rails.root}/app/mailers
     #{Rails.root}/app/observers
     #{Rails.root}/app/xml
+    #{Rails.root}/app/presenters
   ) 
 
   # Specify gems that this application depends on and have them installed with rake gems:install

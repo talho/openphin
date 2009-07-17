@@ -19,6 +19,13 @@
   <%- end -%>
 </div>
 
+  <nav>
+    <%= link_to 'Send an Alert', new_alert_path %>
+    <%= link_to 'Request Role', new_role_request_path %>
+    <%= link_to 'View Role Requests', admin_role_requests_path %>
+    <%= link_to 'View Alerts', alerts_path %>
+  </nav>
+
 <%- [:notice, :success, :failure].each do |type| -%>
   <%- if flash[type] -%>
     <p class="<%= type %>"><%= flash[type] %></p>
