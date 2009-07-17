@@ -57,7 +57,7 @@ Feature: Signing up for an account
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
       | What County    | Dallas County    |
-      | What is your role within the health department | Health Alert and Communications Coordinator |
+      | What is your primary role within the health department | Health Alert and Communications Coordinator |
       | Preferred language | English      |
     Then I should see "Thanks for signing up"
     And "john@example.com" should receive the email:
@@ -85,7 +85,7 @@ Feature: Signing up for an account
   Scenario: Signing up should not display system-roles
     Given there is an system only Admin role
     When I go to the sign up page
-    Then I should not see "Admin" in the "What is your role within the health department" dropdown
+    Then I should not see "Admin" in the "What is your primary role within the health department" dropdown
 
   Scenario: Confirming a new account 
     When I sign up for an account as "john@example.com"

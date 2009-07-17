@@ -9,7 +9,7 @@ module FeatureHelpers
           "Preferred name"=> "Jonathan Smith",
           "Are you with any of these organizations"=> "Red Cross",
           "What County"=> "Dallas County",
-          "What is your role within the health department"=> "Health Alert and Communications Coordinator",
+          "What is your primary role within the health department"=> "Health Alert and Communications Coordinator",
           "Preferred language"=> "English"
       }
       if table.is_a?(Hash)
@@ -23,7 +23,7 @@ module FeatureHelpers
         when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name'
           fill_in field, :with => value
         when 'What County', 'Preferred language', 
-          'What is your role within the health department', 
+          'What is your primary role within the health department', 
           'Are you with any of these organizations'
             select value, :from => field
         else
