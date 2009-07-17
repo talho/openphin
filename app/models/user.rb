@@ -119,6 +119,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def alerter?
+    !role_memberships.alerter.empty?
+  end
+  
 private
 
   def assign_public_role

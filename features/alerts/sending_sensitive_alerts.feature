@@ -8,6 +8,7 @@ Feature: Sending sensitive alerts
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
+    And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the Alerts page

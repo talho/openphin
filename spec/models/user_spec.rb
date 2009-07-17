@@ -133,4 +133,22 @@ describe User do
       user.display_name.should == 'bkeepers'
     end
   end
+  
+  describe "alerter?" do
+    it "should return false if user does not have any roles" do
+      Factory(:user, :role_memberships => []).alerter?.should be_false
+    end
+
+    it "should return false if user does not have an alerter role" do
+      user = Factory(:user, :role_memberships => [])
+      Factory(:role_membership, :role => Factory(:role, :alerter => false), :user => user)
+      user.alerter?.should be_false
+    end
+
+    it "should return true if user has an alerter role" do
+      user = Factory(:user, :role_memberships => [])
+      Factory(:role_membership, :role => Factory(:role, :alerter => true), :user => user)
+      user.alerter?.should be_true
+    end
+  end
 end

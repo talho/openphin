@@ -8,6 +8,7 @@ Feature: Sending alerts to multiple communication devices
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
+    And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And "keith.gaddis@example.com" has an IM device
     And I am allowed to send alerts

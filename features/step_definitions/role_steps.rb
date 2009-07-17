@@ -8,3 +8,7 @@ Then 'I should have the "$role" role in "$jurisdiction"' do |role_name, jurisdic
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   current_user.role_memberships.find_by_role_id_and_jurisdiction_id!(role, jurisdiction)
 end
+
+Given 'the role "$role" is an alerter' do |role|
+  Role.find_by_name(role).update_attributes! :alerter => true
+end

@@ -19,4 +19,6 @@ class RoleMembership < ActiveRecord::Base
   has_one :approver, :through => :role_request
   
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
+  
+  named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}
 end

@@ -4,7 +4,7 @@ Feature: Creating and sending alerts
   As a user
   I can create and send alerts
 
-  Background: 
+  Background:
     Given the following entities exists:
       | Organization | Red Cross             |
       | Jurisdiction | Dallas County         |
@@ -31,6 +31,7 @@ Feature: Creating and sending alerts
     And the following users belong to the Red Cross:
       | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison | Brian Ryckbost |
       
+    And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the Alerts page

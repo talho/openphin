@@ -1,14 +1,15 @@
 class AlertsController < ApplicationController
-  def index
-    
-  end
+  before_filter :alerter_required, :only => [:new, :create]
   
-  def new
-    @alert = Alert.new
+  def index
   end
   
   def show
     @alert = Alert.find(params[:id])
+  end
+  
+  def new
+    @alert = Alert.new
   end
   
   def create
@@ -20,4 +21,14 @@ class AlertsController < ApplicationController
       redirect_to logs_path
     end
   end
+  
+private
+  
+  def alerter_required
+    unless current_user.alerter?
+      flash[:notice] = "You do not have permission to send an alert."
+      redirect_to root_path
+    end
+  end
+  
 end

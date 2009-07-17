@@ -17,6 +17,7 @@ Feature: Sending cascading alerts
     And Federal is the parent jurisdiction of:
       | Texas |  
     
+    And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the Alerts page
