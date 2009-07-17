@@ -16,6 +16,8 @@ module NavigationHelpers
       alerts_path
     when /the logs page/i
       logs_path
+    when /the roles requests page for an admin/
+      admin_role_requests_path
       
     # Add more page name => path mappings here
     
