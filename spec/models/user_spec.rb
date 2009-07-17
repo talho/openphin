@@ -116,4 +116,16 @@ describe User do
       @user.is_admin_for?(j2).should == false
     end
   end
+  
+  describe "display_name" do
+    it "should default to full name if display name not specified" do
+      user = User.new(:first_name => 'Brandon', :last_name => 'Keepers')
+      user.display_name.should == 'Brandon Keepers'
+    end
+    
+    it "should use display name if specified" do
+      user = User.new(:first_name => 'Brandon', :last_name => 'Keepers', :display_name => 'bkeepers')
+      user.display_name.should == 'bkeepers'
+    end
+  end
 end

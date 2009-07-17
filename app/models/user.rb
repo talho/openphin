@@ -63,21 +63,11 @@ class User < ActiveRecord::Base
   def is_admin_for?(jurisdiction)
     jurisdiction.admins.include?(self)
   end
-  def name
-    display_name.blank? ? first_name + " " + last_name : display_name
-  end
-  
-  #def auto_complete_for_user_display_name
-  #  User.find(:display_name => params[:user][:display_name])
-  #end
 
-  #def auto_complete_for_user_first_name
-    
-  #end
-  
-  #def auto_complete_for_user_last_name
-    
-  #end
+  def display_name
+    self[:display_name].blank? ? first_name + " " + last_name : self[:display_name]
+  end
+  alias_method :name, :display_name
   
   def phin_oid=(val)
     raise "PHIN oids should never change"
