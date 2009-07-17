@@ -67,8 +67,11 @@ describe User do
       it "should create a public role membership for the jurisdiction of the first role request" do
         jurisdiction = Factory(:jurisdiction)
         user = Factory.build(:user)
-        user.role_requests = [Factory.build(:role_request, :jurisdiction => jurisdiction, :requester => user)]
+        user.role_requests = [Factory.build(:role_request, 
+            :role => Factory(:role, :approval_required => true), 
+            :jurisdiction => jurisdiction, :requester => user)]
         user.save!
+        user.reload
         public_membership = user.role_memberships.detect do |membership|
           membership.jurisdiction == jurisdiction && membership.role == Role.find_by_name!("Public")
         end

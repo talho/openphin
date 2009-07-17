@@ -121,10 +121,19 @@ class User < ActiveRecord::Base
 private
 
   def assign_public_role
+    public_role = Role.find_by_name("Public")
+    role_requests.find_all_by_role_id(public_role).each do |request|
+      role_memberships.create!(
+        :role => public_role, 
+        :jurisdiction => request.jurisdiction
+      )
+      request.destroy
+    end
+        
     if self.role_requests.any?
-      self.role_memberships.create!(
-        :role => Role.find_by_name("Public"), 
-        :jurisdiction => self.role_requests.first.jurisdiction
+      self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
+        public_role.id, 
+        self.role_requests.first.jurisdiction.id
       )
     end
   end

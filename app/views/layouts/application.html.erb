@@ -13,6 +13,11 @@
 </head>
 <body>
 
+<div>
+  <%- if signed_in? -%>
+    <%= link_to 'Sign Out', sign_out_path %>
+  <%- end -%>
+</div>
 
 <%- [:notice, :success, :failure].each do |type| -%>
   <%- if flash[type] -%>
