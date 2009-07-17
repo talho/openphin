@@ -33,11 +33,17 @@ Feature: Sending alerts form
     When I fill out the alert form with:
       | From Jurisdiction | Potter County |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
-    Then I see an alert with:
-      | From Jurisdiction | Potter County |
-      | Title | H1N1 SNS push packs to be delivered tomorrow |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+      
     
-  Scenario: Sending alerts form should not contain unapproved organizations
+    Then I see an alert with:
+      | from_jurisdiction | Potter County |
+      | title | H1N1 SNS push packs to be delivered tomorrow |
+      Scenario: Sending alerts form should not contain unapproved organizations
     Given there is an unapproved Blue Cross Blue Shield organization
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |

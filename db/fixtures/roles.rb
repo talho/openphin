@@ -5,6 +5,7 @@ FasterCSV.open(File.dirname(__FILE__) + '/roles.csv', :headers => true) do |role
     Role.seed(:name, :approval_required) do |role|
       role.name = row['role']
       role.approval_required = row['approval_required'].downcase == 'true'
+      role.alerter = row['alerter']
     end
   end
 end

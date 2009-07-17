@@ -11,7 +11,7 @@ When "I fill out the alert form with:" do |table|
         user = Given "a user named #{name.strip}"
         fill_in 'alert_user_ids', :with => user.id.to_s
       end
-    when 'Status', 'Severity'
+    when 'Status', 'Severity', 'From Jurisdiction'
       select value, :from => key
     when 'Acknowledge', 'Sensitive'
       id = "alert_#{key.parameterize('_')}"
@@ -67,15 +67,18 @@ end
 
 Then 'I see an alert with:' do |table|
   attrs = table.rows_hash
-  alert = Alert.find_by_identifier!(attrs['identifier'])
+  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
+      {:identifier => attrs['identifier'], :title => attrs['title']}])
   attrs.each do |attr, value|
     case attr
+    when 'from_jurisdiction'
+      alert.from_jurisdiction.should == Jurisdiction.find_by_name!(value)
     when 'jurisdiction'
-      alert.jurisdictions.should include(Jurisdiction.find_by_name(value))
+      alert.jurisdictions.should include(Jurisdiction.find_by_name!(value))
     when 'role'
       alert.roles.should include(Role.find_by_name(value))
     when 'from_organization'
-      alert.from_organization.should == Organization.find_by_name(value)
+      alert.from_organization.should == Organization.find_by_name!(value)
     when 'delivery_time'
       alert.delivery_time.should == value.to_i
     when 'sent_at'

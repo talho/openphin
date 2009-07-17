@@ -31,6 +31,7 @@
 class Alert < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :from_organization, :class_name => 'Organization'
+  belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
