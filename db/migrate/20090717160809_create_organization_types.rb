@@ -10,6 +10,7 @@ class CreateOrganizationTypes < ActiveRecord::Migration
     end
     
     add_index :organization_types, :name
+    add_index :organizations, :organization_type_id
   end
 
   def self.down
