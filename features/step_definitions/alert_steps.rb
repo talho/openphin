@@ -1,3 +1,9 @@
+Given "an alert with:" do |table|
+  attributes = table.rows_hash
+  attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction'])
+  Factory(:alert, attributes)
+end
+
 When "PhinMS delivers the message: $filename" do |filename|
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
   EDXL::Message.parse(xml)
@@ -44,7 +50,7 @@ Then 'no foreign alert "$title" is sent to $name' do |title, name|
   File.exist?(File.join(organization.phin_ms_queue, "#{cascade_alert.distribution_id}.edxl")).should_not be_true
 end
 
-Then 'I see an alert with:' do |table|
+Then 'an alert exists with:' do |table|
   attrs = table.rows_hash
   alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
       {:identifier => attrs['identifier'], :title => attrs['title']}])
@@ -68,4 +74,12 @@ Then 'I see an alert with:' do |table|
       alert.send(attr).should == value
     end
   end
+end
+
+Then 'I should see an alert titled "$title"' do |title|
+  response.should have_tag('.alert .title', title)
+end
+
+Then 'I should not see an alert titled "$title"' do |title|
+  response.should_not have_tag('.alert .title', title)
 end

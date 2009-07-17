@@ -1,1 +1,15 @@
-<%= link_to 'New Alert', new_alert_path %>
+<%= debug @alerts %>
+<table id="alerts">
+  <thead>
+    <tr>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @alerts.each do |alert| %>
+      <tr class="alert">
+        <td class="title"><%=h alert.title %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

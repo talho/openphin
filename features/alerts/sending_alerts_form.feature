@@ -40,7 +40,7 @@ Feature: Sending alerts form
     Then I should see "Successfully sent the alert"
       
     
-    Then I see an alert with:
+    Then an alert exists with:
       | from_jurisdiction | Potter County |
       | title | H1N1 SNS push packs to be delivered tomorrow |
       Scenario: Sending alerts form should not contain unapproved organizations

@@ -151,4 +151,32 @@ describe User do
       user.alerter?.should be_true
     end
   end
+  
+  describe "alerts_within_jurisdictions" do
+    it "should include alerts in user's jurisdictions" do
+      user = Factory(:user)
+      jurisdiction = Factory(:jurisdiction)
+      user.jurisdictions << jurisdiction
+      alert = Factory(:alert, :from_jurisdiction => jurisdiction)
+      user.alerts_within_jurisdictions.should include(alert)
+    end
+    
+    it "should include alerts in child jurisdictions" do
+      user = Factory(:user)
+      parent = Factory(:jurisdiction)
+      user.jurisdictions << parent
+      child = Factory(:jurisdiction)
+      child.move_to_child_of parent
+      alert = Factory(:alert, :from_jurisdiction => child)
+      user.alerts_within_jurisdictions.should include(alert)
+    end
+    
+    it "should not include alerts in other jurisdicitions" do
+      user = Factory(:user)
+      user.jurisdictions << Factory(:jurisdiction)
+      another = Factory(:jurisdiction)
+      alert = Factory(:alert, :from_jurisdiction => another)
+      user.alerts_within_jurisdictions.should_not include(alert)
+    end
+  end
 end

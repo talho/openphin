@@ -16,7 +16,7 @@ Feature: Alerts from EDXL
 
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
-    Then I see an alert with:
+    Then an alert exists with:
       | identifier | CDC-2006-183 |
       | from_organization | CDC |
       | from_organization_name | Centers for Disease Control and Prevention |
@@ -46,14 +46,14 @@ Feature: Alerts from EDXL
   
   Scenario: Receiving an EDXL alert update
     When PhinMS delivers the message: PCAMessageUpdate.xml
-    Then I see an alert with:
+    Then an alert exists with:
       | identifier | CDC-2006-183 |
       | references | 2.16.840.1.114222.4.20.1.1,CDC-2006-182,2006-11-05T13:02:42.1219Z |
       | message_type | Update |
   
   Scenario: Receiving an EDXL alert cancel
     When PhinMS delivers the message: PCAMessageCancel.xml
-    Then I see an alert with:
+    Then an alert exists with:
       | identifier | CDC-2006-183 |
       | references | 2.16.840.1.114222.4.20.1.1,CDC-2006-182,2006-11-05T13:02:42.1219Z |
       | message_type | Cancel |
