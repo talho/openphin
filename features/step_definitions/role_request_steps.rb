@@ -65,7 +65,7 @@ When /^I deny "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
-  visit deny_role_request_path(request)
+  visit deny_admin_role_request_path(request)
 end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|

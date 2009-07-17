@@ -81,7 +81,7 @@ class Alert < ActiveRecord::Base
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)
       organizations.select(&:foreign).each do |organization|
-        deliveries.create!(:organization => oranizations).deliver
+        deliveries.create!(:organization => organizations).deliver
       end
     end
   end

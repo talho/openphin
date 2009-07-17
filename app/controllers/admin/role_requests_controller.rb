@@ -70,7 +70,7 @@ class Admin::RoleRequestsController < ApplicationController
     end
   end
   def deny
-    request=RoleRequest.find(params[:role_request_id])
+    request=RoleRequest.find(params[:id])
     if request
       if current_user.is_admin_for?(request.jurisdiction)
         request.deny!

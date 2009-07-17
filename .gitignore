@@ -8,3 +8,4 @@ tmp/*
 .DS_Store
 .rake_tasks
 db/schema.rb
+vendor/plugins/cucumber
