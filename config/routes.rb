@@ -5,6 +5,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
+  map.resources :admin_organizations, :member => [:approve, :deny], :controller => "admin/organizations"
 
   map.resources :users, :collection => {:search => :get} do |user|
     user.resource :user_profile, :as => "profile"

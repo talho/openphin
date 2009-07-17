@@ -1,8 +1,30 @@
 <% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
-  <h4>Awaiting Approval<h4>
+  <h4>Awaiting Approval</h4>
   <ul class="pending_role_requests">
     <% current_user.role_requests.unapproved.each do |request| %>
       <li class="request"><%= request.jurisdiction.name %>: <%= request.role.name %></li>
     <% end %>
   </ul>
+<% end %>
+
+<% if current_user.is_org_approver? %>
+    <fieldset>
+      <legend>Organizations awaiting approval</legend>
+        <table class='pending_organization_requests'>
+          <tr>
+            <td>Name</td>
+            <td>Contact</td>
+            <td>Approve</td>
+            <td>Deny</td>
+          </tr>
+          <% Organization.unapproved.all.each do |organization| %>
+              <tr class='request'>
+                <td class='org_name'><%= organization.name %></td>
+                <td><%= h organization.contact.formatted_email %></td>
+                <td><%= link_to "Approve", approve_admin_organization_path(organization), :class => "approval_link" %></td>
+                <td><%= link_to "Deny", deny_admin_organization_path(organization), :class => "denial_link" %></td>
+              </tr>
+           <% end %>
+        </table>
+    </fieldset>
 <% end %>

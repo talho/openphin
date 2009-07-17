@@ -32,7 +32,8 @@ class Organization < ActiveRecord::Base
   belongs_to :contact, :class_name => "User"
   
   named_scope :approved, :conditions => { :approved => true }
-  
+  named_scope :unapproved, :conditions => ["approved is null or approved = ?" , false ]
+
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|

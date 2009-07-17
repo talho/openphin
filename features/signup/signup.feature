@@ -101,5 +101,12 @@ Feature: Signing up for an account
       | Password       | password        |
       | Password confirmation | <blank>  |
     Then I should see error messages
+
+  Scenario: User tries to log in without confirming email address
+    Given "john@example.com" is an unconfirmed user
+    When I log in as "john@example.com"
+    Then I should see "Your account is unconfirmed"
+    And I should see a user confirmation url
+    And I should see a link to "Resend confirmation"
     
       

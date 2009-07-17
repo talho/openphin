@@ -12,4 +12,10 @@ class ApprovalMailer < ActionMailer::Base
     body :request => request, :admin => admin
   end
 
+  def organization_approval(organization)
+    recipients organization.contact.email
+    subject "Confirmation of #{organization.name} organization registration"
+    body :organization => organization
+  end
+
 end

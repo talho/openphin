@@ -65,6 +65,10 @@ class User < ActiveRecord::Base
     jurisdiction.admins.include?(self)
   end
 
+  def is_org_approver?
+    self.roles.detect{|role| role == Role.org_admin }
+  end
+
   def display_name
     self[:display_name].blank? ? first_name + " " + last_name : self[:display_name]
   end

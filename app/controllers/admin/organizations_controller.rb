@@ -1,5 +1,4 @@
-class OrganizationsController < ApplicationController
-  skip_before_filter :login_required, :only => [:new, :create]
+class Admin::OrganizationsController < ApplicationController
   def new
     @organization = Organization.new(:contact => User.new)
   end
@@ -24,5 +23,14 @@ class OrganizationsController < ApplicationController
       render 'new'
     end
   end
- 
+
+  def approve
+    if current_user.is_org_approver?
+      org=Organization.find(params[:id])
+      org.approved=true
+      org.save
+      ApprovalMailer.deliver_organization_approval(org)
+      redirect_to dashboard_path
+    end
+  end
 end

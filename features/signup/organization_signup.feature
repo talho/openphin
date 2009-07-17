@@ -19,17 +19,17 @@ Feature: Signing up for an organization account
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
         | Organization Type                       | Non-Profit Organization |
-        | Distribution Email         | staff@salvationarmydallas.org |
-        | What Counties                   | Dallas County, Tarrant County, Denton County |
-        | Description                    | This might be a mission statement |
-        | Password                              | apples                |
-        | Password confirmation                 | apples                |
-        | First name                           | John                  |
-        | Last name                            | Smith                 |
+        | Distribution Email                      | staff@salvationarmydallas.org |
+        | What Counties                           | Dallas County, Tarrant County, Denton County |
+        | Description                             | This might be a mission statement |
+        | Password                                | apples                |
+        | Password confirmation                   | apples                |
+        | First name                              | John                  |
+        | Last name                               | Smith                 |
         | Preferred name                          | Jonathan Smith |
-        | Email                           | john@example.com |
+        | Email                                   | john@example.com |
         | Preferred language                      | English |
-        | Phone                         | 5124444444 |
+        | Phone                                   | 5124444444 |
         | Fax                                     | 5123333333 |
         | Street                                  | 123 Willow Ave. Suite 34 |
         | City                                    | Dallas |
@@ -50,7 +50,7 @@ Feature: Signing up for an organization account
         | body contains | Denton County |
         | body contains | Non-Profit Organization |
 
-    Given the organization has been approved
+    Given the organization "Greater Dallas Salvation Army" has been approved
     Then "john@example.com" should receive the email:
       | subject       | Confirmation of Health Alert Network organization registration    |
       | body contains | Thanks for signing up.  Your users may now begin enrollment.|
@@ -85,7 +85,8 @@ Feature: Signing up for an organization account
         | body contains | Denton County |
         | body contains | Non-Profit Organization |
 
-    Given the organization has been approved
+
+    Given the organization "Greater Dallas Salvation Army" has been approved    
     And "john@example.com" should receive the email:
       | subject       | Confirmation of Health Alert Network organization registration    |
       | body contains | Thanks for signing up.  Your users may now begin enrollment.|
