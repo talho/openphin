@@ -25,7 +25,7 @@ module FeatureHelpers
         when 'What County', 'Preferred language', 
           'What is your primary role within the health department', 
           'Are you with any of these organizations'
-            select value, :from => field
+            select Regexp.new(value), :from => field
         else
           raise "Unknown field: #{field}: Please update this step if you intended to use this field."
         end

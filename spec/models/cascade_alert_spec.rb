@@ -11,8 +11,5 @@ describe CascadeAlert do
       lambda {@cascade_alert.to_edxl}.should_not raise_error
     end
     
-    it "should be a valid document"
-    
-    it "should wrap everything in an EDXLDistribution tag"
   end
 end
