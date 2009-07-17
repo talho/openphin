@@ -50,12 +50,6 @@ Feature: Signing up for an organization account
         | body contains | Denton County |
         | body contains | Non-Profit Organization |
 
-    Given the organization "Greater Dallas Salvation Army" has been approved
-    Then "john@example.com" should receive the email:
-      | subject       | Confirmation of Health Alert Network organization registration    |
-      | body contains | Thanks for signing up.  Your users may now begin enrollment.|
-    And when I self-enroll I should have "Greater Dallas Salvation Army" as a choice of organization affiliation
-
 
   Scenario: Signing up as an organization when logged in
     Given the following users exist:
@@ -84,10 +78,3 @@ Feature: Signing up for an organization account
         | body contains | Tarrant County |
         | body contains | Denton County |
         | body contains | Non-Profit Organization |
-
-
-    Given the organization "Greater Dallas Salvation Army" has been approved    
-    And "john@example.com" should receive the email:
-      | subject       | Confirmation of Health Alert Network organization registration    |
-      | body contains | Thanks for signing up.  Your users may now begin enrollment.|
-    And when I self-enroll I should have "Greater Dallas Salvation Army" as a choice of organization affiliation
