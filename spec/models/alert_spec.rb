@@ -58,10 +58,11 @@ describe Alert do
         new_alert.reload.original_alert.should == alert
       end
       
-      it "should set the message_type to 'cancel'" do
+      it "should set the message_type to 'Cancel'" do
         alert = Factory(:alert)
         new_alert = alert.build_cancellation
-        new_alert.message_type.should == "Cancel"
+        new_alert.save!
+        new_alert.reload.message_type.should == "Cancel"
       end
       
       it "should clone values from the existing alert" do
