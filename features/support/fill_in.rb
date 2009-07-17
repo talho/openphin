@@ -46,7 +46,59 @@ module FeatureHelpers
         end
       end
     end
+  
+    def fill_in_alert_form(table = nil)
+      fields = { 
+        "Title" => "H1N1 SNS push packs to be delivered tomorrow",
+        "Message" => "For more details, keep on reading...",
+        "Severity" =>"Moderate",
+        "Status" => "Actual",
+        "Acknowledge"  => "<unchecked>",
+        "Communication methods" => "E-mail",
+        "Delivery Time" => "15 minutes"
+      }
+
+      if table.is_a?(Hash)
+        fields.merge!(table)
+      elsif !table.nil?
+        fields.merge!(table.rows_hash)
+      end
+      
+      fields.each do |label, value|
+        fill_in_alert_field label, value
+      end
+    end
+  
+    def fill_in_alert_field(label, value)
+      case label
+      when "People"
+        value.split(',').each do |name| 
+          user = Given "a user named #{name.strip}"
+          fill_in 'alert_user_ids', :with => user.id.to_s
+        end
+      when 'Status', 'Severity', 'From Jurisdiction'
+        select value, :from => label
+      when 'Acknowledge', 'Sensitive'
+        id = "alert_#{label.parameterize('_')}"
+        if value == '<unchecked>'
+          uncheck id
+        else
+          check id
+        end
+      when 'Communication methods'
+        check value
+      when /Jurisdiction[s]?/
+        select_multiple value.split(',').map(&:strip), :from => 'alert_jurisdiction_ids'
+      when /Role[s]?/
+        select_multiple value.split(',').map(&:strip), :from => 'alert_role_ids'
+      when /Organization[s]?/
+        select_multiple value.split(',').map(&:strip), :from => 'alert_organization_ids'
+      else
+        fill_in label, :with => value
+      end
+    end
   end
+  
 end
 
 World(FeatureHelpers::FillInMethods)

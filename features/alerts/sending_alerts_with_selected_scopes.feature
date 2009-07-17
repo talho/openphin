@@ -74,7 +74,6 @@ Feature: Creating and sending alerts
       | Acknowledge | <unchecked>                               |
       | Communication methods | E-mail                          |
       | Delivery Time | 60 minutes                              |
-      
     
     And I press "Preview Message"
     Then I should see a preview of the message with:
@@ -91,7 +90,7 @@ Feature: Creating and sending alerts
       | Delivery Time | 60 minutes                              |
     
     When I follow "Edit"
-    And I fill out the alert form with:
+    And I make changes to the alert form with:
       | Title    | Something Different |
     And I press "Preview Message"
     Then I should see a preview of the message with:
