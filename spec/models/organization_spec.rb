@@ -27,6 +27,18 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Organization do
+  describe "default scope" do
+    before do
+      Organization.create! :name => 'Banana'
+      Organization.create! :name => 'Apple'
+      Organization.create! :name => 'Cucumber'
+    end
+    
+    it 'should sort by name' do
+      Organization.all.map(&:name).should == %w(Apple Banana Cucumber)
+    end
+  end
+  
   describe "parent/child relationships" do
     it "should return an array of people from .users" do
       o=Factory(:organization, :name => "APHC")

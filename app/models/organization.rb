@@ -31,6 +31,8 @@ class Organization < ActiveRecord::Base
   belongs_to :organization_type
   belongs_to :contact, :class_name => "User"
   
+  default_scope :order => :name
+  
   named_scope :approved, :conditions => { :approved => true }
   named_scope :unapproved, :conditions => ["approved is null or approved = ?" , false ]
 

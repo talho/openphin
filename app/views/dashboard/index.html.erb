@@ -20,7 +20,7 @@
           <% Organization.unapproved.all.each do |organization| %>
               <tr class='request'>
                 <td class='org_name'><%= organization.name %></td>
-                <td><%= h organization.contact.formatted_email %></td>
+                <td><%= h organization.contact.formatted_email if organization.contact %></td>
                 <td><%= link_to "Approve", approve_admin_organization_path(organization), :class => "approval_link" %></td>
                 <td><%= link_to "Deny", deny_admin_organization_path(organization), :class => "denial_link" %></td>
               </tr>
