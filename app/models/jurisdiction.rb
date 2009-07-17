@@ -39,6 +39,10 @@ class Jurisdiction < ActiveRecord::Base
   def parent
     Jurisdiction.find(parent_id) unless !Jurisdiction.exists?(parent_id)
   end
+  
+  def to_s
+    name
+  end
 
    def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?

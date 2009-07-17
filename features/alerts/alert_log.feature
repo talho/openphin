@@ -11,6 +11,9 @@ Feature: Viewing the alert log
     When I am on the alert log
     Then I should see an alert titled "Hello World"
     
+    When I click "View" on "Hello World"
+    Then I can see the alert summary for "Hello World"
+    
   Scenario: Viewing list of alerts in child jurisdictions
     Given the following entities exists:
       | Jurisdiction | Texas                                    |

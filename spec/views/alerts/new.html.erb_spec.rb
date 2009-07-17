@@ -5,6 +5,7 @@ describe 'alerts/new.html.erb' do
   before do
     @alert = Alert.new
     assigns[:alert] = @alert
+    template.stub!(:current_user).and_return(stub_model(User))
   end
   
   def render

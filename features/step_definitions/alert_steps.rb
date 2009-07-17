@@ -19,6 +19,12 @@ When "I make changes to the alert form with:" do |table|
   end
 end
 
+When 'I click "$link" on "$title"' do |link, title|
+  within(".alert:contains('#{title}')") do
+    click_link "View"
+  end
+end
+
 Then 'I should see a preview of the message' do
   response.should have_tag('#preview')
 end
@@ -82,4 +88,9 @@ end
 
 Then 'I should not see an alert titled "$title"' do |title|
   response.should_not have_tag('.alert .title', title)
+end
+
+Then 'I can see the alert summary for "$title"' do |title|
+  alert = Alert.find_by_title!(title)
+  response.should have_tag('#?', dom_id(alert))
 end

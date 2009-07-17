@@ -3,14 +3,23 @@
 <table id="alerts">
   <thead>
     <tr>
+      <th>ID</th>
+      <th>Date Sent</th>
+      <th>Sender</th>
+      <th>Severity</th>
       <th>Title</th>
     </tr>
   </thead>
   <tbody>
     <% @alerts.each do |alert| %>
-      <tr class="alert">
+      <% content_tag_for :li, alert do %>
+        <td class="identifier"><%=h alert.identifier %></td>
+        <td class="sent_at"><%= time_ago_in_words alert.sent_at if alert.sent_at? %></td>
+        <td class="from_jurisdiction"><%=h alert.from_jurisdiction %></td>
+        <td class="severity"><%=h alert.severity %></td>
         <td class="title"><%=h alert.title %></td>
-      </tr>
+        <td><%= link_to 'View', alert %></td>
+      <% end %>
     <% end %>
   </tbody>
 </table>
