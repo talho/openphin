@@ -1,3 +1,8 @@
+<%- unless signed_in? -%>
+  <p><strong>Already have an account?</strong> <%= link_to 'Sign in', sign_in_path %> now.</p>
+<%- end -%>
+
+
 <% form_for @organization do |form| %>
   <fieldset>
     <legend>Organization Information</legend>
