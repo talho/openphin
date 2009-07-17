@@ -50,10 +50,11 @@ Rails::Initializer.run do |config|
   #TODO: add these back in later
   #config.gem "libxslt-ruby"
   #config.gem "libxml-ruby"
-  config.gem "thoughtbot-clearance",
+  config.gem 'thoughtbot-clearance',
     :lib     => 'clearance', 
     :source  => 'http://gems.github.com', 
     :version => '0.6.9'
+  config.gem 'fastercsv', :version => '1.5.0'
 end
 
 require 'happymapper'
