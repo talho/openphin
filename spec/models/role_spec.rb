@@ -10,6 +10,7 @@
 #  updated_at        :datetime
 #  approval_required :boolean
 #  alerter           :boolean
+#  user_role         :boolean         default(TRUE)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

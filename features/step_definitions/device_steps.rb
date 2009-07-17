@@ -13,10 +13,8 @@ end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   When "delayed jobs are processed"
-  email = ActionMailer::Base.deliveries.last 
+  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email_address) }
   email.should_not be_nil
-  
-  email.to.should == [email_address]
   
   table.rows_hash.each do |field, value|
     case field

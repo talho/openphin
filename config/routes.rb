@@ -13,6 +13,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :alerts
   map.resources :roles
   map.resources :logs
+  map.resources :organizations
   
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"

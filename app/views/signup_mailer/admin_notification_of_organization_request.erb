@@ -1,0 +1,15 @@
+A user has requested an organization that needs approval from an admin.
+
+User <%= @organization.contact.name %> (<%= @organization.contact.email %>)  is requesting 
+the organization <%= @organization.name %>.  
+
+<%= @organization.name %>
+<%= @organization.organization_type.name %>
+<%= @organization.phone %>
+<%= @organization.jurisdictions.map(&:name).to_sentence %>
+
+You may approve or deny this request at the following link:
+
+<%= organization_url(@organization) %>
+
+Please be sure to verify the user's credentials for the organization he or she is requesting.  If in doubt, it is better to delay or deny the request until you can verify the user.

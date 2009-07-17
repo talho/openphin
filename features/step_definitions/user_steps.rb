@@ -6,7 +6,7 @@ end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
-  user = User.find_by_first_name_and_last_name(first_name, last_name) ||
+  user = User.find_by_email(email) ||
     Factory(:user, :first_name => first_name, :last_name => last_name, :email => email)
   user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
 end
@@ -32,6 +32,15 @@ end
 
 Given "the following administrators exist:" do |table|
   admin_role = Role.admin
+  table.raw.each do |row|
+    admin = Factory(:user, :email => row[0])
+    jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])
+    RoleMembership.create!(:user => admin, :jurisdiction => jurisdiction, :role => admin_role)
+  end
+end
+
+Given "the following organization administrators exist:" do |table|
+  admin_role=Role.org_admin || Factory(:role, :name => Role::ORG_ADMIN)
   table.raw.each do |row|
     admin = Factory(:user, :email => row[0])
     jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])

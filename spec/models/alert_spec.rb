@@ -26,6 +26,7 @@
 #  urgency                :string(255)
 #  certainty              :string(255)
 #  jurisdictional_level   :string(255)
+#  references             :string(255)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

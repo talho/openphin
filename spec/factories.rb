@@ -34,10 +34,19 @@ Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }
 end
+
+Factory.sequence(:organization_name) {|jn| "Organization #{jn}"}
 Factory.define :organization do |org|
   org.approved true
-  org.name { Factory.next(:jurisdiction_name) }
+  org.name { Factory.next(:organization_name) }
 end
+
+Factory.sequence(:organization_type_name) {|jn| "Organization Type #{jn}"}
+Factory.define :organization_type do |org|
+  org.name { Factory.next(:organization_type_name) }
+end
+
+
 Factory.sequence(:rolename) {|r| "role#{r}"}
 Factory.define :role do |pr|
   pr.name { Factory.next(:rolename) }

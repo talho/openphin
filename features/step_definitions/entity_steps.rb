@@ -1,4 +1,4 @@
-Given 'the following entities exists:' do |table|
+Given /^the following entities exist[s]?:$/ do |table|
   table.raw.each do |row|
     key, value = row
     Given "a #{key.downcase} named #{value}"
@@ -16,6 +16,11 @@ end
 Given 'a role named $name' do |name|
   Role.find_by_name(name) || Factory(:role, :name => name)
 end
+
+Given /^a[n]? organization type named (.*)$/ do |name|
+  OrganizationType.find_by_name(name) || Factory(:organization_type, :name => name)
+end
+
 
 Given 'an approval role named $name' do |name|
   r = Factory(:role, :name => name, :approval_required => true)

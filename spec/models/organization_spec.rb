@@ -12,7 +12,6 @@
 #  state                     :string(255)
 #  street                    :string(255)
 #  phone                     :string(255)
-#  county                    :string(255)
 #  alerting_jurisdictions    :string(255)
 #  primary_organization_type :string(255)
 #  type                      :string(255)
@@ -20,6 +19,9 @@
 #  updated_at                :datetime
 #  foreign                   :boolean
 #  queue                     :string(255)
+#  organization_type_id      :integer
+#  distribution_email        :string(255)
+#  contact_id                :integer
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
