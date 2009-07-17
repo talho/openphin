@@ -35,6 +35,7 @@ Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }
 end
 Factory.define :organization do |org|
+  org.approved true
   org.name { Factory.next(:jurisdiction_name) }
 end
 Factory.sequence(:rolename) {|r| "role#{r}"}

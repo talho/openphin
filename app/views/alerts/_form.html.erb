@@ -39,7 +39,8 @@
       
   <fieldset>
     <legend>Limit to Certain Organizations</legend>
-    <%= form.select :organization_ids, Organization.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
+    <%= form.label :organization_ids, "Organizations", :style => "display:none" %>
+    <%= form.select :organization_ids, Organization.approved.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
   
   <fieldset>

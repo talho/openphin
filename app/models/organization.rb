@@ -27,6 +27,8 @@ class Organization < ActiveRecord::Base
   has_many :deliveries
   belongs_to :organization_type
   
+  named_scope :approved, :conditions => { :approved => true }
+  
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|

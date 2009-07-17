@@ -37,3 +37,12 @@ Feature: Sending alerts form
       | From Jurisdiction | Potter County |
       | Title | H1N1 SNS push packs to be delivered tomorrow |
     
+  Scenario: Sending alerts form should not contain unapproved organizations
+    Given there is an unapproved Blue Cross Blue Shield organization
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    When I go to the alerts page
+    And I follow "New Alert"
+    Then I should not see "Blue Cross Blue Shield" in the "Organizations" dropdown

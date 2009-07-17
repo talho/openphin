@@ -32,6 +32,15 @@ describe Organization do
       o.users << p
       o.users.length.should == 1
     end  
-
+  end
+  
+  describe "finders" do
+    describe ".approved" do
+      it "should return only approved organizations " do
+        unapproved_org = Factory(:organization, :approved => false)
+        approved_orgs = [Factory(:organization, :approved => true), Factory(:organization, :approved => true)]
+        Organization.approved.should == approved_orgs
+      end
+    end
   end
 end
