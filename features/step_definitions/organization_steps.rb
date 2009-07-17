@@ -18,6 +18,10 @@ When /^I approve the organization "([^\"]*)"$/ do |org_name|
   visit approve_admin_organization_path(Organization.find_by_name(org_name))
 end
 
+When /^I deny the organization "([^\"]*)"$/ do |org_name|
+  visit deny_admin_organization_path(Organization.find_by_name(org_name))
+end
+
 Then /^I should see the organization "([^\"]*)" is awaiting approval$/ do |org_name|
   organization=Organization.find_by_name(org_name)
   response.should have_selector(".pending_organization_requests") do |request|
@@ -37,5 +41,4 @@ end
 Then /^"([^\"]*)" contact should receive the following email:$/ do |org_name, table|
   contact=Organization.find_by_name(org_name).contact
   Then "\"#{contact.email}\" should receive the email:", table
-  
 end
