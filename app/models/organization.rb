@@ -25,6 +25,7 @@
 class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
   has_many :deliveries
+  belongs_to :organization_type
   
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
