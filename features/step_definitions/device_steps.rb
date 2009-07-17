@@ -70,3 +70,18 @@ Then '"$email" should not receive an email' do |email|
   email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) }
   email.should be_nil
 end
+
+Then "the following users should not receive any emails" do |table|
+  headers = table.headers
+  recipients = if headers.first == "roles"
+    jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
+    jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+    jurisdiction.users.with_role(role_name)
+  end
+
+  When "delayed jobs are processed"
+  recipients.each do |user|
+    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
+    email.should be_nil
+  end
+end

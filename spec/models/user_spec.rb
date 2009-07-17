@@ -104,16 +104,18 @@ describe User do
       lambda { person.phin_oid = 1 }.should raise_error
     end
   end
-  describe "#is_admin_for" do
+  
+  describe "#is_admin_for?" do
     before(:each) do
       @user = Factory(:user)
-      role = Role.admin || Factory(:role, :name => Role::ADMIN)
       @jurisdiction = Factory(:jurisdiction)
-      Factory(:role_membership, :jurisdiction => @jurisdiction, :role => role, :user => @user)
+      Factory(:role_membership, :jurisdiction => @jurisdiction, :role => Role.admin, :user => @user)
     end
+    
     it "should return true if the user is an admin for the given jurisdiction" do
       @user.is_admin_for?(@jurisdiction).should == true
     end
+    
     it "should return false if the user is not an admin for the given jurisdiction" do
       j2=Factory(:jurisdiction)
       @user.is_admin_for?(j2).should == false

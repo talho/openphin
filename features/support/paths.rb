@@ -4,6 +4,8 @@ module NavigationHelpers
     
     when /the homepage/i
       root_path
+    when /the dashboard page/i
+      dashboard_path
     when /the sign up page/i
       new_user_path
     when /the sign in page/i

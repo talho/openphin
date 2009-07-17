@@ -39,7 +39,7 @@ end
 
 Then /^I should see 0 pending role requests$/ do
   response.should_not have_selector(".pending_role_requests .request")
-  current_user.jurisdictions.first.role_requests.count.should == 0
+  current_user.role_requests.unapproved.flatten.size.should == 0
 end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
@@ -50,7 +50,7 @@ Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
 end
 
 Then /^I should see that I have a pending role request$/ do
-  current_user.role_requests.should_not be_empty
+  current_user.role_requests.unapproved.should_not be_empty
 end
 
 Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jurisdiction_name|

@@ -20,7 +20,7 @@ Feature: Role Requests
     And Tarrant County has the following administrators:
       | TarrantCounty Admin  | admin@tarrantcounty.com      |
     And Texas has the following administrators:
-      | Texas Admin   | admin@texas.com      |
+      | Zach Dennis   | admin@texas.com      |
       
   Scenario: User requests role
     Given the following users exist:
@@ -47,6 +47,69 @@ Feature: Role Requests
       | body contains | John Smith (john.smith@example.com) |
       | body contains | Health Officer |
       | body contains | Dallas County  |
+      
+  Scenario: Admin requests a role outside of their jurisdiction should go through normal approval process
+    Given I am logged in as "admin1@dallascounty.com"
+    When I go to the request a role page
+    And I fill out the role request form with:
+      | Jurisdiction | Tarrant County |
+      | Role         | Health Officer |
+    Then I should see that I have a pending role request
+    Then I should see "Your request to be a Health Officer in Tarrant County has been submitted"
+    Then I should see I am awaiting approval for Health Officer in Tarrant County
+    
+    And I should see that I have a pending role request
+    And "admin1@dallascounty.com" should receive the email:
+      | subject       | Request submitted for Health Officer in Tarrant County |
+      | body contains | Health Officer in Tarrant County |
+
+    And the following users should receive the email:
+      | roles         | Tarrant County / Admin |
+      | subject       | User requesting role Health Officer in Tarrant County |
+      | body contains | requested assignment |
+      | body contains | Bob Jones (admin1@dallascounty.com) |
+      | body contains | Health Officer |
+      | body contains | Tarrant County  |
+    
+  Scenario: Admin requests a role within their jurisdiction should automatically be approved
+    Given I am logged in as "admin1@dallascounty.com"
+    When I go to the request a role page
+    And I fill out the role request form with:
+      | Jurisdiction | Dallas County |
+      | Role         | Health Officer |
+    Then I should see "You have been granted the Health Officer role in Dallas County"
+    And I should have the "Health Officer" role in "Dallas County"
+
+    And "admin1@dallascounty.com" should not receive an email
+
+    And the following users should not receive any emails
+      | roles         | Dallas County / Admin |
+    
+    When I go to the dashboard page
+    And I should see 0 pending role requests
+  
+  Scenario: Admin requests a role within a child of their jurisdiction should go through normal approval process
+    Given I am logged in as "admin@texas.com"
+    When I go to the request a role page
+    And I fill out the role request form with:
+      | Jurisdiction | Tarrant County |
+      | Role         | Health Officer |
+    Then I should see that I have a pending role request
+    Then I should see "Your request to be a Health Officer in Tarrant County has been submitted"
+    Then I should see I am awaiting approval for Health Officer in Tarrant County
+    
+    And I should see that I have a pending role request
+    And "admin@texas.com" should receive the email:
+      | subject       | Request submitted for Health Officer in Tarrant County |
+      | body contains | Health Officer in Tarrant County |
+
+    And the following users should receive the email:
+      | roles         | Tarrant County / Admin |
+      | subject       | User requesting role Health Officer in Tarrant County |
+      | body contains | requested assignment |
+      | body contains | Zach Dennis (admin@texas.com) |
+      | body contains | Health Officer |
+      | body contains | Tarrant County  |
     
   Scenario: Requesting a role should not display system-roles
     Given there is an system only Admin role

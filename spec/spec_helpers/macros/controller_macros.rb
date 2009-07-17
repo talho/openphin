@@ -31,7 +31,7 @@ module SpecHelpers
     def should_require_admin_role(user_str, http_method, action, params={}, options={})
       describe "#{http_method} ##{action} requires the admin role" do
         before do
-          @role = Role.admin || Factory(:role, :name => Role::ADMIN)
+          @role = Role.admin
           stub_before_filters! :except => [:login_required, :admin_required]
         end
       

@@ -32,7 +32,7 @@ class Jurisdiction < ActiveRecord::Base
   validates_uniqueness_of :name
   
   def admins
-    users.with_role(Role::ADMIN)
+    users.with_role(Role.admin)
   end
 
   def parent

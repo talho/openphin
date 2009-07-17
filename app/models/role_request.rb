@@ -26,12 +26,25 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
   }
   
+  after_create :auto_approve_if_requester_is_jurisdiction_admin
+  
+  def approved?
+    true if approver
+  end
+  
   def approve!(approving_user)
     self.approver=approving_user
     create_role_membership(:user => requester, :role => role, :jurisdiction => jurisdiction)
     save!
   end
+  
   def deny!
     self.destroy
+  end
+  
+  private 
+  
+  def auto_approve_if_requester_is_jurisdiction_admin
+    approve!(requester) if requester.is_admin_for?(jurisdiction)
   end
 end

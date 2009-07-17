@@ -14,16 +14,19 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RoleRequest do
-  before(:each) do
-    @valid_attributes = {
-      :requester => mock_model(User),
-      :role => mock_model(Role),
-      :approver => mock_model(User)
-    }
-  end
-
-  it "should create a new instance given valid attributes" do
-    RoleRequest.create!(@valid_attributes)
+  describe "validations" do
+    before(:each) do
+      @role_request = Factory.build(:role_request,
+        :requester => stub_model(User),
+        :role => stub_model(Role),
+        :approver => stub_model(User),
+        :jurisdiction => stub_model(Jurisdiction)
+      )
+    end
+    
+    it "should be valid" do
+      @role_request.valid?.should be_true
+    end
   end
 
   describe "named scope" do
@@ -40,6 +43,30 @@ describe RoleRequest do
         RoleRequest.in_jurisdictions(Jurisdiction.first).size.should == 1
       end
     end
+  end
+  
+  describe "creating a role request" do
+    context "when the requester is an admin of the requested jurisdiction" do
+      before(:each) do
+        @user = Factory(:user)
+        @jurisdiction = Factory(:jurisdiction)
+        @admin_role = Role.admin
+        @role_membership = Factory(:role_membership, :role => @admin_role, :jurisdiction => @jurisdiction, :user => @user)
+        @role = Factory(:role, :name => "Foobar")
+        @request = Factory.build(:role_request, :requester => @user, :jurisdiction => @jurisdiction, :role => @role, :approver => nil)
+      end
+
+      it "should approve the request" do
+        @request.save!
+        @request.approved?.should be_true
+      end
+      
+      it "should set the approver to the requesting admin" do
+        @request.save!
+        @request.approver.should == @user
+      end
+    end
+    
   end
   
   describe "#approve!" do

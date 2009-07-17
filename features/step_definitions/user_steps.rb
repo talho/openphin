@@ -31,7 +31,7 @@ Given 'I have confirmed my account for "$email"' do |email|
 end
 
 Given "the following administrators exist:" do |table|
-  admin_role=Role.admin || Factory(:role, :name => Role::ADMIN)
+  admin_role = Role.admin
   table.raw.each do |row|
     admin = Factory(:user, :email => row[0])
     jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])
@@ -40,7 +40,7 @@ Given "the following administrators exist:" do |table|
 end
 
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
-  role = Role.admin || Factory(:role, :name => Role::ADMIN)
+  role = Role.admin
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   table.raw.each do |row|
     first_name, last_name = row.first.split(/\s+/)
@@ -96,3 +96,4 @@ Then '"$email" should have the "$role" role request for "$jurisdiction"' do |ema
   m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)
   m.should_not be_nil
 end
+

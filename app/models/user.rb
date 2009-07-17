@@ -51,7 +51,8 @@ class User < ActiveRecord::Base
   after_create :assign_public_role
   
   named_scope :with_role, lambda {|role| 
-    { :conditions => [ "role_memberships.role_id = ?",  Role.find_by_name(role).id ]}
+    role = role.is_a?(Role) ? role : Role.find_by_name(role)
+    { :conditions => [ "role_memberships.role_id = ?", role.id ]}
   }
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
