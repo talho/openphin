@@ -119,13 +119,12 @@ class User < ActiveRecord::Base
     end
   end
   
-<<<<<<< HEAD:app/models/user.rb
   def alerter?
     !role_memberships.alerter.empty?
-=======
+  end
+  
   def formatted_email
     "#{name} <#{email}>"
->>>>>>> An organization can sign up:app/models/user.rb
   end
   
 private

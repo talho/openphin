@@ -1,16 +1,30 @@
 module FeatureHelpers
   module FillInMethods
-    def fill_in_signup_form(table = nil)
-      fields={
-          # "Email"=> "john@example.com",
-          # "Password"=> "password",
-          # "Password confirmation"=> "password",
-          # "First name"=> "John",
-          # "Last name"=> "Smith",
-          # "Preferred name"=> "Jonathan Smith",
-          # "Are you with any of these organizations"=> "Red Cross",
-          # "Preferred language"=> "English"
+    
+    def fill_in_user_signup_form(table=nil)
+      fields={"Email"=> "john@example.com",
+       "Password"=> "password",
+       "Password confirmation"=> "password",
+       "First name"=> "John",
+       "Last name"=> "Smith",
+       "Preferred name"=> "Jonathan Smith",
+       "Are you with any of these organizations"=> "Red Cross",
+       "What County"=> "Dallas County",
+       "What is your primary role within the health department"=> "Health Alert and Communications Coordinator",
+       "Preferred language"=> "English"
       }
+      
+      if table.is_a?(Hash)
+        fields.merge!(table)
+      elsif !table.nil?
+        fields.merge!(table.rows_hash)
+      end
+      
+      fill_in_signup_form(fields)
+    end
+    
+    def fill_in_signup_form(table = nil)
+      fields = {}
       if table.is_a?(Hash)
         fields.merge!(table)
       elsif !table.nil?

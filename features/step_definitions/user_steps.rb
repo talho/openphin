@@ -68,13 +68,13 @@ end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
-  fill_in_signup_form("Email" => email)
+  fill_in_user_signup_form("Email" => email)
   click_button "Save"
 end
 
 When 'I signup for an account with the following info:' do |table|
   visit new_user_path
-  fill_in_signup_form(table)
+  fill_in_user_signup_form(table)
   click_button 'Save'
 end
 
