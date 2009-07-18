@@ -9,7 +9,7 @@
 	url = git://github.com/mbleigh/seed-fu.git
 [submodule "public/javascripts/FCBKcomplete"]
 	path = public/javascripts/FCBKcomplete
-	url = git://github.com/emposha/FCBKcomplete.git
+	url = git://github.com/collectiveidea/FCBKcomplete.git
 [submodule "vendor/plugins/webrat"]
 	path = vendor/plugins/webrat
 	url = git://github.com/collectiveidea/webrat.git
