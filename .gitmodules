@@ -25,3 +25,6 @@
 [submodule "vendor/plugins/caching_presenter"]
 	path = vendor/plugins/caching_presenter
 	url = git://github.com/mhs/caching_presenter.git
+[submodule "vendor/plugins/rspec-on-rails-matchers"]
+	path = vendor/plugins/rspec-on-rails-matchers
+	url = git://github.com/brandon/rspec-on-rails-matchers.git
