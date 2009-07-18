@@ -17,4 +17,5 @@ class Admin::OrganizationsController < ApplicationController
       redirect_to dashboard_path
     end
   end
+
 end

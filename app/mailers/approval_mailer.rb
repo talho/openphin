@@ -17,11 +17,10 @@ class ApprovalMailer < ActionMailer::Base
     subject "Confirmation of #{organization.name} organization registration"
     body :organization => organization
   end
-  
+
   def organization_denial(organization)
     recipients organization.contact.email
-    subject "Denial of #{organization.name} organization registration"
+    subject "Organization registration request denied"
     body :organization => organization
   end
-
 end
