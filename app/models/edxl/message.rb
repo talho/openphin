@@ -20,6 +20,19 @@
 =end
 
 module EDXL
+  class MessageContainer
+    include HappyMapper
+
+    tag "EDXLDistribution"
+    element :distribution_id, String, :tag => "distributionID"
+    element :sender_id, String, :tag => "senderID"
+    element :datetime_sent, DateTime, :tag => "dateTimeSent"
+    element :distribution_status, String, :tag => "distributionStatus"
+    element :distribution_type, String, :tag => "distributionType"
+    element :distribution_reference, String, :tag => "distributionReference"
+    element :combined_confidentiality, String, :tag => "combinedConfidentiality"
+  end
+
   class Message
     include HappyMapper
 
@@ -69,6 +82,37 @@ module EDXL
             a.roles << role if role
           end
         end
+      end
+    end
+  end
+  
+  class AckMessage
+    include HappyMapper
+
+    tag "EDXLDistribution"
+    element :distribution_id, String, :tag => "distributionID"
+    element :sender_id, String, :tag => "senderID"
+    element :datetime_sent, DateTime, :tag => "dateTimeSent"
+    element :distribution_status, String, :tag => "distributionStatus"
+    element :distribution_type, String, :tag => "distributionType"
+    element :distribution_reference, String, :tag => "distributionReference"
+    element :combined_confidentiality, String, :tag => "combinedConfidentiality"
+
+    def alert
+      @alert ||= ::Alert.find_by_identifier(distribution_id.split(',')[0])
+    end
+    
+    def acknowledge
+      if !alert.nil?
+        alert.alert_acknowledged = true
+        alert.alert_acknowledged_timestamp = Time.zone.now
+        alert.save!
+      end
+    end
+
+    def self.parse(xml, options = {})
+      returning super do |message|
+        message.acknowledge
       end
     end
   end

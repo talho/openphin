@@ -63,6 +63,6 @@ Feature: Alerts from EDXL
     And an alert with:
       | identifier | CDC-2006-183 |
     When PhinMS delivers the message: PCAAckExample.xml
-    Then the alert "CDC-2006-183" to "Red Cross" should be acknowledged
+    Then the alert "CDC-2006-183" should be acknowledged
     
 

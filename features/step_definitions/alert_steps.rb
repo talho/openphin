@@ -13,7 +13,11 @@ end
 
 When "PhinMS delivers the message: $filename" do |filename|
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
-  EDXL::Message.parse(xml)
+  if(EDXL::MessageContainer.parse(xml).distribution_type == "Ack")
+    EDXL::AckMessage.parse(xml)
+  else
+    EDXL::Message.parse(xml)
+  end
 end
 
 When "I fill out the alert form with:" do |table|
@@ -100,4 +104,9 @@ end
 Then 'I can see the alert summary for "$title"' do |title|
   alert = Alert.find_by_title!(title)
   response.should have_tag('#?', dom_id(alert))
+end
+
+Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
+  alert = Alert.find_by_identifier(alert_id)
+  alert.alert_acknowledged.should be_true
 end
