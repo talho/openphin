@@ -27,16 +27,14 @@ should be able to manage organization enrollements
       | subject       | Confirmation of Gopher Lovers of America organization registration    |
       | body contains | Thanks for signing up.  Your users may now begin enrollment.|
 
+Scenario: denying an organization signup
+	Given there is an unapproved Furries organization with "furrylover@example.com" as the contact
+	And I am logged in as "keith@texashan.org"
 
-  Scenario: denying an organization signup
-    Given there is an unapproved Gopher Lovers of America organization
-    And I am logged in as "keith@texashan.org"
-    When I go to the dashboard page
-    Then I should see the organization "Gopher Lovers of America" is awaiting approval
+	When I deny the organization "Furries"
+	Then I should not see the organization "Furries" is awaiting approval
+	And "furrylover@example.com" should receive the email:
+				| subject       | Organization registration request denied    |
+				| body contains | Thanks for your organization request. |
+				| body contains | Your request has been denied.         |
 
-    When I deny the organization "Gopher Lovers of America"
-    Then I should not see the organization "Gopher Lovers of America" is awaiting approval
-    # And "Gopher Lovers of America" contact should receive the following email:
-    #   | subject       | Denial of Gopher Lovers of America organization registration    |
-    #   | body contains | You have been denied for the organization Gopher Lovers of America |
-    

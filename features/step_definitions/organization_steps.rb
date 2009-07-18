@@ -1,5 +1,10 @@
+Given /^there is an unapproved ([^\"]*) organization with "([^\"]*)" as the contact$/ do |name, email|
+	contact = User.find_by_email(email) || Factory(:user, :email => email)
+	Factory(:organization, :name => name, :approved => false, :contact => contact)
+end
 Given "there is an unapproved $name organization" do |name|
-  Factory(:organization, :name => name, :approved => false, :contact => Factory(:user))
+	contact=Factory(:user)
+	Given "there is an unapproved #{name} organization with \"#{contact.email}\" as the contact"
 end
 
 When 'I signup for an organization account with the following info:' do |table|
@@ -39,6 +44,6 @@ Then /^I should not see the organization "([^\"]*)" is awaiting approval$/ do |o
 end
 
 Then /^"([^\"]*)" contact should receive the following email:$/ do |org_name, table|
-  contact=Organization.find_by_name(org_name).contact
+  contact=Organization.find_by_name(org_name).contact 
   Then "\"#{contact.email}\" should receive the email:", table
 end
