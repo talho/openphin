@@ -16,9 +16,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RoleMembership do
   before(:each) do
     @valid_attributes = {
+      :jurisdiction_id => 6,
+      :user_id => 7
     }
   end
-
+  
+  it { should validate_presence_of(:jurisdiction_id) }
+  it { should validate_presence_of(:user_id) }
+  
   it "should create a new instance given valid attributes" do
     RoleMembership.create!(@valid_attributes)
   end
