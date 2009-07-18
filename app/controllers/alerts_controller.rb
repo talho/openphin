@@ -19,7 +19,7 @@ class AlertsController < ApplicationController
       @alert.save
       @alert.deliver
       flash[:notice] = "Successfully sent the alert"
-      redirect_to @alert
+      redirect_to logs_path
     else
       render :template => "alerts/preview"
     end
