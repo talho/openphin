@@ -69,7 +69,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
-      roles=params[:roles]
+      roles=params[:role_requests]
       roles.each_value do |r|
 
         if r["_delete"]

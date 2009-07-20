@@ -1,3 +1,4 @@
+<div class='user_profile'>
 <p>
   <b>Photo:</b>
   <%=h @user_profile.photo %>
@@ -27,7 +28,7 @@
   <b>Bio:</b>
   <%=h @user_profile.bio %>
 </p>
-
+</div>
 
 <%= link_to 'Edit', edit_user_profile_path(@user_profile) %> |
-<%= link_to 'Back', user_profiles_path %>
+<%= link_to 'Back', user_profile_path(current_user) %>

@@ -22,11 +22,10 @@ module NavigationHelpers
       admin_role_requests_path
     when /the alert log/i
       alerts_path
+	  when /the edit profile page/i
+		  edit_user_profile_path(current_user.profile)
     when /cancel the alert/
       edit_alert_path(Alert.last, :_action => "cancel")
-      
-    # Add more page name => path mappings here
-    
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

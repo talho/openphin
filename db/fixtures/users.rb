@@ -5,7 +5,6 @@ User.seed(:first_name, :last_name) do |m|
   m.password = 'password'
   m.password_confirmation = 'password'
 end
-
 User.seed(:first_name, :last_name) do |m|
   m.first_name = 'Ethan'
   m.last_name = 'Waldo'

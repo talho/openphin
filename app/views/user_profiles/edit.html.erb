@@ -1,36 +1,57 @@
+<div class='profile_edit'>
 <h1>Editing user_profile</h1>
+  <% form_for(@user_profile) do |form| %>
+		<% fields_for :user, @user_profile.user do |user_form| %>
+			<fieldset>
+				<legend>Account information</legend>
+				<%= render :partial => "users/user_account_form", :locals => { :form => user_form } %>
+			</fieldset>
+		<% end %>
 
-<% form_for(@user_profile) do |f| %>
-  <%= f.error_messages %>
+		<fieldset>
+			<legend>Public Profile</legend>
+			<p>This is information you can choose to make public through the OpenPHIN directory.
+			It is not required that you fill any part of this profile out, or that you make the information public if you do. </p>
+    <%= form.error_messages %>
+    <p>
+      <%= form.label :public, "Make this profile public?" %>
+      <%= form.check_box :public %>
+    </p>
 
+    <!--
   <p>
-    <%= f.label :photo %><br />
-    <%= f.text_field :photo %>
+    <%= form.label :photo %><br />
+    <%= form.text_field :photo %>
   </p>
-  <p>
-    <%= f.label :public %><br />
-    <%= f.check_box :public %>
-  </p>
-  <p>
-    <%= f.label :credentials %><br />
-    <%= f.text_area :credentials %>
-  </p>
-  <p>
-    <%= f.label :employer %><br />
-    <%= f.text_field :employer %>
-  </p>
-  <p>
-    <%= f.label :experience %><br />
-    <%= f.text_area :experience %>
-  </p>
-  <p>
-    <%= f.label :bio %><br />
-    <%= f.text_area :bio %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
 
-<%= link_to 'Show', @user_profile %> |
-<%= link_to 'Back', user_profiles_path %>
+-->
+    <p>
+      <b><%= form.label :bio %></b><br/>
+      Tell us a bit about yourself.<br/>
+      <%= form.text_area :bio, :cols => 60, :rows =>5, :class => "bio" %>
+    </p>
+
+    <p>
+      <b><%= form.label :credentials %></b><br/>
+      List any degrees, certifications, or other professional credentials you have.<br/>
+      <%= form.text_area :credentials, :cols => 60, :rows =>5 %>
+    </p>
+
+    <p>
+      <b><%= form.label :experience %></b><br/>
+      List any experience you have in other areas besides your profession. (E.g. SCUBA, photography, carpentry, etc)<br/>
+      <%= form.text_area :experience, :cols => 60, :rows =>5 %>
+    </p>
+
+    <p>
+      <b><%= form.label :employer %></b><br/>
+      <%= form.text_field :employer, :cols => 60, :rows =>5 %>
+    </p>
+    </fieldset>
+    <p>
+      <%= form.submit 'Save' %>
+    </p>
+  <% end %>
+</div>
+  <%= link_to 'Show', @user_profile %> |
+  <%= link_to 'Back', user_profile_path %>

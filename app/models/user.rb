@@ -49,7 +49,8 @@ class User < ActiveRecord::Base
   before_create :create_default_email_device
 
   after_create :assign_public_role
-  
+  after_create :create_default_profile
+
   named_scope :with_role, lambda {|role| 
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ]}
@@ -168,5 +169,9 @@ private
   def set_confirmation_token
     self.token = ActiveSupport::SecureRandom.hex
   end
+
+	def create_default_profile
+		self.create_profile(:public => false)
+	end
 
 end

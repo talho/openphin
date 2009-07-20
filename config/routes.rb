@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :user_profiles, :as => "profile"
+#  map.resources :user_profiles, :as => "profile"
 
   map.resources :jurisdictions
 
@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_organizations, :member => [:approve, :deny], :controller => "admin/organizations"
 
   map.resources :users, :collection => {:search => :get} do |user|
-    user.resource :user_profile, :as => "profile"
+    user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
   map.resources :alerts, :member => { :cancel => :put }
