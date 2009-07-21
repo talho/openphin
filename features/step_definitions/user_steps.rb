@@ -48,6 +48,10 @@ Given "the following organization administrators exist:" do |table|
   end
 end
 
+Given /^"([^\"]*)" is an unconfirmed user$/ do |email|
+  Factory(:user, :email => email, :email_confirmed => false)
+end
+
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
   role = Role.admin
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)

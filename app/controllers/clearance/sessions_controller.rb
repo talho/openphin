@@ -51,7 +51,7 @@ class Clearance::SessionsController < ApplicationController
   def flash_notice_after_create
     flash[:notice] = translate(:unconfirmed_email,
       :scope   => [:clearance, :controllers, :sessions],
-      :default => "User has not confirmed email. " <<
+      :default => "Your account is unconfirmed. " <<
                   "Confirmation email will be resent.")
   end
 

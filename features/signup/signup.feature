@@ -106,7 +106,9 @@ Feature: Signing up for an account
     Given "john@example.com" is an unconfirmed user
     When I log in as "john@example.com"
     Then I should see "Your account is unconfirmed"
-    And I should see a user confirmation url
-    And I should see a link to "Resend confirmation"
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+
     
       
