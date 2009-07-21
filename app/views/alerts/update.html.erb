@@ -1,4 +1,4 @@
-<% form_for @alert do |form|%>
+<% form_for @alert, :url => @alert.original_alert, :html => {:method => :put} do |form|%>
   <div id="edit">
     <%= render form %>
     <%= form.submit "Preview Message" %>
