@@ -54,7 +54,7 @@ Feature: Canceling an alert
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : HAN Coordinator |
       | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | body contains | Type: Cancel   |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
       | body contains | Flying monkey disease is not contagious |
     
