@@ -30,6 +30,15 @@ Factory.define :user do |pp|
   pp.email_confirmed { true }
 end
 
+Factory.define :user_profile do |m|
+  m.public true
+  m.credentials "Some fancy credentials"
+  m.employer "Acme Fireworks"
+  m.experience "hunting wabbits"
+  m.bio "The details of my early life are really quite inconsequential..."
+  m.user {|profile| profile.association :user, Factory(:user) }
+end
+
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }

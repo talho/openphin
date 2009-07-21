@@ -18,17 +18,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe UserProfile do
   before(:each) do
-    @valid_attributes = {
-      # :photo => ,
-      :public => false,
-      :credentials => "value for credentials",
-      :employer => "value for employer",
-      :experience => "value for experience",
-      :bio => "value for bio"
-    }
+    
+    @profile=Factory(:user_profile, :user => Factory(:user))
   end
 
-  it "should create a new instance given valid attributes" do
-    UserProfile.create!(@valid_attributes)
+  it "should create a new instance" do
+    @profile.should be_valid
   end
 end
