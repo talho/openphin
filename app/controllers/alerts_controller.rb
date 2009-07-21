@@ -20,32 +20,22 @@ class AlertsController < ApplicationController
       @alert.deliver
       flash[:notice] = "Successfully sent the alert"
       redirect_to logs_path
-    else
-      render :template => "alerts/preview"
     end
   end
   
   def edit
     alert = current_user.alerts.find params[:id]
     @alert = present alert, :action => params[:_action]
-    render :template => "alerts/edit_with_#{params[:_action]}"
-  end
-  
-  def cancel
-    original_alert = current_user.alerts.find params[:id]
-    @alert = original_alert.build_cancellation params[:alert]
-    if params[:send]
-      @alert.save
-      @alert.deliver
-      flash[:notice] = "Successfully sent the alert"
-      redirect_to logs_path
-    else
-      render :template => "alerts/preview"
-    end
   end
   
   def update
-    @alert = current_user.alerts.build params[:alert]
+    original_alert = current_user.alerts.find params[:id]
+    @alert = if params[:_action] == 'cancel'
+      original_alert.build_cancellation(params[:alert])
+    else
+      # TODO: implement this
+      # original_alert.build_update(params[:alert])
+    end
     if params[:send]
       @alert.save
       @alert.deliver

@@ -12,7 +12,7 @@
   </thead>
   <tbody>
     <% @alerts.each do |alert| %>
-      <% content_tag_for :li, alert do %>
+      <% content_tag_for :tr, alert do %>
         <td class="identifier"><%=h alert.identifier %></td>
         <td class="sent_at"><%= time_ago_in_words alert.sent_at if alert.sent_at? %></td>
         <td class="from_jurisdiction"><%=h alert.from_jurisdiction %></td>

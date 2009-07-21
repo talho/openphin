@@ -43,8 +43,8 @@ Then /^the following users should receive the email:$/ do |table|
   
   recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
     
-  emails = ActionMailer::Base.deliveries  
-
+  emails = ActionMailer::Base.deliveries
+  
   recipients.each do |user|
     email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
     email.should_not be_nil
