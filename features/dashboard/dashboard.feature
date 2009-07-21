@@ -35,7 +35,7 @@ Feature: Viewing the dashboard
     And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
     And "admin1@dallascounty.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
     When I go to the dashboard page
-    Then I should see 1 recent role approval
+    Then I should see 2 recent role approval
 
 
     Scenario: Dashboard should show only the panels each user has access to

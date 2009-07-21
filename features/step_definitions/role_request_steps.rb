@@ -16,7 +16,7 @@ Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)"
   role = Role.find_by_name!(role_name)
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   user = User.find_by_email(email_address)
-  r = user.role_memberships << Factory(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :updated_at => numdays.to_i.days.ago)
+  r = user.role_memberships << Factory(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :created_at => numdays.to_i.days.ago)
 end
 
 When /^I fill out the role request form with:$/ do |table|
@@ -102,5 +102,5 @@ Then /^I should see (\d) recent role approvals?$/ do |num|
   else
     response.should have_selector(".recent_role_approvals .approval")
   end
-  current_user.role_memberships.recent.flatten.size.should == 1
+  current_user.role_memberships.recent.flatten.size.should == num.to_i
 end
