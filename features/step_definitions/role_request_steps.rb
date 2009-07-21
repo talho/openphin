@@ -8,6 +8,16 @@ Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_em
                     :requester => user)
 end
 
+Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)"$/ do |admin_email_address, role_name, jurisdiction_name, email_address|
+ Given "\"#{admin_email_address}\" has approved the \"#{role_name}\" role in \"#{jurisdiction_name}\" for \"#{email_address}\" 0 days ago"
+end
+
+Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)" (\d) days ago$/ do |admin_email_address, role_name, jurisdiction_name, email_address, numdays|
+  role = Role.find_by_name!(role_name)
+  jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+  user = User.find_by_email(email_address)
+  r = user.role_memberships << Factory(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :updated_at => numdays.to_i.days.ago)
+end
 
 When /^I fill out the role request form with:$/ do |table|
   table.rows_hash.each do |label, value|
@@ -37,9 +47,13 @@ When /^I deny "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
   visit deny_admin_role_request_path(request)
 end
 
-Then /^I should see 0 pending role requests$/ do
-  response.should_not have_selector(".pending_role_requests .request")
-  current_user.role_requests.unapproved.flatten.size.should == 0
+Then /^I should see (\d*) pending role requests?$/ do |num|
+  if(num.to_i == 0)
+    response.should_not have_selector(".pending_role_requests .request")
+  else
+    response.should have_selector(".pending_role_requests .request")
+  end
+  current_user.role_requests.unapproved.flatten.size.should == num.to_i
 end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
@@ -80,4 +94,13 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
     req.should have_selector("a.approve_link[href='#{approve_admin_role_request_path(request)}']")
     req.should have_selector("a.deny_link[href='#{deny_admin_role_request_path(request)}']")
   end
+end
+
+Then /^I should see (\d) recent role approvals?$/ do |num|
+  if(num.to_i == 0)
+    response.should_not have_selector(".recent_role_approvals .approval")
+  else
+    response.should have_selector(".recent_role_approvals .approval")
+  end
+  current_user.role_memberships.recent.flatten.size.should == 1
 end

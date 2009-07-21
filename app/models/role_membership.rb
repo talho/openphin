@@ -23,4 +23,5 @@ class RoleMembership < ActiveRecord::Base
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
   
   named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}
+  named_scope :recent, :conditions => ["updated_at < ?",1.days.ago]
 end

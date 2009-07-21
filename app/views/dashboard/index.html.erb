@@ -7,6 +7,15 @@
   </ul>
 <% end %>
 
+<% if current_user.role_memberships.recent.any? %>
+  <h4>Recently Approved Roles</h4>
+  <ul class="recent_role_approvals">
+    <% current_user.role_memberships.recent.each do |recent| %>
+      <li class="approval"><%= recent.jurisdiction.name %> : <%= recent.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 <% if current_user.is_org_approver? %>
     <fieldset>
       <legend>Organizations awaiting approval</legend>
