@@ -69,6 +69,7 @@ class Admin::RoleRequestsController < ApplicationController
       end
     end
   end
+  
   def deny
     request=RoleRequest.find(params[:id])
     if request

@@ -130,4 +130,10 @@ Feature: Role Requests
     And I am logged in as "admin@texas.com"
     When I go to the roles requests page for an admin
     Then I should see 0 pending role requests
-      
+
+  Scenario: Going to the View Role Requests without admin rights
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the roles requests page for an admin
+    Then I should see "That resource does not exist or you do not have access to it"
