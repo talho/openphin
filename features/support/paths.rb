@@ -22,8 +22,10 @@ module NavigationHelpers
       admin_role_requests_path
     when /the alert log/i
       alerts_path
-	  when /the edit profile page/i
-		  edit_user_profile_path(current_user.profile)
+    when /the user edit page/i
+      edit_user_path(current_user)
+	when /the edit profile page/i
+	  edit_user_profile_path(current_user.profile)
     when /cancel the alert/
       edit_alert_path(Alert.last, :_action => "cancel")
     else
