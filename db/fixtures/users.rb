@@ -8,11 +8,18 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Texas')
-  r.role_id = Role.admin
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.admin.id
   r.user_id = u.id
 end
 u.role_memberships << r
+
+t = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('HAN Coordinator').id
+  r.user_id = u.id
+end
+u.role_memberships << t
 
 u = User.seed(:first_name, :last_name) do |m|
   m.first_name = 'Ethan'
@@ -24,8 +31,8 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Texas')
-  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator')
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('HAN Coordinator').id
   r.user_id = u.id
 end
 u.role_memberships << r
@@ -40,8 +47,8 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County')
-  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator')
+  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
+  r.role_id = Role.find_by_name('HAN Coordinator').id
   r.user_id = u.id
 end
 u.role_memberships << r
@@ -56,8 +63,8 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County')
-  r.role_id = Role.find_by_name('Health Officer')
+  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
+  r.role_id = Role.find_by_name('Health Officer').id
   r.user_id = u.id
 end
 u.role_memberships << r
@@ -72,8 +79,8 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Wise County')
-  r.role_id = Role.find_by_name('Health Officer')
+  r.jurisdiction_id = Jurisdiction.find_by_name('Wise County').id
+  r.role_id = Role.find_by_name('Health Officer').id
   r.user_id = u.id
 end
 u.role_memberships << r
@@ -88,8 +95,8 @@ u = User.seed(:first_name, :last_name) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County')
-  r.role_id = Role.find_by_name('Public')
+  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
+  r.role_id = Role.find_by_name('Public').id
   r.user_id = u.id
 end
 u.role_memberships << r
