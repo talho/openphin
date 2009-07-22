@@ -20,6 +20,9 @@ class AlertsController < ApplicationController
       @alert.deliver
       flash[:notice] = "Successfully sent the alert"
       redirect_to logs_path
+    else
+      @preview = true
+      render :new
     end
   end
   
@@ -41,6 +44,9 @@ class AlertsController < ApplicationController
       @alert.deliver
       flash[:notice] = "Successfully sent the alert"
       redirect_to logs_path
+    else
+      @preview = true
+      render :edit
     end
   end
 
