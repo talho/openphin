@@ -9,6 +9,7 @@ Feature: Viewing the dashboard
           | Role         | Health Officer        |
           | Role         | Immunization Director |
           | Role         | HAN Coordinator       |
+        And the role "HAN Coordinator" is an alerter
         And Texas is the parent jurisdiction of:
           | Dallas County | Tarrant County |
         And Dallas County has the following administrators:
@@ -39,3 +40,58 @@ Feature: Viewing the dashboard
 
 
     Scenario: Dashboard should show only the panels each user has access to
+    
+    Scenario: Dashboard should show the user navigation
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the dashboard page
+    Then I should see a signout link
+    And I should not see a sendalert link
+    And I should see a requestrole link
+    And I should not see a viewrole link
+    And I should not see a viewrolerequests link
+    And I should not see a viewalerts link
+    And I should not see a link to View Profile
+    And I should not see a link to View Alert Logs
+
+    Scenario: Dashboard should show the alerter navigation
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
+    And I am logged in as "john.smith@example.com"
+    When I go to the dashboard page
+    Then I should see a signout link
+    And I should see a sendalert link
+    And I should see a requestrole link
+    And I should not see a viewrole link
+    And I should not see a viewrolerequests link
+    And I should see a viewalerts link
+    And I should not see a link to View Profile
+    And I should not see a link to View Alert Logs
+
+    Scenario: Dashboard should show the admin navigation
+    And I am logged in as "admin1@dallascounty.com"
+    When I go to the dashboard page
+    Then I should see a signout link
+    And I should not see a sendalert link
+    And I should see a requestrole link
+    And I should not see a viewrole link
+    And I should see a viewrolerequests link
+    And I should not see a viewalerts link
+    And I should not see a link to View Profile
+    And I should not see a link to View Alert Logs
+ 
+    Scenario: Dashboard should show the admin alerter navigation
+    And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
+    And I am logged in as "admin1@dallascounty.com"
+    When I go to the dashboard page
+    Then I should see a signout link
+    And I should see a sendalert link
+    And I should see a requestrole link
+    And I should not see a viewrole link
+    And I should see a viewrolerequests link
+    And I should see a viewalerts link
+    And I should not see a link to View Profile
+    And I should not see a link to View Alert Logs
+    

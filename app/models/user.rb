@@ -65,6 +65,18 @@ class User < ActiveRecord::Base
   def is_admin_for?(jurisdiction)
     jurisdiction.admins.include?(self)
   end
+  
+  def is_super_admin?
+    j = Jurisdiction.find_by_name('Texas')
+    j.admins.include?(self) unless j.nil?
+  end
+
+  def is_admin?
+    self.jurisdictions.each do |j|
+      return true if j.admins.include?(self)
+    end
+    false
+  end
 
   def is_org_approver?
     self.roles.detect{|role| role == Role.org_admin }

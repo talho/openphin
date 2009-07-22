@@ -18,3 +18,18 @@ When /^I fill in the form with the following info:$/ do |table|
 	end
 end
 
+Then /^I should see a link to (.*)$/ do |page_name|
+  response.should have_selector('a', :content => page_name)
+end
+
+Then /^I should not see a link to (.*)$/ do |page_name|
+  response.should_not have_selector('a', :content => page_name)
+end
+
+Then /^I should see a (.*) link$/ do |class_name|
+  response.should have_selector('a', :class => ".#{class_name}")
+end
+
+Then /^I should not see a (.*) link$/ do |class_name|
+  response.should_not have_selector('a', :class => ".#{class_name}")
+end
