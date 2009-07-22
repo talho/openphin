@@ -10,3 +10,4 @@ tmp/*
 db/schema.rb
 vendor/plugins/cucumber
 .project
+.loadpath
