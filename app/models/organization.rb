@@ -22,6 +22,7 @@
 #  organization_type_id      :integer
 #  distribution_email        :string(255)
 #  contact_id                :integer
+#  approved                  :boolean
 #
 
 class Organization < ActiveRecord::Base

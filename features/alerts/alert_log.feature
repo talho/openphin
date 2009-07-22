@@ -43,11 +43,47 @@ Feature: Viewing the alert log
       | title             | Hello World   |
     When I am on the alert log
     Then I should not see an alert titled "Hello World"
-  
-  Scenario: Viewing an alert in the log
-  # show "active" (time hasn't run out) 72h, 24h, 60m, 15m
-  
+ 
+   Scenario: Clicking back on a viewed alert
+    Given the following entities exists:
+      | Jurisdiction | Texas                                    |
+      | Jurisdiction | Dallas County                            |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |  
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    And an alert with:
+      | from_jurisdiction | Dallas County |
+      | title             | Hello World   |
+    When I am on the alert log
+    And I click "View" on "Hello World"
+    And I follow "Back"
+    Then I should see an alert titled "Hello World" 
+    
   Scenario: Viewing percentage of recipients that have acknowledged
+    Given the following entities exists:
+      | Jurisdiction | Texas         |
+      | Jurisdiction | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |  
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+      | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    And an alert with:
+      | from_jurisdiction | Texas                |
+      | jurisdictions     | Texas, Dallas County |
+      | roles             | HAN Coordinator      |
+      | title             | Hello World          |
+    And "john.smith@example.com" has acknowledged the alert "Hello World"
+    And "daniel@example.com" has not acknowledged the alert "Hello World"
+    When I am on the alert log
+    Then I can see the alert summary for "Hello World"
+    And I can see the alert for "Hello World" is 50% acknowledged
+
   Scenario: Viewing percentage of recipients that have acknowledged by jurisdiction
-  Scenario: Viewing percentage of acknowledgements by device type
+  Scenario: Viewing percentage of acknowledgments by device type
   Scenario: Viewing jurisdictions, organizations, roles and individual users that received an alert

@@ -2,31 +2,35 @@
 #
 # Table name: alerts
 #
-#  id                     :integer         not null, primary key
-#  title                  :string(255)
-#  message                :text
-#  severity               :string(255)
-#  status                 :string(255)
-#  acknowledge            :boolean
-#  author_id              :integer
-#  created_at             :datetime
-#  updated_at             :datetime
-#  sensitive              :boolean
-#  delivery_time          :integer
-#  sent_at                :datetime
-#  message_type           :string(255)
-#  program_type           :string(255)
-#  from_organization_id   :integer
-#  from_organization_name :string(255)
-#  from_organization_oid  :string(255)
-#  identifier             :string(255)
-#  scope                  :string(255)
-#  category               :string(255)
-#  program                :string(255)
-#  urgency                :string(255)
-#  certainty              :string(255)
-#  jurisdictional_level   :string(255)
-#  references             :string(255)
+#  id                           :integer         not null, primary key
+#  title                        :string(255)
+#  message                      :text
+#  severity                     :string(255)
+#  status                       :string(255)
+#  acknowledge                  :boolean
+#  author_id                    :integer
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  sensitive                    :boolean
+#  delivery_time                :integer
+#  sent_at                      :datetime
+#  message_type                 :string(255)
+#  program_type                 :string(255)
+#  from_organization_id         :integer
+#  from_organization_name       :string(255)
+#  from_organization_oid        :string(255)
+#  identifier                   :string(255)
+#  scope                        :string(255)
+#  category                     :string(255)
+#  program                      :string(255)
+#  urgency                      :string(255)
+#  certainty                    :string(255)
+#  jurisdictional_level         :string(255)
+#  references                   :string(255)
+#  from_jurisdiction_id         :integer
+#  original_alert_id            :integer
+#  alert_acknowledged           :boolean
+#  alert_acknowledged_timestamp :time
 #
 
 class Alert < ActiveRecord::Base
@@ -40,6 +44,7 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :organizations
   has_many :alert_device_types
   has_many :deliveries
+  has_many :alert_attempts
   
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
@@ -51,6 +56,7 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   
   before_create :set_message_type
+  named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
@@ -101,6 +107,21 @@ class Alert < ActiveRecord::Base
     end
   end
   handle_asynchronously :deliver
+  
+  def acknowledgments
+    alert_attempts.all(:conditions => "acknowledged_at IS NOT NULL")
+  end
+  
+  def acknowledged_percent
+    if(alert_attempts.size > 0)
+      total = alert_attempts.size.to_f
+      acked = alert_attempts.acknowledged.size.to_f
+      (acked/total*100)
+    else
+      0
+    end
+  end
+
   
 private
   def set_message_type

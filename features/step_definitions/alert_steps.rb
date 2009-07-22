@@ -1,6 +1,9 @@
 Given "an alert with:" do |table|
   attributes = table.rows_hash
   attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction'])
+  attributes['jurisdictions'] = attributes['jurisdictions'].split(',').map{|m| Jurisdiction.find_by_name(m.strip)} unless attributes['jurisdictions'].blank?
+  attributes['roles'] = attributes['roles'].split(',').map{|m| Role.find_by_name(m.strip)} unless attributes['roles'].blank?
+  attributes['author_id'] = current_user.id
   Factory(:alert, attributes)
 end
 
@@ -9,6 +12,16 @@ Given "I've sent an alert with:" do |table|
   fill_in_alert_form table
   click_button "Preview Message"
   lambda { click_button "Send" }.should change(Alert, :count).by(1)
+end
+
+Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_address, title|
+  u = User.find_by_email(email_address)
+  ack = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :device => u.devices.email.first, :acknowledged_at => Time.zone.now)
+end
+
+Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_address, title|
+  u = User.find_by_email(email_address)
+  ack = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :device => u.devices.email.first)
 end
 
 When "PhinMS delivers the message: $filename" do |filename|
@@ -109,4 +122,8 @@ end
 Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
   alert = Alert.find_by_identifier(alert_id)
   alert.alert_acknowledged.should be_true
+end
+
+Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|
+  response.should have_selector('.ackpercent', :content => percent)
 end

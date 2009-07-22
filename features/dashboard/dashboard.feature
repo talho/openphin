@@ -53,7 +53,6 @@ Feature: Viewing the dashboard
     And I should not see a viewrolerequests link
     And I should not see a viewalerts link
     And I should not see a link to View Profile
-    And I should not see a link to View Alert Logs
 
     Scenario: Dashboard should show the alerter navigation
     Given the following users exist:
@@ -68,7 +67,6 @@ Feature: Viewing the dashboard
     And I should not see a viewrolerequests link
     And I should see a viewalerts link
     And I should not see a link to View Profile
-    And I should not see a link to View Alert Logs
 
     Scenario: Dashboard should show the admin navigation
     And I am logged in as "admin1@dallascounty.com"
@@ -80,7 +78,6 @@ Feature: Viewing the dashboard
     And I should see a viewrolerequests link
     And I should not see a viewalerts link
     And I should not see a link to View Profile
-    And I should not see a link to View Alert Logs
  
     Scenario: Dashboard should show the admin alerter navigation
     And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
@@ -93,5 +90,4 @@ Feature: Viewing the dashboard
     And I should see a viewrolerequests link
     And I should see a viewalerts link
     And I should not see a link to View Profile
-    And I should not see a link to View Alert Logs
     

@@ -4,20 +4,25 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>Date Sent</th>
+      <th>Date Created</th>
       <th>Sender</th>
+	  <th>Jurisdiction</th>
       <th>Severity</th>
       <th>Title</th>
+	  <th>Progress</th>
+	  <th></th>
     </tr>
   </thead>
   <tbody>
     <% @alerts.each do |alert| %>
       <% content_tag_for :tr, alert do %>
         <td class="identifier"><%=h alert.identifier %></td>
-        <td class="sent_at"><%= time_ago_in_words alert.sent_at if alert.sent_at? %></td>
+        <td class="sent_at"><%= time_ago_in_words alert.created_at if alert.created_at? %></td>
+		<td class="sent_by"><%= alert.author.display_name %></td>
         <td class="from_jurisdiction"><%=h alert.from_jurisdiction %></td>
         <td class="severity"><%=h alert.severity %></td>
         <td class="title"><%=h alert.title %></td>
+		<td class="ackpercent"><%=h alert.acknowledged_percent.round %>%</td>
         <td>
           <%= link_to 'View', alert %>
           <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') %>
