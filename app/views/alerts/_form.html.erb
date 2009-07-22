@@ -1,4 +1,4 @@
-<div id="edit">
+<div id="edit" class="<%= 'preview' if @preview %>">
   <%= hidden_field_tag :_action, params[:_action] %>
   
   <%= form.label :title %>
