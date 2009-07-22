@@ -1,3 +1,4 @@
+<div id="edit" class="<%= 'preview' if @preview %>">
   <%= hidden_field_tag :_action, params[:_action] %>
   
   <%= form.label :title %>
@@ -53,3 +54,14 @@
     <%= hidden_field_tag 'alert[user_ids][]', nil, :id => :alert_user_id %>
     <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
   </fieldset>
+  <%= form.submit "Preview Message" %>
+</div>
+
+<% if @preview %>
+  <div id="preview">
+    <%= render @alert %>
+
+    <%= link_to 'Edit', '#edit', :class => 'edit' %>
+    <%= form.submit "Send", :name => 'send' %>
+  </div> 
+<% end %>

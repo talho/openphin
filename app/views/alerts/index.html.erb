@@ -18,7 +18,10 @@
         <td class="from_jurisdiction"><%=h alert.from_jurisdiction %></td>
         <td class="severity"><%=h alert.severity %></td>
         <td class="title"><%=h alert.title %></td>
-        <td><%= link_to 'View', alert %></td>
+        <td>
+          <%= link_to 'View', alert %>
+          <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') %>
+        </td>
       <% end %>
     <% end %>
   </tbody>

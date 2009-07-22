@@ -5,6 +5,6 @@
   });
   
   $(function() {
-    $('#edit').hide();
+    $('#edit.preview').hide();
   })
 })(jQuery);
