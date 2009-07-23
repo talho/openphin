@@ -45,7 +45,16 @@ class Alert < ActiveRecord::Base
   has_many :alert_device_types
   has_many :deliveries
   has_many :alert_attempts
-  
+  has_many :users, :through => :alert_attempts, :uniq => true
+  has_many :acknowledged_users,
+           :class_name => "User",
+           :foreign_key => :user_id,
+           :source => :user,
+           :through => :alert_attempts,
+           :uniq => true,
+           :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
+  has_many :devices, :source => :device, :through => :alert_attempts, :uniq => true
+
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
@@ -120,6 +129,27 @@ class Alert < ActiveRecord::Base
     else
       0
     end
+  end
+
+  def acknowledged_percent_for_jurisdiction(jur)
+		total = users.with_jurisdiction(jur).size.to_f
+		if total > 0
+			acks = acknowledged_users.with_jurisdiction(jur).size.to_f
+			acks / total * 100
+		else
+			0
+		end
+
+  end
+
+  def acknowledged_percent_for_device(device)
+		total = alert_attempts.with_device(device).size.to_f
+		if total > 0
+			acks = alert_attempts.acknowledged.with_device(device).size.to_f
+			acks / total * 100
+		else
+			0
+		end
   end
 
   

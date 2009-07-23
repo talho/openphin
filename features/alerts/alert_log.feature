@@ -62,12 +62,12 @@ Feature: Viewing the alert log
     And I follow "Back"
     Then I should see an alert titled "Hello World" 
     
-  Scenario: Viewing percentage of recipients that have acknowledged
+  Scenario: Viewing percentage of recipients that have acknowledged     
     Given the following entities exists:
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
     And Texas is the parent jurisdiction of:
-      | Dallas County |  
+      | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
       | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
@@ -83,7 +83,8 @@ Feature: Viewing the alert log
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
     And I can see the alert for "Hello World" is 50% acknowledged
+    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 50%
+    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
+    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 50%
 
-  Scenario: Viewing percentage of recipients that have acknowledged by jurisdiction
-  Scenario: Viewing percentage of acknowledgments by device type
   Scenario: Viewing jurisdictions, organizations, roles and individual users that received an alert

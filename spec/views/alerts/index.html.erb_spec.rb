@@ -4,12 +4,13 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe '/alerts/index.html.erb' do
 
   before do
-    @alert = stub_model(Alert,
+    @alert = Factory(:alert,
       :identifier => 'TX-2009-1',
       :sent_at => 10.minutes.ago,
-      :from_jurisdiction => stub_model(Jurisdiction, :name => 'Foo County'),
-      :severity => 'Severe'
-    ).as_null_object
+      :from_jurisdiction => Factory(:jurisdiction),
+      :severity => 'Severe',
+      :author => Factory(:user)
+    )
     assigns[:alerts] = [@alert]
     render
   end
@@ -28,7 +29,7 @@ describe '/alerts/index.html.erb' do
     response.should have_tag('#? .identifier', dom_id(@alert), @alert.identifier)
   end
 
-  it "should show send_at" do
+  it "should show sent_at" do
     response.should have_tag('#? .sent_at', dom_id(@alert), time_ago_in_words(@alert.sent_at))
   end
 

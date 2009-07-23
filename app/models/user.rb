@@ -56,6 +56,14 @@ class User < ActiveRecord::Base
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ]}
   }
+  named_scope :with_jurisdiction, lambda {|jurisdiction|
+    jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
+    { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
+  }
+
+#  named_scope :acknowledged_alert, lamda {|alert|
+#	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
+#  }
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
   

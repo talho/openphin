@@ -75,7 +75,7 @@ end
 
 Factory.define :alert_attempt do |m|
   m.alert {|t| t.association :alert}
-  m.device {|t| t.association :device}
+#  m.device {|t| t.association :device}
   m.user {|t| Factory(:user, :device => m.device)}
   m.requested_at Time.zone.now
 end

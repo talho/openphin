@@ -1,9 +1,9 @@
 Given "an alert with:" do |table|
   attributes = table.rows_hash
-  attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction'])
+  attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
   attributes['jurisdictions'] = attributes['jurisdictions'].split(',').map{|m| Jurisdiction.find_by_name(m.strip)} unless attributes['jurisdictions'].blank?
   attributes['roles'] = attributes['roles'].split(',').map{|m| Role.find_by_name(m.strip)} unless attributes['roles'].blank?
-  attributes['author_id'] = current_user.id
+  attributes['author_id'] = current_user.id unless current_user.nil?
   Factory(:alert, attributes)
 end
 
@@ -126,4 +126,18 @@ end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|
   response.should have_selector('.ackpercent', :content => percent)
+end
+
+Then /^I can see the jurisdiction alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, jurisdiction_name, percentage|
+  response.should have_selector(".jur_ackpct") do |elm|
+	  elm.should have_selector(".jurisdiction", :content => jurisdiction_name)
+	  elm.should have_selector(".percentage", :content => percentage)
+  end
+end
+
+Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, device_type, percentage|
+  response.should have_selector(".dev_ackpct") do |elm|
+	  elm.should have_selector(".device_type", :content => device_type)
+	  elm.should have_selector(".percentage", :content => percentage)
+  end
 end
