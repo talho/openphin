@@ -10,6 +10,7 @@ Feature: Alerts from EDXL
       | organization | CDC                   |
       | jurisdiction | Texas                 |
       | jurisdiction | Potter County         |
+      | user | John Smith |
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
     And "Texas" has the FIPS code "01091"
     And "Potter County" has the FIPS code "01003"
@@ -60,9 +61,13 @@ Feature: Alerts from EDXL
 
   Scenario: Receiving an EDXL Acknowledgment
     Given "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
-    And an alert with:
+    And Red Cross is a foreign Organization
+    And a sent alert with:
       | identifier | CDC-2006-183 |
-    When PhinMS delivers the message: PCAAckExample.xml
+      | organizations | Red Cross |
+      | jurisdictions | Texas |
+      | author        | John Smith |
+	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "CDC-2006-183" should be acknowledged
     
 

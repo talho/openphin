@@ -28,7 +28,8 @@
 class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
-  has_many :deliveries
+  has_many :alert_attempts
+  has_many :deliveries, :through => :alert_attempts
   belongs_to :organization_type
   belongs_to :contact, :class_name => "User"
   

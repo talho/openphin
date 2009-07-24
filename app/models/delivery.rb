@@ -2,22 +2,41 @@
 #
 # Table name: deliveries
 #
-#  id              :integer         not null, primary key
-#  alert_id        :integer
-#  device_id       :integer
-#  user_id         :integer
-#  delivered_at    :datetime
-#  acknowledged_at :datetime
-#  created_at      :datetime
-#  updated_at      :datetime
-#  organization_id :integer
+#  id                  :integer         not null, primary key
+#  device_id           :integer
+#  delivered_at        :datetime
+#  created_at          :datetime
+#  updated_at          :datetime
+#  alert_attempt_id    :integer
+#  sys_acknowledged_at :datetime
 #
 
 class Delivery < ActiveRecord::Base
-  belongs_to :alert
-  belongs_to :user
+  belongs_to :alert_attempt
+  has_one :user, :through => :alert_attempt
   belongs_to :device
-  belongs_to :organization
+  has_one :alert, :through => :alert_attempt
+  has_one :organization, :through => :alert_attempt
+
+  default_scope :order => "delivered_at DESC"
+
+  named_scope :sys_acknowledged?, :conditions => "sys_acknowledged_at IS NOT NULL"
+  named_scope :delivered, :conditions => "delivered_at IS NOT NULL"
+  named_scope :with_device, lambda {|device_type|
+    if device_type.is_a?(Class)
+      d=device_type.name
+    elsif device_type.is_a?(Device)
+      d=device_type.class.name
+    else
+      d=device_type
+    end
+
+    {:include => "device",
+     :conditions => ["devices.type = ?", d]}}
+
+  def delivered?
+    delivered_at.nil?
+  end
   
   def deliver
     if organization.nil?

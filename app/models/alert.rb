@@ -43,17 +43,17 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
   has_many :alert_device_types
-  has_many :deliveries
   has_many :alert_attempts
+  has_many :deliveries, :through => :alert_attempts
   has_many :users, :through => :alert_attempts, :uniq => true
   has_many :acknowledged_users,
-           :class_name => "User",
-           :foreign_key => :user_id,
+           #:class_name => "User",
+           #:foreign_key => :user_id,
            :source => :user,
            :through => :alert_attempts,
            :uniq => true,
            :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
-  has_many :devices, :source => :device, :through => :alert_attempts, :uniq => true
+  has_many :devices, :through => :deliveries, :source => :device, :uniq => true
 
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
@@ -104,18 +104,18 @@ class Alert < ActiveRecord::Base
   def deliver
     # 1 - explode all known users and deliver to them
     find_user_recipients.each do |user|
-      user.devices.all(:conditions => {:type => device_types}).each do |device|      
-        deliveries.create!(:user => user, :device => device).deliver
-      end
+      alert_attempts.create!(:user => user).deliver
+      #user.devices.all(:conditions => {:type => device_types}).each do |device|      
+      #  deliveries.create!(:user => user, :device => device).deliver
     end
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)
       organizations.select(&:foreign).each do |organization|
-        deliveries.create!(:organization => organization).deliver
+        alert_attempts.create!(:organization => organization).deliver
       end
     end
   end
-  handle_asynchronously :deliver
+  #handle_asynchronously :deliver
   
   def acknowledgments
     alert_attempts.all(:conditions => "acknowledged_at IS NOT NULL")

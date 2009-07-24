@@ -35,7 +35,8 @@ class User < ActiveRecord::Base
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
   has_many :alerts, :foreign_key => 'author_id'
-  has_many :deliveries
+  has_many :alert_attempts
+  has_many :deliveries, :through => :alert_attempts
   has_one :profile, :class_name => "UserProfile"
   has_many :alert_attempts
 

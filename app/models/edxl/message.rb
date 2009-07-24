@@ -99,14 +99,18 @@ module EDXL
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
 
     def alert
-      @alert ||= ::Alert.find_by_identifier(distribution_id.split(',')[0])
+      @alert ||= ::Alert.find_by_identifier(distribution_id.split(',')[0].strip)
+    end
+    
+    def organization
+      @organization ||= ::Organization.find_by_phin_oid(distribution_id.split(',')[1].strip)
     end
     
     def acknowledge
       if !alert.nil?
-        alert.alert_acknowledged = true
-        alert.alert_acknowledged_timestamp = Time.zone.now
-        alert.save!
+        d = alert.alert_attempts.find_by_organization_id(organization).deliveries.first
+        d.sys_acknowledged_at = Time.zone.now
+        d.save!
       end
     end
 

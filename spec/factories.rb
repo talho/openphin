@@ -91,3 +91,8 @@ Factory.define :role_request do |m|
   m.association :jurisdiction
   m.association :role
 end
+
+Factory.define :delivery do |m|
+  m.association :alert_attempt
+  m.association :device
+end
