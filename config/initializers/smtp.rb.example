@@ -1,3 +1,10 @@
+########################################################
+## Caution
+##
+## Don't edit these settings as they live with the repo
+## Put your settings in the shared path on the server.
+########################################################
+
 ActionMailer::Base.smtp_settings = {
   :address  => 'mail.texashan.org',
   :domain => 'talho.org',
