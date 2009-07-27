@@ -26,7 +26,6 @@ config.action_view.cache_template_loading            = true
 
 # Enable threaded mode
 # config.threadsafe!
-config.gem "activeldap", :lib => "active_ldap"
 PHIN_PARTNER_OID="2.16.840.1.114222.4.3.2.2.3.770"
 PHIN_APP_OID="1"
 PHIN_ENV_OID="1"
