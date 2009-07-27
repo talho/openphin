@@ -16,7 +16,7 @@ end
 Given "a sent alert with:" do |table|
   a = Given "an alert with:", table
   a.deliver
-  #When "delayed jobs are processed"
+  When "delayed jobs are processed"
 end
 
 Given "I've sent an alert with:" do |table|
