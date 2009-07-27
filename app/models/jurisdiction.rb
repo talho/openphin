@@ -30,6 +30,8 @@ class Jurisdiction < ActiveRecord::Base
   has_many :users, :through => :role_memberships
   has_many :role_requests
 
+  named_scope :admin, :include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }
+
   validates_uniqueness_of :name
   
   def admins

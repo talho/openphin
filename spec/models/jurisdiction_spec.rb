@@ -79,6 +79,26 @@ describe Jurisdiction do
     end
   end
   
+  describe "name_scope: admin relationships" do
+    before :each do
+      @dallas = Factory(:jurisdiction, :name => "dallas")
+      @houston = Factory(:jurisdiction, :name => "houston")
+      @austin = Factory(:jurisdiction, :name => "austin")
+      @user = Factory(:user)
+      @user.role_memberships << Factory(:role_membership, :jurisdiction => @dallas, :role => Role.admin, :user => @user)
+      @user.role_memberships << Factory(:role_membership, :jurisdiction => @houston, :role => Role.admin, :user => @user)
+      @user.role_memberships << Factory(:role_membership, :jurisdiction => @austin, :role => Factory(:role), :user => @user)
+    end
+
+    it "should return jurisdictions the user is an admin of" do
+      @user.jurisdictions.admin.should == [@dallas, @houston]
+    end
+    
+    it "should not return any jurisdictions the user is not an admin of" do
+      @user.jurisdictions.admin.should_not include(@austin)
+    end
+  end
+  
   #describe "parent/child relationships" do
   #  it "should return an array of child jurisdictions of the active jurisdiction with recursion" do
   #    @root.jurisdictions(true).length.should == 2

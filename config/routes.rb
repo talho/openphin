@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :jurisdictions, :devices
 
   map.resources :role_requests, :controller => "role_requests"
+  map.resources :role_assignments, :controller => "admin/role_assignments"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
   map.resources :admin_organizations, :member => [:approve, :deny], :controller => "admin/organizations"
 

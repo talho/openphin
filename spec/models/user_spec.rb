@@ -179,4 +179,14 @@ describe User do
       user.alerts_within_jurisdictions.should_not include(alert)
     end
   end
+  
+  it "should create the role membership to the given list of users" do
+    user1 = Factory(:user)
+    user2 = Factory(:user)
+    role = Factory(:role)
+    jurisdiction = Factory(:jurisdiction)
+    User.assign_role(role, jurisdiction, [user1, user2])
+    jurisdiction.users.should include(user1, user2)
+  end
+  
 end

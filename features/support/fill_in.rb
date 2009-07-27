@@ -97,8 +97,26 @@ module FeatureHelpers
         fill_in label, :with => value
       end
     end
+
+    def fill_in_assign_role_form(table)
+      table.rows_hash.each do |label, value|
+        case label
+        when "People"
+          value.split(',').each do |name| 
+            user = Given "a user named #{name.strip}"
+            fill_in "role_assigns_user_ids", :with => user.id.to_s
+          end
+        when "Role", "Jurisdiction"
+          select value.split(',').map(&:strip), :from => label
+        else
+          raise "Unknown field '#{label}'. You may need to update this step."
+        end
+      end
+    end
+
+
   end
-  
+
 end
 
 World(FeatureHelpers::FillInMethods)
