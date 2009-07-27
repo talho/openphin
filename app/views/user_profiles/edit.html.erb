@@ -54,7 +54,7 @@
     <fieldset id="devices">
       <legend>Devices</legend>
       
-      <%= render form.object.user.devices %>
+      <%= render form.object.user.devices, :in_form => true %>
       
       <div id="new_device">
         <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>

@@ -28,6 +28,8 @@
   <b>Bio:</b>
   <%=h @user_profile.bio %>
 </p>
+
+<%= render @user_profile.user.devices %>
 </div>
 
 <%= link_to 'Edit', edit_user_profile_path(@user_profile) %>
