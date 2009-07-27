@@ -29,6 +29,7 @@ desc "mod_rails restart"
 end
  
 after 'deploy:update_code', 'deploy:symlink_configs'
+after 'deploy:update_code', 'deploy:install_gems'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
   desc "we need a database. this helps with that."
@@ -37,4 +38,17 @@ namespace :deploy do
 #    run "chown -R apache:apache #{release_path}"
 #    run "chmod a+rw #{release_path}/log/*"
   end
+  
+  desc "install any gem dependencies"
+  task :install_gems, :role => :app do 
+    rails_env = fetch(:rails_env, "production")
+    run "cd #{release_path}; rake gems:install RAILS_ENV=#{rails_env}"
+  end
+end
+
+after :deploy, :seed
+desc "seed. for seed-fu"
+task :seed, :roles => :db, :only => {:primary => true} do 
+  rails_env = fetch(:rails_env, "production")
+  run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
 end
