@@ -101,6 +101,8 @@ Then "the following users should not receive any emails" do |table|
     jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
     jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
     jurisdiction.users.with_role(role_name)
+  elsif headers.first == "emails"
+    headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
   end
 
 When "delayed jobs are processed"

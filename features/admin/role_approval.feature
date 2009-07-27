@@ -22,7 +22,8 @@ Feature: Approving users for roles
       | subject       | Request approved    |
       | body contains | You have been approved for the assignment of Health Officer in Dallas County |
     And I should see "john@example.com has been approved"
-    
+    And "john@example.com" should have the "Health Officer" role in "Dallas County"
+
   Scenario: Jurisdiction Admin approving role requests outside their jurisdiction
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@potter.gov"
@@ -37,4 +38,4 @@ Feature: Approving users for roles
       | subject       | Request denied    |
       | body contains | You have been denied for the assignment of Health Officer in Dallas County |
     And I should not see that "john@example.com" is awaiting approval
-        
+    And "john@example.com" should not have the "Health Officer" role in "Dallas County"
