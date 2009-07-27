@@ -32,3 +32,15 @@ Then /^I should not see any errors$/ do
   response.template.assigns['user_profile'].errors.should be_empty
   response.template.assigns['user_profile'].user.errors.should be_empty
 end
+
+Then /^I can see the following roles:$/ do |table|
+  table.rows_hash.each do |role, jurisdiction|
+    response.should have_selector(".roles *", :content => "#{role} in #{jurisdiction}")
+  end
+end
+
+Then /^I should not see the following roles:$/ do |table|
+  table.rows_hash.each do |role, jurisdiction|
+    response.should_not have_selector(".roles *", :content => "#{role} in #{jurisdiction}")
+  end
+end

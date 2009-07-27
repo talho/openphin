@@ -29,6 +29,17 @@
   <%=h @user_profile.bio %>
 </p>
 
+<% if current_user == @user_profile.user %>
+<p>
+  <b>Roles:</b>
+  	<ul class="roles">
+      <% current_user.role_memberships.each do |r| %>
+      <li><%= r.role.name%> in <%= r.jurisdiction.name%></li>
+      <% end %>
+  	</ul>
+</p>
+<% end %>
+
 <%= render @user_profile.user.devices %>
 </div>
 

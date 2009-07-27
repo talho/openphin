@@ -14,6 +14,7 @@ class UserProfilesController < ApplicationController
   # GET /user_profiles/1.xml
   def show
     @user_profile = User.find(params[:user_id]).profile
+
     respond_to do |format|
       if @user_profile.public? || current_user == @user_profile.user
         format.html # show.html.erb
