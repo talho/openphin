@@ -52,5 +52,15 @@ jQuery(function($) {
     firstselected: true,
     newel: true
   });
+
+  $("#role_assigns_user_ids").fcbkcomplete({
+    json_url: '/users/search',
+    json_cache: true,
+    filter_case: false,
+    filter_hide: true,
+    filter_selected: true,
+    firstselected: true,
+    newel: true
+  });
   
 });
