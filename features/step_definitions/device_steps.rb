@@ -46,7 +46,7 @@ Then /^the following users should receive the email:$/ do |table|
   emails = ActionMailer::Base.deliveries
   
   recipients.each do |user|
-    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
+    email = ActionMailer::Base.deliveries.select {|email| email.to.include?(user.email) }.last
     email.should_not be_nil
     
     table.rows.each do |row|

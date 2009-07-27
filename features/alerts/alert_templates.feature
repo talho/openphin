@@ -11,6 +11,7 @@ I want to save alert templates for reuse and activate them at a later date
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
+    And this is implemented
 
 	Scenario: Saving an alert template
     When I go to the Alerts page
