@@ -5,6 +5,7 @@ class AlertMailer < ActionMailer::Base
     recipients "#{user.name} <#{device.options[:email_address]}>"
     # TODO: should this show their job title instead of their role?
     # If role, which one?
+    from EMAIL_FROM
     subject "#{alert.severity} Health Alert from #{role_membership.jurisdiction.name} : #{alert.author.name} : #{role_membership.role.name}"
     body :alert => alert
   end
