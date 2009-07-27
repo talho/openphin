@@ -35,6 +35,7 @@ namespace :deploy do
   desc "we need a database. this helps with that."
   task :symlink_configs do
     run "mv #{release_path}/config/database.yml.example #{release_path}/config/database.yml"
+    run "ln -fs #{shared_path}/production.sqlite3 #{release_path}/db/production.sqlite3"
 #    run "chown -R apache:apache #{release_path}"
 #    run "chmod a+rw #{release_path}/log/*"
   end
