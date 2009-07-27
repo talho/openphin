@@ -11,6 +11,19 @@ Then /^"([^"]+). should have the communication device$/ do |email, table|
   end
 end
 
+Then /^"([^"]+). should not have the communication device$/ do |email, table|
+  user = User.find_by_email!(email)
+  table.rows_hash.each do |type, value|
+    case type
+    when /Email/
+      device = user.devices.email.detect{ |e| e.email_address == value }
+      device.should be_nil
+    else
+      raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+    end
+  end
+end
+
 Then /^I should see in my list of devices$/ do |table|
   table.rows_hash.each do |type, value|
     case type
@@ -90,7 +103,7 @@ Then "the following users should not receive any emails" do |table|
     jurisdiction.users.with_role(role_name)
   end
 
-  When "delayed jobs are processed"
+When "delayed jobs are processed"
   recipients.each do |user|
     email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
     email.should be_nil

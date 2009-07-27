@@ -1,6 +1,8 @@
 <div class='profile_edit'>
 <h1>Editing user_profile</h1>
   <% form_for @user_profile, :html => {:multipart => true} do |form| %>
+    <%= form.error_messages %>
+		
 		<% fields_for :user, @user_profile.user do |user_form| %>
 			<fieldset>
 				<legend>Account information</legend>
@@ -12,7 +14,7 @@
 			<legend>Public Profile</legend>
 			<p>This is information you can choose to make public through the OpenPHIN directory.
 			It is not required that you fill any part of this profile out, or that you make the information public if you do. </p>
-    <%= form.error_messages %>
+
     <p>
       <%= form.label :public, "Make this profile public?" %>
       <%= form.check_box :public %>
@@ -54,10 +56,13 @@
       
       <%= render form.object.user.devices %>
       
-      <%- fields_for :device, Device::EmailDevice.new do |device_form| -%>
+      <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>
+        <%= device_form.error_messages %>
+        
         <p>
           <%= device_form.label :type, 'Device Type' %>
-          <%= device_form.select :type, Device::Types.map{|t| [t.display_name, t.name]}, :selected => device_form.object.class.name %>      </p>
+          <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name]}, params[:device_type])%>
+        </p>
         
         <p>
           <%= device_form.label :email_address, 'E-mail' %>

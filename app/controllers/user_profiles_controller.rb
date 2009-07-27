@@ -66,10 +66,13 @@ class UserProfilesController < ApplicationController
   def update
 	  @user=User.find(params[:user_id])
 		@user_profile = @user.profile
-		@user.devices << Device::EmailDevice.new(params[:device]) 
+		if Device::Types.map(&:to_s).include?(params[:device_type])
+  		@device = params[:device_type].constantize.new(params[:device]) 
+  		@device.user = @user
+		end
 
     respond_to do |format|
-      if @user_profile.update_attributes(params[:user_profile])
+      if (@device.nil? || @device.save) && @user_profile.update_attributes(params[:user_profile])
         flash[:notice] = 'Profile information saved.'
         format.html { redirect_to(@user_profile) }
         format.xml  { head :ok }

@@ -18,6 +18,9 @@ class Device::EmailDevice < Device
   serialize :options
   option_accessor :email_address
   
+  validates_presence_of     :email_address
+  validates_format_of       :email_address, :with => %r{.+@.+\..+}
+  
   def self.display_name
     'E-mail'
   end

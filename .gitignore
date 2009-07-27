@@ -12,3 +12,4 @@ vendor/plugins/cucumber
 .project
 .loadpath
 .tmp*
+public/system/photos
