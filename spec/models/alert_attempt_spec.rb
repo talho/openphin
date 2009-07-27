@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: alert_attempts
+#
+#  id              :integer         not null, primary key
+#  alert_id        :integer
+#  user_id         :integer
+#  requested_at    :datetime
+#  acknowledged_at :datetime
+#  created_at      :datetime
+#  updated_at      :datetime
+#  organization_id :integer
+#
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 

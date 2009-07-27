@@ -10,6 +10,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  organization_id :integer
+#
 
 class AlertAttempt < ActiveRecord::Base
   belongs_to :alert
