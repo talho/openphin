@@ -15,6 +15,7 @@ Spec::Runner.configure do |config|
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   
+  config.include Webrat::Matchers, :type => [:view]
   config.extend SpecHelpers::ModelMacros, :type => [:model]
   config.extend SpecHelpers::ControllerMacros, :type => [:controller]
   config.include SpecHelpers::ControllerHelpers, :type => [:controller]

@@ -24,6 +24,7 @@
     <%= link_to 'Request Role', new_role_request_path, :class => '.requestrole' if signed_in? %>
     <%= link_to 'View Role Requests', admin_role_requests_path, :class => '.viewrolerequests' if @is_admin %>
     <%= link_to 'View Alerts', alerts_path, :class => '.viewalerts' if @is_alerter %>
+    <%= link_to 'Edit Profile', edit_user_profile_path(current_user), :class => '.edit_profile' if signed_in? %>
   </nav>
 
 <%- [:notice, :success, :failure].each do |type| -%>
