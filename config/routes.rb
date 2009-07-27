@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :role_assignments, :controller => "admin/role_assignments"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
   map.resources :admin_organizations, :member => [:approve, :deny], :controller => "admin/organizations"
+  map.resources :admin_users, :controller => "admin/users"
 
   map.resources :users, :collection => {:search => :get} do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
