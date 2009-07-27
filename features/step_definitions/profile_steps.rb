@@ -1,3 +1,22 @@
+Given '$email has a $public profile' do |email, pub|
+  user = User.find_by_email!(email)
+  user.profile.public = (pub == 'public')
+  user.profile.save!
+end
+
+When 'I view the profile page for $email' do |email|
+  user = User.find_by_email!(email)
+  visit user_profile_path(user)
+end
+
+Then 'I can see the profile' do
+  response.should have_selector('.user_profile')
+end
+
+Then /^I can not see the profile$/ do
+  response.should_not have_selector('.user_profile')
+end
+
 Then /^I should see the profile edit form$/ do
   response.should have_selector(".profile_edit") do |form|
 	  form.should have_selector(".email_address")

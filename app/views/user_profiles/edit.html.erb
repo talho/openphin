@@ -1,6 +1,6 @@
 <div class='profile_edit'>
 <h1>Editing user_profile</h1>
-  <% form_for(@user_profile) do |form| %>
+  <% form_for @user_profile, :html => {:multipart => true} do |form| %>
 		<% fields_for :user, @user_profile.user do |user_form| %>
 			<fieldset>
 				<legend>Account information</legend>
@@ -18,14 +18,13 @@
       <%= form.check_box :public %>
     </p>
 
-    <!--
   <p>
+    <%= image_tag form.object.photo.url %>
     <%= form.label :photo %><br />
-    <%= form.text_field :photo %>
+    <%= form.file_field :photo %>
   </p>
 
--->
-    <p>
+  <p>
       <b><%= form.label :bio %></b><br/>
       Tell us a bit about yourself.<br/>
       <%= form.text_area :bio, :cols => 60, :rows =>5, :class => "bio" %>

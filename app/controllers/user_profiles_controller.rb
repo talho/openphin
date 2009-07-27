@@ -14,10 +14,13 @@ class UserProfilesController < ApplicationController
   # GET /user_profiles/1.xml
   def show
     @user_profile = User.find(params[:user_id]).profile
-
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @user_profile }
+      if @user_profile.public? || current_user == @user_profile.user
+        format.html # show.html.erb
+        format.xml  { render :xml => @user_profile }  
+      else
+        format.html { render :action => 'privacy'}
+      end
     end
   end
 

@@ -28,7 +28,8 @@ I should be able to edit my profile
 				| Credentials                       | Rock star, Certified |
 				| Experience                        | Summer camp director  |
 				| Employer                          | State of Texas |
-		And I press "Save"
+    And I attach the file at "spec/fixtures/keith.jpg" to "Photo"
+    And I press "Save"
 		Then I should see the profile page
 		And I should not see any errors
 		And I should see "Profile information saved"

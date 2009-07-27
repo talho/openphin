@@ -21,5 +21,5 @@ class UserProfile < ActiveRecord::Base
   belongs_to :user
 	validates_presence_of :user
 	
-	has_attached_file :photo #, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+	has_attached_file :photo, :default_url => '/images/missing.jpg' #, :styles => { :medium => "300x300>", :thumb => "100x100>" }
 end
