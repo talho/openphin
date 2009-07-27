@@ -56,6 +56,10 @@ Rails::Initializer.run do |config|
     :lib     => 'clearance', 
     :source  => 'http://gems.github.com', 
     :version => '0.6.9'
+  config.gem 'thoughtbot-paperclip',
+    :lib     => 'paperclip', 
+    :source  => 'http://gems.github.com', 
+    :version => '2.3.0'
   config.gem 'fastercsv', :version => '1.5.0'
 end
 
