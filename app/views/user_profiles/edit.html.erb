@@ -47,6 +47,32 @@
       <%= form.text_field :employer, :cols => 60, :rows =>5 %>
     </p>
     </fieldset>
+    
+    
+    <fieldset id="devices">
+      <legend>Devices</legend>
+      
+      <%= render form.object.user.devices %>
+      
+      <%- fields_for :device, Device::EmailDevice.new do |device_form| -%>
+        <p>
+          <%= device_form.label :type, 'Device Type' %>
+          <%= device_form.select :type, Device::Types.map{|t| [t.display_name, t.name]}, :selected => device_form.object.class.name %>      </p>
+        
+        <p>
+          <%= device_form.label :email_address, 'E-mail' %>
+          <%= device_form.text_field :email_address %>
+        </p>
+        
+        <p>
+          <%= form.submit "Save Device" %>
+        </p>
+      <%- end -%>
+        
+      <a href="#add-device">Add Device</a>
+    </fieldset>
+    
+    
     <p>
       <%= form.submit 'Save' %>
     </p>

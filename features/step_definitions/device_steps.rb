@@ -11,6 +11,17 @@ Then /^"([^"]+). should have the communication device$/ do |email, table|
   end
 end
 
+Then /^I should see in my list of devices$/ do |table|
+  table.rows_hash.each do |type, value|
+    case type
+    when /Email/
+      response.should have_selector('#devices .device_email_device', :content => value)
+    else
+      raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+    end
+  end
+end
+
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   When "delayed jobs are processed"
   # Reverse here to ensure we're looking at the newest emails first.

@@ -66,6 +66,7 @@ class UserProfilesController < ApplicationController
   def update
 	  @user=User.find(params[:user_id])
 		@user_profile = @user.profile
+		@user.devices << Device::EmailDevice.new(params[:device]) 
 
     respond_to do |format|
       if @user_profile.update_attributes(params[:user_profile])

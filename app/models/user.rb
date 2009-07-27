@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
   include Clearance::User
   
   has_many :devices
+  accepts_nested_attributes_for :devices
+  
   has_many :role_memberships
   has_many :role_requests, :foreign_key => "requester_id"
   accepts_nested_attributes_for :role_requests
