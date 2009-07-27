@@ -64,7 +64,7 @@ class Admin::RoleRequestsController < ApplicationController
       if current_user.is_admin_for?(request.jurisdiction)
         request.approve!(current_user)
         ApprovalMailer.deliver_approval(request)
-        flash[:notice]="#{request.requester.email} has been approved for the role #{request.role.name}"
+        flash[:notice]="#{request.requester.email} has been approved for the role #{request.role.name} in #{request.jurisdiction.name}"
         redirect_to :action => :index
       end
     end
@@ -76,7 +76,7 @@ class Admin::RoleRequestsController < ApplicationController
       if current_user.is_admin_for?(request.jurisdiction)
         request.deny!
         ApprovalMailer.deliver_denial(request, current_user)
-        flash[:notice]="#{request.requester.email} has been approved for the role #{request.role.name}"
+        flash[:notice]="#{request.requester.email} has been denied for the role #{request.role.name} in #{request.jurisdiction.name}"
         redirect_to :action => :index
       end
     end
