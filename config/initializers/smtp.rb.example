@@ -1,0 +1,11 @@
+ActionMailer::Base.smtp_settings = {
+  :address  => 'mail.texashan.org',
+  :domain => 'talho.org',
+  :authentication => :plain,
+  :user_name => 'openphin@talho.org',
+  :password => 'fake',
+}
+
+# ExceptionNotifier.exception_recipients = %w(fake@talho.org)
+# ExceptionNotifier.email_prefix = "[OpenPHIN] "
+# ExceptionNotifier.sender_address = %("Application Error" <fake@talho.org>)

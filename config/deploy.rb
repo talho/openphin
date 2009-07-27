@@ -37,6 +37,7 @@ namespace :deploy do
   task :symlink_configs do
     run "mv #{release_path}/config/database.yml.example #{release_path}/config/database.yml"
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
+    run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
 #    run "chown -R apache:apache #{release_path}"
 #    run "chmod a+rw #{release_path}/log/*"
   end
