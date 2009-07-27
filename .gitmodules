@@ -31,3 +31,6 @@
 [submodule "vendor/plugins/deploy_and_deliver"]
 	path = vendor/plugins/deploy_and_deliver
 	url = git://github.com/collectiveidea/deploy_and_deliver.git
+[submodule "vendor/plugins/exception_notification"]
+	path = vendor/plugins/exception_notification
+	url = git://github.com/collectiveidea/exception_notification.git
