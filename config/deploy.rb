@@ -54,3 +54,9 @@ task :seed, :roles => :db, :only => {:primary => true} do
   rails_env = fetch(:rails_env, RAILS_ENV)
   run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
 end
+
+set :pivotal_tracker_project_id, 19881
+set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
+
+after :deploy, 'pivotal_tracker:deliver_stories'
+
