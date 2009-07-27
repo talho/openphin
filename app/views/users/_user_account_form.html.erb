@@ -10,9 +10,9 @@
   <%= form.label(:email, "Email address") %><br/>
   <%= form.text_field(:email, :class => "email_address") %><br/>
   <%= form.label(:password, "Password") %><br/>
-  <%= form.password_field(:password) %><br/>
+  <%= form.password_field(:password, :"data-label" => "******") %><br/>
   <%= form.label(:password_confirmation,"Password Confirmation") %><br/>
-  <%= form.password_field(:password_confirmation) %><br/>
+  <%= form.password_field(:password_confirmation, :"data-label" => "******") %><br/>
 
 
   <%= form.label(:preferred_language, "Preferred language") %><br/>
