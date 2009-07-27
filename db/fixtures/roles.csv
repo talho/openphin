@@ -14,7 +14,7 @@ Emergency Training Coordinator,true,false
 Environmental Health Director,true,false
 Epidemiologist,true,false
 FBI WMD/BT Agent,true,false
-Health Alert and Communications Coordinator,true,false
+Health Alert and Communications Coordinator,true,true
 Health Officer,true,false
 Immunization Director,true,false
 Infection Control Practitioner,true,false
@@ -35,4 +35,3 @@ School District Nurse,true,false
 Strategic National Stockpile Coordinator,true,false
 Technical Training Liaison,true,false
 Weapons of Mass Destruction Coordinator,true,false
-HAN Coordinator,true,true

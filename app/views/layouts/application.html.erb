@@ -20,6 +20,8 @@
 </div>
 
   <nav>
+    <%= link_to 'Home', root_path %>
+    <%= link_to 'My Dashboard', dashboard_path if signed_in? %>
     <%= link_to 'Send an Alert', new_alert_path, :class => '.sendalert' if @is_alerter %>
     <%= link_to 'Request Role', new_role_request_path, :class => '.requestrole' if signed_in? %>
     <%= link_to 'View Role Requests', admin_role_requests_path, :class => '.viewrolerequests' if @is_admin %>
