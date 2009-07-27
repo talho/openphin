@@ -20,8 +20,21 @@
       $(target)[this.checked ? 'show' : 'hide']();
     });
   };
-})(jQuery);
 
+  $('a.destroy').live('click', function(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to delete?')) {
+      var form = $('<form method="POST"></form>')
+        .css({display:'none'})
+        .attr('action', this.href)
+        .append('<input type="hidden" name="_method" value="delete"/>')
+        .append('<input type="hidden" name="authenticity_token" value="' +
+          $.authenticityToken() + '"/>')
+        .insertAfter(this.parentNode);
+      form.submit();
+    }
+  });
+})(jQuery);
 
 jQuery(function($) {
   $('#health_professional').toggleCheckbox('#health_professional_fields').click(function() {

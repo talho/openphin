@@ -56,25 +56,27 @@
       
       <%= render form.object.user.devices %>
       
-      <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>
-        <%= device_form.error_messages %>
+      <div id="new_device">
+        <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>
+          <%= device_form.error_messages %>
         
-        <p>
-          <%= device_form.label :type, 'Device Type' %>
-          <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name]}, params[:device_type])%>
-        </p>
+          <p>
+            <%= device_form.label :type, 'Device Type' %>
+            <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name]}, params[:device_type])%>
+          </p>
         
-        <p>
-          <%= device_form.label :email_address, 'E-mail' %>
-          <%= device_form.text_field :email_address %>
-        </p>
+          <p>
+            <%= device_form.label :email_address, 'E-mail' %>
+            <%= device_form.text_field :email_address %>
+          </p>
         
-        <p>
-          <%= form.submit "Save Device" %>
-        </p>
-      <%- end -%>
+          <p>
+            <%= form.submit "Save Device" %>
+          </p>
+        <%- end -%>
+      </div>
         
-      <a href="#add-device">Add Device</a>
+      <a href="#add-device", class="add_device">Add Device</a>
     </fieldset>
     
     
