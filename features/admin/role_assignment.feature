@@ -50,3 +50,9 @@ Feature: Assigning roles to users for roles
       | emails         | john@example.com, jane@example.com |
     And "john@example.com" should not have the "Health Officer" role in "Potter County"
     And "jane@example.com" should not have the "Health Officer" role in "Potter County"
+
+  Scenario: Role assignment form should not contain jurisdictions the user is not an admin of
+    Given I am logged in as "admin@dallas.gov"
+    And I go to the roles requests page for an admin
+    When I follow "Assign Role"
+    Then I should not see "Potter County" in the "Jurisdiction" dropdown
