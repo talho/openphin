@@ -40,7 +40,6 @@ class User < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   has_one :profile, :class_name => "UserProfile"
-  has_many :alert_attempts
 
   validates_presence_of :email
   validates_presence_of :first_name
