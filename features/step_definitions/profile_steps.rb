@@ -9,6 +9,11 @@ When 'I view the profile page for $email' do |email|
   visit user_profile_path(user)
 end
 
+When 'I edit the profile for $email' do |email|
+  user = User.find_by_email!(email)
+  visit edit_user_profile_path(user)
+end
+
 Then 'I can see the profile' do
   response.should have_selector('.user_profile')
 end

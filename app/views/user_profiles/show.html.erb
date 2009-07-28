@@ -1,4 +1,6 @@
   <div class='user_profile'>
+    <%= link_to 'Edit', edit_user_profile_path(@user_profile.user) if @user_profile.editable_by?(current_user) %>
+    
 <p>
   <b>Photo:</b>
   <%= image_tag @user_profile.photo.url(:medium) %>

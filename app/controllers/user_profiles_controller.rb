@@ -1,4 +1,4 @@
-class UserProfilesController < ApplicationController
+class UserProfilesController < ApplicationController  
   # GET /user_profiles
   # GET /user_profiles.xml
   def index
@@ -41,7 +41,7 @@ class UserProfilesController < ApplicationController
 
   # GET /user_profiles/1/edit
   def edit
-    @user_profile = UserProfile.find(params[:user_id])
+    find_user_and_profile
   end
 
   # POST /user_profiles
@@ -65,8 +65,7 @@ class UserProfilesController < ApplicationController
   # PUT /user_profiles/1
   # PUT /user_profiles/1.xml
   def update
-	  @user=User.find(params[:user_id])
-		@user_profile = @user.profile
+	  find_user_and_profile
 		if Device::Types.map(&:to_s).include?(params[:device_type])
   		@device = params[:device_type].constantize.new(params[:device]) 
   		@device.user = @user
@@ -82,5 +81,15 @@ class UserProfilesController < ApplicationController
         format.xml  { render :xml => @user_profile.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+private
+  def find_user_and_profile
+    @user = User.find(params[:user_id])
+    @user_profile = @user.profile
+    unless @user_profile.editable_by?(current_user)
+		  flash[:notice] = "You are not authorized to edit this profile."
+		  redirect_to :back
+	  end
   end
 end

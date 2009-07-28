@@ -11,6 +11,7 @@ I should be able to edit my profile
       | Role         | Health Officer |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
+      | Jane Smith      | jane.smith@example.com   | Public | Potter County |
 
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"
@@ -39,3 +40,9 @@ I should be able to edit my profile
     Given I am logged in as "john.smith@example.com"
     When I go to the user edit page 
     Then I should be redirected to the edit profile page
+
+
+  Scenario: editing user account information for another user as a non-admin
+    Given I am logged in as "jane.smith@example.com"
+    When I edit the profile for john.smith@example.com
+    Then I should see "You are not authorized to edit this profile."

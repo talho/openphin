@@ -22,4 +22,8 @@ class UserProfile < ActiveRecord::Base
 	validates_presence_of :user
 	
 	has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
+	
+	def editable_by?(other_user)
+	  user == other_user || user.jurisdictions.any?{|j| other_user.is_admin_for?(j) }
+  end
 end
