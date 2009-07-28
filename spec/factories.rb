@@ -68,6 +68,7 @@ Factory.define :alert do |m|
   m.status 'Test'
   m.severity 'Moderate'
   m.delivery_time 60
+  m.from_jurisdiction { Factory(:jurisdiction) }
   #  status      :string(255)
   #  acknowledge :boolean
   #  author_id   :integer
