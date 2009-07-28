@@ -10,7 +10,13 @@ Given /^a[n]? organization named (.*)$/ do |name|
 end
 
 Given 'a jurisdiction named $name' do |name|
-  Jurisdiction.find_by_name(name) || Factory(:jurisdiction, :name => name)
+  if jurisdiction=Jurisdiction.find_by_name(name)
+    jurisdiction
+  else
+    jurisdiction = Factory(:jurisdiction, :name => name)
+    jurisdiction.move_to_child_of(Jurisdiction.root) if Jurisdiction.root
+    jurisdiction
+  end
 end
 
 Given 'a role named $name' do |name|

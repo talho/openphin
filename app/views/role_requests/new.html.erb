@@ -5,7 +5,7 @@
 
   <p>
     <%= f.label :jurisdiction_id,  "Jurisdiction" %><br/>
-    <%= f.collection_select :jurisdiction_id, Jurisdiction.all, :id, :name, :include_blank => true %><br/>
+    <%= f.collection_select :jurisdiction_id, Jurisdiction.root.descendants, :id, :name, :include_blank => true %><br/>
   </p>
 
   <p>

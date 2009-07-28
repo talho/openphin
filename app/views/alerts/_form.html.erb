@@ -34,6 +34,7 @@
   
   <fieldset>
     <legend>Jurisdictions</legend>
+    <%= form.label :jurisdiction_ids, "Jurisdictions", :style => "display:none" %>
     <%= form.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>
 
