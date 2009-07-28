@@ -63,5 +63,10 @@ jQuery(function($) {
     firstselected: true,
     newel: true
   });
-  
+});
+
+jQuery(function($) {
+  $('.alert .summary').click(function(){
+    $(this).parent(".alert").children(".detail").toggle();
+  });
 });
