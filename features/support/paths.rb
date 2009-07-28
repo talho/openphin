@@ -28,6 +28,8 @@ module NavigationHelpers
 	    edit_user_profile_path(current_user.profile)
     when /cancel the alert/
       edit_alert_path(Alert.last, :_action => "cancel")
+    when /the new organization page/
+      new_organization_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

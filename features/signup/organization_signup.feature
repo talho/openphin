@@ -15,6 +15,10 @@ Feature: Signing up for an organization account
     And the following organization administrators exist:
         | keith@texashan.org     | Texas      |
 
+  Scenario: Organization signup form should not display Federal jurisdiction
+    When I go to the new organization page
+    Then I should not see "Federal" in the "Jurisdictions" dropdown
+
   Scenario: Signing up as an organization when not logged in
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
