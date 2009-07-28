@@ -65,7 +65,7 @@ Feature: Alerts from EDXL
     And a sent alert with:
       | identifier | CDC-2006-183 |
       | organizations | Red Cross |
-      | jurisdictions | Texas |
+      | jurisdictions | Federal |
       | author        | John Smith |
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "CDC-2006-183" should be acknowledged
