@@ -24,7 +24,7 @@ Feature: An admin managing users
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
       | What County    | Dallas County    |
-      | What is your primary role within the health department | Health Alert and Communications Coordinator |
+      | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
     Then "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"

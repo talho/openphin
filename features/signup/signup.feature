@@ -57,7 +57,7 @@ Feature: Signing up for an account
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
       | What County    | Dallas County    |
-      | What is your primary role within the health department | Health Alert and Communications Coordinator |
+      | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
     Then I should see "Thanks for signing up"
     And "john@example.com" should receive the email:
