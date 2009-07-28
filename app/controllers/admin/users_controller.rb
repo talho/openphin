@@ -1,4 +1,6 @@
 class Admin::UsersController < ApplicationController
+  before_filter :admin_required
+  
   def new
     @user = User.new
 
