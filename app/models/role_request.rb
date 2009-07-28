@@ -15,6 +15,8 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :role
   validates_presence_of :requester, :if => lambda { |rr| !rr.new_record? }
   
+  attr_protected :approver_id
+  
   belongs_to :requester, :class_name => "User", :foreign_key => "requester_id"
   belongs_to :approver,  :class_name => "User", :foreign_key => "approver_id"
   belongs_to :role, :class_name => "Role", :foreign_key => "role_id"
@@ -27,6 +29,7 @@ class RoleRequest < ActiveRecord::Base
   }
   
   after_create :auto_approve_if_requester_is_jurisdiction_admin
+  after_create :auto_approve_if_approver_is_specified
   
   def approved?
     true if approver
@@ -46,5 +49,9 @@ class RoleRequest < ActiveRecord::Base
   
   def auto_approve_if_requester_is_jurisdiction_admin
     approve!(requester) if requester.is_admin_for?(jurisdiction)
+  end
+  
+  def auto_approve_if_approver_is_specified
+    approve!(approver) if !approver.blank?
   end
 end

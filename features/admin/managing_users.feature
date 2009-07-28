@@ -28,6 +28,12 @@ Feature: An admin managing users
       | Preferred language | English      |
     Then "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
+    
+    And "john.smith@example.com" should not receive an email with the subject "Request submitted for Health Officer in Dallas County"
+
+    And the following users should not receive any emails
+      | roles         | Dallas County / Admin |
+    
     When I log in as "john@example.com"
     Then I should not see "Awaiting Approval"
     
