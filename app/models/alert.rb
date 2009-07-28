@@ -103,8 +103,6 @@ class Alert < ActiveRecord::Base
     # 1 - explode all known users and deliver to them
     find_user_recipients.each do |user|
       alert_attempts.create!(:user => user).deliver
-      #user.devices.all(:conditions => {:type => device_types}).each do |device|      
-      #  deliveries.create!(:user => user, :device => device).deliver
     end
     # 2 - deliver to foreign orgs
     if jurisdictions.any?(&:root?)

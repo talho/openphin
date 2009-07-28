@@ -30,7 +30,7 @@ Feature: Canceling an alert
       | Acknowledge   | <unchecked>         |
       | Communication methods | E-mail      |
       | Delivery Time | 60 minutes          |
-      
+
     When I go to cancel the alert
     And I make changes to the alert form with:
       | Message    | Flying monkey disease is not contagious |

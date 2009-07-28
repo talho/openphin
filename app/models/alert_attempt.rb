@@ -37,8 +37,8 @@ class AlertAttempt < ActiveRecord::Base
      
    def deliver
      if organization.blank?
-       user.devices.each do |d|
-          deliveries.create!(:device => d).deliver if alert.alert_device_types.map(&:device).include? d.type
+       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
+          deliveries.create!(:device => device).deliver
        end
      else
        deliveries.create!
