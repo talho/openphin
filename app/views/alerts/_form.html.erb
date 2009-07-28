@@ -7,7 +7,7 @@
   <%= form.text_area :message, :rows => 5 %>
 
   <%= form.label :from_jurisdiction_id %>
-  <%= form.select :from_jurisdiction_id, current_user.role_memberships.alerter.map {|m| [m.jurisdiction.name, m.jurisdiction.id] } %>
+  <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
   
   <%= form.label :status %>
   <%= form.select :status, Alert::Statuses %>

@@ -103,6 +103,10 @@ class User < ActiveRecord::Base
   end
   alias_method :name, :display_name
   
+  def alerter_jurisdictions
+    Jurisdiction.find(role_memberships.alerter.map(&:jurisdiction_id))
+  end
+  
   def phin_oid=(val)
     raise "PHIN oids should never change"
   end

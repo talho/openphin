@@ -189,4 +189,27 @@ describe User do
     jurisdiction.users.should include(user1, user2)
   end
   
+  describe "alerter_jurisdictions" do
+    before do
+      @user = Factory(:user)
+      role1 = Factory(:role, :alerter => true)
+      role2 = Factory(:role, :alerter => true)
+      jurisdiction1 = Factory(:jurisdiction)
+      jurisdiction2 = Factory(:jurisdiction)
+      User.assign_role(role1, jurisdiction1, [@user])
+      User.assign_role(role1, jurisdiction2, [@user])
+      User.assign_role(role2, jurisdiction2, [@user])
+    end
+    
+    it "should include all the jurisdictions the user is an alerter in" do
+      @user.role_memberships.alerter.each do |role_membership|
+        @user.alerter_jurisdictions.should include(role_membership.jurisdiction)
+      end
+    end
+    
+    it "should not have duplicates" do
+      @user.alerter_jurisdictions.should == @user.alerter_jurisdictions.uniq
+    end
+  end
+  
 end
