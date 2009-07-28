@@ -53,7 +53,7 @@ class AlertsController < ApplicationController
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id_and_token!(params[:id], params[:token])
     alert_attempt.acknowledge!
-    flash[:notice] = "Successfully acknowledged alert: #{@alert_attempt.alert.title}"
+    flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
     redirect_to dashboard_path
   end
 
