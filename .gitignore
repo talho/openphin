@@ -13,3 +13,4 @@ vendor/plugins/cucumber
 .loadpath
 .tmp*
 public/system/photos
+config/paperclip.yml
