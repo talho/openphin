@@ -1,0 +1,23 @@
+<li class="alert">
+  <div class="summary">
+    <span class="created_at"><%= time_ago_in_words alert.created_at %></span>
+    <span class="title"><%=h alert.title %></span>
+    <span class="severity"><%=h alert.severity %></span>
+  </div>
+  <dl class="detail">
+    <dt>Title:</dt>
+    <dd class="title"><%=h alert.title %></dd>
+
+    <dt>Message:</dt>
+    <dd class="message"><%=simple_format h(alert.message) %></dd>
+
+    <dt>Severity:</dt>
+    <dd class="severity"><%=h alert.severity %></dd>
+
+    <dt>Status:</dt>
+    <dd class="status"><%=h alert.status %></dd>
+
+    <dt>Acknowledge:</dt>
+    <dd class="acknowledge"><%=h alert.acknowledge? ? 'Yes' : 'No' %></dd>
+  </dl>
+</li>

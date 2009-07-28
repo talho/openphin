@@ -43,7 +43,7 @@ class Alert < ActiveRecord::Base
   has_many :alert_device_types
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-  has_many :users, :through => :alert_attempts, :uniq => true
+  has_many :attempted_users, :through => :alert_attempts, :uniq => true
   has_many :acknowledged_users,
            #:class_name => "User",
            #:foreign_key => :user_id,

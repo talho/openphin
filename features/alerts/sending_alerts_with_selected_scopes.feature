@@ -153,6 +153,7 @@ Feature: Creating and sending alerts
       | body contains | Type: Alert    |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
+    
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -255,4 +256,5 @@ Feature: Creating and sending alerts
       | body contains | Type: Alert    |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | For more details, keep on reading... |
-  And "ethan.waldo@example.com" should not receive an email
+    And "ethan.waldo@example.com" should not receive an email
+    

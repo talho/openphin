@@ -38,8 +38,10 @@ class User < ActiveRecord::Base
   has_many :roles, :through => :role_memberships
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts
+  has_many :received_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
   has_many :deliveries, :through => :alert_attempts
   has_one :profile, :class_name => "UserProfile"
+  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
 
   validates_presence_of :email
   validates_presence_of :first_name

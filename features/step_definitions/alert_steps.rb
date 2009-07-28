@@ -1,22 +1,20 @@
 Given "an alert with:" do |table|
-  attributes = table.rows_hash
-  attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
-  attributes['jurisdictions'] = attributes['jurisdictions'].split(',').map{|m| Jurisdiction.find_by_name(m.strip)} unless attributes['jurisdictions'].blank?
-  attributes['organizations'] = attributes['organizations'].split(',').map{|m| Organization.find_by_name(m.strip)} unless attributes['organizations'].blank?
-  attributes['roles'] = attributes['roles'].split(',').map{|m| Role.find_by_name(m.strip)} unless attributes['roles'].blank?
-  if attributes['author'].blank?
-    attributes['author_id'] = current_user.id unless current_user.nil?
-  else
-    attributes['author_id'] = User.find_by_display_name(attributes['author']).id
-  end
-  attributes.delete('author')
-  Factory(:alert, attributes)
+  create_alert_with table.rows_hash
 end
 
 Given "a sent alert with:" do |table|
-  a = Given "an alert with:", table
-  a.deliver
+  alert = create_alert_with table.rows_hash
+  alert.deliver
   When "delayed jobs are processed"
+end
+
+Given /^(\d+) (?:more alerts are|more alert is) sent to me$/ do |n|
+  last_alert = current_user.received_alerts.last
+  n.to_i.times do |i|
+    # always make these alerts happen after the last alert for the user
+    alert = create_alert_with "people" => current_user.name, "created_at" => last_alert.created_at + 1.second
+    alert.deliver
+  end
 end
 
 Given "I've sent an alert with:" do |table|
@@ -120,6 +118,11 @@ Then 'an alert exists with:' do |table|
   end
 end
 
+Then "I should see $n alerts" do |n|
+  response.should have_selector('.alert', :count => n.to_i)
+end
+
+
 Then 'I should see an alert titled "$title"' do |title|
   response.should have_tag('.alert .title', title)
 end
@@ -131,6 +134,18 @@ end
 Then 'I can see the alert summary for "$title"' do |title|
   alert = Alert.find_by_title!(title)
   response.should have_tag('#?', dom_id(alert))
+end
+
+Then 'I should see an alert with the summary:' do |table|
+  table.rows_hash.each do |field, value|
+    response.should have_selector(".alert .summary .#{field}", :content => value)
+  end
+end
+
+Then 'I should see an alert with the detail:' do |table|
+ table.rows_hash.each do |field, value|
+   response.should have_selector(".alert .detail .#{field}", :content => value)
+ end
 end
 
 Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
