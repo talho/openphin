@@ -43,7 +43,7 @@ class Alert < ActiveRecord::Base
   has_many :alert_device_types
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-  has_many :attempted_users, :through => :alert_attempts, :uniq => true
+  has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
   has_many :acknowledged_users,
            #:class_name => "User",
            #:foreign_key => :user_id,
@@ -128,7 +128,7 @@ class Alert < ActiveRecord::Base
   end
 
   def acknowledged_percent_for_jurisdiction(jur)
-		total = users.with_jurisdiction(jur).size.to_f
+		total = attempted_users.with_jurisdiction(jur).size.to_f
 		if total > 0
 			acks = acknowledged_users.with_jurisdiction(jur).size.to_f
 			acks / total * 100
