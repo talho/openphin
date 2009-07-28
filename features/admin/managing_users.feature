@@ -36,4 +36,10 @@ Feature: An admin managing users
     
     When I log in as "john@example.com"
     Then I should not see "Awaiting Approval"
-    
+   
+  Scenario: Creating a user with invalid data
+    When I create a user account with the following info:
+      | Email          | invalidemail    |
+      | Password       | password        |
+      | Password confirmation | <blank>  |
+    Then I should see error messages
