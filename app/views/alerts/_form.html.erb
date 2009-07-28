@@ -6,6 +6,10 @@
   <%= form.label :message %>
   <%= form.text_area :message, :rows => 5 %>
 
+  <%= form.label :short_message %>
+  <%= form.text_area :short_message, :rows => 2 %>
+  (can only be 160 characters)
+
   <%= form.label :from_jurisdiction_id %>
   <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
   

@@ -61,6 +61,7 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
+  validates_length_of :short_message, :maximum => 160
   
   before_create :set_message_type
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"

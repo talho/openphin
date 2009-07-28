@@ -65,6 +65,7 @@ end
 Factory.define :alert do |m|
   m.sequence(:title) {|t| "alert#{t}"}
   m.message "alertmessage"
+  m.short_message ""
   m.status 'Test'
   m.severity 'Moderate'
   m.delivery_time 60

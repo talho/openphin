@@ -129,44 +129,40 @@ describe Alert do
     end
   end
   
-  describe "status" do
+  describe "validations" do
     ['Actual', 'Exercise', 'Test'].each do |status|
-      it "should be valid with #{status.inspect}" do
+      it "should be valid with #{status.inspect} status" do
         alert = Factory.build(:alert, :status => status)
         alert.should be_valid
       end
     end
 
     [nil, '', 'Shout Out'].each do |status|
-      it "should be invalid with #{status.inspect}" do
+      it "should be invalid with #{status.inspect} status" do
         alert = Factory.build(:alert, :status => status)
         alert.should_not be_valid
         alert.errors.on(:status).should_not be_nil
       end
     end
-  end
   
-  describe "severity" do
     ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'].each do |severity|
-      it "should be valid with #{severity.inspect}" do
+      it "should be valid with #{severity.inspect} severity" do
         alert = Factory.build(:alert, :severity => severity)
         alert.valid?
         alert.should be_valid
       end
     end
-
+    
     [nil, '', 'Bogus'].each do |severity|
-      it "should be invalid with #{severity.inspect}" do
+      it "should be invalid with #{severity.inspect} severity" do
         alert = Factory.build(:alert, :severity => severity)
         alert.should_not be_valid
         alert.errors.on(:severity).should_not be_nil
       end
     end
-  end
   
-  describe "delivery_time" do
     [15, 60, 1440, 4320].each do |delivery_time|
-      it "should be valid with #{delivery_time.inspect}" do
+      it "should be valid with #{delivery_time.inspect} delivery_time" do
         alert = Factory.build(:alert, :delivery_time => delivery_time)
         alert.valid?
         alert.should be_valid
@@ -174,11 +170,18 @@ describe Alert do
     end
 
     [nil, '', 'Bogus', 0].each do |delivery_time|
-      it "should be invalid with #{delivery_time.inspect}" do
+      it "should be invalid with #{delivery_time.inspect} delivery_time" do
         alert = Factory.build(:alert, :delivery_time => delivery_time)
         alert.should_not be_valid
         alert.errors.on(:delivery_time).should_not be_nil
       end
+    end
+    
+    it "should be invalid with a short message over 160 characters long" do
+      alert = Factory.build(:alert, :short_message => "a"*160)
+      alert.should be_valid
+      alert.short_message = "a"*161
+      alert.should_not be_valid
     end
   end
   
