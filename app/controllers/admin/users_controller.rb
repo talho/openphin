@@ -12,12 +12,20 @@ class Admin::UsersController < ApplicationController
     assign_public_role_if_no_role_is_provided
     
     @user = User.new(params[:user])
+    @user.role_requests.each do |role_request|
+      if current_user.is_admin_for?(role_request.jurisdiction)
+        role_request.approver = current_user
+      end
+    end
+    
     respond_to do |format|
       if @user.save
-        # SignupMailer.deliver_confirmation(@user)
-        # mark them confirmed
-        # auto approve
-        # send approval email
+        @user.confirm_email!
+        @user.role_requests.each do |role_request|
+          if current_user.is_admin_for?(role_request.jurisdiction)
+            ApprovalMailer.deliver_approval(role_request)
+          end
+        end
         flash[:notice] = 'The user has been successfully created.'
         format.html { redirect_to dashboard_path }
         format.xml  { render :xml => @user, :status => :created, :location => @user }

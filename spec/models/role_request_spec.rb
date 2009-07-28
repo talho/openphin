@@ -23,12 +23,10 @@ describe RoleRequest do
         :jurisdiction => stub_model(Jurisdiction)
       )
     end
-    
-    it "should be valid" do
-      @role_request.valid?.should be_true
-    end
   end
-
+  
+  should_make_fields_protected :approver_id
+  
   describe "named scope" do
     describe "in_jurisdictions" do
       before(:each) do

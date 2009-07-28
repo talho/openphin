@@ -95,6 +95,12 @@ Then '"$email" should not receive an email' do |email|
   email.should be_nil
 end
 
+Then '"$email" should not receive an email with the subject "$subject"' do |email, subject|
+  When "delayed jobs are processed"
+  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) && email.subject.include?(subject) }
+  email.should be_nil
+end
+
 Then "the following users should not receive any emails" do |table|
   headers = table.headers
   recipients = if headers.first == "roles"
