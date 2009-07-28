@@ -49,7 +49,7 @@ namespace :deploy do
   end
 end
 
-after :deploy, :seed
+after 'deploy:migrations', :seed
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
   rails_env = fetch(:rails_env, RAILS_ENV)
