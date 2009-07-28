@@ -23,12 +23,6 @@ class ApplicationController < ActionController::Base
       unless signed_in?
         redirect_to sign_in_path 
         false
-      else
-        if !current_user.nil?
-          @is_alerter = current_user.alerter?
-          @is_admin = current_user.is_admin?
-          @is_super_admin = current_user.is_super_admin?
-        end
       end
     end
     
