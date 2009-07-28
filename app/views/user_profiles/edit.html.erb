@@ -21,7 +21,7 @@
     </p>
 
   <p>
-    <%= image_tag form.object.photo.url %>
+    <%= image_tag form.object.photo.url(:medium) %>
     <%= form.label :photo %><br />
     <%= form.file_field :photo %>
   </p>
