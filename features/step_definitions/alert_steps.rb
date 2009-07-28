@@ -61,6 +61,11 @@ When 'I click "$link" on "$title"' do |link, title|
   end
 end
 
+When 'I follow the acknowledge alert link' do
+  attempt = current_user.alert_attempts.last
+  visit acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+end
+
 Then 'I should see a preview of the message' do
   response.should have_tag('#preview')
 end
@@ -169,4 +174,8 @@ Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]
 	  elm.should have_selector(".device_type", :content => device_type)
 	  elm.should have_selector(".percentage", :content => percentage)
   end
+end
+
+Then "the alert should be acknowledged" do
+  current_user.alert_attempts.last.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
 end

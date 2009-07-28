@@ -5,5 +5,9 @@ Title: <%= @alert.title %>
 Status: <%= @alert.status %>
 Type: <%= @alert.message_type %>
 
+<% if @alert.acknowledge? %>
+To acknowledge this alert, please click <%= acknowledge_alert_url(@alert, @alert_attempt.token) %>
+<% end %>
+
 <%= @alert.message %>
 <%- end -%>

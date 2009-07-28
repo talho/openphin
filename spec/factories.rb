@@ -75,8 +75,7 @@ end
 
 Factory.define :alert_attempt do |m|
   m.alert {|t| t.association :alert}
-#  m.device {|t| t.association :device}
-  m.user {|t| Factory(:user, :device => m.device)}
+  m.user {|t| Factory(:user)}
   m.requested_at Time.zone.now
 end
 
@@ -95,4 +94,9 @@ end
 Factory.define :delivery do |m|
   m.association :alert_attempt
   m.association :device
+end
+
+Factory.define :email_device, :class => Device::EmailDevice do |m|
+  m.association :user
+  m.sequence(:email_address) {|t| "EmailDevice#{t}@example.com"}
 end

@@ -7,7 +7,7 @@ class AlertMailer < ActionMailer::Base
     # If role, which one?
     from DO_NOT_REPLY
     subject "#{alert.severity} Health Alert from #{role_membership.jurisdiction.name} : #{alert.author.name} : #{role_membership.role.name}"
-    body :alert => alert
+    body :alert => alert, :alert_attempt => user.alert_attempts.find_by_alert_id(alert.id)
   end
   
 end

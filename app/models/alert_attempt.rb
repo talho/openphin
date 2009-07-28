@@ -35,14 +35,25 @@ class AlertAttempt < ActiveRecord::Base
    #validates_uniqueness_of :user, :scope => :alert
    #validates_uniqueness_of :organization, :scope => :alert
      
-   def deliver
-     if organization.blank?
-       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
-          deliveries.create!(:device => device).deliver
-       end
-     else
-       deliveries.create!
-       organization.deliver(alert)
-     end
-   end
+  before_save :generate_acknowledgment_token
+     
+  def deliver
+    if organization.blank?
+      user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
+        deliveries.create!(:device => device).deliver
+      end
+    else
+      deliveries.create!
+      organization.deliver(alert)
+    end
+  end
+  
+  def acknowledge!
+    update_attribute(:acknowledged_at, Time.zone.now)
+  end
+  
+  protected
+  def generate_acknowledgment_token
+    self.token = ActiveSupport::SecureRandom.hex
+  end
 end

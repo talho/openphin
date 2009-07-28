@@ -44,5 +44,13 @@ describe "AlertAttempt" do
 			@alert.acknowledged_percent_for_jurisdiction(@j1).round.should == 50.0
 			@alert.acknowledged_percent_for_jurisdiction(@j2).round.should == 100.0
 		end
-	end
+  end
+
+  context "creating an alert attempt" do
+    it "should assign a random token" do
+      alert_attempt = Factory.build(:alert_attempt, :token => nil)
+      alert_attempt.save!
+      alert_attempt.token.should_not be_nil
+    end
+  end
 end
