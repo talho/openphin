@@ -25,8 +25,8 @@
       <%= link_to 'My Dashboard', dashboard_path %>
       <%= link_to 'Send an Alert', new_alert_path, :class => '.sendalert' if current_user.alerter? %>
       <%= link_to 'Request Role', new_role_request_path, :class => '.requestrole' %>
-      <%- if current_user.is_admin -%>
-        <%= link_to 'View Role Requests', admin_role_requests_path, :class => '.viewrolerequests' ? %>
+      <%- if current_user.is_admin? -%>
+        <%= link_to 'View Role Requests', admin_role_requests_path, :class => '.viewrolerequests' %>
         <%= link_to 'Add a User', new_admin_user_path %>
       <%- end -%>
       <%= link_to 'View Alerts', alerts_path, :class => '.viewalerts' if current_user.alerter? %>
