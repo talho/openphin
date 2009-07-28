@@ -10,7 +10,7 @@ module FeatureHelpers
        "Preferred name"=> "Jonathan Smith",
        "Are you with any of these organizations"=> "Red Cross",
        "What County"=> "Dallas County",
-       "What is your primary role within the health department"=> "Health Alert and Communications Coordinator",
+       "What is your primary role"=> "Health Alert and Communications Coordinator",
        "Preferred language"=> "English"
       }
       
@@ -33,10 +33,10 @@ module FeatureHelpers
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field
-        when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Distribution Email'
+        when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email'
           fill_in field, :with => value
         when 'What County', 'Preferred language', 
-          'What is your primary role within the health department', 
+          'What is your primary role', 
           'Are you with any of these organizations', 'Organization Type'
             select Regexp.new(value), :from => field
         when /Counties/
