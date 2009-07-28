@@ -42,7 +42,6 @@ class User < ActiveRecord::Base
   has_one :profile, :class_name => "UserProfile"
   has_many :alert_attempts
 
-  validates_uniqueness_of :email
   validates_presence_of :email
   validates_presence_of :first_name
   validates_presence_of :last_name
