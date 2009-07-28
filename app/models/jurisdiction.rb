@@ -37,6 +37,10 @@ class Jurisdiction < ActiveRecord::Base
   def admins
     users.with_role(Role.admin)
   end
+  
+  def han_coordinators
+    users.with_role(Role.han_coordinator)
+  end
 
   def parent
     Jurisdiction.find(parent_id) unless !Jurisdiction.exists?(parent_id)

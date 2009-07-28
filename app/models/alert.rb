@@ -159,8 +159,29 @@ private
     user_ids_for_delivery &= roles.map(&:user_ids).flatten unless roles.empty?
     user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
 
-    user_ids_for_delivery += user_ids    
-
+    user_ids_for_delivery += user_ids
+    
+    user_ids_for_delivery += required_han_coordinators
+    
     User.find(user_ids_for_delivery)
+  end
+  
+  def required_han_coordinators
+    # Keith says: "Do not fuck with this method."
+    
+    # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
+    selves_and_ancestors = (jurisdictions + [from_jurisdiction]).map(&:self_and_ancestors)
+
+    # union them all, but that may give us too many ancestors
+    unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
+    
+    # intersecting will give us all the ancestors in common
+    intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
+
+    # So we grab the lowest common ancestor; ancestory at the lowest level
+    good_ones = (unioned - intersected) + [intersected.max{|x,y| x.level <=> y.level }]
+    
+    # Finally, grab all those han coordinators
+    good_ones.map {|jurisdiction| jurisdiction.han_coordinators.map(&:id) }.flatten
   end
 end

@@ -28,6 +28,10 @@ class Role < ActiveRecord::Base
     find_by_name ORG_ADMIN
   end
   
+  def self.han_coordinator
+    find_or_create_by_name 'Health Alert and Communications Coordinator'
+  end
+  
   named_scope :user_roles, :conditions => { :user_role => true }
   
   validates_uniqueness_of :name
