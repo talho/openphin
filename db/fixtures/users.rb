@@ -1,4 +1,4 @@
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Keith'
   m.last_name = 'Gaddis'
   m.email = 'keith@example.com'
@@ -21,7 +21,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Bob'
   m.last_name = 'Dole'
   m.email = 'bob@example.com'
@@ -44,7 +44,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Ethan'
   m.last_name = 'Waldo'
   m.email = 'ethan@example.com'
@@ -60,7 +60,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
   m.email = 'jason@example.com'
@@ -76,7 +76,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Brandon'
   m.last_name = 'Keepers'
   m.email = 'brandon@example.com'
@@ -92,7 +92,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Daniel'
   m.last_name = 'Morrison'
   m.email = 'daniel@example.com'
@@ -108,7 +108,7 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
-u = User.seed(:first_name, :last_name) do |m|
+u = User.seed(:email) do |m|
   m.first_name = 'Zach'
   m.last_name = 'Dennis'
   m.email = 'zach@example.com'
