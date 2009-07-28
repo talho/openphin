@@ -5,8 +5,6 @@
   <%= f.text_field(:last_name) %><br/>
   <%= f.label(:display_name, "Preferred name to be displayed") %><br/>
   <%= f.text_field(:display_name) %><br/>
-  <%= f.label(:description, "Description of person") %><br/>
-  <%= f.text_field(:description) %><br/>
   <%= f.label(:email, "Email address") %><br/>
   <%= f.text_field(:email) %><br/>
   <%= f.label(:password, "Password") %><br/>
@@ -32,6 +30,11 @@
       <%= r.collection_select :role_id, Role.user_roles, :id, :name, :include_blank => true %><br/>
       <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
       <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
+      
+      <p>
+        <%= f.label(:description, "Please describe your role within your organization") %><br/>
+        <%= f.text_field(:description) %><br/>
+      </p>
     </fieldset>
   <% end %>
   <p>
