@@ -18,6 +18,7 @@ development: &DEVELOPMENT
 
 test: &TEST
   <<: *DEVELOPMENT
+  delivery_method: test
   
-test:
+cucumber:
   <<: *TEST  

@@ -31,34 +31,33 @@ class Service::Base
     
     attr_accessor_with_default :options, {}
     
-    def delivery_method=(what)
-      @delivery_method = what
-    end
-    
-    def delivery_method
-      @delivery_method ||= DEFAULT_DELIVERY_METHOD
-    end
-    
     def fake_delivery?
-      @delivery_method == :test
+      options["delivery_method"] == "test"
     end
+    
+    def to_hash
+      options.dup
+    end
+    
+    delegate :[], :to => :options
+    delegate :[]=, :to => :options
   end
   
   # =================
   # = CLASS METHODS =
   # =================
   
-  def self.configure(&blk)
-    yield configuration
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+  
+  def self.load_configuration_file(file)
+    configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
     if configuration.fake_delivery?
       def self.deliveries 
         @deliveries ||= []
       end
     end
-  end
-  
-  def self.configuration
-    @configuration ||= Configuration.new
   end
   
   # =================
