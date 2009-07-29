@@ -1,0 +1,16 @@
+development:
+  enable_star: 1
+  min_prefix_len: 1
+
+test: &TEST
+  listen: 3313
+  enable_star: 1
+  min_prefix_len: 1
+
+production:
+  enable_star: 1
+  min_prefix_len: 1
+  bin_path: '/usr/local/bin'
+
+cucumber:
+  <<: *TEST

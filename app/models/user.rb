@@ -70,6 +70,14 @@ class User < ActiveRecord::Base
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
   
+  define_index do
+    indexes first_name
+    indexes last_name
+    indexes display_name
+
+    set_property :delta => :delayed
+  end
+  
   def self.assign_role(role, jurisdiction, users)
     users.each do |u|
       u.role_memberships.create(:role => role, :jurisdiction => jurisdiction)
