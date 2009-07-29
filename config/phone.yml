@@ -1,0 +1,23 @@
+production:
+  provider: 21cc
+  username: tdh_talho
+  password: qtvu71uu
+  client_id: 63
+  user_id: 1089
+  url: https://ucs.tfcci.com/ucsxml/request.cgi
+  retry_duration: 6.hours
+  
+development: &DEVELOPMENT
+  provider: 21cc
+  username: tdh_talho
+  password: qtvu71uu
+  client_id: 63
+  user_id: 1089
+  url: https://ucstest.tfcci.com/ucsxml/request.cgi
+  retry_duration: 6.hours
+
+test: &TEST
+  <<: *DEVELOPMENT
+  
+test:
+  <<: *TEST  

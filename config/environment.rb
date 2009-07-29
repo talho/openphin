@@ -61,6 +61,9 @@ Rails::Initializer.run do |config|
     :source  => 'http://gems.github.com', 
     :version => '2.3.0'
   config.gem 'fastercsv', :version => '1.5.0'
+  config.gem 'httparty',
+    :lib => 'httparty',
+    :version => '0.4.4'
 end
 
 require 'happymapper'

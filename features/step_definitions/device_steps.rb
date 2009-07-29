@@ -120,10 +120,37 @@ Then "the following users should not receive any emails" do |table|
   elsif headers.first == "emails"
     headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
   end
+end
+  
+Then 'I should have a phone device with the phone "$text"' do |text|
+  device = current_user.devices.phone.detect{ |device| device.phone == text }
+  device.phone.should_not be_nil
+end
 
-When "delayed jobs are processed"
-  recipients.each do |user|
-    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
-    email.should be_nil
+
+Then /^the following phone calls should be made:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::Phone.deliveries.detect do |phone_call|
+      xml = Nokogiri::XML(phone_call.body)
+      message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
+      phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+      message == row["message"] && phone == row["phone"]
+    end
+    call.should_not be_nil
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

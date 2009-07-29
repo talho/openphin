@@ -62,10 +62,10 @@ class UserProfilesController < ApplicationController
   # PUT /users/1.xml
   def update
 	  find_user_and_profile
-		if Device::Types.map(&:to_s).include?(params[:device_type])
-  		@device = params[:device_type].constantize.new(params[:device]) 
-  		@device.user = @user
-		end
+    if Device::Types.map(&:name).map(&:demodulize).include?(params[:device_type])
+      @device = device_class_for(params[:device_type]).new params[params[:device_type]]
+      @device.user = @user
+    end
 		
 		params[:user][:role_requests_attributes].each do |index, role_requests|
 		  if role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?
@@ -86,6 +86,10 @@ class UserProfilesController < ApplicationController
   end
 
 private
+  def device_class_for(device_type)
+      ("#{Device.name}::" + params[:device_type]).constantize
+  end
+
   def find_user_and_profile
     @user = User.find(params[:user_id])
     unless @user.editable_by?(current_user)

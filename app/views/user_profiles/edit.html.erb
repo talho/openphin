@@ -60,18 +60,19 @@
         
           <p>
             <%= device_form.label :type, 'Device Type' %>
-            <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name]}, params[:device_type])%>
-          </p>
-        
-          <p>
-            <%= device_form.label :email_address, 'E-mail' %>
-            <%= device_form.text_field :email_address %>
-          </p>
-        
-          <p>
-            <%= form.submit "Save Device" %>
+            <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name.demodulize]}, params[:device_type])%>
           </p>
         <%- end -%>
+        
+        <% Device::Types.each do |device| %>
+          <%- fields_for device.name.demodulize, device.new do |device_form| -%>
+            <%= render :partial => "user_profiles/#{device.name.demodulize.underscore}", :locals => { :form => device_form } %>
+          <% end %>
+        <% end %>  
+          
+        <p>
+          <%= form.submit "Save Device" %>
+        </p>
       </div>
         
       <a href="#add-device" class="add_device">Add Device</a>
