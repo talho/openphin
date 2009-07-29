@@ -30,7 +30,7 @@ Feature: Sending sensitive alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the logs page
+    And I should be on the alerts page
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
       | body contains | Status: Actual |
