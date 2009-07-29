@@ -27,7 +27,7 @@ module NavigationHelpers
     when /the user edit page/i
       edit_user_path(current_user)
 	  when /the edit profile page$/i
-	    edit_user_profile_path(current_user.profile)
+	    edit_user_profile_path(current_user)
     when /cancel the alert/
       edit_alert_path(Alert.last, :_action => "cancel")
     when /the new organization page/

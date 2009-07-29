@@ -2,21 +2,21 @@
 #
 # Table name: alerts
 #
-#  id                     :integer         not null, primary key
+#  id                     :integer(4)      not null, primary key
 #  title                  :string(255)
 #  message                :text
 #  severity               :string(255)
 #  status                 :string(255)
-#  acknowledge            :boolean
-#  author_id              :integer
+#  acknowledge            :boolean(1)
+#  author_id              :integer(4)
 #  created_at             :datetime
 #  updated_at             :datetime
-#  sensitive              :boolean
-#  delivery_time          :integer
+#  sensitive              :boolean(1)
+#  delivery_time          :integer(4)
 #  sent_at                :datetime
 #  message_type           :string(255)
 #  program_type           :string(255)
-#  from_organization_id   :integer
+#  from_organization_id   :integer(4)
 #  from_organization_name :string(255)
 #  from_organization_oid  :string(255)
 #  identifier             :string(255)
@@ -27,8 +27,9 @@
 #  certainty              :string(255)
 #  jurisdictional_level   :string(255)
 #  references             :string(255)
-#  from_jurisdiction_id   :integer
-#  original_alert_id      :integer
+#  from_jurisdiction_id   :integer(4)
+#  original_alert_id      :integer(4)
+#  short_message          :string(255)     default("")
 #
 
 require 'happymapper'

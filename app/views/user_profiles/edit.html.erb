@@ -1,14 +1,12 @@
 <div class='profile_edit'>
-<h1>Editing user_profile</h1>
-  <% form_for @user_profile, :html => {:multipart => true} do |form| %>
+<h1>Editing user</h1>
+  <% form_for @user, :url => user_profile_path(@user), :html => {:multipart => true} do |form| %>
     <%= form.error_messages %>
 		
-		<% fields_for :user, @user_profile.user do |user_form| %>
-			<fieldset>
-				<legend>Account information</legend>
-				<%= render :partial => "users/user_account_form", :locals => { :form => user_form } %>
-			</fieldset>
-		<% end %>
+		<fieldset>
+			<legend>Account information</legend>
+			<%= render :partial => "users/user_account_form", :locals => { :form => form } %>
+		</fieldset>
 
 		<fieldset>
 			<legend>Public Profile</legend>
@@ -54,7 +52,7 @@
     <fieldset id="devices">
       <legend>Devices</legend>
       
-      <%= render form.object.user.devices, :in_form => true %>
+      <%= render form.object.devices, :in_form => true %>
       
       <div id="new_device">
         <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>
@@ -79,10 +77,20 @@
       <a href="#add-device", class="add_device">Add Device</a>
     </fieldset>
     
+    <fieldset>
+      <legend>Roles</legend>
+      
+      <%= render 'users/roles', :user => form.object %>
+      
+      <%- form.object.role_requests.build unless form.object.role_requests.last.new_record? -%>
+      <%- form.fields_for :role_requests do |role_form| -%>
+        <%= render 'role_requests/form', :f => role_form if role_form.object.new_record? %>
+      <%- end -%>
+    </fieldset>
     
     <p>
       <%= form.submit 'Save' %>
     </p>
   <% end %>
 </div>
-  <%= link_to 'Show', @user_profile %>
+  <%= link_to 'Show', @user %>

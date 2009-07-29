@@ -1,0 +1,5 @@
+<ul class="roles">
+  <% user.role_memberships.user_roles.each do |r| %>
+  <li><%= r.role.name%> in <%= r.jurisdiction.name%></li>
+  <% end %>
+</ul>

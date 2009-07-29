@@ -1,48 +1,44 @@
   <div class='user_profile'>
-    <%= link_to 'Edit', edit_user_profile_path(@user_profile.user) if @user_profile.editable_by?(current_user) %>
+    <%= link_to 'Edit', edit_user_profile_path(@user) if @user.editable_by?(current_user) %>
     
 <p>
   <b>Photo:</b>
-  <%= image_tag @user_profile.photo.url(:medium) %>
+  <%= image_tag @user.photo.url(:medium) %>
 </p>
 
 <p>
   <b>Public:</b>
-  <%=h @user_profile.public %>
+  <%=h @user.public %>
 </p>
 
 <p>
   <b>Credentials:</b>
-  <%=h @user_profile.credentials %>
+  <%=h @user.credentials %>
 </p>
 
 <p>
   <b>Employer:</b>
-  <%=h @user_profile.employer %>
+  <%=h @user.employer %>
 </p>
 
 <p>
   <b>Experience:</b>
-  <%=h @user_profile.experience %>
+  <%=h @user.experience %>
 </p>
 
 <p>
   <b>Bio:</b>
-  <%=h @user_profile.bio %>
+  <%=h @user.bio %>
 </p>
 
-<% if current_user == @user_profile.user %>
+<% if current_user == @user %>
 <p>
   <b>Roles:</b>
-  	<ul class="roles">
-      <% current_user.role_memberships.each do |r| %>
-      <li><%= r.role.name%> in <%= r.jurisdiction.name%></li>
-      <% end %>
-  	</ul>
+  <%= render 'users/roles', :user => @user %>
 </p>
 <% end %>
 
-<%= render @user_profile.user.devices %>
+<%= render @user.devices %>
 </div>
 
-<%= link_to 'Edit', edit_user_profile_path(@user_profile) %>
+<%= link_to 'Edit', edit_user_profile_path(@user) %>

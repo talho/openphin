@@ -2,14 +2,15 @@
 #
 # Table name: alert_attempts
 #
-#  id              :integer         not null, primary key
-#  alert_id        :integer
-#  user_id         :integer
+#  id              :integer(4)      not null, primary key
+#  alert_id        :integer(4)
+#  user_id         :integer(4)
 #  requested_at    :datetime
 #  acknowledged_at :datetime
 #  created_at      :datetime
 #  updated_at      :datetime
-#  organization_id :integer
+#  organization_id :integer(4)
+#  token           :string(255)
 #
 
 class AlertAttempt < ActiveRecord::Base

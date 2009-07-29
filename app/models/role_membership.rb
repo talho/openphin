@@ -2,13 +2,13 @@
 #
 # Table name: role_memberships
 #
-#  id              :integer         not null, primary key
-#  role_id         :integer
-#  user_id         :integer
+#  id              :integer(4)      not null, primary key
+#  role_id         :integer(4)
+#  user_id         :integer(4)
 #  created_at      :datetime
 #  updated_at      :datetime
-#  jurisdiction_id :integer
-#  role_request_id :integer
+#  jurisdiction_id :integer(4)
+#  role_request_id :integer(4)
 #
 
 class RoleMembership < ActiveRecord::Base
@@ -21,7 +21,8 @@ class RoleMembership < ActiveRecord::Base
   validates_presence_of :jurisdiction_id
   validates_presence_of :user_id
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
-  
+  named_scope :user_roles, :include => :role, :conditions => {:roles => {:user_role => true}}
+
   named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}
   named_scope :recent, :conditions => ["created_at > ?",1.days.ago]
 end

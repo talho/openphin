@@ -2,21 +2,21 @@
 #
 # Table name: roles
 #
-#  id                :integer         not null, primary key
+#  id                :integer(4)      not null, primary key
 #  name              :string(255)
 #  description       :string(255)
 #  phin_oid          :string(255)
 #  created_at        :datetime
 #  updated_at        :datetime
-#  approval_required :boolean
-#  alerter           :boolean
-#  user_role         :boolean         default(TRUE)
+#  approval_required :boolean(1)
+#  alerter           :boolean(1)
+#  user_role         :boolean(1)      default(TRUE)
 #
 
 class Role < ActiveRecord::Base
   has_many :role_memberships
   has_many :users, :through => :role_memberships
-  
+    
   ADMIN = "Admin"
   ORG_ADMIN = "OrgAdmin"
   

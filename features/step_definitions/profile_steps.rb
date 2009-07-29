@@ -1,7 +1,7 @@
 Given '$email has a $public profile' do |email, pub|
   user = User.find_by_email!(email)
-  user.profile.public = (pub == 'public')
-  user.profile.save!
+  user.public = (pub == 'public')
+  user.save!
 end
 
 When 'I view the profile page for $email' do |email|

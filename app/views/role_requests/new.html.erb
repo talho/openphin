@@ -3,7 +3,7 @@
 <% form_for(@role_request) do |f| %>
   <%= f.error_messages %>
 
-  <%= render 'form' %>
+  <%= render 'form', :f => f %>
   
   <p>
     <%= f.submit 'Submit Request' %>

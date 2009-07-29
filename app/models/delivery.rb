@@ -2,13 +2,13 @@
 #
 # Table name: deliveries
 #
-#  id                  :integer         not null, primary key
-#  device_id           :integer
+#  id                  :integer(4)      not null, primary key
+#  device_id           :integer(4)
 #  delivered_at        :datetime
+#  sys_acknowledged_at :datetime
 #  created_at          :datetime
 #  updated_at          :datetime
-#  alert_attempt_id    :integer
-#  sys_acknowledged_at :datetime
+#  alert_attempt_id    :integer(4)
 #
 
 class Delivery < ActiveRecord::Base

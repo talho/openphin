@@ -1,84 +1,86 @@
 class UserProfilesController < ApplicationController  
-  # GET /user_profiles
-  # GET /user_profiles.xml
+  # GET /users
+  # GET /users.xml
   def index
-    @user_profiles = UserProfile.all
+    @users = User.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @user_profiles }
+      format.xml  { render :xml => @users }
     end
   end
 
-  # GET /user_profiles/1
-  # GET /user_profiles/1.xml
+  # GET /users/1
+  # GET /users/1.xml
   def show
-    @user_profile = User.find(params[:user_id]).profile
+    @user = User.find(params[:user_id])
 
     respond_to do |format|
-      if @user_profile.public? || current_user == @user_profile.user
+      if @user.public? || current_user == @user
         format.html # show.html.erb
-        format.xml  { render :xml => @user_profile }  
+        format.xml  { render :xml => @user }  
       else
         format.html { render :action => 'privacy'}
       end
     end
   end
 
-  # GET /user_profiles/new
-  # GET /user_profiles/new.xml
+  # GET /users/new
+  # GET /users/new.xml
   def new
-    if params[:user_id]
-      @user_profile = User.find(params[:user_id]).build_profile
-    end
-    @user_profile ||= UserProfile.new
+    User.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @user_profile }
+      format.xml  { render :xml => @user }
     end
   end
 
-  # GET /user_profiles/1/edit
+  # GET /users/1/edit
   def edit
     find_user_and_profile
   end
 
-  # POST /user_profiles
-  # POST /user_profiles.xml
+  # POST /users
+  # POST /users.xml
   def create
 		@user=User.find(params[:user_id])
-		@user_profile = @user.create_profile(params[:user_profile])
 
     respond_to do |format|
-      if @user_profile.save
-        flash[:notice] = 'UserProfile was successfully created.'
-        format.html { redirect_to(@user_profile) }
-        format.xml  { render :xml => @user_profile, :status => :created, :location => @user_profile }
+      if @user.save
+        flash[:notice] = 'User was successfully created.'
+        format.html { redirect_to(@user) }
+        format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @user_profile.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /user_profiles/1
-  # PUT /user_profiles/1.xml
+  # PUT /users/1
+  # PUT /users/1.xml
   def update
 	  find_user_and_profile
 		if Device::Types.map(&:to_s).include?(params[:device_type])
   		@device = params[:device_type].constantize.new(params[:device]) 
   		@device.user = @user
 		end
+		
+		params[:user][:role_requests_attributes].each do |index, role_requests|
+		  if role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?
+		    params[:user][:role_requests_attributes].delete(index)
+	    end
+		end
 
     respond_to do |format|
-      if (@device.nil? || @device.save) && @user_profile.update_attributes(params[:user_profile])
+      if (@device.nil? || @device.save) && @user.update_attributes(params[:user])
         flash[:notice] = 'Profile information saved.'
-        format.html { redirect_to(@user_profile) }
+        format.html { redirect_to(@user) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @user_profile.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -86,8 +88,7 @@ class UserProfilesController < ApplicationController
 private
   def find_user_and_profile
     @user = User.find(params[:user_id])
-    @user_profile = @user.profile
-    unless @user_profile.editable_by?(current_user)
+    unless @user.editable_by?(current_user)
 		  flash[:notice] = "You are not authorized to edit this profile."
 		  redirect_to :back
 	  end

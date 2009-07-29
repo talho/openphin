@@ -2,7 +2,7 @@
 #
 # Table name: users
 #
-#  id                 :integer         not null, primary key
+#  id                 :integer(4)      not null, primary key
 #  last_name          :string(255)
 #  phin_oid           :string(255)
 #  description        :text
@@ -17,8 +17,18 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean         not null
+#  email_confirmed    :boolean(1)      not null
 #  phone              :string(255)
+#  delta              :boolean(1)
+#  credentials        :text
+#  bio                :text
+#  experience         :text
+#  employer           :string(255)
+#  photo_file_name    :string(255)
+#  photo_content_type :string(255)
+#  public             :boolean(1)
+#  photo_file_size    :integer(4)
+#  photo_updated_at   :datetime
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

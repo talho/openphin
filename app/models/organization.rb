@@ -2,7 +2,7 @@
 #
 # Table name: organizations
 #
-#  id                        :integer         not null, primary key
+#  id                        :integer(4)      not null, primary key
 #  name                      :string(255)
 #  phin_oid                  :string(255)
 #  description               :string(255)
@@ -17,12 +17,12 @@
 #  type                      :string(255)
 #  created_at                :datetime
 #  updated_at                :datetime
-#  foreign                   :boolean
+#  foreign                   :boolean(1)
 #  queue                     :string(255)
-#  organization_type_id      :integer
+#  organization_type_id      :integer(4)
 #  distribution_email        :string(255)
-#  contact_id                :integer
-#  approved                  :boolean
+#  contact_id                :integer(4)
+#  approved                  :boolean(1)
 #
 
 class Organization < ActiveRecord::Base

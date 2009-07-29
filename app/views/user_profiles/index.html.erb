@@ -1,4 +1,4 @@
-<h1>Listing user_profiles</h1>
+<h1>Listing users</h1>
 
 <table>
   <tr>
@@ -10,21 +10,21 @@
     <th>Bio</th>
   </tr>
 
-<% @user_profiles.each do |user_profile| %>
+<% @users.each do |user| %>
   <tr>
-    <td><%=h user_profile.photo %></td>
-    <td><%=h user_profile.public %></td>
-    <td><%=h user_profile.credentials %></td>
-    <td><%=h user_profile.employer %></td>
-    <td><%=h user_profile.experience %></td>
-    <td><%=h user_profile.bio %></td>
-    <td><%= link_to 'Show', user_profile %></td>
-    <td><%= link_to 'Edit', edit_user_profile_path(user_profile) %></td>
-    <td><%= link_to 'Destroy', user_profile, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h user.photo %></td>
+    <td><%=h user.public %></td>
+    <td><%=h user.credentials %></td>
+    <td><%=h user.employer %></td>
+    <td><%=h user.experience %></td>
+    <td><%=h user.bio %></td>
+    <td><%= link_to 'Show', user %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New user_profile', new_user_profile_path %>
+<%= link_to 'New user', new_user_profile_path %>

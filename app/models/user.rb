@@ -2,7 +2,7 @@
 #
 # Table name: users
 #
-#  id                 :integer         not null, primary key
+#  id                 :integer(4)      not null, primary key
 #  last_name          :string(255)
 #  phin_oid           :string(255)
 #  description        :text
@@ -17,8 +17,18 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean         not null
+#  email_confirmed    :boolean(1)      not null
 #  phone              :string(255)
+#  delta              :boolean(1)
+#  credentials        :text
+#  bio                :text
+#  experience         :text
+#  employer           :string(255)
+#  photo_file_name    :string(255)
+#  photo_content_type :string(255)
+#  public             :boolean(1)
+#  photo_file_size    :integer(4)
+#  photo_updated_at   :datetime
 #
 
 # Required Attributes: :cn, :sn, :organizations
@@ -40,20 +50,24 @@ class User < ActiveRecord::Base
   has_many :alert_attempts
   has_many :received_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
   has_many :deliveries, :through => :alert_attempts
-  has_one :profile, :class_name => "UserProfile"
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
 
   validates_presence_of :email
   validates_presence_of :first_name
   validates_presence_of :last_name
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
+    
+  has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
+	
+	def editable_by?(other_user)
+	  self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
+  end
     
   before_create :generate_oid
   before_create :set_confirmation_token
   before_create :create_default_email_device
 
   after_create :assign_public_role
-  after_create :create_default_profile
 
   named_scope :with_role, lambda {|role| 
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
@@ -218,9 +232,5 @@ private
   def set_confirmation_token
     self.token = ActiveSupport::SecureRandom.hex
   end
-
-	def create_default_profile
-		self.create_profile(:public => false)
-	end
 
 end
