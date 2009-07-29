@@ -6,12 +6,12 @@ Feature: Role Requests
 
   Background:
     Given the following entities exists:
-      | Jurisdiction | Dallas County         |
-      | Jurisdiction | Tarrant County        |
-      | Jurisdiction | Texas                 |
-      | Role         | Public                |
-      | Role         | Health Officer        |
-      | Role         | Immunization Director |
+      | Jurisdiction  | Dallas County         |
+      | Jurisdiction  | Tarrant County        |
+      | Jurisdiction  | Texas                 |
+      | Role          | Public                |
+      | approval role | Health Officer        |
+      | approval role | Immunization Director |
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County |  
     And Dallas County has the following administrators:
@@ -52,8 +52,8 @@ Feature: Role Requests
     Given I am logged in as "admin1@dallascounty.com"
     When I go to the request a role page
     And I fill out the role request form with:
-      | Jurisdiction | Tarrant County |
-      | Role         | Health Officer |
+      | Jurisdiction  | Tarrant County |
+      | Role | Health Officer |
     Then I should see that I have a pending role request
     Then I should see "Your request to be a Health Officer in Tarrant County has been submitted"
     Then I should see I am awaiting approval for Health Officer in Tarrant County
@@ -92,8 +92,8 @@ Feature: Role Requests
     Given I am logged in as "admin@texas.com"
     When I go to the request a role page
     And I fill out the role request form with:
-      | Jurisdiction | Tarrant County |
-      | Role         | Health Officer |
+      | Jurisdiction  | Tarrant County |
+      | Role | Health Officer |
     Then I should see that I have a pending role request
     Then I should see "Your request to be a Health Officer in Tarrant County has been submitted"
     Then I should see I am awaiting approval for Health Officer in Tarrant County

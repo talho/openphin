@@ -9,7 +9,7 @@ Feature: Searching for users
       | Jurisdiction | Tarrant County        |
       | Jurisdiction | Texas                 |
       | Role         | Public                |
-      | approval role         | Health Officer        |
+      | approval role| Health Officer        |
       | Role         | Immunization Director |
       | Role         | HAN Coordinator       |
     And Texas is the parent jurisdiction of:

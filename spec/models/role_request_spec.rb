@@ -32,13 +32,13 @@ describe RoleRequest do
       before(:each) do
         user=Factory(:user)
         role=Factory(:role)
-        j1,j2,j3 = [Factory(:jurisdiction), Factory(:jurisdiction), Factory(:jurisdiction)]
-        Factory(:role_request, :requester => user, :role => role, :jurisdiction => j1)
+        @j1,j2,j3 = [Factory(:jurisdiction), Factory(:jurisdiction), Factory(:jurisdiction)]
+        Factory(:role_request, :requester => user, :role => role, :jurisdiction => @j1)
         Factory(:role_request, :requester => user, :role => role, :jurisdiction => j2)
         Factory(:role_request, :requester => user, :role => role, :jurisdiction => j3)
       end
       it "should only return requests from the given jurisdiction" do
-        RoleRequest.in_jurisdictions(Jurisdiction.first).size.should == 1
+        RoleRequest.in_jurisdictions(@j1).size.should == 1
       end
     end
   end

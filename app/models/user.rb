@@ -195,6 +195,7 @@ private
           :jurisdiction => request.jurisdiction
         )
       end
+      request.destroy
     end
         
     if self.role_requests.any?

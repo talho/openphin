@@ -31,6 +31,7 @@ require 'database_cleaner'
 DatabaseCleaner.strategy = :truncation
 Before do
   DatabaseCleaner.clean
+  ActionMailer::Base.deliveries = []
   # load application-wide fixtures
   Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
 end

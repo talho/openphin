@@ -78,6 +78,7 @@ Feature: Signing up for an account
       | What County    | Dallas County    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
+      | Are you a public health professional? | <checked> |
     Then I should see "Thanks for signing up"
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |

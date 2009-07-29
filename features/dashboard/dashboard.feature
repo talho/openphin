@@ -2,13 +2,13 @@ Feature: Viewing the dashboard
 
     Background:
         Given the following entities exists:
-          | Jurisdiction | Dallas County         |
-          | Jurisdiction | Tarrant County        |
-          | Jurisdiction | Texas                 |
-          | Role         | Public                |
-          | Role         | Health Officer        |
-          | Role         | Immunization Director |
-          | Role         | HAN Coordinator       |
+          | Jurisdiction  | Dallas County         |
+          | Jurisdiction  | Tarrant County        |
+          | Jurisdiction  | Texas                 |
+          | Role          | Public                |
+          | approval role | Health Officer        |
+          | approval role | Immunization Director |
+          | approval role | HAN Coordinator       |
         And the role "HAN Coordinator" is an alerter
         And Texas is the parent jurisdiction of:
           | Dallas County | Tarrant County |

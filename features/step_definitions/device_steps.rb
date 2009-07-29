@@ -39,7 +39,11 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   When "delayed jobs are processed"
   # Reverse here to ensure we're looking at the newest emails first.
   # Otherwise, this will run into issues if earlier emails are sent to the same person.
-  email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address) }
+  # if row = table.rows_hash.detect{|row| row.key =~ /subject/}
+  #   email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address) && email.subject =~ /#{Regexp.escape(row.value)}/}
+  # else
+    email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address)}
+  # end
   email.should_not be_nil
   
   table.rows_hash.each do |field, value|

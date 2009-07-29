@@ -115,7 +115,7 @@ Feature: Creating and sending alerts
       | Status | Actual |
       | Acknowledge | <unchecked> |
       | Communication methods | E-mail |
-      
+    
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -165,7 +165,7 @@ Feature: Creating and sending alerts
       | Status | Actual |
       | Acknowledge | <unchecked> |
       | Communication methods | E-mail |
-  
+
     And I press "Preview Message"
     Then I should see a preview of the message
 
