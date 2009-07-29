@@ -85,8 +85,8 @@ class User < ActiveRecord::Base
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
   
   define_index do
-    indexes first_name
-    indexes last_name
+    indexes first_name, :sortable => true
+    indexes last_name, :sortable => true
     indexes display_name
     indexes title
 
@@ -97,10 +97,6 @@ class User < ActiveRecord::Base
     users.each do |u|
       u.role_memberships.create(:role => role, :jurisdiction => jurisdiction)
     end
-  end
-
-  def self.search(query)
-    all(:conditions => ['first_name LIKE :query OR last_name LIKE :query OR display_name LIKE :query OR title LIKE :query', {:query => "%#{query}%"}])
   end
 
   def is_admin_for?(jurisdiction)

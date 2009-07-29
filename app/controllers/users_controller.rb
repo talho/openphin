@@ -1,13 +1,6 @@
 class UsersController < ApplicationController
   skip_before_filter :login_required, :only => [:new, :create, :confirm]
   
-  def search
-    @users = User.alphabetical.search(params[:q])
-    respond_to do |format|
-      format.json {render :json => @users.map{|u| {:caption => u.name, :value => u.id}} }
-    end
-  end
-  
   # GET /users
   # GET /users.xml
   def index

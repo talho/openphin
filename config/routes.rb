@@ -9,7 +9,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_organizations, :member => [:approve, :deny], :controller => "admin/organizations"
   map.resources :admin_users, :controller => "admin/users"
 
-  map.resources :users, :collection => {:search => :get} do |user|
+  map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
