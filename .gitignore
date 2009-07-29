@@ -1,5 +1,6 @@
 .idea
 config/*.db
+config/database.yml
 *.sqlite3*
 *.log
 .svn
@@ -14,3 +15,6 @@ vendor/plugins/cucumber
 .tmp*
 public/system/photos
 config/paperclip.yml
+config/*.sphinx.conf
+db/sphinx
+log/searchd.*.pid

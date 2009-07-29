@@ -74,6 +74,7 @@ class User < ActiveRecord::Base
     indexes first_name
     indexes last_name
     indexes display_name
+    indexes title
 
     set_property :delta => :delayed
   end
