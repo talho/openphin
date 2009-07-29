@@ -32,3 +32,48 @@ Feature: Acknowledging an alert
     And I follow the acknowledge alert link
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
+  
+  Scenario: Acknowledge an alert through an email without signing in
+    When I fill out the alert form with:
+      | People | Keith Gaddis |
+      | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Acknowledge | <checked> |
+      | Communication methods | E-mail |
+
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    When delayed jobs are processed
+    And "keith.gaddis@example.com" should receive the email:
+      | subject       | Health Alert from Dallas County |
+      | body contains alert acknowledgment link | |
+
+    When I sign out
+    And I follow the acknowledge alert link
+    Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
+    And the alert should be acknowledged
+    
+  Scenario: Acknowledge an alert through an email without signing in
+     When I fill out the alert form with:
+       | People | Keith Gaddis |
+       | Title  | H1N1 SNS push packs to be delivered tomorrow |
+       | Acknowledge | <checked> |
+       | Sensitive | <checked> |
+       | Communication methods | E-mail |
+
+     And I press "Preview Message"
+     Then I should see a preview of the message
+
+     When I press "Send"
+     Then I should see "Successfully sent the alert"
+     When delayed jobs are processed
+     And "keith.gaddis@example.com" should receive the email:
+       | subject       | Health Alert from Dallas County |
+       | body does not contain alert acknowledgment link | |
+
+     When I sign out
+     And I follow the acknowledge alert link
+     Then I should see "You are not authorized"
+     And the alert should not be acknowledged

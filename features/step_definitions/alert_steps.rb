@@ -62,7 +62,7 @@ When 'I click "$link" on "$title"' do |link, title|
 end
 
 When 'I follow the acknowledge alert link' do
-  attempt = current_user.alert_attempts.last
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
   visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
 end
 
@@ -177,7 +177,13 @@ Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]
 end
 
 Then "the alert should be acknowledged" do
-  current_user.alert_attempts.last.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
+  attempt.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
+end
+
+Then "the alert should not be acknowledged" do
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
+  attempt.acknowledged_at.should be_blank
 end
 
 Then 'I have acknowledged the alert for "$alert"' do |alert|

@@ -91,6 +91,7 @@ end
 
 When /^I sign out$/ do
   visit '/session', :delete
+  unset_current_user
 end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|

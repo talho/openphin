@@ -14,7 +14,7 @@ ActionController::Routing::Routes.draw do |map|
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
   map.resources :alerts, :member => {:acknowledge => :put}
-  map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "acknowledge"
+  map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "token_acknowledge"
   map.resources :roles
   map.resources :organizations
   

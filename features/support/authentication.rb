@@ -9,6 +9,10 @@ module FeatureHelpers
       click_button "Sign in"
       @current_user = user
     end
+    
+    def unset_current_user
+      @current_user = nil
+    end
   end
 end
 
