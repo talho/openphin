@@ -13,6 +13,7 @@
 
 class RoleRequest < ActiveRecord::Base
   validates_presence_of :role
+  validates_presence_of :jurisdiction
   validates_presence_of :requester, :if => lambda { |rr| !rr.new_record? }
   
   attr_protected :approver_id

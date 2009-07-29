@@ -1,11 +1,11 @@
-<div class='profile_edit'>
+<div class="profile_edit">
 <h1>Editing user</h1>
   <% form_for @user, :url => user_profile_path(@user), :html => {:multipart => true} do |form| %>
     <%= form.error_messages %>
 		
 		<fieldset>
 			<legend>Account information</legend>
-			<%= render :partial => "users/user_account_form", :locals => { :form => form } %>
+			<%= render "users/user_account_form", :form => form  %>
 		</fieldset>
 
 		<fieldset>

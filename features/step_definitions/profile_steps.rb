@@ -34,8 +34,7 @@ Then /^I should see the profile page$/ do
 end
 
 Then /^I should not see any errors$/ do
-  response.template.assigns['user_profile'].errors.should be_empty
-  response.template.assigns['user_profile'].user.errors.should be_empty
+  response.template.assigns['user'].errors.should be_empty
 end
 
 Then /^I can see the following roles:$/ do |table|

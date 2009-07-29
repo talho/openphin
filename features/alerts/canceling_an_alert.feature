@@ -49,7 +49,7 @@ Feature: Canceling an alert
     
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the logs page
+    And I should be on the alerts page
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : HAN Coordinator |

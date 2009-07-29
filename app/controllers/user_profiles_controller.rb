@@ -76,7 +76,7 @@ class UserProfilesController < ApplicationController
     respond_to do |format|
       if (@device.nil? || @device.save) && @user.update_attributes(params[:user])
         flash[:notice] = 'Profile information saved.'
-        format.html { redirect_to(@user) }
+        format.html { redirect_to user_profile_path(@user) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
