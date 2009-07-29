@@ -18,3 +18,5 @@ config/paperclip.yml
 config/*.sphinx.conf
 db/sphinx
 log/searchd.*.pid
+coverage/
+.autotest
