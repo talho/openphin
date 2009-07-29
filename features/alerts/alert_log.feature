@@ -50,9 +50,13 @@ Feature: Viewing the alert log
       | Jurisdiction | Dallas County                            |
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+    And the following users exist:
+      | Sam Body      | sam@example.com   | HAN Coordinator | Dallas County |
+
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And an alert with:
+      | author            | Sam Body      |
       | from_jurisdiction | Potter County |
       | title             | Hello World   |
     When I am on the alert log

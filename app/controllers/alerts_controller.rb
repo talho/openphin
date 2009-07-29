@@ -2,7 +2,7 @@ class AlertsController < ApplicationController
   before_filter :alerter_required, :only => [:new, :create]
   
   def index
-    @alerts = current_user.alerts_within_jurisdictions
+    @alerts = current_user.viewable_alerts#_within_jurisdictions
   end
   
   def show

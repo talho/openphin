@@ -192,7 +192,11 @@ class User < ActiveRecord::Base
   def formatted_email
     "#{name} <#{email}>"
   end
-
+  
+  def viewable_alerts
+    alerts_within_jurisdictions | alerts | received_alerts
+  end
+  
   def alerts_within_jurisdictions
     j = jurisdictions.map{|m| m.self_and_descendants}.flatten
     Alert.all(:conditions => {:from_jurisdiction_id => j})
