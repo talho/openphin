@@ -1,0 +1,9 @@
+<div id="search-results">
+  <%- @results.each do |result| -%>
+    <p>
+      <%= link_to result.name, user_profile_path(result), :class => 'name' %>
+    </p>
+  <%- end -%>
+  
+  
+</div>

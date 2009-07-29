@@ -108,6 +108,10 @@ class User < ActiveRecord::Base
   def is_org_approver?
     self.roles.detect{|role| role == Role.org_admin }
   end
+  
+  def has_non_public_role?
+    self.roles.any?{|role| role.approval_required? }
+  end
 
   def display_name
     self[:display_name].blank? ? first_name + " " + last_name : self[:display_name]

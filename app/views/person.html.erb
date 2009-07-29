@@ -1,0 +1,5 @@
+<ul>
+<% @users.each do |person| %>
+    <li><%=link_to person.name, person %></li>
+<% end %>
+</ul>

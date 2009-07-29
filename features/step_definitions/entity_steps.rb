@@ -28,7 +28,7 @@ Given /^a[n]? organization type named (.*)$/ do |name|
 end
 
 
-Given 'an approval role named $name' do |name|
+Given /^a[n]? approval role named (.*)$/ do |name|
   r = Factory(:role, :name => name, :approval_required => true)
 end
 

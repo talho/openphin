@@ -34,14 +34,15 @@
     <%- end -%>
   </nav>
 
-  <div id="search">
-    <% form_tag search_path, :method => :get do %>
-      <%= label_tag :q, 'Search' %>
-      <%= text_field_tag :q %>
-      <%= submit_tag 'Go' %>
-    <% end %>
-    
-  </div>
+  <%- if signed_in? && current_user.has_non_public_role? -%>
+    <div id="search">
+      <% form_tag search_path, :method => :get do %>
+        <%= label_tag :q, 'Search' %>
+        <%= text_field_tag :q %>
+        <%= submit_tag 'Go' %>
+      <% end %>
+    </div>
+  <%- end -%>
 
 <%- [:notice, :success, :failure].each do |type| -%>
   <%- if flash[type] -%>
