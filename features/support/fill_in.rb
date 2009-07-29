@@ -41,6 +41,13 @@ module FeatureHelpers
             select Regexp.new(value), :from => field
         when /Counties/
           select_multiple value.split(',').map(&:strip), :from => 'organization_jurisdiction_ids'
+        when "Are you a public health professional?"
+          id = "health_professional"
+          if value == '<unchecked>'
+            uncheck id
+          else
+            check id
+          end
         else
           raise "Unknown field: #{field}: Please update this step if you intended to use this field."
         end

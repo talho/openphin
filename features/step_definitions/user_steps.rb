@@ -117,3 +117,11 @@ Then '"$email" should have the "$role" role request for "$jurisdiction"' do |ema
   m.should_not be_nil
 end
 
+Then '"$email" should not have the "$role" role request for "$jurisdiction"' do |email, role, jurisdiction|
+  p = User.find_by_email!(email)
+  j = Jurisdiction.find_by_name!(jurisdiction)
+  r = Role.find_by_name!(role)
+  m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_requester_id(r.id, j.id, p.id)
+  m.should be_nil
+end
+

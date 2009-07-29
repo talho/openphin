@@ -50,6 +50,12 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.xml
   def create
+    unless params[:health_professional]
+      params[:user][:role_requests_attributes]['0']['role_id'] = nil
+      params[:user].delete("organization_ids")
+      params[:user].delete("description")
+    end
+    
     assign_public_role_if_no_role_is_provided
     
     @user = User.new(params[:user])

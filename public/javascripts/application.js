@@ -39,7 +39,7 @@
 jQuery(function($) {
   $('#health_professional').toggleCheckbox('#health_professional_fields').click(function() {
     $(this).toggleCheckbox('#health_professional_fields');
-    // $('fieldset#health_professional_fields *:input').val('');
+    $('fieldset#health_professional_fields *:input').val('');
   });
   
   $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});

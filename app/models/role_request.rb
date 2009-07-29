@@ -28,6 +28,7 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
   }
   
+  after_create :auto_approve_if_public_role
   after_create :auto_approve_if_requester_is_jurisdiction_admin
   after_create :auto_approve_if_approver_is_specified
   
@@ -46,6 +47,10 @@ class RoleRequest < ActiveRecord::Base
   end
   
   private 
+  
+  def auto_approve_if_public_role
+    approve!(requester) unless role.approval_required?
+  end
   
   def auto_approve_if_requester_is_jurisdiction_admin
     approve!(requester) if requester.is_admin_for?(jurisdiction)

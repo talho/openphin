@@ -176,11 +176,12 @@ private
   def assign_public_role
     public_role = Role.find_by_name("Public")
     role_requests.find_all_by_role_id(public_role).each do |request|
-      role_memberships.create!(
-        :role => public_role, 
-        :jurisdiction => request.jurisdiction
-      )
-      request.destroy
+      if request.approver.nil?
+        role_memberships.create!(
+          :role => public_role, 
+          :jurisdiction => request.jurisdiction
+        )
+      end
     end
         
     if self.role_requests.any?

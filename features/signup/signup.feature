@@ -32,6 +32,25 @@ Feature: Signing up for an account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
+      
+  Scenario: Signing up as a public role but accidentally selecting non-public fields
+    When I signup for an account with the following info:
+      | Email         | john@example.com |
+      | Password       | apples           |
+      | Password confirmation | apples    |
+      | First name     | John             |
+      | Last name      | Smith            |
+      | Preferred name | Jonathan Smith   |
+      | What County    | Dallas County    |
+      | Preferred language | English      |
+      | Are you with any of these organizations | Red Cross        |
+      | What is your primary role | Health Alert and Communications Coordinator |
+      | Are you a public health professional? | <unchecked> |
+      
+    Then I should see "Thanks for signing up"
+    And "john@example.com" should have the "Public" role for "Dallas County"
+    And "john@example.com" should not have the "Health Alert and Communications Coordinator" role request for "Dallas County"
+    
 
   Scenario: Signing up as a public role without required fields should display errors
     When I signup for an account with the following info:
