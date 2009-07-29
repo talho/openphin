@@ -52,7 +52,7 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
       email.subject.should =~ /#{Regexp.escape(value)}/
     when /body contains alert acknowledgment link/
       attempt = User.find_by_email(email_address).alert_attempts.last
-      email.body.should contain(acknowledge_alert_url(attempt, attempt.token, :host => HOST))
+      email.body.should contain(token_acknowledge_alert_url(attempt, attempt.token, :host => HOST))
     when /body contains/
       email.body.should =~ /#{Regexp.escape(value)}/
     when /body does not contain/

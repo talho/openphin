@@ -14,6 +14,20 @@ Feature: Viewing the alert log
     When I click "View" on "Hello World"
     Then I can see the alert summary for "Hello World"
     
+   Scenario: Viewing list of alerts sent directly to you
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    And an alert with:
+      | people | John Smith |
+      | title             | Hello World   |
+    When I am on the alert log
+    Then I should see an alert titled "Hello World"
+
+    When I click "View" on "Hello World"
+    Then I can see the alert summary for "Hello World"
+    
   Scenario: Viewing list of alerts in child jurisdictions
     Given the following entities exists:
       | Jurisdiction | Texas                                    |

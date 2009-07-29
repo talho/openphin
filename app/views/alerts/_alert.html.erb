@@ -33,3 +33,5 @@
   <dd class="people"><%=h @alert.users.map(&:name).to_sentence %></dd>
   
 </dl>
+
+<%= button_to 'Acknowledge', acknowledge_alert_path(@alert), :method => :put if @alert.acknowledge? && !@alert.new_record? %>

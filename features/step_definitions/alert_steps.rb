@@ -63,7 +63,7 @@ end
 
 When 'I follow the acknowledge alert link' do
   attempt = current_user.alert_attempts.last
-  visit acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
 end
 
 Then 'I should see a preview of the message' do
@@ -178,4 +178,8 @@ end
 
 Then "the alert should be acknowledged" do
   current_user.alert_attempts.last.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
+end
+
+Then 'I have acknowledged the alert for "$alert"' do |alert|
+  Alert.find_by_title(alert).acknowledged_users.should include(current_user)
 end
