@@ -82,7 +82,7 @@
       
       <%= render 'users/roles', :user => form.object %>
       
-      <%- form.object.role_requests.build unless form.object.role_requests.last.new_record? -%>
+      <%- form.object.role_requests.build if !form.object.role_requests.last.nil? || !form.object.role_requests.last.new_record? -%>
       <%- form.fields_for :role_requests do |role_form| -%>
         <%= render 'role_requests/form', :f => role_form if role_form.object.new_record? %>
       <%- end -%>
