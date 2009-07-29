@@ -34,6 +34,15 @@
     <%- end -%>
   </nav>
 
+  <div id="search">
+    <% form_tag search_path, :method => :get do %>
+      <%= label_tag :q, 'Search' %>
+      <%= text_field_tag :q %>
+      <%= submit_tag 'Go' %>
+    <% end %>
+    
+  </div>
+
 <%- [:notice, :success, :failure].each do |type| -%>
   <%- if flash[type] -%>
     <p class="<%= type %>"><%= flash[type] %></p>

@@ -18,8 +18,6 @@ require 'webrat/core/matchers'
 
 require "#{Rails.root}/spec/factories"
 
-# load application-wide fixtures
-Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
 
 World ActionController::RecordIdentifier
 
@@ -33,6 +31,8 @@ require 'database_cleaner'
 DatabaseCleaner.strategy = :truncation
 Before do
   DatabaseCleaner.clean
+  # load application-wide fixtures
+  Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
 end
 
 ts = ThinkingSphinx::Configuration.instance
@@ -49,4 +49,5 @@ ThinkingSphinx.suppress_delta_output = true
 
 # Re-generate the index before each Scenario
 Before do
-  ts.c
+  ts.controller.index
+end
