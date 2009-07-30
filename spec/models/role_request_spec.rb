@@ -105,7 +105,29 @@ describe RoleRequest do
         request = Factory(:role_request, :role => role)
         request.approve!(@approver)
         request.role_membership.role.should == role
-      end 
+      end
+
+      it "should only create a single role membership" do
+        user=Factory(:user)
+        jur=Factory(:jurisdiction)
+        role=Factory(:role, :approval_required => true)
+        request=Factory(:role_request, :requester => user, :jurisdiction => jur, :role => role)
+        request.approve!(@approver)
+        user.role_memberships.size.should == 1
+      end
+
+      context "as an admin" do
+       it "should only create a single role membership" do
+        user=Factory(:user)
+        jur=Factory(:jurisdiction)
+        user.role_memberships.create(:role => Role.admin, :jurisdiction => jur)
+        
+        role=Factory(:role, :approval_required => true)
+        request=Factory(:role_request, :requester => user, :jurisdiction => jur, :role => role)
+        request.approve!(@approver)
+        user.role_memberships.size.should == 2
+       end
+      end
     end
   end
 end
