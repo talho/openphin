@@ -117,14 +117,14 @@ Feature: Role Requests
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com" 
     When I go to the request a role page
-    Then I should not see "Admin" in the "Role" dropdown
+    Then I should explicitly not see "Admin" in the "Role" dropdown
     
   Scenario: Requesting a role should not display Federal jurisdiction
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
     When I go to the request a role page
-    Then I should not see "Federal" in the "Jurisdiction" dropdown
+    Then I should explicitly not see "Federal" in the "Jurisdiction" dropdown
 
   Scenario: Jurisdiction admins should not see requests outside their jurisdiction
     Given "john.smith@example.com" has requested to be a "Health Officer" for "Dallas County"

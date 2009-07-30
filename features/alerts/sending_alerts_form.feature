@@ -12,7 +12,7 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the alerts page
     And I follow "New Alert"
-    Then I should not see "Admin" in the "Roles" dropdown
+    Then I should explicitly not see "Admin" in the "Roles" dropdown
 
   Scenario: User with one or more jurisdictions
     Given the following entities exists:

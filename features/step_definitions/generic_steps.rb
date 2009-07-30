@@ -2,8 +2,20 @@ Then /^I should not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
   field_labeled(label).element.inner_html.should_not contain(text)
 end
 
+Then /^I should explicitly not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
+  field_labeled(label).element.children.each do |node|
+    node.inner_html.should_not == text
+  end
+end
+
 Then /^I should see "(.*)" in the "(.*)" dropdown$/ do |text, label|
   field_labeled(label).element.inner_html.should contain(text)
+end
+
+Then /^I should explicitly see "(.*)" in the "(.*)" dropdown$/ do |text, label|
+  field_labeled(label).element.children.each do |node|
+    node.inner_html.should == text
+  end
 end
 
 When /^I fill in the form with the following info:$/ do |table|
