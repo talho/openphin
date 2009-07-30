@@ -15,11 +15,13 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :role
   validates_presence_of :jurisdiction
   validates_presence_of :requester, :if => lambda { |rr| !rr.new_record? }
-  validate_on_create do |req|
-    unless req.requester.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
-      req.errors.add("already a member of this role and jurisdiction")
-    end
-  end
+#  validate_on_create do |req|
+#    if req.errors.empty?
+#      unless req.requester.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
+#        req.errors.add("already a member of this role and jurisdiction")
+#      end
+#    end
+#  end
   
   attr_protected :approver_id
   
@@ -34,8 +36,8 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
   }
   
-  after_create :auto_approve_if_approver_is_specified
   after_create :auto_approve_if_public_role
+  after_create :auto_approve_if_approver_is_specified
   after_create :auto_approve_if_requester_is_jurisdiction_admin
 
   def approved?
@@ -55,16 +57,16 @@ class RoleRequest < ActiveRecord::Base
   end
   
   private 
-  
+
   def auto_approve_if_public_role
-    approve!(requester) unless role.approval_required? && !approved?
+    approve!(requester) unless role.approval_required?
   end
   
   def auto_approve_if_requester_is_jurisdiction_admin
-    approve!(requester) if requester.is_admin_for?(jurisdiction) && !approved?
+    approve!(requester) if requester.is_admin_for?(jurisdiction)
   end
   
   def auto_approve_if_approver_is_specified
-    approve!(approver) if !approver.blank? && !approved?
+    approve!(approver) if !approver.blank?
   end
 end
