@@ -1,0 +1,36 @@
+/*
+	Copyright (c) 2008, Yahoo! Inc. All rights reserved.
+	Code licensed under the BSD License:
+	http://developer.yahoo.net/yui/license.txt
+	version:2.5.0
+	reset, fonts, and base
+*/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;font-variant:normal;}sup {vertical-align:text-top;}sub {vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
+body {font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}table {font-size:inherit;font:100%;}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%;}
+h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}abbr,acronym{border-bottom:1px dotted #000;cursor:help;} em{font-style:italic;}blockquote,ul,ol,dl{margin:0 0 20px;}ol,ul,dl{margin-left:35px;}ol li{list-style:decimal outside;}ul li{list-style:disc outside;}dl dd{margin-left:20px;}th,td{padding:5px;}th{font-weight:bold;}caption{margin-bottom:5px;text-align:center;}
+	
+/**
+ * REDECLARATIONS
+ */
+html 																					{height:100%; background:#251D17; margin-bottom:1px;} /* force scrollbar */
+body																					{background:#fff; font-size:13px; min-height:100%; color:#333; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
+a:link, a:visited															{color:#039AC5; text-decoration:none;}
+a:hover																				{text-decoration:underline;}
+sup 																					{vertical-align:text-top;}
+sub 																					{vertical-align:text-bottom;}
+table 																				{border-collapse:collapse; font-size:13px; margin:0 0 20px;}
+table th,
+table td 																			{padding:5px 20px 5px 0;}
+	
+#wrapper																			{width:700px; margin:0 auto; background:url(images/content.png) repeat-y;}
+#header																				{height:80px; background:url(images/header.png) no-repeat;}
+#header h1																		{width:150px; height:47px; float:left;}
+#header h1 a																	{height:47px; text-indent:-9999px; overflow:hidden; display:block;}
+#header ul																		{float:right; height:47px; list-style-type:none;}
+#header li																		{float:left; list-style:none;}
+#header li a																	{display:block; height:47px; line-height:47px; padding:0 20px 0 0; color:#666; font-weight:bold;}
+#current_user																	{height:24px; text-align:right; color:#fff; line-height:24px; font-size:11px; padding:0 10px;}
+#current_user a																{color:#fff;}
+#current_user .info														{float:left;}
+#content																			{padding:15px 25px 5px;}
+#footer																				{background:#fff url(images/footer.png) no-repeat; padding-top:20px; font-size:11px; color:#999;}
