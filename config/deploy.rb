@@ -60,3 +60,6 @@ set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
 after :deploy, 'pivotal_tracker:deliver_stories'
 
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"

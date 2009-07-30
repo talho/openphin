@@ -40,7 +40,7 @@ Given "the following administrators exist:" do |table|
 end
 
 Given "the following organization administrators exist:" do |table|
-  admin_role=Role.org_admin || Factory(:role, :name => Role::ORG_ADMIN)
+  admin_role=Role.org_admin
   table.raw.each do |row|
     admin = Factory(:user, :email => row[0])
     jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])

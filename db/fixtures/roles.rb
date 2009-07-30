@@ -12,6 +12,6 @@ end
 
 # System-roles
 Role.seed_many(:name, [
-  {:name => Role::ADMIN, :approval_required => false, :user_role => false},
-  {:name => Role::ORG_ADMIN, :approval_required => false, :user_role => false}
+  {:name => Role::Defaults[:admin], :approval_required => false, :user_role => false},
+  {:name => Role::Defaults[:org_admin], :approval_required => false, :user_role => false}
 ])
