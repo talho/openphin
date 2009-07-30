@@ -3,6 +3,12 @@
 == Prerequisites 
 
 1. Sphinx http://freelancing-god.github.com/ts/en/installing_sphinx.html
+2. MySQL or PostgreSQL database
+3. Ruby 1.8.6
+4. RubyGems
+5. Rails 2.3
+6. Git (not required to run, but well help getting it installed)
+
 
 == Running the app
 
