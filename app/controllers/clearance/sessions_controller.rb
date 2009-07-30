@@ -15,6 +15,7 @@ class Clearance::SessionsController < ApplicationController
                                 params[:session][:password])
     if @user.nil?
       flash_failure_after_create
+      flash[:email_address] = params[:session][:email]
       render :template => 'sessions/new', :status => :unauthorized
     else
       if @user.email_confirmed?
