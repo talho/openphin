@@ -36,11 +36,11 @@
 class User < ActiveRecord::Base
   include Clearance::User
   
-  has_many :devices
+  has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
-  has_many :role_memberships
-  has_many :role_requests, :foreign_key => "requester_id"
+  has_many :role_memberships, :dependent => :delete_all
+  has_many :role_requests, :foreign_key => "requester_id", :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
   
   has_and_belongs_to_many :organizations
