@@ -234,5 +234,11 @@ describe Alert do
       @alert.message_type.should == 'Alert'
     end
   end
+  
+  describe "new_with_defaults" do
+    it "should initialize with delivery_time set to 60" do
+      Alert.new_with_defaults.delivery_time.should == 60
+    end
+  end
 
 end

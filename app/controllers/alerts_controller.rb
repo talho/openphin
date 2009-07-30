@@ -11,7 +11,7 @@ class AlertsController < ApplicationController
   end
   
   def new
-    @alert = Alert.new
+    @alert = Alert.new_with_defaults
   end
   
   def create

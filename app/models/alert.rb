@@ -67,6 +67,11 @@ class Alert < ActiveRecord::Base
   before_create :set_message_type
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   
+  def self.new_with_defaults(options={})
+    defaults = {:delivery_time => 60}
+    self.new(options.merge(defaults))
+  end
+  
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
     changeable_fields = ["message", "severity", "sensitive"]
