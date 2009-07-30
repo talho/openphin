@@ -48,6 +48,7 @@ class Service::Phone < Service::Base
         |Building alert message:
         |  alert: #{@alert.id}
         |  user_id: #{@user.id}
+        |  config: #{@config.options.inspect}
       EOT
       
       body = AlertWithoutAcknowledgmentBuilder.build(
@@ -59,7 +60,7 @@ class Service::Phone < Service::Base
     private
     
     def perform_delivery(body)
-      Dialer.new(url, username, password).deliver(body)
+      Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
     end
 
   end
