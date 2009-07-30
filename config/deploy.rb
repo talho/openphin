@@ -11,9 +11,9 @@ set :repository,  "git://github.com/talho/openphin.git"
 # set :scm, :subversion
 RAILS_ENV="production"
 
-role :app, "192.168.30.115"
-role :web, "192.168.30.115"
-role :db,  "192.168.30.115", :primary => true
+role :app, "openphin.texashan.org"
+role :web, "openphin.texashan.org"
+role :db,  "openphin.texashan.org", :primary => true
 set :scm, :git
 set :branch, 'master'
 set :use_sudo, false
@@ -39,8 +39,6 @@ namespace :deploy do
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
-#    run "chown -R apache:apache #{release_path}"
-#    run "chmod a+rw #{release_path}/log/*"
   end
   
   desc "install any gem dependencies"
