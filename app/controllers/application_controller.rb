@@ -47,7 +47,7 @@ private
   def assign_public_role_if_no_role_is_provided
     role_requests = params[:user][:role_requests_attributes]
     if role_requests.has_key?("0") && role_requests["0"]["role_id"].blank?
-       role_requests["0"]["role_id"] = Role.find_by_name("Public").id
+       role_requests["0"]["role_id"] = Role.public.id
     end
   end
 end
