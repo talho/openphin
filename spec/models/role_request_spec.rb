@@ -73,7 +73,8 @@ describe RoleRequest do
     end
     
     it "should set approver to the passed-in user" do
-      request = Factory(:role_request)
+      role = Factory(:role, :approval_required => true)
+      request = Factory(:role_request, :role => role)
       request.approve!(@approver)
       request.approver.should == @approver
     end 
