@@ -1,5 +1,8 @@
+require 'vendor/plugins/thinking-sphinx/lib/thinking_sphinx/deploy/capistrano'
+
 set :application, "openphin"
 set :repository,  "git://github.com/talho/openphin.git"
+set :rails_env, 'production'
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -39,6 +42,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
+    run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
   end
   
   desc "install any gem dependencies"
@@ -61,5 +65,8 @@ set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 after :deploy, 'pivotal_tracker:deliver_stories'
 
 after "deploy:stop",    "delayed_job:stop"
+after "deploy:stop",    "thinking_sphinx:stop"
 after "deploy:start",   "delayed_job:start"
+after "deploy:start",   "thinking_sphinx:start"
 after "deploy:restart", "delayed_job:restart"
+after "deploy:restart", "thinking_sphinx:restart"
