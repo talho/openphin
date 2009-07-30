@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_filter :login_required, :only => [:new, :create, :confirm]
+  before_filter :admin_required, :only => [:index, :destroy]
   
   # GET /users
   # GET /users.xml
