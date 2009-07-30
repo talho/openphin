@@ -221,5 +221,23 @@ describe User do
       @user.alerter_jurisdictions.should == @user.alerter_jurisdictions.uniq
     end
   end
-  
+
+  describe "adding roles" do
+    it "should not allow the same role and jurisdiction to be added twice" do
+      user=Factory(:user)
+      role=Factory(:role)
+      jur=Factory(:jurisdiction)
+      user.role_memberships.create(:role => role, :jurisdiction => jur)
+      user.role_memberships.build(:role => role, :jurisdiction => jur)
+      user.should_not be_valid
+    end
+    it "should not allow a role request to duplicate a role" do
+      user=Factory(:user)
+      role=Factory(:role)
+      jur=Factory(:jurisdiction)
+      user.role_memberships.create(:role => role, :jurisdiction => jur)
+      user.role_requests.build(:role => role, :jurisdiction => jur)
+      user.should_not be_valid
+    end
+  end
 end
