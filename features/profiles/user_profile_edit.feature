@@ -19,17 +19,17 @@ I should be able to edit my profile
     Then I should see the profile edit form
     
     When I fill in the form with the following info:
-      | First name                        | Keith  |
-      | Last name                         | Gaddis |
       | Description                       | A developer |
       | Preferred name to be displayed    | Keith G. |
-      | Email                             | kbg@example.com |
       | Preferred language                | English |
       | Job title                         | Developer |
       | Bio                               | Maybe the austin powers reference was too much |
       | Credentials                       | Rock star, Certified |
       | Experience                        | Summer camp director  |
       | Employer                          | State of Texas |
+      # | First name                        | Keith  |
+      # | Last name                         | Gaddis |
+      # | Email                             | kbg@example.com |
     And I attach the file at "spec/fixtures/keith.jpg" to "Photo"
     And I press "Save"
     Then I should see the profile page
