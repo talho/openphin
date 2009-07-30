@@ -67,4 +67,4 @@ Rails::Initializer.run do |config|
 end
 
 require 'happymapper'
-require 'httparty'
+#require 'httparty'
