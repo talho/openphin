@@ -15,7 +15,7 @@
     <div id="current_user">
       <%- if signed_in? -%>
         <p class="info">Signed in as <%=h current_user.name %></p>
-        <p><%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
+        <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
       <%- end -%>
     </div>
     <h1><%= link_to 'OpenPHIN', root_path %></h1>
@@ -36,18 +36,6 @@
     </ul>
   </div>
   <div id="content">
-    <%- if signed_in? -%>
-      <%= link_to 'My Dashboard', dashboard_path %>
-      <%= link_to 'Send an Alert', new_alert_path, :class => '.sendalert' if current_user.alerter? %>
-      <%= link_to 'Request Role', new_role_request_path, :class => '.requestrole' %>
-      <%- if current_user.is_admin? -%>
-        <%= link_to 'View Role Requests', admin_role_requests_path, :class => '.viewrolerequests' %>
-        <%= link_to 'Add a User', new_admin_user_path %>
-      <%- end -%>
-      <%= link_to 'View Alerts', alerts_path, :class => '.viewalerts' if current_user.alerter? %>
-      <%= link_to 'Edit Profile', edit_user_profile_path(current_user), :class => '.edit_profile' %>
-    <%- end -%>
-    
     <%- if signed_in? && current_user.has_non_public_role? -%>
       <div id="search">
         <% form_tag search_path, :method => :get do %>
