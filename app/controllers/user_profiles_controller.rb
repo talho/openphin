@@ -16,7 +16,7 @@ class UserProfilesController < ApplicationController
     @user = User.find(params[:user_id])
 
     respond_to do |format|
-      if @user.public? || current_user == @user
+      if @user.public? || current_user == @user || current_user.is_admin?
         format.html # show.html.erb
         format.xml  { render :xml => @user }  
       else

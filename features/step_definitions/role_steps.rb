@@ -3,6 +3,11 @@ Given /^there is an system only (.*) role$/ do |role_name|
   role.update_attributes!(:user_role => false)
 end
 
+Given '$role is a non public role' do |role_name|
+  role = Role.find_by_name(role_name)
+  role.update_attributes(:approval_required => true)
+end
+
 Given 'the role "$role" is an alerter' do |role|
   Role.find_by_name(role).update_attributes! :alerter => true
 end

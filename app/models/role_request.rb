@@ -16,7 +16,7 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :jurisdiction
   validates_presence_of :requester, :if => lambda { |rr| !rr.new_record? }
   validate_on_create do |req|
-    unless req.requester.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
+    unless req.requester.blank? || req.requester.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
       req.errors.add("already a member of this role and jurisdiction")
     end
   end

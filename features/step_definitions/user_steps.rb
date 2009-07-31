@@ -102,6 +102,7 @@ When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
 end
 
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
+debugger
   p = User.find_by_email!(email)
   j = Jurisdiction.find_by_name!(jurisdiction)
   r = Role.find_by_name!(role)

@@ -51,7 +51,7 @@ class UsersController < ApplicationController
     end
     
     assign_public_role_if_no_role_is_provided
-    
+
     @user = User.new(params[:user])
     respond_to do |format|
       if @user.save

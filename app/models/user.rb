@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :devices
   
   has_many :role_memberships
-  has_many :role_requests, :foreign_key => "requester_id"
+  has_many :role_requests, :foreign_key => "requester_id", :primary_key => "id"
   accepts_nested_attributes_for :role_requests
   
   has_and_belongs_to_many :organizations
