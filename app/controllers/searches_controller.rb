@@ -3,7 +3,12 @@ class SearchesController < ApplicationController
   
   def show  
     params[:q] ||= ''
-    @results = User.search(params[:q].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any)
+    if params[:q].strip.size == 0
+      search_size = 30
+    else
+      search_size = 300
+    end
+    @results = User.search(params[:q].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any, :per_page => search_size)
     
     respond_to do |format|
       format.html
