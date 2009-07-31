@@ -47,3 +47,45 @@ Feature: Sending alerts to phones
       | phone        | message              |
       | 111-555-1212 | Chicken pox outbreak |
     
+  Scenario: Sending alerts to phone devices with acknoledgment
+    Given I am logged in as "keith.gaddis@example.com"
+    When I go to the edit profile page
+    And I select "Phone" from "Device Type"
+    And I fill in "Phone" with "111-555-1212"
+    And I press "Save Device"
+    Then I should see "Profile information saved."
+    When I go to the edit profile page
+    Then I should see "111-555-1212"
+    And I should have a phone device with the phone "111-555-1212"
+    And I sign out
+    
+    Given I log in as "john.smith@example.com"
+    And I am allowed to send alerts
+    When I go to the Alerts page
+    And I follow "New Alert"
+    When I fill out the alert form with:
+      | People | Keith Gaddis |
+      | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | Chicken pox outbreak |
+      | Severity | Moderate |
+      | Status | Actual |
+      | Acknowledge | <checked> |
+      | Communication methods | Phone |
+      | Sensitive | <unchecked> |
+      
+    And I press "Preview Message"
+    Then I should see a preview of the message
+    
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    
+    When delayed jobs are processed
+    Then the following phone calls should be made:
+      | phone        | message              |
+      | 111-555-1212 | Chicken pox outbreak |
+    And I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
+    
+    When "keith.gaddis@example.com" acknowledges the phone alert
+    And delayed jobs are processed
+    And I go to the Alerts page
+    Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 100%
