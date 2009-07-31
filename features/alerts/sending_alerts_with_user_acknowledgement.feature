@@ -10,7 +10,7 @@ Feature: Acknowledging an alert
     When I go to the Alerts page
     And I follow "New Alert"
  
-  Scenario: Acknowledge an alert through an email
+  Scenario: Acknowledging an alert through an email with signing in
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -33,7 +33,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
   
-  Scenario: Acknowledge an alert through an email without signing in
+  Scenario: Acknowledging an alert through an email without signing in
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -55,7 +55,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
     
-  Scenario: Acknowledge an alert through an email without signing in
+  Scenario: A user cannot acknowledge an sensitive alert through an email without signing in
      When I fill out the alert form with:
        | People | Keith Gaddis |
        | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -77,3 +77,4 @@ Feature: Acknowledging an alert
      And I follow the acknowledge alert link
      Then I should see "You are not authorized"
      And the alert should not be acknowledged
+  

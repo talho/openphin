@@ -54,4 +54,16 @@ describe "AlertAttempt" do
       alert_attempt.token.should_not be_nil
     end
   end
+  
+  context '#acknowledged?' do
+    it 'should return true when acknowledged_at is not blank' do
+      alert_attempt = AlertAttempt.new :acknowledged_at => Time.now
+      alert_attempt.acknowledged?.should be_true
+    end
+    
+    it 'should return false when acknowledged_at is blank' do
+      alert_attempt = AlertAttempt.new :acknowledged_at => nil
+      alert_attempt.acknowledged?.should be_false
+    end
+  end
 end

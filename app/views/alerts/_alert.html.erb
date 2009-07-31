@@ -34,4 +34,8 @@
   
 </dl>
 
-<%= button_to 'Acknowledge', acknowledge_alert_path(@alert), :method => :put if @alert.acknowledge? && !@alert.new_record? %>
+<% if @alert.acknowledged_by_user? %>
+  <strong>acknowledged</strong>
+<% else %>
+  <%= acknowledge_alert_button(@alert) %>
+<% end %>

@@ -39,5 +39,5 @@
 <% end %>
 
 <ul class="messages">
-  <%= render :partial => "dashboard/alert", :collection => current_user.recent_alerts, :as => :alert %>
+  <%= render :partial => "dashboard/alert", :collection => present_collection(current_user.recent_alerts), :as => :alert %>
 </ul>
