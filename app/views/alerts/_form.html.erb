@@ -1,32 +1,51 @@
 <div id="edit" class="<%= 'preview' if @preview %>">
   <%= hidden_field_tag :_action, params[:_action] %>
   
-  <%= form.label :title %>
-  <%= form.text_field :title %>
+  <p>
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </p>
+  
+  <p>
   <%= form.label :message %>
   <%= form.text_area :message, :rows => 5 %>
-
-  <%= form.label :short_message %>
-  <%= form.text_area :short_message, :rows => 2 %>
-  (can only be 160 characters)
-
-  <%= form.label :from_jurisdiction_id %>
-  <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
+  </p>
   
-  <%= form.label :status %>
-  <%= form.select :status, Alert::Statuses %>
-
-  <%= form.label :severity %>
-  <%= form.select :severity, Alert::Severities %>
-
-  <%= form.label :acknowledge, "Requires acknowledgement" %>
-  <%= form.check_box :acknowledge %>
+  <p>
+    <%= form.label :short_message %>
+    <%= form.text_area :short_message, :rows => 2 %>
+    (can only be 160 characters)
+  </p>
   
-  <%= form.label :sensitive, "Sensitive (Confidential)" %>
-  <%= form.check_box :sensitive %>
-
-  <%= form.label :delivery_time %>
-  <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]} %>
+  <p>
+    <%= form.label :from_jurisdiction_id %>
+    <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
+  </p>
+  
+  <p>
+    <%= form.label :status %>
+    <%= form.select :status, Alert::Statuses %>
+  </p>
+  
+  <p>
+    <%= form.label :severity %>
+    <%= form.select :severity, Alert::Severities %>
+  </p>
+  
+  <p>
+    <%= form.label :acknowledge, "Requires acknowledgement" %>
+    <%= form.check_box :acknowledge %>
+  </p>
+  
+  <p>
+    <%= form.label :sensitive, "Sensitive (Confidential)" %>
+    <%= form.check_box :sensitive %>
+  </p>
+  
+  <p>
+    <%= form.label :delivery_time %>
+    <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]} %>
+  </p>
   
   <fieldset>
     <legend>Communication Methods</legend>
