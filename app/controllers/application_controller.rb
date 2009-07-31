@@ -44,6 +44,19 @@ class ApplicationController < ActionController::Base
 
 private
 
+  # This makes #present always pass set the current_user on the presenter
+  # if the presenter accepts :current_user.
+  def present_with_current_user(*args)
+    returning present_without_current_user(*args) do |presenter|
+      if presenter.accepts?(:current_user)
+        presenter.instance_variable_set :@current_user, current_user
+      end
+    end
+  end
+  alias_method_chain :present, :current_user
+  helper_method :present
+  helper_method :present_collection
+
   def assign_public_role_if_no_role_is_provided
     role_requests = params[:user][:role_requests_attributes]
     if role_requests.has_key?("0") && role_requests["0"]["role_id"].blank?

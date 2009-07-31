@@ -1,24 +1,33 @@
-<li class="alert">
+<li class="alert" id="<%= dom_id(alert) %>">
   <div class="summary">
     <span class="created_at"><%= time_ago_in_words alert.created_at %></span>
     <span class="title"><%=h alert.title %></span>
     <span class="severity"><%=h alert.severity %></span>
   </div>
   
-  <dl class="detail" style="display:none">
-    <dt>Title:</dt>
-    <dd class="title"><%=h alert.title %></dd>
+  <div class="detail" style="display:none">
+    <dl>
+      <dt>Title:</dt>
+      <dd class="title"><%=h alert.title %></dd>
 
-    <dt>Message:</dt>
-    <dd class="message"><%=simple_format h(alert.message) %></dd>
+      <dt>Message:</dt>
+      <dd class="message"><%=simple_format h(alert.message) %></dd>
 
-    <dt>Severity:</dt>
-    <dd class="severity"><%=h alert.severity %></dd>
+      <dt>Severity:</dt>
+      <dd class="severity"><%=h alert.severity %></dd>
 
-    <dt>Status:</dt>
-    <dd class="status"><%=h alert.status %></dd>
+      <dt>Status:</dt>
+      <dd class="status"><%=h alert.status %></dd>
 
-    <dt>Acknowledge:</dt>
-    <dd class="acknowledge"><%=h alert.acknowledge? ? 'Yes' : 'No' %></dd>
-  </dl>
+      <dt>Acknowledge:</dt>
+      <dd class="acknowledge"><%=h alert.acknowledge? ? 'Yes' : 'No' %></dd>
+    </dl>
+
+    <% if alert.acknowledged_by_user? %>
+      <strong>acknowledged</strong>
+    <% else %>
+      <%= acknowledge_alert_button(alert) %>
+    <% end %>
+  </div>
+  
 </li>

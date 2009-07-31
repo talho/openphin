@@ -3,19 +3,19 @@ class AlertsController < ApplicationController
   skip_before_filter :login_required, :only => :token_acknowledge
   
   def index
-    @alerts = current_user.viewable_alerts#_within_jurisdictions
+    @alerts = present_collection current_user.viewable_alerts
   end
   
   def show
-    @alert = Alert.find(params[:id])
+    @alert = present Alert.find(params[:id])
   end
   
   def new
-    @alert = Alert.new_with_defaults
+    @alert = present Alert.new_with_defaults
   end
   
   def create
-    @alert = current_user.alerts.build params[:alert]
+    @alert = present current_user.alerts.build params[:alert]
     if params[:send]
       @alert.save
       @alert.deliver
@@ -46,6 +46,7 @@ class AlertsController < ApplicationController
       flash[:notice] = "Successfully sent the alert"
       redirect_to alerts_path
     else
+      @alert = present @alert
       @preview = true
       render :edit
     end
@@ -53,7 +54,6 @@ class AlertsController < ApplicationController
   
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id!(params[:id])    
-
     alert_attempt.acknowledge!
     flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
     redirect_to dashboard_path

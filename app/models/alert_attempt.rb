@@ -49,6 +49,10 @@ class AlertAttempt < ActiveRecord::Base
     end
   end
   
+  def acknowledged?
+    acknowledged_at || false
+  end
+  
   def acknowledge!
     update_attribute(:acknowledged_at, Time.zone.now)
   end

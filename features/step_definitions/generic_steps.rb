@@ -45,3 +45,7 @@ end
 Then /^I should not see a (.*) link$/ do |class_name|
   response.should_not have_selector('a', :class => ".#{class_name}")
 end
+
+Then /^I should not see an "([^\"]+)" button$/ do |button_text|
+  response.should_not have_selector('input[type=button]', :content => button_text)
+end
