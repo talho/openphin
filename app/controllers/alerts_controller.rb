@@ -16,6 +16,11 @@ class AlertsController < ApplicationController
   
   def create
     @alert = present current_user.alerts.build params[:alert]
+    #params[:alert][:user_ids].each do |user_id|
+    #  user = nil
+    #  user = User.find_by_id(user_id) if user_id.split.size > 0
+    #  @alert.users << user if user
+    #end
     if params[:send]
       @alert.save
       @alert.deliver
