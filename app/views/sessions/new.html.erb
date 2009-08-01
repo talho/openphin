@@ -1,28 +1,38 @@
-<h2>Sign in</h2>
+<div id="feature">
+  <h2>Public Health Information Network</h2>
+</div>
+<div class="details">
+  <p><strong>PHIN</strong> stands for <strong>Public Health Information Network</strong>. PHIN is a broad concept and collection of functions created by the Ctner for Disease Control. The implementation of the web-based portal allows the state of Texas to consolidate the many applications that serve PHIN goals. To learn more about the PHIN, visit CDC’s PHIN homepage.</p>
+  <p>Organizations may register their contact information and enable PHIN users to associate their profiles with an organization. <%= link_to 'Register your&nbsp;organization', new_user_path %>.</p>
+  <div class="callout">
+    <p>Powered by OpenPHIN, a collaborative project of the Texas Department of State Health Services and the Texas Association of Local Health Officials.</p>
+  </div>
+</div>
 
-<% form_for :session, :url => session_path do |form| %>
-  <div class="text_field">
-    <%= form.label :email %>
-    <%= form.text_field :email, :value => flash[:email_address] %>  
-  </div>
-  <div class="text_field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
-  <div class="text_field">
-    <%= form.check_box :remember_me %>
-    <%= form.label :remember_me %>
-  </div>
-  <div class="submit_field">
-    <%= form.submit "Sign in", :disable_with => "Please wait..." %>
-  </div>
-<% end %>
+<div class="aside">
+  <h2>Sign In to Your Account</h2>
 
-<ul>
-  <li>
-    <%= link_to "Sign up", new_user_path %>
-  </li>
-  <li>
-    <%= link_to "Forgot password?", new_password_path %>
-  </li>
-</ul>
+  <% form_for :session, :url => session_path, :html => {:id => 'sign_in_form'} do |form| %>
+    <p class="text_field">
+      <%= form.label :email %>
+      <%= form.text_field :email, :value => flash[:email_address] %>  
+    </p>
+    <p class="text_field">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+      <%= link_to "Forgot password?", new_password_path %>
+    </p>
+    <p class="checkbox_field">
+      <%= form.check_box :remember_me %>
+      <%= form.label :remember_me %>
+    </p>
+    <p class="submit_field">
+      <%= form.submit "Sign in", :disable_with => "Please wait..." %>
+      Need an account? <%= link_to "Sign up", new_user_path %>.
+    </p>
+  <% end %>
+  <ul id="associations">
+    <li class="texas_phin"><a href="#">Texas PHIN</a></li>
+    <li class="texas_dshs"><a href="#">Texas DSHS</a></li>
+  </ul>
+</div>
