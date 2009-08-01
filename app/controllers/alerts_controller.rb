@@ -58,19 +58,29 @@ class AlertsController < ApplicationController
   end
   
   def acknowledge
-    alert_attempt = current_user.alert_attempts.find_by_alert_id!(params[:id])    
-    alert_attempt.acknowledge!
-    flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+    alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
+    if alert_attempt.nil?
+      flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      If you believe this is in error, please contact support@#{HOST}."
+    else
+      alert_attempt.acknowledge!
+      flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+    end
     redirect_to dashboard_path
   end
 
   def token_acknowledge
-    alert_attempt = AlertAttempt.find_by_alert_id_and_token!(params[:id], params[:token])
-    if alert_attempt.alert.sensitive?
-      flash[:notice] = "You are not authorized to view this page"
+    alert_attempt = AlertAttempt.find_by_alert_id_and_token(params[:id], params[:token])
+    if alert_attempt.nil?
+      flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      If you believe this is in error, please contact support@#{HOST}."
     else
-      alert_attempt.acknowledge!
-      flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+      if alert_attempt.alert.sensitive?
+        flash[:notice] = "You are not authorized to view this page"
+      else
+        alert_attempt.acknowledge!
+        flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+      end
     end
     redirect_to dashboard_path
   end
