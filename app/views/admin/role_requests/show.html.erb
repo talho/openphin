@@ -1,19 +1,21 @@
 <p>
   <b>Requester:</b>
-  <%=h @role_request.requester_id %>
+  <%= link_to(@role_request.requester.name, user_profile_path(@role_request.requester)) %>
 </p>
 
 <p>
   <b>Role:</b>
-  <%=h @role_request.role_id %>
+  <%=h @role_request.role.name %>
 </p>
 
+<% if !@role_request.approver.blank? %>
 <p>
   <b>Approver:</b>
-  <%=h @role_request.approver_id %>
+  <%=h @role_request.approver.name %>
 </p>
+<% end %>
 
-
-<%= link_to 'Edit', edit_role_request_path(@role_request) %> |
-<%= link_to 'Assign Role', role_assignments_path %>
-<%= link_to 'Back', role_requests_path %>
+<%= link_to 'Approve Role', approve_admin_role_request_path(@role_request) %> or 
+<%= link_to 'Deny Role', deny_admin_role_request_path(@role_request) %>
+<br/><br/>
+<%= link_to 'Assign New Role', role_assignments_path %>
