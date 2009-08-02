@@ -23,6 +23,9 @@
 #  distribution_email        :string(255)
 #  contact_id                :integer(4)
 #  approved                  :boolean(1)
+#  contact_display_name      :string(255)
+#  contact_phone             :string(255)
+#  contact_email             :string(255)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

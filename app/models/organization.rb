@@ -23,6 +23,9 @@
 #  distribution_email        :string(255)
 #  contact_id                :integer(4)
 #  approved                  :boolean(1)
+#  contact_display_name      :string(255)
+#  contact_phone             :string(255)
+#  contact_email             :string(255)
 #
 
 class Organization < ActiveRecord::Base
@@ -31,7 +34,7 @@ class Organization < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   belongs_to :organization_type
-  belongs_to :contact, :class_name => "User"
+  has_one :contact, :class_name => "User", :primary_key => :contact_email, :foreign_key => 'email'
   
   default_scope :order => :name
   
@@ -75,6 +78,10 @@ class Organization < ActiveRecord::Base
     raise 'not foreign' unless foreign?
     cascade_alert = CascadeAlert.new(alert)
     File.open(File.join(phin_ms_queue, "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
+  end
+  
+  def email
+    distribution_email
   end
   
   def phin_ms_queue

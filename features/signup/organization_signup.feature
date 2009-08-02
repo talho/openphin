@@ -26,13 +26,9 @@ Feature: Signing up for an organization account
         | Distribution Email                      | staff@salvationarmydallas.org |
         | What Counties                           | Dallas County, Tarrant County, Denton County |
         | Description                             | This might be a mission statement |
-        | Password                                | apples                |
-        | Password confirmation                   | apples                |
-        | First name                              | John                  |
-        | Last name                               | Smith                 |
-        | Preferred name                          | Jonathan Smith |
-        | Email                                   | john@example.com |
-        | Preferred language                      | English |
+        | Name                                    | John Smith            |
+        | Email Address                           | john@example.com |
+        | Phone Number                            | 5125125112 |
         | Phone                                   | 5124444444 |
         | Fax                                     | 5123333333 |
         | Street                                  | 123 Willow Ave. Suite 34 |
@@ -43,16 +39,6 @@ Feature: Signing up for an organization account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
-    And the following users should receive the email:
-        | roles         | Texas / OrgAdmin |
-        | subject       | User requesting organization signup |
-        | body contains | Greater Dallas Salvation Army |
-        | body contains | Jonathan Smith (john@example.com) |
-        | body contains | 5124444444 |
-        | body contains | Dallas County |
-        | body contains | Tarrant County |
-        | body contains | Denton County |
-        | body contains | Non-Profit Organization |
 
 
   Scenario: Signing up as an organization when logged in

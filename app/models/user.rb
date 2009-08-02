@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   has_many :role_requests, :foreign_key => "requester_id", :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
   
-  has_and_belongs_to_many :organizations
+  has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
   has_many :alerts, :foreign_key => 'author_id'

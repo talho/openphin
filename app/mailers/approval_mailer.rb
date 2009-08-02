@@ -15,14 +15,22 @@ class ApprovalMailer < ActionMailer::Base
   end
 
   def organization_approval(organization)
-    recipients organization.contact.email
+    if organization.contact.blank?
+      organization.contact_email
+    else
+      recipients organization.contact.email
+    end
     from DO_NOT_REPLY
     subject "Confirmation of #{organization.name} organization registration"
     body :organization => organization
   end
 
   def organization_denial(organization)
-    recipients organization.contact.email
+    if organization.contact.blank?
+      recipients.organization.contact_email
+    else
+      recipients organization.contact.email
+    end
     from DO_NOT_REPLY
     subject "Organization registration request denied"
     body :organization => organization

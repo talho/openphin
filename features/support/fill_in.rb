@@ -33,7 +33,7 @@ module FeatureHelpers
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field
-        when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email'
+        when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
           fill_in field, :with => value
         when 'What County', 'Preferred language', 
           'What is your primary role', 

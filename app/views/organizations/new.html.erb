@@ -36,33 +36,18 @@
     <%= form.label :postal_code, 'Zip' %>
     <%= form.text_field :postal_code %><br/>
   </fieldset>
-  
+  <br/>
   <%- unless signed_in? -%>
     <fieldset>
       <legend>Contact Person</legend>
-      <% fields_for(:user, form.object.contact) do |user|  %>
-        <%= user.label :email %>
-        <%= user.text_field :email %><br/>
-  
-        <%= user.label :password %>
-        <%= user.text_field :password %><br/>
-  
-        <%= user.label :password_confirmation %>
-        <%= user.text_field :password_confirmation %><br/>
-  
-        <%= user.label :first_name %>
-        <%= user.text_field :first_name %><br/>
-  
-  
-        <%= user.label :last_name %>
-        <%= user.text_field :last_name %><br/>
-  
-        <%= user.label :display_name, 'Preferred name' %>
-        <%= user.text_field :display_name %><br/>
-    
-        <%= user.label(:preferred_language) %>
-        <%= user.select(:preferred_language, ["English","Spanish"]) %><br/>    
-      <% end %>
+      <%= form.label :contact_display_name, "Name" %>
+      <%= form.text_field :contact_display_name %><br/>
+
+      <%= form.label :contact_email, "Email Address" %>
+      <%= form.text_field :contact_email %><br/>
+
+      <%= form.label :contact_phone, "Phone Number" %>
+      <%= form.text_field :contact_phone %><br/>
     </fieldset>
   <%- end -%>
   

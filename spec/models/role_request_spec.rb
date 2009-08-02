@@ -3,9 +3,9 @@
 # Table name: role_requests
 #
 #  id              :integer(4)      not null, primary key
-#  requester_id    :string(255)
-#  role_id         :string(255)
-#  approver_id     :string(255)
+#  requester_id    :integer(4)
+#  role_id         :integer(4)
+#  approver_id     :integer(4)
 #  created_at      :datetime
 #  updated_at      :datetime
 #  jurisdiction_id :integer(4)
