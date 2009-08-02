@@ -6,6 +6,8 @@ Feature: An admin managing users
   Background:
     Given an organization named Red Cross
     And a jurisdiction named Dallas County
+    And the following users exist:
+      | Jane Smith | jane.smith@example.com | Public | Dallas County |
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
       | Quincy Jones   | quincy.jones@example.com   | 
@@ -67,3 +69,16 @@ Feature: An admin managing users
     Then I should see the profile page
     And I should not see any errors
     And I should see "Profile information saved"
+    
+    Scenario: Editing a user's profile and deleting roles
+      Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
+      When I view the profile page for jane.smith@example.com
+      And I follow "Edit"
+
+      Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
+      And I should see the profile edit form
+      And I should see "Health Officer in Dallas County"
+      And I follow "Remove Role"
+
+      Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
+      And I should see "Role Health Officer removed from Jane Smith in Dallas County"

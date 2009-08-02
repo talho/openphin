@@ -9,6 +9,13 @@ end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
   r.role_id = Role.admin.id
   r.user_id = u.id
 end
@@ -55,6 +62,13 @@ end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
   r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
   r.user_id = u.id
 end
@@ -68,6 +82,13 @@ u = User.seed(:email) do |m|
   m.password = 'password'
   m.password_confirmation = 'password'
 end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
@@ -86,6 +107,13 @@ u = User.seed(:email) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
   r.role_id = Role.find_by_name('Health Officer').id
   r.user_id = u.id
@@ -100,6 +128,13 @@ u = User.seed(:email) do |m|
   m.password = 'password'
   m.password_confirmation = 'password'
 end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Wise County').id
@@ -118,7 +153,7 @@ u = User.seed(:email) do |m|
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
-  r.jurisdiction_id = Jurisdiction.find_by_name('Potter County').id
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
   r.role_id = Role.find_by_name('Public').id
   r.user_id = u.id
 end

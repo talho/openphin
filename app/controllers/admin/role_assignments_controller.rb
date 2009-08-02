@@ -21,4 +21,27 @@ class Admin::RoleAssignmentsController < ApplicationController
       redirect_to admin_role_requests_path
     end
   end
+  
+  def destroy
+    role_assignment = RoleMembership.find(params[:id])
+    if role_assignment.blank?
+      flash[:notice] = "Invalid role membership specified"
+      if session[:return_to].blank?
+        redirect_to dashboard_path
+      else
+        redirect_to session[:return_to]
+      end
+    else
+      name = role_assignment.role.name
+      jurisdiction = role_assignment.jurisdiction.name
+      user = role_assignment.user.display_name
+      role_assignment.destroy
+      flash[:notice] = "Role #{name} removed from #{user} in #{jurisdiction}"
+      if session[:return_to].blank?
+        redirect_to dashboard_path
+      else
+        redirect_to session[:return_to]
+      end
+    end
+  end
 end

@@ -43,4 +43,18 @@ class Role < ActiveRecord::Base
   named_scope :user_roles, :conditions => { :user_role => true }
   
   validates_uniqueness_of :name
+
+  def is_public?
+    if name == Defaults[:public]
+      return true
+    end
+    false
+  end
+  
+  def self.is_public?(role)
+    if(role.name == Defaults[:public])
+      return true
+    end
+    false
+  end
 end
