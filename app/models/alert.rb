@@ -68,7 +68,7 @@ class Alert < ActiveRecord::Base
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   
   def self.new_with_defaults(options={})
-    defaults = {:delivery_time => 60}
+    defaults = {:delivery_time => 60, :severity => 'Minor'}
     self.new(options.merge(defaults))
   end
   
