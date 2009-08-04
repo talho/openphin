@@ -70,6 +70,7 @@ end
 
 Then /^the following users should receive the email:$/ do |table|
   When "delayed jobs are processed"
+  
   headers = table.headers
   recipients = if headers.first == "roles"
     jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
@@ -82,22 +83,26 @@ Then /^the following users should receive the email:$/ do |table|
   emails = ActionMailer::Base.deliveries
 
   recipients.each do |user|
-    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
-    email.should_not be_nil
+    email = ActionMailer::Base.deliveries.detect do |email| 
+      status = true
+      status &&= email.to.include?(user.email) &&
+      
     
-    table.rows.each do |row|
-      field, value = row.first, row.last
-      case field
-      when /subject/
-        email.subject.should == value
-      when /body contains/
-        email.body.should =~ /#{Regexp.escape(value)}/
-      when /body does not contain/
-        email.body.should_not =~ /#{Regexp.escape(value)}/
-      else
-        raise "The field #{field} is not supported, please update this step if you intended to use it."
+      table.rows.each do |row|
+        field, value = row.first, row.last
+        case field
+        when /subject/
+          status &&= email.subject == value
+        when /body contains/
+          status &&= email.body =~ /#{Regexp.escape(value)}/
+        when /body does not contain/
+          status &&= !(email.body =~ /#{Regexp.escape(value)}/)
+        else
+          raise "The field #{field} is not supported, please update this step if you intended to use it."
+        end
       end
     end
+    email.should_not be_nil
   end
 end
 
