@@ -15,13 +15,23 @@ class Service::Phone::AlertWithoutAcknowledgmentBuilder
         request.activation :start => Time.now.strftime("%Y%m%d%H%M%S"), :stop => (Time.now + retry_duration).strftime("%Y%m%d%H%M%S") do |activation|
           activation.campaign do |campaign|
             
-            campaign.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "0" do |program|
-              program.addresses :address => "c0", :retry_num => "0", :retry_wait => "0"
-              program.content do |content|
-                msg = alert.message
-                content.slot msg, :id => "1", :type => "TTS" 
+            if alert.message_recording_file_name.blank?
+              campaign.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "0" do |program|
+                program.addresses :address => "c0", :retry_num => "0", :retry_wait => "0"
+                program.content do |content|
+                  msg = alert.message
+                  content.slot msg, :id => "1", :type => "TTS"
+                end
               end
-            end
+            else
+              campaign.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "0" do |program|
+                program.addresses :address => "c0", :retry_num => "0", :retry_wait => "0"
+                program.content do |content|
+                  msg = alert.message
+                  content.slot Base64.encode64(IO.read(alert.message_recording.path)), :id => "1", :type => "VOICE", :encoding => "base64", :format => "wav"
+                end
+               end
+             end
 
             campaign.audience do |audience|
               audience.contact do |contact|

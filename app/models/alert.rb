@@ -54,6 +54,8 @@ class Alert < ActiveRecord::Base
            :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
   has_many :devices, :through => :deliveries, :source => :device, :uniq => true
 
+  has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
+
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
@@ -63,6 +65,7 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   validates_length_of :short_message, :maximum => 160
+  validates_attachment_content_type :message_recording, :content_type => "audio/x-wav"
   
   before_create :set_message_type
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"

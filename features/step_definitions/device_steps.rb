@@ -60,6 +60,8 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
       email.body.should =~ /#{Regexp.escape(value)}/
     when /body does not contain/
       email.body.should_not =~ /#{Regexp.escape(value)}/
+    when /attachments/
+      value.split(',').map { |m| email.attachments.map(&:original_filename).include? m }
     else
       raise "The field #{field} is not supported, please update this step if you intended to use it."
     end
@@ -132,25 +134,17 @@ Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
       xml = Nokogiri::XML(phone_call.body)
-      message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
-      phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
-      message == row["message"] && phone == row["phone"]
+      if row["recording"].blank?
+        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
+        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+        message == row["message"] && phone == row["phone"]
+      else
+        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
+        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+        recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
+        message == recording && phone == row["phone"]
+      end
     end
     call.should_not be_nil
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

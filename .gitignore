@@ -20,3 +20,4 @@ db/sphinx
 log/searchd.*.pid
 coverage/
 .autotest
+message_recordings

@@ -23,9 +23,17 @@ class AlertsController < ApplicationController
     #end
     if params[:send]
       @alert.save
-      @alert.deliver
-      flash[:notice] = "Successfully sent the alert"
-      redirect_to alerts_path
+      if @alert.valid?
+        @alert.deliver
+        flash[:notice] = "Successfully sent the alert"
+        redirect_to alerts_path
+      else
+        if @alert.errors['message_recording']
+          flash[:notice] = "<b>Attached message recording is not a valid wav formatted file</b>"
+          @preview = true
+          render :new
+        end
+      end
     else
       @preview = true
       render :new

@@ -100,6 +100,8 @@ module FeatureHelpers
         select_multiple value.split(',').map(&:strip), :from => 'alert_role_ids'
       when /Organization[s]?/
         select_multiple value.split(',').map(&:strip), :from => 'alert_organization_ids'
+      when "Message Recording"
+        attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
       else
         fill_in label, :with => value
       end
