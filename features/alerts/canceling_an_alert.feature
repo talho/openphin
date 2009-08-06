@@ -50,6 +50,7 @@ Feature: Canceling an alert
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alerts page
+    And I should see an alert titled "[Cancel] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert from Dallas County : John Smith : HAN Coordinator |
@@ -57,5 +58,3 @@ Feature: Canceling an alert
       | body contains | Type: Cancel   |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
       | body contains | Flying monkey disease is not contagious |
-    
-    

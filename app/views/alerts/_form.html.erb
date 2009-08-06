@@ -1,4 +1,10 @@
-<h3>Create a New Alert Message</h3>
+<% if !@update.blank? %>
+  <h3>Create an Alert Update</h3>
+<% elsif !@cancel.blank? %>
+  <h3>Create an Alert Cancellation</h3>
+<% else %>
+  <h3>Create a New Alert Message</h3>
+<% end %>
 <ul class="progress">
   <li class="first"><a href="#details"><span>1. Details</span></a></li>
   <li><a href="#audience"><span>2. Audience</span></a></li>
@@ -10,7 +16,11 @@
     <div class="details">
       <p>
         <%= form.label :title %>
-        <%= form.text_field :title %>
+        <% if @update.blank? && @cancel.blank? %>
+          <%= form.text_field :title %>
+	    <% else %>
+		  <%=h @alert.title %>
+	    <% end %>
       </p>
       
       <p>
@@ -26,6 +36,7 @@
       <p><small>This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is not utilized, the regular message body will be sent via short-message devices, possibly truncating the message.</small></p>
     </div>
     <div class="aside">
+      <% if @update.blank? && @cancel.blank? %>
       <p>
         <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
         <%= form.label :from_jurisdiction_id, 'Jurisdiction' %>
@@ -35,7 +46,8 @@
         <%= form.select :status, Alert::Statuses %>
         <%= form.label :status %>
       </p>
-      
+      <% end %>      
+
       <p>
         <%= form.select :severity, Alert::Severities %>
         <%= form.label :severity %>
@@ -55,7 +67,8 @@
         <%= form.check_box :sensitive %>
         <%= form.label :sensitive, "Sensitive (Confidential)" %>
       </p>
-      
+
+      <% if @update.blank? && @cancel.blank? %>
       <fieldset class="list">
         <legend>Communication Methods</legend>
         <ul class="check_selector">
@@ -66,9 +79,15 @@
           <% end %>
         </ul>
       </fieldset>
+	  <% else %>
+	    <% @devices.each do |device| %>
+		<%= hidden_field_tag "alert[device_types][]", device.type %>
+		<% end %>
+	  <% end %>
 
     </div>
   </div>
+  <% if @update.blank? && @cancel.blank? %>
   <div id="audience">    
     <fieldset class="filterable list">
       <legend>Jurisdictions</legend>
@@ -107,8 +126,9 @@
       <legend>People</legend>
       <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
     </fieldset>
-    <%= form.submit "Preview Message" %>
   </div>
+  <% end %>
+  <%= form.submit "Preview Message" %>
 
 </div>
 

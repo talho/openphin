@@ -42,22 +42,49 @@ class AlertsController < ApplicationController
   
   def edit
     alert = current_user.alerts.find params[:id]
+    # TODO : Remove when devices refactored
+    @devices = []
+    alert.devices.each do |device|
+      @devices << device
+    end
+
+    if !alert.original_alert.nil?
+      flash[:notice] = "You cannot make changes to updated or cancelled alerts"
+      redirect_to alerts_path
+    end
     @alert = present alert, :action => params[:_action]
+    @update = true if params[:_action].downcase == "update"
+    @cancel = true if params[:_action].downcase == "cancel"
   end
   
   def update
     original_alert = current_user.alerts.find params[:id]
-    @alert = if params[:_action] == 'cancel'
+    # TODO : Remove when devices refactored
+    @devices = []
+    original_alert.devices.each do |device|
+      @devices << device
+    end
+
+    @alert = if params[:_action].downcase == 'cancel'
+      @cancel = true
       original_alert.build_cancellation(params[:alert])
-    else
-      # TODO: implement this
-      # original_alert.build_update(params[:alert])
+    elsif params[:_action].downcase == 'update'
+      @update = true
+      original_alert.build_update(params[:alert])
     end
     if params[:send]
       @alert.save
-      @alert.batch_deliver
-      flash[:notice] = "Successfully sent the alert"
-      redirect_to alerts_path
+      if @alert.valid?
+        @alert.batch_deliver
+        flash[:notice] = "Successfully sent the alert"
+        redirect_to alerts_path
+      else
+        if @alert.errors['message_recording']
+          flash[:notice] = "<b>Attached message recording is not a valid wav formatted file</b>"
+          @preview = true
+          render :new
+        end
+      end
     else
       @alert = present @alert
       @preview = true

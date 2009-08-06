@@ -57,7 +57,7 @@ end
 
 When 'I click "$link" on "$title"' do |link, title|
   within(".alert:contains('#{title}')") do
-    click_link "View"
+    click_link link
   end
 end
 

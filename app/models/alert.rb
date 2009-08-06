@@ -62,6 +62,8 @@ class Alert < ActiveRecord::Base
   #has_many :devices, :through => :deliveries, :source => :device, :uniq => true
   has_many :devices,
     :finder_sql => 'SELECT DISTINCT devices.type FROM alerts INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id AND alerts.id=#{id}'
+  has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"]
+  has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"]
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
@@ -89,17 +91,59 @@ class Alert < ActiveRecord::Base
     self.new(options.merge(defaults))
   end
   
+  def cancelled?
+    if cancellation.nil?
+      return false
+    end
+    true
+  end
+  
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
+      self.jurisdictions.each do |jurisdiction|
+        alert.jurisdictions << jurisdiction
+      end
+      self.organizations.each do |organization|
+        alert.organizations << organization
+      end
+      self.roles.each do |role|
+        alert.roles << role
+      end
+      self.users.each do |user|
+        alert.users << user
+      end
     end
   end
-  
+
+  def build_update(attrs={})
+    attrs = attrs.stringify_keys
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
+    overwrite_attrs = attrs.slice(*changeable_fields)
+    self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
+      alert.title = "[Update] - #{title}"
+      alert.message_type = MessageTypes[:update]
+      alert.original_alert = self
+      self.jurisdictions.each do |jurisdiction|
+        alert.jurisdictions << jurisdiction
+      end
+      self.organizations.each do |organization|
+        alert.organizations << organization
+      end
+      self.roles.each do |role|
+        alert.roles << role
+      end
+      self.users.each do |user|
+        alert.users << user
+      end
+    end
+  end
+
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
   end
