@@ -83,7 +83,7 @@ module FeatureHelpers
           user = Given "a user named #{name.strip}"
           fill_in 'alert_user_ids', :with => user.id.to_s
         end
-      when 'Status', 'Severity', 'From Jurisdiction'
+      when 'Status', 'Severity', 'Jurisdiction'
         select value, :from => label
       when 'Acknowledge', 'Sensitive'
         id = "alert_#{label.parameterize('_')}"

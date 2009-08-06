@@ -31,3 +31,8 @@ Then '"$email" should not have the "$role" role in "$jurisdiction"' do |email, r
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction)
   user.role_memberships.find_by_role_id_and_jurisdiction_id(role, jurisdiction).should be_nil
 end  
+
+Then /^I should explicitly not see the "(.*)" role as an option$/ do |name|
+  role = Role.find_by_name!(name)
+  response.should_not have_selector("input[name*=role_id]", :value => role.id.to_s)
+end

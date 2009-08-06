@@ -12,7 +12,7 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the alerts page
     And I follow "New Alert"
-    Then I should explicitly not see "Admin" in the "Roles" dropdown
+    Then I should explicitly not see the "Admin" role as an option
 
   Scenario: User with one or more jurisdictions
     Given the following entities exists:
@@ -27,18 +27,17 @@ Feature: Sending alerts form
 
     When I go to the alerts page
     And I follow "New Alert"
-    Then I should see "Dallas County" in the "From Jurisdiction" dropdown
-    And I should see "Potter County" in the "From Jurisdiction" dropdown
-    And I should not see "Tarrant County" in the "From Jurisdiction" dropdown
+    Then I should see "Dallas County" as a from jurisdiction option
+    Then I should see "Potter County" as a from jurisdiction option
+    Then I should not see "Tarrant County" as a from jurisdiction option
     When I fill out the alert form with:
-      | From Jurisdiction | Potter County |
+      | Jurisdiction | Potter County |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
     And I press "Preview Message"
     Then I should see a preview of the message
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-      
     
     Then an alert exists with:
       | from_jurisdiction | Potter County |
@@ -52,7 +51,7 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the alerts page
     And I follow "New Alert"
-    Then I should not see "Blue Cross Blue Shield" in the "Organizations" dropdown
+    Then I should not see "Blue Cross Blue Shield" organization as an option
 
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
@@ -61,4 +60,4 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the alerts page
     And I follow "New Alert"
-    Then I should see "Federal" in the "Jurisdictions" dropdown
+    Then I should see "Federal" as a jurisdictions option

@@ -51,3 +51,9 @@ Then /^"([^\"]*)" contact should receive the following email:$/ do |org_name, ta
     Then "\"#{org.contact.email}\" should receive the email:", table
   end
 end
+
+
+Then /^I should not see "(.*)" organization as an option$/ do |name|
+  organization = Organization.find_by_name!(name)
+  response.should_not have_selector("select[name*=organization_id] option", :value => organization.id.to_s)
+end
