@@ -55,4 +55,4 @@ Feature: Assigning roles to users for roles
     Given I am logged in as "admin@dallas.gov"
     And I go to the roles requests page for an admin
     When I follow "Assign Role"
-    Then I should not explicitly see "Potter County" in the "Jurisdiction" dropdown
+    Then I should explicitly not see "Potter County" in the "Jurisdiction" dropdown

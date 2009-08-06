@@ -24,7 +24,7 @@ class AlertsController < ApplicationController
     if params[:send]
       @alert.save
       if @alert.valid?
-        @alert.deliver
+        @alert.batch_deliver
         flash[:notice] = "Successfully sent the alert"
         redirect_to alerts_path
       else
@@ -55,7 +55,7 @@ class AlertsController < ApplicationController
     end
     if params[:send]
       @alert.save
-      @alert.deliver
+      @alert.batch_deliver
       flash[:notice] = "Successfully sent the alert"
       redirect_to alerts_path
     else
@@ -67,7 +67,7 @@ class AlertsController < ApplicationController
   
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
-    if alert_attempt.nil?
+    if alert_attempt.nil? || alert_attempt.acknowledged?
       flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
       If you believe this is in error, please contact support@#{HOST}."
     else
@@ -79,7 +79,7 @@ class AlertsController < ApplicationController
 
   def token_acknowledge
     alert_attempt = AlertAttempt.find_by_alert_id_and_token(params[:id], params[:token])
-    if alert_attempt.nil?
+    if alert_attempt.nil? || alert_attempt.acknowledged?
       flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
       If you believe this is in error, please contact support@#{HOST}."
     else

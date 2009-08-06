@@ -28,4 +28,8 @@ class Device::EmailDevice < Device
   def deliver(alert)
     AlertMailer.deliver_alert(alert, user, self)
   end
+  
+  def batch_deliver(alert)
+    AlertMailer.deliver_batch_alert(alert)
+  end
 end

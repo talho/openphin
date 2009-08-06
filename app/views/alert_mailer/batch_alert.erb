@@ -1,0 +1,13 @@
+<%- if @alert.sensitive? -%>
+Sensitive: use secure means of retrieval
+<%- else -%>
+Title: <%= @alert.title %>
+Status: <%= @alert.status %>
+Type: <%= @alert.message_type %>
+
+<% if @alert.acknowledge? %>
+To acknowledge this alert, please click <%= acknowledge_alert_url(@alert) %>
+<% end %>
+
+<%= @alert.message %>
+<%- end -%>

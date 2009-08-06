@@ -46,5 +46,5 @@ class Delivery < ActiveRecord::Base
     end
     update_attribute :delivered_at, Time.zone.now
   end
-  handle_asynchronously :deliver
+  #handle_asynchronously :deliver
 end

@@ -1,9 +1,19 @@
+require 'nokogiri'
+
 class Service::Phone < Service::Base
   load_configuration_file RAILS_ROOT+"/config/phone.yml"
   
   def self.deliver_alert(alert, user, device, config=Service::Phone.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    TFCC.new(alert, user, device, config).deliver
+    response = TFCC.new(alert, user, device, config)
+    TFCC::CampaignActivationResponse.build(response,alert)
+  end
+
+    
+  def self.batch_deliver_alert(alert, device, config=Service::Phone.configuration)
+    initialize_fake_delivery(config) if config.fake_delivery?
+    response = TFCC.new(alert, device, config).batch_deliver
+    TFCC::CampaignActivationResponse.build(response,alert)
   end
 
   class << self
@@ -36,13 +46,71 @@ class Service::Phone < Service::Base
           :basic_auth => {:username => @username, :password => @password},
           :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html'})
         PHONE_LOGGER.info "21CC Response:\n#{response}\n\n"
+        return response
+      end
+    end
+    
+    class CampaignActivationResponse < ActiveRecord::Base
+      set_table_name "tfcc_campaign_activation_response"
+      belongs_to :alert
+      has_many :phone_alert_attempts, :source => :alert_attempts, :include => :devices, :through => :alert, :conditions => "devices.type = 'Device::PhoneDevice'"
+
+      def self.build(response, alert)
+        if !alert.blank?
+          if !response.blank? && !response['ucsxml'].blank? && !response['ucsxml']['version'].blank?
+            act_id = response['ucsxml']['response']['activation']['act_id']
+            camp_id = response['ucsxml']['response']['activation']['camp_id']
+            txn_id = response['ucsxml']['response']['txn_id']
+            txn_msg = response['ucsxml']['response']['txn_msg']
+            txn_err = response['ucsxml']['response']['txn_err']
+            self.create!(:alert => alert, :activation_id => act_id, :campaign_id => camp_id, :transaction_id => txn_id, :transaction_msg => txn_msg, :transaction_error => txn_err)
+          else
+            self.create!(:alert => alert)
+          end
+        end
+      end
+    end
+    
+    class DetailedActivationResults
+      include HTTParty
+      #format :html     # use if you need to see in xml format, otherwise response is an array
+      #set_table_name "tfcc_detailed_activation_results"
+      
+      def self.build(campaign_activation, options, type = "outdial")
+        url, username, password, client_id, user_id = options['url'], options['username'], options['password'], options['client_id'], options['user_id']
+
+        body = ""
+        xml = Builder::XmlMarkup.new :target => body, :indent => 2
+        xml.instruct!
+        xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
+          ucsxml.request :method => "query" do |request|
+            request.cli_id client_id
+            request.usr_id user_id
+            request.activation_detail :start_result => "0", :results_requested => "30000" do |activation_detail|
+              activation_detail.id campaign_activation.activation_id
+              activation_detail.channel type
+            end
+          end
+        end
+        PHONE_LOGGER.info "Sending activation detail request at #{Time.now}"
+        response = self.post(url, 
+          :body => body, 
+          :basic_auth => {:username => username, :password => password},
+          :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html'})
+        PHONE_LOGGER.info "21CC Response:\n#{response}\n\n"
+        File.open("response.xml","w") {|f| f.write(response) }
+        return response
       end
     end
     
     def initialize(alert, user, device, config)
       @alert, @user, @device, @config = alert, user, device, config
     end
-    
+
+    def initialize(alert, device, config)
+      @alert, @device, @config = alert, device, config
+    end
+
     def deliver
       PHONE_LOGGER.info <<-EOT.gsub(/^\s+/, '')
         |Building alert message:
@@ -51,10 +119,35 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      body = AlertWithoutAcknowledgmentBuilder.build(
-        @config.to_hash.merge(:alert => @alert, :user => @user, :device => @device).symbolize_keys
-      )
-      perform_delivery body
+      if @alert.acknowledge
+        body = AlertWithAcknowledgmentBuilder.build(
+          @config.to_hash.merge(:alert => @alert, :user => @user, :device => @device).symbolize_keys
+        )
+      else
+        body = AlertWithoutAcknowledgmentBuilder.build(
+          @config.to_hash.merge(:alert => @alert, :user => @user, :device => @device).symbolize_keys
+        )
+      end
+      return perform_delivery body
+    end
+    
+    def batch_deliver
+     PHONE_LOGGER.info <<-EOT.gsub(/^\s+/, '')
+        |Building alert message:
+        |  alert: #{@alert.id}
+        |  config: #{@config.options.inspect}
+      EOT
+      
+      if @alert.acknowledge
+        body = AlertWithAcknowledgmentBuilder.build(
+          @config.to_hash.merge(:alert => @alert, :device => @device).symbolize_keys
+        )
+      else
+        body = AlertWithoutAcknowledgmentBuilder.build(
+          @config.to_hash.merge(:alert => @alert, :device => @device).symbolize_keys
+        )
+      end
+      return perform_delivery body
     end
     
     private

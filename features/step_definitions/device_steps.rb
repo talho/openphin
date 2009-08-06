@@ -1,3 +1,9 @@
+When 'I acknowledge the phone message for "$title"' do |title|
+  a = Alert.find_by_title(title).alert_attempts.first
+  a.acknowledged_at = Time.zone.now
+  a.save!
+end
+
 Then /^"([^"]+). should have the communication device$/ do |email, table|
   user = User.find_by_email!(email)
   table.rows_hash.each do |type, value|
@@ -42,7 +48,11 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   # if row = table.rows_hash.detect{|row| row.key =~ /subject/}
   #   email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address) && email.subject =~ /#{Regexp.escape(row.value)}/}
   # else
+  if ActionMailer::Base.deliveries.reverse.detect.first.to.blank?
+    email = ActionMailer::Base.deliveries.reverse.detect {|email| email.bcc.include?(email_address)}
+  else
     email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address)}
+  end
   # end
   email.should_not be_nil
   
@@ -52,10 +62,10 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
       email.subject.should =~ /#{Regexp.escape(value)}/
     when /body contains alert acknowledgment link/
       attempt = User.find_by_email(email_address).alert_attempts.last
-      email.body.should contain(token_acknowledge_alert_url(attempt, attempt.token, :host => HOST))
+      email.body.should contain(acknowledge_alert_url(attempt, :host => HOST))
     when /body does not contain alert acknowledgment link/
       attempt = User.find_by_email(email_address).alert_attempts.last
-      email.body.should_not contain(token_acknowledge_alert_url(attempt, attempt.token, :host => HOST))
+      email.body.should_not contain(acknowledge_alert_url(attempt, :host => HOST))
     when /body contains/
       email.body.should =~ /#{Regexp.escape(value)}/
     when /body does not contain/
@@ -82,7 +92,11 @@ Then /^the following users should receive the email:$/ do |table|
   emails = ActionMailer::Base.deliveries
 
   recipients.each do |user|
-    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(user.email) }
+    if ActionMailer::Base.deliveries.reverse.detect.first.to.blank?
+      email = ActionMailer::Base.deliveries.reverse.detect {|email| email.bcc.include?(user.email)}
+    else
+      email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(user.email)}
+    end
     email.should_not be_nil
     
     table.rows.each do |row|
@@ -103,13 +117,29 @@ end
 
 Then '"$email" should not receive an email' do |email|
   When "delayed jobs are processed"
-  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) }
+  if ActionMailer::Base.deliveries.detect.first.blank?
+    email = nil
+  else
+    if ActionMailer::Base.deliveries.detect.first.to.blank?
+      if ActionMailer::Base.deliveries.detect.first.bcc.blank?
+        email = nil
+      else
+        email = ActionMailer::Base.deliveries.detect {|email| email.bcc.include?(email)}
+      end
+    else
+      email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email)}
+    end
+  end
   email.should be_nil
 end
 
 Then '"$email" should not receive an email with the subject "$subject"' do |email, subject|
   When "delayed jobs are processed"
-  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) && email.subject.include?(subject) }
+  if ActionMailer::Base.deliveries.detect.first.to.blank?
+    email = ActionMailer::Base.deliveries.detect {|email| email.bcc.include?(email) && email.subject.include?(subject)}
+  else
+    email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) && email.subject.include?(subject)}
+  end
   email.should be_nil
 end
 
@@ -135,11 +165,11 @@ Then /^the following phone calls should be made:$/ do |table|
     call = Service::Phone.deliveries.detect do |phone_call|
       xml = Nokogiri::XML(phone_call.body)
       if row["recording"].blank?
-        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
+        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
         phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
         message == row["message"] && phone == row["phone"]
       else
-        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot').inner_text
+        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
         phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
         recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
         message == recording && phone == row["phone"]

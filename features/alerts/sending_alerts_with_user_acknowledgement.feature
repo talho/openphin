@@ -77,4 +77,50 @@ Feature: Acknowledging an alert
      And I follow the acknowledge alert link
      Then I should see "You are not authorized"
      And the alert should not be acknowledged
-  
+
+     Scenario: Acknowledging an alert through phone
+       Given I am logged in as "keith.gaddis@example.com"
+       When I go to the edit profile page
+       And I select "Phone" from "Device Type"
+       And I fill in "Phone" with "111-555-1212"
+       And I press "Save Device"
+       Then I should see "Profile information saved."
+       When I go to the edit profile page
+       Then I should see "111-555-1212"
+       And I should have a phone device with the phone "111-555-1212"
+       And I sign out
+    
+       Given I log in as "john.smith@example.com"
+       And I am allowed to send alerts
+       When I go to the Alerts page
+       And I follow "New Alert"
+       When I fill out the alert form with:
+         | People | Keith Gaddis |
+         | Title  | H1N1 SNS push packs to be delivered tomorrow |
+         | Message | Chicken pox outbreak |
+         | Severity | Moderate |
+         | Status | Actual |
+         | Acknowledge | <checked> |
+         | Communication methods | Phone |
+         | Sensitive | <unchecked> |
+      
+       And I press "Preview Message"
+       Then I should see a preview of the message
+    
+       When I press "Send"
+       Then I should see "Successfully sent the alert"
+       And I sign out
+
+       When delayed jobs are processed
+       Then the following phone calls should be made:
+         | phone        | message              |
+         | 111-555-1212 | Chicken pox outbreak |
+       
+       When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
+       And delayed jobs are processed
+       And I log in as "keith.gaddis@example.com"
+
+       When I am on the dashboard page
+       Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
+       And I should not see an "Acknowledge" button
+       But I should see "acknowledged"

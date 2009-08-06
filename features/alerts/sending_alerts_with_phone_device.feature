@@ -47,7 +47,7 @@ Feature: Sending alerts to phones
       | phone        | message              |
       | 111-555-1212 | Chicken pox outbreak |
     
-  Scenario: Sending alerts to phone devices with acknoledgment
+  Scenario: Sending alerts to phone devices with acknowledgment
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I select "Phone" from "Device Type"

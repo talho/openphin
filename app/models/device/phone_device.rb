@@ -28,4 +28,8 @@ class Device::PhoneDevice < Device
   def deliver(alert)
     Service::Phone.deliver_alert(alert, user, self)
   end
+  
+  def batch_deliver(alert)
+    Service::Phone.batch_deliver_alert(alert, self)
+  end
 end

@@ -52,7 +52,16 @@ class Alert < ActiveRecord::Base
            :through => :alert_attempts,
            :uniq => true,
            :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
-  has_many :devices, :through => :deliveries, :source => :device, :uniq => true
+  has_many :unacknowledged_users,
+           #:class_name => "User",
+           #:foreign_key => :user_id,
+           :source => :user,
+           :through => :alert_attempts,
+           :uniq => true,
+           :conditions => ["alert_attempts.acknowledged_at IS NULL"]
+  #has_many :devices, :through => :deliveries, :source => :device, :uniq => true
+  has_many :devices,
+    :finder_sql => 'SELECT DISTINCT devices.type FROM alerts INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id AND alerts.id=#{id}'
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
@@ -69,6 +78,11 @@ class Alert < ActiveRecord::Base
   
   before_create :set_message_type
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
+  named_scope :devices, {
+    :select => "DISTINCT devices.type",
+    :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
+    :conditions => "alerts.id=#{object_id}"
+  }
   
   def self.new_with_defaults(options={})
     defaults = {:delivery_time => 60, :severity => 'Minor'}
@@ -122,6 +136,22 @@ class Alert < ActiveRecord::Base
     end
   end
   #handle_asynchronously :deliver
+  
+  def batch_deliver
+    # 1 - explode all known users and batch deliver to them
+    find_user_recipients.each do |user|
+      alert_attempts.create!(:user => user).batch_deliver
+    end
+    # 2 - batch deliver to foreign orgs
+    if jurisdictions.any?(&:root?)
+      organizations.select(&:foreign).each do |organization|
+        alert_attempts.create!(:organization => organization).batch_deliver
+      end
+    end
+    devices.each do |device|
+      device.batch_deliver(self)
+    end
+  end
   
   def acknowledgments
     alert_attempts.all(:conditions => "acknowledged_at IS NOT NULL")

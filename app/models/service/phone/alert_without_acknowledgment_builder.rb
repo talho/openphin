@@ -1,10 +1,20 @@
 class Service::Phone::AlertWithoutAcknowledgmentBuilder
   
   def self.build(options)
-    alert, user, device = options[:alert], options[:user], options[:device]
+    users = []
+    alert = options[:alert]
     client_id, user_id = options[:client_id], options[:user_id]
+    users << {:user => options[:user], :device => options[:device]} if !options[:user].blank? && !options[:device].blank? 
     retry_duration = options[:retry_duration].scan(/\d+/).first.to_i.hours
     
+    if users.size == 0
+      alert.alert_attempts.with_device('Device::PhoneDevice').each do |alert_attempt|
+        alert_attempt.user.devices.phone.each do |device|
+          users << {:user => alert_attempt.user, :device => device}
+        end
+      end
+    end
+
     body = ""
     xml = Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
@@ -34,8 +44,12 @@ class Service::Phone::AlertWithoutAcknowledgmentBuilder
              end
 
             campaign.audience do |audience|
-              audience.contact do |contact|
-                contact.c0 device.phone, :type => "phone" 
+              users.each do |user|
+                audience.contact do |contact|
+                  contact.c0 user[:user].email, :type => "string"
+                  contact.c1 user[:device].phone, :type => "phone"
+                  contact.data1 "1", :type => "data_entry"
+                end
               end
             end
 

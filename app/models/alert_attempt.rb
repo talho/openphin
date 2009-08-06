@@ -21,6 +21,7 @@ class AlertAttempt < ActiveRecord::Base
   has_many :devices, :through => :deliveries, :uniq => true
 
   named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
+  named_scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"
   named_scope :with_device, lambda {|device_type|
     if device_type.is_a?(Class)
       d=device_type.name
@@ -42,6 +43,17 @@ class AlertAttempt < ActiveRecord::Base
     if organization.blank?
       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
         deliveries.create!(:device => device).deliver
+      end
+    else
+      deliveries.create!
+      organization.deliver(alert)
+    end
+  end
+  
+  def batch_deliver
+    if organization.blank?
+      user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
+        deliveries.create!(:device => device)
       end
     else
       deliveries.create!

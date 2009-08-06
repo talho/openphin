@@ -16,4 +16,24 @@ class AlertMailer < ActionMailer::Base
     end
   end
   
+  def batch_alert(alert)
+    role_membership = alert.author.role_memberships.first
+    users = []
+    alert.unacknowledged_users.each do |user|
+      users << "#{user.name} <#{user.email}>"
+    end
+    bcc users
+    # TODO: should this show their job title instead of their role?
+    # If role, which one?
+    from DO_NOT_REPLY
+    subject "#{alert.severity} Health Alert from #{role_membership.jurisdiction.name} : #{alert.author.name} : #{role_membership.role.name}"
+    body :alert => alert
+    if !alert.message_recording_file_name.blank?
+      attachment alert.message_recording.content_type do |a|
+        a.body = File.read(alert.message_recording.path)
+        a.filename = alert.message_recording_file_name
+      end
+    end
+  end
+  
 end
