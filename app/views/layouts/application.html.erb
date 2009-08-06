@@ -6,15 +6,15 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>OpenPHIN: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'master','jquery.crossSelect','jquery.ui.autocomplete', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', :cache => 'all' %>
+  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', :cache => 'all' %>
 </head>
 <body>
-<div id="wrapper">  
+<div id="wrapper">
   <div id="header">
     <div id="current_user">
       <%- if signed_in? -%>
-        <p class="info">Signed in as <%=h current_user.name %></p>
+        <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
         <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
       <%- end -%>
     </div>
@@ -28,6 +28,7 @@
         <li><%= link_to 'Add a User', new_admin_user_path %></li>
       <%- end -%>
       <%= content_tag(:li, link_to('View Alerts', alerts_path, :class => '.viewalerts')) if current_user.alerter? %>
+      <%= content_tag(:li, link_to('Find People', search_path, :class => 'search')) if signed_in? && current_user.has_non_public_role? %>
     <%- else -%>  
       <li><%= link_to 'Sign Up', new_user_path %></li>
       <li><%= link_to 'Register Your Organization', new_organization_path %></li>
@@ -35,17 +36,7 @@
     <%- end -%>
     </ul>
   </div>
-  <div id="content">
-    <%- if signed_in? && current_user.has_non_public_role? -%>
-      <div id="search">
-        <% form_tag search_path, :method => :get do %>
-          <%= label_tag :q, 'Search' %>
-          <%= text_field_tag :q %>
-          <%= submit_tag 'Go' %>
-        <% end %>
-      </div>
-    <%- end -%>
-    
+  <div id="content">    
     <%- [:notice, :success, :failure].each do |type| -%>
       <%- if flash[type] -%>
         <p class="<%= type %>"><%= flash[type] %></p>

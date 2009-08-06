@@ -1,86 +1,118 @@
-<div id="edit" class="<%= 'preview' if @preview %>">
+<h3>Create a New Alert Message</h3>
+<ul class="progress">
+  <li class="first"><a href="#details"><span>1. Details</span></a></li>
+  <li><a href="#audience"><span>2. Audience</span></a></li>
+  <li><a href="#preview"<%= ' class="current"' if @preview %>><span>3. Preview</span></a></li>
+</ul>
+<div id="edit">
   <%= hidden_field_tag :_action, params[:_action] %>
-  
-  <p>
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </p>
-  
-  <p>
-  <%= form.label :message %>
-  <%= form.text_area :message, :rows => 5 %>
-  </p>
-  
-  <p>
-    <%= form.label :short_message %>
-    <%= form.text_area :short_message, :rows => 2 %>
-    (can only be 160 characters)
-  </p>
-  
-  <p>
-    <%= form.label :from_jurisdiction_id %>
-    <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
-  </p>
-  
-  <p>
-    <%= form.label :status %>
-    <%= form.select :status, Alert::Statuses %>
-  </p>
-  
-  <p>
-    <%= form.label :severity %>
-    <%= form.select :severity, Alert::Severities %>
-  </p>
-  
-  <p>
-    <%= form.label :acknowledge, "Requires acknowledgement" %>
-    <%= form.check_box :acknowledge %>
-  </p>
-  
-  <p>
-    <%= form.label :sensitive, "Sensitive (Confidential)" %>
-    <%= form.check_box :sensitive %>
-  </p>
-  
-  <p>
-    <%= form.label :delivery_time %>
-    <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]} %>
-  </p>
-  
-  <fieldset>
-    <legend>Communication Methods</legend>
-    <% Device::Types.each do |type| %>
-      <%= check_box_tag 'alert[device_types][]', type, form.object.device_types.include?(type.to_s), :id => "alert_#{dom_class(type)}" %>
-      <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
-    <% end %>
-  </fieldset>
-  
-  <fieldset>
-    <legend>Jurisdictions</legend>
-    <%= form.label :jurisdiction_ids, "Jurisdictions", :style => "display:none" %>
-    <%= form.select :jurisdiction_ids, Jurisdiction.all.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
-  </fieldset>
-
-  <fieldset>
-    <legend>Limit to Certain Roles</legend>
-    <%= form.label :role_ids, "Roles", :style => "display:none" %>
-    <%= form.select :role_ids, Role.user_roles.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
-  </fieldset>
+  <div id="details">
+    <div class="details">
+      <p>
+        <%= form.label :title %>
+        <%= form.text_field :title %>
+      </p>
       
-  <fieldset>
-    <legend>Limit to Certain Organizations</legend>
-    <%= form.label :organization_ids, "Organizations", :style => "display:none" %>
-    <%= form.select :organization_ids, Organization.approved.map{|m| [m.name, m.id]}, {}, :multiple => :multiple, :class => 'crossSelect' %>
-  </fieldset>
-  
-  <fieldset>
-    <legend>People</legend>
-	<% form.object.users.each do |user| %>
-	  <%= hidden_field_tag "alert[user_ids][]", user.id, :id => user.id if RAILS_ENV != "test"%>
-	<% end %>
-    <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
-  </fieldset>
-  <%= form.submit "Preview Message" %>
+      <p>
+      <%= form.label :message %>
+      <%= form.text_area :message, :rows => 5 %>
+      </p>
+      
+      <p>
+        <%= form.label :short_message %>
+        <%= form.text_area :short_message, :rows => 2 %>
+      </p>
+      
+      <p><small>This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is not utilized, the regular message body will be sent via short-message devices, possibly truncating the message.</small></p>
+    </div>
+    <div class="aside">
+      <p>
+        <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
+        <%= form.label :from_jurisdiction_id, 'Jurisdiction' %>
+      </p>
+      
+      <p>
+        <%= form.select :status, Alert::Statuses %>
+        <%= form.label :status %>
+      </p>
+      
+      <p>
+        <%= form.select :severity, Alert::Severities %>
+        <%= form.label :severity %>
+      </p>
+      
+      <p>
+        <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]} %>
+        <%= form.label :delivery_time %>
+      </p>
+      
+      <p>
+        <%= form.check_box :acknowledge %>
+        <%= form.label :acknowledge, "Requires acknowledgement" %>
+      </p>
+      
+      <p>
+        <%= form.check_box :sensitive %>
+        <%= form.label :sensitive, "Sensitive (Confidential)" %>
+      </p>
+      
+      <fieldset class="list">
+        <legend>Communication Methods</legend>
+        <ul class="check_selector">
+          <% Device::Types.each do |type| %>
+            <li><%= check_box_tag 'alert[device_types][]', type, form.object.device_types.include?(type.to_s), :id => "alert_#{dom_class(type)}" %>
+            <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
+            </li>
+          <% end %>
+        </ul>
+      </fieldset>
+
+    </div>
+  </div>
+  <div id="audience">    
+    <fieldset class="filterable list">
+      <legend>Jurisdictions</legend>
+      <ul class="check_selector">
+        <%- Jurisdiction.all.each do |j| -%>
+          <li><%= check_box_tag 'alert[jurisdiction_ids][]', j.id, form.object.jurisdiction_ids.include?(j.id), :id => "alert_jurisdiction_#{j.id}" %>
+          <%= label_tag "alert_jurisdiction_#{j.id}", j.name %>
+          </li>
+        <%- end -%>
+      </ul>
+    </fieldset>
+    
+    <fieldset class="filterable list">
+      <legend>Limit Roles</legend>
+      <ul class="check_selector">
+        <%- Role.user_roles.each do |r| -%>
+          <li><%= check_box_tag 'alert[role_ids][]', r.id, form.object.role_ids.include?(r.id), :id => "alert_role_#{r.id}" %>
+          <%= label_tag "alert_role_#{r.id}", r.name %>
+          </li>
+        <%- end -%>
+      </ul>
+    </fieldset>
+        
+    <fieldset class="filterable list last">
+      <legend>Organizations</legend>
+      <ul class="check_selector">
+        <%- Organization.approved.each do |o| -%>
+          <li><%= check_box_tag 'alert[organization_ids][]', o.id, form.object.role_ids.include?(r.id), :id => "alert_org_#{o.id}" %>
+          <%= label_tag "alert_org_#{o.id}", o.name %>
+          </li>
+        <%- end -%>
+      </ul>
+    </fieldset>
+    
+    <fieldset class="people">
+      <legend>People</legend>
+	  <% form.object.users.each do |user| %>
+	    <%= hidden_field_tag "alert[user_ids][]", user.id, :id => user.id %>
+	  <% end %>
+      <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
+    </fieldset>
+    <%= form.submit "Preview Message" %>
+  </div>
+
 </div>
 
 <% if @preview %>
