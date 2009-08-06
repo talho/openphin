@@ -83,7 +83,7 @@ module FeatureHelpers
           user = Given "a user named #{name.strip}"
           fill_in 'alert_user_ids', :with => user.id.to_s
         end
-      when 'Status', 'Severity', 'Jurisdiction'
+      when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time'
         select value, :from => label
       when 'Acknowledge', 'Sensitive'
         id = "alert_#{label.parameterize('_')}"
@@ -94,12 +94,14 @@ module FeatureHelpers
         end
       when 'Communication methods'
         check value
-      when /Jurisdiction[s]?/, /Role[s]?/, /Organization[s]?/
+      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
-      else
+      when "Message", "Title"
         fill_in label, :with => value
+      else
+        raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end
     end
 

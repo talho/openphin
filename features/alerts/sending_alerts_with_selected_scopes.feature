@@ -233,7 +233,7 @@ Feature: Creating and sending alerts
       
   Scenario: Sending an alert to specific Jurisdictions/Roles/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
-      | Jurisdiction  | Tarrant County  |
+      | Jurisdictions | Tarrant County  |
       | Roles         | Health Officer |
       | Organization  | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |

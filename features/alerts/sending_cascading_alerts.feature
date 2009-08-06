@@ -25,7 +25,7 @@ Feature: Sending cascading alerts
 
   Scenario: Sending a cascading alert
     When I fill out the alert form with:
-      | Jurisdiction | Federal                                  |
+      | Jurisdictions | Federal                                 |
       | Role         | Immunization Director                    |
       | Organization | Louisiana State Public Health Department |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
@@ -42,7 +42,7 @@ Feature: Sending cascading alerts
   
   Scenario: Trying to send cascading alert that should not cascade
     When I fill out the alert form with:
-      | Jurisdiction | Texas                                    |
+      | Jurisdictions | Texas                                   |
       | Role         | Immunization Director                    |
       | Organization | Louisiana State Public Health Department |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |

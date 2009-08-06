@@ -105,9 +105,6 @@
     
     <fieldset class="people">
       <legend>People</legend>
-	  <% form.object.users.each do |user| %>
-	    <%= hidden_field_tag "alert[user_ids][]", user.id, :id => user.id %>
-	  <% end %>
       <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
     </fieldset>
     <%= form.submit "Preview Message" %>
