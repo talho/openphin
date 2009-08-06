@@ -96,7 +96,7 @@
       <legend>Organizations</legend>
       <ul class="check_selector">
         <%- Organization.approved.each do |o| -%>
-          <li><%= check_box_tag 'alert[organization_ids][]', o.id, form.object.role_ids.include?(r.id), :id => "alert_org_#{o.id}" %>
+          <li><%= check_box_tag 'alert[organization_ids][]', o.id, form.object.organization_ids.include?(o.id), :id => "alert_org_#{o.id}" %>
           <%= label_tag "alert_org_#{o.id}", o.name %>
           </li>
         <%- end -%>
