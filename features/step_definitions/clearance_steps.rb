@@ -58,11 +58,11 @@ end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  sent = ActionMailer::Base.deliveries.first
-  assert_equal [user.email], sent.to
-  assert_match /password/i, sent.subject
+  find_email(email, Cucumber::Ast::Table.new([
+    ['subject', 'password'],
+    ['body contains', user.token]
+  ])).should_not be_nil
   assert !user.token.blank?
-  assert_match /#{user.token}/, sent.body
 end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|

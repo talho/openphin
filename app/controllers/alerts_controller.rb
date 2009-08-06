@@ -15,7 +15,7 @@ class AlertsController < ApplicationController
   end
   
   def create
-    @alert = present current_user.alerts.build params[:alert]
+    @alert = present current_user.alerts.build(params[:alert])
     #params[:alert][:user_ids].each do |user_id|
     #  user = nil
     #  user = User.find_by_id(user_id) if user_id.split.size > 0
