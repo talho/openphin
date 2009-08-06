@@ -30,6 +30,7 @@ table td 																			{padding:5px 20px 5px 0;}
 #header ul																		{float:right; height:47px; list-style-type:none;}
 #header li																		{float:left; list-style:none;}
 #header li a																	{display:block; height:47px; line-height:47px; padding:0 20px 0 0; color:#666; font-weight:bold;}
+#header strong																{color:#fff;}
 #current_user																	{height:24px; text-align:right; color:#fff; line-height:24px; font-size:11px; padding:0 10px;}
 #current_user a																{color:#fff;}
 #current_user .info														{float:left;}
@@ -39,12 +40,15 @@ table td 																			{padding:5px 20px 5px 0;}
 #feature 																			{width:680px; height:260px; margin:-23px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.jpg) no-repeat;}
 #content p																		{margin:0 0 15px; line-height:1.6;}
 #content div.details													{width:410px; float:left;}
-#content div.aside														{width:200px; float:right;}
+#content div.aside														{width:210px; float:right;}
 #content div.callout													{font-size:11px; background:#efefef url(images/feature_bottom.png) no-repeat bottom left; margin:0 0 15px;}
 #content div.callout p												{margin:0; color:#999; padding:10px 15px 10px; background:url(images/feature_top.png) no-repeat top left;}
+#content h3																		{color:#999; margin:-10px 0 15px;}
+#audience																			{margin:0 0 15px;}
 
 div.aside h2																	{margin:0 0 5px; color:#0299C5; border-bottom:1px solid #d9d9d9;}
-form label																		{font-weight:bold; color:#999;}
+form label,
+form legend																		{font-weight:bold; color:#666;}
 #content div.aside p.text_field								{margin:0 0 5px;}
 #content div.aside p.text_field a							{font-size:11px;}
 div.aside p.text_field input									{width:196px;}
@@ -57,3 +61,45 @@ ul#associations li														{float:left; list-style:none; width:100px; heigh
 ul#associations li a													{display:block; width:100px; height:55px; text-indent:-9999px; overflow:hidden;}
 ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat;}
 ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat;}
+
+#edit .details label													{display:block;}
+#edit .details input,
+#edit .details textarea												{width:405px;}
+#edit .aside 																	{padding-top:1.6em;}
+#edit .aside p																{margin-bottom:8px;}
+#alert_title																	{font-size:22px; font-weight:bold;}
+#alert_message																{height:200px;}
+#alert_short_message													{height:50px;}
+
+ul.progress																		{width:650px; height:26px; background:url(images/progress.png) no-repeat; margin:0 0 15px; padding:0;}
+ul.progress li																{float:left; padding:0; margin:0; line-height:26px; list-style:none;}
+ul.progress a																	{display:block; font-size:11px; color:#333; font-weight:bold;}
+ul.progress span															{display:block; padding:0 25px 0 15px; background:url(images/progress_arrow.png) no-repeat 100% 50%;}
+ul.progress li a.current											{background:url(images/progress_current.png) no-repeat; margin:0 0 0 -13px;}
+ul.progress li.first a.current								{background-image:url(images/progress_current_first.png); margin-left:0;}
+ul.progress li a.current span									{padding-left:28px; background-image:url(images/progress_current_arrow.png);}
+ul.progress li.first a.current span						{padding-left:15px;}
+
+div.wrapped																		{border:1px solid #d9d9d9; -webkit-border-radius:6px; -moz-border-radius:6px; padding:8px 10px; margin:10px 0 15px;}
+div.wrapped label															{margin:0 15px 0 0;}
+form legend																		{padding:0 0 5px; display:block;}
+
+#edit fieldset.list														{width:200px; position:relative; margin:0 24px 20px 0;}
+#details fieldset.list												{clear:both; margin:20px 0 0;}
+#audience fieldset.list 											{height:340px; float:left;}
+#edit fieldset.last														{margin-right:0;}
+#edit fieldset ul.check_selector							{margin:0; padding:0; position:absolute; top:20px; left:0; right:0; border:1px solid #d9d9d9;}
+#audience fieldset ul.check_selector							{top:20px; left:0; right:0; bottom:26px; overflow:auto;}
+#edit fieldset ul.check_selector li						{position:relative; list-style:none;}
+#edit fieldset ul.check_selector li + li			{border-top:1px solid #efefef;}
+#edit fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
+#edit fieldset ul.check_selector input				{position:absolute; left:6px; top:6px;}
+#edit fieldset ul.check_selector li.checked label	{background:#EBF2FD; color:#333;}
+
+fieldset div.list_filter 											{position:absolute; bottom:0; height:19px; border:1px solid #d9d9d9; background:#efefef; padding:3px 5px; left:0; right:0;}
+fieldset div.list_filter input								{width:187px;}
+fieldset div.list_filter input.empty					{color:#999;}
+fieldset.people																{clear:both; margin:0 0 15px;}
+
+#edit button,
+#edit input.submit														{clear:both; padding:0; margin:0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
