@@ -33,8 +33,8 @@ Feature: Sending sensitive alerts
     And I should be on the alerts page
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
       | body contains | Sensitive: use secure means of retrieval |
+      | body does not contain | Status: Actual |
+      | body does not contain | Type: Alert    |
       | body does not contain | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body does not contain | For more details, keep on reading... |

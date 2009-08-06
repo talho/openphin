@@ -36,36 +36,7 @@ Then /^I should see in my list of devices$/ do |table|
 end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
-  When "delayed jobs are processed"
-  # Reverse here to ensure we're looking at the newest emails first.
-  # Otherwise, this will run into issues if earlier emails are sent to the same person.
-  # if row = table.rows_hash.detect{|row| row.key =~ /subject/}
-  #   email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address) && email.subject =~ /#{Regexp.escape(row.value)}/}
-  # else
-    email = ActionMailer::Base.deliveries.reverse.detect {|email| email.to.include?(email_address)}
-  # end
-  email.should_not be_nil
-  
-  table.rows_hash.each do |field, value|
-    case field
-    when /subject/
-      email.subject.should =~ /#{Regexp.escape(value)}/
-    when /body contains alert acknowledgment link/
-      attempt = User.find_by_email(email_address).alert_attempts.last
-      email.body.should contain(token_acknowledge_alert_url(attempt, attempt.token, :host => HOST))
-    when /body does not contain alert acknowledgment link/
-      attempt = User.find_by_email(email_address).alert_attempts.last
-      email.body.should_not contain(token_acknowledge_alert_url(attempt, attempt.token, :host => HOST))
-    when /body contains/
-      email.body.should =~ /#{Regexp.escape(value)}/
-    when /body does not contain/
-      email.body.should_not =~ /#{Regexp.escape(value)}/
-    when /attachments/
-      value.split(',').map { |m| email.attachments.map(&:original_filename).include? m }
-    else
-      raise "The field #{field} is not supported, please update this step if you intended to use it."
-    end
-  end
+  find_email(email_address, table).should_not be_nil
 end
 
 Then /^the following users should receive the email:$/ do |table|
@@ -79,43 +50,18 @@ Then /^the following users should receive the email:$/ do |table|
   end
   
   recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
-    
-  emails = ActionMailer::Base.deliveries
-
+  
   recipients.each do |user|
-    email = ActionMailer::Base.deliveries.detect do |email| 
-      status = true
-      status &&= email.to.include?(user.email) &&
-      
-    
-      table.rows.each do |row|
-        field, value = row.first, row.last
-        case field
-        when /subject/
-          status &&= email.subject == value
-        when /body contains/
-          status &&= email.body =~ /#{Regexp.escape(value)}/
-        when /body does not contain/
-          status &&= !(email.body =~ /#{Regexp.escape(value)}/)
-        else
-          raise "The field #{field} is not supported, please update this step if you intended to use it."
-        end
-      end
-    end
-    email.should_not be_nil
+    Then %Q{"#{user.email}" should receive the email:}, table
   end
 end
 
 Then '"$email" should not receive an email' do |email|
-  When "delayed jobs are processed"
-  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) }
-  email.should be_nil
+  find_email(email).should be_nil  
 end
 
 Then '"$email" should not receive an email with the subject "$subject"' do |email, subject|
-  When "delayed jobs are processed"
-  email = ActionMailer::Base.deliveries.detect {|email| email.to.include?(email) && email.subject.include?(subject) }
-  email.should be_nil
+  find_email(email, Cucumber::Ast::Table.new([['subject', subject]])).should be_nil
 end
 
 Then "the following users should not receive any emails" do |table|
@@ -126,6 +72,10 @@ Then "the following users should not receive any emails" do |table|
     jurisdiction.users.with_role(role_name)
   elsif headers.first == "emails"
     headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
+  end
+  
+  recipients.each do |user|
+    Then %Q{"#{user.email}" should not receive an email}
   end
 end
   
