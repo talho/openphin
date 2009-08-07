@@ -64,6 +64,12 @@ Rails::Initializer.run do |config|
   config.gem 'httparty',
     :lib => 'httparty',
     :version => '0.4.4'
+  config.gem 'chronic',
+    :source => 'http://gems.github.com',
+    :version => '0.2.3'
+  config.gem 'packet',
+    :source => 'http://gems.github.com',
+    :version => '0.1.15'
 end
 
 require 'happymapper'
