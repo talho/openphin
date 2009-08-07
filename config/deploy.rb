@@ -34,7 +34,7 @@ end
  
 after 'deploy:update_code', 'deploy:symlink_configs'
 after 'deploy:update_code', 'deploy:install_gems'
-after 'deploy:install_gems', 'deploy:restart_backroundrb'
+after 'deploy:install_gems', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
   desc "we need a database. this helps with that."
