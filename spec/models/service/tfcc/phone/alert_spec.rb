@@ -80,11 +80,13 @@ describe Service::TFCC::Phone::Alert do
       xml.should have_xpath("//ucsxml/request/activation/campaign/program", :channel => "outdial")
     end
 
-    it "should set the program template to 0" do
-      xml = @tfcc_alert.build!
-      xml.should have_xpath("//ucsxml/request/activation/campaign/program", :template => "0")
+    context "when the alert does not require acknowledgement" do
+      it "should set the program template to 0" do
+        xml = @tfcc_alert.build!
+        xml.should have_xpath("//ucsxml/request/activation/campaign/program", :template => "0")
+      end
     end
-    
+
     it "should set the program name" do
       xml = @tfcc_alert.build!
       xml.should have_xpath("//ucsxml/request/activation/campaign/program", :name => "OpenPhin Alert ##{@tfcc_alert.alert.id}")
@@ -139,6 +141,15 @@ describe Service::TFCC::Phone::Alert do
         (xml / "ucsxml/request/activation/campaign/program/content/slot").text.should == Base64.encode64(IO.read(@wav_file_path))
       end
     end
-
+  
+    context "when the alert does requires acknowledgement" do
+      it "should set the program template to 9" do
+        @tfcc_alert.alert.acknowledge = true
+        xml = @tfcc_alert.build!
+        xml.should have_xpath("//ucsxml/request/activation/campaign/program", :template => "9")
+      end
+    end
+    
   end
+  
 end
