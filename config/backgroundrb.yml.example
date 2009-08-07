@@ -1,0 +1,12 @@
+--- 
+:backgroundrb: 
+  :port: 11006
+  :ip: localhost
+  :environment: production
+:schedules:
+  :query_tfcc_for_acknowledgments_worker:
+    :query:
+      :trigger_args:
+        :start: <%= Time.now + 5.seconds %>
+        :end: <%= Time.now + 3.minutes %>
+        :repeat_interval: <%= 1.minute %>

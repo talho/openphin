@@ -98,7 +98,6 @@ class Service::Phone < Service::Base
           :basic_auth => {:username => username, :password => password},
           :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html'})
         PHONE_LOGGER.info "21CC Response:\n#{response}\n\n"
-        File.open("response.xml","w") {|f| f.write(response) }
         return response
       end
     end

@@ -43,12 +43,19 @@ namespace :deploy do
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
     run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
+    run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
   end
   
   desc "install any gem dependencies"
   task :install_gems, :role => :app do 
     rails_env = fetch(:rails_env, RAILS_ENV)
     run "cd #{release_path}; rake gems:install RAILS_ENV=#{rails_env}"
+  end
+
+  desc "restart backgroundrb"
+  task :restart_backgroundrb, :role => :app do
+    rails_env = fetch(:rails_env, RAILS_ENV)
+    run "cd #{release_path}; script/backgroundrb restart -e production"
   end
 end
 

@@ -37,3 +37,6 @@
 [submodule "vendor/plugins/thinking-sphinx"]
 	path = vendor/plugins/thinking-sphinx
 	url = git://github.com/freelancing-god/thinking-sphinx.git
+[submodule "vendor/plugins/backgroundrb"]
+	path = vendor/plugins/backgroundrb
+	url = git://github.com/gnufied/backgroundrb.git
