@@ -7,21 +7,21 @@
 <% end %>
 <ul class="progress">
   <li class="first"><a href="#details"><span>1. Details</span></a></li>
-  <li><a href="#audience"><span>2. Audience</span></a></li>
+  <% if @update.blank? && @cancel.blank? %><li><a href="#audience"><span>2. Audience</span></a></li><% end %>
   <li><a href="#preview"<%= ' class="current"' if @preview %>><span>3. Preview</span></a></li>
 </ul>
 <div id="edit">
   <%= hidden_field_tag :_action, params[:_action] %>
   <div id="details">
     <div class="details">
-      <p>
-        <%= form.label :title %>
-        <% if @update.blank? && @cancel.blank? %>
+      <% if @update.blank? && @cancel.blank? %>
+        <p>
+          <%= form.label :title %>
           <%= form.text_field :title %>
+        </p>
 	    <% else %>
-		  <%=h @alert.title %>
+		  <h2><%=h @alert.title %></h2>
 	    <% end %>
-      </p>
       
       <p>
       <%= form.label :message %>
@@ -34,6 +34,7 @@
       </p>
       
       <p><small>This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is not utilized, the regular message body will be sent via short-message devices, possibly truncating the message.</small></p>
+      <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message" %></p><% end %>
     </div>
     <div class="aside">
       <% if @update.blank? && @cancel.blank? %>
@@ -84,11 +85,10 @@
 		<%= hidden_field_tag "alert[device_types][]", device.type %>
 		<% end %>
 	  <% end %>
-
     </div>
   </div>
-  <% if @update.blank? && @cancel.blank? %>
   <div id="audience">    
+    <% if @update.blank? && @cancel.blank? %>
     <fieldset class="filterable list">
       <legend>Jurisdictions</legend>
       <ul class="check_selector">
@@ -128,8 +128,9 @@
     </fieldset>
     
     <%= form.submit "Preview Message" %>
+    <%- end -%>
+    
   </div>
-  <%- end -%>
 </div>
 
 <% if @preview %>

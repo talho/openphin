@@ -26,7 +26,9 @@
 			$(this).liveFilter();
 		});
 		
-		$('#details .details').append('<p><button class="audience">Select an Audience &gt;</button></p>');
+		if ($('ul.progress a[href=#audience]').length > 0)
+			$('#details .details').append('<p><button class="audience">Select an Audience &gt;</button></p>');
+		
 		$('#details button.audience').click(function() {
 			$('ul.progress a[href=#audience]').click();
 			return false;
@@ -50,7 +52,7 @@
 		}
 		
 		$('ul.progress a[href=#preview]').click(function() {
-			$('#new_alert').submit();
+			$(this).parents('form').submit();
 		})
   })
 })(jQuery);

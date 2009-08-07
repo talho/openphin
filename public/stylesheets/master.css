@@ -66,6 +66,7 @@ ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no
 #edit .details label													{display:block;}
 #edit .details input,
 #edit .details textarea												{width:405px;}
+#edit .details input.submit										{width:149px;}
 #edit .aside																	{padding-top:1.6em;}
 #edit .aside p																{margin-bottom:8px;}
 #alert_title																	{font-size:22px; font-weight:bold;}
