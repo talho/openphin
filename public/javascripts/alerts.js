@@ -31,6 +31,11 @@
 			$('ul.progress a[href=#audience]').click();
 			return false;
 		});
+		
+		$('#preview button.edit').click(function() {
+			$('ul.progress a[href=#details]').click();
+			return false;
+		});
 
 		var $current = $('ul.progress a.current');
 		if ($current.length > 0) {

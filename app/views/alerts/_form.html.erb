@@ -127,22 +127,23 @@
       <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
     </fieldset>
   </div>
-  <% end %>
-  <%= form.submit "Preview Message" %>
 
+  <%= form.submit "Preview Message" %>
 </div>
 
 <% if @preview %>
   <div id="preview">
     <%= render @alert %>
-    <div class="ask_recording">
-  	  Would you like to attach a voice recorded message now?<br/>
-	  <%= form.label :message_recording %>
-	  <%= form.file_field :message_recording %><br/>
-	  Message recording must be in a PCM (WAV) 8000Hz mono format<br/><br/>
+    <div class="details callout">
+  	  <p>Would you like to attach a voice recorded message now?<br />
+	      <%= form.label :message_recording %>
+	      <%= form.file_field :message_recording %><br />
+	      Message recording must be in a PCM (WAV) 8000Hz mono format
+	    </p>
    </div>
-  
-    <%= link_to 'Edit', '#edit', :class => 'edit' %>
-    <%= form.submit "Send", :name => 'send' %>
+   <div class="details actions">
+    <button class="edit">&lt; Edit this Alert</button>
+    <%= form.submit "Send this Alert", :name => 'send' %>
+   </div>
   </div> 
 <% end %>

@@ -1,38 +1,34 @@
-<dl>
-  <dt>Title:</dt>
-  <dd class="title"><%=h @alert.title %></dd>
-
-  <dt>Message:</dt>
-  <dd class="message"><%=simple_format h(@alert.message) %></dd>
-
-  <dt>Severity:</dt>
-  <dd class="severity"><%=h @alert.severity %></dd>
-
-  <dt>Status:</dt>
-  <dd class="status"><%=h @alert.status %></dd>
-
-  <dt>Acknowledge:</dt>
-  <dd class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></dd>
-
-  <dt>Delivery Time:</dt>
-  <dd class="delivery_time"><%=h @alert.human_delivery_time %></dd>
-
-  <dt>Communication Methods:</dt>
-  <dd class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></dd>
-
-  <dt>Jurisdictions:</dt>
-  <dd class="jurisdictions"><%=h @alert.jurisdictions.map(&:name).to_sentence %></dd>
-
-  <dt>Roles:</dt>
-  <dd class="roles"><%=h @alert.roles.map(&:name).to_sentence %></dd>
-
-  <dt>Organizations:</dt>
-  <dd class="organizations"><%=h @alert.organizations.map(&:name).to_sentence %></dd>
-
-  <dt>People:</dt>
-  <dd class="people"><%=h @alert.users.map(&:name).to_sentence %></dd>
+<h2><%=h @alert.title %></h2>
+<div class="details">
+  <%=simple_format h(@alert.message) %>
   
-</dl>
+  <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
+
+  <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h @alert.jurisdictions.blank? ? 'None' : @alert.jurisdictions.map(&:name).to_sentence %></p>
+
+  <p class="roles"><strong>Roles:</strong> <%=h @alert.roles.blank? ? 'None' : @alert.roles.map(&:name).to_sentence %></p>
+
+  <p class="organizations"><strong>Organizations:</strong> <%=h @alert.organizations.blank? ? 'None' : @alert.organizations.map(&:name).to_sentence %></p>
+
+  <p class="people"><strong>People:</strong> <%=h @alert.users.blank? ? 'No additional people selected' : @alert.users.map(&:name).to_sentence %></p>
+</div>
+
+<div class="aside">
+  <h5>Severity</h5>
+  <p class="severity"><%=h @alert.severity %></p>
+
+  <h5>Status</h5>
+  <p class="status"><%=h @alert.status %></p>
+
+  <h5>Acknowledge</h5>
+  <p class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></p>
+
+  <h5>Delivery Time</h5>
+  <p class="delivery_time"><%=h @alert.human_delivery_time %></p>
+
+  <h5>Methods</h5>
+  <p class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
+</div>
 
 <% if @alert.acknowledged_by_user? %>
   <strong>acknowledged</strong>
