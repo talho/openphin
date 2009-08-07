@@ -91,7 +91,7 @@ Feature: Creating and sending alerts
       | Communication methods | E-mail                          |
       | Delivery Time | 60 minutes                              |
     
-    When I follow "Edit"
+    When I press "Edit"
     And I make changes to the alert form with:
       | Title    | Something Different |
     And I press "Preview Message"

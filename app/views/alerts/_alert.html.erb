@@ -1,6 +1,6 @@
-<h2><%=h @alert.title %></h2>
+<h2 class="title"><%=h @alert.title %></h2>
 <div class="details">
-  <%=simple_format h(@alert.message) %>
+  <%=simple_format h(@alert.message), :class => 'message' %>
   
   <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
 
