@@ -1,9 +1,15 @@
 <%- if @alert.sensitive? -%>
+
 Sensitive: use secure means of retrieval
+
 <%- else -%>
+
 Title: <%= @alert.title %>
-Status: <%= @alert.status %>
-Type: <%= @alert.message_type %>
+
+Alert ID: <%= @alert.id %>
+Agency: <%= @jurisdiction.name %>
+Sender: <%= @author.display_name %>
+Time Sent: <%= @alert.created_at %>
 
 <% if @alert.acknowledge? %>
 To acknowledge this alert, please click <%= acknowledge_alert_url(@alert) %>

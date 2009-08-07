@@ -35,7 +35,7 @@ Feature: Sending audio alerts
     
     When delayed jobs are processed
     Then "keith.gaddis@example.com" should receive the email:
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | attachments   | calm-river.wav |
       
   Scenario: Sending a phone alert with an audio file

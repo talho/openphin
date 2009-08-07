@@ -59,10 +59,11 @@ I want to save alert templates for reuse and activate them at a later date
     Then I should see "Successfully sent the alert"
     And I should be on the logs page
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Severe Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Severe Health Alert The Martians are coming |
       | body contains | Title: The Martians are coming |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | The martians have landed, run for your lives! |
 
 

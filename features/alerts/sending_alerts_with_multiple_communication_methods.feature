@@ -33,7 +33,7 @@ Feature: Sending alerts to multiple communication devices
     Then I should see "Successfully sent the alert"
 
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
     And "keith.gaddis@example.com" should receive the IM:
-      | contains      | Moderate Health Alert from Dallas County : John Smith : Health Officer |
+      | contains      | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
     

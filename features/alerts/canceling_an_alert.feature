@@ -53,8 +53,9 @@ Feature: Canceling an alert
     And I should see an alert titled "[Cancel] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : HAN Coordinator |
-      | body contains | Status: Actual |
-      | body contains | Type: Cancel   |
+      | subject       | Moderate Health Alert from Dallas County [Cancel] - Flying Monkey Disease |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | Flying monkey disease is not contagious |

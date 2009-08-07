@@ -55,10 +55,11 @@ Feature: Creating and sending alerts
     Then I should see "Successfully sent the alert"
     And I should be on the alerts page
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
 
   Scenario: Previewing an alert
@@ -76,7 +77,8 @@ Feature: Creating and sending alerts
       | Delivery Time | 60 minutes                              |
     
     And I press "Preview Message"
-    Then I should see a preview of the message with:
+    Then I see WTF is going on
+    And I should see a preview of the message with:
       | Jurisdictions | Dallas County, Potter County            |
       | Roles | Health Officer, Epidemiologist                  |
       | Organizations | Red Cross                               |
@@ -124,10 +126,11 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
@@ -148,12 +151,12 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | For more details, keep on reading... |
-    
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
+      | body contains | For more details, keep on reading... |    
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -174,12 +177,13 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-      
+            
   Scenario: Sending an alert to an Jurisdictions/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
       | Jurisdictions | Dallas County |
@@ -199,12 +203,13 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-
+      
   Scenario: Sending an alert to an Jurisdictions/Organizations when the organization contains sub-organizations scopes who the alerts are sent to
     When I fill out the alert form with:
       | Jurisdictions | Texas |
@@ -224,13 +229,13 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com, jason.phipps@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-
-      
+            
   Scenario: Sending an alert to specific Jurisdictions/Roles/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
       | Jurisdictions | Tarrant County  |
@@ -251,10 +256,11 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | brian.ryckbost@example.com |
-      | subject       | Moderate Health Alert from Dallas County : John Smith : Health Officer |
-      | body contains | Status: Actual |
-      | body contains | Type: Alert    |
+      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
+      | body contains | Alert ID: 1 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
     And "ethan.waldo@example.com" should not receive an email
     

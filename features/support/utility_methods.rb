@@ -16,7 +16,7 @@ module FeatureHelpers
         if(!email.to.blank?)
           status &&= email.to.include?(email_address)
         end
-        
+
         unless table.nil?
           table.rows.each do |row|
             field, value = row.first, row.last

@@ -24,7 +24,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully sent the alert"
     When delayed jobs are processed
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Health Alert from Dallas County |
+      | subject       | Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains alert acknowledgment link | |
 
     When I sign out
@@ -47,7 +47,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully sent the alert"
     When delayed jobs are processed
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Health Alert from Dallas County |
+      | subject       | Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains alert acknowledgment link | |
 
     When I sign out
