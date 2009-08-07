@@ -10,7 +10,7 @@
 			return false;
 		});
 		$('#edit fieldset input:checkbox').click(function() {
-			$(this).parents('li').toggleClass('checked');
+			$(this).siblings('label').toggleClass('checked');
 		});
 		
 		$('fieldset.filterable').append('<div class="list_filter"><input type="search" name="q" value="Filter this List" class="empty" /></div>');
@@ -50,6 +50,14 @@
 		} else {
 			$('ul.progress a:first').click();
 		}
+		
+		$('ul.check_selector>li>ul>li>ul>li').append('<a href="#" class="toggle closed">Toggle</a>');
+		$('ul.check_selector ul ul ul').hide();
+		
+		$('ul.check_selector a.toggle').click(function() {
+			$(this).toggleClass('closed').siblings('ul').toggle();
+			return false;
+		})
 		
 		$('ul.progress a[href=#preview]').click(function() {
 			$(this).parents('form').submit();

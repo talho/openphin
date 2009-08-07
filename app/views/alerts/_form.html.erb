@@ -91,13 +91,7 @@
     <% if @update.blank? && @cancel.blank? %>
     <fieldset class="filterable list">
       <legend>Jurisdictions</legend>
-      <ul class="check_selector">
-        <%- Jurisdiction.all.each do |j| -%>
-          <li><%= check_box_tag 'alert[jurisdiction_ids][]', j.id, form.object.jurisdiction_ids.include?(j.id), :id => "alert_jurisdiction_#{j.id}" %>
-          <%= label_tag "alert_jurisdiction_#{j.id}", j.name %>
-          </li>
-        <%- end -%>
-      </ul>
+      <%= jurisdiction_list %>
     </fieldset>
     
     <fieldset class="filterable list">
