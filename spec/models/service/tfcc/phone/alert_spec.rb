@@ -142,14 +142,27 @@ describe Service::TFCC::Phone::Alert do
       end
     end
   
-    context "when the alert does requires acknowledgement" do
-      it "should set the program template to 9" do
+    context "when the alert requires acknowledgement" do
+      before(:each) do
         @tfcc_alert.alert.acknowledge = true
+      end
+      
+      it "should set the program template to 9" do
         xml = @tfcc_alert.build!
         xml.should have_xpath("//ucsxml/request/activation/campaign/program", :template => "9")
       end
+      
+      it "should include a slots for the options to acknowledge the alert" do
+        xml = @tfcc_alert.build!
+        path = "//ucsxml/request/activation/campaign/program/content/slot"
+        xml.should have_xpath(path.dup, :type => "TTS", :id => "2", :content => "You have received a Health Alert.  Please login to the Health Alert Network Application to view the alert message.")
+        xml.should have_xpath(path.dup, :type => "TTS", :id => "3", :content => "Please press one to acknowledge this health alert.")
+        xml.should have_xpath(path.dup, :type => "TTS", :id => "4", :content => "The number pressed is not valid.  Please press one to acknowledge this health alert.")
+        xml.should have_xpath(path.dup, :type => "TTS", :id => "5", :content => "You have failed to acknowledge this message.  Good-bye.")
+        xml.should have_xpath(path.dup, :type => "TTS", :id => "6", :content => "You have successfully acknowledged this health alert.  Thanks for your cooperation.  Good-bye.")
+      end
     end
-    
+
   end
   
 end
