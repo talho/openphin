@@ -102,3 +102,8 @@ Factory.define :email_device, :class => Device::EmailDevice do |m|
   m.association :user
   m.sequence(:email_address) {|t| "EmailDevice#{t}@example.com"}
 end
+
+Factory.define :phone_device, :class => Device::PhoneDevice do |m|
+  m.association :user
+  m.sequence(:phone) {|t| "555-121#{t}"}
+end

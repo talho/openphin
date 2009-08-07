@@ -70,6 +70,7 @@ Rails::Initializer.run do |config|
   config.gem 'packet',
     :source => 'http://gems.github.com',
     :version => '0.1.15'
+  config.gem 'validatable', :version => '1.6.7'
 end
 
 require 'happymapper'

@@ -19,6 +19,8 @@ class Device < ActiveRecord::Base
   
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
+  
+  serialize :options, Hash
 
   Types = [Device::EmailDevice, Device::PhoneDevice]
 
