@@ -70,9 +70,6 @@ Factory.define :alert do |m|
   m.severity 'Moderate'
   m.delivery_time 60
   m.from_jurisdiction { Factory(:jurisdiction) }
-  #  status      :string(255)
-  #  acknowledge :boolean
-  #  author_id   :integer
 end
 
 Factory.define :alert_attempt do |m|
@@ -101,4 +98,9 @@ end
 Factory.define :email_device, :class => Device::EmailDevice do |m|
   m.association :user
   m.sequence(:email_address) {|t| "EmailDevice#{t}@example.com"}
+end
+
+Factory.define :phone_device, :class => Device::PhoneDevice do |m|
+  m.association :user
+  m.sequence(:phone) {|t| "555-121#{t}"}
 end

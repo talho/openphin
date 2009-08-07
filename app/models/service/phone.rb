@@ -2,17 +2,18 @@ require 'nokogiri'
 
 class Service::Phone < Service::Base
   load_configuration_file RAILS_ROOT+"/config/phone.yml"
-  
+
   def self.deliver_alert(alert, user, device, config=Service::Phone.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    response = TFCC.new(alert, user, device, config)
+    response = TFCC.new(alert, device, config, [user])
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
     
   def self.batch_deliver_alert(alert, device, config=Service::Phone.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    response = TFCC.new(alert, device, config).batch_deliver
+    users = alert.alert_attempts.with_device(Device::PhoneDevice).map{ |aa| aa.user }
+    response = TFCC.new(alert, device, config, users).batch_deliver
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
@@ -102,32 +103,27 @@ class Service::Phone < Service::Base
       end
     end
     
-    def initialize(alert, user, device, config)
-      @alert, @user, @device, @config = alert, user, device, config
-    end
-
-    def initialize(alert, device, config)
-      @alert, @device, @config = alert, device, config
+    def initialize(alert, device, config, users)
+      @alert, @device, @config, @users = alert, device, config, users
     end
 
     def deliver
       PHONE_LOGGER.info <<-EOT.gsub(/^\s+/, '')
         |Building alert message:
         |  alert: #{@alert.id}
-        |  user_id: #{@user.id}
+        |  user_ids: #{@users.map(&:id).inspect}
         |  config: #{@config.options.inspect}
       EOT
       
-      if @alert.acknowledge
-        body = AlertWithAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :user => @user, :device => @device).symbolize_keys
-        )
-      else
-        body = AlertWithoutAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :user => @user, :device => @device).symbolize_keys
-        )
-      end
-      return perform_delivery body
+      body = Service::TFCC::Phone::Alert.new(
+        :alert => @alert, 
+        :users => @users,
+        :client_id => @config['client_id'],
+        :user_id => @config['user_id'],
+        :retry_duration => @config['retry_duration']
+      ).build!
+
+      perform_delivery body
     end
     
     def batch_deliver
@@ -137,16 +133,15 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      if @alert.acknowledge
-        body = AlertWithAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :device => @device).symbolize_keys
-        )
-      else
-        body = AlertWithoutAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :device => @device).symbolize_keys
-        )
-      end
-      return perform_delivery body
+      body = Service::TFCC::Phone::Alert.new(
+        :alert => @alert, 
+        :users => @users, 
+        :client_id => @config['client_id'],
+        :user_id => @config['user_id'],
+        :retry_duration => @config['retry_duration']
+      ).build!
+
+      perform_delivery body
     end
     
     private
