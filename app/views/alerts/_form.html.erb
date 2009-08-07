@@ -126,10 +126,9 @@
       <legend>People</legend>
       <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
     </fieldset>
+    
+    <%= form.submit "Preview Message" %>
   </div>
-
-  <%= form.submit "Preview Message" %>
-</div>
 
 <% if @preview %>
   <div id="preview">
