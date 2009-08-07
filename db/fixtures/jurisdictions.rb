@@ -8,7 +8,7 @@ texas = Jurisdiction.seed(:name) do |j|
 end
 texas.move_to_child_of(federal)
 
-FasterCSV.open(File.join(RAILS_ROOT, "db/fixtures/regions.csv"), :headers => true) do |roles|
+FasterCSV.open(File.join(RAILS_ROOT, "db/fixtures/jurisdiction_regions.csv"), :headers => true) do |roles|
   roles.each do |row|
     Jurisdiction.seed(:name) do |region|
       region.name = row['name']
