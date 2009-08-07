@@ -7,7 +7,7 @@
   :backgroundrb:
     :port: 11007
     :lazy_load: true
-    :environemnt: production
+    :environment: production
 
 :schedules:
   :query_tfcc_for_acknowledgments_worker:
