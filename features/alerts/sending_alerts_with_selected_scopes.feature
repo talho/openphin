@@ -77,7 +77,6 @@ Feature: Creating and sending alerts
       | Delivery Time | 60 minutes                              |
     
     And I press "Preview Message"
-    Then I see WTF is going on
     And I should see a preview of the message with:
       | Jurisdictions | Dallas County, Potter County            |
       | Roles | Health Officer, Epidemiologist                  |

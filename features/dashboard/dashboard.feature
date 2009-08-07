@@ -48,7 +48,6 @@ Feature: Viewing the dashboard
     When I go to the dashboard page
     Then I should see a signout link
     And I should not see a sendalert link
-    And I should see a requestrole link
     And I should not see a viewrole link
     And I should not see a viewrolerequests link
     And I should not see a viewalerts link
@@ -62,7 +61,6 @@ Feature: Viewing the dashboard
     When I go to the dashboard page
     Then I should see a signout link
     And I should see a sendalert link
-    And I should see a requestrole link
     And I should not see a viewrole link
     And I should not see a viewrolerequests link
     And I should see a viewalerts link
@@ -73,7 +71,6 @@ Feature: Viewing the dashboard
     When I go to the dashboard page
     Then I should see a signout link
     And I should not see a sendalert link
-    And I should see a requestrole link
     And I should not see a viewrole link
     And I should see a viewrolerequests link
     And I should not see a viewalerts link
@@ -85,7 +82,6 @@ Feature: Viewing the dashboard
     When I go to the dashboard page
     Then I should see a signout link
     And I should see a sendalert link
-    And I should see a requestrole link
     And I should not see a viewrole link
     And I should see a viewrolerequests link
     And I should see a viewalerts link
