@@ -5,8 +5,8 @@ class QueryTfccForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   end
 
   def query(args = nil)
-    Service::Phone::TFCC::CampaignActivationResponse.find_by_sql("SELECT DISTINCT c.* FROM tfcc_campaign_activation_response AS c, alerts as a, alert_attempts as aa, deliveries as de, devices AS d WHERE c.alert_id=a.id AND aa.alert_id=a.id AND de.alert_attempt_id=aa.id AND de.device_id=d.id AND d.type='Device::PhoneDevice' AND aa.acknowledged_at IS NULL").each do |car|
-      result = Service::Phone::TFCC::DetailedActivationResults.build(car, Service::Phone.configuration.options)
+    Service::TFCC::Phone::CampaignActivationResponse.find_by_sql("SELECT DISTINCT c.* FROM tfcc_campaign_activation_response AS c, alerts as a, alert_attempts as aa, deliveries as de, devices AS d WHERE c.alert_id=a.id AND aa.alert_id=a.id AND de.alert_attempt_id=aa.id AND de.device_id=d.id AND d.type='Device::PhoneDevice' AND aa.acknowledged_at IS NULL").each do |car|
+      result = Service::TFCC::Phone::DetailedActivationResults.build(car, Service::Phone.configuration.options)
       detail = result['ucsxml']['response']['activation_detail']
       results_returned = detail['results_returned']
 

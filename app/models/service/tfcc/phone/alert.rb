@@ -1,4 +1,4 @@
-class Service::Phone::TFCC::Alert < Service::Phone::TFCC::Base
+class Service::TFCC::Phone::Alert < Service::TFCC::Phone::Base
   property :alert
   property :users
   property :client_id

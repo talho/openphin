@@ -115,7 +115,7 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      body = Alert.new(
+      body = Service::TFCC::Phone::Alert.new(
         :alert => @alert, 
         :users => @users,
         :client_id => @config['client_id'],
@@ -133,7 +133,7 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      body = Alert.new(
+      body = Service::TFCC::Phone::Alert.new(
         :alert => @alert, 
         :users => @users, 
         :client_id => @config['client_id'],

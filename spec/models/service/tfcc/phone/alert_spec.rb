@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../../../spec_helper'
 
-describe Service::Phone::TFCC::Alert do
+describe Service::TFCC::Phone::Alert do
   include Webrat::Matchers
   
   def self.should_validate_presence_of(*fields)
@@ -12,7 +12,7 @@ describe Service::Phone::TFCC::Alert do
     end
   end
 
-  subject { Service::Phone::TFCC::Alert }
+  subject { Service::TFCC::Phone::Alert }
   
   before(:each) do
     @alert = Factory(:alert, :acknowledge => false)
