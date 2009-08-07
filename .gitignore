@@ -22,6 +22,3 @@ coverage/
 .autotest
 message_recordings
 config/backgroundrb.yml
-script/backgroundrb
-script/load_worker_env.rb
-
