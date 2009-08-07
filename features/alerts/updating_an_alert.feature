@@ -61,7 +61,8 @@ Feature: Updating an alert
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert [Update] - Flying Monkey Disease |
-      | body contains | Status: Actual |
-      | body contains | Type: Update   |
       | body contains | Title: [Update] - Flying Monkey Disease |
+      | body contains | Alert ID: 2 |
+      | body contains | Agency: Dallas County |
+      | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
