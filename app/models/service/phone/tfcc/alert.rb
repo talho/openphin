@@ -1,4 +1,4 @@
-class Service::Phone::TFCC::AlertWithoutAcknowledgment < Service::Phone::TFCC::Base
+class Service::Phone::TFCC::Alert < Service::Phone::TFCC::Base
   property :alert
   property :users
   property :client_id
@@ -29,41 +29,51 @@ class Service::Phone::TFCC::AlertWithoutAcknowledgment < Service::Phone::TFCC::B
         xml.cli_id client_id
         xml.usr_id user_id
         xml.activation :start => start_at, :stop => stop_at do
-          add_campaign(xml)
+          xml.campaign do
+            add_program  xml
+            add_audience xml
+          end
         end
       end
     end
   end
   
   private
-  
-  def add_campaign(xml)
-    xml.campaign do |campaign|
-      if alert.message_recording_file_name.blank?
-        add_program_without_audio campaign
-      else
-        add_program_with_audio campaign
-      end
-      add_audience campaign
-    end
-  end  
 
-  def add_program_without_audio(xml)
+  def add_program(xml)
     xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "0" do
       xml.addresses :address => "c0", :retry_num => "0", :retry_wait => "0"
       xml.content do
-        xml.slot alert.message, :id => "1", :type => "TTS"
+        if alert.message_recording_file_name.blank?
+          add_program_content_without_audio xml
+        else
+          add_program_content_with_audio xml
+        end
       end
     end
   end
   
-  def add_program_with_audio(xml)
-    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "0" do
-      xml.addresses :address => "c0", :retry_num => "0", :retry_wait => "0"
-      xml.content do
-        xml.slot Base64.encode64(IO.read(alert.message_recording.path)), :id => "1", :type => "VOICE", :encoding => "base64", :format => "wav"
-      end
-     end
+  def add_program_content_without_audio(xml)
+    xml.slot alert.message, :id => "1", :type => "TTS"
+    add_acknowledgement xml if alert.acknowledge?
+  end
+  
+  def add_program_content_with_audio(xml)
+    xml.slot Base64.encode64(IO.read(alert.message_recording.path)), :id => "1", :type => "VOICE", :encoding => "base64", :format => "wav"
+    add_acknowledgement xml if alert.acknowledge?
+  end
+  
+  def add_acknowledgement(xml)
+    msg = "You have received a Health Alert.  Please login to the Health Alert Network Application to view the alert message."
+    xml.slot msg, :id => "2", :type => "TTS"
+    msg = "Please press one to acknowledge this health alert."
+    xml.slot msg, :id => "3", :type => "TTS"
+    msg = "The number pressed is not valid.  Please press one to acknowledge this health alert."
+    xml.slot msg, :id => "4", :type => "TTS"
+    msg = "You have failed to acknowledge this message.  Good-bye."
+    xml.slot msg, :id => "5", :type => "TTS"
+    msg = "You have successfully acknowledged this health alert.  Thanks for your cooperation.  Good-bye."
+    xml.slot msg, :id => "6", :type => "TTS"
   end
 
   def add_audience(xml)

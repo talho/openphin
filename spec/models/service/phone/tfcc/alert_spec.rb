@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../../../spec_helper'
 
-describe Service::Phone::TFCC::AlertWithoutAcknowledgment do
+describe Service::Phone::TFCC::Alert do
   include Webrat::Matchers
   
   def self.should_validate_presence_of(*fields)
@@ -12,10 +12,10 @@ describe Service::Phone::TFCC::AlertWithoutAcknowledgment do
     end
   end
 
-  subject { Service::Phone::TFCC::AlertWithoutAcknowledgment }
+  subject { Service::Phone::TFCC::Alert }
   
   before(:each) do
-    @alert = Factory(:alert)
+    @alert = Factory(:alert, :acknowledge => false)
     @user = Factory(:user, :devices => [Factory(:phone_device)])
     @client_id = "AAA1"
     @user_id = "BBB2"

@@ -115,19 +115,14 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      if @alert.acknowledge
-        body = AlertWithAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :users => @users, :device => @device).symbolize_keys
-        )
-      else
-        body = AlertWithoutAcknowledgment.new(
-          :alert => @alert, 
-          :users => @users,
-          :client_id => @config['client_id'],
-          :user_id => @config['user_id'],
-          :retry_duration => @config['retry_duration']
-        ).build!
-      end
+      body = Alert.new(
+        :alert => @alert, 
+        :users => @users,
+        :client_id => @config['client_id'],
+        :user_id => @config['user_id'],
+        :retry_duration => @config['retry_duration']
+      ).build!
+
       perform_delivery body
     end
     
@@ -138,19 +133,14 @@ class Service::Phone < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      if @alert.acknowledge
-        body = AlertWithAcknowledgmentBuilder.build(
-          @config.to_hash.merge(:alert => @alert, :device => @device).symbolize_keys
-        )
-      else
-        body = AlertWithoutAcknowledgment.new(
-          :alert => @alert, 
-          :users => @users, 
-          :client_id => @config['client_id'],
-          :user_id => @config['user_id'],
-          :retry_duration => @config['retry_duration']
-        ).build!
-      end
+      body = Alert.new(
+        :alert => @alert, 
+        :users => @users, 
+        :client_id => @config['client_id'],
+        :user_id => @config['user_id'],
+        :retry_duration => @config['retry_duration']
+      ).build!
+
       perform_delivery body
     end
     
