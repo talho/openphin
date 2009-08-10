@@ -12,9 +12,9 @@ class QueryTfccForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
 
       if results_returned != "0"
          detail['results'].each do |result|
-          email = result[1][0]['c0']
-          response = result[1][0]['data1']
-          time = result[1][0]['xdate']
+          email = result[1]['c0']
+          response = result[1]['data1']
+          time = result[1]['xdate']
 
           if response == "1" && !email.blank?
             user = User.find_by_email(email)
