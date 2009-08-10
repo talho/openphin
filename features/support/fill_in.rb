@@ -98,6 +98,8 @@ module FeatureHelpers
         value.split(',').map(&:strip).each{ |r| check r }
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
+      when "Short Message"
+        fill_in "alert_short_message", :with => value
       when "Message", "Title"
         fill_in label, :with => value
       else

@@ -90,7 +90,11 @@ Then 'I should have a phone device with the phone "$text"' do |text|
   device = current_user.devices.phone.detect{ |device| device.phone == text }
   device.phone.should_not be_nil
 end
-
+  
+Then 'I should have a SMS device with the SMS number "$text"' do |text|
+  device = current_user.devices.sms.detect{ |device| device.sms == text }
+  device.sms.should_not be_nil
+end
 
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
@@ -106,6 +110,18 @@ Then /^the following phone calls should be made:$/ do |table|
         recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
         message == recording && phone == row["phone"]
       end
+    end
+    call.should_not be_nil
+  end
+end
+
+Then /^the following SMS calls should be made:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::SMS.deliveries.detect do |sms_call|
+      xml = Nokogiri::XML(sms_call.body)
+      message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
+      sms = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+      message == row["message"] && sms == row["sms"]
     end
     call.should_not be_nil
   end
