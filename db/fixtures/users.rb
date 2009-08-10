@@ -158,3 +158,125 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.user_id = u.id
 end
 u.role_memberships << r
+
+u = User.seed(:email) do |m|
+  m.first_name = 'Jason'
+  m.last_name = 'Phipps'
+  m.email = 'jason@texashan.org'
+  m.email_confirmed = true
+  m.password = 'password'
+  m.password_confirmation = 'password'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+u = User.seed(:email) do |m|
+  m.first_name = 'Jason'
+  m.last_name = 'Phipps'
+  m.email = 'jphipps@texashan.org'
+  m.email_confirmed = true
+  m.password = 'password'
+  m.password_confirmation = 'password'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Wise').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Wise').id
+  r.role_id = Role.admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Wise').id
+  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+u = User.seed(:email) do |m|
+  m.first_name = 'Jason'
+  m.last_name = 'Phipps'
+  m.email = 'jphipps@talho.org'
+  m.email_confirmed = true
+  m.password = 'password'
+  m.password_confirmation = 'password'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Wise').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+u = User.seed(:email) do |m|
+  m.first_name = 'Jason'
+  m.last_name = 'Phipps'
+  m.email = 'jason.phipps@earthlink.net'
+  m.email_confirmed = true
+  m.password = 'password'
+  m.password_confirmation = 'password'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Texas').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+u = User.seed(:email) do |m|
+  m.first_name = 'Ethan'
+  m.last_name = 'Weirdo'
+  m.email = 'ewaldo@talho.org'
+  m.email_confirmed = true
+  m.password = 'password'
+  m.password_confirmation = 'password'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Armstrong').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Armstrong').id
+  r.role_id = Role.admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Armstrong').id
+  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
+  r.user_id = u.id
+end
+u.role_memberships << r
