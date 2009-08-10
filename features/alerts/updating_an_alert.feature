@@ -63,6 +63,7 @@ Feature: Updating an alert
       | subject       | Moderate Health Alert [Update] - Flying Monkey Disease |
       | body contains | Title: [Update] - Flying Monkey Disease |
       | body contains | Alert ID: 2 |
+      | body contains | Reference: 1 |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |

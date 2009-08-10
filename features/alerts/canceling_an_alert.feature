@@ -56,6 +56,7 @@ Feature: Canceling an alert
       | subject       | Moderate Health Alert [Cancel] - Flying Monkey Disease |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
       | body contains | Alert ID: 2 |
+      | body contains | Reference: 1 |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease is not contagious |
