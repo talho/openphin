@@ -1,60 +1,79 @@
 <%= link_to 'New Alert', new_alert_path %>
 
 <table id="alerts">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Date Created</th>
-      <th>Sender</th>
-	  <th>Jurisdiction</th>
-      <th>Severity</th>
-      <th>Title</th>
-	  <th>Progress</th>
-	  <th>Progress (by jurisdiction)</th>
-	  <th>Progress (by device)</th>
-	  <th></th>
-    </tr>
-  </thead>
   <tbody>
     <% @alerts.each do |alert| %>
       <% content_tag_for :tr, alert do %>
-        <td class="identifier"><%=h alert.identifier %></td>
-        <td class="sent_at"><%= time_ago_in_words alert.sent_at if alert.sent_at? %></td>
-		<td class="sent_by"><%= alert.author.display_name unless alert.author.nil? %></td>
-        <td class="from_jurisdiction"><%=h alert.from_jurisdiction %></td>
-        <td class="severity"><%=h alert.severity %></td>
-        <td class="title"><%=h alert.title %></td>
-        <td class="ackpercent"><%=h alert.acknowledged_percent.round %>%</td>
-        <td>
-          <ul>
-            <% alert.jurisdictions.each do |d| %>
-                <li class='jur_ackpct'>
-                  <span class='jurisdiction'><%= d.name %></span> -
-                  <span class='percentage'>
-                    <%= alert.acknowledged_percent_for_jurisdiction(d).round %>%
-                  </span>
-                </li>
-            <% end %>
-          </ul>
-        </td>
-        <td>
-          <ul>
-            <% Device::Types.each do |d| %>
+        <li class="alert" id="<%= dom_id(alert) %>">
+          <div class="summary">
+            <span class="created_at"><%= time_ago_in_words alert.created_at %></span>
+            <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
+            <span class="status">[<%= alert.status.capitalize %>]</span>
+            <%- end -%>
+            <span class="title"><%=h alert.title %></span>
+            <span class="from_jurisdiction"><%=h alert.from_jurisdiction.name %></span>
+            <span class="sender"><%= link_to alert.author.display_name, user_profile_path(alert.author) unless alert.author.blank? || alert.author.display_name.blank? %></span>
+			<span class="actions">
+              <%= link_to 'View', alert %>
+              <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
+              <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>
+            </span>
+          </div>
+		  <div class="progress">
+		  	<span class="ack">Acknowledge? <%=h alert.acknowledge? ? 'Yes' : 'No' %></span>
+		  	<ul>
+              Progress
+              <li class="ackpercent"><%= alert.acknowledged_percent.round %>%</li>
+			</ul>
+		  	<ul>
+		      Progress (by jurisdiction)
+              <% alert.jurisdictions.each do |d| %>
+              <li class='jur_ackpct'>
+                <span class='jurisdiction'><%= d.name %></span> -
+                <span class='percentage'>
+                  <%= alert.acknowledged_percent_for_jurisdiction(d).round %>%
+                </span>
+              </li>
+              <% end %>
+            </ul>
+            <ul>
+              Progress (by device)
+              <% Device::Types.each do |d| %>
                 <li class='dev_ackpct'>
                   <span class='device_type'><%= d.display_name %></span> -
                   <span class='percentage'>
                     <%= alert.acknowledged_percent_for_device(d).round %>%
                   </span>
                 </li>
+              <% end %>
+            </ul>
+          </div>
+  
+          <div class="detail" style="display:none">
+            <dl>
+              <dt>Alert ID:</dt>
+              <dd class="alert_id"><%=h alert.id %></dd>
+
+              <%- if !alert.original_alert_id.blank? -%>
+              <dt>Reference ID:</dt>
+              <dd class="alert_id"><%=h alert.original_alert_id %></dd>
+
+              <%- end -%>
+              <dd class="message"><%=simple_format h(alert.message) %></dd>
+
+              <dt>Sensitive:</dt>
+              <dd class="sensitive"><%=h alert.sensitive? ? 'Yes' : 'No' %></dd>
+            </dl>
+
+            <% if alert.acknowledged_by_user? %>
+            <strong>Acknowledged</strong>
+            <% else %>
+            <%= acknowledge_alert_button(alert) %>
             <% end %>
-          </ul>
-        </td>
-        <td>
-          <%= link_to 'View', alert %>
-		  <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
-          <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>
-        </td>
-      <% end %>
-    <% end %>
+          </div>
+  
+        </li>
+	  <%- end -%>
+	<%- end -%>
   </tbody>
 </table>
