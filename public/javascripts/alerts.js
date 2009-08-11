@@ -61,6 +61,10 @@
 		
 		$('ul.progress a[href=#preview]').click(function() {
 			$(this).parents('form').submit();
+		});
+		
+		$('ul#alerts a.view_more, ul#alerts a.view_less').click(function() {
+		  $(this).closest('li').toggleClass('more');
 		})
   })
 })(jQuery);
