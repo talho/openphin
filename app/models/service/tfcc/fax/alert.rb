@@ -1,6 +1,4 @@
-include ActionView::Helpers::TextHelper
-
-class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
+class Service::TFCC::Fax::Alert < Service::TFCC::Fax::Base
   property :alert
   property :users
   property :client_id
@@ -43,25 +41,21 @@ class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
   private
 
   def add_program(xml)
-    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "page", :template => "0" do
+    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "fax", :template => "0", :subject => alert.title, :from => "#{alert.author.display_name} in #{alert.from_jurisdiction.name}" do
       xml.addresses :address => "c1", :retry_num => "0", :retry_wait => "0"
       xml.content do
-        severity = "#{alert.severity}"
-        status = " #{alert.status}" if alert.status.downcase != "actual"
-        subject = "#{severity} Health Alert#{status} #{alert.title}"
-        message = truncate(alert.short_message, 160-1-subject.size, "...")
-        xml.slot "#{subject} #{message}", :id => "1"
+        xml.slot alert.message, :id => "1"
       end
     end
   end
-  
+
   def add_audience(xml)
     xml.audience do 
       users.each do |user|
-        user.devices.sms.each do |sms_device|
+        user.devices.fax.each do |fax_device|
           xml.contact do
             xml.c0 user.email, :type => "string"
-            xml.c1 sms_device.sms, :type => "phone"
+            xml.c1 fax_device.fax, :type => "phone"
           end
         end
       end

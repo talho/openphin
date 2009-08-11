@@ -96,6 +96,11 @@ Then 'I should have a SMS device with the SMS number "$text"' do |text|
   device.sms.should_not be_nil
 end
 
+Then 'I should have a Fax device with the Fax number "$text"' do |text|
+  device = current_user.devices.fax.detect{ |device| device.fax == text }
+  device.fax.should_not be_nil
+end
+
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
@@ -122,6 +127,18 @@ Then /^the following SMS calls should be made:$/ do |table|
       message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
       sms = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
       message == row["message"] && sms == row["sms"]
+    end
+    call.should_not be_nil
+  end
+end
+
+Then /^the following Fax calls should be made:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::Fax.deliveries.detect do |fax_call|
+      xml = Nokogiri::XML(fax_call.body)
+      message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
+      fax = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+      message == row["message"] && fax == row["fax"]
     end
     call.should_not be_nil
   end

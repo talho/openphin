@@ -1,18 +1,18 @@
 require 'nokogiri'
 
-class Service::SMS < Service::Base
+class Service::Fax < Service::Base
   load_configuration_file RAILS_ROOT+"/config/phone.yml"
 
-  def self.deliver_alert(alert, user, device, config=Service::SMS.configuration)
+  def self.deliver_alert(alert, user, device, config=Service::Fax.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     response = TFCC.new(alert, device, config, [user])
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
     
-  def self.batch_deliver_alert(alert, device, config=Service::SMS.configuration)
+  def self.batch_deliver_alert(alert, device, config=Service::Fax.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    users = alert.alert_attempts.with_device(Device::SMSDevice).map{ |aa| aa.user }
+    users = alert.alert_attempts.with_device(Device::FaxDevice).map{ |aa| aa.user }
     response = TFCC.new(alert, device, config, users).batch_deliver
     TFCC::CampaignActivationResponse.build(response,alert)
   end
@@ -25,7 +25,7 @@ class Service::SMS < Service::Base
     def initialize_fake_delivery(config) # :nodoc:
       TFCC.instance_eval do
         define_method(:perform_delivery) do |body|
-          Service::SMS.deliveries << OpenStruct.new(:body => body)
+          Service::Fax.deliveries << OpenStruct.new(:body => body)
           config.options[:default_response] ||= "200 OK"
         end
       end
@@ -54,6 +54,7 @@ class Service::SMS < Service::Base
     class CampaignActivationResponse < ActiveRecord::Base
       set_table_name "tfcc_campaign_activation_response"
       belongs_to :alert
+      has_many :fax_alert_attempts, :source => :alert_attempts, :include => :devices, :through => :alert, :conditions => "devices.type = 'Device::FaxDevice'"
 
       def self.build(response, alert)
         if !alert.blank?
@@ -70,13 +71,13 @@ class Service::SMS < Service::Base
         end
       end
     end
-    
+
     class DetailedActivationResults
       include HTTParty
       #format :html     # use if you need to see in xml format, otherwise response is an array
       #set_table_name "tfcc_detailed_activation_results"
       
-      def self.build(campaign_activation, options, type = "page")
+      def self.build(campaign_activation, options, type = "fax")
         url, username, password, client_id, user_id = options['url'], options['username'], options['password'], options['client_id'], options['user_id']
 
         body = ""
@@ -114,7 +115,7 @@ class Service::SMS < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      body = Service::TFCC::SMS::Alert.new(
+      body = Service::TFCC::Fax::Alert.new(
         :alert => @alert, 
         :users => @users,
         :client_id => @config['client_id'],
@@ -132,7 +133,7 @@ class Service::SMS < Service::Base
         |  config: #{@config.options.inspect}
       EOT
       
-      body = Service::TFCC::SMS::Alert.new(
+      body = Service::TFCC::Fax::Alert.new(
         :alert => @alert, 
         :users => @users, 
         :client_id => @config['client_id'],
