@@ -1,3 +1,4 @@
+<h3>My Dashboard</h3>
 <% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
   <h4>Awaiting Approval</h4>
   <ul class="pending_role_requests">
@@ -38,6 +39,6 @@
     </fieldset>
 <% end %>
 
-<ul class="messages">
+<ul id="alerts">
   <%= render :partial => "dashboard/alert", :collection => present_collection(current_user.recent_alerts), :as => :alert %>
 </ul>

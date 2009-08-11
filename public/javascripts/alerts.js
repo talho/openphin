@@ -65,6 +65,7 @@
 		
 		$('ul#alerts a.view_more, ul#alerts a.view_less').click(function() {
 		  $(this).closest('li').toggleClass('more');
+		  return false;
 		})
   })
 })(jQuery);
