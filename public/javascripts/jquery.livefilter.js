@@ -19,9 +19,12 @@ jQuery.fn.liveFilter = function(){
 	}
 
   function filter(e){
-    var term = jQuery.trim( jQuery(this).val().toLowerCase() ), scores = [];
-    console.log(cache);
+  	var term = jQuery.trim(jQuery(this).val().toLowerCase()), scores = [];
+  	if (typeof console != "undefined") {
+  	  console.log(cache);
+    }
     if ( !term || input.hasClass('empty') ) {
+		if (typeof console != "undefined")
 			console.log('here');
       rows.show();
     } else {
