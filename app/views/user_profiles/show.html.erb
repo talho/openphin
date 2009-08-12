@@ -1,44 +1,40 @@
-  <div class='user_profile'>
-    <%= link_to 'Edit', edit_user_profile_path(@user) if @user.editable_by?(current_user) %>
+<div class='user_profile'>
     
-<p>
-  <b>Photo:</b>
-  <%= image_tag @user.photo.url(:medium) %>
-</p>
-
-<p>
-  <b>Public:</b>
-  <%=h @user.public %>
-</p>
-
-<p>
-  <b>Credentials:</b>
-  <%=h @user.credentials %>
-</p>
-
-<p>
-  <b>Employer:</b>
-  <%=h @user.employer %>
-</p>
-
-<p>
-  <b>Experience:</b>
-  <%=h @user.experience %>
-</p>
-
-<p>
-  <b>Bio:</b>
-  <%=h @user.bio %>
-</p>
-
-<% if current_user == @user %>
-<p>
-  <b>Roles:</b>
-  <%= render 'users/roles', :user => @user %>
-</p>
-<% end %>
-
-<%= render @user.devices %>
+  <div class="details">
+    <h2><%=h @user.name %></h2>
+    <p>
+      <strong>Public:</strong>
+      <%=h @user.public ? 'Yes' : 'No' %>
+    </p>
+  
+    <p>
+      <strong>Credentials:</strong>
+      <%=h @user.credentials || 'None Given' %>
+    </p>
+  
+    <p>
+      <strong>Employer:</strong>
+      <%=h @user.employer || 'None Given' %>
+    </p>
+  
+    <h4>Experience</h4>
+    <p><%=h @user.experience || 'None Given' %></p>
+  
+    <h4>Bio</h4>
+    <%=simple_format @user.bio || 'None Given' %>
+  
+    <% if current_user == @user %>
+    <h4>Roles</h4>
+    <%= render 'users/roles', :user => @user %>
+    <% end %>
+    
+    <div class="actions">
+      <%= link_to 'Edit this Person', edit_user_profile_path(@user), :class => 'button' %>
+    </div>
+  </div>
+  <div class="aside">
+    <%= image_tag @user.photo.url(:medium) %>
+    <h4>Devices</h4>
+    <%= render @user.devices %>
+  </div>
 </div>
-
-<%= link_to 'Edit', edit_user_profile_path(@user) %>

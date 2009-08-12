@@ -46,6 +46,7 @@ table td 																			{padding:5px 20px 5px 0;}
 #content h2																		{font-size:20px; margin:0 0 15px;}
 #content div.aside h2                         {font-size:100%;}
 #content h3																		{color:#999; margin:-15px 0 15px;}
+#content h4                                   {color:#333; margin:0 0 5px;}
 #audience																			{margin:0 0 15px;}
 
 div.aside h2																	{margin:0 0 5px; color:#0299C5; border-bottom:1px solid #d9d9d9;}
@@ -140,6 +141,10 @@ ul#alerts a.view_less                         {display:none;}
 ul#alerts li.more div.extended                {display:block;}
 ul#alerts li.more a.view_less                 {display:block;}
 ul#alerts li.more a.view_more                 {display:none;}
+
+ul.roles                                      {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
+ul.roles li                                   {margin:0; padding:5px 30px 5px 10px; position:relative; list-style:none; border-bottom:1px solid #d9d9d9;}
+ul.roles a.remove                             {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden; background:url(images/cross-circle.png) no-repeat center;}
   
 fieldset div.list_filter 											{position:absolute; bottom:0; height:19px; border:1px solid #d9d9d9; background:#efefef; padding:3px 5px; left:0; right:0;}
 fieldset div.list_filter input								{width:187px;}
@@ -147,4 +152,5 @@ fieldset div.list_filter input.empty					{color:#999;}
 fieldset.people																{clear:both; margin:0 0 15px;}
 
 form button,
-form input.submit															{clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
+form input.submit,
+a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px; display:block;}
