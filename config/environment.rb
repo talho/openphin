@@ -22,9 +22,6 @@ Rails::Initializer.run do |config|
     #{Rails.root}/app/presenters
   ) 
 
-  ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y")
-  ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y %I:%M %p")
-
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
@@ -75,6 +72,9 @@ Rails::Initializer.run do |config|
     :version => '0.1.15'
   config.gem 'validatable', :version => '1.6.7'
 end
+
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y")
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y %I:%M %p")
 
 require 'happymapper'
 #require 'httparty'
