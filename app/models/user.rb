@@ -195,12 +195,12 @@ class User < ActiveRecord::Base
   end
   
   def viewable_alerts
-    alerts_within_jurisdictions | alerts | received_alerts
+    alerts_within_jurisdictions | recent_alerts | received_alerts
   end
   
   def alerts_within_jurisdictions
     j = jurisdictions.map{|m| m.self_and_descendants}.flatten
-    Alert.all(:conditions => {:from_jurisdiction_id => j})
+    Alert.all(:conditions => {:from_jurisdiction_id => j}, :order => "alerts.created_at DESC")
   end
 
   def generate_upload_token

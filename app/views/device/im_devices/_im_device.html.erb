@@ -1,0 +1,5 @@
+<%- in_form ||= false -%>
+<% content_tag_for :p, im_device do %>
+  <%= im_device.class.display_name %>: <%=h im_device.phone %>
+  <%= link_to 'Delete', device_path(im_device), :class => 'destroy' if in_form %>
+<% end %>

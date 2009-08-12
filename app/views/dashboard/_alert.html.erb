@@ -21,7 +21,7 @@
         
         <p class="brief"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
           
-	      <p class="brief"><strong>Acknowledged?:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
+	      <p class="brief"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
         
         <%- if !alert.original_alert_id.blank? -%>
         <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert_id %></p>

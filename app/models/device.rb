@@ -21,10 +21,12 @@ class Device < ActiveRecord::Base
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
   named_scope :sms, :conditions => "type = 'Device::SMSDevice'"
   named_scope :fax, :conditions => "type = 'Device::FaxDevice'"
+  named_scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
+  named_scope :im, :conditions => "type = 'Device::IMDevice'"
   
   serialize :options, Hash
 
-  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice]
+  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice, Device::IMDevice]
 
   def parent
     :user
