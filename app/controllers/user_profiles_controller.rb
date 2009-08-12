@@ -72,9 +72,14 @@ class UserProfilesController < ApplicationController
 		    params[:user][:role_requests_attributes].delete(index)
 	    end
 		end
+    
+    if !params[:user][:photo].blank?
+      @user.photo=params[:user][:photo]
+      params[:user].delete("photo")
+    end
 
     respond_to do |format|
-      if (@device.nil? || @device.save) && @user.update_attributes(params[:user])
+      if (@device.nil? || @device.save) && (@user.update_attributes(params[:user]) && @user.save)
         flash[:notice] = 'Profile information saved.'
         format.html { redirect_to user_profile_path(@user) }
         format.xml  { head :ok }
