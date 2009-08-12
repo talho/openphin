@@ -77,6 +77,11 @@ class UserProfilesController < ApplicationController
       @user.photo=params[:user][:photo]
       params[:user].delete("photo")
     end
+    
+    if params[:user][:password] == "******"
+      params[:user].delete("password")
+      params[:user].delete("password_confirmation")
+    end
 
     respond_to do |format|
       if (@device.nil? || @device.save) && (@user.update_attributes(params[:user]) && @user.save)
