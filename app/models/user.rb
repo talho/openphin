@@ -199,6 +199,10 @@ class User < ActiveRecord::Base
   end
 
   def generate_upload_token
+    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"
+    if File.exists?(filename)
+      File.delete(filename)
+    end
     self.token = ActiveSupport::SecureRandom.hex
     self.token_expires_at = Time.zone.now+10.minutes
     self.save

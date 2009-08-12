@@ -15,7 +15,6 @@
 		$('ul.progress a[href=#details]').attr('disabled', 'disabled');
 		$('ul.progress a[href=#audience]').attr('disabled', 'disabled');
 		$('ul.progress a[href=#preview]').attr('disabled', 'disabled');
-		$('form').submit(function(){ return false;})
 	    document.JavaSonicRecorderUploader.sendRecordedMessage();
 	  } else {
 		alert("Failed up upload audio")
@@ -33,7 +32,6 @@ function uploadComplete(){
   $('ul.progress a[href=#details]').removeAttr('disabled');
   $('ul.progress a[href=#audience]').removeAttr('disabled');
   $('ul.progress a[href=#preview]').removeAttr('disabled');
-  $('form').submit(function(){ return true;})
 }
 
 function uploadFailure(){
@@ -44,5 +42,4 @@ function uploadFailure(){
   $('ul.progress a[href=#details]').removeAttr('disabled');
   $('ul.progress a[href=#audience]').removeAttr('disabled');
   $('ul.progress a[href=#preview]').removeAttr('disabled');
-  $('form').submit(function(){ return true;})
 }

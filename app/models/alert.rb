@@ -32,6 +32,8 @@
 #  short_message          :string(255)     default("")
 #
 
+require 'ftools'
+
 class Alert < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :from_organization, :class_name => 'Organization'
@@ -76,7 +78,7 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   validates_length_of :short_message, :maximum => 160
-  validates_attachment_content_type :message_recording, :content_type => "audio/x-wav"
+  validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
   
   before_create :set_message_type
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
@@ -230,6 +232,18 @@ class Alert < ActiveRecord::Base
 		else
 			0
 		end
+  end
+
+  def integrate_voice
+    original_file_name = "#{RAILS_ROOT}/message_recordings/tmp/#{self.author.token}.wav"
+    new_file_name = "#{RAILS_ROOT}/message_recordings/#{id}.wav"
+    if File.exists?(original_file_name)
+      File.move(original_file_name, new_file_name)
+      m = self
+      m.message_recording = File.open(new_file_name)
+      m.message_recording.save
+      m.save
+    end
   end
 
   

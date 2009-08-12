@@ -27,6 +27,7 @@ class AlertsController < ApplicationController
     if params[:send]
       @alert.save
       if @alert.valid?
+        @alert.integrate_voice
         @alert.batch_deliver
         flash[:notice] = "Successfully sent the alert"
         redirect_to alerts_path
@@ -78,6 +79,7 @@ class AlertsController < ApplicationController
     if params[:send]
       @alert.save
       if @alert.valid?
+        @alert.integrate_voice
         @alert.batch_deliver
         flash[:notice] = "Successfully sent the alert"
         redirect_to alerts_path
@@ -134,7 +136,7 @@ class AlertsController < ApplicationController
     if(!File.exists?(temp.path))
       render :upload_error, :layout => false
     end
-    newpath = "#{RAILS_ROOT}/message_recordings/#{user.token}.wav"
+    newpath = "#{RAILS_ROOT}/message_recordings/tmp/#{user.token}.wav"
     File.copy(temp.path,newpath)
     if(!File.exists?(newpath))
       render :upload_error, :layout => false
