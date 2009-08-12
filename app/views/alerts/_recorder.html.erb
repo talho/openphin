@@ -1,0 +1,34 @@
+<p>
+  <div class="audio">
+    Please use the controls below to record an audio alert message.
+    <applet
+      CODE="com.softsynth.javasonics.recplay.RecorderUploadApplet"
+      CODEBASE="/codebase"
+      ARCHIVE="JavaSonicsListenUp.jar,OggXiphSpeexJS.jar"
+      NAME="JavaSonicRecorderUploader"
+      WIDTH="186" HEIGHT="42">
+      <param name="bevelSize" value="0">
+      <param name="showWaveform" value="no">
+      <param name="background" value="FFFFFF">
+      <param name="showLogo" value="no">
+      <param name="showPauseButton" value="no">
+      <param name="showTimeText" value="no">
+      <param name="showPositionDisplay" value="no">
+      <param name="showVUMeter" value="yes">
+      <param name="showWaveform" value="no">
+      <param name="showSendButton" value="no">
+      <param name="arrangement" value="wide">
+      <param name="packButtons" value="yes">
+      <param name="format" value="s16">
+      <param name="uploadURL" value="<%= upload_url %>">
+      <param id="filename" name="uploadFileName" value="<%= filename %>">
+      <param name="useURLConnection" value="yes">
+      <param name="frameRate" value="8000.0">
+      <param name="numChannels" value="1">
+      <param name="maxRecordTime" value="60.0">
+    </applet>
+  </div>
+  <div class="success">You have successfully uploaded the recording.</div>
+  <div class="failure">Recording failed to upload, please try again.</div>
+  <div class="waiting">Uploading recording...please wait.</div>
+</p>

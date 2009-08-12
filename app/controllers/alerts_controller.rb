@@ -1,6 +1,9 @@
+require 'ftools'
+
 class AlertsController < ApplicationController
   before_filter :alerter_required, :only => [:new, :create]
-  skip_before_filter :login_required, :only => :token_acknowledge
+  skip_before_filter :login_required, :only => [:token_acknowledge, :upload]
+  protect_from_forgery :except => [:upload]
   
   def index
     @alerts = present_collection current_user.viewable_alerts
@@ -118,6 +121,25 @@ class AlertsController < ApplicationController
       end
     end
     redirect_to dashboard_path
+  end
+  
+  def upload
+    # Takes uploaded file info from JavaSonicRecorderUploader, copies to permanent location, and returns SUCCESS or ERROR
+    user = User.find_by_token(params[:token]) if !params[:token].blank?
+    if user.blank? || user.token_expires_at.blank? || user.token_expires_at < Time.zone.now || !user.alerter? || params[:userfile].blank?
+      render :upload_error, :layout => false
+      return
+    end
+    temp = params[:userfile]
+    if(!File.exists?(temp.path))
+      render :upload_error, :layout => false
+    end
+    newpath = "#{RAILS_ROOT}/message_recordings/#{user.token}.wav"
+    File.copy(temp.path,newpath)
+    if(!File.exists?(newpath))
+      render :upload_error, :layout => false
+    end
+    render :upload_success, :layout => false
   end
   
 private

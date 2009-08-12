@@ -197,7 +197,14 @@ class User < ActiveRecord::Base
     j = jurisdictions.map{|m| m.self_and_descendants}.flatten
     Alert.all(:conditions => {:from_jurisdiction_id => j})
   end
-  
+
+  def generate_upload_token
+    self.token = ActiveSupport::SecureRandom.hex
+    self.token_expires_at = Time.zone.now+10.minutes
+    self.save
+    return self.token
+  end
+
 private
 
   def assign_public_role
