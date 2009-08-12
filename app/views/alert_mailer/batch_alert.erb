@@ -1,6 +1,12 @@
 <%- if @alert.sensitive? -%>
+Alert ID: <%= @alert.id %>
+<%- if !@alert.original_alert_id.blank? -%>
+Reference: <%= @alert.original_alert_id %>
+<%- end %>
 
 Sensitive: use secure means of retrieval
+
+Please visit <%= alerts_path(@alert) %> to securely view this alert.
 
 <%- else -%>
 
