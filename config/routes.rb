@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
   map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "token_acknowledge"
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
+  map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
   map.resources :roles
   map.resources :organizations
   

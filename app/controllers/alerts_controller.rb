@@ -2,8 +2,8 @@ require 'ftools'
 
 class AlertsController < ApplicationController
   before_filter :alerter_required, :only => [:new, :create]
-  skip_before_filter :login_required, :only => [:token_acknowledge, :upload]
-  protect_from_forgery :except => [:upload]
+  skip_before_filter :login_required, :only => [:token_acknowledge, :upload, :playback]
+  protect_from_forgery :except => [:upload, :playback]
   
   def index
     @alerts = present_collection current_user.viewable_alerts
@@ -40,6 +40,7 @@ class AlertsController < ApplicationController
       end
     else
       @preview = true
+      @token = current_user.token
       render :new
     end
   end
@@ -142,6 +143,15 @@ class AlertsController < ApplicationController
       render :upload_error, :layout => false
     end
     render :upload_success, :layout => false
+  end
+  
+  def playback
+    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{params[:token]}.wav"
+    if File.exists?(filename)
+      @file = File.read(filename)
+    end
+    response.headers["Content-Type"] = 'audio/x-wav'
+    render :play, :layout => false
   end
   
 private

@@ -134,13 +134,14 @@
 <% if @preview %>
   <div id="preview" class="preview">
     <%= render @alert %>
-    <div class="details callout">
+    <!--<div class="details callout">
   	  <p>Would you like to attach a voice recorded message now?<br />
 	      <%= form.label :message_recording %>
 	      <%= form.file_field :message_recording %><br />
 	      Message recording must be in a PCM (WAV) 8000Hz mono format
 	    </p>
-   </div>
+   </div>-->
+   <%= render :partial => "player", :locals => {:sample_url => "http://192.168.1.119:3000/alerts/new/playback.wav?token=#{@token}" } %>
    <div class="details actions">
     <button class="edit">&lt; Edit this Alert</button>
     <%= form.submit "Send this Alert", :name => 'send' %>
