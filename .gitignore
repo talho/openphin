@@ -20,5 +20,6 @@ db/sphinx
 log/searchd.*.pid
 coverage/
 .autotest
-message_recordings
 config/backgroundrb.yml
+message_recordings/*.wav
+message_recordings/tmp/*.wav
