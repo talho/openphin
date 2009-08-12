@@ -135,6 +135,11 @@ class User < ActiveRecord::Base
   def phin_oid=(val)
     raise "PHIN oids should never change"
   end
+  
+  def has_uploaded?
+    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{token}.wav"
+    return File.exists?(filename)
+  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?

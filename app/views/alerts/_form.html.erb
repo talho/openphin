@@ -141,7 +141,7 @@
 	      Message recording must be in a PCM (WAV) 8000Hz mono format
 	    </p>
    </div>-->
-   <%= render :partial => "player", :locals => {:sample_url => "#{UPLOAD_BASE_URI}/alerts/new/playback.wav?token=#{@token}" } %>
+   <%= render :partial => "player", :locals => {:sample_url => "#{UPLOAD_BASE_URI}/alerts/new/playback.wav?token=#{@token}" } if current_user.has_uploaded? %>
    <div class="details actions">
     <button class="edit">&lt; Edit this Alert</button>
     <%= form.submit "Send this Alert", :name => 'send' %>
