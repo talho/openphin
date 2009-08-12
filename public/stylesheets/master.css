@@ -150,7 +150,7 @@ ul#alerts li.more a.view_more                 {display:none;}
 form p.rel_1                                  {width:195px; float:left; margin:0 20px 0 0;}
 form p.rel_2                                  {width:195px; float:right; clear:none;}
 form p.text input                             {width:97%;}
-form p                                        {clear:left;}
+form div.details p                            {clear:left;}
 form p.select select                          {width:97%;}
 form textarea                                 {width:97%;}
 
@@ -161,4 +161,5 @@ fieldset.people																{clear:both; margin:0 0 15px;}
 
 form button,
 form input.submit,
-a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px; display:block;}
+a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
+a.button                                      {display:block;}

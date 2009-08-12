@@ -29,9 +29,3 @@
   <h5>Methods</h5>
   <p class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
 </div>
-
-<% if @alert.acknowledged_by_user? %>
-  <strong>acknowledged</strong>
-<% else %>
-  <%= acknowledge_alert_button(@alert) %>
-<% end %>
