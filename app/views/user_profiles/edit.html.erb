@@ -1,97 +1,95 @@
 <div class="profile_edit">
-<h1>Editing user</h1>
   <% form_for @user, :url => user_profile_path(@user), :html => {:multipart => true} do |form| %>
-    <%= form.error_messages %>
+  <div class="details">
+    <h3>Editing this Profile</h3>
+      <%= form.error_messages %>
 		
-		<fieldset>
-			<legend>Account information</legend>
-			<%= render "users/user_account_form", :form => form  %>
-		</fieldset>
+  		<fieldset>
+  			<%= render "users/user_account_form", :form => form  %>
+  		</fieldset>
 
-		<fieldset>
-			<legend>Public Profile</legend>
+  		<fieldset>
+      <h4><%= form.label :bio %></h4>
+      <p>
+        Tell us a bit about yourself.
+        <%= form.text_area :bio, :cols => 60, :rows =>5, :class => "bio" %>
+      </p>
+
+      <h4><%= form.label :credentials %></h4>
+      <p>
+        List any degrees, certifications, or other professional credentials you have.<br/>
+        <%= form.text_area :credentials, :cols => 60, :rows =>5 %>
+      </p>
+
+      <h4><%= form.label :experience %></h4>
+      <p>
+        List any experience you have in other areas besides your profession. (E.g. SCUBA, photography, carpentry, etc)<br/>
+        <%= form.text_area :experience, :cols => 60, :rows =>5 %>
+      </p>
+
+      <p class="text">
+        <%= form.label :employer %>
+        <%= form.text_field :employer, :cols => 60, :rows =>5 %>
+      </p>
+    </fieldset>
+    
+      <fieldset>
+        <legend>Roles</legend>
+      
+        <%= render 'users/roles', :user => form.object %>
+      
+        <%- form.object.role_requests.build if form.object.role_requests.last.nil? || !form.object.role_requests.last.new_record? -%>
+        <%- form.fields_for :role_requests do |role_form| -%>
+          <%= render 'role_requests/form', :f => role_form if role_form.object.new_record? %>
+        <%- end -%>
+      </fieldset>
+    
+      <p>
+        <%= form.submit 'Save' %>
+      </p>
+    </div>
+    <div class="aside">
+      <h4>Photo</h4>
+      <p>
+        <%= image_tag form.object.photo.url(:medium) %>
+        <%= form.file_field :photo %>
+      </p>
+      
+      <h4>Public Profile</h4>
 			<p>This is information you can choose to make public through the OpenPHIN directory.
 			It is not required that you fill any part of this profile out, or that you make the information public if you do. </p>
 
     <p>
-      <%= form.label :public, "Make this profile public?" %>
       <%= form.check_box :public %>
+      <%= form.label :public, "Make this profile public?" %>
     </p>
-
-  <p>
-    <%= image_tag form.object.photo.url(:medium) %>
-    <%= form.label :photo %><br />
-    <%= form.file_field :photo %>
-  </p>
-
-  <p>
-      <b><%= form.label :bio %></b><br/>
-      Tell us a bit about yourself.<br/>
-      <%= form.text_area :bio, :cols => 60, :rows =>5, :class => "bio" %>
-    </p>
-
-    <p>
-      <b><%= form.label :credentials %></b><br/>
-      List any degrees, certifications, or other professional credentials you have.<br/>
-      <%= form.text_area :credentials, :cols => 60, :rows =>5 %>
-    </p>
-
-    <p>
-      <b><%= form.label :experience %></b><br/>
-      List any experience you have in other areas besides your profession. (E.g. SCUBA, photography, carpentry, etc)<br/>
-      <%= form.text_area :experience, :cols => 60, :rows =>5 %>
-    </p>
-
-    <p>
-      <b><%= form.label :employer %></b><br/>
-      <%= form.text_field :employer, :cols => 60, :rows =>5 %>
-    </p>
-    </fieldset>
-    
     
     <fieldset id="devices">
       <legend>Devices</legend>
-      
-      <%= render form.object.devices, :in_form => true %>
-      
-      <div id="new_device">
+    
+      <div class="data-list">
+        <%= render form.object.devices, :in_form => true %>
+      </div>
+    
+      <div class="new_device" style="display:none">
         <%- fields_for :device, @device ||= Device::EmailDevice.new do |device_form| -%>
           <%= device_form.error_messages %>
-        
+      
           <p>
             <%= device_form.label :type, 'Device Type' %>
             <%= select_tag :device_type, options_for_select([['Select…', nil]] + Device::Types.map{|t| [t.display_name, t.name.demodulize]}, params[:device_type])%>
           </p>
         <%- end -%>
-        
+      
         <% Device::Types.each do |device| %>
           <%- fields_for device.name.demodulize, device.new do |device_form| -%>
             <%= render :partial => "user_profiles/#{device.name.demodulize.underscore}", :locals => { :form => device_form } %>
           <% end %>
         <% end %>  
-          
-        <p>
-          <%= form.submit "Save Device" %>
-        </p>
       </div>
-        
+      
       <a href="#add-device" class="add_device">Add Device</a>
     </fieldset>
-    
-    <fieldset>
-      <legend>Roles</legend>
-      
-      <%= render 'users/roles', :user => form.object %>
-      
-      <%- form.object.role_requests.build if form.object.role_requests.last.nil? || !form.object.role_requests.last.new_record? -%>
-      <%- form.fields_for :role_requests do |role_form| -%>
-        <%= render 'role_requests/form', :f => role_form if role_form.object.new_record? %>
-      <%- end -%>
-    </fieldset>
-    
-    <p>
-      <%= form.submit 'Save' %>
-    </p>
+    </div>
   <% end %>
 </div>
-  <%= link_to 'Show', @user %>

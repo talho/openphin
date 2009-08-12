@@ -1,9 +1,9 @@
-<p>
-  <%= f.label :jurisdiction_id,  "Jurisdiction" %><br/>
-  <%= f.collection_select :jurisdiction_id, Jurisdiction.root.descendants, :id, :name, :include_blank => true %><br/>
+<p class="select rel_1">
+  <%= f.label :jurisdiction_id,  "Jurisdiction" %>
+  <%= f.collection_select :jurisdiction_id, Jurisdiction.root.descendants, :id, :name, :include_blank => true %>
 </p>
 
-<p>
-  <%= f.label :role_id, "Role" %><br/>
-  <%= f.collection_select :role_id, Role.user_roles, :id, :name, :include_blank => true %><br/>
+<p class="select rel_2">
+  <%= f.label :role_id, "Role" %>
+  <%= f.collection_select :role_id, Role.user_roles, :id, :name, :include_blank => true %>
 </p>

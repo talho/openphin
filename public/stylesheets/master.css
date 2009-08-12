@@ -142,10 +142,18 @@ ul#alerts li.more div.extended                {display:block;}
 ul#alerts li.more a.view_less                 {display:block;}
 ul#alerts li.more a.view_more                 {display:none;}
 
-ul.roles                                      {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
-ul.roles li                                   {margin:0; padding:5px 30px 5px 10px; position:relative; list-style:none; border-bottom:1px solid #d9d9d9;}
-ul.roles a.remove                             {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden; background:url(images/cross-circle.png) no-repeat center;}
-  
+.data-list                                    {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
+.data-list li,
+.data-list p                                  {margin:0; padding:5px 30px 5px 10px; position:relative; list-style:none; border-bottom:1px solid #d9d9d9;}
+.data-list a.destroy                           {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden; background:url(images/cross-circle.png) no-repeat center;}
+
+form p.rel_1                                  {width:195px; float:left; margin:0 20px 0 0;}
+form p.rel_2                                  {width:195px; float:right; clear:none;}
+form p.text input                             {width:97%;}
+form p                                        {clear:left;}
+form p.select select                          {width:97%;}
+form textarea                                 {width:97%;}
+
 fieldset div.list_filter 											{position:absolute; bottom:0; height:19px; border:1px solid #d9d9d9; background:#efefef; padding:3px 5px; left:0; right:0;}
 fieldset div.list_filter input								{width:187px;}
 fieldset div.list_filter input.empty					{color:#999;}

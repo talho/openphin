@@ -1,20 +1,36 @@
-  <%= form.label(:first_name, "First Name") %><br/>
-  <%= form.text_field(:first_name) %><br/>
-  <%= form.label(:last_name, "Last Name") %><br/>
-  <%= form.text_field(:last_name) %><br/>
-  <%= form.label(:display_name, "Preferred name to be displayed") %><br/>
-  <%= form.text_field(:display_name) %><br/>
-  <%= form.label(:description, "Description of person") %><br/>
-  <%= form.text_field(:description) %><br/>
-  <%= form.label(:email, "Email address") %><br/>
-  <%= form.text_field(:email, :class => "email_address") %><br/>
-  <%= form.label(:password, "Password") %><br/>
-  <%= form.password_field(:password, :"data-label" => "******") %><br/>
-  <%= form.label(:password_confirmation,"Password Confirmation") %><br/>
-  <%= form.password_field(:password_confirmation, :"data-label" => "******") %><br/>
-
-
-  <%= form.label(:preferred_language, "Preferred language") %><br/>
-  <%= form.select(:preferred_language, ["English","Spanish"]) %><br/>
-  <%= form.label(:title, "Job title") %><br/>
-  <%= form.text_field(:title) %><br/>
+<p class="rel_1 text">
+  <%= form.label(:first_name, "First Name") %>
+  <%= form.text_field(:first_name) %>
+</p>
+<p class="rel_2 text">
+  <%= form.label(:last_name, "Last Name") %>
+  <%= form.text_field(:last_name) %>
+</p>
+<p class="text">
+  <%= form.label(:display_name, "Preferred name to be displayed") %>
+  <%= form.text_field(:display_name) %>
+</p>
+<p class="text">
+  <%= form.label(:description, "Description of person") %>
+  <%= form.text_field(:description) %>
+</p>
+<p class="text">
+  <%= form.label(:title, "Job title") %>
+  <%= form.text_field(:title) %>
+</p>
+<p class="text">
+  <%= form.label(:email, "Email address") %>
+  <%= form.text_field(:email, :class => "email_address") %>
+</p>
+<p class="text rel_1">
+  <%= form.label(:password, "Password") %>
+  <%= form.password_field(:password, :"data-label" => "******") %>
+</p>
+<p class="text rel_2">
+  <%= form.label(:password_confirmation,"Password Confirmation") %>
+  <%= form.password_field(:password_confirmation, :"data-label" => "******") %>
+</p>
+<p>
+  <%= form.label(:preferred_language, "Preferred language") %>
+  <%= form.select(:preferred_language, ["English","Spanish"]) %>
+</p>
