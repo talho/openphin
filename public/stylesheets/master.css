@@ -25,7 +25,7 @@ table td 																			{padding:5px 20px 5px 0;}
 	
 #wrapper																			{width:700px; margin:0 auto 20px; background:url(images/content.png) repeat-y;}
 #header																				{height:80px; background:url(images/header.png) no-repeat;}
-#header h1																		{width:150px; height:47px; float:left;}
+#header h1																		{width:100px; height:47px; float:left;}
 #header h1 a																	{height:47px; text-indent:-9999px; overflow:hidden; display:block;}
 #header ul																		{float:right; height:47px; list-style-type:none;}
 #header li																		{float:left; list-style:none;}
