@@ -23,6 +23,9 @@
   <h5>Acknowledge</h5>
   <p class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></p>
 
+  <h5>Sensitive</h5>
+  <p class="sensitive"><%=h @alert.sensitive? ? 'Yes' : 'No' %></p>
+
   <h5>Delivery Time</h5>
   <p class="delivery_time"><%=h @alert.human_delivery_time %></p>
 

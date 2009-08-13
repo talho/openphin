@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../../../spec_helper'
+File.expand_path(File.dirname(__FILE__) + '/../../../../spec_helper')
 
 describe Service::TFCC::Phone::Alert do
   include Webrat::Matchers
