@@ -19,4 +19,5 @@ Spec::Runner.configure do |config|
   config.extend SpecHelpers::ModelMacros, :type => [:model]
   config.extend SpecHelpers::ControllerMacros, :type => [:controller]
   config.include SpecHelpers::ControllerHelpers, :type => [:controller]
+  config.include CachingPresenter::InstantiationMethods, :type => [:view]
 end

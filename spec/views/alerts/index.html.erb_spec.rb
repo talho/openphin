@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe '/alerts/index.html.erb' do
 
   before do
-    @alert = Factory(:alert,
+    @alert = present Factory(:alert,
       :identifier => 'TX-2009-1',
       :sent_at => 10.minutes.ago,
       :from_jurisdiction => Factory(:jurisdiction),

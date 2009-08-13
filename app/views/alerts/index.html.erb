@@ -37,7 +37,7 @@
             <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert_id %></p>
             <%- end -%>
             <div class="message">
-              <%=simple_format h(alert.message) %></dd>
+              <%=simple_format h(alert.message) %>
             </div>
 
             <% unless alert.acknowledged_by_user? %>
