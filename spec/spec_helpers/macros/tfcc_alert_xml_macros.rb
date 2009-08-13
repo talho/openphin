@@ -58,7 +58,7 @@ module SpecHelpers
     def should_set_program_name
       it "should set the program name" do
         xml = subject.build!
-        xml.should have_xpath("//ucsxml/request/activation/campaign/program", :name => "OpenPhin Alert ##{subject.alert.id}")
+        xml.should have_xpath("//ucsxml/request/activation/campaign/program", :name => "TXPhin Alert ##{subject.alert.id}")
       end
     end
     

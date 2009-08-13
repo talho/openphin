@@ -5,7 +5,7 @@
   <%- if protect_against_forgery? -%>
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
-  <title>OpenPHIN: <%= controller.controller_name %>/<%= controller.action_name %></title>
+  <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
   <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', :cache => 'all' %>
 </head>
@@ -18,7 +18,7 @@
         <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
       <%- end -%>
     </div>
-    <h1><%= link_to 'OpenPHIN', root_path %></h1>
+    <h1><%= link_to 'TXPhin', root_path %></h1>
     <ul>
     <%- if signed_in? -%>
       <%= content_tag(:li, link_to('Send an Alert', new_alert_path, :class => '.sendalert')) if current_user.alerter? %>
@@ -31,7 +31,7 @@
     <%- else -%>  
       <li><%= link_to 'Sign Up', new_user_path %></li>
       <li><%= link_to 'Register Your Organization', new_organization_path %></li>
-      <li><%= link_to 'About OpenPHIN', '#' %></li>
+      <li><%= link_to 'About TXPhin', '#' %></li>
     <%- end -%>
     </ul>
   </div>

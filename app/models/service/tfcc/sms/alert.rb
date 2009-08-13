@@ -43,7 +43,7 @@ class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
   private
 
   def add_program(xml)
-    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "page", :template => "0" do
+    xml.program :name => "TXPhin Alert ##{alert.id}", :desc => alert.title, :channel => "page", :template => "0" do
       xml.addresses :address => "c1", :retry_num => "0", :retry_wait => "0"
       xml.content do
         severity = "#{alert.severity}"

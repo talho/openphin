@@ -1,6 +1,6 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
-UPLOAD_BASE_URI = "https://openphin.texashan.org"
+UPLOAD_BASE_URI = "https://txphin.texashan.org"
 
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests

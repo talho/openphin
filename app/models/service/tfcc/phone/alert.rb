@@ -41,7 +41,7 @@ class Service::TFCC::Phone::Alert < Service::TFCC::Phone::Base
   private
 
   def add_program(xml)
-    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "#{alert.acknowledge? ? 9 : 0}" do
+    xml.program :name => "TXPhin Alert ##{alert.id}", :desc => alert.title, :channel => "outdial", :template => "#{alert.acknowledge? ? 9 : 0}" do
       xml.addresses :address => "c1", :retry_num => "0", :retry_wait => "0"
       xml.content do
         if alert.message_recording_file_name.blank?

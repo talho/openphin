@@ -41,7 +41,7 @@ class Service::TFCC::Fax::Alert < Service::TFCC::Fax::Base
   private
 
   def add_program(xml)
-    xml.program :name => "OpenPhin Alert ##{alert.id}", :desc => alert.title, :channel => "fax", :template => "0", :subject => alert.title, :from => "#{alert.author.display_name} in #{alert.from_jurisdiction.name}" do
+    xml.program :name => "TXPhin Alert ##{alert.id}", :desc => alert.title, :channel => "fax", :template => "0", :subject => alert.title, :from => "#{alert.author.display_name} in #{alert.from_jurisdiction.name}" do
       xml.addresses :address => "c1", :retry_num => "0", :retry_wait => "0"
       xml.content do
         xml.slot alert.message, :id => "1"
