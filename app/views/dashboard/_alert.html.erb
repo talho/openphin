@@ -12,7 +12,7 @@
         <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
         <span class="status <%= alert.status.downcase %>"><strong>Status:</strong> [<%= alert.status.capitalize %>]</span>
         <%- end -%>
-		<span class="sensitive <%=h alert.sensitive? ? 'yes' : 'no' %>"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></span>
+			<span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
         <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.from_jurisdiction.name %></span>
      </p> 
     </div>
