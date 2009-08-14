@@ -1,6 +1,6 @@
-Feature: Sending alerts to phones
+Feature: Sending alerts to faxes
 
-  In order to be notified of an alert via Fax
+  In order to be notified of an alert
   As a user
   I want people to be able to send me alerts on my Fax machine
   

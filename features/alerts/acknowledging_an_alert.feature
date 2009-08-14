@@ -28,7 +28,7 @@ Feature: Acknowledging an alert
     When I go to the alert log
     And I click "View" on "Piggy Pox"
     Then I should not see an "Acknowledge" button
-    But I should see "acknowledged"
+    But the "acknowledge" class selector should contain "Yes"
 
   Scenario: A user acknowledging an alert via the dashboard
     When I am on the dashboard page
@@ -38,4 +38,4 @@ Feature: Acknowledging an alert
     
     When I go to the dashboard page
     Then I should not see an "Acknowledge" button
-    But I should see "acknowledged"
+    But I should see "Acknowledge: Yes"

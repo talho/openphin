@@ -1,6 +1,6 @@
-Feature: Sending alerts to phones
+Feature: Sending alerts to SMS devices
 
-  In order to be notified of an alert via SMS
+  In order to be notified of an alert
   As a user
   I want people to be able to send me alerts on my SMS device
   

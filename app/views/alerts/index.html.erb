@@ -23,15 +23,15 @@
             <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.from_jurisdiction.name %></span>
             <br/>
             <span class="progress"><strong>Progress:</strong> <%= alert.acknowledged_percent.round %>%</span>
-		     </p> 
+		  </p> 
         </div>
-	      <div class="extended preview">
-	  	    <div class="details">
+	    <div class="extended preview">
+	  	  <div class="details">
             <p class="brief"><strong>Alert ID:</strong> <%=h alert.id %></p>
             
             <p class="brief"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
               
-	  	      <p class="brief"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
+	  	    <p class="brief"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
             
             <%- if !alert.original_alert_id.blank? -%>
             <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert_id %></p>
@@ -44,19 +44,19 @@
               <%= acknowledge_alert_button(alert) %>
             <% end %>
           </div>
-	  	    <div class="aside">
-	          <h3>Progress (by jurisdiction)</h3>
+	  	  <div class="aside">
+	        <h3>Progress (by jurisdiction)</h3>
             <% alert.jurisdictions.each do |d| %>
-            <h5><%= d.name %></h5>
-            <p><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
+              <h5><%= d.name %></h5>
+              <p><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
             <% end %>
             
             <h3>Progress (by device)</h3>
             <% Device::Types.each do |d| %>
-            <h5><%= d.display_name %></h5>
-            <p><%= alert.acknowledged_percent_for_device(d).round %>%</p>
+              <h5><%= d.display_name %></h5>
+              <p><%= alert.acknowledged_percent_for_device(d).round %>%</p>
             <% end %>
-	  	    </div>
+	  	  </div>
         </div>
     <%- end -%>
   <%- end -%>

@@ -1,6 +1,6 @@
 Feature: Sending alerts to phones
 
-  In order to be notified of an alert via the phone
+  In order to be notified of an alert
   As a user
   I want people to be able to send me alerts on my phone
   

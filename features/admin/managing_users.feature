@@ -64,7 +64,7 @@ Feature: An admin managing users
       # | First name                        | Keith  |
       # | Last name                         | Gaddis |
       # | Email                             | kbg@example.com |
-    And I attach the file at "spec/fixtures/keith.jpg" to "Photo"
+    And I attach the file at "spec/fixtures/keith.jpg" to "user_photo"
     And I press "Save"
     Then I should see the profile page
     And I should not see any errors

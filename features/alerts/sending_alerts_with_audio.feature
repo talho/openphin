@@ -1,6 +1,6 @@
 Feature: Sending audio alerts
 
-  In order to be notified of an alert with audio via the phone
+  In order to be notified of an alert with audio
   As a user
   I want to people to be able to send me alerts with audio on my phone
   

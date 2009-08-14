@@ -19,18 +19,18 @@
           <%= form.label :title %>
           <%= form.text_field :title %>
         </p>
-	    <% else %>
-		  <h2><%=h @alert.title %></h2>
-	    <% end %>
+	  <% else %>
+		<h2><%=h @alert.title %></h2>
+	  <% end %>
       
       <p>
-      <%= form.label :message %>
-      <%= form.text_area :message, :rows => 5 %>
+        <%= form.label :message %>
+        <%= form.text_area :message, :rows => 5 %>
       </p>
 
-	  </p>
-        <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview%>
       <p>
+        <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview%>
+      </p>
        	
       <p>
         <%= form.label :short_message %>
