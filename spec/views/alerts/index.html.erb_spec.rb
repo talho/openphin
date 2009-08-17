@@ -26,19 +26,19 @@ describe '/alerts/index.html.erb' do
   # | message_type | Alert |
   
   it "should show the identifier" do
-    response.should have_tag('#? .identifier', dom_id(@alert), @alert.identifier)
+    response.should have_tag('#? .alertid', dom_id(@alert), "Alert ID: #{@alert.id}")
   end
 
-  it "should show sent_at" do
-    response.should have_tag('#? .sent_at', dom_id(@alert), time_ago_in_words(@alert.sent_at))
+  it "should show created_at" do
+    response.should have_tag('#? .created_at', dom_id(@alert), "Posted at #{@alert.created_at.to_s(:standard)} by #{@alert.author.display_name}")
   end
 
   it "should show from_jurisdiction" do
-    response.should have_tag('#? .from_jurisdiction', dom_id(@alert), @alert.from_jurisdiction.name)
+    response.should have_tag('#? .from_jurisdiction', dom_id(@alert), "From: #{@alert.from_jurisdiction.name}")
   end
 
   it "should show the severity" do
-    response.should have_tag('#? .severity', dom_id(@alert), @alert.severity)
+    response.should have_tag('#? .severity', dom_id(@alert), "Severity: #{@alert.severity}")
   end
 
 end
