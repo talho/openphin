@@ -1,4 +1,4 @@
-<ul class="data-list">
+<ul class="roles data-list">
   <% user.role_memberships.user_roles.each do |r| %>
   <li><%= r.role.name%> in <%= r.jurisdiction.name%> <%= link_to "Remove Role", role_assignment_path(r.id), :confirm => "Are you sure?", :method => :delete, :class => 'destroy' if !r.role.is_public? && (user == current_user || current_user.is_admin_for?(r.jurisdiction)) %></li>
   <% end %>

@@ -49,7 +49,7 @@
       </p>
     </div>
     <div class="aside">
-      <h4>Photo</h4>
+      <%= form.label :photo %>
       <p>
         <%= image_tag form.object.photo.url(:medium) %>
         <%= form.file_field :photo %>

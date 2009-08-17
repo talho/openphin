@@ -18,7 +18,7 @@ Feature: Managing devices when editing user profiles
     And I follow "Add Device"
     And I select "E-mail" from "Device Type"
     And I fill in "E-mail" with "johnny@example.com"
-    And I press "Save Device"
+    And I press "Save"
     Then "john.smith@example.com" should have the communication device
       | Email | johnny@example.com |
   	When I go to the edit profile page
@@ -30,7 +30,7 @@ Feature: Managing devices when editing user profiles
     And I follow "Add Device"
     And I select "E-mail" from "Device Type"
     And I fill in "E-mail" with ""
-    And I press "Save Device"
+    And I press "Save"
     Then I should see error messages
     And "john.smith@example.com" should not have the communication device
       | Email |  |
