@@ -1,39 +1,39 @@
 <% content_tag_for :li, alert do %>
-    <div class="summary">
-      <p class="title">
-        <span class="title <%= alert.severity.downcase %>"><%=h alert.title %></span>
-        <span class="actions">
-          <%= link_to 'More', '#', :class => 'view_more' %>
-          <%= link_to 'Less', '#', :class => 'view_less' %>
-        </span>
-      </p>
-      <p class="meta">
-        <span class="created_at">Posted at <%= alert.created_at.to_s(:standard) %> <%= 'by '+link_to(alert.author.display_name, user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
-        <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
+  <div class="summary">
+    <p class="title">
+      <span class="title <%= alert.severity.downcase %>"><%=h alert.title %></span>
+      <span class="actions">
+        <%= link_to 'More', '#', :class => 'view_more' %>
+        <%= link_to 'Less', '#', :class => 'view_less' %>
+      </span>
+    </p>
+    <p class="meta">
+      <span class="created_at">Posted at <%= alert.created_at.to_s(:standard) %> <%= 'by '+link_to(alert.author.display_name, user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
+      <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
         <span class="status <%= alert.status.downcase %>"><strong>Status:</strong> [<%= alert.status.capitalize %>]</span>
-        <%- end -%>
-			<span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
-        <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.from_jurisdiction.name %></span>
-     </p> 
-    </div>
-    <div class="extended preview">
-	    <div class="details">
-        <p class="brief"><strong>Alert ID:</strong> <%=h alert.id %></p>
+      <%- end -%>
+	  <span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
+      <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.from_jurisdiction.name %></span>
+    </p> 
+  </div>
+  <div class="extended preview">
+    <div class="details">
+      <p class="brief"><strong>Alert ID:</strong> <%=h alert.id %></p>
         
-        <p class="brief"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
+      <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
           
-	      <p class="brief"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
+	  <p class="brief acknowledge"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
         
-        <%- if !alert.original_alert_id.blank? -%>
+      <%- if !alert.original_alert_id.blank? -%>
         <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert_id %></p>
-        <%- end -%>
-        <div class="message">
-          <%=simple_format h(alert.message) %></dd>
-        </div>
-
-        <% unless alert.acknowledged_by_user? %>
-          <%= acknowledge_alert_button(alert) %>
-        <% end %>
+      <%- end -%>
+      <div class="message">
+        <%=simple_format h(alert.message) %>
       </div>
+
+      <% unless alert.acknowledged_by_user? %>
+        <%= acknowledge_alert_button(alert) %>
+      <% end %>
     </div>
+  </div>
 <%- end -%>

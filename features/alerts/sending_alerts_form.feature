@@ -10,8 +10,8 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     Then I should explicitly not see the "Admin" role as an option
 
   Scenario: User with one or more jurisdictions
@@ -25,8 +25,8 @@ Feature: Sending alerts form
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     Then I should see "Dallas County" as a from jurisdiction option
     Then I should see "Potter County" as a from jurisdiction option
     Then I should not see "Tarrant County" as a from jurisdiction option
@@ -49,8 +49,8 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     Then I should not see "Blue Cross Blue Shield" organization as an option
 
   Scenario: Sending alerts should display Federal jurisdiction as an option
@@ -58,6 +58,6 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     Then I should see "Federal" as a jurisdictions option

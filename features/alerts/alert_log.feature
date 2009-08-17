@@ -19,7 +19,7 @@ Feature: Viewing the alert log
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    And an alert with:
+    And a sent alert with:
       | people | John Smith |
       | title             | Hello World   |
     When I am on the alert log
@@ -77,7 +77,7 @@ Feature: Viewing the alert log
       | title             | Hello World   |
     When I am on the alert log
     And I click "View" on "Hello World"
-    And I follow "Back"
+    And I press "Back"
     Then I should see an alert titled "Hello World" 
     
   Scenario: Viewing percentage of recipients that have acknowledged     

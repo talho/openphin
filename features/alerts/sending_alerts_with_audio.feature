@@ -13,8 +13,8 @@ Feature: Sending audio alerts
  Scenario: Sending a phone alert with an audio file
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -24,26 +24,24 @@ Feature: Sending audio alerts
       | Acknowledge | <unchecked> |
       | Communication methods | E-mail |
       | Sensitive | <unchecked> |
+    And I send a message recording "calm-river.wav"
       
     And I press "Preview Message"
     Then I should see a preview of the message
     
-    When I make changes to the alert form with:    
-      | Message Recording | calm-river.wav |
     And I press "Send"
     And I should see "Successfully sent the alert"
     
     When delayed jobs are processed
-    Then "keith.gaddis@example.com" should receive the email:
+    Then "keith.gaddis@example.com" should receive the email with an alert attachment:
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
-      | attachments   | calm-river.wav |
       
   Scenario: Sending a phone alert with an audio file
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I select "Phone" from "Device Type"
     And I fill in "Phone" with "111-555-1212"
-    And I press "Save Device"
+    And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
     Then I should see "111-555-1212"
@@ -52,8 +50,8 @@ Feature: Sending audio alerts
     
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -63,12 +61,11 @@ Feature: Sending audio alerts
       | Acknowledge | <unchecked> |
       | Communication methods | Phone |
       | Sensitive | <unchecked> |
+    And I send a message recording "calm-river.wav"
       
     And I press "Preview Message"
     Then I should see a preview of the message
     
-    When I make changes to the alert form with:    
-      | Message Recording | calm-river.wav |
     And I press "Send"
     And I should see "Successfully sent the alert"
     

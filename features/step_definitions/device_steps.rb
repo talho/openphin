@@ -4,6 +4,12 @@ When 'I acknowledge the phone message for "$title"' do |title|
   a.save!
 end
 
+When '"$email" acknowledges the phone alert' do |email|
+  a = User.find_by_email(email).alert_attempts.first
+  a.acknowledged_at = Time.zone.now
+  a.save!
+end
+
 Then /^"([^"]+). should have the communication device$/ do |email, table|
   user = User.find_by_email!(email)
   table.rows_hash.each do |type, value|
@@ -43,6 +49,11 @@ end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   find_email(email_address, table).should_not be_nil
+end
+
+Then /^"([^\"]*)" should receive the email with an alert attachment:$/ do |email_address, table|
+  email = find_email(email_address, table)
+  email.attachments.should_not be_nil
 end
 
 Then /^the following users should receive the email:$/ do |table|
@@ -101,6 +112,11 @@ Then 'I should have a Fax device with the Fax number "$text"' do |text|
   device.fax.should_not be_nil
 end
 
+Then 'I should have a Blackberry device with the Blackberry number "$text"' do |text|
+  device = current_user.devices.blackberry.detect{ |device| device.blackberry == text }
+  device.blackberry.should_not be_nil
+end
+
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
@@ -139,6 +155,20 @@ Then /^the following Fax calls should be made:$/ do |table|
       message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
       fax = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
       message == row["message"] && fax == row["fax"]
+    end
+    call.should_not be_nil
+  end
+end
+
+Then /^the following Blackberry calls should be made:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::Blackberry.deliveries.detect do |blackberry_call|
+      xml = Nokogiri::XML(blackberry_call.body)
+      body = xml.xpath('.//soap-env:Envelope/soap-env:Body')
+      note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})
+      message = note.xpath('.//swn:notification/swn:body', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      blackberry = note.xpath(".//swn:rcpts/*/swn:contactPnts/swn:contactPntInfo/swn:address", {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      message == row["message"] && blackberry == "#{row['blackberry']}@blackberry.sendwordnow.com"
     end
     call.should_not be_nil
   end

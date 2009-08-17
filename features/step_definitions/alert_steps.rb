@@ -66,6 +66,10 @@ When 'I follow the acknowledge alert link' do
   visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
 end
 
+When 'I send a message recording "$filename"' do |filename|
+  File.new("#{RAILS_ROOT}/message_recordings/tmp/#{current_user.token}.wav","w").close
+end
+
 Then 'I should see a preview of the message' do
   response.should have_tag('#preview')
 end
@@ -127,13 +131,20 @@ Then "I should see $n alerts" do |n|
   response.should have_selector('.alert', :count => n.to_i)
 end
 
-
 Then 'I should see an alert titled "$title"' do |title|
-  response.should have_tag('.alert .title', title)
+  response.should have_tag('.alert .title .moderate', title)
 end
 
 Then 'I should not see an alert titled "$title"' do |title|
   response.should_not have_tag('.alert .title', title)
+end
+
+Then /^I should see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
+  response.should have_tag(".alert .title .#{severity.downcase}", title)
+end
+
+Then /^I should not see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
+  response.should_not have_tag(".alert .title .#{severity.downcase}", title)
 end
 
 Then 'I can see the alert summary for "$title"' do |title|
@@ -149,7 +160,7 @@ end
 
 Then 'I should see an alert with the detail:' do |table|
  table.rows_hash.each do |field, value|
-   response.should have_selector(".alert .detail .#{field}", :content => value)
+   response.should have_selector(".alert .details .#{field}", :content => value)
  end
 end
 
@@ -159,7 +170,7 @@ Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
 end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|
-  response.should have_selector('.ackpercent', :content => percent)
+  response.should have_selector('.progress', :content => percent)
 end
 
 Then /^I can see the jurisdiction alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, jurisdiction_name, percentage|

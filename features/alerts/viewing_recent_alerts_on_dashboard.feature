@@ -21,10 +21,7 @@ Feature: Viewing recent alerts on dashboard
       | title       | rolling pig pox |
       | severity    | Moderate |
     And I should see an alert with the detail:
-      | title       | rolling pig pox |
       | message     | the world is on fie |
-      | status      | Actual   |
-      | severity    | Moderate |
       | acknowledge | Yes      |
 
     Given 19 more alerts are sent to me
@@ -34,10 +31,7 @@ Feature: Viewing recent alerts on dashboard
       | title       | rolling pig pox |
       | severity    | Moderate |
     And I should see an alert with the detail:
-      | title       | rolling pig pox |
       | message     | the world is on fie |
-      | status      | Actual   |
-      | severity    | Moderate |
       | acknowledge | Yes      |
     
     Given 1 more alert is sent to me

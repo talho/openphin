@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
   end
   
   def viewable_alerts
-    alerts_within_jurisdictions | recent_alerts | received_alerts
+    (alerts_within_jurisdictions + recent_alerts).uniq
   end
   
   def alerts_within_jurisdictions

@@ -11,8 +11,8 @@ Feature: Sending sensitive alerts
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
 
   Scenario: Sending a sensitive email alert
     When I fill out the alert form with:

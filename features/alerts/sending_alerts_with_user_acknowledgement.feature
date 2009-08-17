@@ -7,8 +7,8 @@ Feature: Acknowledging an alert
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
  
   Scenario: Acknowledging an alert through an email with signing in
     When I fill out the alert form with:
@@ -83,7 +83,7 @@ Feature: Acknowledging an alert
        When I go to the edit profile page
        And I select "Phone" from "Device Type"
        And I fill in "Phone" with "111-555-1212"
-       And I press "Save Device"
+       And I press "Save"
        Then I should see "Profile information saved."
        When I go to the edit profile page
        Then I should see "111-555-1212"
@@ -92,8 +92,8 @@ Feature: Acknowledging an alert
     
        Given I log in as "john.smith@example.com"
        And I am allowed to send alerts
-       When I go to the Alerts page
-       And I follow "New Alert"
+       When I go to the dashboard page
+       And I follow "Send an Alert"
        When I fill out the alert form with:
          | People | Keith Gaddis |
          | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -123,4 +123,4 @@ Feature: Acknowledging an alert
        When I am on the dashboard page
        Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
        And I should not see an "Acknowledge" button
-       But I should see "acknowledged"
+       But I should see "Acknowledge: Yes"

@@ -15,7 +15,7 @@ Feature: Sending alerts to faxes
     When I go to the edit profile page
     And I select "Fax" from "Device Type"
     And I fill in "Fax" with "111-555-1212"
-    And I press "Save Device"
+    And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
     Then I should see "111-555-1212"

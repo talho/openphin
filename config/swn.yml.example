@@ -1,0 +1,20 @@
+production:
+  provider: swn
+  username: sampleuser
+  password: 1234567
+  url: https://sendwordnow.com
+  retry_duration: 6.hours
+  
+development: &DEVELOPMENT
+  provider: swn
+  username: sampleuser
+  password: 1234567
+  url: https://sendwordnow.com
+  retry_duration: 6.hours
+
+test: &TEST
+  <<: *DEVELOPMENT
+  delivery_method: test
+  
+cucumber:
+  <<: *TEST  

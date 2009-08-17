@@ -240,7 +240,11 @@ class Alert < ActiveRecord::Base
 
   def integrate_voice
     original_file_name = "#{RAILS_ROOT}/message_recordings/tmp/#{self.author.token}.wav"
-    new_file_name = "#{RAILS_ROOT}/message_recordings/#{id}.wav"
+    if RAILS_ENV == "test"
+      new_file_name = "#{RAILS_ROOT}/message_recordings/test/#{id}.wav"
+    else
+      new_file_name = "#{RAILS_ROOT}/message_recordings/#{id}.wav"
+    end
     if File.exists?(original_file_name)
       File.move(original_file_name, new_file_name)
       m = self

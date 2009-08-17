@@ -15,7 +15,7 @@ Feature: Sending alerts to phones
     When I go to the edit profile page
     And I select "Phone" from "Device Type"
     And I fill in "Phone" with "111-555-1212"
-    And I press "Save Device"
+    And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
     Then I should see "111-555-1212"
@@ -24,8 +24,8 @@ Feature: Sending alerts to phones
     
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
@@ -52,7 +52,7 @@ Feature: Sending alerts to phones
     When I go to the edit profile page
     And I select "Phone" from "Device Type"
     And I fill in "Phone" with "111-555-1212"
-    And I press "Save Device"
+    And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
     Then I should see "111-555-1212"
@@ -61,8 +61,8 @@ Feature: Sending alerts to phones
     
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Alerts page
-    And I follow "New Alert"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |

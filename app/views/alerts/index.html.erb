@@ -46,16 +46,20 @@
           </div>
 	  	  <div class="aside">
 	        <h3>Progress (by jurisdiction)</h3>
+			<div class="jur_ackpct">
             <% alert.jurisdictions.each do |d| %>
-              <h5><%= d.name %></h5>
-              <p><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
+              <h5 class="jurisdiction"><%= d.name %></h5>
+              <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
             <% end %>
+			</div>
             
             <h3>Progress (by device)</h3>
+			<div class="dev_ackpct">
             <% Device::Types.each do |d| %>
-              <h5><%= d.display_name %></h5>
-              <p><%= alert.acknowledged_percent_for_device(d).round %>%</p>
+              <h5 class="device_type"><%= d.display_name %></h5>
+              <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
             <% end %>
+			</div>
 	  	  </div>
         </div>
     <%- end -%>
