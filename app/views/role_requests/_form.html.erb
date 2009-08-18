@@ -1,6 +1,6 @@
 <p class="select rel_1">
   <%= f.label :jurisdiction_id,  "Jurisdiction" %>
-  <%= f.collection_select :jurisdiction_id, Jurisdiction.root.descendants, :id, :name, :include_blank => true %>
+  <%= f.collection_select :jurisdiction_id, Jurisdiction.nonroot, :id, :name, :include_blank => true %>
 </p>
 
 <p class="select rel_2">
