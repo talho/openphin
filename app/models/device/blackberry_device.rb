@@ -18,7 +18,7 @@ class Device::BlackberryDevice < Device
   option_accessor :blackberry
   
   def self.display_name
-    'Blackberry'
+    'Blackberry PIN'
   end
   
   def deliver(alert)
