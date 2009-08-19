@@ -29,7 +29,8 @@ class Service::Base
     FAKE_DELIVERY_METHOD = :test
     DEFAULT_DELIVERY_METHOD = :deliver
     
-    attr_accessor_with_default :options, {}
+    attr_accessor_with_default(:options){ Hash.new }
+
     
     def fake_delivery?
       options["delivery_method"] == "test"
@@ -48,11 +49,13 @@ class Service::Base
   # =================
   
   def self.configuration
-    @configuration ||= Configuration.new
+    #configuration on a per-class basis
+    @@configuration||={}
+    @@configuration[self.name] ||= Configuration.new
   end
   
   def self.load_configuration_file(file)
-    configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
+    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
     if configuration.fake_delivery?
       def self.deliveries 
         @deliveries ||= []

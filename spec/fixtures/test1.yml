@@ -1,0 +1,21 @@
+login: &LOGIN
+  username: test1
+  password: pass1
+  url: https://test1.example.com
+  provider: test1
+
+production:
+  <<: *LOGIN
+  retry_duration: 6.hours
+  
+development: &DEVELOPMENT
+  <<: *LOGIN
+  retry_duration: 6.hours
+
+test: &TEST
+  <<: *LOGIN
+  <<: *DEVELOPMENT
+  delivery_method: test
+  
+cucumber:
+  <<: *TEST  
