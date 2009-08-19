@@ -22,10 +22,10 @@ class Device::IMDevice < Device
   end
   
   def deliver(alert)
-    Service::IM.deliver_alert(alert, user, self)
+    Service::IM.deliver_alert(alert, user)
   end
   
-  def batch_deliver(alert)
-    Service::IM.batch_deliver_alert(alert, self)
+  def self.batch_deliver(alert)
+    Service::IM.batch_deliver_alert(alert)
   end
 end

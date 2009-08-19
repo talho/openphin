@@ -22,10 +22,10 @@ class Device::BlackberryDevice < Device
   end
   
   def deliver(alert)
-    Service::Blackberry.deliver_alert(alert, self)
+    Service::Blackberry.deliver_alert(alert)
   end
   
-  def batch_deliver(alert)
-    Service::Blackberry.batch_deliver_alert(alert, self)
+  def self.batch_deliver(alert)
+    Service::Blackberry.batch_deliver_alert(alert)
   end
 end

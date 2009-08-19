@@ -14,7 +14,7 @@ Feature: Sending alerts to BlackBerry devices
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I follow "Add Device"
-    And I select "Blackberry" from "Device Type"
+    And I select "Blackberry PIN" from "Device Type"
     And I fill in "Blackberry" with "111-555-1212"
     And I press "Save"
     Then I should see "Profile information saved."

@@ -3,17 +3,17 @@ require 'nokogiri'
 class Service::Fax < Service::Base
   load_configuration_file RAILS_ROOT+"/config/phone.yml"
 
-  def self.deliver_alert(alert, user, device, config=Service::Fax.configuration)
+  def self.deliver_alert(alert, user, config=Service::Fax.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    response = TFCC.new(alert, device, config, [user])
+    response = TFCC.new(alert, config, [user])
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
     
-  def self.batch_deliver_alert(alert, device, config=Service::Fax.configuration)
+  def self.batch_deliver_alert(alert, config=Service::Fax.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     users = alert.alert_attempts.with_device(Device::FaxDevice).map{ |aa| aa.user }
-    response = TFCC.new(alert, device, config, users).batch_deliver
+    response = TFCC.new(alert, config, users).batch_deliver
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
@@ -54,7 +54,6 @@ class Service::Fax < Service::Base
     class CampaignActivationResponse < ActiveRecord::Base
       set_table_name "tfcc_campaign_activation_response"
       belongs_to :alert
-      has_many :fax_alert_attempts, :source => :alert_attempts, :include => :devices, :through => :alert, :conditions => "devices.type = 'Device::FaxDevice'"
 
       def self.build(response, alert)
         if !alert.blank?
@@ -103,8 +102,8 @@ class Service::Fax < Service::Base
       end
     end
     
-    def initialize(alert, device, config, users)
-      @alert, @device, @config, @users = alert, device, config, users
+    def initialize(alert, config, users)
+      @alert, @config, @users = alert, config, users
     end
 
     def deliver

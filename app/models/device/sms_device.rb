@@ -22,10 +22,10 @@ class Device::SMSDevice < Device
   end
   
   def deliver(alert)
-    Service::SMS.deliver_alert(alert, user, self)
+    Service::SMS.deliver_alert(alert, user)
   end
   
-  def batch_deliver(alert)
-    Service::SMS.batch_deliver_alert(alert, self)
+  def self.batch_deliver(alert)
+    Service::SMS.batch_deliver_alert(alert)
   end
 end

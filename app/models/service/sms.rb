@@ -3,17 +3,17 @@ require 'nokogiri'
 class Service::SMS < Service::Base
   load_configuration_file RAILS_ROOT+"/config/phone.yml"
 
-  def self.deliver_alert(alert, user, device, config=Service::SMS.configuration)
+  def self.deliver_alert(alert, user, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    response = TFCC.new(alert, device, config, [user])
+    response = TFCC.new(alert, config, [user])
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
     
-  def self.batch_deliver_alert(alert, device, config=Service::SMS.configuration)
+  def self.batch_deliver_alert(alert, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     users = alert.alert_attempts.with_device(Device::SMSDevice).map{ |aa| aa.user }
-    response = TFCC.new(alert, device, config, users).batch_deliver
+    response = TFCC.new(alert, config, users).batch_deliver
     TFCC::CampaignActivationResponse.build(response,alert)
   end
 
@@ -102,8 +102,8 @@ class Service::SMS < Service::Base
       end
     end
     
-    def initialize(alert, device, config, users)
-      @alert, @device, @config, @users = alert, device, config, users
+    def initialize(alert, config, users)
+      @alert, @config, @users = alert, config, users
     end
 
     def deliver

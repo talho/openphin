@@ -85,8 +85,8 @@
         </ul>
       </fieldset>
 	  <% else %>
-	    <% @devices.each do |device| %>
-		<%= hidden_field_tag "alert[device_types][]", device.type %>
+	    <% @device_types.each do |device_type| %>
+		<%= hidden_field_tag "alert[device_types][]", device_type %>
 		<% end %>
 	  <% end %>
     </div>

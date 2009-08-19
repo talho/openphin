@@ -61,9 +61,7 @@ class Alert < ActiveRecord::Base
            :through => :alert_attempts,
            :uniq => true,
            :conditions => ["alert_attempts.acknowledged_at IS NULL"]
-  #has_many :devices, :through => :deliveries, :source => :device, :uniq => true
-  has_many :devices,
-    :finder_sql => 'SELECT DISTINCT devices.type FROM alerts INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id AND alerts.id=#{id}'
+
   has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"]
   has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"]
 
@@ -198,8 +196,8 @@ class Alert < ActiveRecord::Base
         alert_attempts.create!(:organization => organization).batch_deliver
       end
     end
-    devices.each do |device|
-      device.batch_deliver(self)
+    alert_device_types.each do |device_type|
+      device_type.device.constantize.batch_deliver(self)
     end
   end
   

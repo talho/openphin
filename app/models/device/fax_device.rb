@@ -22,10 +22,10 @@ class Device::FaxDevice < Device
   end
   
   def deliver(alert)
-    Service::Fax.deliver_alert(alert, user, self)
+    Service::Fax.deliver_alert(alert, user)
   end
   
-  def batch_deliver(alert)
-    Service::Fax.batch_deliver_alert(alert, self)
+  def self.batch_deliver(alert)
+    Service::Fax.batch_deliver_alert(alert)
   end
 end

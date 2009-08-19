@@ -48,9 +48,9 @@ class AlertsController < ApplicationController
   def edit
     alert = current_user.alerts.find params[:id]
     # TODO : Remove when devices refactored
-    @devices = []
-    alert.devices.each do |device|
-      @devices << device
+    @device_types = []
+    alert.device_types.each do |device_type|
+      @device_types << device_type
     end
 
     if !alert.original_alert.nil?
@@ -65,9 +65,9 @@ class AlertsController < ApplicationController
   def update
     original_alert = current_user.alerts.find params[:id]
     # TODO : Remove when devices refactored
-    @devices = []
-    original_alert.devices.each do |device|
-      @devices << device
+    @device_types = []
+    original_alert.device_types.each do |device_type|
+      @device_types << device_type
     end
 
     @alert = if params[:_action].downcase == 'cancel'

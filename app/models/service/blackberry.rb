@@ -3,17 +3,17 @@ require 'nokogiri'
 class Service::Blackberry < Service::Base
   load_configuration_file RAILS_ROOT+"/config/swn.yml"
 
-  def self.deliver_alert(alert, user, device, config=Service::Blackberry.configuration)
+  def self.deliver_alert(alert, user, config=Service::Blackberry.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    response = SWN.new(alert, device, config, [user])
+    response = SWN.new(alert, config, [user])
     SWN::NotificationResponse.build(response,alert)
   end
 
     
-  def self.batch_deliver_alert(alert, device, config=Service::Blackberry.configuration)
+  def self.batch_deliver_alert(alert, config=Service::Blackberry.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     users = alert.alert_attempts.with_device(Device::BlackberryDevice).map{ |aa| aa.user }
-    response = SWN.new(alert, device, config, users).batch_deliver
+    response = SWN.new(alert, config, users).batch_deliver
     SWN::NotificationResponse.build(response,alert)
   end
 
@@ -66,8 +66,8 @@ class Service::Blackberry < Service::Base
       end
     end
 
-    def initialize(alert, device, config, users)
-      @alert, @device, @config, @users = alert, device, config, users
+    def initialize(alert, config, users)
+      @alert, @config, @users = alert, config, users
     end
 
     def deliver

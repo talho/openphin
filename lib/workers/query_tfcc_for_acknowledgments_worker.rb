@@ -18,7 +18,7 @@ class QueryTfccForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
 
           if response == "1" && !email.blank?
             user = User.find_by_email(email)
-            alert_attempt = car.phone_alert_attempts.find_by_user_id(user.id) unless user.blank?
+            alert_attempt = car.alert.alert_attempts.with_device("Device::PhoneDevice").find_by_user_id(user.id) unless user.blank?
             if(!alert_attempt.blank?)
               alert_attempt.acknowledged_at = time
               alert_attempt.save!

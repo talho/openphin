@@ -30,5 +30,5 @@
   <p class="delivery_time"><%=h @alert.human_delivery_time %></p>
 
   <h5>Methods</h5>
-  <p class="communication_methods"><%=h @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
+  <p class="communication_methods"><%= @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
 </div>

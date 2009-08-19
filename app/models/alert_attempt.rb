@@ -34,9 +34,6 @@ class AlertAttempt < ActiveRecord::Base
     {:include => :devices,
      :conditions => ["devices.type = ?", d]}}
      
-   #validates_uniqueness_of :user, :scope => :alert
-   #validates_uniqueness_of :organization, :scope => :alert
-     
   before_save :generate_acknowledgment_token
      
   def deliver
