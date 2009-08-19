@@ -12,9 +12,14 @@ module AlertsHelper
     content_tag(:ul, :class => ul_class) do
       items.inject('') do |lis, item|
         lis += content_tag(:li) do
-          html = check_box_tag 'alert[jurisdiction_ids][]', item.id, form.object.jurisdiction_ids.include?(item.id), :id => "alert_jurisdiction_#{item.id}"
-          html += label_tag "alert_jurisdiction_#{item.id}", item.name
-          html += jurisdiction_list(form, item.children) if item.children.any?
+          html = check_box_tag('alert[jurisdiction_ids][]', item.id, form.object.jurisdiction_ids.include?(item.id), :id => "alert_jurisdiction_#{item.id}")
+          html += label_tag ("alert_jurisdiction_#{item.id}", item.name) +"\n"
+          if item.children.any?
+            html += link_to_function("Select all children...", "select_all_child_jurisdictions()", :class => "hidden select_all" )
+
+            html += jurisdiction_list(form, item.children)+"\n"
+          end
+
           html
         end
         lis

@@ -56,6 +56,7 @@
 		
 		$('ul.check_selector a.toggle').click(function() {
 			$(this).toggleClass('closed').siblings('ul').toggle();
+      $(this).parent().children(".select_all").toggle();
 			return false;
 		})
 		
@@ -66,6 +67,12 @@
 		$('ul#alerts a.view_more, ul#alerts a.view_less').click(function() {
 		  $(this).closest('li').toggleClass('more');
 		  return false;
-		})
+		});
+
+    //select all child jurisdictions of the jur. for this link
+    $("a.select_all").click(function(){
+      $(this).parent().find(":checkbox").attr("checked", "true");
+    });
+
   })
 })(jQuery);

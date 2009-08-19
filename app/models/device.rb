@@ -26,7 +26,7 @@ class Device < ActiveRecord::Base
   
   serialize :options, Hash
 
-  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice, Device::IMDevice]
+  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice] #, Device::IMDevice]
 
   def parent
     :user

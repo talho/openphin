@@ -61,3 +61,16 @@ Feature: Sending alerts form
     When I go to the dashboard page
     And I follow "Send an Alert"
     Then I should see "Federal" as a jurisdictions option
+
+  Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
+    Given the following entities exist:
+      | Jurisdiction | Texas         |
+      | Jurisdiction | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    And I am on the new alert page
+    Then I should see "Select all children"
