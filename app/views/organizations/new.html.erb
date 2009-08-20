@@ -10,7 +10,7 @@
     <%= form.text_field :name %><br/>
   
     <%= form.label :organization_type_id, 'Organization Type' %>
-    <%= form.select :organization_type_id, OrganizationType.all.map{|o| [o.name, o.id]} %><br/>
+    <%= form.hidden_field :organization_type_id, {:value => OrganizationType.first.id}  %><br/>
   
     <%= form.label :distribution_email %>
     <%= form.text_field :distribution_email %><br/>
