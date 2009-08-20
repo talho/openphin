@@ -137,6 +137,10 @@ class AlertsController < ApplicationController
     if(!File.exists?(temp.path))
       render :upload_error, :layout => false
     end
+    if(File.size(temp.path) > 7000000) # sufficiently below 10Meg (21CC attachment limitation) after Base64 encoding
+      render :upload_error, :layout => false
+    end
+
     newpath = "#{RAILS_ROOT}/message_recordings/tmp/#{user.token}.wav"
     File.copy(temp.path,newpath)
     if(!File.exists?(newpath))

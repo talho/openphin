@@ -10,7 +10,12 @@
 			return false;
 		});
 		$('ul.check_selector #alert_device_phone_device').click(function() {
-			$('div.audio').toggle();
+			if($('ul.check_selector #alert_device_email_device:checked').length == 0)
+			  $('div.audio').toggle();
+		});
+		$('ul.check_selector #alert_device_email_device').click(function() {
+			if($('ul.check_selector #alert_device_phone_device:checked').length == 0)
+			  $('div.audio').toggle();
 		});
 		$('#edit fieldset input:checkbox').click(function() {
 			$(this).siblings('label').toggleClass('checked');
