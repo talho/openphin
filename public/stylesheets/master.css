@@ -74,6 +74,7 @@ ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no
 #alert_title																	{font-size:22px; font-weight:bold;}
 #alert_message																{height:200px;}
 #alert_short_message													{height:50px;}
+div.audio                                                               {display:none;}
 
 ul.progress																		{width:650px; height:26px; background:url(images/progress.png) no-repeat; margin:0 0 15px; padding:0;}
 ul.progress li																{float:left; padding:0; margin:0; line-height:26px; list-style:none;}
