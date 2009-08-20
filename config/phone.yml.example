@@ -1,0 +1,24 @@
+production:
+  provider: 21cc
+  username: username
+  password: password
+  client_id: 1
+  user_id: 1
+  url: https://ucs.tfcci.com
+  retry_duration: 6.hours
+  
+development: &DEVELOPMENT
+  provider: 21cc
+  username: password
+  password: password
+  client_id: 1
+  user_id: 1
+  url: https://ucstest.tfcci.com
+  retry_duration: 6.hours
+
+test: &TEST
+  <<: *DEVELOPMENT
+  delivery_method: test
+  
+cucumber:
+  <<: *TEST  

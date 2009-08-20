@@ -46,6 +46,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
+    run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
   end
   
   desc "install any gem dependencies"
