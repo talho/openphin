@@ -21,7 +21,7 @@ Sender: <%= @author.display_name %>
 Time Sent: <%= @alert.created_at %>
 
 <% if @alert.acknowledge? %>
-To acknowledge this alert, please click <%= acknowledge_alert_url(@alert) %>
+Please click <%= acknowledge_alert_url(@alert)%> and log in to acknowledge this alert
 <% end %>
 
 <%= @alert.message %>
