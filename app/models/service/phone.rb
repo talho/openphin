@@ -54,6 +54,9 @@ class Service::Phone < Service::Base
     class CampaignActivationResponse < ActiveRecord::Base
       set_table_name "tfcc_campaign_activation_response"
       belongs_to :alert
+      
+      named_scope :acknowledge, :joins => :alert, :conditions => ['alerts.acknowledge = ?', true]
+      named_scope :active, :joins => :alert, :conditions => ['UNIX_TIMESTAMP(alerts.created_at) + (alerts.delivery_time * 60) > UNIX_TIMESTAMP(UTC_TIMESTAMP())']
 
       def self.build(response, alert)
         if !alert.blank?
