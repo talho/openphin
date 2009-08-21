@@ -22,7 +22,6 @@ Feature: Signing up for an organization account
   Scenario: Signing up as an organization when not logged in
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
-        | Organization Type                       | Non-Profit Organization |
         | Distribution Email                      | staff@salvationarmydallas.org |
         | What Counties                           | Dallas County, Tarrant County, Denton County |
         | Description                             | This might be a mission statement |
@@ -47,7 +46,6 @@ Feature: Signing up for an organization account
     And I am logged in as "john.smith@example.com"
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
-        | Organization Type                       | Non-Profit Organization |
         | Distribution Email         | staff@salvationarmydallas.org |
         | What Counties                   | Dallas County, Tarrant County, Denton County |
         | Description                    | This might be a mission statement |

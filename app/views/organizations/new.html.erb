@@ -6,47 +6,49 @@
 <% form_for @organization do |form| %>
   <fieldset>
     <legend>Organization Information</legend>
-    <%= form.label :name, 'Organization Name' %>
+    <%= form.label :name, 'Organization Name' %><br/>
     <%= form.text_field :name %><br/>
   
-    <%= form.label :organization_type_id, 'Organization Type' %>
-    <%= form.hidden_field :organization_type_id, {:value => OrganizationType.first.id}  %><br/>
+<!-- Will be used later
+    <%= form.label :organization_type_id, 'Organization Type' %><br/>
+-->
+    <%= form.hidden_field :organization_type_id, {:value => OrganizationType.first.id}  %>
   
-    <%= form.label :distribution_email %>
+    <%= form.label :distribution_email %><br/>
     <%= form.text_field :distribution_email %><br/>
   
-    <%= form.label :description, 'Description of Organization' %>
+    <%= form.label :description, 'Description of Organization' %><br/>
     <%= form.text_field :description %><br/>
    
-    <%= form.label :phone %>
+    <%= form.label :phone %><br/>
     <%= form.text_field :phone %><br/>
   
-    <%= form.label :fax %>
+    <%= form.label :fax %><br/>
     <%= form.text_field :fax %><br/>
   
-    <%= form.label :street %>
+    <%= form.label :street %><br/>
     <%= form.text_field :street %><br/>
   
-    <%= form.label :locality, 'City' %>
+    <%= form.label :locality, 'City' %><br/>
     <%= form.text_field :locality %><br/>
   
-    <%= form.label :state %>
+    <%= form.label :state %><br/>
     <%= form.text_field :state %><br/>
   
-    <%= form.label :postal_code, 'Zip' %>
+    <%= form.label :postal_code, 'Zip' %><br/>
     <%= form.text_field :postal_code %><br/>
   </fieldset>
   <br/>
   <%- unless signed_in? -%>
     <fieldset>
       <legend>Contact Person</legend>
-      <%= form.label :contact_display_name, "Name" %>
+      <%= form.label :contact_display_name, "Name" %><br/>
       <%= form.text_field :contact_display_name %><br/>
 
-      <%= form.label :contact_email, "Email Address" %>
+      <%= form.label :contact_email, "Email Address" %><br/>
       <%= form.text_field :contact_email %><br/>
 
-      <%= form.label :contact_phone, "Phone Number" %>
+      <%= form.label :contact_phone, "Phone Number" %><br/>
       <%= form.text_field :contact_phone %><br/>
     </fieldset>
   <%- end -%>

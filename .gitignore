@@ -1,3 +1,4 @@
+*.swp
 .idea
 config/*.db
 config/database.yml
