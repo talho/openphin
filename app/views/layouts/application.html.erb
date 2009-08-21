@@ -16,6 +16,8 @@
       <%- if signed_in? -%>
         <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
         <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
+      <%- else -%>
+        <p><%= link_to 'Sign In', sign_in_path %></p>
       <%- end -%>
     </div>
     <h1><%= link_to 'TXPhin', root_path %></h1>
@@ -31,7 +33,6 @@
     <%- else -%>  
       <li><%= link_to 'Sign Up', new_user_path %></li>
       <li><%= link_to 'Register Your Organization', new_organization_path %></li>
-      <li><%= link_to 'About TXPhin', '#' %></li>
     <%- end -%>
     </ul>
   </div>
