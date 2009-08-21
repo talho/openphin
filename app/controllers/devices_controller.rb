@@ -9,7 +9,6 @@ class DevicesController < ApplicationController
   end
 
   def create
-    debugger
     user = User.find(params[:user_id])
     @device = "Device::#{params[:device_type]}".constantize.new(params[params[:device_type]])
     @device.user=user
