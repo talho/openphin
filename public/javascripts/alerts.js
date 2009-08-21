@@ -79,7 +79,14 @@
 
     //select all child jurisdictions of the jur. for this link
     $("a.select_all").click(function(){
-      $(this).parent().find(":checkbox").attr("checked", "true");
+      if($(this).text() == "Select all children..."){
+        $(this).parent().find(":checkbox").attr("checked", true);
+        $(this).text("Unselect all...");
+      }else{
+        $(this).parent().find(":checkbox").attr("checked", false);
+        $(this).text("Select all children...");
+
+      }
     });
 
   })
