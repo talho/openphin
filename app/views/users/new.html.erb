@@ -2,5 +2,9 @@
 
 <% form_for @user do |f| %>
   <%= render 'new_user_form', :f => f, :user => @user %>
+  <p>
+    <%= f.submit 'Sign Up' %> or <%= link_to 'Cancel', sign_in_path %>
+  </p>
 <% end %>
+
 
