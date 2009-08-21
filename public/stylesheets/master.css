@@ -164,3 +164,6 @@ form button,
 form input.submit,
 a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
 a.button                                      {display:block;}
+.new_user input, .new_user select, new_user textarea {margin-bottom:10px;}
+.new_organization input, .new_organization select, .new_organization textarea {margin-bottom:10px;}
+.new_organization legend {font-size:1.4em; color:#369;}

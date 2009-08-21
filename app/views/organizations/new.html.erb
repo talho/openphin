@@ -1,8 +1,3 @@
-<%- unless signed_in? -%>
-  <p><strong>Already have an account?</strong> <%= link_to 'Sign in', sign_in_path %> now.</p>
-<%- end -%>
-
-
 <% form_for @organization do |form| %>
   <fieldset>
     <legend>Organization Information</legend>
@@ -18,7 +13,7 @@
     <%= form.text_field :distribution_email %><br/>
   
     <%= form.label :description, 'Description of Organization' %><br/>
-    <%= form.text_field :description %><br/>
+    <%= form.text_area :description, :rows => "8" %><br/>
    
     <%= form.label :phone %><br/>
     <%= form.text_field :phone %><br/>
