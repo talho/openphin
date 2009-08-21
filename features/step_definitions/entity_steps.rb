@@ -32,7 +32,7 @@ Given /^a[n]? approval role named (.*)$/ do |name|
   r = Factory(:role, :name => name, :approval_required => true)
 end
 
-Given '$parent is the parent jurisdiction of:' do |parent_name, table|
+Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   jurisdictions = table.raw.first
   parent = Given "a jurisdiction named #{parent_name}"
   jurisdictions.each do |name|
@@ -41,7 +41,7 @@ Given '$parent is the parent jurisdiction of:' do |parent_name, table|
   end
 end
 
-Given 'the following users belong to the $name:' do |organization_name, table|
+Given /^the following users belong to the (.*):$/ do |organization_name, table|
   organization = Given "an organization named #{organization_name}"
   users = table.raw.first
   users.each do |user_name|

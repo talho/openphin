@@ -1,3 +1,5 @@
+<script type='text/javascript'>var DEVICE_POST_URL = "<%= user_devices_path(current_user) %>"</script>
+
 <div class="profile_edit">
   <% form_for @user, :url => user_profile_path(@user), :html => {:multipart => true} do |form| %>
   <div class="details">
@@ -85,7 +87,8 @@
           <%- fields_for device.name.demodulize, device.new do |device_form| -%>
             <%= render :partial => "user_profiles/#{device.name.demodulize.underscore}", :locals => { :form => device_form } %>
           <% end %>
-        <% end %>  
+        <% end %>
+        <%= link_to "Add device", "#add-device", :class => "hidden add_new_device" %>
       </div>
       
       <a href="#add-device" class="add_device">Add Device</a>

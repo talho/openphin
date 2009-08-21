@@ -34,4 +34,5 @@ Feature: Managing devices when editing user profiles
     Then I should see error messages
     And "john.smith@example.com" should not have the communication device
       | Email |  |
+
       

@@ -11,6 +11,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
+    user.resources :devices
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
