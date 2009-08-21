@@ -1,9 +1,8 @@
 <div id="search-results">
+  <%= render :partial => "search" %>
   <%- @results.each do |result| -%>
     <p>
       <%= link_to result.name, user_profile_path(result), :class => 'name' %>
     </p>
-  <%- end -%>
-  
-  
+  <%- end if !@results.blank?-%>
 </div>

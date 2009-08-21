@@ -1,0 +1,6 @@
+Please fill in part of the name of the person you would like to search for:<br/>
+<% form_tag(search_path, :method => "get") do %>
+  <%= label_tag(:tag, "Search for:") %>
+  <%= text_field_tag(:tag) %>
+  <%= submit_tag("Search") %>
+<% end %>

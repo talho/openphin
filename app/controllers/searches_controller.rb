@@ -2,13 +2,10 @@ class SearchesController < ApplicationController
   before_filter :non_public_role_required
   
   def show  
-    params[:q] ||= ''
-    if params[:q].strip.size == 0
-      search_size = 30
-    else
+    if !params[:tag].blank?
       search_size = 300
+      @results = User.search("*" + params[:tag].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any, :per_page => search_size)
     end
-    @results = User.search(params[:q].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any, :per_page => search_size)
     
     respond_to do |format|
       format.html

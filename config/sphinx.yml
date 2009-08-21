@@ -1,15 +1,15 @@
 development:
-  enable_star: 1
-  min_prefix_len: 1
+  enable_star: true
+  min_infix_len: 2
 
 test: &TEST
   port: 3313
-  enable_star: 1
-  min_prefix_len: 1
+  enable_star: true
+  min_infix_len: 2
 
 production:
-  enable_star: 1
-  min_prefix_len: 1
+  enable_star: true
+  min_infix_len: 2
   bin_path: '/usr/local/bin'
 
 cucumber:

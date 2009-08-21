@@ -27,8 +27,9 @@ Feature: Searching for users
   Scenario: Searching for a user
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page
+    And I follow "Find People"
     And I fill in "Search" with "Smith"
-    And I press "Go"
+    And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
       
@@ -46,16 +47,18 @@ Feature: Searching for users
     And jane.smith@example.com has a public profile
   
     When I go to the dashboard page
+    And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I press "Go"
+    And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
     When I follow "John Smith"
     And I should see "This user's profile is not public"
     
     When I go to the dashboard page
+    And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I press "Go"
+    And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
     When I follow "Jane Smith"
@@ -66,16 +69,18 @@ Feature: Searching for users
     And jane.smith@example.com has a public profile
   
     When I go to the dashboard page
+    And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I press "Go"
+    And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
     When I follow "John Smith"
     And I should not see "This user's profile is not public"
     
     When I go to the dashboard page
+    And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I press "Go"
+    And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
     When I follow "Jane Smith"
