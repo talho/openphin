@@ -58,6 +58,7 @@ class UsersController < ApplicationController
         SignupMailer.deliver_confirmation(@user)
         format.html 
         format.xml  { render :xml => @user, :status => :created, :location => @user }
+flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{HOST}."
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }

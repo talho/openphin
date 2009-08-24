@@ -20,6 +20,7 @@ ActionController::Routing::Routes.draw do |map|
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
   map.resources :roles
   map.resources :organizations
+  map.organization_confirmation "organizations/:id/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   
   map.resource :search
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"

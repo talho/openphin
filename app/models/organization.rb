@@ -26,16 +26,31 @@
 #  contact_display_name      :string(255)
 #  contact_phone             :string(255)
 #  contact_email             :string(255)
+#  token                     :string(128)
+#  email_confirmed           :boolean(1)      not null
 #
 
 class Organization < ActiveRecord::Base
+
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   belongs_to :organization_type
   has_one :contact, :class_name => "User", :primary_key => :contact_email, :foreign_key => 'email'
+
+  validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
+  def validate
+    errors.add_to_base("Organization name can't be blank") if self.name.blank?
+    errors.add_to_base("Description of organization can't be blank") if self.description.blank?
+    errors.add_to_base("City can't be blank") if self.locality.blank?
+    errors.add_to_base("Contact person's name can't be blank") if self.contact_display_name.blank?
+    errors.add_to_base("Contact person's email can't be blank") if self.contact_email.blank?
+    errors.add_to_base("Contact person's phone can't be blank") if self.contact_phone.blank?
+  end
   
+  before_create :set_token
+
   default_scope :order => :name
   
   named_scope :approved, :conditions => { :approved => true }
@@ -87,4 +102,11 @@ class Organization < ActiveRecord::Base
   def phin_ms_queue
     FileUtils.mkdir_p File.join(Agency[:phin_ms_base_path], queue)
   end
+
+  private
+
+  def set_token
+    self.token = ActiveSupport::SecureRandom.hex
+  end
+
 end

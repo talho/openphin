@@ -39,6 +39,13 @@ end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
   r.jurisdiction_id = Jurisdiction.find_by_name('Potter').id
+  r.role_id = Role.org_admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Potter').id
   r.role_id = Role.admin.id
   r.user_id = u.id
 end

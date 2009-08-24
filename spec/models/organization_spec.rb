@@ -26,16 +26,77 @@
 #  contact_display_name      :string(255)
 #  contact_phone             :string(255)
 #  contact_email             :string(255)
+#  token                     :string(128)
+#  email_confirmed           :boolean(1)      not null
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Organization do
+
+  describe "validations" do
+
+    before(:each) do
+      @organization = Factory.build(:organization)
+    end
+
+    it "should not be valid without a name" do
+      @organization.name = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a description" do
+      @organization.description = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a distribution_email" do
+      @organization.distribution_email = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a city (locality)" do
+      @organization.locality = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a state" do
+      @organization.state = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a postal_code" do
+      @organization.postal_code = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a phone" do
+      @organization.phone = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a contact display name" do
+      @organization.contact_display_name = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a contact email" do
+      @organization.contact_email = ""
+      @organization.valid?.should be_false
+    end
+
+    it "should not be valid without a contact phone" do
+      @organization.contact_phone = ""
+      @organization.valid?.should be_false
+    end
+
+  end
+
   describe "default scope" do
     before do
-      Organization.create! :name => 'Banana'
-      Organization.create! :name => 'Apple'
-      Organization.create! :name => 'Cucumber'
+      Organization.create! :name => 'Banana', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
+      Organization.create! :name => 'Apple', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
+      Organization.create! :name => 'Cucumber', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
     end
     
     it 'should sort by name' do

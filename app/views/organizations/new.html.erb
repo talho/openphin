@@ -1,4 +1,6 @@
 <% form_for @organization do |form| %>
+  <%= form.error_messages %><br/>
+
   <fieldset>
     <legend>Organization Information</legend>
     <%= form.label :name, 'Organization Name' %><br/>

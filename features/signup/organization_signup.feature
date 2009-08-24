@@ -34,35 +34,25 @@ Feature: Signing up for an organization account
         | City                                    | Dallas |
         | State                                   | TX |
         | Zip                                     | 22212 |
-    Then I should see "Thanks for signing your organization up, the email you specified as the organization's contact will receive an email notification upon admin approval of the organization's registration.  Once approval is received, individuals will be able to enroll themselves and associate their account with this organization."
+    Then I should see "Thank you for registering your organization with TXPhin. You will receive an email notification at the organization's email address upon administrator approval of the organization's registration.  Once approval is granted, individuals will be able to enroll themselves and associate their account with this organization."
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
-      | body contains | Thanks for signing up |
+      | body contains | Thanks for registering your organization |
 
-
-  Scenario: Signing up as an organization when logged in
-    Given the following users exist:
-      | Jonathan Smith | john.smith@example.com | Public | Texas |
-    And I am logged in as "john.smith@example.com"
+  Scenario: Signing up as an organization when not logged in should display error when form is blank
     When I signup for an organization account with the following info:
-        | Organization                            | Greater Dallas Salvation Army |
-        | Distribution Email         | staff@salvationarmydallas.org |
-        | What Counties                   | Dallas County, Tarrant County, Denton County |
-        | Description                    | This might be a mission statement |
-        | Phone                         | 5124444444 |
-        | Fax                                     | 5123333333 |
-        | Street                                  | 123 Willow Ave. Suite 34 |
-        | City                                    | Dallas |
-        | State                                   | TX |
-        | Zip                                     | 22212 |
-    Then I should see "Thanks for signing your organization up, the email you specified as the organization's contact will receive an email notification upon admin approval of the organization's registration.  Once approval is received, individuals will be able to enroll themselves and associate their account with this organization."
-    And the following users should receive the email:
-        | roles         | Texas / OrgAdmin |
-        | subject       | User requesting organization signup |
-        | body contains | Greater Dallas Salvation Army |
-        | body contains | Jonathan Smith (john.smith@example.com) |
-        | body contains | 5124444444 |
-        | body contains | Dallas County |
-        | body contains | Tarrant County |
-        | body contains | Denton County |
-        | body contains | Non-Profit Organization |
+        | Fax                            | 5124444444 |
+    Then I should see "11 errors prohibited this organization from being saved"
+    And I should see "There were problems with the following fields:"
+    And I should see "Organization name can't be blank"
+    And I should see "Distribution email can't be blank"
+    And I should see "Postal code can't be blank"
+    And I should see "Street can't be blank"
+    And I should see "Phone can't be blank"
+    And I should see "Description of organization can't be blank"
+    And I should see "City can't be blank"
+    And I should see "Contact person's name can't be blank"
+    And I should see "Contact person's email can't be blank"
+    And I should see "Contact person's phone can't be blank"
+    And I should see "State can't be blank"
+

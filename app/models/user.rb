@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
 
   named_scope :with_role, lambda {|role| 
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
-    { :conditions => [ "role_memberships.role_id = ?", role.id ]}
+    { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
   }
   named_scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)

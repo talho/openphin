@@ -167,3 +167,36 @@ a.button                                      {display:block;}
 .new_user input, .new_user select, new_user textarea {margin-bottom:10px;}
 .new_organization input, .new_organization select, .new_organization textarea {margin-bottom:10px;}
 .new_organization legend {font-size:1.4em; color:#369;}
+
+/* Alerts and notifications */
+.flash {
+  margin: .8em .8em .4em;
+}
+.completed, .error, .notice, .instructions {
+  font-size: 12px;
+  padding: .8em; 
+  margin-top: 0px;
+  border: 2px solid #ddd;
+}
+.completed    { background: #E6EFC2; color: #264409; border-color: #C6D880; }
+.error        { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
+.notice       { background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.instructions { background: #CCFFFF; color: #264409; border-color: #33FFFF; }
+
+/* Error explainations */
+.errorExplanation {
+  border: 1px solid #fbc2c4;
+  margin-top: 1em;
+  padding: 1em;
+  padding-left: 1em;
+}
+.errorExplanation h2 {
+  color: #800;
+  font-size: 1.2em;
+  margin-top: 0;
+  padding: 0;
+}
+.errorExplanation li {
+  margin-left: 2em;
+}
+

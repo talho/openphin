@@ -64,7 +64,7 @@ class Clearance::PasswordsController < ApplicationController
   end
 
   def flash_failure_after_create
-    flash.now[:failure] = translate(:unknown_email,
+    flash.now[:error] = translate(:unknown_email,
       :scope   => [:clearance, :controllers, :passwords],
       :default => "Unknown email.")
   end
@@ -74,7 +74,7 @@ class Clearance::PasswordsController < ApplicationController
   end
 
   def flash_success_after_update
-    flash[:success] = translate(:signed_in, :default => "Signed in.")
+    flash[:completed] = translate(:signed_in, :default => "Signed in.")
   end
 
   def url_after_update

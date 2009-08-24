@@ -36,13 +36,15 @@
     <%- end -%>
     </ul>
   </div>
-  <div id="content">    
-    <%- [:notice, :success, :failure].each do |type| -%>
+  <div class="flash">
+    <%- [:notice, :instructions, :completed, :error].each do |type| -%>
       <%- if flash[type] -%>
-        <p class="<%= type %>"><%= flash[type] %></p>
+        <p class="<%= type %>"><%= flash[type] %></p><br/>
       <%- end -%>
     <%- end -%>
-    
+  </div>
+
+  <div id="content">    
     <%= yield %>
   </div>
   

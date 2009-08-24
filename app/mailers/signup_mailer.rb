@@ -11,6 +11,17 @@ class SignupMailer < ActionMailer::Base
     end
   end
   
+  def org_confirmation(organization)
+    if organization.nil? || organization.contact_email.blank?
+      logger.info "Tried to send an email confirmation notification for an organization with no contact email address"
+    else
+      recipients organization.contact_email
+      from DO_NOT_REPLY
+      subject "Confirm your email"
+      body :confirm_link => organization_confirmation_url(organization, organization.token)
+    end
+  end
+  
   def admin_notification_of_organization_request(organization)
     user = User.with_role(Role.org_admin).all(:include => :role_memberships).map(&:formatted_email)
     if user.blank?

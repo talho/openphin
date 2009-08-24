@@ -48,6 +48,17 @@ Factory.sequence(:organization_name) {|jn| "Organization #{jn}"}
 Factory.define :organization do |org|
   org.approved true
   org.name { Factory.next(:organization_name) }
+  org.distribution_email "dist@email.com"
+  org.description "National Organization"
+  org.phone "555-555-5555"
+  org.fax "444-444-4444"
+  org.street "123 Willow Ave. Suite 34"
+  org.locality "Dallas"
+  org.state "TX"
+  org.postal_code "22212"
+  org.contact_display_name "Allen Wrench"
+  org.contact_email "allen@email.com"
+  org.contact_phone "555-555-5555"
 end
 
 Factory.sequence(:organization_type_name) {|jn| "Organization Type #{jn}"}
