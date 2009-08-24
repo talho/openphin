@@ -19,8 +19,9 @@ ActionController::Routing::Routes.draw do |map|
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
   map.resources :roles
-  map.resources :organizations
-  map.organization_confirmation "organizations/:id/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
+  map.resources :organizations do |organization|
+    organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
+  end
   
   map.resource :search
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"

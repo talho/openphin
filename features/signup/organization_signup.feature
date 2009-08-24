@@ -39,6 +39,10 @@ Feature: Signing up for an organization account
       | subject       | Confirm your email    |
       | body contains | Thanks for registering your organization |
 
+    When "john@example.com" clicks the organization confirmation link in the email
+    Then I should see "Your organization is confirmed.  You will be contacted by your TXPhin administrator when your registration is approved."
+    And "Greater Dallas Salvation Army" is confirmed
+
   Scenario: Signing up as an organization when not logged in should display error when form is blank
     When I signup for an organization account with the following info:
         | Fax                            | 5124444444 |
@@ -55,4 +59,3 @@ Feature: Signing up for an organization account
     And I should see "Contact person's email can't be blank"
     And I should see "Contact person's phone can't be blank"
     And I should see "State can't be blank"
-

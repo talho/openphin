@@ -103,6 +103,10 @@ class Organization < ActiveRecord::Base
     FileUtils.mkdir_p File.join(Agency[:phin_ms_base_path], queue)
   end
 
+  def confirmed?
+    email_confirmed
+  end
+
   private
 
   def set_token
