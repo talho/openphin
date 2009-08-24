@@ -82,12 +82,12 @@ Feature: Acknowledging an alert
        Given I am logged in as "keith.gaddis@example.com"
        When I go to the edit profile page
        And I select "Phone" from "Device Type"
-       And I fill in "Phone" with "111-555-1212"
+       And I fill in "Phone" with "2105551212"
        And I press "Save"
        Then I should see "Profile information saved."
        When I go to the edit profile page
-       Then I should see "111-555-1212"
-       And I should have a phone device with the phone "111-555-1212"
+       Then I should see "2105551212"
+       And I should have a phone device with the phone "2105551212"
        And I sign out
     
        Given I log in as "john.smith@example.com"
@@ -114,7 +114,7 @@ Feature: Acknowledging an alert
        When delayed jobs are processed
        Then the following phone calls should be made:
          | phone        | message              |
-         | 111-555-1212 | Chicken pox outbreak |
+         | 2105551212 | Chicken pox outbreak |
        
        When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
        And delayed jobs are processed

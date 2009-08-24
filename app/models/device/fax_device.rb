@@ -16,6 +16,9 @@
 class Device::FaxDevice < Device
   
   option_accessor :fax
+  validates_format_of :fax, :with => /^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/
+
+  before_save :strip_extra_characters
   
   def self.display_name
     'Fax'
@@ -27,5 +30,11 @@ class Device::FaxDevice < Device
   
   def self.batch_deliver(alert)
     Service::Fax.batch_deliver_alert(alert)
+  end
+
+  private
+  def strip_extra_characters
+    self.fax = self.fax.tr('()-. ','')
+    self.fax = self.fax[1..-1] if self.fax.first == '1'
   end
 end

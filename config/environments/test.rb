@@ -23,6 +23,11 @@ config.action_controller.allow_forgery_protection    = false
 # The :test delivery method accumulates sent emails in the
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
+##don't load backgroundrb in test environment'
+config.plugins = config.plugin_locators.map do |locator|
+  locator.new(self).plugins
+end.flatten.map{|p| p.name.to_sym}
+config.plugins -= [:backgroundrb]
 
 config.gem "rspec",       :lib => false,        :version => ">=1.2.7"
 config.gem "rspec-rails", :lib => false, :version => ">=1.2.7"
@@ -42,3 +47,4 @@ PHIN_PARTNER_OID="1.3.6.1.4.1.1"
 PHIN_APP_OID="1"
 PHIN_ENV_OID="3"
 PHIN_OID_ROOT="#{PHIN_PARTNER_OID}.#{PHIN_ENV_OID}.#{PHIN_APP_OID}"
+

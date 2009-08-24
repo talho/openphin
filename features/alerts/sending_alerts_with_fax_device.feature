@@ -14,12 +14,12 @@ Feature: Sending alerts to faxes
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I select "Fax" from "Device Type"
-    And I fill in "Fax" with "111-555-1212"
+    And I fill in "Fax" with "210-555-1212"
     And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
-    Then I should see "111-555-1212"
-    And I should have a Fax device with the Fax number "111-555-1212"
+    Then I should see "2105551212"
+    And I should have a Fax device with the Fax number "2105551212"
     And I sign out
     
     Given I log in as "john.smith@example.com"
@@ -45,4 +45,4 @@ Feature: Sending alerts to faxes
     When delayed jobs are processed
     Then the following Fax calls should be made:
       | fax          | message              |
-      | 111-555-1212 | Chicken pox outbreak |
+      | 2105551212 | Chicken pox outbreak |

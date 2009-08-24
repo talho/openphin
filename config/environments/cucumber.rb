@@ -15,6 +15,12 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
+##don't load backgroundrb in test environment'
+config.plugins = config.plugin_locators.map do |locator|
+  locator.new(self).plugins
+end.flatten.map{|p| p.name.to_sym}
+config.plugins -= [:backgroundrb]
+
 config.gem "cucumber",    :lib => false,        :version => "=0.3.11"
 config.gem "rspec",       :lib => false,        :version => ">=1.2.7"
 config.gem "rspec-rails", :lib => false,        :version => ">=1.2.7"
