@@ -70,6 +70,7 @@
       <legend>Devices</legend>
     
       <div class="data-list">
+        <div class='error'></div>
         <%= render form.object.devices, :in_form => true %>
       </div>
     
@@ -88,7 +89,8 @@
             <%= render :partial => "user_profiles/#{device.name.demodulize.underscore}", :locals => { :form => device_form } %>
           <% end %>
         <% end %>
-        <%= link_to "Add device", "#add-device", :class => "hidden add_new_device" %>
+        <%= link_to "Add", "#add-device", :class => "hidden add_new_device" %>
+        <%= link_to "Cancel", "#add-device", :class => "hidden cancel_new_device" %>
       </div>
       
       <a href="#add-device" class="add_device">Add Device</a>

@@ -102,5 +102,20 @@ end
 
 Factory.define :phone_device, :class => Device::PhoneDevice do |m|
   m.association :user
-  m.sequence(:phone) {|t| "555-121#{t}"}
+  m.sequence(:phone) {|t| "210-555-#{t.to_s.rjust(4,"0")}"}
+end
+
+Factory.define :fax_device, :class => Device::FaxDevice do |m|
+  m.association :user
+  m.sequence(:fax) {|t| "210-555-#{t.to_s.rjust(4,"0")}"}
+end
+
+Factory.define :sms_device, :class => Device::SMSDevice do |m|
+  m.association :user
+  m.sequence(:sms) {|t| "210-555-#{t.to_s.rjust(4,"0")}"}
+end
+
+Factory.define :blackberry_device, :class => Device::BlackberryDevice do |m|
+  m.association :user
+  m.sequence(:blackberry) {|t| "abcf#{t.to_s.rjust(4,"0")}"}
 end

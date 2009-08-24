@@ -15,12 +15,12 @@ Feature: Sending alerts to BlackBerry devices
     When I go to the edit profile page
     And I follow "Add Device"
     And I select "Blackberry PIN" from "Device Type"
-    And I fill in "Blackberry" with "111-555-1212"
+    And I fill in "Blackberry" with "12345678"
     And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
-    Then I should see "111-555-1212"
-    And I should have a Blackberry device with the Blackberry number "111-555-1212"
+    Then I should see "12345678"
+    And I should have a Blackberry device with the Blackberry number "12345678"
     And I sign out
     
     Given I log in as "john.smith@example.com"
@@ -47,4 +47,4 @@ Feature: Sending alerts to BlackBerry devices
     When delayed jobs are processed
     Then the following Blackberry calls should be made:
       | blackberry   | message              |
-      | 111-555-1212 | Chicken pox outbreak short message |
+      | 12345678 | Chicken pox outbreak short message |

@@ -10,6 +10,7 @@
       $(this).closest('div.aside').find('p.device').hide();
       $('p.' + $(this).val()).show();
       $('a.add_new_device').show();
+      $('a.cancel_new_device').show();
     });
     $("a.add_new_device").click(function(){
       dev_type=$("select#device_type option:selected").val();
@@ -25,13 +26,27 @@
         dataType: "html",
         success: function(data, status){
           $("#devices .data-list").append(data);
-          
+        },
+        error: function(request, error){
+          $("#devices .data-list .error").text(request.responseText);
+          $("#devices .data-list .error").effect("highlight", {}, 3000);
         }
       });
       $(".new_device").hide();
       $("form a.add_device").show();
 
     });
+    $("a.cancel_new_device").click(function(){
+
+      dev_type=$("select#device_type option:selected").val();
+      $("p."+dev_type+" input").each(function(){
+        $(this).val("");
+      });
+      $(".new_device").hide();
+      $("form a.add_device").show();
+
+    });
+
   });
   
   $(function() {

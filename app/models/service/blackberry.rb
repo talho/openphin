@@ -3,7 +3,7 @@ require 'nokogiri'
 class Service::Blackberry < Service::Base
   load_configuration_file RAILS_ROOT+"/config/swn.yml"
 
-  def self.deliver_alert(alert, user, config=Service::Blackberry.configuration)
+  def self.deliver_alert(alert, config=Service::Blackberry.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     response = SWN.new(alert, config, [user])
     SWN::NotificationResponse.build(response,alert)

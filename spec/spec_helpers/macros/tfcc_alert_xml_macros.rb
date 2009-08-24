@@ -75,7 +75,7 @@ module SpecHelpers
         users = []
         5.times do |i|
           users << Factory(:user, :email => "joe#{i}@example.com", :devices => [])
-          users.last.devices << Factory.build(:phone_device, :phone => "616-555-121#{i}", :user => users.last)
+          users.last.devices << Factory.build(:phone_device, :phone => "616555#{i.to_s.rjust(4,'0')}", :user => users.last)
         end
 
         subject.users = users
@@ -83,7 +83,7 @@ module SpecHelpers
 
         5.times do |i|
           xml.should have_xpath("//ucsxml/request/activation/campaign/audience/contact/c0", :type => "string", :content => "joe#{i}@example.com")
-          xml.should have_xpath("//ucsxml/request/activation/campaign/audience/contact/c1", :type => "phone", :content => "616-555-121#{i}")
+          xml.should have_xpath("//ucsxml/request/activation/campaign/audience/contact/c1", :type => "phone", :content => "616555#{i.to_s.rjust(4,'0')}")
         end
       end
     end

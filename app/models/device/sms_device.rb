@@ -16,6 +16,9 @@
 class Device::SMSDevice < Device
   
   option_accessor :sms
+  validates_format_of :sms, :with => /^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/
+
+  before_save :strip_extra_characters
   
   def self.display_name
     'SMS'
@@ -27,5 +30,12 @@ class Device::SMSDevice < Device
   
   def self.batch_deliver(alert)
     Service::SMS.batch_deliver_alert(alert)
+  end
+
+
+  private
+  def strip_extra_characters
+    self.sms = self.sms.tr('()-. ','')
+    self.sms = self.sms[1..-1] if self.sms.first == '1'
   end
 end

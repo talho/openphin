@@ -14,12 +14,12 @@ Feature: Sending alerts to SMS devices
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I select "SMS" from "Device Type"
-    And I fill in "SMS" with "111-555-1212"
+    And I fill in "SMS" with "2105551212"
     And I press "Save"
     Then I should see "Profile information saved."
     When I go to the edit profile page
-    Then I should see "111-555-1212"
-    And I should have a SMS device with the SMS number "111-555-1212"
+    Then I should see "2105551212"
+    And I should have a SMS device with the SMS number "2105551212"
     And I sign out
     
     Given I log in as "john.smith@example.com"
@@ -46,4 +46,4 @@ Feature: Sending alerts to SMS devices
     When delayed jobs are processed
     Then the following SMS calls should be made:
       | sms          | message              |
-      | 111-555-1212 | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow Chicken pox outbreak short message |
+      | 2105551212 | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow Chicken pox outbreak short message |

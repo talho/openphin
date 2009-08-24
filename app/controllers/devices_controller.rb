@@ -13,9 +13,9 @@ class DevicesController < ApplicationController
     @device = "Device::#{params[:device_type]}".constantize.new(params[params[:device_type]])
     @device.user=user
     if @device.save
-      render :partial => @device, :status => :created
+      render :partial => "device/#{params[:device_type].snake_case.pluralize}/#{params[:device_type].snake_case}", :object => @device, :locals => {:in_form => true}, :status => :created
     else
-      render :text => "Error saving device", :status => 403
+      render :text => @device.errors.full_messages, :status => 403
     end
 
   end

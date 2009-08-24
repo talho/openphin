@@ -16,7 +16,8 @@
 class Device::BlackberryDevice < Device
   
   option_accessor :blackberry
-  
+  validates_format_of :blackberry, :with => /^[0-9A-Fa-f]{8}$/
+
   def self.display_name
     'Blackberry PIN'
   end
