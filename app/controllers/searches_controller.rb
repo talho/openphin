@@ -9,7 +9,10 @@ class SearchesController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.json {render :json => @results.map{|u| {:caption => u.name, :value => u.id}} }
+      format.json {
+        @results = [] if @results.blank?
+        render :json => @results.map{|u| {:caption => u.name, :value => u.id}} 
+      }
     end
   end
 

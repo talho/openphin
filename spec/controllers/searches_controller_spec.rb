@@ -14,7 +14,7 @@ describe SearchesController do
     end
     
     def do_action
-      get :show, :q => 'smith', :format => 'json'
+      get :show, :tag => 'smith', :format => 'json'
     end
       
     it 'should search the users' do
