@@ -30,15 +30,12 @@
       </p>
 
       <p>
-        <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview%>
-      </p>
-       	
-      <p>
         <%= form.label :short_message %>
-        <%= form.text_area :short_message, :rows => 2 %>
+      This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is blank, the regular message body (above) will be used for short-message devices, possibly truncating the message. <strong>Maximum length: 160 characters</strong>.
+        <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
+        <%= form.text_area :short_message, :rows => 2, :class => "short_message" %>
       </p>
       
-      <p><small>This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is not utilized, the regular message body will be sent via short-message devices, possibly truncating the message. <strong>Maximum length: 160 characters</strong>.</small></p>
       <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message" %></p><% end %>
     </div>
     <div class="aside">
