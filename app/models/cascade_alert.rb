@@ -16,22 +16,23 @@ class CascadeAlert
   def agency_name
     Agency[:agency_name]
   end
+
   
+  def sender_id(include_agency_domain=false)
+    if include_agency_domain
+      "#{Agency[:agency_identifier]}@#{Agency[:agency_domain]}"
+    else
+      "#{Agency[:agency_identifier]}"
+    end
+
+  end
+
   def distribution_id
-    "#{agency_name}-2009-#{alert.id}"
-  end
-  
-  def sender_id
-    "#{Agency[:agency_identifier]}@#{Agency[:agency_domain]}"
-  end
-  
-  def sent_at
-    # FIXME: format
-    alert.sent_at
+    alert.distribution_id
   end
   
   def distribution_reference
-    "#{distribution_id},#{sender_id},#{sent_at}"
+    "#{alert.parent.distribution_id},#{sender_id},#{alert.parent.sent_at}" unless alert.parent.nil?
   end
   
   def confidentiality
@@ -42,9 +43,9 @@ class CascadeAlert
     xml = Builder::XmlMarkup.new(:indent => 2)
     xml.instruct!
     xml.EDXLDistribution do
-      xml.distributionID distribution_id
-      xml.senderID sender_id
-      xml.dateTimeSent sent_at
+      xml.distributionID alert.distribution_id
+      xml.senderID sender_id(true)
+      xml.dateTimeSent alert.sent_at
       xml.distributionStatus alert.status
       xml.distributionType alert.message_type
       xml.combinedConfidentiality confidentiality
@@ -66,9 +67,9 @@ class CascadeAlert
         xml.xmlContent do
           xml.embeddedXMLContent do
             xml.ns1(:alert, "xmlns:ns1".to_sym => 'urn:oasis:names:tc:emergency:cap:1.1') do |cap|
-              xml.ns1 :identifier, distribution_id
+              xml.ns1 :identifier, alert.distribution_id
               xml.ns1 :sender, sender_id
-              xml.ns1 :sent, sent_at
+              xml.ns1 :sent, alert.sent_at
               xml.ns1 :status, alert.status
               xml.ns1 :msgType, alert.message_type
               xml.ns1 :references, distribution_reference unless alert.message_type == 'Alert'
@@ -101,7 +102,7 @@ class CascadeAlert
                 
                 xml.ns1 :parameter do
                   xml.ns1 :valueName, 'ProgramType'
-                  xml.ns1 :value, alert.program_type
+                  xml.ns1 :value, 'Alert'  #alert.program_type
                 end
                
               end

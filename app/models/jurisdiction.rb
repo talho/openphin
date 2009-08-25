@@ -20,6 +20,7 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  fips_code              :string(255)
+#  foreign                :boolean(1)
 #
 
 class Jurisdiction < ActiveRecord::Base
@@ -29,9 +30,13 @@ class Jurisdiction < ActiveRecord::Base
   has_many :role_memberships
   has_many :users, :through => :role_memberships
   has_many :role_requests
+  has_many :alert_attempts
+  has_many :deliveries, :through => :alert_attempts
 
   named_scope :admin, :include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }
-  named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name  
+  named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
+  named_scope :parents, :conditions => "rgt - lft > 1", :order => :name
+  named_scope :foreign, :conditions => { :foreign => true }
 
   validates_uniqueness_of :name
   
@@ -49,6 +54,13 @@ class Jurisdiction < ActiveRecord::Base
   
   def to_s
     name
+  end
+
+  def deliver(alert)
+    raise 'not foreign' unless foreign?
+    cascade_alert = CascadeAlert.new(alert)
+    Dir.ensure_exists(Agency[:phin_ms_path])
+    File.open(File.join(Agency[:phin_ms_path], "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
   end
 
    def to_dsml(builder=nil)

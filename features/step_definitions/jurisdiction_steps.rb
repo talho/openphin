@@ -12,3 +12,15 @@ Then /^I should not see "(.*)" as a from jurisdiction option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
   response.should_not have_selector("select[name*=from_jurisdiction_id] option", :value => jurisdiction.id.to_s)
 end
+When /^(.*) is a foreign jurisdiction$/ do | name |
+  j=Jurisdiction.find_or_create_by_name(name)
+  j.foreign=true
+  j.save
+end
+Given /^the following FIPS codes exist\:$/ do |table |
+  table.rows_hash.each do |jurisdiction, fips|
+    j=Jurisdiction.find_by_name(jurisdiction)
+    j.fips_code = fips
+    j.save
+  end
+end

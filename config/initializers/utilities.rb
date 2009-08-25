@@ -26,3 +26,13 @@ module PHIN_support
   end
 end
 String.send(:include, PHIN_support)
+
+Dir.class_eval <<-END
+  def self.ensure_exists(dirname)
+    dirname.split(File::SEPARATOR).inject{ |memo, dir|
+      newdir=File.join(memo,dir)
+      Dir.mkdir(newdir) unless File.exist?(newdir)
+      newdir
+    }
+  end
+END

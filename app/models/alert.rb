@@ -93,7 +93,16 @@ class Alert < ActiveRecord::Base
     defaults = {:delivery_time => 60, :severity => 'Minor'}
     self.new(options.merge(defaults))
   end
-  
+
+  def distribution_id
+    "#{Agency[:agency_name]}-#{created_at.strftime("%Y")}-#{self.id}"
+  end
+
+  #TODO: replace with column spec
+  def sent_at
+    self.created_at.utc.iso8601
+  end
+
   def cancelled?
     if cancellation.nil?
       return false
@@ -180,11 +189,11 @@ class Alert < ActiveRecord::Base
       alert_attempts.create!(:user => user).deliver
     end
     # 2 - deliver to foreign orgs
-    if jurisdictions.any?(&:root?)
-      organizations.select(&:foreign).each do |organization|
-        alert_attempts.create!(:organization => organization).deliver
+    #if jurisdictions.any?(&:root?)
+      jurisdictions.select(&:foreign).each do |jurisdiction|
+        alert_attempts.create!(:jurisdiction => jurisdiction).deliver
       end
-    end
+    #end
   end
   #handle_asynchronously :deliver
   
@@ -193,12 +202,11 @@ class Alert < ActiveRecord::Base
     find_user_recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
-    # 2 - batch deliver to foreign orgs
-    if jurisdictions.any?(&:root?)
-      organizations.select(&:foreign).each do |organization|
-        alert_attempts.create!(:organization => organization).batch_deliver
-      end
+    # 2 - batch deliver to foreign jursidictions
+    if jurisdictions.any?(&:foreign?)
+      alert_attempts.create!(:jurisdiction => jurisdictions.foreign.first.root).batch_deliver
     end
+
     alert_device_types.each do |device_type|
       device_type.device.constantize.batch_deliver(self)
     end

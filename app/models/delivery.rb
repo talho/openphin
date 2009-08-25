@@ -17,6 +17,7 @@ class Delivery < ActiveRecord::Base
   belongs_to :device
   has_one :alert, :through => :alert_attempt
   has_one :organization, :through => :alert_attempt
+  has_one :jurisdiction, :through => :alert_attempt
 
   default_scope :order => "delivered_at DESC"
 
@@ -39,10 +40,12 @@ class Delivery < ActiveRecord::Base
   end
   
   def deliver
-    if organization.nil?
+    if jurisdiction.nil? && organization.nil?
       device.deliver(alert)
-    else
+    elsif jurisdiction.nil?
       organization.deliver(alert)
+    else
+      jurisdiction.deliver(alert)
     end
     update_attribute :delivered_at, Time.zone.now
   end

@@ -13,4 +13,5 @@ Organization.seed(:name) do |o|
   o.contact_email = "jason@texashan.org"
   o.contact_phone = "5125289691"
   o.email_confirmed = true
+  o.queue = 'redcross'
 end

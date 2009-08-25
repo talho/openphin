@@ -206,3 +206,15 @@ end
 Then 'I have acknowledged the alert for "$alert"' do |alert|
   Alert.find_by_title(alert).acknowledged_users.should include(current_user)
 end
+
+When /^a foreign alert "([^\"]*)" is sent$/ do |title|
+  When "delayed jobs are processed"
+  alert=Alert.find_by_title!(title)
+  File.exist?(File.join(Agency[:phin_ms_path], "#{alert.distribution_id}.edxl")).should be_true
+
+end
+When /^no foreign alert "([^\"]*)" is sent$/ do |title|
+  When "delayed jobs are processed"
+  alert=Alert.find_by_title(title)
+  File.exist?(File.join(Agency[:phin_ms_path],"#{alert.distribution_id}.edxl")).should_not be_true
+end

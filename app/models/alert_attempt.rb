@@ -17,6 +17,7 @@ class AlertAttempt < ActiveRecord::Base
   belongs_to :alert
   belongs_to :user
   belongs_to :organization
+  belongs_to :jurisdiction
   has_many :deliveries
   has_many :devices, :through => :deliveries, :uniq => true
 
@@ -37,24 +38,30 @@ class AlertAttempt < ActiveRecord::Base
   before_save :generate_acknowledgment_token
      
   def deliver
-    if organization.blank?
+    if jurisdiction.nil? && organization.nil?
       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
         deliveries.create!(:device => device).deliver
       end
-    else
+    elsif jurisdiction.nil?
       deliveries.create!
       organization.deliver(alert)
+    else
+      deliveries.create!
+      jurisdiction.deliver(alert)
     end
   end
   
   def batch_deliver
-    if organization.blank?
+    if jurisdiction.nil? && organization.nil?
       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
         deliveries.create!(:device => device)
       end
-    else
+    elsif jurisdiction.nil?
       deliveries.create!
       organization.deliver(alert)
+    else
+      deliveries.create!
+      jurisdiction.deliver(alert)
     end
   end
   
