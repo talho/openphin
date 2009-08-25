@@ -78,8 +78,8 @@ module FeatureHelpers
   
     def fill_in_alert_field(label, value)
       case label
-      when "People"
-        value.split(',').each do |name| 
+        when "People"
+        value.split(',').each do |name|
           user = Given "a user named #{name.strip}"
           fill_in 'alert_user_ids', :with => user.id.to_s
         end

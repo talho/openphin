@@ -105,6 +105,7 @@ Then 'an alert exists with:' do |table|
   attrs = table.rows_hash
   alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
       {:identifier => attrs['identifier'], :title => attrs['title']}])
+  debugger
   attrs.each do |attr, value|
     case attr
     when 'from_jurisdiction'
@@ -121,6 +122,12 @@ Then 'an alert exists with:' do |table|
       alert.sent_at.should be_close(Time.zone.parse(value), 1)
     when 'acknowledge'
       alert.acknowledge.should == (value == 'Yes')
+    when 'people'
+      value.split(",").each do |user|
+        first_name, last_name = user.split(" ")
+        alert.users.should include(User.find_by_first_name_and_last_name(first_name, last_name))
+      end
+      
     else
       alert.send(attr).should == value
     end

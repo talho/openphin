@@ -74,3 +74,27 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     And I am on the new alert page
     Then I should see "Select all children"
+
+  Scenario: Sending alerts with only People in the audience should work
+    Given the following entities exist:
+      | Jurisdiction | Texas         |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    When I go to the dashboard page
+    And I follow "Send an Alert"
+    And I fill out the alert form with:
+      | People   | Jane Smith                                   |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | People            | Jane Smith |
+    And I press "Send"
+    Then an alert exists with:
+      | from_jurisdiction | Texas                                        |
+      | people            | Jane Smith                                   |
+      | title             | H1N1 SNS push packs to be delivered tomorrow |
+
+
+
