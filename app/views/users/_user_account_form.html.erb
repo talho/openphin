@@ -1,10 +1,10 @@
-<p class="rel_1 text">
-  <%= form.label(:first_name, "First Name") %>
-  <%= form.text_field(:first_name) %>
-</p>
 <p class="rel_2 text">
   <%= form.label(:last_name, "Last Name") %>
   <%= form.text_field(:last_name) %>
+</p>
+<p class="rel_1 text">
+  <%= form.label(:first_name, "First Name") %>
+  <%= form.text_field(:first_name) %>
 </p>
 <p class="text">
   <%= form.label(:display_name, "Preferred name to be displayed") %>
@@ -22,13 +22,13 @@
   <%= form.label(:email, "Email address") %>
   <%= form.text_field(:email, :class => "email_address") %>
 </p>
-<p class="text rel_1">
-  <%= form.label(:password, "Password") %>
-  <%= form.password_field(:password, :"data-label" => "******") %>
-</p>
 <p class="text rel_2">
   <%= form.label(:password_confirmation,"Password Confirmation") %>
   <%= form.password_field(:password_confirmation, :"data-label" => "******") %>
+</p>
+<p class="text rel_1">
+  <%= form.label(:password, "Password") %>
+  <%= form.password_field(:password, :"data-label" => "******") %>
 </p>
 <p>
   <%= form.label(:preferred_language, "Preferred language") %>
