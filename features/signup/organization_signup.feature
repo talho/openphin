@@ -38,6 +38,7 @@ Feature: Signing up for an organization account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for registering your organization |
+    And then is a "Greater Dallas Salvation Army" organization that is unapproved
 
     When "john@example.com" clicks the organization confirmation link in the email
     Then I should see "Your organization is confirmed.  You will be contacted by your TXPhin administrator when your registration is approved."

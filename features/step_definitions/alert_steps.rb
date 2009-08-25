@@ -105,7 +105,6 @@ Then 'an alert exists with:' do |table|
   attrs = table.rows_hash
   alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
       {:identifier => attrs['identifier'], :title => attrs['title']}])
-  debugger
   attrs.each do |attr, value|
     case attr
     when 'from_jurisdiction'

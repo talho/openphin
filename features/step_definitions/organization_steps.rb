@@ -1,4 +1,4 @@
-Given /^there is an unapproved ([^\"]*) organization with "([^\"]*)" as the contact$/ do |name, email|
+Given /^there is an unapproved "([^\"]*)" organization with "([^\"]*)" as the contact$/ do |name, email|
 	contact = User.find_by_email(email) || Factory(:user, :email => email)
 	Factory(:organization, :name => name, :approved => false, :contact_email => email)
 end
@@ -68,5 +68,10 @@ end
 Then '"$organization" is confirmed' do |name|
   organization = Organization.find_by_name!(name)
   organization.confirmed?.should_not be_nil
+end
+
+Then /^then is a "([^\"]*)" organization that is unapproved$/ do |name|
+  organization = Organization.find_by_name!(name)
+  organization.approved?.should_not be_nil
 end
 
