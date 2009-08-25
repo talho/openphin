@@ -122,9 +122,10 @@ flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email}
     if u=User.find_by_id_and_token(params[:user_id], params[:token])
       u.confirm_email!
       flash[:notice]="Your account has been confirmed."
-      redirect_back_or dashboard_path
     else
+      flash[:error]="Invalid URL."
     end
+    redirect_back_or dashboard_path
   end
   
 end
