@@ -25,18 +25,18 @@ class AlertsController < ApplicationController
     #  @alert.users << user if user
     #end
     if params[:send]
-      @alert.save
       if @alert.valid?
+        @alert.save
         @alert.integrate_voice
         @alert.batch_deliver
-        flash[:notice] = "Successfully sent the alert"
+        flash[:notice] = "Successfully sent the alert."
         redirect_to alerts_path
       else
         if @alert.errors['message_recording']
-          flash[:notice] = "<b>Attached message recording is not a valid wav formatted file</b>"
+          flash[:error] = "Attached message recording is not a valid wav formatted file."
           @preview = true
-          render :new
         end
+        render :new
       end
     else
       @preview = true
@@ -54,7 +54,7 @@ class AlertsController < ApplicationController
     end
 
     if !alert.original_alert.nil?
-      flash[:notice] = "You cannot make changes to updated or cancelled alerts"
+      flash[:error] = "You cannot make changes to updated or cancelled alerts."
       redirect_to alerts_path
     end
     @alert = present alert, :action => params[:_action]
@@ -82,11 +82,11 @@ class AlertsController < ApplicationController
       if @alert.valid?
         @alert.integrate_voice
         @alert.batch_deliver
-        flash[:notice] = "Successfully sent the alert"
+        flash[:notice] = "Successfully sent the alert."
         redirect_to alerts_path
       else
         if @alert.errors['message_recording']
-          flash[:notice] = "<b>Attached message recording is not a valid wav formatted file</b>"
+          flash[:error] = "Attached message recording is not a valid wav formatted file."
           @preview = true
           render :new
         end
@@ -101,11 +101,11 @@ class AlertsController < ApplicationController
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
     if alert_attempt.nil? || alert_attempt.acknowledged?
-      flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
       If you believe this is in error, please contact support@#{HOST}."
     else
       alert_attempt.acknowledge!
-      flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+      flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
     redirect_to dashboard_path
   end
@@ -113,14 +113,14 @@ class AlertsController < ApplicationController
   def token_acknowledge
     alert_attempt = AlertAttempt.find_by_alert_id_and_token(params[:id], params[:token])
     if alert_attempt.nil? || alert_attempt.acknowledged?
-      flash[:notice] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
       If you believe this is in error, please contact support@#{HOST}."
     else
       if alert_attempt.alert.sensitive?
-        flash[:notice] = "You are not authorized to view this page"
+        flash[:error] = "You are not authorized to view this page."
       else
         alert_attempt.acknowledge!
-        flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}"
+        flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end
     end
     redirect_to dashboard_path
@@ -162,7 +162,7 @@ private
   
   def alerter_required
     unless current_user.alerter?
-      flash[:notice] = "You do not have permission to send an alert."
+      flash[:error] = "You do not have permission to send an alert."
       redirect_to root_path
     end
   end
