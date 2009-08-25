@@ -9,6 +9,7 @@ class OrganizationsController < ApplicationController
 
   def confirmation
     @organization = Organization.find_by_token(params[:token])
+
     unless @organization.nil?
       @organization.update_attribute(:email_confirmed, true)
       SignupMailer.send_later(:deliver_admin_notification_of_organization_request, @organization)
@@ -24,7 +25,6 @@ class OrganizationsController < ApplicationController
     
     if @organization.save
       SignupMailer.send_later(:deliver_org_confirmation, @organization)
-      
       flash[:notice] = "Thank you for registering your organization with TXPhin. You will receive an email notification at the organization's email address upon administrator approval of the organization's registration.  Once approval is granted, individuals will be able to enroll themselves and associate their account with this organization."
       redirect_to dashboard_path
     else

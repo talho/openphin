@@ -35,6 +35,17 @@ When /^"([^\"]*)" clicks the organization confirmation link in the email$/ do |u
   visit link
 end
 
+When /^"([^\"]*)" receives a "([^\"]*)" organization approval email$/ do |user_email, name|
+  When "delayed jobs are processed"
+  email = ActionMailer::Base.deliveries.last
+  organization = Organization.find_by_name!(name)
+  email.subject.should contain("User requesting organization signup")
+  approve_link = approve_admin_organization_url(organization, :host => HOST)
+  email.body.should contain(approve_link)
+  deny_link = deny_admin_organization_url(organization, :host => HOST)
+  email.body.should contain(deny_link)
+end
+
 Then /^I should see the organization "([^\"]*)" is awaiting approval$/ do |org_name|
   organization=Organization.find_by_name(org_name)
   response.should have_selector(".pending_organization_requests") do |request|
@@ -70,7 +81,7 @@ Then '"$organization" is confirmed' do |name|
   organization.confirmed?.should_not be_nil
 end
 
-Then /^then is a "([^\"]*)" organization that is unapproved$/ do |name|
+Then /^there is a "([^\"]*)" organization that is unapproved$/ do |name|
   organization = Organization.find_by_name!(name)
   organization.approved?.should_not be_nil
 end

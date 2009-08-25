@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
     def login_required
       store_location
       unless signed_in?
+        flash[:error] = "You must sign in to complete that operation."
         redirect_to sign_in_path 
         false
       end
@@ -28,7 +29,7 @@ class ApplicationController < ActionController::Base
     
     def non_public_role_required
       unless current_user.has_non_public_role?
-        flash[:notice] = 'You are not authorized to view this page'
+        flash[:error] = "You are not authorized to view this page."
         redirect_to dashboard_path
         false 
       end
@@ -36,7 +37,7 @@ class ApplicationController < ActionController::Base
     
     def admin_required
       unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin }
-        flash[:notice] = "That resource does not exist or you do not have access to it"
+        flash[:error] = "That resource does not exist or you do not have access to it."
         redirect_to dashboard_path
         false
       end

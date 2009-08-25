@@ -23,7 +23,7 @@ Feature: Signing up for an organization account
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
         | Distribution Email                      | staff@salvationarmydallas.org |
-        | What Counties                           | Dallas County, Tarrant County, Denton County |
+        | What Counties                           | Potter, Dallas County, Tarrant County, Denton County |
         | Description                             | This might be a mission statement |
         | Name                                    | John Smith            |
         | Email Address                           | john@example.com |
@@ -38,11 +38,13 @@ Feature: Signing up for an organization account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for registering your organization |
-    And then is a "Greater Dallas Salvation Army" organization that is unapproved
+    And there is a "Greater Dallas Salvation Army" organization that is unapproved
 
     When "john@example.com" clicks the organization confirmation link in the email
     Then I should see "Your organization is confirmed.  You will be contacted by your TXPhin administrator when your registration is approved."
     And "Greater Dallas Salvation Army" is confirmed
+
+    And "bob@example.com" receives a "Greater Dallas Salvation Army" organization approval email
 
   Scenario: Signing up as an organization when not logged in should display error when form is blank
     When I signup for an organization account with the following info:

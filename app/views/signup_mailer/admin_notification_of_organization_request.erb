@@ -7,8 +7,10 @@ User <%= @organization.contact.blank? ? @organization.contact_display_name : @or
 <%= @organization.phone %>
 <%= @organization.jurisdictions.map(&:name).to_sentence %>
 
-You may approve or deny this request at the following link:
+You may approve or deny this request at the following links:
 
-<%= organization_url(@organization) %>
+Approve: <%= approve_admin_organization_url(@organization) %>
+
+Deny: <%= deny_admin_organization_url(@organization) %>
 
 Please be sure to verify the user's credentials for the organization he or she is requesting.  If in doubt, it is better to delay or deny the request until you can verify the user.
