@@ -54,7 +54,7 @@
       <%= form.label :photo %>
       <p>
         <%= image_tag form.object.photo.url(:medium) %>
-        <%= form.file_field :photo %>
+        <%= form.file_field :photo, :size => "12" %>
       </p>
       
       <h4>Public Profile</h4>
