@@ -1,16 +1,16 @@
 Organization.seed(:name) do |o|
-  o.name = 'Red Cross'
+  o.name = 'TALHO'
   o.organization_type = Organization.find_by_name('Non-profit')
   o.approved = true
-  o.description = "National Organization"
-  o.street = "123 Willow Ave. Suite 34"
-  o.locality = "Dallas"
+  o.description = "Texas Association of Local Health Officials"
+  o.street = "715 Discovery Blvd. Ste. 308"
+  o.locality = "Cedar Park"
   o.state = "TX"
-  o.postal_code = "22212"
-  o.phone = "5551234567"
-  o.distribution_email = "red_cross@email.com"
-  o.contact_display_name = "Bob Dole"
-  o.contact_email = "bob@example.com"
-  o.contact_phone = "5121234567"
+  o.postal_code = "78613"
+  o.phone = "5125289691"
+  o.distribution_email = "admins@talho.org"
+  o.contact_display_name = "Jason Phipps"
+  o.contact_email = "jason@texashan.org"
+  o.contact_phone = "5125289691"
   o.email_confirmed = true
 end
