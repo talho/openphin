@@ -21,15 +21,9 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(params[:organization])
-    @organization.contact_email = current_user.email if signed_in?
     
     if @organization.save
-      if @organization.contact.blank?
-        SignupMailer.send_later(:deliver_org_confirmation, @organization) unless signed_in?
-      else
-        contact = @organization.contact
-        SignupMailer.send_later(:deliver_confirmation, contact) unless signed_in?
-      end
+      SignupMailer.send_later(:deliver_org_confirmation, @organization)
       
       flash[:notice] = "Thank you for registering your organization with TXPhin. You will receive an email notification at the organization's email address upon administrator approval of the organization's registration.  Once approval is granted, individuals will be able to enroll themselves and associate their account with this organization."
       redirect_to dashboard_path
