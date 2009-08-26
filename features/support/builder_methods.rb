@@ -27,7 +27,7 @@ module FeatureHelpers
         attributes['device_types']= attributes.delete('communication methods').split(",").map{|device_name| "Device::#{device_name}Device"}
       end
 
-      if attributes.has_key?("delivery time")
+      if attributes.has_key?("Delivery time")
         delivery_time=attributes.delete("delivery time")
         case delivery_time
           when /72 hours?/i

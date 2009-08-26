@@ -47,11 +47,12 @@ namespace :deploy do
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
-    if Rails.env.test? || Rails.env.development?
-      FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
-#      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
-#      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
-    end
+    run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
+    #if Rails.env.test? || Rails.env.development?
+      #FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
+##      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
+##      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+    #end
 
   end
 

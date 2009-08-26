@@ -32,6 +32,7 @@ louisiana=Jurisdiction.seed(:name) do |j|
   j.fips_code = "22"
 end
 
+louisiana.move_to_child_of(Jurisdiction.root)
 {"Caldwell" => 22021, "Beauregard" => 22011, "Calcasieu" => 22019}.each do |parish, fips|
 
   p=Jurisdiction.seed(:name) do |j|

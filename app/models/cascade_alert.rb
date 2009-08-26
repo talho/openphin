@@ -51,8 +51,9 @@ class CascadeAlert
       xml.combinedConfidentiality confidentiality
       xml.recipientRole do
         xml.valueListUrn 'urn:phin:role'
+        xml.value "Health Alert and Communications Coordinator"
         alert.roles.each do |role|
-          xml.value role.name
+          xml.value role.name unless role.name = "Health Alert and Communications Coordinator"
         end
       end
       xml.distributionReference distribution_reference unless alert.message_type == 'Alert'
