@@ -25,3 +25,19 @@ FasterCSV.open(File.join(RAILS_ROOT, "db/fixtures/jurisdictions.csv"), :headers 
     m.move_to_child_of Jurisdiction.find_by_name!(row['region_name'])
   end
 end
+
+louisiana=Jurisdiction.seed(:name) do |j|
+  j.name="Louisiana"
+  j.foreign=true
+  j.fips_code = "22"
+end
+
+{"Caldwell" => 22021, "Beauregard" => 22011, "Calcasieu" => 22019}.each do |parish, fips|
+
+  p=Jurisdiction.seed(:name) do |j|
+    j.name=parish
+    j.foreign=true
+    j.fips_code = fips
+  end
+  p.move_to_child_of louisiana
+end
