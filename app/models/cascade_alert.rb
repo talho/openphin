@@ -90,7 +90,7 @@ class CascadeAlert
                 xml.ns1 :event, 'HAN'
                 xml.ns1 :urgency, 'Unknown'
                 xml.ns1 :severity, alert.severity
-                xml.ns1 :certainty, 'Very Likely'
+                xml.ns1 :certainty, 'Likely'
                 xml.ns1 :senderName, agency_name
                 xml.ns1 :headline, alert.title
                 xml.ns1 :description, alert.message
