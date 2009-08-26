@@ -56,12 +56,12 @@ module FeatureHelpers
   
     def fill_in_alert_form(table = nil)
       fields = { 
-        "Title" => "H1N1 SNS push packs to be delivered tomorrow",
+        #"Title" => "H1N1 SNS push packs to be delivered tomorrow",
         "Message" => "For more details, keep on reading...",
         "Severity" =>"Moderate",
-        "Status" => "Actual",
+        #"Status" => "Actual",
         "Acknowledge"  => "<unchecked>",
-        "Communication methods" => "E-mail",
+        #"Communication methods" => "E-mail",
         "Delivery Time" => "15 minutes"
       }
 

@@ -32,7 +32,7 @@ class CascadeAlert
   end
   
   def distribution_reference
-    "#{alert.parent.distribution_id},#{sender_id},#{alert.parent.sent_at}" unless alert.parent.nil?
+    "#{alert.original_alert.distribution_id},#{sender_id},#{alert.original_alert.sent_at}" unless alert.original_alert.nil?
   end
   
   def confidentiality

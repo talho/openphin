@@ -97,7 +97,7 @@ class Alert < ActiveRecord::Base
   end
 
   def distribution_id
-    "#{Agency[:agency_name]}-#{created_at.strftime("%Y")}-#{self.id}"
+    "#{Agency[:agency_abbreviation]}-#{created_at.strftime("%Y")}-#{self.id}"
   end
 
   def cancelled?
@@ -132,7 +132,7 @@ class Alert < ActiveRecord::Base
     end
   end
 
-  def build_update(attrs={})
+  def build_update(attrs={})  
     attrs = attrs.stringify_keys
     changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
     overwrite_attrs = attrs.slice(*changeable_fields)
