@@ -44,9 +44,13 @@ class AlertAttempt < ActiveRecord::Base
       end
     elsif jurisdiction.nil?
       deliveries.create!
+      alert.sent_at = Time.zone.now
+      alert.save
       organization.deliver(alert)
     else
       deliveries.create!
+      alert.sent_at = Time.zone.now
+      alert.save
       jurisdiction.deliver(alert)
     end
   end
@@ -58,9 +62,13 @@ class AlertAttempt < ActiveRecord::Base
       end
     elsif jurisdiction.nil?
       deliveries.create!
+      alert.sent_at = Time.zone.now
+      alert.save
       organization.deliver(alert)
     else
       deliveries.create!
+      alert.sent_at = Time.zone.now
+      alert.save
       jurisdiction.deliver(alert)
     end
   end

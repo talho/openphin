@@ -108,7 +108,7 @@ module EDXL
     
     def acknowledge
       if !alert.nil?
-        d = alert.alert_attempts.find_by_organization_id(organization).deliveries.first
+        d = alert.alert_attempts.first.deliveries.first
         d.sys_acknowledged_at = Time.zone.now
         d.save!
       end

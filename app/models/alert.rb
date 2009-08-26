@@ -98,11 +98,6 @@ class Alert < ActiveRecord::Base
     "#{Agency[:agency_name]}-#{created_at.strftime("%Y")}-#{self.id}"
   end
 
-  #TODO: replace with column spec
-  def sent_at
-    self.created_at.utc.iso8601
-  end
-
   def cancelled?
     if cancellation.nil?
       return false

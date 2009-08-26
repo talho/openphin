@@ -62,6 +62,7 @@ Feature: Alerts from EDXL
   Scenario: Receiving an EDXL Acknowledgment
     Given "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
     And Red Cross is a foreign Organization
+    And Federal is a foreign jurisdiction
     And a sent alert with:
       | identifier | CDC-2006-183 |
       | organizations | Red Cross |
