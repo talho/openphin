@@ -62,19 +62,136 @@ Feature: Sending CDC test cases
 
   Scenario: Test case 1--Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
     When I fill out the alert form with:
-          | Jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
-          | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
-          | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
-          | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
-          | Acknowledge           | <unchecked>                                                                       |
-          | Sensitive             | <unchecked>                                                                       |
-          | Severity              | Moderate                                                                          |
-          | Delivery Time         | 72 hours                                                                          |
-          | People                | Mark Jensen,TLP7 CDC                                                      |
-          | Communication methods | E-mail                                                                            |
-        And I press "Preview Message"
-        Then I should see a preview of the message
+      | Jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+      | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
+      | Acknowledge           | <unchecked>                  |
+      | Sensitive             | <unchecked>                  |
+      | Severity              | Moderate                     |
+      | Delivery Time         | 72 hours                     |
+      | People                | Mark Jensen,TLP7 CDC         |
+      | Communication methods | E-mail                       |
+    And I press "Preview Message"
+    Then I should see a preview of the message
 
-        When I press "Send"
-        Then I should see "Successfully sent the alert"
-        And a foreign alert "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
+
+  Scenario: Test case 2--Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections
+    When I fill out the alert form with:
+      | Jurisdictions         | Federal               |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections      |     
+      | Message               | Public health officials in multiple states, with the assistance of the CDC, are investigating a large outbreak of E. coli O157:H7 infections. Thus far, 50 cases have been reported in 17 states, including 3 adjacent states. The outbreak is likely ongoing. |
+      | Acknowledge           | <unchecked>           |
+      | Sensitive             | <unchecked>           |
+      | Severity              | Severe                |
+      | Delivery Time         | 24 hours              |
+      | People                | Mark Jensen,TLP7 CDC  |
+      | Communication methods | E-mail                |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections" is sent
+
+  Scenario: Test case 3--Possible Ricin exposures detected
+    When I fill out the alert form with:
+      | Jurisdictions         | Federal               |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Possible Ricin exposures detected |
+      | Message               | The Texas Department of State Health Services is working collaboratively with the CDC, the FBI, and other public health and law enforcement agencies to investigate a case of possible ricin exposure. Preliminary results of environmental testing have tested positive for ricin |
+      | Acknowledge           | <unchecked>           |
+      | Sensitive             | <checked>             |
+      | Severity              | Extreme               |
+      | Delivery Time         | 24 hours              |
+      | People                | Mark Jensen,TLP7 CDC  |
+      | Communication methods | E-mail                |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Possible Ricin exposures detected" is sent
+
+  Scenario: Test case 4--Test of the Alerting Network
+    When I fill out the alert form with:
+      | Jurisdictions         | Federal               |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Test of the Alerting Network |
+      | Message               | This is a test of the Texas Department of State Health Services alerting network. This test is performed quarterly to measure the effectiveness of alerts reaching the intended recipients. Follow the defined steps to acknowledge receipt of this test alert |
+      | Acknowledge           | <checked>             |
+      | Sensitive             | <unchecked>           |
+      | Severity              | Moderate              |
+      | Delivery Time         | 24 hours              |
+      | People                | Mark Jensen,TLP7 CDC  |
+      | Communication methods | E-mail                |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Test of the Alerting Network" is sent
+
+  Scenario: Test case 5--Update: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
+    Given an alert exists with:
+      | Jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+      | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
+      | Acknowledge           | <unchecked>                  |
+      | Sensitive             | <unchecked>                  |
+      | Severity              | Moderate                     |
+      | Delivery Time         | 72 hours                     |
+      | People                | Mark Jensen,TLP7 CDC         |
+      | Communication methods | E-mail                       |
+    When I go to the update alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
+    And I fill out the alert form with:
+      | Jurisdictions         | Federal               |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Message               | The Centers for Disease Control and Prevention (CDC) and state health officials in 17 states based located and tested 42 of the 44 potentially exposed passengers. All of the exposed passengers tested had negative TST results. |
+      | Acknowledge           | <unchecked>           |
+      | Sensitive             | <unchecked>           |
+      | Severity              | Minor                 |
+      | Delivery Time         | 24 hours              |
+      | People                | Mark Jensen,TLP7 CDC  |
+      | Reference             | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Update: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
+
+  Scenario: Test case 6--Cancel: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
+    Given an alert exists with:
+      | Jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+      | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
+      | Acknowledge           | <unchecked>                  |
+      | Sensitive             | <unchecked>                  |
+      | Severity              | Moderate                     |
+      | Delivery Time         | 72 hours                     |
+      | People                | Mark Jensen,TLP7 CDC         |
+      | Communication methods | E-mail                       |
+    When I go to the cancel alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
+    And I fill out the alert form with:
+      | Jurisdictions         | Federal               |
+      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | Message               | This alert has been cancelled.  |
+      | Acknowledge           | <unchecked>           |
+      | Sensitive             | <unchecked>           |
+      | Severity              | Minor                 |
+      | Delivery Time         | 24 hours              |
+      | People                | Mark Jensen,TLP7 CDC  |
+      | Reference             | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And a foreign alert "Cancel: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
