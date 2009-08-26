@@ -5,7 +5,7 @@ Feature: Sending CDC test cases
 
   Background:
     Given the following entities exists:
-          | Jurisdiction | Lousiana                                 |
+          | Jurisdiction | Louisiana                                 |
           | Jurisdiction | Cameron Parish                           |
           | Jurisdiction | Calcasieu Parish                         |
           | Jurisdiction | Beauregard Parish                        |
@@ -15,27 +15,27 @@ Feature: Sending CDC test cases
           | Role         | Bioterrorism Coordinator                 |
           | Role         | Emergency Management Coordinator         |
         And the following FIPS codes exist:
-          | Lousiana          | 30    |
+          | Louisiana          | 30    |
           | Cameron Parish    | 30001 |
           | Calcasieu Parish  | 30002 |
           | Beauregard Parish | 30003 |
           | Texas             | 48    |
         And Federal is a foreign jurisdiction
-        And Lousiana is a foreign jurisdiction
+        And Louisiana is a foreign jurisdiction
         And Cameron Parish is a foreign jurisdiction
         And Calcasieu Parish is a foreign jurisdiction
         And Beauregard Parish is a foreign jurisdiction
         And Federal is the parent jurisdiction of:
           | Texas    |
-          | Lousiana |
-        And Lousiana is the parent jurisdiction of:
+          | Louisiana |
+        And Louisiana is the parent jurisdiction of:
           | Cameron Parish    |
           | Calcasieu Parish  |
           | Beauregard Parish |
         And the following users exist:
           | John Smith      | john.smith@example.com   | Health Officer  | Texas    |
-          | Mark Jensen     | mjensen@cdc.gov          | Public          | Lousiana |
-          | TLP7 CDC        | tlp7@cdc.gov             | Public          | Lousiana |
+          | Mark Jensen     | mjensen@cdc.gov          | Public          | Louisiana |
+          | TLP7 CDC        | tlp7@cdc.gov             | Public          | Louisiana |
 
 
         And the role "Health Officer" is an alerter
@@ -137,17 +137,17 @@ Feature: Sending CDC test cases
     And a foreign alert "Test of the Alerting Network" is sent
 
   Scenario: Test case 5--Update: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
-    Given an alert exists with:
-      | Jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
-      | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
-      | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
-      | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
-      | Acknowledge           | <unchecked>                  |
-      | Sensitive             | <unchecked>                  |
-      | Severity              | Moderate                     |
-      | Delivery Time         | 72 hours                     |
-      | People                | Mark Jensen,TLP7 CDC         |
-      | Communication methods | E-mail                       |
+    Given an alert with:
+      | jurisdictions         | Cameron Parish,Calcasieu Parish,Beauregard Parish                       |
+      | roles                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
+      | title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
+      | message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
+      | acknowledge           | <unchecked>                  |
+      | sensitive             | <unchecked>                  |
+      | severity              | Moderate                     |
+      | delivery_time         | 72 hours                     |
+      | people                | Mark Jensen,TLP7 CDC         |
+      | communication methods | E-mail                       |
     When I go to the update alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Jurisdictions         | Federal               |

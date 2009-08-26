@@ -82,6 +82,8 @@ class Alert < ActiveRecord::Base
   validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
   
   before_create :set_message_type
+  before_save :set_jurisdictional_level
+  
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
     :select => "DISTINCT devices.type",
@@ -258,6 +260,20 @@ class Alert < ActiveRecord::Base
     end
   end
 
+  def set_jurisdictional_level
+    jurs=Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', jurisdiction_ids])
+    level=[]
+    level << "Federal" if jurs.detect{|j| j.root?}
+    level << "State" if jurs.detect{|j| !j.root? && !j.leaf?}
+    level << "Local" if jurs.detect{|j| j.leaf?}
+    write_attribute("jurisdictional_level",  level.join(","))
+  end
+
+  #TODO: opportunity for optimization:  perform this function in SQL, not using map
+  def foreign_users
+    @foreign_users ||= users.map{|u| u if u.jurisdictions.foreign.all.any? }.compact
+  end
+
   
 private
   def set_message_type
@@ -271,7 +287,7 @@ private
 
     user_ids_for_delivery += user_ids
     
-    user_ids_for_delivery += required_han_coordinators
+    user_ids_for_delivery += required_han_coordinators                     
     
     User.find(user_ids_for_delivery)
   end

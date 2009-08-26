@@ -107,7 +107,7 @@ describe Alert do
       end
       
       [:references, :category, :urgency, :scope, 
-       :from_organization_name, :delivery_time, :program_type, :jurisdictional_level, 
+       :from_organization_name, :delivery_time, :program_type,  
        :acknowledge, :from_organization_id, :certainty, :program, :from_organization_oid, 
        :from_jurisdiction_id, :author_id
       ].each do |field|
@@ -241,6 +241,53 @@ describe Alert do
   describe "new_with_defaults" do
     it "should initialize with delivery_time set to 60" do
       Alert.new_with_defaults.delivery_time.should == 60
+    end
+  end
+
+  describe "foreign users" do
+    it "should detect and return users with foreign jurisdictions named in the alert" do
+      j1=Factory(:jurisdiction, :foreign => true)
+      j2=Factory(:jurisdiction)
+      u1 = Factory(:user)
+      role = Factory(:role)
+      Factory(:role_membership, :user => u1, :role => role, :jurisdiction => j1)
+      u2 = Factory(:user)
+      Factory(:role_membership, :user => u2, :role => role, :jurisdiction => j2)
+      u3 = Factory(:user)
+      Factory(:role_membership, :user => u3, :role => role, :jurisdiction => j1)
+      Factory(:role_membership, :user => u3, :role => role, :jurisdiction => j2)
+
+      alert=Factory(:alert, :users => [u1,u2,u3])
+      alert.foreign_users.should include(u1)
+      alert.foreign_users.should_not include(u2)
+      alert.foreign_users.should include(u3)
+
+    end
+  end
+
+  describe "jurisdictional level" do
+    before(:each) do
+      @federal=Factory(:jurisdiction,  :foreign => true)
+      @state = Factory(:jurisdiction, :foreign => true)
+      @local = Factory(:jurisdiction, :foreign => true)
+      @state.move_to_child_of(@federal)
+      @local.move_to_child_of(@state) 
+    end
+    it "should have 'Federal' with a foreign root" do
+      alert=Factory(:alert, :jurisdictions => [@federal])
+      alert.jurisdictional_level.should == "Federal"
+    end
+    it "should have 'State' with a foreign intermediate node" do
+      alert=Factory(:alert, :jurisdictions => [@state])
+      alert.jurisdictional_level.should == "State"
+    end
+    it "should have 'Local' with a foreign terminal leaf node" do
+      alert=Factory(:alert, :jurisdictions => [@local])
+      alert.jurisdictional_level.should == "Local"
+    end
+    it "should have comma-separated list with multiple levels" do
+      alert=Factory(:alert, :jurisdictions => [@federal, @state, @local])
+      alert.jurisdictional_level.should == "Federal,State,Local"
     end
   end
 

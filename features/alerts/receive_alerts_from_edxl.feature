@@ -35,7 +35,6 @@ Feature: Alerts from EDXL
       | message | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
       | acknowledge | Yes |
       | delivery_time | 1440 |
-      | jurisdictional_level | StateLocal |
       | program_type | Notification |
       | jurisdiction | Texas |
       | jurisdiction | Potter County |
