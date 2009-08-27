@@ -63,7 +63,7 @@ module EDXL
     
     class Parameter
       include HappyMapper
-      namespace "http://schemas.google.com/analytics/2009"
+      namespace "urn:oasis:names:tc:emergency:cap:1.1"
       element :key, String, :tag => 'valueName'
       element :value, String
     end

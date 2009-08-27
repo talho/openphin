@@ -57,6 +57,17 @@ class CascadeAlert
         end
       end
       xml.distributionReference distribution_reference unless alert.message_type == 'Alert'
+      xml.explicitAddress do
+        xml.explicitAddressScheme "e-mail"
+        alert.foreign_users.each do |user|
+          xml.explicitAddressValue user.email
+        end
+      end if alert.foreign_users.any?
+      xml.targetArea do
+        alert.jurisdictions.foreign.each do |j|
+          xml.locCodeUN j.fips_code
+        end
+      end if alert.jurisdictions.foreign.any?
       # xml.targetArea do
       #   xml.country 'US'
       #   alert.jurisdictions.each do
@@ -74,17 +85,6 @@ class CascadeAlert
               xml.ns1 :status, alert.status
               xml.ns1 :msgType, alert.message_type
               xml.ns1 :references, distribution_reference unless alert.message_type == 'Alert'
-              xml.ns1 :explicitAddress do
-                xml.ns1 :explicitAddressScheme, "e-mail"
-                alert.foreign_users.each do |user|
-                  xml.ns1 :explicitAddressValue, user.email
-                end
-              end if alert.foreign_users.any?
-              xml.ns1 :targetArea do
-                alert.jurisdictions.foreign.each do |j|
-                  xml.ns1 :locCodeUN, j.fips_code
-                end
-              end if alert.jurisdictions.foreign.any?
               xml.ns1 :scope, 'Restricted'
               xml.ns1 :info do |info|
                 xml.ns1 :category, 'Health'
