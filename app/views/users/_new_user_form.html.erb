@@ -21,7 +21,7 @@
   <% user.role_requests.build if user.role_requests.empty? %>
   <% f.fields_for :role_requests do |r| %>
     <%= r.label :jurisdiction_id,  "What County are you in?" %><br/>
-    <%= r.select( :jurisdiction_id, nested_set_options(Jurisdiction.root.descendants)  {|i| "#{'–' * i.level} #{i.name}" }) %><br/>
+    <%= r.select( :jurisdiction_id, nested_set_options(current_user && current_user.is_admin? ? Jurisdiction.root : Jurisdiction.root.descendants)  {|i| "#{'–' * i.level} #{i.name}" }) %><br/>
     <%= label_tag "health_professional", "Are you a public health professional?" %>
     <%= check_box_tag "health_professional", 1, params[:health_professional] %>
     <fieldset id='health_professional_fields'>
