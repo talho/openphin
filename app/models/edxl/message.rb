@@ -47,6 +47,7 @@ module EDXL
     has_many :alerts, EDXL::Alert
     has_many :fips_codes, String, :tag => 'locCodeUN', :deep => true
     has_many :roles, String, :tag => 'recipientRole/value'
+    has_many :users, String, :tag => 'explicitAddress/explicitAddressValue'
     
     def self.parse(xml, options = {})
       returning super do |message|
@@ -73,6 +74,7 @@ module EDXL
             :certainty => alert.certainty,
             :program => alert.program
           )
+
           message.fips_codes.each do |code|
             j = Jurisdiction.find_by_fips_code(code)
             a.jurisdictions << j if j
@@ -81,6 +83,11 @@ module EDXL
             role = Role.find_by_name(role.strip)
             a.roles << role if role
           end
+          message.users.each do |email|
+            user=User.find_by_email(email)
+            a.users << user if user
+          end
+          a.deliver
         end
       end
     end

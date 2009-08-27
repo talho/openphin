@@ -274,6 +274,10 @@ class Alert < ActiveRecord::Base
     @foreign_users ||= users.map{|u| u if u.jurisdictions.foreign.all.any? }.compact
   end
 
+  def sender
+    from_jurisdiction.nil? ? from_organization_name :  from_jurisdiction.name
+  end
+
   
 private
   def set_message_type
@@ -294,20 +298,24 @@ private
   
   def required_han_coordinators
     # Keith says: "Do not fuck with this method."
+    unless jurisdictions.empty? && from_jurisdiction.nil?
 
-    # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
-    selves_and_ancestors = (jurisdictions + [from_jurisdiction]).compact.map(&:self_and_ancestors)
+      # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
+      selves_and_ancestors = (jurisdictions + [from_jurisdiction]).compact.map(&:self_and_ancestors)
 
-    # union them all, but that may give us too many ancestors
-    unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
-    
-    # intersecting will give us all the ancestors in common
-    intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
+      # union them all, but that may give us too many ancestors
+      unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
 
-    # So we grab the lowest common ancestor; ancestory at the lowest level
-    good_ones = (unioned - intersected) + [intersected.max{|x,y| x.level <=> y.level }]
-    
-    # Finally, grab all those han coordinators
-    good_ones.compact.map {|jurisdiction| jurisdiction.han_coordinators.map(&:id) }.flatten
+      # intersecting will give us all the ancestors in common
+      intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
+
+      # So we grab the lowest common ancestor; ancestory at the lowest level
+      good_ones = (unioned - intersected) + [intersected.max{|x,y| x.level <=> y.level }]
+
+      # Finally, grab all those han coordinators
+      good_ones.compact.map {|jurisdiction| jurisdiction.han_coordinators.map(&:id) }.flatten
+    else
+      []
+    end 
   end
 end

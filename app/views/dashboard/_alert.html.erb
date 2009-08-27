@@ -13,7 +13,7 @@
         <span class="status <%= alert.status.downcase %>"><strong>Status:</strong> [<%= alert.status.capitalize %>]</span>
       <%- end -%>
 	  <span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
-      <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.from_jurisdiction.name %></span>
+      <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.sender %></span>
     </p> 
   </div>
   <div class="extended preview">

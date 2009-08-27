@@ -73,6 +73,11 @@ Rails::Initializer.run do |config|
   config.gem 'validatable', :version => '1.6.7'
 end
 
+PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'receiverincoming')
+PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'archive')
+Dir.ensure_exists(PHINMS_INCOMING)
+Dir.ensure_exists(PHINMS_ARCHIVE)
+
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y")
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y %I:%M %p")
 

@@ -14,6 +14,8 @@ Feature: Alerts from EDXL
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
     And "Texas" has the FIPS code "01091"
     And "Potter County" has the FIPS code "01003"
+    And the following users exist:
+    | Keith Gaddis | keith@example.com  | Health Officer | Texas |
 
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
@@ -43,6 +45,11 @@ Feature: Alerts from EDXL
       | role | Chief Epidemiologist |
       | role | Communicable/Infectious Disease Coordinators |
       | role | HAN Coordinator  |
+
+   Scenario: Receiving an alert through EDXL
+    When PhinMS delivers the message: PCAMessageAlert2.xml
+    Then an alert exists with:
+      | identifier | CDC-2009-183 |
   
   Scenario: Receiving an EDXL alert update
     When PhinMS delivers the message: PCAMessageUpdate.xml

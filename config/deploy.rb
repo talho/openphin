@@ -39,6 +39,7 @@ after "deploy", "deploy:cleanup"
 namespace :deploy do
   desc "we need a database. this helps with that."
   task :symlink_configs do
+    rails_env = fetch(:rails_env, RAILS_ENV)
     #run "mv #{release_path}/config/database.yml.example #{release_path}/config/database.yml"
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
@@ -48,11 +49,11 @@ namespace :deploy do
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
-    #if Rails.env.test? || Rails.env.development?
-      #FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
-##      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
-##      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
-    #end
+    if rails_env == 'test'|| rails_env == 'development'
+      FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
+#      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
+#      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+    end
 
   end
 
