@@ -200,7 +200,7 @@ class Alert < ActiveRecord::Base
     find_user_recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
-    # 2 - batch deliver to foreign jursidictions
+    # 2 - batch deliver to foreign jurisdictions
     if jurisdictions.any?(&:foreign?)
       alert_attempts.create!(:jurisdiction => jurisdictions.foreign.first.root).batch_deliver
     end
@@ -300,17 +300,20 @@ private
 
     user_ids_for_delivery += user_ids
     
-    user_ids_for_delivery += required_han_coordinators                     
+    user_ids_for_delivery += required_han_coordinators
     
     User.find(user_ids_for_delivery)
   end
   
   def required_han_coordinators
     # Keith says: "Do not fuck with this method."
-    unless jurisdictions.empty? && from_jurisdiction.nil?
-
+    unless jurisdictions.empty?
       # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
-      selves_and_ancestors = (jurisdictions + [from_jurisdiction]).compact.map(&:self_and_ancestors)
+      if from_jurisdiction.nil?
+        return (jurisdictions.compact.map(&:self_and_ancestors).flatten.uniq - (Jurisdiction.federal)).map{|jurisdiction| jurisdiction.han_coordinators.map(&:id)}.flatten
+      else
+        selves_and_ancestors = (jurisdictions + [from_jurisdiction]).compact.map(&:self_and_ancestors)
+      end
 
       # union them all, but that may give us too many ancestors
       unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}

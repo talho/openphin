@@ -12,22 +12,30 @@ Feature: Alerts from EDXL
       | jurisdiction | Federal               |
       | jurisdiction | Texas                 |
       | jurisdiction | Potter County         |
+      | jurisdiction | Wise County           |
       | jurisdiction | Louisiana             |
       | jurisdiction | Calcasieu             |
       | user | John Smith |
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
     And "Texas" has the FIPS code "48"
     And "Potter County" has the FIPS code "01003"
+    And "Wise County" has the FIPS code "01091"
     And "Calcasieu" has the FIPS code "22019"
     And Federal is a foreign jurisdiction
     And Federal is the parent jurisdiction of:
       | Texas | Louisiana |
     And Texas is the parent jurisdiction of:
-      | Potter County |
+      | Potter County | Wise County |
     And Louisiana is the parent jurisdiction of:
       | Calcasieu |
     And the following users exist:
     | Keith Gaddis | keith@example.com  | Health Alert and Communications Coordinator | Texas |
+    | Bob Dole     | bob@example.com  | Health Alert and Communications Coordinator | Potter County |
+    | Jason Phipps | jphipps@example.com | Chief Epidemiologist | Potter County |
+    | Wise Coordinator | wisecoordinator@example.com | Health Alert and Communications Coordinator | Wise County |
+    | Daniel Morrison | daniel@example.com | Health Officer | Wise County |
+    | Brandon Keeper | brandon@example.com | Health Officer | Texas |
+    | Zach Dennis | zach@example.com | Health Officer | Texas |
     | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
     | Ethan Waldo | ethan@example.com | Public | Potter County |
 
@@ -52,17 +60,18 @@ Feature: Alerts from EDXL
       | acknowledge | Yes |
       | delivery_time | 1440 |
       | program_type | Notification |
-      | jurisdiction | Texas |
       | jurisdiction | Potter County |
       | role | Health Officer |
       | role | Emergency Preparedness Coordinator |
       | role | Chief Epidemiologist |
       | role | Communicable/Infectious Disease Coordinators |
-      | role | HAN Coordinator  |
     And the following users should receive the email:
-      | People        | keith@example.com |
+      | People        | keith@example.com, bob@example.com, daniel@example.com, jphipps@example.com, zach@example.com |
       | subject       | Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
+    And "ethan@example.com" should not receive an email with the subject "Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees"
+    And "brandon@example.com" should not receive an email with the subject "Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees"
+    And "mjensen@cdc.gov" should not receive an email with the subject "Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees"
 
    Scenario: Receiving an alert with enumerated users and roles through PhinMS
     When PhinMS delivers the message: test-CDC-cascade.edxl

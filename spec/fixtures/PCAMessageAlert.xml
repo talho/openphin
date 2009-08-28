@@ -8,17 +8,17 @@
 	<combinedConfidentiality>NotSensitive</combinedConfidentiality>
 	<recipientRole>
 		<valueListUrn>urn:phin:role</valueListUrn>
-		<value>Health Officer </value>
+		<value>Health Officer</value>
 		<value>Emergency Preparedness Coordinator</value>
 		<value>Chief Epidemiologist</value>
 		<value>Communicable/Infectious Disease Coordinators</value>
-		<value>HAN Coordinator </value>
 	</recipientRole>
 	<distributionReference></distributionReference>
 	<explicitAddress>
 		<explicitAddressScheme>e-mail</explicitAddressScheme>
 		<explicitAddressValue>johnsmith@healthdept.gov</explicitAddressValue>
 		<explicitAddressValue>maryjones@healthdept.gov</explicitAddressValue>
+		<explicitAddressValue>zach@example.com</explicitAddressValue>
 	</explicitAddress>
 	<targetArea>
 		<country>US</country>
@@ -35,9 +35,6 @@
 		<locCodeUN>22087</locCodeUN>
 		<locCodeUN>22075</locCodeUN>
 		<locCodeUN>22051</locCodeUN>
-	</targetArea>
-	<targetArea>
-		<locCodeUN>48</locCodeUN>
 	</targetArea>
 	<contentObject>
 		<confidentiality>Sensitive</confidentiality>
