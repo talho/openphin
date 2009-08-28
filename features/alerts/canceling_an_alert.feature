@@ -55,8 +55,9 @@ Feature: Canceling an alert
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert [Cancel] - Flying Monkey Disease |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
-      | body contains | Alert ID: 2 |
-      | body contains | Reference: 1 |
+      | body contains | Alert ID:  |
+      | body contains | Reference:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease is not contagious |
+    And "fix the above step to include an alert and reference id" should be implemented

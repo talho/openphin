@@ -62,8 +62,9 @@ Feature: Updating an alert
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert [Update] - Flying Monkey Disease |
       | body contains | Title: [Update] - Flying Monkey Disease |
-      | body contains | Alert ID: 2 |
-      | body contains | Reference: 1 |
+      | body contains | Alert ID:  |
+      | body contains | Reference:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
+    And "Fix the above step to include Alert ID and Reference ID" should be implemented

@@ -57,10 +57,11 @@ Feature: Creating and sending alerts
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
 
   Scenario: Previewing an alert
     When I fill out the alert form with:
@@ -127,10 +128,12 @@ Feature: Creating and sending alerts
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
+
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
     When I fill out the alert form with:
@@ -152,10 +155,12 @@ Feature: Creating and sending alerts
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |    
+      | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
+
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -178,10 +183,12 @@ Feature: Creating and sending alerts
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
+
             
   Scenario: Sending an alert to an Jurisdictions/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -204,10 +211,12 @@ Feature: Creating and sending alerts
       | People        | john.smith@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
+
       
   Scenario: Sending an alert to an Jurisdictions/Organizations when the organization contains sub-organizations scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -230,10 +239,12 @@ Feature: Creating and sending alerts
       | People        | john.smith@example.com, ed.mcguyver@example.com, jason.phipps@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "fix the above step to include an alert id" should be implemented
+
             
   Scenario: Sending an alert to specific Jurisdictions/Roles/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
@@ -253,13 +264,14 @@ Feature: Creating and sending alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alerts page
+    And "ethan.waldo@example.com" should not receive an email
     And the following users should receive the email:
       | People        | brian.ryckbost@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "ethan.waldo@example.com" should not receive an email
-    
+    And "fix the above step to include an alert id" should be implemented
+

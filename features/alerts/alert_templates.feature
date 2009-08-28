@@ -61,7 +61,7 @@ I want to save alert templates for reuse and activate them at a later date
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Severe Health Alert The Martians are coming |
       | body contains | Title: The Martians are coming |
-      | body contains | Alert ID: 1 |
+      | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | The martians have landed, run for your lives! |

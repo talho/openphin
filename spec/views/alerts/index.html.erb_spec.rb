@@ -26,7 +26,7 @@ describe '/alerts/index.html.erb' do
   # | message_type | Alert |
   
   it "should show the identifier" do
-    response.should have_tag('#? .alertid', dom_id(@alert), "Alert ID: #{@alert.id}")
+    response.should have_tag('#? .alertid', dom_id(@alert), "Alert ID: #{@alert.identifier}")
   end
 
   it "should show created_at" do

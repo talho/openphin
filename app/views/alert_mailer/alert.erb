@@ -1,5 +1,5 @@
 <%- if @alert.sensitive? -%>
-Alert ID: <%= @alert.id %>
+Alert ID: <%= @alert.identifier %>
 <%- if !@alert.original_alert_id.blank? -%>
 Reference: <%= @alert.original_alert_id %>
 <%- end %>
