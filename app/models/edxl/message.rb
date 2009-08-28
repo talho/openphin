@@ -117,6 +117,14 @@ module EDXL
             user=User.find_by_email(email)
             a.users << user if user
           end
+
+          original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
+
+          if a.message_type == "Cancel" || a.message_type == "Update"
+            a.title = "[#{a.message_type}] - #{a.title}"
+            a.original_alert_id = original_alert.id
+            a.save!
+          end
           a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
           a.batch_deliver
         end

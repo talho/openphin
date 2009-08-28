@@ -216,6 +216,12 @@ Then /^I have acknowledged the alert for "([^\"]*)"$/ do |alert|
   Alert.find_by_title(alert).acknowledged_users.should include(current_user)
 end
 
+Then /^the cancelled alert "([^\"]*)" has an original alert "([^\"]*)"$/ do |alert_identifier, original_alert_identifier|
+  alert = Alert.find_by_identifier(alert_identifier)
+  original_alert = Alert.find_by_identifier(original_alert_identifier)
+  alert.original_alert_id.should == original_alert.id
+end
+
 When /^a foreign alert "([^\"]*)" is sent$/ do |title|
   When "delayed jobs are processed"
   alert=Alert.find_by_title!(title)

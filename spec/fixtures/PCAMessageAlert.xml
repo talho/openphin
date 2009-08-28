@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <EDXLDistribution xmlns="urn:oasis:names:tc:emergency:EDXL:DE:1.0">
-	<distributionID>CDC-2006-183</distributionID>
+	<distributionID>CDC-2009-183</distributionID>
 	<senderID>2.16.840.1.114222.4.20.1.1@cdc.gov</senderID>
-	<dateTimeSent>2006-11-07T21:25:16.5127Z</dateTimeSent>
+	<dateTimeSent>2009-11-07T21:25:16.5127Z</dateTimeSent>
 	<distributionStatus>Test</distributionStatus>
 	<distributionType>Alert</distributionType>
-	<combinedConfidentiality>SENSITIVE</combinedConfidentiality>
+	<combinedConfidentiality>NotSensitive</combinedConfidentiality>
 	<recipientRole>
 		<valueListUrn>urn:phin:role</valueListUrn>
 		<value>Health Officer </value>
@@ -36,14 +36,17 @@
 		<locCodeUN>22075</locCodeUN>
 		<locCodeUN>22051</locCodeUN>
 	</targetArea>
+	<targetArea>
+		<locCodeUN>48</locCodeUN>
+	</targetArea>
 	<contentObject>
 		<confidentiality>Sensitive</confidentiality>
 		<xmlContent>
 			<embeddedXMLContent>
 				<ns1:alert xmlns:ns1="urn:oasis:names:tc:emergency:cap:1.1">
-					<ns1:identifier>CDC-2006-183</ns1:identifier>
+					<ns1:identifier>CDC-2009-183</ns1:identifier>
 					<ns1:sender>2.16.840.1.114222.4.20.1.1</ns1:sender>
-					<ns1:sent>2006-11-07T21:25:16.5127Z </ns1:sent>
+					<ns1:sent>2009-11-07T21:25:16.5127Z </ns1:sent>
 					<ns1:status>Test</ns1:status>
 					<ns1:msgType>Alert</ns1:msgType>
 					<ns1:references></ns1:references>

@@ -289,7 +289,7 @@ private
   
   def set_identifier
     if identifier.nil?
-      identifier = "#{Agency[:agency_abbreviation]}-#{created_at.strftime("%Y")}-#{id}"
+      identifier = "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}"
     end
   end
   

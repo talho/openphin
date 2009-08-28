@@ -202,6 +202,15 @@ class User < ActiveRecord::Base
     j = jurisdictions.map{|m| m.self_and_descendants}.flatten
     Alert.all(:conditions => {:from_jurisdiction_id => j}, :order => "alerts.created_at DESC")
   end
+  
+  def cascade_alerts
+    #j = jurisdictions.uniq.map{|j| j }
+    #alerts.reject{|alert|
+    #  alert.jurisdictions.include?(j)
+    #}
+      #Alert.find_all_by_jurisdiction_id(:conditions => {:jurisdiction => j}, :order => "alerts.created_at DESC")
+    #}
+  end
 
   def generate_upload_token
     filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"

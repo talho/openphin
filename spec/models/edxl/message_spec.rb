@@ -10,6 +10,6 @@ describe EDXL::Message do
   end
   
   it "should map distribution_id" do
-    @message.distribution_id.should == 'CDC-2006-183'
+    @message.distribution_id.should == 'CDC-2009-183'
   end
 end
