@@ -83,6 +83,7 @@ class Alert < ActiveRecord::Base
   
   before_create :set_message_type
   before_save :set_jurisdictional_level
+  before_save :set_identifier
   
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
@@ -284,6 +285,12 @@ class Alert < ActiveRecord::Base
 private
   def set_message_type
     self.message_type = MessageTypes[:alert] if self.message_type.blank?
+  end
+  
+  def set_identifier
+    if identifier.nil?
+      identifier = "#{Agency[:agency_abbreviation]}-#{created_at.strftime("%Y")}-#{id}"
+    end
   end
   
   def find_user_recipients

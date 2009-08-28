@@ -9,12 +9,23 @@ Feature: Alerts from EDXL
       | role | Health Alert and Communications Coordinator |
       | role | HAN Coordinator  |
       | organization | CDC                   |
+      | jurisdiction | Federal               |
       | jurisdiction | Texas                 |
       | jurisdiction | Potter County         |
+      | jurisdiction | Louisiana             |
+      | jurisdiction | Calcasieu             |
       | user | John Smith |
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
     And "Texas" has the FIPS code "48"
     And "Potter County" has the FIPS code "01003"
+    And "Calcasieu" has the FIPS code "22019"
+    And Federal is a foreign jurisdiction
+    And Federal is the parent jurisdiction of:
+      | Texas | Louisiana |
+    And Texas is the parent jurisdiction of:
+      | Potter County |
+    And Louisiana is the parent jurisdiction of:
+      | Calcasieu |
     And the following users exist:
     | Keith Gaddis | keith@example.com  | Health Alert and Communications Coordinator | Texas |
     | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
@@ -97,7 +108,6 @@ Feature: Alerts from EDXL
     Given this is implemented
     And "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
     And Red Cross is a foreign Organization
-    And Federal is a foreign jurisdiction
     And a sent alert with:
       | identifier | CDC-2006-183 |
       | organizations | Red Cross |
@@ -106,11 +116,19 @@ Feature: Alerts from EDXL
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "CDC-2006-183" should be acknowledged
     
-  Scenario: Receiving an EDXL Acknowledgment that was originally sent via a jurisdiction
-    Given Federal is a foreign jurisdiction
-    And a sent alert with:
+  Scenario: Receiving an EDXL Acknowledgment that was originally sent via the federal jurisdiction
+    Given a sent alert with:
       | identifier | CDC-2006-183 |
       | jurisdictions | Federal |
       | author        | John Smith |
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "CDC-2006-183" should be acknowledged
+    
+  Scenario: Receiving an EDXL Acknowledgment that was originally sent via a non-federal jurisdiction
+    Given Calcasieu is a foreign jurisdiction
+    And a sent alert with:
+      | identifier | DSHS-2009-183 |
+      | jurisdictions | Calcasieu |
+      | author        | John Smith |
+	When PhinMS delivers the message: PCAAckExample.xml
+    Then the alert "DSHS-2009-183" should be acknowledged

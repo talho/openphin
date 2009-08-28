@@ -4,7 +4,7 @@ end
 
 Given "a sent alert with:" do |table|
   alert = create_alert_with table.rows_hash
-  alert.deliver
+  alert.batch_deliver
   When "delayed jobs are processed"
 end
 
@@ -178,7 +178,7 @@ end
 Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
   alert = Alert.find_by_identifier(alert_id)
   if(alert.organizations.empty?)
-    alert.jurisdictions.federal.first.deliveries.first.sys_acknowledged_at?.should be_true
+    Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first.sys_acknowledged_at?.should be_true
   else
     alert.organizations.first.deliveries.first.sys_acknowledged_at?.should be_true
   end

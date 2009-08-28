@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <EDXLDistribution xmlns="urn:oasis:names:tc:emergency:EDXL:DE:1.0">
-	<distributionID>CDC-2006-183, 2.16.840.7.1234567.5.82.2.1</distributionID>
+	<distributionID>DSHS-2009-183, 2.16.840.1.114222.4.1.3683</distributionID>
 	<senderID>2.16.840.7.1234567.5.82.2.1@state.healthdept.gov</senderID>
-	<dateTimeSent>2006-11-07T21:29:42.8133Z </dateTimeSent>
+	<dateTimeSent>2009-11-07T21:29:42.8133Z </dateTimeSent>
 	<distributionStatus>Test</distributionStatus>
 	<distributionType>Ack</distributionType>
 	<combinedConfidentiality>SENSITIVE</combinedConfidentiality>
-	<distributionReference>CDC-2006-183,2.16.840.1.114222.4.20.1.1@cdc.gov,2006-11-07T21:25:16.5127Z</distributionReference>
+	<distributionReference>DSHS-2009-183,2.16.840.1.114222.4.1.3683@dshs.state.tx.us,2009-11-07T21:25:16.5127Z</distributionReference>
 </EDXLDistribution>
