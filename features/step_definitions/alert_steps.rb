@@ -139,7 +139,6 @@ Then 'an alert exists with:' do |table|
 end
 
 Then /^I should see (\d*) alerts?$/ do |n|
-  debugger
   response.should have_selector('.alert', :count => n.to_i)
 end
 

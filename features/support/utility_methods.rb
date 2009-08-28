@@ -9,13 +9,12 @@ module FeatureHelpers
       When "delayed jobs are processed"
 
       ActionMailer::Base.deliveries.detect do |email|
-        debugger
-        status = true
+        status = false
         if(!email.bcc.blank?)
-          status &&= email.bcc.include?(email_address)
+          status ||= email.bcc.include?(email_address)
         end
         if(!email.to.blank?)
-          status &&= email.to.include?(email_address)
+          status ||= email.to.include?(email_address)
         end
 
         unless table.nil?

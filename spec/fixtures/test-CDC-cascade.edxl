@@ -10,6 +10,10 @@
     <valueListUrn>urn:phin:role</valueListUrn>
     <value>Health Alert and Communications Coordinator</value>
   </recipientRole>
+  <explicitAddress>
+    <explicitAddressScheme>e-mail</explicitAddressScheme>
+    <explicitAddressValue>mjensen@cdc.gov</explicitAddressValue>
+  </explicitAddress>
   <targetArea>
     <locCodeUN>48</locCodeUN>
   </targetArea>
@@ -33,7 +37,8 @@
             <ns1:senderName>Centers for Disease Control</ns1:senderName>
             <ns1:headline>Cascade alert sent from Federal jurisdiction to TX</ns1:headline>
             <ns1:description>Message Body Message Body Message Body Message Body Message Body Message Body</ns1:description>
-            <ns1:contact>mjensen@cdc.gov</ns1:contact>
+            <ns1:contact>Mark Jensen
+            mjensen@cdc.gov</ns1:contact>
             <ns1:parameter>
               <ns1:valueName>Acknowledge</ns1:valueName>
               <ns1:value>No</ns1:value>

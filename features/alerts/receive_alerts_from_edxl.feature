@@ -16,8 +16,9 @@ Feature: Alerts from EDXL
     And "Texas" has the FIPS code "48"
     And "Potter County" has the FIPS code "01003"
     And the following users exist:
-    | Keith Gaddis | keith@example.com  | Health Officer | Texas |
+    | Keith Gaddis | keith@example.com  | Health Alert and Communications Coordinator | Texas |
     | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
+    | Ethan Waldo | ethan@example.com | Public | Potter County |
 
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
@@ -48,7 +49,7 @@ Feature: Alerts from EDXL
       | role | Communicable/Infectious Disease Coordinators |
       | role | HAN Coordinator  |
 
-   Scenario: Receiving an alert through EDXL
+   Scenario: Receiving an alert with enumerated users and roles through PhinMS
     When PhinMS delivers the message: test-CDC-cascade.edxl
     Then an alert exists with:
       | identifier | CDC-2009-66 |
@@ -68,9 +69,11 @@ Feature: Alerts from EDXL
       | program_type | Alert |
       | jurisdiction | Texas |
       | role | Health Alert and Communications Coordinator |
-    And "mjensen@cdc.gov" should receive the email:
+    And the following users should receive the email:
+     | People        | mjensen@cdc.gov,keith@example.com |
      | subject       | Cascade alert sent from Federal jurisdiction to TX    |
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
+    And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "mjensen@cdc.gov"
     And I go to the alerts page
     Then I should see 1 alerts

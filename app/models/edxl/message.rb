@@ -48,7 +48,7 @@ module EDXL
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
     has_many :alerts, EDXL::Alert
     has_many :roles, String, :deep => true, :tag => 'recipientRole/value'
-    has_many :users, String, :tag => 'explicitAddress/explicitAddressValue'
+    has_many :users, String, :deep => true, :tag => 'explicitAddressValue'
     
     class TargetArea
       include HappyMapper
