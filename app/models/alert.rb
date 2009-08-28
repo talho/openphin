@@ -261,7 +261,7 @@ class Alert < ActiveRecord::Base
   end
 
   def set_jurisdictional_level
-    if Jurisdiction.exists?(sender)
+    if !Jurisdiction.find_by_name(sender).nil?
       jurs=Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', jurisdiction_ids])
       level=[]
       level << "Federal" if jurs.detect{|j| j.root?}
