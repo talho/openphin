@@ -42,7 +42,7 @@ class CascadeAlert
   def to_edxl
     xml = Builder::XmlMarkup.new(:indent => 2)
     xml.instruct!
-    xml.EDXLDistribution do
+    xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
       xml.distributionID alert.distribution_id
       xml.senderID sender_id(true)
       xml.dateTimeSent alert.sent_at

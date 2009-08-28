@@ -1,7 +1,6 @@
 class AlertMailer < ActionMailer::Base
   
   def alert(alert, user, device)
-    role_membership = alert.author.role_memberships.first
     recipients "#{user.name} <#{device.options[:email_address]}>"
     # TODO: should this show their job title instead of their role?
     # If role, which one?
@@ -9,7 +8,6 @@ class AlertMailer < ActionMailer::Base
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
     subject "#{severity} Health Alert#{status} #{alert.title}"
-    #subject "#{alert.severity} Health Alert from #{role_membership.jurisdiction.name} : #{alert.author.name} : #{role_membership.role.name}"
     body :alert => alert, :alert_attempt => user.alert_attempts.find_by_alert_id(alert.id)
     if !alert.message_recording_file_name.blank?
       attachment alert.message_recording.content_type do |a|
@@ -20,7 +18,6 @@ class AlertMailer < ActionMailer::Base
   end
   
   def batch_alert(alert)
-    role_membership = alert.author.role_memberships.first
     users = []
     alert.unacknowledged_users.each do |user|
       users << "#{user.name} <#{user.email}>"
@@ -32,8 +29,7 @@ class AlertMailer < ActionMailer::Base
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
     subject "#{severity} Health Alert#{status} #{alert.title}"
-    #subject "#{alert.severity} Health Alert from #{role_membership.jurisdiction.name} : #{alert.author.name} : #{role_membership.role.name}"
-    body :alert => alert, :author => alert.author, :jurisdiction => alert.from_jurisdiction
+    body :alert => alert
     if !alert.message_recording_file_name.blank?
       attachment alert.message_recording.content_type do |a|
         a.body = File.read(alert.message_recording.path)
