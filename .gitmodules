@@ -18,7 +18,7 @@
 	url = git://github.com/pat-maddox/no-peeping-toms.git
 [submodule "vendor/plugins/happymapper"]
 	path = vendor/plugins/happymapper
-	url = git://github.com/brandon/happymapper.git
+	url = git://github.com/talho/happymapper.git
 [submodule "vendor/plugins/delayed_job"]
 	path = vendor/plugins/delayed_job
 	url = git://github.com/collectiveidea/delayed_job.git

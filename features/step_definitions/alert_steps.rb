@@ -178,7 +178,11 @@ end
 
 Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
   alert = Alert.find_by_identifier(alert_id)
-  alert.organizations.first.deliveries.sys_acknowledged?.should be_true
+  if(alert.organizations.empty?)
+    alert.jurisdictions.federal.first.deliveries.first.sys_acknowledged_at?.should be_true
+  else
+    alert.organizations.first.deliveries.first.sys_acknowledged_at?.should be_true
+  end
 end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|

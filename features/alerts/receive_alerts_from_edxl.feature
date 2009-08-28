@@ -90,8 +90,9 @@ Feature: Alerts from EDXL
       | references | 2.16.840.1.114222.4.20.1.1,CDC-2006-182,2006-11-05T13:02:42.1219Z |
       | message_type | Cancel |
 
-  Scenario: Receiving an EDXL Acknowledgment
-    Given "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
+  Scenario: Receiving an EDXL Acknowledgment that was originally sent via an organization
+    Given this is implemented
+    And "Red Cross" has the OID "2.16.840.7.1234567.5.82.2.1"
     And Red Cross is a foreign Organization
     And Federal is a foreign jurisdiction
     And a sent alert with:
@@ -102,4 +103,11 @@ Feature: Alerts from EDXL
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "CDC-2006-183" should be acknowledged
     
-
+  Scenario: Receiving an EDXL Acknowledgment that was originally sent via a jurisdiction
+    Given Federal is a foreign jurisdiction
+    And a sent alert with:
+      | identifier | CDC-2006-183 |
+      | jurisdictions | Federal |
+      | author        | John Smith |
+	When PhinMS delivers the message: PCAAckExample.xml
+    Then the alert "CDC-2006-183" should be acknowledged

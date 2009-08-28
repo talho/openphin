@@ -118,7 +118,6 @@ module EDXL
             a.users << user if user
           end
           a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
-          debugger
           a.batch_deliver
         end
       end
@@ -148,8 +147,13 @@ module EDXL
     
     def acknowledge
       if !alert.nil?
-        d = alert.alert_attempts.first.deliveries.first
-        d.sys_acknowledged_at = Time.zone.now
+        if alert.organizations.empty?
+          d = alert.jurisdictions.federal.first.deliveries.first
+          d.sys_acknowledged_at = Time.zone.now
+        else
+          d = alert.alert_attempts.first.deliveries.first
+          d.sys_acknowledged_at = Time.zone.now
+        end
         d.save!
       end
     end

@@ -34,6 +34,7 @@ class Jurisdiction < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
 
   named_scope :admin, :include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }
+  named_scope :federal, :conditions => "parent_id IS NULL"
   named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
   named_scope :parents, :conditions => "rgt - lft > 1", :order => :name
   named_scope :foreign, :conditions => { :foreign => true }
