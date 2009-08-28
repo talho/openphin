@@ -117,7 +117,7 @@ module EDXL
             user=User.find_by_email(email)
             a.users << user if user
           end
-          a.alert_device_types << AlertDeviceType.find_by_device('Device::EmailDevice')
+          a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
           a.batch_deliver
         end
       end
