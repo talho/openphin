@@ -83,7 +83,7 @@ class Alert < ActiveRecord::Base
   
   before_create :set_message_type
   before_save :set_jurisdictional_level
-  before_save :set_identifier
+  after_save :set_identifier
   
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
@@ -289,7 +289,8 @@ private
   
   def set_identifier
     if identifier.nil?
-      identifier = "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}"
+      write_attribute(:identifier, "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}")
+      self.save!
     end
   end
   
