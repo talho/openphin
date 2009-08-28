@@ -24,6 +24,7 @@ module EDXL
     include HappyMapper
 
     tag "EDXLDistribution"
+    namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
     element :distribution_id, String, :tag => "distributionID"
     element :sender_id, String, :tag => "senderID"
     element :datetime_sent, DateTime, :tag => "dateTimeSent"
@@ -37,6 +38,7 @@ module EDXL
     include HappyMapper
 
     tag "EDXLDistribution"
+    namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
     element :distribution_id, String, :tag => "distributionID"
     element :sender_id, String, :tag => "senderID"
     element :datetime_sent, DateTime, :tag => "dateTimeSent"
@@ -45,15 +47,43 @@ module EDXL
     element :distribution_reference, String, :tag => "distributionReference"
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
     has_many :alerts, EDXL::Alert
-    has_many :fips_codes, String, :tag => 'locCodeUN', :deep => true
-    has_many :roles, String, :tag => 'recipientRole/value'
-    has_many :users, String, :tag => 'explicitAddress/explicitAddressValue'
+    has_many :roles, String, :deep => true, :tag => 'recipientRole/value'
+    has_many :users, String, :deep => true, :tag => 'explicitAddressValue'
     
+    class TargetArea
+      include HappyMapper
+      namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
+      tag "targetArea"
+      has_many :country, String, :tag => "country"
+      has_many :locCodeUN, String, :tag => "locCodeUN"
+    end
+
+    has_many :target_areas, TargetArea
+
+    class RecipientRole
+      include HappyMapper
+      namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
+      tag "recipientRole"
+      has_many :valueListUrn, String, :tag => "valueListUrn"
+      has_many :role, String, :tag => "value"
+    end
+    
+    has_many :recipient_roles, RecipientRole
+    
+    def fips_codes
+      target_areas.map(&:locCodeUN).flatten
+    end
+    
+    def roles
+      recipient_roles.map(&:role).flatten
+    end
+
     def self.parse(xml, options = {})
       returning super do |message|
         message.alerts.each do |alert|
           a = ::Alert.create!(
             :identifier => alert.identifier,
+            :message_type => message.distribution_type,
             :references => alert.references,
             :severity => alert.severity,
             :status => alert.status,
@@ -67,12 +97,12 @@ module EDXL
             :urgency => alert.urgency,
             :scope => alert.scope,
             :program_type => alert.program_type,
-            :message_type => alert.message_type,
             :sent_at => alert.sent_at,
             :jurisdictional_level => alert.jurisdictional_level,
             :acknowledge => alert.acknowledge,
             :certainty => alert.certainty,
-            :program => alert.program
+            :program => alert.program,
+            :sensitive => message.combined_confidentiality == "NotSensitive" ? "false" : "true"
           )
 
           message.fips_codes.each do |code|
@@ -97,6 +127,7 @@ module EDXL
     include HappyMapper
 
     tag "EDXLDistribution"
+    namespace = "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
     element :distribution_id, String, :tag => "distributionID"
     element :sender_id, String, :tag => "senderID"
     element :datetime_sent, DateTime, :tag => "dateTimeSent"

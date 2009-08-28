@@ -40,7 +40,7 @@ require 'happymapper'
 module EDXL
   class Alert
     include HappyMapper
-    namespace "http://schemas.google.com/analytics/2009"
+    namespace "urn:oasis:names:tc:emergency:cap:1.1"
     tag "alert"
     element :identifier, String
     element :sender, String
