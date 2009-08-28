@@ -6,16 +6,18 @@ Feature: Alerts from EDXL
       | role | Emergency Preparedness Coordinator |
       | role | Chief Epidemiologist |
       | role | Communicable/Infectious Disease Coordinators |
+      | role | Health Alert and Communications Coordinator |
       | role | HAN Coordinator  |
       | organization | CDC                   |
       | jurisdiction | Texas                 |
       | jurisdiction | Potter County         |
       | user | John Smith |
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
-    And "Texas" has the FIPS code "01091"
+    And "Texas" has the FIPS code "48"
     And "Potter County" has the FIPS code "01003"
     And the following users exist:
     | Keith Gaddis | keith@example.com  | Health Officer | Texas |
+    | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
 
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
@@ -47,9 +49,32 @@ Feature: Alerts from EDXL
       | role | HAN Coordinator  |
 
    Scenario: Receiving an alert through EDXL
-    When PhinMS delivers the message: PCAMessageAlert2.xml
+    When PhinMS delivers the message: test-CDC-cascade.edxl
     Then an alert exists with:
-      | identifier | CDC-2009-183 |
+      | identifier | CDC-2009-66 |
+      | from_organization_name | Centers for Disease Control |
+      | from_organization_oid  | 2.16.840.1.114222.4.1.3683 |
+      | sent_at | 2009-08-27 10:55:44 -0500 |
+      | status  | Test |
+      | message_type | Alert |
+      | program | HAN |
+      | urgency | Unknown |
+      | severity | Minor |
+      | certainty | Likely |
+      | title | Cascade alert sent from Federal jurisdiction to TX |
+      | message | Message Body Message Body Message Body Message Body Message Body Message Body |
+      | acknowledge | No |
+      | delivery_time | 60 |
+      | program_type | Alert |
+      | jurisdiction | Texas |
+      | role | Health Alert and Communications Coordinator |
+    And "mjensen@cdc.gov" should receive the email:
+     | subject       | Cascade alert sent from Federal jurisdiction to TX    |
+     | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
+    When I log in as "mjensen@cdc.gov"
+    And I go to the alerts page
+    Then I should see 1 alerts
+
   
   Scenario: Receiving an EDXL alert update
     When PhinMS delivers the message: PCAMessageUpdate.xml

@@ -36,7 +36,7 @@ Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_a
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
 end
 
-When "PhinMS delivers the message: $filename" do |filename|
+When /^PhinMS delivers the message: (.*)$/ do |filename|
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
   if(EDXL::MessageContainer.parse(xml).distribution_type == "Ack")
     EDXL::AckMessage.parse(xml)
@@ -138,15 +138,16 @@ Then 'an alert exists with:' do |table|
   end
 end
 
-Then "I should see $n alerts" do |n|
+Then /^I should see (\d*) alerts?$/ do |n|
+  debugger
   response.should have_selector('.alert', :count => n.to_i)
 end
 
-Then 'I should see an alert titled "$title"' do |title|
+Then /^I should see an alert titled "([^\"]*)"$/ do |title|
   response.should have_tag('.alert .title .moderate', title)
 end
 
-Then 'I should not see an alert titled "$title"' do |title|
+Then /^I should not see an alert titled "([^\"]*)"$/ do |title|
   response.should_not have_tag('.alert .title', title)
 end
 
@@ -158,7 +159,7 @@ Then /^I should not see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title
   response.should_not have_tag(".alert .title .#{severity.downcase}", title)
 end
 
-Then 'I can see the alert summary for "$title"' do |title|
+Then /^I can see the alert summary for "([^\"]*)"$/ do |title|
   alert = Alert.find_by_title!(title)
   response.should have_tag('#?', dom_id(alert))
 end
@@ -198,17 +199,17 @@ Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]
   end
 end
 
-Then "the alert should be acknowledged" do
+Then /^the alert should be acknowledged$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
   attempt.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
 end
 
-Then "the alert should not be acknowledged" do
+Then /^the alert should not be acknowledged$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
   attempt.acknowledged_at.should be_blank
 end
 
-Then 'I have acknowledged the alert for "$alert"' do |alert|
+Then /^I have acknowledged the alert for "([^\"]*)"$/ do |alert|
   Alert.find_by_title(alert).acknowledged_users.should include(current_user)
 end
 

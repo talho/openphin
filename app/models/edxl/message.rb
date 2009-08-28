@@ -48,7 +48,7 @@ module EDXL
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
     has_many :alerts, EDXL::Alert
     has_many :roles, String, :deep => true, :tag => 'recipientRole/value'
-    has_many :users, String, :deep => true, :tag => 'explicitAddressValue'
+    has_many :users, String, :tag => 'explicitAddress/explicitAddressValue'
     
     class TargetArea
       include HappyMapper
@@ -118,6 +118,7 @@ module EDXL
             a.users << user if user
           end
           a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
+          debugger
           a.batch_deliver
         end
       end

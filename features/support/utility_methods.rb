@@ -8,7 +8,8 @@ module FeatureHelpers
     def find_email(email_address, table=nil)
       When "delayed jobs are processed"
 
-      ActionMailer::Base.deliveries.detect do |email| 
+      ActionMailer::Base.deliveries.detect do |email|
+        debugger
         status = true
         if(!email.bcc.blank?)
           status &&= email.bcc.include?(email_address)
