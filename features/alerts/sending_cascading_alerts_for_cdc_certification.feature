@@ -162,8 +162,7 @@ Feature: Sending CDC test cases
     Then I should see "Successfully sent the alert"
     And a foreign alert "[Update] - Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
     When I log in as "mjensen@cdc.gov"
-    And I go to the dashboard
-  page
+    And I go to the dashboard page
     Then I should see 2 alerts
 
   Scenario: Test case 6--Cancel: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
@@ -178,7 +177,7 @@ Feature: Sending CDC test cases
       | delivery time         | 72 hours                     |
       | people                | Mark Jensen,TLP7 CDC         |
       | communication methods | Email                        |
-    When I load the cancel alert page for "1Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
+    When I load the cancel alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Message               | This alert has been cancelled.  |
       | Acknowledge           | <unchecked>           |

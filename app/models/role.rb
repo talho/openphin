@@ -41,6 +41,7 @@ class Role < ActiveRecord::Base
   end
   
   named_scope :user_roles, :conditions => { :user_role => true }
+  named_scope :approval_roles, :conditions => { :approval_required => true }
   
   validates_uniqueness_of :name
 

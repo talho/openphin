@@ -2,12 +2,12 @@ Feature: Alerts from EDXL
 
   Background:
     Given the following entities exists:
-      | role | Health Officer |
-      | role | Emergency Preparedness Coordinator |
-      | role | Chief Epidemiologist |
-      | role | Communicable/Infectious Disease Coordinators |
-      | role | Health Alert and Communications Coordinator |
-      | role | HAN Coordinator  |
+      | approval role | Health Officer |
+      | approval role | Emergency Preparedness Coordinator |
+      | approval role | Chief Epidemiologist |
+      | approval role | Communicable/Infectious Disease Coordinators |
+      | approval role | Health Alert and Communications Coordinator |
+      | approval role | HAN Coordinator  |
       | organization | CDC                   |
       | jurisdiction | Federal               |
       | jurisdiction | Texas                 |
@@ -22,6 +22,8 @@ Feature: Alerts from EDXL
     And "Wise County" has the FIPS code "01091"
     And "Calcasieu" has the FIPS code "22019"
     And Federal is a foreign jurisdiction
+    And Louisiana is a foreign jurisdiction
+    And Calcasieu is a foreign jurisdiction
     And Federal is the parent jurisdiction of:
       | Texas | Louisiana |
     And Texas is the parent jurisdiction of:
@@ -51,10 +53,10 @@ Feature: Alerts from EDXL
       | message_type | Alert |
       | scope | Restricted |
       | category | Health |
-      | program | HAN |
       | urgency | Expected |
       | severity | Severe |
       | certainty | Very Likely |
+      | program | HAN |
       | title | Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
       | message | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
       | acknowledge | Yes |
@@ -189,8 +191,17 @@ Feature: Alerts from EDXL
     And I go to the alerts page
     Then I should see 1 alerts
 
-
   Scenario:  Receiving a cascade alert without roles specified should alert all roles
+    When PhinMS delivers the message: cdc_no_role.edxl
+    Then the following users should receive the email:
+     | People        | keith@example.com,brandon@example.com,zach@example.com |
+     | subject       | Cascade alert sent from Federal jurisdiction to TX    |
+     | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
+    And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
+    And "jphipps@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
+    When I log in as "keith@example.com"
+    And I go to the alerts page
+    Then I should see 1 alerts
 
   Scenario:  Sending system-to-system ack when receiving a message
     When PhinMS delivers the message: test-CDC-cascade.edxl

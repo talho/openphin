@@ -198,13 +198,18 @@ class Alert < ActiveRecord::Base
   #handle_asynchronously :deliver
   
   def batch_deliver
+    #0: take care of the case where there is no jurisdiction specified or no role specified
+    if users.empty?
+      jurisdictions << Jurisdiction.nonforeign if jurisdictions && jurisdictions.empty?
+      roles << Role.approval_roles if roles && roles.empty?
+    end
     # 1 - explode all known users and batch deliver to them
     find_user_recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
     # 2 - batch deliver to foreign jurisdictions
-    if jurisdictions.any?(&:foreign?)
-      alert_attempts.create!(:jurisdiction => jurisdictions.foreign.first.root).batch_deliver
+    if jurisdictions && jurisdictions.any?(&:foreign?)
+      alert_attempts.create!(:jurisdiction => jurisdictions.foreign.first.root).batch_deliver  
     end
 
     alert_device_types.each do |device_type|
@@ -317,7 +322,7 @@ private
   end
   
   def find_user_recipients
-    user_ids_for_delivery = jurisdictions.map(&:self_and_descendants).flatten.map(&:user_ids).flatten
+    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
     user_ids_for_delivery &= roles.map(&:user_ids).flatten unless roles.empty?
     user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
 

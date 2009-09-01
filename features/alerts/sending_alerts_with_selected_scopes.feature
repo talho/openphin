@@ -220,7 +220,7 @@ Feature: Creating and sending alerts
       
   Scenario: Sending an alert to an Jurisdictions/Organizations when the organization contains sub-organizations scopes who the alerts are sent to
     When I fill out the alert form with:
-      | Jurisdictions | Texas |
+      | Jurisdictions | Dallas County |
       | Organizations | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
       | Message | For more details, keep on reading... |
@@ -236,13 +236,14 @@ Feature: Creating and sending alerts
     Then I should see "Successfully sent the alert"
     And I should be on the alerts page
     And the following users should receive the email:
-      | People        | john.smith@example.com, ed.mcguyver@example.com, jason.phipps@example.com |
+      | People        | john.smith@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
+    And "jason.phipps@example.com" should not receive an email with the subject "Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow"
     And "fix the above step to include an alert id" should be implemented
 
             
