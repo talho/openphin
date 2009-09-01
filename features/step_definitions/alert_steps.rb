@@ -235,7 +235,6 @@ When /^no foreign alert "([^\"]*)" is sent$/ do |title|
 end
 
 Then /^there should be an file "([^\"]*)" in the PhinMS queue$/ do | filename |
-  debugger
   File.exist?(File.join(Agency[:phin_ms_path], filename)).should be_true
 end
 

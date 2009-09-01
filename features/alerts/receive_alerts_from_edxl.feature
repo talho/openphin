@@ -176,6 +176,7 @@ Feature: Alerts from EDXL
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "DSHS-2009-183" should be acknowledged
 
+  @WIP
   Scenario:  Receiving a cascade alert without jurisdictions specified should alert all jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction.edxl
     Then the following users should receive the email:
@@ -195,6 +196,6 @@ Feature: Alerts from EDXL
     When PhinMS delivers the message: test-CDC-cascade.edxl
     Then there should be an file "CDC-2009-66-ACK.edxl" in the PhinMS queue
     And the system acknowledgment for alert "CDC-2009-66" should contain the following:
-      | distribution_reference | CDC-2009-66,2.16.840.1.114222.4.1.3683@cdc.gov,2009-08-27 10:55:44 -0500 |
+      | distribution_reference | CDC-2009-66,2.16.840.1.114222.4.1.3683@cdc.gov,2009-08-27T10:55:44-05:00 |
       | distribution_type      | Ack |
 
