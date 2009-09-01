@@ -26,6 +26,9 @@
         dataType: "html",
         success: function(data, status){
           $("#devices .data-list").append(data);
+          $("p."+dev_type+" input").each(function(){
+            $(this).val("");
+          });
         },
         error: function(request, error){
           $("#devices .data-list .error").text(request.responseText);
