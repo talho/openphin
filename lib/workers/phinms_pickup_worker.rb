@@ -10,6 +10,7 @@ class PhinmsPickupWorker < BackgrounDRb::MetaWorker
       phindir.each do |file|
         filename = File.join(PHINMS_INCOMING, file)
         archive_filename = File.join(PHINMS_ARCHIVE, file)
+        error_filename = File.join(PHINMS_ERROR, file)
         xml=""
         begin
           unless File.directory?(filename)
@@ -27,7 +28,7 @@ class PhinmsPickupWorker < BackgrounDRb::MetaWorker
           end
         rescue Exception => e
           PHINMS_RECEIVE_LOGGER.error "Error parsing PHIN-MS message:\n#{e}\n#{xml}"
-          File.mv( filename, archive_filename)
+          File.mv( filename, error_filename)
           AppMailer.deliver_system_error(e, "Filename: #{filename}\nContents:\n#{xml}")
         end
       end
