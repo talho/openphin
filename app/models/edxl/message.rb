@@ -102,7 +102,8 @@ module EDXL
             :acknowledge => alert.acknowledge,
             :certainty => alert.certainty,
             :program => alert.program,
-            :sensitive => message.combined_confidentiality == "NotSensitive" ? "false" : "true"
+            :sensitive => message.combined_confidentiality == "NotSensitive" ? "false" : "true",
+            :distribution_reference => "#{alert.identifier},#{message.sender_id},#{alert.sent}"      
           )
 
           message.fips_codes.each do |code|
@@ -127,6 +128,8 @@ module EDXL
           end
           a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
           a.batch_deliver
+          Dir.ensure_exists(File.join(Agency[:phin_ms_path]))
+          File.open(File.join(Agency[:phin_ms_path], "#{a.identifier}-ACK.edxl"), 'w' ).write(a.to_ack_edxl)
         end
       end
     end

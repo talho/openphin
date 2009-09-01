@@ -280,7 +280,27 @@ class Alert < ActiveRecord::Base
   def sender
     from_jurisdiction.nil? ? from_organization_name :  from_jurisdiction.name
   end
+  def self.sender_id
+    "#{Agency[:agency_identifer]}@#{Agency[:agency_domain]}"
+  end
+  def sender_id
+    Alert.sender_id
+  end
 
+  def to_ack_edxl
+    xml = Builder::XmlMarkup.new(:indent => 2)
+    xml.instruct!
+    xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
+      xml.distributionID "#{self.distribution_id},#{Agency[:agency_identifier]}"
+      xml.senderID sender_id
+      xml.dateTimeSent Time.now.utc
+      xml.distributionStatus status
+      xml.distributionType "Ack"
+      xml.combinedConfidentiality sensitive? ? "Sensitive" : "NotSensitive"
+      xml.distributionReference distribution_reference
+    end
+
+  end
   
 private
   def set_message_type

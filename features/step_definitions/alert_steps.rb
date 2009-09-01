@@ -233,3 +233,16 @@ When /^no foreign alert "([^\"]*)" is sent$/ do |title|
   alert=Alert.find_by_title(title)
   File.exist?(File.join(Agency[:phin_ms_path],"#{alert.distribution_id}.edxl")).should_not be_true
 end
+
+Then /^there should be an file "([^\"]*)" in the PhinMS queue$/ do | filename |
+  debugger
+  File.exist?(File.join(Agency[:phin_ms_path], filename)).should be_true
+end
+
+Then /^the system acknowledgment for alert "([^\"]*)" should contain the following:$/ do |alert_identifier, table |
+  ack=File.read(File.join(Agency[:phin_ms_path], "#{alert_identifier}-ACK.edxl"))
+  ack_msg=EDXL::AckMessage.parse(ack)
+  table.raw.each do |row|
+    ack_msg.send(row[0]).should == row[1]
+  end
+end

@@ -1,3 +1,5 @@
+.idea
+.idea/*
 *.swp
 .idea
 config/*.db

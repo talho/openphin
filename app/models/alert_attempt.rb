@@ -11,6 +11,7 @@
 #  updated_at      :datetime
 #  organization_id :integer(4)
 #  token           :string(255)
+#  jurisdiction_id :integer(4)
 #
 
 class AlertAttempt < ActiveRecord::Base

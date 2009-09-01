@@ -1,3 +1,4 @@
+@icebox
 Feature: Alert Templates
 In order to facilitate rapid response to an event and give access to alert features from a mobile device
 As an alerter
