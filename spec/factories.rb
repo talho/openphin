@@ -42,6 +42,7 @@ end
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }
+  jur.foreign false
 end
 
 Factory.sequence(:organization_name) {|jn| "Organization #{jn}"}
