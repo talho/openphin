@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EDXLDistribution xmlns="urn:oasis:names:tc:emergency:EDXL:DE:1.0">
+  <distributionID>CDC-2009-66</distributionID>
+  <senderID>2.16.840.1.114222.4.1.3683@cdc.gov</senderID>
+  <dateTimeSent>2009-08-27 10:55:44 -0500</dateTimeSent>
+  <distributionStatus>Test</distributionStatus>
+  <distributionType>Alert</distributionType>
+  <combinedConfidentiality>NotSensitive</combinedConfidentiality>
+  <contentObject>
+    <confidentiality>NotSensitive</confidentiality>
+    <xmlContent>
+      <embeddedXMLContent>
+        <ns1:alert xmlns:ns1="urn:oasis:names:tc:emergency:cap:1.1">
+          <ns1:identifier>CDC-2009-66</ns1:identifier>
+          <ns1:sender>2.16.840.1.114222.4.1.3683</ns1:sender>
+          <ns1:sent>2009-08-27 10:55:44 -0500</ns1:sent>
+          <ns1:status>Test</ns1:status>
+          <ns1:msgType>Alert</ns1:msgType>
+          <ns1:scope>Restricted</ns1:scope>
+          <ns1:info>
+            <ns1:category>Health</ns1:category>
+            <ns1:event>HAN</ns1:event>
+            <ns1:urgency>Unknown</ns1:urgency>
+            <ns1:severity>Minor</ns1:severity>
+            <ns1:certainty>Likely</ns1:certainty>
+            <ns1:senderName>Centers for Disease Control</ns1:senderName>
+            <ns1:headline>Cascade alert sent from Federal jurisdiction to TX</ns1:headline>
+            <ns1:description>Message Body Message Body Message Body Message Body Message Body Message Body</ns1:description>
+            <ns1:contact>Mark Jensen
+            mjensen@cdc.gov</ns1:contact>
+            <ns1:parameter>
+              <ns1:valueName>Acknowledge</ns1:valueName>
+              <ns1:value>No</ns1:value>
+            </ns1:parameter>
+            <ns1:parameter>
+              <ns1:valueName>DeliveryTime</ns1:valueName>
+              <ns1:value>60</ns1:value>
+            </ns1:parameter>
+            <ns1:parameter>
+              <ns1:valueName>Level</ns1:valueName>
+              <ns1:value>State</ns1:value>
+            </ns1:parameter>
+            <ns1:parameter>
+              <ns1:valueName>ProgramType</ns1:valueName>
+              <ns1:value>Alert</ns1:value>
+            </ns1:parameter>
+          </ns1:info>
+        </ns1:alert>
+      </embeddedXMLContent>
+    </xmlContent>
+  </contentObject>
+</EDXLDistribution>
+

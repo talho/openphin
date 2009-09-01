@@ -6,10 +6,6 @@
   <distributionStatus>Test</distributionStatus>
   <distributionType>Alert</distributionType>
   <combinedConfidentiality>NotSensitive</combinedConfidentiality>
-  <recipientRole>
-    <valueListUrn>urn:phin:role</valueListUrn>
-    <value>Health Alert and Communications Coordinator</value>
-  </recipientRole>
   <contentObject>
     <confidentiality>NotSensitive</confidentiality>
     <xmlContent>
@@ -41,8 +37,8 @@
               <ns1:value>60</ns1:value>
             </ns1:parameter>
             <ns1:parameter>
-              <ns1:valueName>JurisdictionalLevel</ns1:valueName>
-              <ns1:value>State</ns1:value>
+              <ns1:valueName>Level</ns1:valueName>
+              <ns1:value>Local</ns1:value>
             </ns1:parameter>
             <ns1:parameter>
               <ns1:valueName>ProgramType</ns1:valueName>

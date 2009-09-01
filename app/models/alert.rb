@@ -200,7 +200,14 @@ class Alert < ActiveRecord::Base
   def batch_deliver
     #0: take care of the case where there is no jurisdiction specified or no role specified
     if users.empty?
-      jurisdictions << Jurisdiction.nonforeign if jurisdictions && jurisdictions.empty?
+      if jurisdictions && jurisdictions.empty?
+        if jurisdictional_level =~ /local/i
+          jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+        end
+        if jurisdictional_level =~ /state/i
+          jurisdictions << Jurisdiction.root.children.nonforeign
+        end
+      end
       roles << Role.approval_roles if roles && roles.empty?
     end
     # 1 - explode all known users and batch deliver to them
