@@ -175,3 +175,27 @@ Feature: Alerts from EDXL
       | author        | John Smith |
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "DSHS-2009-183" should be acknowledged
+
+  @WIP
+  Scenario:  Receiving a cascade alert without jurisdictions specified should alert all jurisdictions
+    When PhinMS delivers the message: cdc_no_jurisdiction.edxl
+    Then the following users should receive the email:
+     | People        | bob@example.com,keith@example.com,wisecoordinator@example.com |
+     | subject       | Cascade alert sent from Federal jurisdiction to TX    |
+     | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
+    And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
+    And "jphipps@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
+    When I log in as "bob@example.com"
+    And I go to the alerts page
+    Then I should see 1 alerts
+
+
+  Scenario:  Receiving a cascade alert without roles specified should alert all roles
+
+  Scenario:  Sending system-to-system ack when receiving a message
+    When PhinMS delivers the message: test-CDC-cascade.edxl
+    Then there should be an file "CDC-2009-66-ACK.edxl" in the PhinMS queue
+    And the system acknowledgment for alert "CDC-2009-66" should contain the following:
+      | distribution_reference | CDC-2009-66,2.16.840.1.114222.4.1.3683@cdc.gov,2009-08-27T10:55:44-05:00 |
+      | distribution_type      | Ack |
+

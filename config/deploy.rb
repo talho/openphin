@@ -36,7 +36,6 @@ after 'deploy:update_code', 'deploy:symlink_configs'
 after 'deploy:update_code', 'deploy:install_gems'
 after 'deploy:install_gems', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
-
 namespace :deploy do
   desc "we need a database. this helps with that."
   task :symlink_configs do
@@ -48,12 +47,10 @@ namespace :deploy do
     run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
-    run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
     if rails_env == 'test'|| rails_env == 'development'
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
-      FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/backgroundrb.yml")
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
 #      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
     end

@@ -4,5 +4,5 @@ Agency = {
   :agency_name => 'Texas Department of State Health Services',
   :agency_abbreviation => 'DSHS',
   :phin_ms_base_path => File.expand_path(File.join(Rails.root, 'tmp', 'phin_ms_queues', Rails.env)),
-  :phin_ms_path => File.expand_path(File.join(Rails.root, 'tmp', 'phin_ms_queues', Rails.env, 'CIBER_TA_PCA', 'outgoing')) 
+  :phin_ms_path => File.expand_path(File.join(Rails.root, 'tmp', 'phin_ms_queues', Rails.env, 'receiverincoming')) 
 }

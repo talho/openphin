@@ -5,6 +5,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+require File.join(File.dirname(__FILE__), 'initializers', 'utilities')
 
 HOST = "txphin.texashan.org"
 
@@ -73,7 +74,7 @@ Rails::Initializer.run do |config|
   config.gem 'validatable', :version => '1.6.7'
 end
 
-PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'senderincoming')
+PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'receiverincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'archive')
 Dir.ensure_exists(PHINMS_INCOMING)
 Dir.ensure_exists(PHINMS_ARCHIVE)

@@ -2,7 +2,7 @@
 <EDXLDistribution xmlns="urn:oasis:names:tc:emergency:EDXL:DE:1.0">
   <distributionID>CDC-2009-66</distributionID>
   <senderID>2.16.840.1.114222.4.1.3683@cdc.gov</senderID>
-  <dateTimeSent>2009-08-27T10:55:44-0500</dateTimeSent>
+  <dateTimeSent>2009-08-27 10:55:44 -0500</dateTimeSent>
   <distributionStatus>Test</distributionStatus>
   <distributionType>Alert</distributionType>
   <combinedConfidentiality>NotSensitive</combinedConfidentiality>
@@ -10,13 +10,6 @@
     <valueListUrn>urn:phin:role</valueListUrn>
     <value>Health Alert and Communications Coordinator</value>
   </recipientRole>
-  <explicitAddress>
-    <explicitAddressScheme>e-mail</explicitAddressScheme>
-    <explicitAddressValue>mjensen@cdc.gov</explicitAddressValue>
-  </explicitAddress>
-  <targetArea>
-    <locCodeUN>48</locCodeUN>
-  </targetArea>
   <contentObject>
     <confidentiality>NotSensitive</confidentiality>
     <xmlContent>
@@ -24,7 +17,7 @@
         <ns1:alert xmlns:ns1="urn:oasis:names:tc:emergency:cap:1.1">
           <ns1:identifier>CDC-2009-66</ns1:identifier>
           <ns1:sender>2.16.840.1.114222.4.1.3683</ns1:sender>
-          <ns1:sent>2009-08-27T10:55:44-0500</ns1:sent>
+          <ns1:sent>2009-08-27 10:55:44 -0500</ns1:sent>
           <ns1:status>Test</ns1:status>
           <ns1:msgType>Alert</ns1:msgType>
           <ns1:scope>Restricted</ns1:scope>
