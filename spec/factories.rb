@@ -130,3 +130,8 @@ Factory.define :blackberry_device, :class => Device::BlackberryDevice do |m|
   m.association :user
   m.sequence(:blackberry) {|t| "abcf#{t.to_s.rjust(4,"0")}"}
 end
+
+Factory.define :im_device, :class => Device::IMDevice do |m|
+  m.association :user
+  m.sequence(:im) {|t| "user#{t.to_s.rjust(4,"0")}@example.com"}
+end

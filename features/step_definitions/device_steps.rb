@@ -1,3 +1,10 @@
+
+Given /^I have an? (.*) device$/ do |device_type|
+  current_user.devices << Factory("#{device_type.downcase}_device")
+  
+end
+
+
 When 'I acknowledge the phone message for "$title"' do |title|
   a = Alert.find_by_title(title).alert_attempts.first
   a.acknowledged_at = Time.zone.now
