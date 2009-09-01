@@ -25,7 +25,7 @@
 	  <p class="brief acknowledge"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
         
       <%- if !alert.original_alert_id.blank? -%>
-        <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert_id %></p>
+        <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert.identifier %></p>
       <%- end -%>
       <div class="message">
         <%=simple_format h(alert.message) %>

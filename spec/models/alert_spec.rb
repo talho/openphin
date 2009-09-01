@@ -42,7 +42,7 @@ describe Alert do
   describe 'class level builders' do
     describe '.build_cancellation' do
       def fields_not_cloned
-        ["id", "updated_at", "created_at", "title", "message_type", "original_alert_id"]
+        ["id", "updated_at", "created_at", "title", "message_type", "original_alert_id", "identifier"]
       end
       
       def changeable_fields

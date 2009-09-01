@@ -115,6 +115,7 @@ class Alert < ActiveRecord::Base
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
       alert.updated_at = nil
+      alert.identifier = nil
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
@@ -140,6 +141,7 @@ class Alert < ActiveRecord::Base
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
       alert.updated_at = nil
+      alert.identifier = nil
       alert.title = "[Update] - #{title}"
       alert.message_type = MessageTypes[:update]
       alert.original_alert = self
