@@ -74,7 +74,7 @@ Rails::Initializer.run do |config|
   config.gem 'validatable', :version => '1.6.7'
 end
 
-PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'receiverincoming')
+PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'senderincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'archive')
 Dir.ensure_exists(PHINMS_INCOMING)
 Dir.ensure_exists(PHINMS_ARCHIVE)
