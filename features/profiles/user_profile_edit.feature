@@ -46,3 +46,9 @@ I should be able to edit my profile
     Given I am logged in as "jane.smith@example.com"
     When I edit the profile for john.smith@example.com
     Then I should see "You are not authorized to edit this profile."
+
+  Scenario: editing user account information with an im device in a profile
+    Given I am logged in as "john.smith@example.com"
+    And I have an IM device
+    When I go to the edit profile page
+    Then I should see the profile edit form

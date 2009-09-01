@@ -76,8 +76,10 @@ end
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'senderincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'archive')
+PHINMS_ERROR=File.join(Rails.root,"tmp","phin_ms_queues",Rails.env,'error')
 Dir.ensure_exists(PHINMS_INCOMING)
 Dir.ensure_exists(PHINMS_ARCHIVE)
+Dir.ensure_exists(PHINMS_ERROR)
 
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y")
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y %I:%M %p")

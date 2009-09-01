@@ -24,7 +24,7 @@
 #
 
 class Jurisdiction < ActiveRecord::Base
-  acts_as_nested_set
+  acts_as_nested_set                                                    
   
   has_and_belongs_to_many :organizations
   has_many :role_memberships
@@ -38,6 +38,7 @@ class Jurisdiction < ActiveRecord::Base
   named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
   named_scope :parents, :conditions => "rgt - lft > 1", :order => :name
   named_scope :foreign, :conditions => { :foreign => true }
+  named_scope :nonforeign, :conditions => { :foreign => nil }, :order => :name
 
   validates_uniqueness_of :name
   
@@ -58,7 +59,7 @@ class Jurisdiction < ActiveRecord::Base
   end
 
   def deliver(alert)
-    raise 'not foreign' unless foreign?
+    raise "#{self.name} is not foreign jurisdiction' unless foreign?"
     cascade_alert = CascadeAlert.new(alert)
     Dir.ensure_exists(Agency[:phin_ms_path])
     File.open(File.join(Agency[:phin_ms_path], "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }

@@ -42,6 +42,7 @@ end
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }
+  jur.foreign false
 end
 
 Factory.sequence(:organization_name) {|jn| "Organization #{jn}"}
@@ -129,4 +130,9 @@ end
 Factory.define :blackberry_device, :class => Device::BlackberryDevice do |m|
   m.association :user
   m.sequence(:blackberry) {|t| "abcf#{t.to_s.rjust(4,"0")}"}
+end
+
+Factory.define :im_device, :class => Device::IMDevice do |m|
+  m.association :user
+  m.sequence(:im) {|t| "user#{t.to_s.rjust(4,"0")}@example.com"}
 end

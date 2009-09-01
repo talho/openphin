@@ -10,6 +10,7 @@ class PhinmsPickupWorker < BackgrounDRb::MetaWorker
       phindir.each do |file|
         filename = File.join(PHINMS_INCOMING, file)
         archive_filename = File.join(PHINMS_ARCHIVE, file)
+        error_filename = File.join(PHINMS_ERROR, file)
         xml=""
         begin
           unless File.directory?(filename)
@@ -24,9 +25,10 @@ class PhinmsPickupWorker < BackgrounDRb::MetaWorker
               PHINMS_RECEIVE_LOGGER.debug "Cascade Message Parsed: #{msg.distribution_id}"
             end
             File.mv( filename, archive_filename)
-          end 
+          end
         rescue Exception => e
           PHINMS_RECEIVE_LOGGER.error "Error parsing PHIN-MS message:\n#{e}\n#{xml}"
+          File.mv( filename, error_filename)
           AppMailer.deliver_system_error(e, "Filename: #{filename}\nContents:\n#{xml}")
         end
       end
