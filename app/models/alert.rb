@@ -307,7 +307,7 @@ class Alert < ActiveRecord::Base
     xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
       xml.distributionID "#{self.distribution_id},#{Agency[:agency_identifier]}"
       xml.senderID sender_id
-      xml.dateTimeSent Time.now.utc.iso8601
+      xml.dateTimeSent Time.now.utc.iso8601(3)
       xml.distributionStatus status
       xml.distributionType "Ack"
       xml.combinedConfidentiality sensitive? ? "Sensitive" : "NotSensitive"

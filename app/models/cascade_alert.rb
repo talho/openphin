@@ -32,7 +32,7 @@ class CascadeAlert
   end
   
   def distribution_reference
-    "#{alert.original_alert.distribution_id},#{sender_id},#{alert.original_alert.sent_at}" unless alert.original_alert.nil?
+    "#{alert.original_alert.distribution_id},#{sender_id},#{alert.original_alert.sent_at.utc.iso8601(3)}" unless alert.original_alert.nil?
   end
   
   def confidentiality
@@ -45,7 +45,7 @@ class CascadeAlert
     xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
       xml.distributionID alert.distribution_id
       xml.senderID sender_id(true)
-      xml.dateTimeSent alert.sent_at
+      xml.dateTimeSent alert.sent_at.utc.iso8601(3)
       xml.distributionStatus alert.status
       xml.distributionType alert.message_type
       xml.combinedConfidentiality confidentiality
@@ -81,7 +81,7 @@ class CascadeAlert
             xml.ns1(:alert, "xmlns:ns1".to_sym => 'urn:oasis:names:tc:emergency:cap:1.1') do |cap|
               xml.ns1 :identifier, alert.distribution_id
               xml.ns1 :sender, sender_id
-              xml.ns1 :sent, alert.sent_at
+              xml.ns1 :sent, alert.sent_at.utc.iso8601(3)
               xml.ns1 :status, alert.status
               xml.ns1 :msgType, alert.message_type
               xml.ns1 :references, distribution_reference unless alert.message_type == 'Alert'
@@ -108,7 +108,7 @@ class CascadeAlert
                 end
                 
                 xml.ns1 :parameter do
-                  xml.ns1 :valueName, 'JurisdictionalLevel'
+                  xml.ns1 :valueName, 'Level'
                   xml.ns1 :value, alert.jurisdictional_level
                 end
                 

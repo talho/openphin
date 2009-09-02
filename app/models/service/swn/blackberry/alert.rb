@@ -51,7 +51,7 @@ class Service::SWN::Blackberry::Alert < Service::SWN::Blackberry::Base
       xml.swn(:pSendNotificationInfo) do
         xml.swn(:SendNotificationInfo) do
           xml.swn(:id, alert.id)
-          xml.swn(:custSentTimestamp, Time.zone.now.iso8601)
+          xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml
           add_recipients xml
