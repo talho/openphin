@@ -2,6 +2,7 @@ class CascadeAlert
   attr_accessor :alert
   
   def initialize(alert)
+    alert.reload
     self.alert = alert
   end
   
