@@ -7,6 +7,7 @@ end
 texas = Jurisdiction.seed(:name) do |j|
   j.name = 'Texas'
   j.fips_code = '01091'
+  j.foreign = false
 end
 texas.move_to_child_of(federal)
 

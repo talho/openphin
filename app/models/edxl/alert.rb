@@ -82,6 +82,7 @@ module EDXL
 
     def jurisdictional_level
       parameter = parameters.detect {|p| p.key == 'Level' }
+      parameter = parameters.detect {|p| p.key == 'JurisdictionalLevel' } if parameter.blank?
       parameter.value if parameter
     end
 
