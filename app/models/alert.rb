@@ -82,6 +82,7 @@ class Alert < ActiveRecord::Base
   validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
   
   before_create :set_message_type
+  before_create :set_sent_at
   before_save :set_jurisdictional_level
   after_save :set_identifier
   
@@ -286,6 +287,12 @@ class Alert < ActiveRecord::Base
     end
   end
 
+  def set_sent_at
+    if sent_at.blank?
+      write_attribute("sent_at", Time.zone.now)
+    end
+  end
+  
   #TODO: opportunity for optimization:  perform this function in SQL, not using map
   def foreign_users
     @foreign_users ||= users.map{|u| u if u.jurisdictions.foreign.all.any? }.compact
