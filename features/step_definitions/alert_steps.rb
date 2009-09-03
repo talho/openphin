@@ -234,6 +234,16 @@ When /^no foreign alert "([^\"]*)" is sent$/ do |title|
   File.exist?(File.join(Agency[:phin_ms_path],"#{alert.distribution_id}.edxl")).should_not be_true
 end
 
+When /^I re\-submit a cancellation for "([^\"]*)"$/ do |title|
+  visit path_to("the cancel alert page", title)
+  When "I press \"Preview Message\""
+end
+
+When /^I re\-submit an update for "([^\"]*)"$/ do |title|
+  visit path_to("the update alert page", title)
+  When "I press \"Preview Message\""
+end
+
 Then /^there should be an file "([^\"]*)" in the PhinMS queue$/ do | filename |
   File.exist?(File.join(Agency[:phin_ms_path], filename)).should be_true
 end

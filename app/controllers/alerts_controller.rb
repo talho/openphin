@@ -65,6 +65,12 @@ class AlertsController < ApplicationController
       @device_types << device_type
     end
 
+    if original_alert.cancelled?
+      flash[:error] = "You cannot update or cancel an alert that has already been cancelled."
+      redirect_to alerts_path
+      return
+    end
+    
     @alert = if params[:_action].downcase == 'cancel'
       @cancel = true
       original_alert.build_cancellation(params[:alert])

@@ -68,3 +68,28 @@ Feature: Updating an alert
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
     And "Fix the above step to include Alert ID and Reference ID" should be implemented
+
+    Scenario: Make sure re-submitting an updaten after alert is canceled doesn't work
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    And I've sent an alert with:
+      | Jurisdictions | Dallas County       |
+      | Roles         | Health Officer      |
+      | Title         | Flying Monkey Disease                |
+      | Message       | For more details, keep on reading... |
+      | Severity      | Moderate            |
+      | Status        | Actual              |
+      | Acknowledge   | <unchecked>         |
+      | Communication methods | E-mail      |
+      | Delivery Time | 60 minutes          |
+
+    When I go to cancel the alert
+    And I make changes to the alert form with:
+      | Message    | Flying monkey disease is not contagious |
+    And I press "Preview Message"
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    When I re-submit an update for "Flying Monkey Disease"
+    Then I should see "You cannot update or cancel an alert that has already been cancelled."
+    And I should be on the alerts page
+    And I should see 2 alerts
