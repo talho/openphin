@@ -23,6 +23,7 @@
 
   $('a.destroy').live('click', function(event) {
     event.preventDefault();
+	event.stopPropogation();
     if (confirm('Are you sure you want to delete?')) {
       var form = $('<form method="POST"></form>')
         .css({display:'none'})
