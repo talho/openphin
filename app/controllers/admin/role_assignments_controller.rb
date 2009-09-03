@@ -11,7 +11,7 @@ class Admin::RoleAssignmentsController < ApplicationController
       users = User.find_all_by_id(params[:role_assigns][:user_ids])
       User.assign_role(role, jurisdiction, users)
       users.each do |user|
-        AppMailer.deliver_role_assigned(role, jurisdiction, user)
+        AppMailer.deliver_role_assigned(role, jurisdiction, user, current_user)
       end
       connector = users.size == 1 ? "has" : "have"
       flash[:notice] = "#{users.map(&:email).to_sentence} #{connector} been approved for the role #{role.name} in #{jurisdiction.name}"

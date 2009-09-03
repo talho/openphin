@@ -1,12 +1,24 @@
 (function($) {
   $(function() {
 		$('input[type=submit]').addClass('submit');
-		$('ul.progress a:not([href=#preview])').click(function() {
-			$(this).parents('ul').find('a').removeClass('current');
-			$(this).addClass('current');
-			$('#details, #audience, #preview').hide();
+		$('ul.progress a:not([href=#preview])').click(function(event) {
 			var selector = $(this).attr('href');
-			$('' + selector).show();
+			if (selector == '#audience') {
+				$('.alert_device').each(function(){
+					if ($(this).attr("checked")) {
+						$(this).parents('ul').find('a').removeClass('current');
+						$(this).addClass('current');
+						$('#details, #audience, #preview').hide();
+						$('' + selector).show();
+						return false;
+					}
+				})
+			} else {
+				$(this).parents('ul').find('a').removeClass('current');
+				$(this).addClass('current');
+				$('#details, #audience, #preview').hide();
+				$('' + selector).show();
+			}
 			return false;
 		});
 		$('#edit fieldset input:checkbox').click(function() {
@@ -30,7 +42,12 @@
 			$('#details .details').append('<p><button class="audience">Select an Audience &gt;</button></p>');
 		
 		$('#details button.audience').click(function() {
-			$('ul.progress a[href=#audience]').click();
+			$('.alert_device').each(function (i) {
+				if ($(this).attr("checked")) {
+					$('ul.progress a[href=#audience]').click();
+					return false;
+				}
+			});
 			return false;
 		});
 		
@@ -61,7 +78,11 @@
 		})
 		
 		$('ul.progress a[href=#preview]').click(function() {
-			$(this).parents('form').submit();
+			$('.alert_device').each(function(){
+				if ($(this).attr("checked")) {
+					$(this).parents('form').submit();
+				}
+			})
 		});
 		
 		$('ul#alerts a.view_more, ul#alerts a.view_less').click(function() {

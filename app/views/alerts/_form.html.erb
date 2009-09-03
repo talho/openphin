@@ -76,7 +76,7 @@
         <legend>Communication Methods</legend>
         <ul class="check_selector">
           <% Device::Types.each do |type| %>
-            <li><%= check_box_tag 'alert[device_types][]', type, form.object.device_types.include?(type.to_s), :id => "alert_#{dom_class(type)}" %>
+            <li><%= check_box_tag 'alert[device_types][]', type, form.object.device_types.include?(type.to_s), {:class => "alert_device", :id => "alert_#{dom_class(type)}"} %>
             <%= label_tag "alert_#{dom_class(type)}", type.display_name %>
             </li>
           <% end %>
