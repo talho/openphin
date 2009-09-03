@@ -12,4 +12,7 @@
 :schedules:
   :query_tfcc_for_acknowledgments_worker:
     :query:
-      :trigger_args: * */5 * * * *
+      :trigger_args: 0 */5 * * * *
+  :phinms_pickup_worker:
+    :check:
+      :trigger_args: 0 */1 * * * *
