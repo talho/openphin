@@ -134,7 +134,7 @@ describe User do
   
   describe "display_name" do
     it "should default to full name if display name not specified" do
-      user = User.new(:first_name => 'Brandon', :last_name => 'Keepers')
+      user = User.create(:first_name => 'Brandon', :last_name => 'Keepers', :email => "brandon@example.com", :password => "password")
       user.display_name.should == 'Brandon Keepers'
     end
     

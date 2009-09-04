@@ -71,3 +71,24 @@ jQuery(function($) {
     $(this).parent(".alert").children(".detail").toggle();
   });
 });
+
+ $(document).ready(function() {
+	var name_synched = false;
+
+	if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+
+	display_name_change = function(){
+		if (name_synched) {
+			$('#user_display_name').val(($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim())
+		}
+		if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+		else name_synched = false;
+	}
+
+	$('#user_first_name').keyup(display_name_change)
+	$('#user_last_name').keyup(display_name_change)
+	$('#user_display_name').keyup(function() {
+		if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+		else name_synched = false;
+	});
+});

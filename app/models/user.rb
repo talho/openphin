@@ -66,6 +66,7 @@ class User < ActiveRecord::Base
   before_create :generate_oid
   before_create :set_confirmation_token
   before_create :create_default_email_device
+  before_create :set_display_name
 
   after_create :assign_public_role
 
@@ -123,10 +124,7 @@ class User < ActiveRecord::Base
     self.roles.any?{|role| role.approval_required? }
   end
 
-  def display_name
-    self[:display_name].blank? ? first_name + " " + last_name : self[:display_name]
-  end
-  alias_method :name, :display_name
+  alias_attribute :name, :display_name
   
   def alerter_jurisdictions
     Jurisdiction.find(role_memberships.alerter.map(&:jurisdiction_id))
@@ -258,4 +256,7 @@ private
     self.token = ActiveSupport::SecureRandom.hex
   end
 
+  def set_display_name
+    self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
+  end
 end
