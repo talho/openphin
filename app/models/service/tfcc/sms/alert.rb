@@ -22,6 +22,7 @@ class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
 
     start_at = self.class.format_activation_time(start_time)
     stop_at =  self.class.format_activation_time(start_time + retry_duration)
+    caller_id = alert.caller_id.nil? || alert.caller_id.blank? ? "" : alert.caller_id
 
     body = ""
     xml = Builder::XmlMarkup.new :target => body, :indent => 2
@@ -30,7 +31,7 @@ class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
       xml.request :method => "create" do
         xml.cli_id client_id
         xml.usr_id user_id
-        xml.activation :start => start_at, :stop => stop_at do
+        xml.activation :start => start_at, :stop => stop_at, :caller_id => caller_id do
           xml.campaign do
             add_program  xml
             add_audience xml

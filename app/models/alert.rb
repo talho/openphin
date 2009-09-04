@@ -80,6 +80,8 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   validates_length_of :short_message, :maximum => 160
+  validates_length_of :caller_id, :is => 10, :allow_blank => true, :allow_nil => true
+  validates_format_of :caller_id, :with => /^[0-9]*$/, :on => :create, :allow_blank => true, :allow_nil => true
   validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
   
   before_create :set_message_type

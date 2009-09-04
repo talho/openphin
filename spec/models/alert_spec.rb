@@ -188,6 +188,25 @@ describe Alert do
       alert.short_message = "a"*161
       alert.should_not be_valid
     end
+    
+    it "should be invalid with a caller id not 10 characters long and non-numeral but can be blank or nil" do
+      alert = Factory.build(:alert, :caller_id => "0"*10)
+      alert.should be_valid
+      alert.caller_id = nil
+      alert.should be_valid
+      alert.caller_id = ""
+      alert.should be_valid
+      alert.caller_id = " "
+      alert.should be_valid
+
+      alert.caller_id = "a"*11
+      alert.should_not be_valid
+      alert.caller_id = "a"*9
+      alert.should_not be_valid
+
+      alert.caller_id = "a"*10
+      alert.should_not be_valid
+    end
   end
   
   describe "acknowledge" do

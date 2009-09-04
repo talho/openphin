@@ -102,5 +102,23 @@
       }
     });
 
-  })
+    $('ul.check_selector #alert_device_phone_device,#alert_device_sms_device,#alert_device_fax_device,#alert_device_blackberry_device').click(function() {
+		if($('ul.check_selector #alert_device_phone_device:checked').length || 
+		   $('ul.check_selector #alert_device_sms_device:checked').length || 
+		   $('ul.check_selector #alert_device_fax_device:checked').length || 
+		   $('ul.check_selector #alert_device_blackberry_device:checked').length)
+		   $('.caller_id').show();
+		 else $('.caller_id').hide();
+	});
+	
+	$('#alert_caller_id').keydown(function(event) {
+		if ((event.shiftKey || ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 37 || event.keyCode > 40))) 
+			&& event.keyCode != 46 && event.keyCode != 8) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	});
+  });
 })(jQuery);

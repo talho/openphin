@@ -71,6 +71,11 @@
         <%= form.label :sensitive, "Sensitive (Confidential)" %>
       </p>
 
+	  <p class="caller_id">
+		<%= form.text_field :caller_id, {:value => @alert.caller_id.blank? ? "4114114111" : @alert.caller_id, :maxlength => 10} %>
+	  	<%= form.label :caller_id, "Caller ID<br/>(numbers only, no country code or dashes)" %>
+	  </p>
+
       <% if @update.blank? && @cancel.blank? %>
       <fieldset class="list">
         <legend>Communication Methods</legend>
