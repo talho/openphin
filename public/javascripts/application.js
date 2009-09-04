@@ -73,9 +73,9 @@ jQuery(function($) {
 });
 
  $(document).ready(function() {
-	var name_synched = false;
+ 	var name_synched = false;
 
-	if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+	if(typeof $('#user_display_name').val() != "undefined" && ($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim())) name_synched = true;
 
 	display_name_change = function(){
 		if (name_synched) {
