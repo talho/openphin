@@ -22,7 +22,9 @@
 			<span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
             <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.sender %></span>
             <br/>
-            <span class="progress"><strong>Progress:</strong> <%= alert.acknowledged_percent.round %>%</span>
+			<%- if alert.acknowledge? -%>
+            <span class="progress"><strong>Acknowledgments:</strong> <%= alert.acknowledged_percent.round %>%</span>
+			<%- end -%>
 		  </p> 
         </div>
 	    <div class="extended preview">
@@ -45,7 +47,8 @@
             <% end %>
           </div>
 	  	  <div class="aside">
-	        <h3>Progress (by jurisdiction)</h3>
+			<%- if alert.acknowledge? -%>
+	        <h3>Acknowledgments (by jurisdiction)</h3>
 			<div class="jur_ackpct">
             <% alert.jurisdictions.each do |d| %>
               <h5 class="jurisdiction"><%= d.name %></h5>
@@ -53,13 +56,14 @@
             <% end %>
 			</div>
             
-            <h3>Progress (by device)</h3>
+            <h3>Acknowledgments (by device)</h3>
 			<div class="dev_ackpct">
             <% Device::Types.each do |d| %>
               <h5 class="device_type"><%= d.display_name %></h5>
               <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
             <% end %>
 			</div>
+			<%- end -%>
 	  	  </div>
         </div>
     <%- end -%>
