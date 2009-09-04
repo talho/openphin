@@ -33,6 +33,7 @@
 #  message_recording_file_name    :string(255)
 #  message_recording_content_type :string(255)
 #  message_recording_file_size    :integer(4)
+#  distribution_reference         :string(255)
 #
 
 require 'ftools'

@@ -20,7 +20,7 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  fips_code              :string(255)
-#  foreign                :boolean(1)
+#  foreign                :boolean(1)      not null
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
