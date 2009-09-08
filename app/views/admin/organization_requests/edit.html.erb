@@ -1,0 +1,24 @@
+<h1>Editing organization_request</h1>
+
+<% form_for(@organization_request) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :organization_id %><br />
+    <%= f.text_field :organization_id %>
+  </p>
+    <p>
+      <%= f.label :jurisdiction_id %><br />
+      <%= f.text_field :jurisdiction_id %>
+    </p>
+  <p>
+    <%= f.label :approver_id %><br />
+    <%= f.text_field :approver_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @organization_request %> |
+<%= link_to 'Back', admin_organization_requests_path %>

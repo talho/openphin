@@ -49,7 +49,7 @@ Feature: Viewing the dashboard
     Then I should see a signout link
     And I should not see a sendalert link
     And I should not see a viewrole link
-    And I should not see a viewrolerequests link
+    And I should not see a viewpendingrequests link
     And I should not see a viewalerts link
     And I should not see a link to View Profile
 
@@ -62,7 +62,7 @@ Feature: Viewing the dashboard
     Then I should see a signout link
     And I should see a sendalert link
     And I should not see a viewrole link
-    And I should not see a viewrolerequests link
+    And I should not see a viewpendingrequests link
     And I should see a viewalerts link
     And I should not see a link to View Profile
 
@@ -72,7 +72,7 @@ Feature: Viewing the dashboard
     Then I should see a signout link
     And I should not see a sendalert link
     And I should not see a viewrole link
-    And I should see a viewrolerequests link
+    And I should see a viewpendingrequests link
     And I should not see a viewalerts link
     And I should not see a link to View Profile
  
@@ -83,7 +83,7 @@ Feature: Viewing the dashboard
     Then I should see a signout link
     And I should see a sendalert link
     And I should not see a viewrole link
-    And I should see a viewrolerequests link
+    And I should see a viewpendingrequests link
     And I should see a viewalerts link
     And I should not see a link to View Profile
     

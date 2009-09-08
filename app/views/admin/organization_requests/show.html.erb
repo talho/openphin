@@ -1,0 +1,24 @@
+<p>
+  <b>Requester:</b>
+  <%= link_to(@organization_request.organization.contact_display_name, @organization_request.organization.contact.nil? ? "mailto:#{@organization_request.organization.contact_email}" : user_profile_path(@organization_request.organization.contact)) %>
+</p>
+
+<p>
+  <b>Organization:</b>
+  <%=h @organization_request.organization.name %>
+</p>
+
+<p>
+  <b>Jurisdiction:</b>
+  <%=h @organization_request.jurisdiction.name %>
+</p>
+
+<% if !@organization_request.approver.blank? %>
+<p>
+  <b>Approver:</b>
+  <%=h @organization_request.approver.name %>
+</p>
+<% end %>
+
+<%= link_to 'Approve Role', approve_admin_organization_request_path(@organization_request) %> or
+<%= link_to 'Deny Role', deny_admin_organization_request_path(@organization_request) %>

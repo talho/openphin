@@ -16,7 +16,7 @@ class ApprovalMailer < ActionMailer::Base
 
   def organization_approval(organization)
     if organization.contact.blank?
-      organization.contact_email
+      recipients organization.contact_email
     else
       recipients organization.contact.email
     end
@@ -27,7 +27,7 @@ class ApprovalMailer < ActionMailer::Base
 
   def organization_denial(organization)
     if organization.contact.blank?
-      recipients.organization.contact_email
+      recipients organization.contact_email
     else
       recipients organization.contact.email
     end

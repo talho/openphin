@@ -30,7 +30,7 @@ Feature: Creating and sending alerts
       | Dallas County | Tarrant County | Wise County | Potter County |  
     And the following users belong to the Red Cross:
       | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison | Brian Ryckbost |
-      
+
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts

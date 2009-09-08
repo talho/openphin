@@ -9,11 +9,16 @@ Feature: Signing up for an organization account
         | Jurisdiction      | Dallas County           |
         | Jurisdiction      | Texas                   |
         | Jurisdiction      | Tarrant County          |
+        | Jurisdiction      | Potter County          |
         | Jurisdiction      | Denton County           |
         | Organization Type | Non-Profit Organization |
         | Role              | Public                  |
-    And the following organization administrators exist:
-        | keith@texashan.org     | Texas      |
+    And the following administrators exist:
+        | keith@texashan.org     | Texas              |
+        | ethan@example.com      | Potter County      |
+        | brandon@example.com    | Dallas County      |
+        | dan@example.com        | Tarrant County     |
+        | jason@example.com      | Denton County      |
 
   Scenario: Organization signup form should not display Federal jurisdiction
     When I go to the new organization page
@@ -23,7 +28,7 @@ Feature: Signing up for an organization account
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
         | Distribution Email                      | staff@salvationarmydallas.org |
-        | What Counties                           | Potter, Dallas County, Tarrant County, Denton County |
+        | What Counties                           | Potter County, Dallas County, Tarrant County, Denton County |
         | Description                             | This might be a mission statement |
         | Name                                    | John Smith            |
         | Email Address                           | john@example.com |
@@ -44,7 +49,11 @@ Feature: Signing up for an organization account
     Then I should see "Your organization is confirmed.  You will be contacted by your TXPhin administrator when your registration is approved."
     And "Greater Dallas Salvation Army" is confirmed
 
-    And "bob@example.com" receives a "Greater Dallas Salvation Army" organization approval email
+    And "ethan@example.com" receives a "Greater Dallas Salvation Army" organization approval email
+    And "brandon@example.com" receives a "Greater Dallas Salvation Army" organization approval email
+    And "dan@example.com" receives a "Greater Dallas Salvation Army" organization approval email
+    And "jason@example.com" receives a "Greater Dallas Salvation Army" organization approval email
+    And "keith@texashan.org" should not receive an email
 
   Scenario: Signing up as an organization when not logged in should display error when form is blank
     When I signup for an organization account with the following info:

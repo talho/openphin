@@ -12,29 +12,39 @@ should be able to manage organization enrollements
         | Jurisdiction      | Denton County           |
         | Organization Type | Non-Profit Organization |
         | Role              | Public                  |
-    And the following organization administrators exist:
-        | keith@texashan.org     | Texas      |
-
+    And the following administrators exist:
+        | keith@texashan.org     | Texas |
+        | bob@example.com        | Dallas County |
+    And the following unapproved organizations exist:
+        | name                          | distribution_email            | jurisdictions                | contact_email    |
+        | Gopher Lovers of America      | staff@salvationarmydallas.org | Texas, Dallas County         | john@example.com |
   Scenario: approving an organization signup
-    Given there is an unapproved Gopher Lovers of America organization
-    And I am logged in as "keith@texashan.org"
+    Given I am logged in as "keith@texashan.org"
     When I go to the dashboard page
-    Then I should see the organization "Gopher Lovers of America" is awaiting approval
+    Then I should see the organization "Gopher Lovers of America" is awaiting approval for "keith@texashan.org"
 
-    When I approve the organization "Gopher Lovers of America"
+    When I follow "Approve"
+    Then I should not see the organization "Gopher Lovers of America" is awaiting approval
+    And "Gopher Lovers of America" contact should receive the following email:
+      | subject       | Confirmation of Gopher Lovers of America organization registration    |
+      | body contains | Thanks for signing up.  Your users may now begin enrollment.|
+    When I sign out
+    Given I am logged in as "bob@example.com"
+    When I go to the dashboard page
+    Then I should see the organization "Gopher Lovers of America" is awaiting approval for "bob@example.com"
+
+    When I follow "Approve"
     Then I should not see the organization "Gopher Lovers of America" is awaiting approval
     And "Gopher Lovers of America" contact should receive the following email:
       | subject       | Confirmation of Gopher Lovers of America organization registration    |
       | body contains | Thanks for signing up.  Your users may now begin enrollment.|
 
 Scenario: denying an organization signup
-	Given there is an unapproved Furries organization with "furrylover@example.com" as the contact
-	And I am logged in as "keith@texashan.org"
-
-	When I deny the organization "Furries"
-	Then I should not see the organization "Furries" is awaiting approval
-	And "furrylover@example.com" should receive the email:
-				| subject       | Organization registration request denied    |
-				| body contains | Thanks for your organization request. |
-				| body contains | Your request has been denied.         |
-
+	Given I am logged in as "keith@texashan.org"
+	When I go to the dashboard page
+	And I follow "Deny"
+	Then I should not see the organization "Gopher Lovers of America" is awaiting approval
+	And "Gopher Lovers of America" contact should receive the following email:
+	  | subject       | Organization registration request denied    |
+      | body contains | Thanks for your organization request. |
+      | body contains | Your request has been denied.         |

@@ -117,7 +117,11 @@ describe Organization do
     describe ".approved" do
       it "should return only approved organizations " do
         unapproved_org = Factory(:organization, :approved => false)
-        approved_orgs = [Factory(:organization, :approved => true), Factory(:organization, :approved => true)]
+        organization1 = Factory(:organization)
+        OrganizationRequest.create!(:approved => true, :jurisdiction => Factory(:jurisdiction), :organization => organization1)
+        organization2 = Factory(:organization)
+        OrganizationRequest.create!(:approved => true, :jurisdiction => Factory(:jurisdiction), :organization => organization2)
+        approved_orgs = [organization1, organization2]
         Organization.approved.should == approved_orgs
       end
     end

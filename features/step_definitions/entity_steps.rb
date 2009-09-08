@@ -6,7 +6,21 @@ Given /^the following entities exist[s]?:$/ do |table|
 end
 
 Given /^a[n]? organization named (.*)$/ do |name|
-  Organization.find_by_name(name) || Factory(:organization, :name => name)
+  organization = Organization.find_by_name(name)
+  if organization
+    return organization
+  else
+    return Given "a new organization named #{name}"
+  end  
+end
+
+Given /^a new organization named (.*)$/ do |name|
+  org = Factory(:organization, :name => name)
+  user = Factory(:user)
+  RoleMembership.create(:user => user, :role => Role.admin, :jurisdiction => Jurisdiction.root || Factory(:jurisdiction))
+  org.organization_requests << OrganizationRequest.create(:jurisdiction => Jurisdiction.root)
+  org.organization_requests.first.approve!(user)
+  return org
 end
 
 Given 'a jurisdiction named $name' do |name|

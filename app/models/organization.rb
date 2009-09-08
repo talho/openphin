@@ -33,11 +33,14 @@
 class Organization < ActiveRecord::Base
 
   has_and_belongs_to_many :users
-  has_and_belongs_to_many :jurisdictions
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   belongs_to :organization_type
   has_one :contact, :class_name => "User", :primary_key => :contact_email, :foreign_key => 'email'
+  has_many :organization_memberships, :dependent => :destroy
+  has_many :organization_requests, :dependent => :destroy
+  has_many :requested_jurisdictions, :source => :jurisdiction, :through => :organization_requests
+  has_many :jurisdictions, :through => :organization_memberships
 
   validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
   def validate
@@ -53,8 +56,22 @@ class Organization < ActiveRecord::Base
 
   default_scope :order => :name
   
-  named_scope :approved, :conditions => { :approved => true }
-  named_scope :unapproved, :conditions => ["approved is null or approved = ?" , false ]
+  named_scope :approved, :include => :organization_requests, :conditions => [ 'organization_requests.approved = ?', true ]
+  named_scope :unapproved, :include => :organization_requests, :conditions => ["organization_requests.approved is null or organization_requests.approved = ?" , false ]
+  named_scope :requests_in_jurisdictions, lambda { |jurs|
+    { :include => 'organization_requests',
+      :conditions => [ 'organization_requests.jurisdiction_id IN (?)', jurs.map(&:id) ]
+    }
+  }
+  named_scope :members_in_jurisdictions, lambda { |jurs|
+      { :include => 'organization_memberships',
+        :conditions => [ 'organization_memberships.jurisdiction_id IN (?)', jurs.map(&:id) ]
+      }
+    }
+
+  def approved?
+    organization_requests.any?(&:approved)
+  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?

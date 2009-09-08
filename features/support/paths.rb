@@ -14,6 +14,8 @@ module NavigationHelpers
         new_password_path
       when /the request a role page/i
         new_role_request_path
+      when /the pending requests page/i
+        new_admin_pending_requests_path
       when /the new alert page/i
         new_alert_path
       when /the alerts page/i
