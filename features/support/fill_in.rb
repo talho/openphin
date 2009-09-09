@@ -3,8 +3,8 @@ module FeatureHelpers
     
     def fill_in_user_signup_form(table=nil)
       fields={"Email"=> "john@example.com",
-       "Password"=> "password",
-       "Password confirmation"=> "password",
+       "Password"=> "Password1",
+       "Password confirmation"=> "Password1",
        "First name"=> "John",
        "Last name"=> "Smith",
        "Preferred name"=> "Jonathan Smith",
@@ -60,9 +60,9 @@ module FeatureHelpers
         "Message" => "For more details, keep on reading...",
         "Severity" =>"Moderate",
         #"Status" => "Actual",
-        "Acknowledge"  => "<unchecked>",
+        "Acknowledge"  => "<unchecked>"
         #"Communication methods" => "E-mail",
-        "Delivery Time" => "15 minutes"
+        #"Delivery Time" => "15 minutes"
       }
 
       if table.is_a?(Hash)
@@ -72,7 +72,7 @@ module FeatureHelpers
       end
       
       fields.each do |label, value|
-        fill_in_alert_field label, value
+        fill_in_alert_field label, value unless label == "Delivery Time"
       end
     end
   
@@ -84,7 +84,7 @@ module FeatureHelpers
           fill_in 'alert_user_ids', :with => user.id.to_s
         end
       when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time'
-        select value, :from => label
+        select value, :from => label unless label == 'Delivery Time'
       when 'Acknowledge', 'Sensitive'
         id = "alert_#{label.parameterize('_')}"
         if value == '<unchecked>'

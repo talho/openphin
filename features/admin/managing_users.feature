@@ -20,8 +20,8 @@ Feature: An admin managing users
   Scenario: Creating a user
     When I create a user account with the following info:
       | Email          | john.smith@example.com |
-      | Password       | password         |
-      | Password confirmation | password  |
+      | Password       | Password1        |
+      | Password confirmation | Password1 |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
@@ -43,7 +43,7 @@ Feature: An admin managing users
   Scenario: Creating a user with invalid data
     When I create a user account with the following info:
       | Email          | invalidemail    |
-      | Password       | password        |
+      | Password       | Password1       |
       | Password confirmation | <blank>  |
     Then I should see error messages
     

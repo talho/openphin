@@ -75,7 +75,7 @@ Feature: Creating and sending alerts
       | Status   | Actual                                       |
       | Acknowledge | <unchecked>                               |
       | Communication methods | E-mail                          |
-      | Delivery Time | 60 minutes                              |
+      | Delivery Time | 72 hours                                |
     
     And I press "Preview Message"
     And I should see a preview of the message with:
@@ -89,7 +89,7 @@ Feature: Creating and sending alerts
       | Status   | Actual                                       |
       | Acknowledge | No                                        |
       | Communication methods | E-mail                          |
-      | Delivery Time | 60 minutes                              |
+      | Delivery Time | 72 hours                                |
     
     When I press "Edit"
     And I make changes to the alert form with:
@@ -106,7 +106,7 @@ Feature: Creating and sending alerts
       | Status   | Actual                                       |
       | Acknowledge | No                                        |
       | Communication methods | E-mail                          |
-      | Delivery Time | 60 minutes                              |
+      | Delivery Time | 72 hours                                |
 
   Scenario: Sending an alert to specific users sends alerts to each user
     When I fill out the alert form with:

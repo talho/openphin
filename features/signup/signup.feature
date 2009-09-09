@@ -17,9 +17,9 @@ Feature: Signing up for an account
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
-      | Email         | john@example.com |
-      | Password       | apples           |
-      | Password confirmation | apples    |
+      | Email          | john@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
@@ -35,9 +35,9 @@ Feature: Signing up for an account
       
   Scenario: Signing up as a public role but accidentally selecting non-public fields
     When I signup for an account with the following info:
-      | Email         | john@example.com |
-      | Password       | apples           |
-      | Password confirmation | apples    |
+      | Email          | john@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
@@ -69,8 +69,8 @@ Feature: Signing up for an account
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
       | Email          | john@example.com |
-      | Password       | password         |
-      | Password confirmation | password  |
+      | Password       | Password1        |
+      | Password confirmation | Password1 |
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
@@ -118,7 +118,7 @@ Feature: Signing up for an account
   Scenario: User signs up with invalid data
     When I signup for an account with the following info:
       | Email          | invalidemail    |
-      | Password       | password        |
+      | Password       | Password1       |
       | Password confirmation | <blank>  |
     Then I should see error messages
 

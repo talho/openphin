@@ -9,25 +9,25 @@ Feature: Password reset
       Then I should see "Unknown email"
 
     Scenario: User is signed up and requests password reset
-      Given I signed up with "email@person.com/password"
+      Given I signed up with "email@person.com/Password1"
       When I request password reset link to be sent to "email@person.com"
       Then I should see "instructions for changing your password"
       And a password reset message should be sent to "email@person.com"
 
     Scenario: User is signed up updated his password and types wrong confirmation
-      Given I signed up with "email@person.com/password"
+      Given I signed up with "email@person.com/Password1"
       When I follow the password reset link sent to "email@person.com"
-      And I update my password with "newpassword/wrongconfirmation"
+      And I update my password with "Newpassword1/Wrongconfirmation1"
       Then I should see error messages
       And I should be signed out
 
     Scenario: User is signed up and updates his password
-      Given I signed up with "email@person.com/password"
+      Given I signed up with "email@person.com/Password1"
       When I follow the password reset link sent to "email@person.com"
-      And I update my password with "newpassword/newpassword"
+      And I update my password with "Newpassword1/Newpassword1"
       Then I should be signed in
       When I sign out
       Then I should be signed out
-      And I sign in as "email@person.com/newpassword"
+      And I sign in as "email@person.com/Newpassword1"
       Then I should be signed in
 

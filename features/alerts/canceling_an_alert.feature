@@ -29,7 +29,7 @@ Feature: Canceling an alert
       | Status        | Actual              |
       | Acknowledge   | <unchecked>         |
       | Communication methods | E-mail      |
-      | Delivery Time | 60 minutes          |
+      | Delivery Time | 72 hours            |
 
     When I go to cancel the alert
     And I make changes to the alert form with:
@@ -45,7 +45,7 @@ Feature: Canceling an alert
       | Status   | Actual              |
       | Acknowledge | No               |
       | Communication methods | E-mail |
-      | Delivery Time | 60 minutes     |
+      | Delivery Time | 72 hours       |
     
     When I press "Send"
     Then I should see "Successfully sent the alert"

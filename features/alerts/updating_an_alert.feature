@@ -28,7 +28,7 @@ Feature: Updating an alert
       | Status        | Actual              |
       | Acknowledge   | <unchecked>         |
       | Communication methods | E-mail      |
-      | Delivery Time | 60 minutes          |
+      | Delivery Time | 72 hours            |
 
     When I am on the alert log
     Then I should see an alert titled "Flying Monkey Disease"
@@ -52,7 +52,7 @@ Feature: Updating an alert
       | Status   | Actual              |
       | Acknowledge | No               |
       | Communication methods | E-mail |
-      | Delivery Time | 60 minutes     |
+      | Delivery Time | 72 hours       |
     
     When I press "Send"
     Then I should see "Successfully sent the alert"

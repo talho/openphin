@@ -25,8 +25,8 @@ Factory.define :user do |pp|
   pp.last_name "FactoryUser"
   pp.display_name {|p| "#{p.first_name} #{p.last_name}"}
   pp.sequence(:email) {|i| "user#{i}@example.com" }
-  pp.password              { "password" }
-  pp.password_confirmation { "password" }
+  pp.password              { "Password1" }
+  pp.password_confirmation { "Password1" }
   pp.email_confirmed { true }
 end
 
