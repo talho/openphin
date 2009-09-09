@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   validates_presence_of :email
   validates_presence_of :first_name
   validates_presence_of :last_name
+  validates_length_of :password, :minimum => 6, :too_short => "must be at least 6 characters long", :if => :password_required?
+  validates_format_of :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
+
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }

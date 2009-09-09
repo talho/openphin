@@ -3,8 +3,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Gaddis'
   m.email = 'keith@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -33,8 +33,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Dole'
   m.email = 'bob@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -63,8 +63,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Waldo'
   m.email = 'ethan@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -86,8 +86,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Phipps'
   m.email = 'jason@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -109,8 +109,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Keepers'
   m.email = 'brandon@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -132,8 +132,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Morrison'
   m.email = 'daniel@example.com'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -155,8 +155,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Dennis'
   m.email = 'zach@example.com'
   m.email_confirmed = false
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -171,8 +171,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Phipps'
   m.email = 'jason@texashan.org'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -201,8 +201,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Phipps'
   m.email = 'jphipps@texashan.org'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -231,8 +231,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Phipps'
   m.email = 'jphipps@talho.org'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -247,8 +247,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Phipps'
   m.email = 'jason.phipps@earthlink.net'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
@@ -263,8 +263,8 @@ u = User.seed(:email) do |m|
   m.last_name = 'Weirdo'
   m.email = 'ewaldo@talho.org'
   m.email_confirmed = true
-  m.password = 'password'
-  m.password_confirmation = 'password'
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
 end
 
 r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
