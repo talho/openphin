@@ -5,7 +5,7 @@
   <div class="details">
     <h3>Editing this Profile</h3>
       <%= form.error_messages %>
-		
+
   		<fieldset>
   			<%= render "users/user_account_form", :form => form  %>
   		</fieldset>
@@ -55,6 +55,7 @@
       <p>
         <%= image_tag form.object.photo.url(:medium) %>
         <%= form.file_field :photo, :size => "12" %>
+        <%= form.submit 'Upload Picture' %>
       </p>
       
       <h4>Public Profile</h4>
