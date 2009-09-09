@@ -4,21 +4,51 @@
 		$('ul.progress a:not([href=#preview])').click(function(event) {
 			var selector = $(this).attr('href');
 			if (selector == '#audience') {
-				$('.alert_device').each(function(){
-					if ($(this).attr("checked")) {
-						$(this).parents('ul').find('a').removeClass('current');
-						$(this).addClass('current');
-						$('#details, #audience, #preview').hide();
-						$('' + selector).show();
-						return false;
-					}
-				})
-			} else {
-				$(this).parents('ul').find('a').removeClass('current');
-				$(this).addClass('current');
-				$('#details, #audience, #preview').hide();
-				$('' + selector).show();
+                var cont = true;
+                if($('.alert_device:checked').length == 0) return false;
+                $('.alert_device:checked').each(function(){
+                    switch($(this).val())
+                    {
+                        case "Device::EmailDevice":
+                            if($('#alert_message').val().trim() == "") {
+                                cont = false;
+                                alert("You must provide a message for an email alert");
+                            }
+                            break;
+                        case "Device::PhoneDevice":
+                             if($('.short_message').val().trim() == "" && $('.success:hidden').length != 0) {
+                                cont = false;
+                                alert("You must provide a short message or voice recording for a phone alert.");
+                            }
+                            break;
+                        case "Device::SMSDevice":
+                            if($('.short_message').val().trim() == "") {
+                                cont = false;
+                                alert("You must provide a short message for an SMS alert.");
+                            }
+                            break;
+                        case "Device::FaxDevice":
+                            if($('#alert_message').val().trim() == "") {
+                                cont = false;
+                                alert("You must provide a message for a fax alert.");
+                            }
+                            break;
+                        case "Device::BlackberryDevice":
+                            if($('.short_message').val().trim() == "") {
+                                cont = false;
+                                alert("You must provide a short message for a Blackberry alert.");
+                            }
+                        default:
+                            cont = false;
+                    }
+                })
+                if(cont == false) return false;
 			}
+
+            $(this).parents('ul').find('a').removeClass('current');
+            $(this).addClass('current');
+            $('#details, #audience, #preview').hide();
+            $('' + selector).show();
 			return false;
 		});
 		$('#edit fieldset input:checkbox').click(function() {
@@ -42,14 +72,9 @@
 			$('#details .details').append('<p><button class="audience">Select an Audience &gt;</button></p>');
 		
 		$('#details button.audience').click(function() {
-			$('.alert_device').each(function (i) {
-				if ($(this).attr("checked")) {
-					$('ul.progress a[href=#audience]').click();
-					return false;
-				}
-			});
-			return false;
-		});
+            $('ul.progress a[href=#audience]').click();
+            return false;
+        });
 		
 		$('#preview button.edit').click(function() {
 			$('ul.progress a[href=#details]').click();
@@ -73,7 +98,7 @@
 		
 		$('ul.check_selector a.toggle').click(function() {
 			$(this).toggleClass('closed').siblings('ul').toggle();
-      $(this).parent().children(".select_all").toggle();
+            $(this).parent().children(".select_all").toggle();
 			return false;
 		})
 		
