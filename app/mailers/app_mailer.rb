@@ -8,7 +8,8 @@ class AppMailer < ActionMailer::Base
   end
 
   def system_error(exception_message, message="")
-    recipients OpenPHIN_config[:admin_emails]
+    PHINMS_RECEIVE_LOGGER.debug "Sending system error notification to #{OpenPHIN_config[:admin_emails]}"
+    recipients OpenPHIN_config[:admin_emails].split(',')
     from DO_NOT_REPLY
     subject "System error: #{exception_message}"
     body :exception_message => exception_message, :message => message
