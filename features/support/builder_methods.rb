@@ -30,6 +30,8 @@ module FeatureHelpers
       if attributes.has_key?("delivery time")
         delivery_time=attributes.delete("delivery time")
         case delivery_time
+          when /73 hours?/i
+            attributes['delivery_time']=4420
           when /72 hours?/i
             attributes['delivery_time']=4320
           when /24 hours?/i

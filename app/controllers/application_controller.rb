@@ -51,6 +51,14 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def can_view_alert
+      alert = Alert.find(params[:id])
+      unless !alert.nil? && alert.find_user_recipients.include?(current_user)
+        flash[:error] = "That resource does not exist or you do not have access to it."
+        redirect_to dashboard_path
+      end
+  end
+
   private
 
     # This makes #present always pass set the current_user on the presenter

@@ -2,6 +2,7 @@ require 'ftools'
 
 class AlertsController < ApplicationController
   before_filter :alerter_required, :only => [:new, :create, :edit, :update]
+  before_filter :can_view_alert, :only => [:show]
   skip_before_filter :login_required, :only => [:token_acknowledge, :upload, :playback]
   protect_from_forgery :except => [:upload, :playback]
   

@@ -325,7 +325,19 @@ class Alert < ActiveRecord::Base
     end
 
   end
-  
+
+  def find_user_recipients
+    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
+    user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
+    user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
+
+    user_ids_for_delivery += user_ids
+
+    user_ids_for_delivery += required_han_coordinators
+
+    User.find(user_ids_for_delivery)
+  end
+
 private
   def set_message_type
     self.message_type = MessageTypes[:alert] if self.message_type.blank?
@@ -336,18 +348,6 @@ private
       write_attribute(:identifier, "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}")
       self.save!
     end
-  end
-  
-  def find_user_recipients
-    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
-    user_ids_for_delivery &= roles.map(&:user_ids).flatten unless roles.empty?
-    user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
-
-    user_ids_for_delivery += user_ids
-    
-    user_ids_for_delivery += required_han_coordinators
-    
-    User.find(user_ids_for_delivery)
   end
   
   def required_han_coordinators
