@@ -32,7 +32,7 @@ module SpecHelpers
       describe "#{http_method} ##{action} requires the admin role" do
         before do
           @role = Role.admin
-          stub_before_filters! :except => [:login_required, :admin_required]
+          stub_before_filters! :except => [:login_required, :admin_required, :admin_or_self_required]
         end
       
         describe "when the user does not have the admin role" do

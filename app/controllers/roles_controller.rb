@@ -1,5 +1,5 @@
 class RolesController < ApplicationController
-  before_filter {|controller| controller.admin_required}
+  before_filter :admin_required
 
   # GET /roles
   # GET /roles.xml

@@ -25,13 +25,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-    def admin_required
-      unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin }
-        flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to dashboard_path
-        false
-      end
-    end
 
   protected
     def login_required
@@ -41,7 +34,15 @@ class ApplicationController < ActionController::Base
         false
       end
     end
-    
+
+    def admin_required
+      unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin }
+        flash[:error] = "That resource does not exist or you do not have access to it."
+        redirect_to dashboard_path
+        false
+      end
+    end
+
     def non_public_role_required
       unless current_user.has_non_public_role?
         flash[:error] = "You are not authorized to view this page."

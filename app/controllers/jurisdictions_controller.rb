@@ -1,5 +1,5 @@
 class JurisdictionsController < ApplicationController
-  before_filter {|controller| controller.admin_required}
+  before_filter :admin_required
 
   # GET /jurisdictions
   # GET /jurisdictions.xml

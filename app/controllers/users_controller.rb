@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
   skip_before_filter :login_required, :only => [:new, :create, :confirm]
-  before_filter :admin_required, :only => [:index, :destroy]
-  before_filter(:except => [:index, :new, :create, :confirm]) do |controller|
-    controller.admin_or_self_required(:user_id)
+  before_filter(:except => [:index, :show, :new, :create, :confirm]) do |controller|
+    controller.admin_or_self_required(:id)
   end
 
   # GET /users

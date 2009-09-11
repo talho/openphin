@@ -1,5 +1,7 @@
-class UserProfilesController < ApplicationController  
-  before_filter {|controller| controller.admin_or_self_required(:user_id)}
+class UserProfilesController < ApplicationController
+  before_filter(:except => [:show]) do |controller|
+    controller.admin_or_self_required(:user_id)
+  end
 
   # GET /users
   # GET /users.xml
@@ -20,7 +22,7 @@ class UserProfilesController < ApplicationController
     respond_to do |format|
       if @user.public? || current_user == @user || current_user.is_admin?
         format.html # show.html.erb
-        format.xml  { render :xml => @user }  
+        format.xml  { render :xml => @user }
       else
         format.html { render :action => 'privacy'}
       end
@@ -68,18 +70,18 @@ class UserProfilesController < ApplicationController
       @device = device_class_for(params[:device_type]).new params[params[:device_type]]
       @device.user = @user
     end
-		
+
 		params[:user][:role_requests_attributes].each do |index, role_requests|
 		  if role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?
 		    params[:user][:role_requests_attributes].delete(index)
 	    end
 		end
-    
+
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]
       params[:user].delete("photo")
     end
-    
+
     if params[:user][:password] == "******"
       params[:user].delete("password")
       params[:user].delete("password_confirmation")

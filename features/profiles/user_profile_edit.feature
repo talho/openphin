@@ -12,6 +12,7 @@ I should be able to edit my profile
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Public | Potter County |
+      | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
 
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"
@@ -38,14 +39,19 @@ I should be able to edit my profile
     
   Scenario: editing user account information
     Given I am logged in as "john.smith@example.com"
-    When I go to the user edit page 
+    When I go to the user edit page
     Then I should be redirected to the edit profile page
-
 
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
     When I edit the profile for john.smith@example.com
-    Then I should see "You are not authorized to edit this profile."
+    Then I should see "That resource does not exist or you do not have access to it."
+    
+  Scenario: editing user account information for another user as another jurisdictional admin
+      Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
+      And I am logged in as "jane.smith@example.com"
+      When I edit the profile for john.smith@example.com
+      Then I should see "You are not authorized to edit this profile."
 
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"
