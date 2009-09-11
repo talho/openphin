@@ -1,4 +1,6 @@
 class UserProfilesController < ApplicationController  
+  before_filter {|controller| controller.admin_or_self_required(:user_id)}
+
   # GET /users
   # GET /users.xml
   def index
@@ -61,7 +63,7 @@ class UserProfilesController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
-	  find_user_and_profile
+	find_user_and_profile
     if Device::Types.map(&:name).map(&:demodulize).include?(params[:device_type])
       @device = device_class_for(params[:device_type]).new params[params[:device_type]]
       @device.user = @user
@@ -103,8 +105,8 @@ private
   def find_user_and_profile
     @user = User.find(params[:user_id])
     unless @user.editable_by?(current_user)
-		  flash[:notice] = "You are not authorized to edit this profile."
-		  redirect_to :back
-	  end
+      flash[:notice] = "You are not authorized to edit this profile."
+      redirect_to :back
+	end
   end
 end

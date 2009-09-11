@@ -1,7 +1,10 @@
 class UsersController < ApplicationController
   skip_before_filter :login_required, :only => [:new, :create, :confirm]
   before_filter :admin_required, :only => [:index, :destroy]
-  
+  before_filter(:except => [:index, :new, :create, :confirm]) do |controller|
+    controller.admin_or_self_required(:user_id)
+  end
+
   # GET /users
   # GET /users.xml
   def index
