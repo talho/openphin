@@ -19,7 +19,7 @@ class AlertAttempt < ActiveRecord::Base
   belongs_to :user
   belongs_to :organization
   belongs_to :jurisdiction
-  has_many :deliveries
+  has_many :deliveries, :dependent => :delete_all
   has_many :devices, :through => :deliveries, :uniq => true
 
   named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"

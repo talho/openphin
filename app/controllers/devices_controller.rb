@@ -1,11 +1,15 @@
 class DevicesController < ApplicationController
-
+  before_filter {|controller| controller.admin_or_self_required(:user_id)}
   protect_from_forgery :except => :create
   
   def destroy
     @device = Device.find(params[:id])
     @device.destroy
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue
+      redirect_to dashboard_path
+    end
   end
 
   def create

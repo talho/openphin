@@ -27,9 +27,11 @@ class Jurisdiction < ActiveRecord::Base
   acts_as_nested_set                                                    
   
   has_and_belongs_to_many :organizations
-  has_many :role_memberships
+  has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
-  has_many :role_requests
+  has_many :organization_memberships, :dependent => :delete_all
+  has_many :organizations, :through => :organization_memberships
+  has_many :role_requests, :dependent => :delete_all
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
 

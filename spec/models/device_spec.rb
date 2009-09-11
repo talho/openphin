@@ -23,14 +23,7 @@ describe Device do
   end
 
   it "should create a new instance given valid attributes" do
-    Jurisdiction.new(@valid_attributes)
-  end
-  it "should return the parent node when .parent is called" do
-    @parent_node = User.new(:id => 1, :first_name => "John", :last_name => "Smith")
-    @child_node=Device.new(:id => 2, :user => @parent_node, :name => "Email") #stub_model(PhinJurisdiction,      :dn => @child_dn)
-
-    #User.should_receive(:find).with(1).and_return(@parent_node)
-    @child_node.parent.should_not be_nil
+    Device.new(@valid_attributes)
   end
 
 end

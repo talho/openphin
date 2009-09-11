@@ -1,7 +1,7 @@
 require 'ftools'
 
 class AlertsController < ApplicationController
-  before_filter :alerter_required, :only => [:new, :create]
+  before_filter :alerter_required, :only => [:new, :create, :edit, :update]
   skip_before_filter :login_required, :only => [:token_acknowledge, :upload, :playback]
   protect_from_forgery :except => [:upload, :playback]
   
@@ -10,6 +10,7 @@ class AlertsController < ApplicationController
   end
   
   def show
+    #TODO Make sure that only alerts the user has permission to see show
     @alert = present Alert.find(params[:id])
   end
   

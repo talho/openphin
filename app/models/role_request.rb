@@ -27,7 +27,7 @@ class RoleRequest < ActiveRecord::Base
   belongs_to :approver,  :class_name => "User", :foreign_key => "approver_id"
   belongs_to :role, :class_name => "Role", :foreign_key => "role_id"
   belongs_to :jurisdiction
-  has_one :role_membership
+  has_one :role_membership, :dependent => :delete
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|

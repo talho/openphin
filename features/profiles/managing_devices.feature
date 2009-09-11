@@ -10,8 +10,8 @@ Feature: Managing devices when editing user profiles
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
     And the following users exist:
-			| John Smith      | john.smith@example.com   | Public | Dallas County |
-		And I am logged in as "john.smith@example.com"
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com"
 		
   Scenario: Adding a device
   	When I go to the edit profile page
@@ -35,4 +35,3 @@ Feature: Managing devices when editing user profiles
     And "john.smith@example.com" should not have the communication device
       | Email |  |
 
-      

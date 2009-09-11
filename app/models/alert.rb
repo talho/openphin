@@ -47,8 +47,8 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
-  has_many :alert_device_types
-  has_many :alert_attempts
+  has_many :alert_device_types, :dependent => :delete_all
+  has_many :alert_attempts, :dependent => :destroy
   has_many :deliveries, :through => :alert_attempts
   has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
   has_many :acknowledged_users,
