@@ -5,7 +5,10 @@
 			var selector = $(this).attr('href');
 			if (selector == '#audience') {
                 var cont = true;
-                if($('.alert_device:checked').length == 0) return false;
+                if($('.alert_device:checked').length == 0) {
+                    alert("You must specify at least one communication method");
+                    return false;
+                }
                 $('.alert_device:checked').each(function(){
                     switch($(this).val())
                     {
