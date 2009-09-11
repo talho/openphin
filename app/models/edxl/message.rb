@@ -69,13 +69,28 @@ module EDXL
     end
     
     has_many :recipient_roles, RecipientRole
-    
+
+    class Keyword
+      include HappyMapper
+      namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
+      element :key, String, :tag => 'valueListUrn'
+      element :value, String
+    end
+
+    has_many :keywords, Keyword
+
     def fips_codes
       target_areas.map(&:locCodeUN).flatten
     end
     
     def roles
       recipient_roles.map(&:role).flatten
+    end
+
+
+    def delivery_time
+      parameter = keywords.detect {|p| p.key =~ /urn:phin:deliverytime/i }
+      parameter.value if parameter
     end
 
     def self.parse(xml, options = {})
@@ -87,7 +102,7 @@ module EDXL
             :references => alert.references,
             :severity => alert.severity,
             :status => alert.status,
-            :delivery_time => alert.delivery_time,
+            :delivery_time => !alert.delivery_time.blank? ? alert.delivery_time : message.delivery_time,
             :message => alert.description,
             :category => alert.category,
             :from_organization => Organization.find_by_phin_oid(alert.sender),

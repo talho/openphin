@@ -249,3 +249,7 @@ Feature: Alerts from EDXL
       | distribution_reference | CDC-2009-66,2.16.840.1.114222.4.1.3683@cdc.gov,2009-08-27T10:55:44-05:00 |
       | distribution_type      | Ack |
 
+  Scenario:  Receiving a cascade alert from the CDC with new delivery time specification
+    When PhinMS delivers the message: CascadeAlert_PCG-000029.xml_1252502214646
+    Then an alert exists with:
+      | title | Five New West Nile Cases in Eastern Nebraska  (PHIN Cert Step 2.10) |

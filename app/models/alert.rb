@@ -74,7 +74,7 @@ class Alert < ActiveRecord::Base
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
-  DeliveryTimes = [15, 60, 1440, 4320]
+  DeliveryTimes = [15, 60, 1440, 4320, 4420]
   
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities

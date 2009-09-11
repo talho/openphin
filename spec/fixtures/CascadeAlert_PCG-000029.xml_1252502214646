@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EDXLDistribution xmlns="urn:oasis:names:tc:emergency:EDXL:DE:1.0">
+    <distributionID>PCG-000029</distributionID>
+    <senderID>2.16.840.1.114222.4.3.2.2.2.1.2@cdc.gov</senderID>
+    <dateTimeSent>2009-09-09T18:10:12.971Z</dateTimeSent>
+    <distributionStatus>Test</distributionStatus>
+    <distributionType>Alert</distributionType>
+    <combinedConfidentiality>Not Sensitive</combinedConfidentiality>
+    <recipientRole>
+        <valueListUrn>urn:phin:role</valueListUrn>
+        <value>No Roles Defined</value>
+    </recipientRole>
+    <keyword>
+        <valueListUrn>urn:phin:deliverytime</valueListUrn>
+        <value>4420</value>
+    </keyword>
+    <distributionReference>9015</distributionReference>
+    <contentObject>
+        <contentDescription>CDC/PHIN Cascade Alert v1.0</contentDescription>
+        <confidentiality>Not Sensitive</confidentiality>
+        <xmlContent>
+            <embeddedXMLContent>
+                <ns1:alert xmlns:ns1="urn:oasis:names:tc:emergency:cap:1.1">
+                    <ns1:identifier>PCG-000029</ns1:identifier>
+                    <ns1:sender>2.16.840.1.114222.4.3.2.2.2.1.2@cdc.gov</ns1:sender>
+                    <ns1:sent>2009-09-09T18:10:12.971Z</ns1:sent>
+                    <ns1:status>Test</ns1:status>
+                    <ns1:msgType>Alert</ns1:msgType>
+                    <ns1:scope>Restricted</ns1:scope>
+                    <ns1:info>
+                        <ns1:language>en-US</ns1:language>
+                        <ns1:category>Health</ns1:category>
+                        <ns1:event>PCG</ns1:event>
+                        <ns1:urgency>Unknown</ns1:urgency>
+                        <ns1:severity>Moderate</ns1:severity>
+                        <ns1:certainty>Unknown</ns1:certainty>
+                        <ns1:eventCode>
+                            <ns1:valueName>Event Type</ns1:valueName>
+                            <ns1:value>Simple</ns1:value>
+                        </ns1:eventCode>
+                        <ns1:senderName>2.16.840.1.114222.4.3.2.2.2.1.2@cdc.gov</ns1:senderName>
+                        <ns1:headline>Five New West Nile Cases in Eastern Nebraska  (PHIN Cert Step 2.10)</ns1:headline>
+                        <ns1:description>Five more cases of West Nile virus have been reported to the Nebraska Department of Health and Human Services this week, bringing the total cases reported in the state this year to 10.  The new cases are residents of Adams, Cass, Dodge, Platte and Saunders counties. Previously reported cases have been residents of Adams, Douglas, Keith, Merrick and York counties.</ns1:description>
+                        <ns1:instruction>1 WEEK</ns1:instruction>
+                        <ns1:parameter>
+                            <ns1:valueName>Acknowledge</ns1:valueName>
+                            <ns1:value>No</ns1:value>
+                        </ns1:parameter>
+                    </ns1:info>
+                </ns1:alert>
+            </embeddedXMLContent>
+        </xmlContent>
+    </contentObject>
+</EDXLDistribution>
