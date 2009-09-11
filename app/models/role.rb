@@ -21,6 +21,7 @@ class Role < ActiveRecord::Base
   Defaults = {
     :admin => 'Admin',
     :org_admin => 'OrgAdmin',
+    :superadmin => "Superadmin",
     :public => 'Public',
     :han_coordinator => 'Health Alert and Communications Coordinator'
   }
@@ -31,6 +32,10 @@ class Role < ActiveRecord::Base
   
   def self.org_admin
     find_or_create_by_name Defaults[:org_admin]
+  end
+
+  def self.superadmin
+    find_or_create_by_name Defaults[:superadmin]
   end
   
   def self.public

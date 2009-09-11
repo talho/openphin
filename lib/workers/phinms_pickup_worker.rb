@@ -1,3 +1,5 @@
+require File.join(Rails.root,"config","initializers","system")
+
 class PhinmsPickupWorker < BackgrounDRb::MetaWorker
   set_worker_name :phinms_pickup_worker
 

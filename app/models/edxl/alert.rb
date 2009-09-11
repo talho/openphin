@@ -72,7 +72,7 @@ module EDXL
     has_many :parameters, Parameter
     
     def delivery_time
-      parameter = parameters.detect {|p| p.key == 'DeliveryTime' }
+      parameter = parameters.detect {|p| p.key =~ /DeliveryTime/i }
       parameter.value if parameter
     end
 
