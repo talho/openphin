@@ -8,9 +8,9 @@ end
 Given /^a[n]? organization named (.*)$/ do |name|
   organization = Organization.find_by_name(name)
   if organization
-    return organization
+    organization
   else
-    return Given "a new organization named #{name}"
+    Given "a new organization named #{name}"
   end  
 end
 
@@ -20,7 +20,7 @@ Given /^a new organization named (.*)$/ do |name|
   RoleMembership.create(:user => user, :role => Role.admin, :jurisdiction => Jurisdiction.root || Factory(:jurisdiction))
   org.organization_requests << OrganizationRequest.create(:jurisdiction => Jurisdiction.root)
   org.organization_requests.first.approve!(user)
-  return org
+  org
 end
 
 Given 'a jurisdiction named $name' do |name|
