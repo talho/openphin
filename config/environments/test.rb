@@ -32,7 +32,7 @@ config.plugins -= [:backgroundrb]
 config.gem "rspec",       :lib => false,        :version => ">=1.2.7"
 config.gem "rspec-rails", :lib => false, :version => ">=1.2.7"
 # config.gem "cucumber"
-config.gem "hpricot"
+config.gem "hpricot", :version => "=0.6"
 config.gem "webrat"
 config.gem "thoughtbot-factory_girl",
   :lib    => "factory_girl",

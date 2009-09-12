@@ -63,6 +63,7 @@ describe User do
       Factory(:user, :email => "joe@example.com")
       @user.email = "joe@example.com"
       @user.valid?.should be_false
+      @user.errors["email"].include?("address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link.").should be_true
     end
   end
 

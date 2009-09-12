@@ -34,8 +34,12 @@
 # Required Attributes: :cn, :sn, :organizations
 
 class User < ActiveRecord::Base
-  include Clearance::User
-  
+  extend Clearance::User::ClassMethods
+  include Clearance::User::InstanceMethods
+  include Clearance::User::AttrAccessible
+  include Clearance::User::AttrAccessor
+  include Clearance::User::Callbacks
+
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
@@ -52,11 +56,15 @@ class User < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
 
-  validates_presence_of :email
-  validates_presence_of :first_name
-  validates_presence_of :last_name
-  validates_length_of :password, :minimum => 6, :too_short => "must be at least 6 characters long", :if => :password_required?
-  validates_format_of :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
+  validates_presence_of     :email
+  validates_presence_of     :first_name
+  validates_presence_of     :last_name
+  validates_length_of       :password, :minimum => 6, :too_short => "must be at least 6 characters long", :if => :password_required?
+  validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
+  validates_format_of       :email, :with => %r{.+@.+\..+}
+  validates_uniqueness_of   :email, :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
+  validates_presence_of     :password, :if => :password_required?
+  validates_confirmation_of :password, :if => :password_required?
 
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
     
