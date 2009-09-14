@@ -5,6 +5,10 @@
 			var selector = $(this).attr('href');
 			if (selector == '#audience') {
                 var cont = true;
+                if(jQuery.trim($('#alert_title').val()).length == 0) {
+                    alert("You must specify a title");
+                    return false;
+                }
                 if($('.alert_device:checked').length == 0) {
                     alert("You must specify at least one communication method");
                     return false;
@@ -41,6 +45,7 @@
                                 cont = false;
                                 alert("You must provide a short message for a Blackberry alert.");
                             }
+                            break;
                         default:
                             cont = false;
                     }
