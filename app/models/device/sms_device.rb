@@ -18,7 +18,7 @@ class Device::SMSDevice < Device
   option_accessor :sms
   validates_format_of :sms, :with => /^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/
 
-  before_save :strip_extra_characters
+  before_validation :strip_extra_characters
   
   def self.display_name
     'SMS'

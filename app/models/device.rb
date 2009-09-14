@@ -28,6 +28,8 @@ class Device < ActiveRecord::Base
 
   Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice] #, Device::IMDevice]
 
+  validate :check_uniq_device
+
   def parent
     :user
   end
@@ -57,6 +59,14 @@ class Device < ActiveRecord::Base
       entry.dsml(:attr, :name => :emergencyUseInd) {|a| a.dsml :value, emergencyUseInd}
       entry.dsml(:attr, :name => :homeInd) {|a| a.dsml :value, homeInd}
     end
+  end
+
+  private
+
+  def check_uniq_device
+    devices = Device.find_all_by_user_id_and_type(user_id, type)
+    devices = Device.find(:all, :conditions => ['id != ? AND user_id = ? AND type = ?', id, user_id, type]) if(!id.nil? && devices.map(&:id).include?(id))
+    errors.add_to_base("Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
   end
 end
 

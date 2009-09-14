@@ -48,7 +48,7 @@ class UserProfilesController < ApplicationController
   # POST /users
   # POST /users.xml
   def create
-		@user=User.find(params[:user_id])
+	@user=User.find(params[:user_id])
 
     respond_to do |format|
       if @user.save
@@ -71,11 +71,11 @@ class UserProfilesController < ApplicationController
       @device.user = @user
     end
 
-		params[:user][:role_requests_attributes].each do |index, role_requests|
-		  if role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?
-		    params[:user][:role_requests_attributes].delete(index)
-	    end
-		end
+	params[:user][:role_requests_attributes].each do |index, role_requests|
+	  if role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?
+	    params[:user][:role_requests_attributes].delete(index)
+      end
+    end
 
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]

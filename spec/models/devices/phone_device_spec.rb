@@ -1,5 +1,3 @@
-
-
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Device::PhoneDevice do
@@ -19,6 +17,15 @@ describe Device::PhoneDevice do
 
     it "should not be valid with letters in the phone number" do
       @phone_device.phone = "abcdefg1234"
+      @phone_device.should_not be_valid
+    end
+
+    it "cannot be created more than once per user" do
+      @user = @phone_device.user
+      @phone_device.phone = "5125657931"
+      @phone_device.should be_valid
+      @phone_device.save!
+      @phone_device = Factory.build(:phone_device, :user => @user, :phone => "5125657931")
       @phone_device.should_not be_valid
     end
 
