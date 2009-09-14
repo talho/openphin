@@ -51,9 +51,9 @@
     });
   
     $('.jurisdiction_select').change(function(){
-		if ($(".role_select").val().trim().length == 0) {
+		if (jQuery.trim($(".role_select").val()).length == 0) {
 			$('.role_select option').each(function() {
-				if(this.text.trim() == "Public") $(".role_select").val(this.value);
+				if(jQuery.trim(this.text) == "Public") $(".role_select").val(this.value);
 			});
 		}
     });
