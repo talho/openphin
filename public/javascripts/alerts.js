@@ -52,7 +52,23 @@
             $(this).addClass('current');
             $('#details, #audience, #preview').hide();
             $('' + selector).show();
-			return false;
+			$('.short_message').keypress(function(event) {
+                if($('.short_message').val().length >= 160) {
+                    if(event.keyCode == 46 || event.keyCode == 8) {
+                        $('.maxlen').css('color', '#000000');
+                        return true;
+                    }
+                    else if(event.keyCode > 36 && event.keyCode < 41)
+                        return true;
+                    else {
+                        $('.maxlen').css('color', '#FF0000');
+                        return false;
+                    }
+                }
+                else $('.maxlen').css('color', '#000000');
+                return true;
+            });
+            return false;
 		});
 		$('#edit fieldset input:checkbox').click(function() {
 			$(this).siblings('label').toggleClass('checked');
