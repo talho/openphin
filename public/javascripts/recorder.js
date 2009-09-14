@@ -5,18 +5,18 @@
 		if($('applet').length == 0) {
 			addRecorderApplet();
 		}
-		if ($('ul.check_selector #alert_device_email_device:checked').length == 0) {
+		//if ($('ul.check_selector #alert_device_email_device:checked').length == 0) {
 			$('.audio').toggle();
-		}
+		//}
 	});
-	$('ul.check_selector #alert_device_email_device').click(function() {
+	/*$('ul.check_selector #alert_device_email_device').click(function() {
 		if($('applet').length == 0) {
 			addRecorderApplet();
 		}
 		if ($('ul.check_selector #alert_device_phone_device:checked').length == 0) {
 			$('.audio').toggle();
 		}
-	});
+	});*/
   })
 })(jQuery);
 
