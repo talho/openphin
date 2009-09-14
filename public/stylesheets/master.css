@@ -60,10 +60,10 @@ form#sign_in_form p.submit_field							{font-size:11px; line-height:1.1;}
 form#sign_in_form p.submit_field input				{border:none; background:url(images/button_login.png) no-repeat; width:89px; height:26px; display:inline; float:left; margin:0 10px 0 0; text-indent:-9999px; overflow:hidden;}
 
 ul#associations																{clear:both; margin:0; padding:0;}
-ul#associations li														{float:left; list-style:none; width:100px; height:55px; margin:0; padding:0;}
-ul#associations li a													{display:block; width:100px; height:55px; text-indent:-9999px; overflow:hidden;}
-ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat;}
-ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat;}
+ul#associations li														{float:left; list-style:none; width:200x; height:47px; margin:0; padding:0;}
+ul#associations li a													{display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
+ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat; width:141px; height:83px;}
+ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat; width:200px; height:47px;}
 
 #edit .details label													{display:block;}
 #edit .details input,
