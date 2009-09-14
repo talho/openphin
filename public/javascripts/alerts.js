@@ -13,31 +13,31 @@
                     switch($(this).val())
                     {
                         case "Device::EmailDevice":
-                            if($('#alert_message').val().trim() == "") {
+                            if(jQuery.trim($('#alert_message').val()) == "") {
                                 cont = false;
                                 alert("You must provide a message for an email alert");
                             }
                             break;
                         case "Device::PhoneDevice":
-                             if($('.short_message').val().trim() == "" && $('.success:hidden').length != 0) {
+                             if(jQuery.trim($('.short_message').val()) == "" && $('.success:hidden').length != 0) {
                                 cont = false;
                                 alert("You must provide a short message or voice recording for a phone alert.");
                             }
                             break;
                         case "Device::SMSDevice":
-                            if($('.short_message').val().trim() == "") {
+                            if(jQuery.trim($('.short_message').val()) == "") {
                                 cont = false;
                                 alert("You must provide a short message for an SMS alert.");
                             }
                             break;
                         case "Device::FaxDevice":
-                            if($('#alert_message').val().trim() == "") {
+                            if(jQuery.trim($('#alert_message').val()) == "") {
                                 cont = false;
                                 alert("You must provide a message for a fax alert.");
                             }
                             break;
                         case "Device::BlackberryDevice":
-                            if($('.short_message').val().trim() == "") {
+                            if(jQuery.trim($('.short_message').val()) == "") {
                                 cont = false;
                                 alert("You must provide a short message for a Blackberry alert.");
                             }
