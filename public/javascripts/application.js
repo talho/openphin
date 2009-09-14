@@ -75,20 +75,20 @@ jQuery(function($) {
  $(document).ready(function() {
  	var name_synched = false;
 
-	if(typeof $('#user_display_name').val() != "undefined" && ($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim())) name_synched = true;
+	if(typeof $('#user_display_name').val() != "undefined" && (jQuery.trim($('#user_display_name').val()) == "" || jQuery.trim($('#user_display_name').val()) == jQuery.trim(jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val())))) name_synched = true;
 
 	display_name_change = function(){
 		if (name_synched) {
-			$('#user_display_name').val(($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim())
+			$('#user_display_name').val(jQuery.trim((jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val()))));
 		}
-		if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+		if(jQuery.trim($('#user_display_name').val()) == "" || jQuery.trim($('#user_display_name').val()) == jQuery.trim(jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val()))) name_synched = true;
 		else name_synched = false;
 	}
 
 	$('#user_first_name').keyup(display_name_change)
 	$('#user_last_name').keyup(display_name_change)
 	$('#user_display_name').keyup(function() {
-		if($('#user_display_name').val().trim() == "" || $('#user_display_name').val() == ($('#user_first_name').val().trim() + " " + $('#user_last_name').val().trim()).trim()) name_synched = true;
+		if(jQuery.trim($('#user_display_name').val()) == "" || jQuery.trim($('#user_display_name').val()) == jQuery.trim(jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val()))) name_synched = true;
 		else name_synched = false;
 	});
 });
