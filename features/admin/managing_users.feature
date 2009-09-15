@@ -5,7 +5,7 @@ Feature: An admin managing users
   
   Background:
     Given an organization named Red Cross
-    And a jurisdiction named Dallas County
+    And a child jurisdiction named Dallas County
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
     And Dallas County has the following administrators:
@@ -26,7 +26,7 @@ Feature: An admin managing users
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
-      | What County    | Dallas County    |
+      | Home Jurisdiction  | Dallas County    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
     Then "john.smith@example.com" should have the "Public" role for "Dallas County"
@@ -45,6 +45,7 @@ Feature: An admin managing users
       | Email          | invalidemail    |
       | Password       | Password1       |
       | Password confirmation | <blank>  |
+      | Home Jurisdiction | Dallas County |
     Then I should see error messages
     
   Scenario: Editing a user's profile

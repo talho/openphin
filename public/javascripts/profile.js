@@ -64,6 +64,18 @@
     $('.edit_user_profile #new_device:not:has(.errorMessages)').hide();
   });
 
+  $(function() {
+    $('.state_jurisdiction').click(function() {
+      if($('.state_jurisdiction:checked').length > 0) {
+        $('.home_jurisdiction').val("");
+        $('.home_jurisdiction').attr("disabled", "disabled");
+      } else {
+        $('.home_jurisdiction').val("");
+        $('.home_jurisdiction').removeAttr("disabled");
+      }
+    });
+  });
+
 
 })(jQuery);
 

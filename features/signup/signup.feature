@@ -7,7 +7,8 @@ Feature: Signing up for an account
   
   Background:
     Given an organization named Red Cross
-    And a jurisdiction named Dallas County
+    And a jurisdiction named Texas
+    And a child jurisdiction named Dallas County
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
       | Quincy Jones   | quincy.jones@example.com   | 
@@ -23,7 +24,7 @@ Feature: Signing up for an account
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | What County    | Dallas County    |
+      | Home Jurisdiction  | Dallas County    |
       | Preferred language | English      |
     Then I should see "Thanks for signing up"
     And "john@example.com" should have the "Public" role for "Dallas County"
@@ -32,7 +33,26 @@ Feature: Signing up for an account
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
-      
+
+  Scenario: Signing up as a public role in Texas
+    When I signup for an account with the following info:
+      | Email          | john@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
+      | First name     | John             |
+      | Last name      | Smith            |
+      | Preferred name | Jonathan Smith   |
+      | State Jurisdiction | Texas        |
+      | Preferred language | English      |
+    Then I should see "Thanks for signing up"
+    And "john@example.com" should not have the "Public" role in "Dallas County"
+    And "john@example.com" should have the "Public" role in "Texas"
+    And "john@example.com" should have the communication device
+      | Email | john@example.com |
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+
   Scenario: Signing up as a public role but accidentally selecting non-public fields
     When I signup for an account with the following info:
       | Email          | john@example.com |
@@ -41,7 +61,7 @@ Feature: Signing up for an account
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | What County    | Dallas County    |
+      | Home Jurisdiction  | Dallas County    |
       | Preferred language | English      |
       | Are you with any of these organizations | Red Cross        |
       | What is your primary role | Health Alert and Communications Coordinator |
@@ -75,7 +95,7 @@ Feature: Signing up for an account
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
-      | What County    | Dallas County    |
+      | Home Jurisdiction | Dallas County    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
       | Are you a public health professional? | <checked> |

@@ -9,7 +9,6 @@ module FeatureHelpers
        "Last name"=> "Smith",
        "Preferred name"=> "Jonathan Smith",
        "Are you with any of these organizations"=> "Red Cross",
-       "What County"=> "Dallas County",
        "What is your primary role"=> "Health Alert and Communications Coordinator",
        "Preferred language"=> "English"
       }
@@ -35,7 +34,7 @@ module FeatureHelpers
         case field
         when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
           fill_in field, :with => value
-        when 'What County', 'Preferred language', 
+        when 'Preferred language',
           'What is your primary role', 
           'Are you with any of these organizations', 'Organization Type'
             select Regexp.new(value), :from => field
@@ -48,6 +47,10 @@ module FeatureHelpers
           else
             check id
           end
+        when "Home Jurisdiction"
+          select Regexp.new(value), :from => "user_role_requests_attributes_0_jurisdiction_id"
+        when "State Jurisdiction"
+          check Jurisdiction.find_by_name(value).name
         else
           raise "Unknown field: #{field}: Please update this step if you intended to use this field."
         end

@@ -33,6 +33,29 @@ Given 'a jurisdiction named $name' do |name|
   end
 end
 
+Given 'a child jurisdiction named $name' do |name|
+  if jurisdiction=Jurisdiction.find_by_name(name)
+    jurisdiction
+  else
+    jurisdiction = Factory(:jurisdiction, :name => name)
+    if Jurisdiction.root
+      if Jurisdiction.state.nonforeign.blank?
+        state = Factory(:jurisdiction)
+        state.move_to_child_of(Jurisdiction.root)
+        jurisdiction.move_to_child_of(state)
+      else
+        jurisdiction.move_to_child_of(Jurisdiction.state.nonforeign.first)
+      end
+    else
+      federal = Factory(:jurisdiction)
+      state = Factory(:jurisdiction)
+      state.move_to_child_of(Jurisdiction.root)
+      jurisdiction.move_to_child_of(state)
+    end
+    jurisdiction
+  end
+end
+
 Given 'a role named $name' do |name|
   Role.find_by_name(name) || Factory(:role, :name => name)
 end
