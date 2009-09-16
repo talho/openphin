@@ -256,7 +256,7 @@ class Alert < ActiveRecord::Base
   def acknowledged_percent_for_device(device)
 		total = alert_attempts.with_device(device).size.to_f
 		if total > 0
-			acks = alert_attempts.acknowledged.with_device(device).size.to_f
+			acks = alert_attempts.acknowledged_by_device(device).size.to_f
 			acks / total * 100
 		else
 			0
@@ -336,6 +336,10 @@ class Alert < ActiveRecord::Base
     user_ids_for_delivery += required_han_coordinators
 
     User.find(user_ids_for_delivery)
+  end
+
+  def total_jurisdictions
+    (jurisdictions + find_user_recipients.map(&:jurisdictions).flatten).uniq
   end
 
 private

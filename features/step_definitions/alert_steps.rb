@@ -26,7 +26,7 @@ end
 
 Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_address, title|
   u = User.find_by_email(email_address)
-  aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now)
+  aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
 end
 
@@ -197,9 +197,14 @@ end
 
 Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, device_type, percentage|
   response.should have_selector(".dev_ackpct") do |elm|
-	  elm.should have_selector(".device_type", :content => device_type)
-	  elm.should have_selector(".percentage", :content => percentage)
+    elm.should have_selector(".#{device_type}") do |device|
+	  device.should have_selector(".percentage", :content => percentage)
+    end
   end
+end
+
+Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)"$/ do |alert_name, device_type|
+  response.should_not have_selector(".#{device_type}")
 end
 
 Then /^the alert should be acknowledged$/ do

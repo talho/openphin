@@ -50,7 +50,7 @@
 			<%- if alert.acknowledge? -%>
 	        <h3>Acknowledgments (by jurisdiction)</h3>
 			<div class="jur_ackpct">
-            <% alert.jurisdictions.each do |d| %>
+            <% alert.total_jurisdictions.each do |d| %>
               <h5 class="jurisdiction"><%= d.name %></h5>
               <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
             <% end %>
@@ -58,9 +58,11 @@
             
             <h3>Acknowledgments (by device)</h3>
 			<div class="dev_ackpct">
-            <% Device::Types.each do |d| %>
-              <h5 class="device_type"><%= d.display_name %></h5>
-              <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
+            <% alert.alert_device_types.each do |d| %>
+              <div class="<%= d.device_type.display_name %>">
+                <h5 class="device_type"><%= d.device_type.display_name == "E-mail" ? "E-mail/Console" : d.device_type.display_name %></h5>
+                <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
+              </div>
             <% end %>
 			</div>
 			<%- end -%>

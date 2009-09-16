@@ -98,6 +98,7 @@ Feature: Viewing the alert log
       | jurisdictions     | Texas, Dallas County |
       | roles             | HAN Coordinator      |
       | title             | Hello World          |
+      | communication methods | Email, SMS       |
     And "john.smith@example.com" has acknowledged the alert "Hello World"
     And "daniel@example.com" has not acknowledged the alert "Hello World"
     When I am on the alert log
@@ -106,5 +107,9 @@ Feature: Viewing the alert log
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 50%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
     And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 50%
+    And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
+    And I cannot see the device alert acknowledgement rate for "Hello World" in "Phone"
+    And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
+    And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
 
   Scenario: Viewing jurisdictions, organizations, roles and individual users that received an alert

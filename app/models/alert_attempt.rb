@@ -19,14 +19,15 @@ class AlertAttempt < ActiveRecord::Base
   belongs_to :user
   belongs_to :organization
   belongs_to :jurisdiction
+  belongs_to :acknowledged_alert_device_type, :foreign_key => :acknowledged_alert_device_type_id, :class_name => "AlertDeviceType"
   has_many :deliveries, :dependent => :delete_all
   has_many :devices, :through => :deliveries, :uniq => true
 
   named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
   named_scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"
   named_scope :with_device, lambda {|device_type|
-    if device_type.is_a?(Class)
-      d=device_type.name
+    if device_type.is_a?(AlertDeviceType)
+      d=device_type.device
     elsif device_type.is_a?(Device)
       d=device_type.class.name
     else
@@ -35,6 +36,17 @@ class AlertAttempt < ActiveRecord::Base
 
     {:include => :devices,
      :conditions => ["devices.type = ?", d]}}
+  named_scope :acknowledged_by_device, lambda {|device_type|
+    if device_type.is_a?(AlertDeviceType)
+        d=device_type.device
+      elsif device_type.is_a?(Device)
+        d=device_type.class.name
+      else
+        d=device_type
+      end
+
+      {:include => :acknowledged_alert_device_type,
+       :conditions => ["alert_device_types.device = ?", d]}}
      
   before_save :generate_acknowledgment_token
      
@@ -79,6 +91,7 @@ class AlertAttempt < ActiveRecord::Base
   end
   
   def acknowledge!
+    update_attribute(:acknowledged_alert_device_type_id, AlertDeviceType.find_by_device("Device::EmailDevice"))
     update_attribute(:acknowledged_at, Time.zone.now)
   end
   

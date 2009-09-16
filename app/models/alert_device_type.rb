@@ -10,4 +10,7 @@
 #
 
 class AlertDeviceType < ActiveRecord::Base
+  def device_type
+    eval self.device
+  end
 end
