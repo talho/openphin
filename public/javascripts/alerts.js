@@ -1,5 +1,10 @@
 (function($) {
   $(function() {
+        $(document).ready(function() {
+          if($('#alert_device_phone_device:checked,#alert_device_sms_device:checked,#alert_device_fax_device:checked,#alert_device_blackberry_device:checked').length > 0) {
+              $('#details .caller_id').show();
+          }
+        });
 		$('input[type=submit]').addClass('submit');
 		$('ul.progress a:not([href=#preview])').click(function(event) {
 			var selector = $(this).attr('href');
