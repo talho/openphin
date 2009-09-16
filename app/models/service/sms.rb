@@ -12,7 +12,7 @@ class Service::SMS < Service::Base
     
   def self.batch_deliver_alert(alert, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    users = alert.alert_attempts.with_device(Device::SMSDevice).map{ |aa| aa.user }
+    users = alert.alert_attempts.with_device("Device::SMSDevice").map{ |aa| aa.user }
     response = TFCC.new(alert, config, users).batch_deliver
     TFCC::CampaignActivationResponse.build(response,alert)
   end

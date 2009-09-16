@@ -2,16 +2,17 @@
 #
 # Table name: alert_attempts
 #
-#  id              :integer(4)      not null, primary key
-#  alert_id        :integer(4)
-#  user_id         :integer(4)
-#  requested_at    :datetime
-#  acknowledged_at :datetime
-#  created_at      :datetime
-#  updated_at      :datetime
-#  organization_id :integer(4)
-#  token           :string(255)
-#  jurisdiction_id :integer(4)
+#  id                                :integer(4)      not null, primary key
+#  alert_id                          :integer(4)
+#  user_id                           :integer(4)
+#  requested_at                      :datetime
+#  acknowledged_at                   :datetime
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#  organization_id                   :integer(4)
+#  token                             :string(255)
+#  jurisdiction_id                   :integer(4)
+#  acknowledged_alert_device_type_id :integer(4)
 #
 
 class AlertAttempt < ActiveRecord::Base

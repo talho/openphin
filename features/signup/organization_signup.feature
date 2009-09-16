@@ -28,7 +28,7 @@ Feature: Signing up for an organization account
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
         | Distribution Email                      | staff@salvationarmydallas.org |
-        | What Counties                           | Potter County, Dallas County, Tarrant County, Denton County |
+        | Jurisdiction of Operation               | Potter County, Dallas County, Tarrant County, Denton County |
         | Description                             | This might be a mission statement |
         | Name                                    | John Smith            |
         | Email Address                           | john@example.com |

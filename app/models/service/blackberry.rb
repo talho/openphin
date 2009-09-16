@@ -12,7 +12,7 @@ class Service::Blackberry < Service::Base
     
   def self.batch_deliver_alert(alert, config=Service::Blackberry.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
-    users = alert.alert_attempts.with_device(Device::BlackberryDevice).map{ |aa| aa.user }
+    users = alert.alert_attempts.with_device("Device::BlackberryDevice").map{ |aa| aa.user }
     response = SWN.new(alert, config, users).batch_deliver
     SWN::NotificationResponse.build(response,alert)
   end

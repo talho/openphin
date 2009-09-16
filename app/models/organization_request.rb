@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: organization_requests
+#
+#  id              :integer(4)      not null, primary key
+#  organization_id :integer(4)
+#  jurisdiction_id :integer(4)
+#  approved        :boolean(1)      not null
+#  approver_id     :integer(4)
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class OrganizationRequest < ActiveRecord::Base
   belongs_to :jurisdiction
   belongs_to :organization

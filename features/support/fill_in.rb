@@ -38,7 +38,7 @@ module FeatureHelpers
           'What is your primary role', 
           'Are you with any of these organizations', 'Organization Type'
             select Regexp.new(value), :from => field
-        when /Counties/
+        when /Jurisdiction of Operation/
           select_multiple value.split(',').map(&:strip), :from => 'organization_jurisdiction_ids'
         when "Are you a public health professional?"
           id = "health_professional"

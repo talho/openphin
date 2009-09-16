@@ -42,7 +42,7 @@
               <%=simple_format h(alert.message) %>
             </div>
 
-            <% unless alert.acknowledged_by_user? %>
+            <% unless alert.acknowledged_by_user? || !alert.find_user_recipients.include?(current_user) %>
               <%= acknowledge_alert_button(alert) %>
             <% end %>
           </div>

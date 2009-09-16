@@ -55,7 +55,7 @@ class Service::TFCC::Phone::Alert < Service::TFCC::Phone::Base
   end
   
   def add_program_content_without_audio(xml)
-    xml.slot alert.message, :id => "1", :type => "TTS"
+    xml.slot alert.short_message, :id => "1", :type => "TTS"
     add_acknowledgement xml if alert.acknowledge?
   end
   

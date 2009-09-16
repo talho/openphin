@@ -51,7 +51,7 @@
   <%- end -%>
   
   <fieldset>
-    <legend>Counties</legend>
+    <legend>Jurisdiction of Operation</legend>
     <%= form.label :jurisdiction_ids, "Jurisdictions", :style => "display:none" %>
     <%= form.select :jurisdiction_ids, Jurisdiction.root.descendants.map{|m| [m.name, m.id]}.sort, {}, :multiple => :multiple, :class => 'crossSelect' %>
   </fieldset>

@@ -1,4 +1,8 @@
 (function($) {
+  $(document).ready(function () {
+      $("#devices .data-list .error").hide();
+  });
+
   $('form a.add_device').live('click', function() {
     $('.new_device').show();
     $(this).hide();
@@ -26,14 +30,17 @@
         dataType: "html",
         success: function(data, status){
           $("#devices .data-list").append(data);
-          $("p."+dev_type+" input").each(function(){
-            $(this).val("");
-          });
+          $(".error").hide();
         },
         error: function(request, error){
+          $(".error").show();
           $("#devices .data-list .error").text(request.responseText);
           $("#devices .data-list .error").effect("highlight", {}, 3000);
         }
+      });
+      $('#device_type').val("");
+      $("p."+dev_type+" input").each(function(){
+        $(this).val("");
       });
       $(".new_device").hide();
       $("form a.add_device").show();

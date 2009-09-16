@@ -34,6 +34,7 @@
 #  message_recording_content_type :string(255)
 #  message_recording_file_size    :integer(4)
 #  distribution_reference         :string(255)
+#  caller_id                      :string(255)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

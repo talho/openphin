@@ -97,7 +97,7 @@ Feature: Acknowledging an alert
        When I fill out the alert form with:
          | People | Keith Gaddis |
          | Title  | H1N1 SNS push packs to be delivered tomorrow |
-         | Message | Chicken pox outbreak |
+         | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
          | Acknowledge | <checked> |

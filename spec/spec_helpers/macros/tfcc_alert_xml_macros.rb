@@ -64,7 +64,7 @@ module SpecHelpers
     
     def should_include_TTS_slot_with_alert_message
       it "should have a single text to speech slot with the alert message" do
-        subject.alert.message = "Turkey pox outbreak"
+        subject.alert.short_message = "Turkey pox outbreak"
         xml = subject.build!
         xml.should have_xpath("//ucsxml/request/activation/campaign/program/content/slot", :type => "TTS", :id => "1", :content => "Turkey pox outbreak")
       end

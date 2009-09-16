@@ -66,6 +66,14 @@ class UserProfilesController < ApplicationController
   # PUT /users/1.xml
   def update
 	find_user_and_profile
+
+    # Profile form will return blank devices due to hidden fields used to add devices via ajax
+    Device::Types.map(&:name).map(&:demodulize).each do |device_type|
+      if params[device_type].values.first.blank?
+        params.delete(device_type)
+      end
+    end
+
     if Device::Types.map(&:name).map(&:demodulize).include?(params[:device_type])
       @device = device_class_for(params[:device_type]).new params[params[:device_type]]
       @device.user = @user

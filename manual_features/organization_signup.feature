@@ -22,7 +22,7 @@ Feature: Signing up for an organization account
     When I signup for an organization account with the following info:
         | Organization                            | Greater Dallas Salvation Army |
         | Distribution Email         | staff@salvationarmydallas.org |
-        | What Counties                   | Dallas County, Tarrant County, Denton County |
+        | Jurisdiction of Operation              | Dallas County, Tarrant County, Denton County |
         | Description                    | This might be a mission statement |
         | Phone                         | 5124444444 |
         | Fax                                     | 5123333333 |
