@@ -156,8 +156,8 @@
 		   $('ul.check_selector #alert_device_sms_device:checked').length || 
 		   $('ul.check_selector #alert_device_fax_device:checked').length || 
 		   $('ul.check_selector #alert_device_blackberry_device:checked').length)
-		   $('.caller_id').show();
-		 else $('.caller_id').hide();
+		   $('#details .caller_id').show();
+		 else $('#details .caller_id').hide();
 	});
 	
 	$('#alert_caller_id').keydown(function(event) {

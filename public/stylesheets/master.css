@@ -112,7 +112,7 @@ form legend																		{padding:0 0 5px; display:block;}
 #edit fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}
 
 #alert_caller_id									{width: 80px;}
-.caller_id											{display: none;}
+#details .caller_id											{display: none;}
 
 .preview .aside h5														{line-height:1.2; font-weight:bold; font-size:11px; color:#CCC; clear:left; float:left; width:80px; text-align:right; margin:0 10px 0 0;}
 .preview .aside p															{line-height:1.2; font-size:11px; width:120px; float:left;}
