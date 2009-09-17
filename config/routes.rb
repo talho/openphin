@@ -31,6 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :search
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
+  map.about "/about", :controller => "dashboard", :action => "about"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

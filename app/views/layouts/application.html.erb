@@ -15,7 +15,7 @@
     <div id="current_user">
       <%- if signed_in? -%>
         <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
-        <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
+        <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'About TXPHIN', about_path, :class => '.about' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
       <%- else -%>
         <p><%= link_to 'Sign In', sign_in_path %></p>
       <%- end -%>
@@ -30,9 +30,10 @@
       <%- end -%>
       <%= content_tag(:li, link_to('View Alerts', alerts_path, :class => '.viewalerts')) if current_user.alerter? %>
       <%= content_tag(:li, link_to('Find People', search_path, :class => 'search')) if signed_in? && current_user.has_non_public_role? %>
-    <%- else -%>  
+    <%- else -%>
       <li><%= link_to 'Sign Up', new_user_path %></li>
       <li><%= link_to 'Register Your Organization', new_organization_path %></li>
+          <li><%= link_to 'About TXPHIN', about_path %></li>
     <%- end -%>
     </ul>
   </div>
@@ -49,7 +50,6 @@
   </div>
   
   <div id="footer">
-    <p>Copyright © 2009 OpenPHIN - All Rights Reserved</p>
   </div>
 </div>
 </body>
