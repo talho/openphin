@@ -87,7 +87,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
-  m.diplay_name = 'Jason Phipps'
+  m.display_name = 'Jason Phipps'
   m.email = 'jason@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
