@@ -9,6 +9,11 @@
 </p>
 
 <p>
+  <b>Distribution Email:</b>
+  <%=h @organization_request.organization.distribution_email %>
+</p>
+
+<p>
   <b>Jurisdiction:</b>
   <%=h @organization_request.jurisdiction.name %>
 </p>
@@ -20,5 +25,5 @@
 </p>
 <% end %>
 
-<%= link_to 'Approve Role', approve_admin_organization_request_path(@organization_request) %> or
-<%= link_to 'Deny Role', deny_admin_organization_request_path(@organization_request) %>
+<%= link_to 'Approve', approve_admin_organization_request_path(@organization_request) %> or
+<%= link_to 'Deny', deny_admin_organization_request_path(@organization_request) %>

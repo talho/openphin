@@ -36,6 +36,7 @@
                   <td><%=h jurisdiction %></td>
                   <td><%= link_to "Approve", approve_admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "approval_link" %></td>
                   <td><%= link_to "Deny", deny_admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "denial_link" %></td>
+                  <td><%= link_to "View Details", admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "view_link" %></td>
                 </tr>
               <% end %>
            <% end %>

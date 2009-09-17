@@ -9,7 +9,7 @@ end
 
 Given 'the following unapproved organizations exist:' do |table|
   table.hashes.each do |row|
-    org = Factory(:organization, :name => row['name'], :distribution_email => row['distribution_email'], :contact_email => row['contact_email'])
+    org = Factory(:organization, :name => row['name'], :distribution_email => row['distribution_email'], :contact_display_name => row['contact_name'], :contact_email => row['contact_email'])
     row['jurisdictions'].split(',').each do |name|
       org.organization_requests.create!(:jurisdiction_id => Jurisdiction.find_by_name(name.strip).id)
     end
