@@ -1,6 +1,7 @@
 u = User.seed(:email) do |m|
   m.first_name = 'Keith'
   m.last_name = 'Gaddis'
+  m.display_name = 'Keith Gaddis'
   m.email = 'keith@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -31,6 +32,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Bob'
   m.last_name = 'Dole'
+  m.display_name = 'Bob Dole'
   m.email = 'bob@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -61,6 +63,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Ethan'
   m.last_name = 'Waldo'
+  m.display_name = 'Ethan Waldo'
   m.email = 'ethan@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -84,6 +87,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
+  m.diplay_name = 'Jason Phipps'
   m.email = 'jason@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -107,6 +111,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Brandon'
   m.last_name = 'Keepers'
+  m.display_name = 'Brandon Keepers'
   m.email = 'brandon@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -130,6 +135,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Daniel'
   m.last_name = 'Morrison'
+  m.display_name = 'Daniel Morrison'
   m.email = 'daniel@example.com'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -153,6 +159,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Zach'
   m.last_name = 'Dennis'
+  m.display_name = 'Zach Dennis'
   m.email = 'zach@example.com'
   m.email_confirmed = false
   m.password = 'Password1'
@@ -169,6 +176,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
+  m.display_name = 'Jason Phipps'
   m.email = 'jason@texashan.org'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -199,6 +207,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
+  m.display_name = 'Jason Phipps'
   m.email = 'jphipps@texashan.org'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -229,6 +238,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
+  m.display_name = 'Jason Phipps'
   m.email = 'jphipps@talho.org'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -245,6 +255,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Jason'
   m.last_name = 'Phipps'
+  m.display_name = 'Jason Phipps'
   m.email = 'jason.phipps@earthlink.net'
   m.email_confirmed = true
   m.password = 'Password1'
@@ -261,6 +272,7 @@ u.role_memberships << r
 u = User.seed(:email) do |m|
   m.first_name = 'Ethan'
   m.last_name = 'Weirdo'
+  m.display_name = 'Ethan Weirdo'
   m.email = 'ewaldo@talho.org'
   m.email_confirmed = true
   m.password = 'Password1'

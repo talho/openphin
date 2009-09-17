@@ -11,7 +11,6 @@ class AlertsController < ApplicationController
   end
   
   def show
-    #TODO Make sure that only alerts the user has permission to see show
     @alert = present Alert.find(params[:id])
   end
   
