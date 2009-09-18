@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   end
   
   def has_non_public_role?
-    self.roles.any?{|role| role.approval_required? }
+    self.roles.any?{|role| role.approval_required? || role == Role.admin || role == Role.superadmin }
   end
 
   alias_attribute :name, :display_name
@@ -204,7 +204,7 @@ class User < ActiveRecord::Base
   end
   
   def viewable_alerts
-    (alerts_within_jurisdictions + recent_alerts).uniq
+      (alerts_within_jurisdictions | recent_alerts).sort!{|a,b| b.created_at.utc.to_datetime <=> a.created_at.utc.to_datetime}
   end
   
   def alerts_within_jurisdictions

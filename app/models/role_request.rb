@@ -33,7 +33,7 @@ class RoleRequest < ActiveRecord::Base
   named_scope :in_jurisdictions, lambda { |jurisdictions|
     {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
   }
-  
+
   after_create :auto_approve_if_public_role
   after_create :auto_approve_if_approver_is_specified
   after_create :auto_approve_if_requester_is_jurisdiction_admin
@@ -65,6 +65,6 @@ class RoleRequest < ActiveRecord::Base
   end
   
   def auto_approve_if_approver_is_specified
-    approve!(requester) if !approver.blank?
+    approve!(requester) if !approver.blank? && approver.is_admin_for?(jurisdiction)
   end
 end

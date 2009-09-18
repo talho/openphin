@@ -21,7 +21,7 @@ class QueryTfccForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
             alert_attempt = car.alert.alert_attempts.with_device("Device::PhoneDevice").find_by_user_id(user.id) unless user.blank?
             if(!alert_attempt.blank?)
               alert_attempt.acknowledged_at = time
-              alert_attempt.acknowledged_device_type = AlertDeviceType.find_by_device("Device::PhoneDevice")
+              alert_attempt.acknowledged_alert_device_type = AlertDeviceType.find_by_device("Device::PhoneDevice")
               alert_attempt.save!
             end
           end

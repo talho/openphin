@@ -21,9 +21,9 @@
     });
   };
 
-  $('a.destroy').live('click', function(event) {
+  $('a.destroy').live('click.namespace', function(event) {
     event.preventDefault();
-	event.stopPropagation();
+	event.stopImmediatePropagation();
     if (confirm('Are you sure you want to delete?')) {
       var form = $('<form method="POST"></form>')
         .css({display:'none'})
@@ -34,6 +34,7 @@
         .insertAfter(this.parentNode);
       form.submit();
     }
+    return false;
   });
 })(jQuery);
 
@@ -91,4 +92,5 @@ jQuery(function($) {
 		if(jQuery.trim($('#user_display_name').val()) == "" || jQuery.trim($('#user_display_name').val()) == jQuery.trim(jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val()))) name_synched = true;
 		else name_synched = false;
 	});
+    $('a.destroy').removeAttr('onclick');
 });
