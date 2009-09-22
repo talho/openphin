@@ -20,7 +20,7 @@
       <param name="arrangement" value="wide">
       <param name="packButtons" value="yes">
       <param name="format" value="s16">
-      <param name="uploadURL" value="<%= upload_url %>">
+      <param name="uploadURL" value="<%= OpenPHIN_config[:recorder_upload_applet_host].blank? ? upload_url : upload_url(:host => "txphin.texashan.org", :protocol => "https") %>">
       <param id="filename" name="uploadFileName" value="<%= filename %>">
       <param name="useURLConnection" value="yes">
       <param name="frameRate" value="8000.0">
