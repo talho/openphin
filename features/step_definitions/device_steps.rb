@@ -148,11 +148,13 @@ Then /^the following SMS calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::SMS.deliveries.detect do |sms_call|
       xml = Nokogiri::XML(sms_call.body)
-      message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
-      sms = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
-      message == row["message"] && sms == row["sms"]
+      body = xml.xpath('.//soap-env:Envelope/soap-env:Body')
+      note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})
+      message = note.xpath('.//swn:notification/swn:body', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      sms = note.xpath(".//swn:rcpts/*/swn:contactPnts/swn:contactPntInfo/swn:address", {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      message == row["message"] && sms == "#{row['sms']}@sms.sendwordnow.com"
     end
-    call.should_not be_nil
+    call.should_not be_nil   
   end
 end
 
