@@ -73,6 +73,7 @@ EOF
         xml.swn(:SendNotificationInfo) do
           xml.swn(:id, alert.distribution_id)
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
+          xml.swn(:gwbText, "Please press one to acknowledge this alert.") if alert.acknowledge?
           add_sender xml
           add_notification xml
           add_recipients xml
@@ -118,17 +119,8 @@ EOF
     end
   end
 
-  def add_program_content_without_audio(xml)
-#    xml.swn(:SendNotificationInfoBase) do
-      xml.swn(:gwbText, "yes")  if alert.acknowledge?
-#    end if alert.acknowledge?
-  end
-
   def add_program_content_with_audio(xml)
-#    xml.swn(:SendNotificationInfoBase) do
       xml.swn(:soundName, alert.message_recording_file_name )
-      xml.swn(:gwbText, "yes") if alert.acknowledge?
-#    end
   end
 
 end
