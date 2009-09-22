@@ -75,13 +75,14 @@ class Service::Phone < Service::Base
         xml = Builder::XmlMarkup.new :target => body, :indent => 2
         xsi = "xmlns:xsi".to_sym
         xsd = "xmlns:xsd".to_sym
+        swn = "xmlns:swn".to_sym
         soapenv = "xmlns:soap-env".to_sym
         soapenc = "xmlns:soap-enc".to_sym
         xml.tag!("soap-env:Envelope", xsi => "http://www.w3.org/2001/XMLSchema-instance", xsd => "http://www.w3.org/2001/XMLSchema",
           soapenv => "http://schemas.xmlsoap.org/soap/envelope/", soapenc => "http://schemas.xmlsoap.org/soap/encoding/") do
           add_header xml
           xml.tag!("soap-env:Body") do
-            xml.swn(:getNotificationResults, :xmlns => "http://www.sendwordnow.notification") do
+            xml.swn(:getNotificationResults, :"xmlns:swn" => "http://www.sendwordnow.com/notification") do
               xml.swn(:pNotificationID, notification_result.alert.distribution_id)
             end
 
@@ -93,7 +94,7 @@ class Service::Phone < Service::Base
         response = self.post(@url,
           :body => body,
           :basic_auth => {:username => @username, :password => @password},
-          :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html', 'SOAPAction' => "\"http://www.sendwordnow.com/notification/sendNotification\""})
+          :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html', 'SOAPAction' => "\"http://www.sendwordnow.com/notification/getNotificationResults\""})
         PHONE_LOGGER.info "21CC Response:\n#{response}\n\n"
         return response
       end
