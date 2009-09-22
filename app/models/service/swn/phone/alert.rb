@@ -76,8 +76,10 @@ EOF
           add_sender xml
           add_notification xml
           xml.swn(:gwbText, "Please press one to acknowledge this alert.") if alert.acknowledge?
+          
           add_recipients xml
-          add_program_content_with_audio xml unless alert.message_recording_file_name.blank?
+	        #TODO: uncomment if and when SWN introduces ability to attach voice files.
+#          add_program_content_with_audio xml unless alert.message_recording_file_name.blank?
         end
       end
     end
@@ -119,8 +121,8 @@ EOF
     end
   end
 
-  def add_program_content_with_audio(xml)
-      xml.swn(:soundName, alert.message_recording_file_name )
-  end
+#  def add_program_content_with_audio(xml)
+#      xml.swn(:soundName, alert.message_recording_file_name )
+#  end
 
 end
