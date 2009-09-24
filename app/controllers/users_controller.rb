@@ -57,6 +57,7 @@ class UsersController < ApplicationController
     assign_public_role_if_no_role_is_provided
 
     @user = User.new(params[:user])
+    
     respond_to do |format|
       if @user.save
         SignupMailer.deliver_confirmation(@user)
@@ -87,7 +88,7 @@ flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email}
             flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
             rr=RoleRequest.new
             rr.role=pr
-            rr.requester=@user
+            rr.user=@user
             rr.save
           else
             rm=@user.role_memberships.create(:role => pr)

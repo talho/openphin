@@ -7,6 +7,7 @@ class RoleRequestsController < ApplicationController
   def create
     @role_request = RoleRequest.new(params[:role_request])
     @role_request.requester = current_user
+    @role_request.user = current_user
 
     respond_to do |format|
       if @role_request.save

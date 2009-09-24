@@ -67,7 +67,6 @@ Factory.define :organization_type do |org|
   org.name { Factory.next(:organization_type_name) }
 end
 
-
 Factory.sequence(:rolename) {|r| "role#{r}"}
 Factory.define :role do |pr|
   pr.name { Factory.next(:rolename) }
@@ -97,7 +96,9 @@ Factory.define :role_membership do |m|
 end
 
 Factory.define :role_request do |m|
-  m.requester {|rr| rr.association :user }
+  user=Factory(:user)
+  m.user user
+  m.requester user
   m.association :jurisdiction
   m.association :role
 end

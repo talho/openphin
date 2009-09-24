@@ -80,7 +80,7 @@ describe User do
         user = Factory.build(:user)
         user.role_requests = [Factory.build(:role_request, 
             :role => Factory(:role, :approval_required => true), 
-            :jurisdiction => jurisdiction, :requester => user)]
+            :jurisdiction => jurisdiction, :user => user, :requester => user)]
         user.save!
         user.reload
         public_membership = user.role_memberships.detect do |membership|

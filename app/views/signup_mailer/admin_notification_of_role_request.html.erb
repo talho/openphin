@@ -1,7 +1,7 @@
 A user has requested assignment to a role that needs approval from an admin 
 for the jurisdiction <%= @role_request.jurisdiction.name %>
 
-User <%= @role_request.requester.name %> (<%= @role_request.requester.email %>)  is requesting 
+User <%= @role_request.user.name %> (<%= @role_request.user.email %>)  is requesting 
 the role <%= @role_request.role.name %>.  You may approve or deny this request at the following link:
 
 <%= admin_role_request_url(@role_request) %>
