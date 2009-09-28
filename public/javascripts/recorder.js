@@ -1,7 +1,7 @@
 (function($) {
   $(function() {
   	$('.success, .failure, .waiting').hide();
-	$('ul.check_selector #alert_device_phone_device').click(function() {
+	/*$('ul.check_selector #alert_device_phone_device').click(function() {
 		if($('applet').length == 0) {
 			addRecorderApplet();
 		}
