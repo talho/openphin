@@ -46,4 +46,4 @@ Feature: Sending alerts to SMS devices
     When delayed jobs are processed
     Then the following SMS calls should be made:
       | sms          | message              |
-      | 2105551212 | Chicken pox outbreak short message|
+      | 12105551212 | Chicken pox outbreak short message|

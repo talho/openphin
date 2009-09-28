@@ -87,7 +87,7 @@ class Service::SWN::SMS::Alert < Service::SWN::SMS::Base
               xml.swn(:contactPntInfo, :type => "Text") do
                 xml.swn(:id, user.id)
                 xml.swn(:label, "SMS Device")
-                xml.swn(:address, "#{sms_device.sms}@sms.sendwordnow.com")
+                xml.swn(:address, "1#{sms_device.sms}@sms.sendwordnow.com")
               end
             end
           end
