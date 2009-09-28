@@ -18,6 +18,7 @@ describe RoleRequest do
     before(:each) do
       @role_request = Factory.build(:role_request,
         :requester => stub_model(User),
+        :user => stub_model(User),
         :role => stub_model(Role),
         :approver => stub_model(User),
         :jurisdiction => stub_model(Jurisdiction)
@@ -33,9 +34,9 @@ describe RoleRequest do
         user=Factory(:user)
         role=Factory(:role)
         @j1,j2,j3 = [Factory(:jurisdiction), Factory(:jurisdiction), Factory(:jurisdiction)]
-        Factory(:role_request, :requester => user, :role => role, :jurisdiction => @j1)
-        Factory(:role_request, :requester => user, :role => role, :jurisdiction => j2)
-        Factory(:role_request, :requester => user, :role => role, :jurisdiction => j3)
+        Factory(:role_request, :user => user, :role => role, :jurisdiction => @j1)
+        Factory(:role_request, :user => user, :role => role, :jurisdiction => j2)
+        Factory(:role_request, :user => user, :role => role, :jurisdiction => j3)
       end
       it "should only return requests from the given jurisdiction" do
         RoleRequest.in_jurisdictions(@j1).size.should == 1
@@ -46,12 +47,13 @@ describe RoleRequest do
   describe "creating a role request" do
     context "when the requester is an admin of the requested jurisdiction" do
       before(:each) do
+        @admin = Factory(:user)
         @user = Factory(:user)
         @jurisdiction = Factory(:jurisdiction)
         @admin_role = Role.admin
-        @role_membership = Factory(:role_membership, :role => @admin_role, :jurisdiction => @jurisdiction, :user => @user)
-        @role = Factory(:role, :name => "Foobar")
-        @request = Factory.build(:role_request, :requester => @user, :jurisdiction => @jurisdiction, :role => @role, :approver => nil)
+        @role_membership = Factory(:role_membership, :role => @admin_role, :jurisdiction => @jurisdiction, :user => @admin)
+        @role = Factory(:role, :name => "Foobar", :approval_required => true)
+        @request = Factory.build(:role_request, :user => @user, :requester => @admin, :jurisdiction => @jurisdiction, :role => @role, :approver => nil)
       end
 
       it "should approve the request" do
@@ -61,7 +63,7 @@ describe RoleRequest do
       
       it "should set the approver to the requesting admin" do
         @request.save!
-        @request.approver.should == @user
+        @request.approver.should == @admin
       end
     end
     
@@ -89,7 +91,7 @@ describe RoleRequest do
     describe "creating the role membership" do
       it "should assign the requester to the role membership" do
         user = Factory(:user)
-        request = Factory(:role_request, :requester => user)
+        request = Factory(:role_request, :user => user, :requester => user)
         request.approve!(@approver)
         request.role_membership.user.should == user
       end
@@ -112,7 +114,7 @@ describe RoleRequest do
         user=Factory(:user)
         jur=Factory(:jurisdiction)
         role=Factory(:role, :approval_required => true)
-        request=Factory(:role_request, :requester => user, :jurisdiction => jur, :role => role)
+        request=Factory(:role_request, :user => user, :requester => user, :jurisdiction => jur, :role => role)
         request.approve!(@approver)
         user.role_memberships.size.should == 1
       end
@@ -124,7 +126,7 @@ describe RoleRequest do
         user.role_memberships.create(:role => Role.admin, :jurisdiction => jur)
         
         role=Factory(:role, :approval_required => true)
-        request=Factory(:role_request, :requester => user, :jurisdiction => jur, :role => role)
+        request=Factory(:role_request, :user => user, :requester => user, :jurisdiction => jur, :role => role)
         request.approve!(@approver)
         user.role_memberships.size.should == 2
        end

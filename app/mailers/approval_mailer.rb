@@ -1,14 +1,14 @@
 class ApprovalMailer < ActionMailer::Base
 
   def approval(request)
-    recipients request.requester.email
+    recipients request.user.email
     from DO_NOT_REPLY
     subject "Request approved"
     body :request => request
   end
 
   def denial(request, admin)
-    recipients request.requester.email
+    recipients request.user.email
     from DO_NOT_REPLY
     subject "Request denied"
     body :request => request, :admin => admin

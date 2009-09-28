@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :devices
   
   has_many :role_memberships, :dependent => :delete_all
-  has_many :role_requests, :foreign_key => "requester_id", :dependent => :delete_all
+  has_many :role_requests, :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
   
   has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
@@ -186,15 +186,7 @@ class User < ActiveRecord::Base
 
     end
   end
-
-  def request_roles
-    role_memberships.each do |rm|
-      if rm.needs_approval?
-        rm.request_approval
-      end
-    end
-  end
-  
+ 
   def alerter?
     !role_memberships.alerter.empty?
   end

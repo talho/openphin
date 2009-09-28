@@ -120,7 +120,7 @@ Feature: Signing up for an account
     
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
-    Then I should not see "Awaiting Approval" 
+    Then I should not see "Awaiting Approval"
     
   Scenario: Signing up should not display system-roles
     Given there is an system only Admin role

@@ -15,6 +15,7 @@ class Admin::UsersController < ApplicationController
     
     @user = User.new(params[:user])
     @user.role_requests.each do |role_request|
+      role_request.requester = current_user
       if current_user.is_admin_for?(role_request.jurisdiction)
         role_request.approver = current_user
       end

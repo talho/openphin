@@ -9,7 +9,7 @@
 
 <% @role_requests.each do |role_request| %>
   <tr class='pending_role_requests'>
-    <td class='requester_email'><%= link_to role_request.requester.email, user_profile_path(role_request.requester) %></td>
+    <td class='requester_email'><%= link_to role_request.user.email, user_profile_path(role_request.user) %></td>
     <td class='role'><%=h role_request.role.name %></td>
     <td class='jurisdiction'><%=h role_request.jurisdiction.name %></td>
     <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link'>Deny</a> | <a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link'>Approve</a></td>
@@ -36,7 +36,7 @@
     <td class='requester_email'><%= link_to org_request.organization.contact_display_name, org_request.organization.contact.nil? ? "mailto:#{org_request.organization.contact_email}" : user_profile_path(org_request.organization.contact) %></td>
     <td class='organization'><%=h org_request.organization.name %></td>
     <td class='jurisdiction'><%=h org_request.jurisdiction.name %></td>
-    <td><a href='<%=deny_admin_organization_request_path(org_request) %>' class='deny_link'>Deny</a> | <a href='<%=approve_admin_organization_request_path(org_request) %>' class='approve_link'>Approve</a></td>
+    <td><a href='<%=deny_admin_organization_request_path(org_request) %>' class='deny_link'>Deny</a> | <a href='<%=approve_admin_organization_request_path(org_request) %>' class='approve_link'>Approve</a> | <a href='<%= admin_organization_request_path(org_request) %>' class='view_details_link'>View Details</a></td>
   </tr>
 <% end %>
 </table>

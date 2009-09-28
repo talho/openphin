@@ -5,6 +5,7 @@ Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_em
   req = Factory(:role_request,
                     :jurisdiction => jurisdiction,
                     :role => role,
+                    :user => user,
                     :requester => user)
 end
 
@@ -32,7 +33,7 @@ When /^I fill out the role request form with:$/ do |table|
 end
 
 When /^I approve "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
-  request=RoleRequest.find_by_requester_id_and_role_id_and_jurisdiction_id(
+  request=RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
@@ -40,7 +41,7 @@ When /^I approve "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
 end
 
 When /^I deny "([^\"]*)" in the role "([^\"]*)"$/ do |user_email, role_name|
-  request=RoleRequest.find_by_requester_id_and_role_id_and_jurisdiction_id(
+  request=RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
@@ -81,7 +82,7 @@ Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jur
 end
 
 Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_email, role_name|
-  request=RoleRequest.find_by_requester_id_and_role_id_and_jurisdiction_id(
+  request=RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(
           User.find_by_email!(user_email).id,
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
