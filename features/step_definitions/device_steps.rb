@@ -128,16 +128,19 @@ end
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
-      xml = Nokogiri::XML(phone_call.body)
+      xml = Nokogiri::XML(phone_call.body)   
       if row["recording"].blank?
-        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
-        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+        phone = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Voice"]/swn:address',
+                   {"swn" => "http://www.sendwordnow.com/notification"})).inner_text
+        message = xml.search( "//swn:notification/swn:body",
+                   {"swn" => "http://www.sendwordnow.com/notification"}).inner_text
         message == row["message"] && phone == row["phone"]
-      else
-        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
-        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
-        recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
-        message == recording && phone == row["phone"]
+	      #SWN doesn't support recorded attachments
+#      else
+#        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
+#        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
+#        recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
+#        message == recording && phone == row["phone"]
       end
     end
     call.should_not be_nil

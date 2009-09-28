@@ -83,6 +83,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
           PHONE_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"
         end
       end
+
     end
   end
 end
