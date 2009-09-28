@@ -46,4 +46,4 @@ Feature: Sending alerts to SMS devices
     When delayed jobs are processed
     Then the following SMS calls should be made:
       | sms          | message              |
-      | 2105551212 | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow Chicken pox outbreak short message |
+      | 2105551212 | Chicken pox outbreak short message|
