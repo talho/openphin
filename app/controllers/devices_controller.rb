@@ -1,6 +1,7 @@
 class DevicesController < ApplicationController
   before_filter {|controller| controller.admin_or_self_required(:user_id)}
   protect_from_forgery :except => :create
+  app_toolbar "han"
   
   def destroy
     @device = Device.find(params[:id])

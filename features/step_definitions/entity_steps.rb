@@ -100,3 +100,6 @@ Given '"$name" has the FIPS code "$code"' do |name, code|
   jurisdiction = Given "a jurisdiction named #{name}"
   jurisdiction.update_attributes :fips_code => code
 end
+When /^an article exists$/ do
+	Factory(:article)
+end

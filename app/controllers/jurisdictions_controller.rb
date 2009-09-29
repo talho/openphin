@@ -1,5 +1,6 @@
 class JurisdictionsController < ApplicationController
   before_filter :admin_required
+  app_toolbar "han"
 
   # GET /jurisdictions
   # GET /jurisdictions.xml

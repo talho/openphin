@@ -38,6 +38,7 @@ Feature: Assigning roles to users for roles
     And I should see "john@example.com and jane@example.com have been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
+	  And "admin@dallas.gov" should not receive an email
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
@@ -58,6 +59,8 @@ Feature: Assigning roles to users for roles
       | subject       | Role assigned    |
       | body contains | You have been assigned the role of Epidemiologist in Dallas County |
     And "john@example.com" should have the "Epidemiologist" role in "Dallas County"
+	  And "admin@dallas.gov" should not receive an email
+	  
 
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
     Given I am logged in as "admin@dallas.gov"

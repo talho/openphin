@@ -6,13 +6,14 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include ExceptionNotifiable
   helper :all # include all helpers, all the time
+  helper_method :toolbar
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   before_filter :login_required
   
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
-
+  
   def phin_oid_prefix
     "#{PHIN_PARTNER_OID}.#{PHIN_APP_OID}.#{PHIN_ENV_OID}"
   end
@@ -25,6 +26,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def toolbar
+	  self.class.app_toolbar
+  end
 
   protected
     def login_required
@@ -57,7 +61,28 @@ class ApplicationController < ActionController::Base
         flash[:error] = "That resource does not exist or you do not have access to it."
         redirect_to dashboard_path
       end
-  end
+    end
+
+    def app_toolbar(toolbar, options = {})
+	    if toolbar.nil?
+	      @toolbar.blank? ? self.class.app_toolbar(toolbar, options) : @toolbar
+	    else
+		    @toolbar = toolbar
+	    end
+
+    end
+
+    def self.app_toolbar(toolbar=nil, options = {}  )
+	    if toolbar.blank?
+		    toolbar_partial = @toolbar.blank? ? self.controller_name : @toolbar
+		    @toolbar = "application" unless File.exist?(File.join(Rails.root, 'app', 'views', 'toolbars', "_#{toolbar_partial}.html.erb"))
+	    else
+		    @toolbar = toolbar
+	    end
+	    @toolbar	    
+    end
+
+
 
   private
 

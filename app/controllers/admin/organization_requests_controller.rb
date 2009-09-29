@@ -1,5 +1,6 @@
 class Admin::OrganizationRequestsController < ApplicationController
   before_filter :admin_required
+  app_toolbar "han"
   
   # GET /organization_requests
   # GET /role_requests.xml

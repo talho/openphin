@@ -1,4 +1,5 @@
 class RoleRequestsController < ApplicationController
+	app_toolbar "han"
 
   def new
     @role_request = RoleRequest.new

@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+	app_toolbar "han"
+	
   skip_before_filter :login_required, :only => [:new, :create, :confirm]
   before_filter(:except => [:index, :show, :new, :create, :confirm]) do |controller|
     controller.admin_or_self_required(:id)

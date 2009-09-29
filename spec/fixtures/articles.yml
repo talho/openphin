@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  author_id: 1
+  pub_date: 1
+  title: MyString
+  lede: MyText
+  body: MyText
+  visible: false
+
+two:
+  author_id: 1
+  pub_date: 1
+  title: MyString
+  lede: MyText
+  body: MyText
+  visible: false

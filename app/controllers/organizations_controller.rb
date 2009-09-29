@@ -2,6 +2,7 @@ class OrganizationsController < ApplicationController
 
   skip_before_filter :login_required, :only => [:new, :create, :confirmation]
   protect_from_forgery :except => [:confirmation]
+  app_toolbar "han"
 
   def new
     @organization = Organization.new(:contact => User.new)
