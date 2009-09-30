@@ -102,8 +102,10 @@ class UserProfilesController < ApplicationController
       if (@device.nil? || @device.save) && (@user.update_attributes(params[:user]) && @user.save)
         params[:user][:role_requests_attributes].each do |index, role_requests|
           rr = @user.role_requests.find_by_role_id_and_jurisdiction_id(role_requests['role_id'], role_requests['jurisdiction_id'])
-          rr.approve!(current_user) if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
-          AppMailer.deliver_role_assigned(rr.role, rr.jurisdiction, rr.user, rr.approver) #if rr.approver != rr.requester
+          if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
+            rr.approve!(current_user)
+            AppMailer.deliver_role_assigned(rr.role, rr.jurisdiction, rr.user, rr.approver)
+          end
         end
         flash[:notice] = 'Profile information saved.'
         format.html { redirect_to user_profile_path(@user) }

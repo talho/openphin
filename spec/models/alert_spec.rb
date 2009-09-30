@@ -245,7 +245,7 @@ describe Alert do
 
     it "should return the names of the device types" do
       @alert.alert_device_types.create! :device => 'Device::EmailDevice'
-      @alert.device_types.should == ['Device::EmailDevice']
+      @alert.device_types.should == ['Device::ConsoleDevice', 'Device::EmailDevice']
     end
   end
   
