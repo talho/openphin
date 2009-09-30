@@ -104,7 +104,7 @@ class AlertsController < ApplicationController
     alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
     if alert_attempt.nil? || alert_attempt.acknowledged?
       flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
-      If you believe this is in error, please contact support@#{HOST}."
+      If you believe this is in error, please contact support@#{DOMAIN}."
     else
       if params[:email].blank?
         alert_attempt.acknowledge!
@@ -120,7 +120,7 @@ class AlertsController < ApplicationController
     alert_attempt = AlertAttempt.find_by_alert_id_and_token(params[:id], params[:token])
     if alert_attempt.nil? || alert_attempt.acknowledged?
       flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
-      If you believe this is in error, please contact support@#{HOST}."
+      If you believe this is in error, please contact support@#{DOMAIN}."
     else
       if alert_attempt.alert.sensitive?
         flash[:error] = "You are not authorized to view this page."
