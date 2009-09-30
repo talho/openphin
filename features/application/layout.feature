@@ -18,7 +18,7 @@ Feature: Application layout should have communications, portal & application too
 		Then I should see the following menu:
 			| name | portal_toolbar       |
 			| item | HAN                  |
-			| item | EduWatch  |
+			| item | RoleCall             |
 			| item | FAQs                 |
 			| item | Forum                |
 	  And I should see the following menu:

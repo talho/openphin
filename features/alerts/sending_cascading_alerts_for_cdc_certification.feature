@@ -41,7 +41,7 @@ Feature: Sending CDC test cases
         And the role "Health Officer" is an alerter
         And I am logged in as "john.smith@example.com"
         And I am allowed to send alerts
-        When I go to the dashboard page
+        When I go to the HAN
         And I follow "Send an Alert"
 
   Scenario: Trying to send cascading alert that should not cascade
@@ -162,7 +162,7 @@ Feature: Sending CDC test cases
     Then I should see "Successfully sent the alert"
     And a foreign alert "[Update] - Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
     When I log in as "mjensen@cdc.gov"
-    And I go to the dashboard page
+    And I go to the HAN
     Then I should see 2 alerts
 
   Scenario: Test case 6--Cancel: Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)
@@ -191,5 +191,5 @@ Feature: Sending CDC test cases
     Then I should see "Successfully sent the alert"
     And a foreign alert "[Cancel] - Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
     When I log in as "mjensen@cdc.gov"
-    And I go to the dashboard page
+    And I go to the HAN
     Then I should see 2 alerts

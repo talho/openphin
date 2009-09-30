@@ -22,19 +22,28 @@
     </div>
     <h1><%= link_to 'TXPhin', root_path %></h1>
     <ul id='portal_toolbar'>
-      <li><%= link_to "HAN", alerts_path %></li>
-      <li><%= link_to "EduWatch", dashboard_path %></li>
-      <li><%= link_to "FAQs", dashboard_path %></li>
-      <li><%= link_to "Forum", dashboard_path %></li>
+
+        <li>Applications
+					<ul>
+						<li><%= link_to "HAN", alerts_path %></li>
+						<li><%= link_to "RollCall", dashboard_path %></li>
+					</ul>
+        </li> 
+      <li><%= link_to "Links", dashboard_path %></li>
+      <li>Help
+        <ul>
+          <li><%= link_to "FAQs", dashboard_path %></li>
+        </ul>
+       </li>
+
     </ul>
     <ul id='app_toolbar'>
-    <%- if signed_in? -%>
-      <%= render :partial => "toolbars/#{toolbar}" %>
-    <%- else -%>
-      <li><%= link_to 'Sign Up', new_user_path %></li>
-      <li><%= link_to 'Register Your Organization', new_organization_path %></li>
-          <li><%= link_to 'About TXPHIN', about_path %></li>
-    <%- end -%>
+			<%- if signed_in? -%>
+				<%= render :partial => "toolbars/#{toolbar}" %>
+			<%- else -%>
+				<li><%= link_to 'Sign Up', new_user_path %></li>
+						<li><%= link_to 'About TXPHIN', about_path %></li>
+			<%- end -%>
     </ul>
   </div>
   <div class="flash">
@@ -53,7 +62,6 @@
     <div id='comm_panel'></div>
     <ul id='comm_toolbar'>
       <li><%= link_to "Calendar", dashboard_path %></li>
-      <li><%= link_to "Links", dashboard_path %></li>
       <li><%= link_to "Documents", dashboard_path %></li>
       <li><%= link_to "Chat", dashboard_path %></li>
     </ul>

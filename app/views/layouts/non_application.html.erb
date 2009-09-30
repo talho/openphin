@@ -32,7 +32,6 @@
       <%= content_tag(:li, link_to('Find People', search_path, :class => 'search')) if signed_in? && current_user.has_non_public_role? %>
     <%- else -%>
       <li><%= link_to 'Sign Up', new_user_path %></li>
-      <li><%= link_to 'Register Your Organization', new_organization_path %></li>
           <li><%= link_to 'About TXPHIN', about_path %></li>
     <%- end -%>
     </ul>
