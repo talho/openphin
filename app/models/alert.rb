@@ -87,6 +87,7 @@ class Alert < ActiveRecord::Base
   
   before_create :set_message_type
   before_create :set_sent_at
+  after_create :create_console_alert_device_type
   before_save :set_jurisdictional_level
   after_save :set_identifier
   
@@ -256,6 +257,7 @@ class Alert < ActiveRecord::Base
 
   def acknowledged_percent_for_device(device)
 		total = alert_attempts.with_device(device).size.to_f
+        total = alert_attempts.size.to_f if device.device == "Device::ConsoleDevice" 
 		if total > 0
 			acks = alert_attempts.acknowledged_by_device(device).size.to_f
 			acks / total * 100
@@ -379,5 +381,9 @@ private
     else
       []
     end 
+  end
+
+  def create_console_alert_device_type
+    AlertDeviceType.create!(:alert => self, :device => "Device::ConsoleDevice")
   end
 end

@@ -106,7 +106,11 @@ class AlertsController < ApplicationController
       flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
       If you believe this is in error, please contact support@#{HOST}."
     else
-      alert_attempt.acknowledge!
+      if params[:email].blank?
+        alert_attempt.acknowledge!
+      else
+        alert_attempt.acknowledge! "Device::EmailDevice"
+      end
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
     redirect_to dashboard_path

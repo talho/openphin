@@ -90,6 +90,7 @@ Feature: Viewing the alert log
       | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+      | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
       | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
@@ -99,17 +100,28 @@ Feature: Viewing the alert log
       | roles             | HAN Coordinator      |
       | title             | Hello World          |
       | communication methods | Email, SMS       |
-    And "john.smith@example.com" has acknowledged the alert "Hello World"
+    And "jane.smith@example.com" has acknowledged the alert "Hello World"
+    And "john.smith@example.com" has not acknowledged the alert "Hello World"
     And "daniel@example.com" has not acknowledged the alert "Hello World"
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
-    And I can see the alert for "Hello World" is 50% acknowledged
-    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 50%
+    And I can see the alert for "Hello World" is 33% acknowledged
+    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 33%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
-    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 50%
+    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 33%
+    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 0%
     And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Phone"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
+    When I press "Acknowledge"
+    And I am on the alert log
+    Then I can see the alert summary for "Hello World"
+    And I can see the alert for "Hello World" is 67% acknowledged
+    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 67%
+    And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
+    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 33%
+    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 33%
+    And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
 
   Scenario: Viewing jurisdictions, organizations, roles and individual users that received an alert
