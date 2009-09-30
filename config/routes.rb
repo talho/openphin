@@ -20,6 +20,7 @@ ActionController::Routing::Routes.draw do |map|
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
+  map.email_acknowledge_alert "alerts/:id/emailack", :controller => "alerts", :action => "acknowledge", :email => "1"
   map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "token_acknowledge"
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]

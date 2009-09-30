@@ -125,7 +125,7 @@ class AlertsController < ApplicationController
       if alert_attempt.alert.sensitive?
         flash[:error] = "You are not authorized to view this page."
       else
-        alert_attempt.acknowledge!
+        alert_attempt.acknowledge! "Device::EmailDevice"
         flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end
     end
