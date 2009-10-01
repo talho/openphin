@@ -255,7 +255,7 @@ end
 
 Then /^the system acknowledgment for alert "([^\"]*)" should contain the following:$/ do |alert_identifier, table |
   ack=File.read(File.join(Agency[:phin_ms_path], "#{alert_identifier}-ACK.edxl"))
-  ack_msg=EDXL::AckMessage.parse(ack)
+  ack_msg=EDXL::AckMessage.parse(ack, :no_delivery => true)
   table.raw.each do |row|
     ack_msg.send(row[0]).should == row[1]
   end

@@ -27,7 +27,7 @@ module EDXL
     namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
     element :distribution_id, String, :tag => "distributionID"
     element :sender_id, String, :tag => "senderID"
-    element :datetime_sent, DateTime, :tag => "dateTimeSent"
+    element :datetime_sent, String, :tag => "dateTimeSent"
     element :distribution_status, String, :tag => "distributionStatus"
     element :distribution_type, String, :tag => "distributionType"
     element :distribution_reference, String, :tag => "distributionReference"
@@ -41,7 +41,7 @@ module EDXL
     namespace "urn:oasis:names:tc:emergency:EDXL:DE:1.0"
     element :distribution_id, String, :tag => "distributionID"
     element :sender_id, String, :tag => "senderID"
-    element :datetime_sent, DateTime, :tag => "dateTimeSent"
+    element :datetime_sent, String, :tag => "dateTimeSent"
     element :distribution_status, String, :tag => "distributionStatus"
     element :distribution_type, String, :tag => "distributionType"
     element :distribution_reference, String, :tag => "distributionReference"
@@ -96,6 +96,7 @@ module EDXL
     def self.parse(xml, options = {})
       returning super do |message|
         message.alerts.each do |alert|
+          next if options[:no_delivery]
           a = ::Alert.create!(
             :identifier => alert.identifier,
             :message_type => message.distribution_type,
@@ -117,8 +118,11 @@ module EDXL
             :acknowledge => alert.acknowledge,
             :certainty => alert.certainty,
             :program => alert.program,
-            :sensitive => message.combined_confidentiality == "NotSensitive" ? "false" : "true",
-            :distribution_reference => "#{alert.identifier},#{message.sender_id},#{alert.sent}"      
+            :sensitive => (message.combined_confidentiality.strip == "Not Sensitive" || message.combined_confidentiality.strip == "NotSensitive") ? "false" : "true",
+            :distribution_reference => message.distribution_reference,
+            :sender_id => message.sender_id,
+            :reference => alert.references,
+            :ack_distribution_reference => "#{message.distribution_id},#{message.sender_id},#{Time.parse(message.datetime_sent).utc.iso8601(3)}"
           )
 
           message.fips_codes.each do |code|
@@ -141,6 +145,7 @@ module EDXL
             a.original_alert_id = original_alert.id
             a.save!
           end
+
           a.alert_device_types << AlertDeviceType.create!(:device => 'Device::EmailDevice')
           a.batch_deliver
           Dir.ensure_exists(File.join(Agency[:phin_ms_path]))
@@ -190,7 +195,7 @@ module EDXL
 
     def self.parse(xml, options = {})
       returning super do |message|
-        message.acknowledge
+        message.acknowledge unless options[:no_delivery]
       end
     end
   end

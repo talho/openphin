@@ -18,22 +18,8 @@ class CascadeAlert
     Agency[:agency_name]
   end
 
-  
-  def sender_id(include_agency_domain=false)
-    if include_agency_domain
-      "#{Agency[:agency_identifier]}@#{Agency[:agency_domain]}"
-    else
-      "#{Agency[:agency_identifier]}"
-    end
-
-  end
-
   def distribution_id
     alert.distribution_id
-  end
-  
-  def distribution_reference
-    "#{alert.original_alert.distribution_id},#{sender_id},#{alert.original_alert.sent_at.utc.iso8601(3)}" unless alert.original_alert.nil?
   end
   
   def confidentiality
@@ -45,7 +31,7 @@ class CascadeAlert
     xml.instruct!
     xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
       xml.distributionID alert.distribution_id
-      xml.senderID sender_id(true)
+      xml.senderID alert.sender_id
       xml.dateTimeSent alert.sent_at.utc.iso8601(3)
       xml.distributionStatus alert.status
       xml.distributionType alert.message_type
@@ -57,7 +43,7 @@ class CascadeAlert
           xml.value role.name unless role.name == "Health Alert and Communications Coordinator"
         end
       end
-      xml.distributionReference distribution_reference unless alert.message_type == 'Alert'
+      xml.distributionReference alert.distribution_reference unless alert.message_type == 'Alert'
       xml.explicitAddress do
         xml.explicitAddressScheme "e-mail"
         alert.foreign_users.each do |user|
@@ -81,11 +67,11 @@ class CascadeAlert
           xml.embeddedXMLContent do
             xml.ns1(:alert, "xmlns:ns1".to_sym => 'urn:oasis:names:tc:emergency:cap:1.1') do |cap|
               xml.ns1 :identifier, alert.distribution_id
-              xml.ns1 :sender, sender_id
+              xml.ns1 :sender, alert.sender_id.split('@')[0]
               xml.ns1 :sent, alert.sent_at.utc.iso8601(3)
               xml.ns1 :status, alert.status
               xml.ns1 :msgType, alert.message_type
-              xml.ns1 :references, distribution_reference unless alert.message_type == 'Alert'
+              xml.ns1 :references, alert.reference unless alert.message_type == 'Alert'
               xml.ns1 :scope, 'Restricted'
               xml.ns1 :info do |info|
                 xml.ns1 :category, 'Health'

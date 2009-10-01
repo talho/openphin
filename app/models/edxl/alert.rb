@@ -35,6 +35,10 @@
 #  message_recording_file_size    :integer(4)
 #  distribution_reference         :string(255)
 #  caller_id                      :string(255)
+#  ack_distribution_reference     :string(255)
+#  distribution_id                :string(255)
+#  reference                      :string(255)
+#  sender_id                      :string(255)
 #
 
 require 'happymapper'

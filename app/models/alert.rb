@@ -35,6 +35,10 @@
 #  message_recording_file_size    :integer(4)
 #  distribution_reference         :string(255)
 #  caller_id                      :string(255)
+#  ack_distribution_reference     :string(255)
+#  distribution_id                :string(255)
+#  reference                      :string(255)
+#  sender_id                      :string(255)
 #
 
 require 'ftools'
@@ -89,6 +93,10 @@ class Alert < ActiveRecord::Base
   before_create :set_sent_at
   before_save :set_jurisdictional_level
   after_save :set_identifier
+  after_save :set_distribution_id
+  after_save :set_sender_id
+  after_save :set_distribution_reference
+  after_save :set_reference
   
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
@@ -100,10 +108,6 @@ class Alert < ActiveRecord::Base
   def self.new_with_defaults(options={})
     defaults = {:delivery_time => 60, :severity => 'Minor'}
     self.new(options.merge(defaults))
-  end
-
-  def distribution_id
-    "#{Agency[:agency_abbreviation]}-#{created_at.strftime("%Y")}-#{self.id}"
   end
 
   def cancelled?
@@ -305,24 +309,22 @@ class Alert < ActiveRecord::Base
   def sender
     from_jurisdiction.nil? ? from_organization_name :  from_jurisdiction.name
   end
+
   def self.sender_id
     "#{Agency[:agency_identifer]}@#{Agency[:agency_domain]}"
-  end
-  def sender_id
-    Alert.sender_id
   end
 
   def to_ack_edxl
     xml = Builder::XmlMarkup.new(:indent => 2)
     xml.instruct!
     xml.EDXLDistribution(:xmlns => 'urn:oasis:names:tc:emergency:EDXL:DE:1.0') do
-      xml.distributionID "#{self.distribution_id},#{Agency[:agency_identifier]}"
-      xml.senderID sender_id
+      xml.distributionID "#{identifier},#{Agency[:agency_identifier]}"
+      xml.senderID "#{Agency[:agency_identifier]}@#{Agency[:agency_domain]}"
       xml.dateTimeSent Time.now.utc.iso8601(3)
       xml.distributionStatus status
       xml.distributionType "Ack"
       xml.combinedConfidentiality sensitive? ? "Sensitive" : "NotSensitive"
-      xml.distributionReference distribution_reference
+      xml.distributionReference ack_distribution_reference
     end
 
   end
@@ -351,6 +353,34 @@ private
   def set_identifier
     if identifier.nil?
       write_attribute(:identifier, "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}")
+      self.save!
+    end
+  end
+
+  def set_distribution_id
+    if distribution_id.nil? || (!original_alert.nil? && distribution_id == original_alert.distribution_id)
+      write_attribute(:distribution_id, "#{Agency[:agency_abbreviation]}-#{created_at.strftime("%Y")}-#{id}")
+      self.save!
+    end
+  end
+
+  def set_sender_id
+    if sender_id.nil?
+      write_attribute(:sender_id, "#{Agency[:agency_identifier]}@#{Agency[:agency_domain]}")
+      self.save!
+    end
+  end
+
+  def set_distribution_reference
+    if !original_alert.nil? && distribution_reference.nil?
+      write_attribute(:distribution_reference, "#{original_alert.distribution_id},#{sender_id},#{original_alert.sent_at.utc.iso8601(3)}")
+      self.save!
+    end
+  end
+
+  def set_reference
+    if !original_alert.nil? && reference.nil?
+      write_attribute(:reference, "#{Agency[:agency_identifier]},#{original_alert.distribution_id},#{original_alert.sent_at.utc.iso8601(3)}")
       self.save!
     end
   end

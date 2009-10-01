@@ -57,9 +57,8 @@
       </p>
       
       <p>
-        <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]}, { :selected => 4320}, {:disabled => true} %>
+        <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]}, { :selected => 4320} %>
         <%= form.label :delivery_time %>
-        <%= hidden_field_tag "alert[delivery_time]", 4320 %>
       </p>
       
       <p>

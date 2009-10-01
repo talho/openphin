@@ -9,6 +9,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  jurisdiction_id :integer(4)
+#  user_id         :integer(4)
 #
 
 class RoleRequest < ActiveRecord::Base
