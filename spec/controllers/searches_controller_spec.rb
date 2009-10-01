@@ -25,8 +25,8 @@ describe SearchesController do
     it 'should return users as a json object' do
       User.stub!(:search).and_return([@user1, @user2])
       do_action
-      response.body.should have_text(Regexp.new(%|"caption": "#{@user1.name}"|))
-      response.body.should have_text(Regexp.new(%|"value": #{@user1.id}|))
+      response.body.should include_text("\"caption\":\"#{@user1.name}\"")
+      response.body.should include_text("\"value\":#{@user1.id}")
     end
   end
 end

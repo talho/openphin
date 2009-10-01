@@ -29,10 +29,10 @@ module FeatureHelpers
               status &&= !(email.body =~ /#{Regexp.escape(value)}/)
             when /body contains alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
-              status &&= email.body.include?(acknowledge_alert_url(attempt, :host => HOST))
+              status &&= email.body.include?(email_acknowledge_alert_url(attempt, :host => HOST))
             when /body does not contain alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
-              status &&= !email.body.include?(acknowledge_alert_url(attempt, :host => HOST))
+              status &&= !email.body.include?(email_acknowledge_alert_url(attempt, :host => HOST))
             when /attachments/
               filenames = email.attachments
               status &&= !filenames.nil? && value.split(',').all?{|m| filenames.map(&:original_filename).include?(m) }

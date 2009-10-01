@@ -60,7 +60,7 @@
 			<div class="dev_ackpct">
             <% alert.alert_device_types.each do |d| %>
               <div class="<%= d.device_type.display_name %>">
-                <h5 class="device_type"><%= d.device_type.display_name == "E-mail" ? "E-mail/Console" : d.device_type.display_name %></h5>
+                <h5 class="device_type"><%= d.device_type.display_name %></h5>
                 <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
               </div>
             <% end %>

@@ -77,7 +77,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
           PHONE_LOGGER.info "Rcpt id #{rcptStatus['id']} does not have a matching alert attempt for alert id #{@alert.id}"
           return false
         end
-        if alert_attempt.acknowledge!
+        if alert_attempt.acknowledge! "Device::PhoneDevice"
           PHONE_LOGGER.info "Rcpt id #{rcptStatus['id']} has been acknowledged"
         else
           PHONE_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"

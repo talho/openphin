@@ -91,8 +91,9 @@ class AlertAttempt < ActiveRecord::Base
     acknowledged_at || false
   end
   
-  def acknowledge!
-    update_attribute(:acknowledged_alert_device_type_id, AlertDeviceType.find_by_device("Device::EmailDevice"))
+  def acknowledge! alert_device_type = nil
+    update_attribute(:acknowledged_alert_device_type_id,
+      AlertDeviceType.find_by_alert_id_and_device(alert.id, alert_device_type.nil? ? "Device::ConsoleDevice" : alert_device_type ).id)
     update_attribute(:acknowledged_at, Time.zone.now)
   end
   
