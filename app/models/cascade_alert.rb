@@ -54,7 +54,7 @@ class CascadeAlert
         alert.jurisdictions.foreign.each do |j|
           xml.locCodeUN j.fips_code
         end
-      end if alert.jurisdictions.foreign.any?
+      end if alert.jurisdictions.foreign.any? && !alert.jurisdictions.foreign.map(&:fips_code).compact.empty?
       # xml.targetArea do
       #   xml.country 'US'
       #   alert.jurisdictions.each do

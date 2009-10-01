@@ -2,7 +2,7 @@ file = RAILS_ROOT + "/config/paperclip.yml"
 
 if File.exists?(file)
   config = YAML.load(IO.read(file))
-  if config.has_key?(:image_magick_path)
-    Paperclip.options[:image_magick_path] = config[:image_magick_path]
+  if config.has_key?(:command_path)
+    Paperclip.options[:command_path] = config[:command_path]
   end
 end
