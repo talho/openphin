@@ -30,12 +30,12 @@ Feature: Acknowledging an alert
     Then I should not see an "Acknowledge" button
     But the "acknowledge" class selector should contain "Yes"
 
-  Scenario: A user acknowledging an alert via the dashboard
-    When I am on the dashboard page
+  Scenario: A user acknowledging an alert via the HAN
+    When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
     When I press "Acknowledge"
     Then I have acknowledged the alert for "Piggy Pox"
     
-    When I go to the dashboard page
+    When I go to the HAN
     Then I should not see an "Acknowledge" button
     But I should see "Acknowledge: Yes"

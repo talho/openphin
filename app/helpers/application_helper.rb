@@ -3,4 +3,8 @@ module ApplicationHelper
     user = super
     present user if user 
   end
+  
+  def s(str)
+    "<span>#{str}</span>"
+  end
 end

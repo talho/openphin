@@ -10,47 +10,57 @@
   <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', :cache => 'all' %>
 </head>
 <body>
-<div id="wrapper">
+<div id="application">
   <div id="header">
-    <div id="current_user">
+    <div id="portal_toolbar">
+      <h1><%= link_to 'TXPhin', root_path %></h1>
+      <ul>
+  			<li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
+  			<li><%= link_to s("RollCall"), dashboard_path %></li>
+  			<li><%= link_to s("Links"), dashboard_path %></li>
+  			<li><%= link_to s("FAQs"), dashboard_path %></li>
+  		</ul>
       <%- if signed_in? -%>
-        <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
         <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'About TXPHIN', about_path, :class => '.about' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
       <%- else -%>
         <p><%= link_to 'Sign In', sign_in_path %></p>
       <%- end -%>
     </div>
-    <h1><%= link_to 'TXPhin', root_path %></h1>
-    <ul>
-    <%- if signed_in? -%>
-      <%= content_tag(:li, link_to('Send an Alert', new_alert_path, :class => '.sendalert')) if current_user.alerter? %>
-      <%- if current_user.is_admin? -%>
-        <li><%= link_to 'View Pending Requests', admin_pending_requests_path, :class => '.viewpendingrequests' %></li>
-        <li><%= link_to 'Add a User', new_admin_user_path %></li>
-      <%- end -%>
-      <%= content_tag(:li, link_to('View Alerts', alerts_path, :class => '.viewalerts')) if current_user.alerter? %>
-      <%= content_tag(:li, link_to('Find People', search_path, :class => 'search')) if signed_in? && current_user.has_non_public_role? %>
-    <%- else -%>
-      <li><%= link_to 'Sign Up', new_user_path %></li>
-      <li><%= link_to 'Register Your Organization', new_organization_path %></li>
-          <li><%= link_to 'About TXPHIN', about_path %></li>
-    <%- end -%>
-    </ul>
+    <div id='app_toolbar'>
+  		<%- if signed_in? -%>
+  			<%= render :partial => "toolbars/#{toolbar}" %>
+  		<%- else -%>
+  			<ul>
+  			  <li><%= link_to s('Sign Up'), new_user_path %></li>
+  				<li><%= link_to s('About TXPHIN'), about_path %></li>
+  			</ul>
+  		<%- end -%>
+    </div>
   </div>
-  <div class="flash">
-    <%- [:notice, :instructions, :completed, :error].each do |type| -%>
-      <%- if flash[type] -%>
-        <p class="<%= type %>"><%= flash[type] %></p><br/>
+  <div id="wrapper">
+    <div class="flash">
+      <%- [:notice, :instructions, :completed, :error].each do |type| -%>
+        <%- if flash[type] -%>
+          <p class="<%= type %>"><%= flash[type] %></p>
+        <%- end -%>
       <%- end -%>
-    <%- end -%>
-  </div>
+    </div>
 
-  <div id="content">    
-    <%= yield %>
+    <div id="content">    
+      <%= yield %>
+    </div>
+  </div> 
+</div>
+<div id='calendar_panel'>
+   <img src='/images/calendar.png'/>
   </div>
-  
-  <div id="footer">
-  </div>
+<div id="footer">
+
+  <ul id='comm_toolbar'>
+    <li class="calendar"><%= link_to s("<b>Calendar</b>"), dashboard_path %></li>
+    <li class="documents"><%= link_to s("<b>Documents</b>"), dashboard_path %></li>
+    <li class="chat"><%= link_to s("<b>Chat</b>"), dashboard_path %></li>
+  </ul>
 </div>
 </body>
 </html>

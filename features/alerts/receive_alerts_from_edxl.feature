@@ -178,7 +178,6 @@ Feature: Alerts from EDXL
 	When PhinMS delivers the message: PCAAckExample.xml
     Then the alert "DSHS-2009-183" should be acknowledged
 
-  @WIP
   Scenario:  Receiving a cascade alert without jurisdictions specified should alert only state jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_state.edxl
     Then the following users should receive the email:

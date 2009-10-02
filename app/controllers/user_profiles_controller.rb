@@ -1,4 +1,6 @@
 class UserProfilesController < ApplicationController
+	app_toolbar "han"
+	
   before_filter(:except => [:show]) do |controller|
     controller.admin_or_self_required(:user_id)
   end

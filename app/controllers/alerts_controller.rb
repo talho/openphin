@@ -5,6 +5,8 @@ class AlertsController < ApplicationController
   before_filter :can_view_alert, :only => [:show]
   skip_before_filter :login_required, :only => [:token_acknowledge, :upload, :playback]
   protect_from_forgery :except => [:upload, :playback]
+
+  app_toolbar "han"
   
   def index
     @alerts = present_collection current_user.viewable_alerts

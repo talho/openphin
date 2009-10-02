@@ -7,7 +7,7 @@ Feature: Acknowledging an alert
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
  
   Scenario: Acknowledging an alert through an email with signing in
@@ -92,7 +92,7 @@ Feature: Acknowledging an alert
     
        Given I log in as "john.smith@example.com"
        And I am allowed to send alerts
-       When I go to the dashboard page
+       When I go to the HAN
        And I follow "Send an Alert"
        When I fill out the alert form with:
          | People | Keith Gaddis |
@@ -120,7 +120,7 @@ Feature: Acknowledging an alert
        And delayed jobs are processed
        And I log in as "keith.gaddis@example.com"
 
-       When I am on the dashboard page
+       When I am on the HAN
        Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
        And I should not see an "Acknowledge" button
        But I should see "Acknowledge: Yes"

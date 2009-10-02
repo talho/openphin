@@ -1,5 +1,7 @@
 class Admin::RoleAssignmentsController < ApplicationController
   before_filter :admin_required
+  app_toolbar "han"
+  
   
   def new
   end

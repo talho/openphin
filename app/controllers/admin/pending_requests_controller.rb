@@ -1,5 +1,6 @@
 class Admin::PendingRequestsController < ApplicationController
   before_filter :admin_required
+  app_toolbar "han"
 
   # GET /pending_requests
   # GET /pending_requests.xml

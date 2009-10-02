@@ -1,4 +1,4 @@
-<h3><%=@user.display_name %></h3>
+<h2><%=@user.display_name %></h2>
 <%= link_to "Public Profile", user_profile_path(@user) if @user.public %>
 <div>
   <b>Description</b>: <%= @user.description %>

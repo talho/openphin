@@ -1,0 +1,6 @@
+<div class="article">
+	<h2><%= article.title %></h2>
+	<p class="date"><%= (article.pub_date || Time.zone.now).strftime('%b %d, %Y') %></p>
+	<div class='lede'><%= simple_format article.lede %></div>
+	<div class='body'><%= simple_format article.body %></div>
+</div>

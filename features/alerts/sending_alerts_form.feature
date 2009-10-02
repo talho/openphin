@@ -10,7 +10,7 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     Then I should explicitly not see the "Admin" role as an option
 
@@ -25,7 +25,7 @@ Feature: Sending alerts form
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     Then I should see "Dallas County" as a from jurisdiction option
     Then I should see "Potter County" as a from jurisdiction option
@@ -49,7 +49,7 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     Then I should not see "Blue Cross Blue Shield" organization as an option
 
@@ -58,7 +58,7 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     Then I should see "Federal" as a jurisdictions option
 
@@ -82,7 +82,7 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     And I fill out the alert form with:
       | People   | Jane Smith                                   |

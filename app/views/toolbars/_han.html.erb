@@ -1,0 +1,10 @@
+<ul>
+  <li class="current"><%= link_to(s('Dashboard'), alerts_path) %></li>
+  <%= content_tag(:li, link_to(s('Send an Alert'), new_alert_path, :class => 'sendalert')) if current_user.alerter? %>
+<%- if current_user.is_admin? -%>
+  <li><%= link_to s('View Pending Requests'), admin_pending_requests_path, :class => '.viewpendingrequests' %></li>
+  <li><%= link_to s('Add a User'), new_admin_user_path %></li>
+<%- end -%>
+  <%= content_tag(:li, link_to(s('View Alerts'), alerts_path, :class => '.viewalerts')) if current_user.alerter? %>
+  <%= content_tag(:li, link_to(s('Find People'), search_path, :class => 'search')) if signed_in? && current_user.has_non_public_role? %>
+</ul>

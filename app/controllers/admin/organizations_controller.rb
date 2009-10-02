@@ -1,5 +1,6 @@
 class Admin::OrganizationsController < ApplicationController
   before_filter :admin_required
+  app_toolbar "han"
 
   def approve
     if current_user.is_org_approver?

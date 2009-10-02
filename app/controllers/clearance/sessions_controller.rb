@@ -1,5 +1,6 @@
 class Clearance::SessionsController < ApplicationController
   unloadable
+  layout "non_application"
 
   protect_from_forgery :except => :create
   filter_parameter_logging :password

@@ -1,0 +1,49 @@
+<h2>My Dashboard</h2>
+<% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
+  <h4>Awaiting Approval</h4>
+  <ul class="pending_role_requests">
+    <% current_user.role_requests.unapproved.each do |request| %>
+      <li class="request"><%= request.jurisdiction.name %>: <%= request.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if current_user.role_memberships.recent.any? %>
+  <h4>Recently Approved Roles</h4>
+  <ul class="recent_role_approvals">
+    <% current_user.role_memberships.recent.each do |recent| %>
+      <li class="approval"><%= recent.jurisdiction.name %> : <%= recent.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if current_user.is_admin? %>
+    <fieldset>
+      <legend>Organizations awaiting approval</legend>
+        <table class='pending_organization_requests'>
+          <tr>
+            <td>Name</td>
+            <td>Contact</td>
+            <td>Jurisdiction</td>
+            <td>Approve</td>
+            <td>Deny</td>
+          </tr>
+          <% Organization.unapproved.requests_in_jurisdictions(current_user.jurisdictions.admin).each do |organization| %>
+              <% (current_user.jurisdictions.admin & organization.requested_jurisdictions).uniq.each do |jurisdiction| %>
+                <tr class='request'>
+                  <td class='org_name'><%= organization.name %></td>
+                  <td><%= link_to organization.contact_display_name, organization.contact.nil? ? "mailto:#{organization.contact_email}" : organization.contact.formatted_email %></td>
+                  <td><%=h jurisdiction %></td>
+                  <td><%= link_to "Approve", approve_admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "approval_link" %></td>
+                  <td><%= link_to "Deny", deny_admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "denial_link" %></td>
+                  <td><%= link_to "View Details", admin_organization_request_path(organization.organization_requests.unapproved.find_by_jurisdiction_id(jurisdiction.id)), :class => "view_link" %></td>
+                </tr>
+              <% end %>
+           <% end %>
+        </table>
+    </fieldset>
+<% end %>
+
+<ul id="alerts">
+  <%= render :partial => "dashboard/alert", :collection => present_collection(current_user.recent_alerts), :as => :alert %>
+</ul>

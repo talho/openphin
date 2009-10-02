@@ -13,7 +13,7 @@ h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}abbr,acronym{border-bottom:1px dotted
  * REDECLARATIONS
  */
 html 																					{height:100%; background:#fff; margin-bottom:1px;} /* force scrollbar */
-body																					{background:#fff; font-size:13px; min-height:100%; color:#666; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
+body																					{height:100%; overflow:hidden; background:#fff; font-size:13px; min-height:100%; color:#666; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
 a:link, a:visited															{color:#039AC5; text-decoration:none;}
 a:hover																				{text-decoration:underline;}
 strong																				{color:#333;}
@@ -22,28 +22,65 @@ sub 																					{vertical-align:text-bottom;}
 table 																				{border-collapse:collapse; font-size:13px; margin:0 0 20px;}
 table th,
 table td 																			{padding:5px 20px 5px 0;}
-	
-#wrapper																			{width:700px; margin:0 auto 20px; background:url(images/content.png) repeat-y;}
-#header																				{height:80px; background:url(images/header.png) no-repeat;}
-#header h1																		{width:100px; height:47px; float:left;}
-#header h1 a																	{height:47px; text-indent:-9999px; overflow:hidden; display:block;}
-#header ul																		{float:right; height:47px; list-style-type:none;}
+
+#wrapper																			{width:700px; margin:0 auto 20px; background:url(images/content.png) repeat-y; clear:both;}
+#header																				{width:100%;}
+#header h1																		{width:83px; height:31px; float:left; background:url(images/app_header_logo.png) no-repeat 15px 0;}
+#header h1 a																	{height:31px; text-indent:-9999px; overflow:hidden; display:block;}
+#header ul																		{float:left; height:32px; margin:0; padding:0; list-style-type:none;}
 #header li																		{float:left; list-style:none;}
-#header li a																	{display:block; height:47px; line-height:47px; padding:0 20px 0 0; color:#666; font-weight:bold;}
+#header a                                     {color:#ccc;}
+#header li a																	{display:block; height:32px; line-height:32px; padding:0 0 0 12px; color:#ccc; font-weight:bold;}
+#header li a span                             {display:block; padding:0 12px 0 0;}
 #header strong																{color:#fff;}
 #current_user																	{height:24px; text-align:right; color:#fff; line-height:24px; font-size:11px; padding:0 10px;}
 #current_user a																{color:#fff;}
 #current_user .info														{float:left;}
 #content																			{padding:15px 25px 1px; width:650px; float:left;}
-#footer																				{clear:left; background:#fff url(images/footer.png) no-repeat; padding-top:20px; margin-top:-5px; font-size:11px; color:#999;}
 
-#feature 																			{width:680px; height:260px; margin:-23px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.jpg) no-repeat;}
+#application                                  {position:absolute; top:0; bottom:31px; left:0; right:0; overflow:auto;}
+#portal_toolbar                               {height:32px; background:url(images/app_header.png) repeat-x; line-height:32px;}
+#portal_toolbar p                             {float:right; margin:0 20px 0 0;}
+#portal_toolbar li.current a                  {background:url(images/app_header_tab.png); margin-bottom:-1px; height:33px; color:#fff;}
+#portal_toolbar li.current a span             {background:url(images/app_header_tab.png) 100% 0; line-height:30px; height:30px; padding-top:3px;}
+
+#app_toolbar                                  {clear:both; height:30px; margin:0 0 20px; background:url(images/app_sub_header.png) repeat-x; line-height:30px; padding:0 20px; text-align:center;}
+#app_toolbar ul                               {display:inline; margin:0 auto; height:30px; float:none;}
+#app_toolbar li                               {float:none; display:inline-block;}
+#app_toolbar li a                             {line-height:28px; color:#D3FAFF;}
+#app_toolbar li.current a                     {background:url(images/app_sub_header_tab.png); color:#333; line-height:27px; height:30px;}
+#app_toolbar li.current a span                {background:url(images/app_sub_header_tab.png) 100% 0; line-height:27px; height:27px; padding-top:3px;}
+
+#footer																				{position:absolute; bottom:0; height:30px; border-top:1px solid #111; background:#333; left:0; right:0; padding:0 20px;}
+#footer ul                                    {list-style-type:none; margin:0; padding:0;}
+#footer li                                    {list-style:none; font-size:11px; float:left; height:22px; line-height:22px; margin:4px 10px 4px 0;}
+#footer li.chat                               {float:right;}
+#footer li a                                  {color:#fff; display:block; height:22px; padding:0 12px 0 0; background:url(images/footer_button.png) 100% 0;}
+#footer li a span                             {display:block; height:22px; padding:0; background:url(images/footer_button.png);}
+#footer li a b                                {display:block; height:22px; padding:0 0 0 30px;}
+#footer li.chat b                             {background:url(images/comment.gif) no-repeat 8px 50%;}
+#footer li.documents b                        {background:url(images/file.gif) no-repeat 8px 50%;}
+#footer li.calendar b                         {background:url(images/website_blue.gif) no-repeat 8px 50%;}
+
+#calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
+
+
+#news_articles                                {margin:0 -55px; width:760px;}
+#news_articles div.main                       {width:495px; float:left;}
+#news_articles div.main p                     {font-size:15px;}
+#news_articles div.extras                     {width:225px; float:right;}
+#news_articles div.main p.date                {margin-top:-15px; color:#999; font-size:12px; margin-bottom:15px;}
+#news_articles div.extras p.date              {color:#999; margin:0;}
+#news_articles div.extras h3                  {color:#333; margin:0;}
+
+#feature 																			{width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.jpg) no-repeat;}
 #content p																		{margin:0 0 15px; line-height:1.6;}
 #content div.details													{width:410px; float:left;}
 #content div.aside														{width:210px; float:right;}
 #content div.callout													{font-size:11px; background:#efefef url(images/feature_bottom.png) no-repeat bottom left; margin:0 0 15px;}
 #content div.callout p												{margin:0; color:#999; padding:10px 15px 10px; background:url(images/feature_top.png) no-repeat top left;}
-#content h2																		{font-size:20px; margin:0 0 15px;}
+#content h2																		{font-size:27px; color:#333; margin:0 0 15px;}
 #content div.aside h2                         {font-size:100%;}
 #content h3																		{color:#999; margin:-15px 0 15px;}
 #content h4                                   {color:#333; margin:0 0 5px;}
@@ -60,7 +97,7 @@ form#sign_in_form p.submit_field							{font-size:11px; line-height:1.1;}
 form#sign_in_form p.submit_field input				{border:none; background:url(images/button_login.png) no-repeat; width:89px; height:26px; display:inline; float:left; margin:0 10px 0 0; text-indent:-9999px; overflow:hidden;}
 
 ul#associations																{clear:both; margin:0; padding:0;}
-ul#associations li														{float:left; list-style:none; width:200x; height:47px; margin:0; padding:0;}
+ul#associations li														{float:left; list-style:none; width:200px; height:47px; margin:0; padding:0;}
 ul#associations li a													{display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
 ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat; width:141px; height:83px;}
 ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat; width:200px; height:47px;}
@@ -136,7 +173,7 @@ span.minor                                    {background-image:url(images/statu
 #content div.message                          {clear:both;}
 
 ul#alerts                                     {margin:0 -24px; padding:0; border-top:1px solid #d9d9d9;}
-ul#alerts li                                  {margin:0; padding:8px 24px; width:650px; float:left; list-style:none; border-bottom:1px solid #d9d9d9; background:url(images/fade_down.png) repeat-x bottom left;}
+ul#alerts li                                  {margin:0; padding:8px 24px; width:650px; float:left; list-style:none; border:1px solid #d9d9d9; border-top:none; background:url(images/fade_down.png) repeat-x bottom left;}
 
 ul#alerts div.details                         {padding-left:26px; width:384px;}
 ul#alerts div.aside                           {margin-top:-15px; padding-top:0;}

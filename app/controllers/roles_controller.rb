@@ -1,4 +1,6 @@
 class RolesController < ApplicationController
+	app_toolbar "han"
+	
   before_filter :admin_required
 
   # GET /roles

@@ -24,7 +24,7 @@ Feature: Sending alerts to SMS devices
     
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the dashboard page
+    When I go to the HAN
     And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
