@@ -36,6 +36,7 @@
     }
     return false;
   });
+
 })(jQuery);
 
 jQuery(function($) {
@@ -93,4 +94,11 @@ jQuery(function($) {
 		else name_synched = false;
 	});
     $('a.destroy').removeAttr('onclick');
+	 $("#calendar_panel").hide();
+	$(".calendar").bind("click", function (e){
+		$("#calendar_panel").slideToggle(1000);
+		e.stopPropagation();
+		e.preventDefault();
+		return false;
+	});
 });

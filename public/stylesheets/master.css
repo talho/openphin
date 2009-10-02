@@ -62,6 +62,9 @@ table td 																			{padding:5px 20px 5px 0;}
 #footer li.documents b                        {background:url(images/file.gif) no-repeat 8px 50%;}
 #footer li.calendar b                         {background:url(images/website_blue.gif) no-repeat 8px 50%;}
 
+#calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
+
 
 #news_articles                                {margin:0 -55px; width:760px;}
 #news_articles div.main                       {width:495px; float:left;}
@@ -94,7 +97,7 @@ form#sign_in_form p.submit_field							{font-size:11px; line-height:1.1;}
 form#sign_in_form p.submit_field input				{border:none; background:url(images/button_login.png) no-repeat; width:89px; height:26px; display:inline; float:left; margin:0 10px 0 0; text-indent:-9999px; overflow:hidden;}
 
 ul#associations																{clear:both; margin:0; padding:0;}
-ul#associations li														{float:left; list-style:none; width:200x; height:47px; margin:0; padding:0;}
+ul#associations li														{float:left; list-style:none; width:200px; height:47px; margin:0; padding:0;}
 ul#associations li a													{display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
 ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat; width:141px; height:83px;}
 ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat; width:200px; height:47px;}
