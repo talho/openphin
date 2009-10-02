@@ -10,17 +10,15 @@
   <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', :cache => 'all' %>
 </head>
 <body>
-<div id="wrapper">
-  <div id="header">
-    <div id="current_user">
-      <%- if signed_in? -%>
-        <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
-        <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'About TXPHIN', about_path, :class => '.about' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
-      <%- else -%>
-        <p><%= link_to 'Sign In', sign_in_path %></p>
-      <%- end -%>
-    </div>
+<div id="header">
+  <div id="portal_toolbar">
     <h1><%= link_to 'TXPhin', root_path %></h1>
+    <%- if signed_in? -%>
+      <p class="info">Signed in as <strong><%=h current_user.name %></strong></p>
+      <p><%= link_to 'My Dashboard', dashboard_path %> | <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> | <%= link_to 'About TXPHIN', about_path, :class => '.about' %> | <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>
+    <%- else -%>
+      <p><%= link_to 'Sign In', sign_in_path %></p>
+    <%- end -%>
     <ul>
     <%- if signed_in? -%>
       <%= content_tag(:li, link_to('Send an Alert', new_alert_path, :class => '.sendalert')) if current_user.alerter? %>
@@ -36,6 +34,8 @@
     <%- end -%>
     </ul>
   </div>
+</div>
+<div id="wrapper">
   <div class="flash">
     <%- [:notice, :instructions, :completed, :error].each do |type| -%>
       <%- if flash[type] -%>
@@ -47,9 +47,7 @@
   <div id="content">    
     <%= yield %>
   </div>
-  
-  <div id="footer">
-  </div>
+</div>
 </div>
 </body>
 </html>
