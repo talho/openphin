@@ -57,6 +57,7 @@ table td 																			{padding:5px 20px 5px 0;}
 #comingsoon h1                                {text-align:center; margin: 20px 0; font-size:36px }
 #comingsoon a.close                            {display:block; text-align:right; font-size:18px;cursor:pointer}
 
+div.help                                      {position:absolute; bottom:31px; padding:20px; right:0px;}
 #footer																				{position:absolute; bottom:0; height:30px; border-top:1px solid #111; background:#333; left:0; right:0; padding:0 20px;}
 #footer ul                                    {list-style-type:none; margin:0; padding:0;}
 #footer li                                    {list-style:none; font-size:11px; float:left; height:22px; line-height:22px; margin:4px 10px 4px 0;}
