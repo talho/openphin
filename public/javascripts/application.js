@@ -97,29 +97,21 @@ jQuery(function($) {
      $("#calendar_panel").hide();
      $("#documents_panel").hide();
      $("#chat_panel").hide();
-	$(".calendar").bind("click", function (e){
-        $("#documents_panel:visible").slideToggle(1000);
-        $("#chat_panel:visible").slideToggle(1000);
-        $("#calendar_panel").slideToggle(1000);
-        e.stopPropagation();
-		e.preventDefault();
-		return false;
-	});
+     $("#links_panel").hide();
+		$(".calendar").bind("click", function (e){
+			togglePanel("calendar", e);
+			return false;
+		});
     $(".documents").bind("click", function (e){
-        $("#calendar_panel:visible").slideToggle(1000);
-        $("#chat_panel:visible").slideToggle(1000);
-        $("#documents_panel").slideToggle(1000);
-		e.stopPropagation();
-        e.preventDefault();
-        return false;
+	    return togglePanel("documents", e);
+
     });
     $(".chat").bind("click", function (e){
-        $("#calendar_panel:visible").slideToggle(1000);
-        $("#documents_panel:visible").slideToggle(1000);
-        $("#chat_panel").slideToggle(1000);
-		    e.stopPropagation();
-        e.preventDefault();
-        return false;
+	    return togglePanel("chat", e);
+
+    });
+	  $(".links").bind("click", function (e){
+	      return togglePanel("links", e);
     });
    $("#news_articles .article .body p.less a").bind("click", function (e){
      $(this).parent().parent().slideToggle(1000);
@@ -138,7 +130,6 @@ jQuery(function($) {
    });
 	 $("#comingsoon a.close").bind("click", toggleComingSoon);
 	 $("a.faqs").bind("click", toggleComingSoon);
-	 $("a.links").bind("click", toggleComingSoon);
 	 $("a.rollcall").bind("click", toggleComingSoon);
 
 });
@@ -147,4 +138,25 @@ function toggleComingSoon(e){
 	$("#comingsoon").slideToggle(1000);
 	e.stopPropagation();
 	return false;
+}
+function togglePanel(panelname, e){
+	$("#"+panelname+"_panel").slideToggle(500);
+	closeAllPanelsExcept(panelname);
+	e.stopPropagation();
+	e.preventDefault();
+	return false;
+}
+function closeAllPanels(){
+	$("#comingsoon:visible").hide("slide",{direction:"down"},500);
+	$(["calendar","documents","chat","links"]).each(function(val){
+		$("#"+val+"_panel:visible").slideToggle(500);
+	});
+
+}
+function closeAllPanelsExcept(exception_name){
+	$("#comingsoon:visible").hide("slide",{direction:"down"},500);
+	if(exception_name!="links")     $("#links_panel:visible").slideToggle(500);
+	if(exception_name!="documents") $("#documents_panel:visible").slideToggle(500);
+	if(exception_name!="chat")      $("#chat_panel:visible").slideToggle(500);
+	if(exception_name!="calendar")  $("#calendar_panel:visible").slideToggle(500);
 }

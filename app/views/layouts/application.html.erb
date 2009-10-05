@@ -17,7 +17,7 @@
       <ul>
   			<li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
   			<li><%= link_to s("RollCall"), dashboard_path, :class => "rollcall" %></li>
-  			<li><%= link_to s("Links"), dashboard_path, :class => "links" %></li>
+
   			<li><%= link_to s("FAQs"), dashboard_path, :class => "faqs" %></li>
   		</ul>
       <%- if signed_in? -%>
@@ -74,6 +74,17 @@
 <div id='chat_panel'>
    <img src='/images/chat.png'/>
 </div>
+<div id='links_panel'>
+  <ul>
+		<li><%= link_to "EMResource", "http://www1.emsystem.com" %></li>
+    <li><%= link_to "New England Journal of Medicine", "http://content.nejm.com" %></li>
+    <li><%= link_to "Texas Disaster Volunteer Registry", "http://texasdisastervolunteerregistry.org" %></li>
+    <li><%= link_to "TIMS", "https://txphin.dshs.state.tx.us/tims/user/login.cfm" %></li>
+    <li><%= link_to "Traction", "https://trac.dshs.state.tx.us/" %></li>
+    <li><%= link_to "TRAIN Texas", "https://tx.train.org/DesktopShell.aspx" %></li>
+    <li><%= link_to "WebEOC", "https://txphin.dshs.state.tx.us/eoc7/" %></li>
+	</ul>
+</div>
 <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %></div>
 <div id="footer">
 
@@ -81,6 +92,9 @@
     <li class="calendar"><%= link_to s("<b>Calendar</b>"), dashboard_path %></li>
     <li class="documents"><%= link_to s("<b>Documents</b>"), dashboard_path %></li>
     <li class="chat"><%= link_to s("<b>Chat</b>"), dashboard_path %></li>
+    <li class='links'><%= link_to s("Links"), dashboard_path %>
+
+		</li>
   </ul>
 
 </div>

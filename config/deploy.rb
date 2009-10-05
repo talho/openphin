@@ -50,7 +50,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
-    if rails_env == 'test'|| rails_env == 'development'
+    if rails_env == 'test'|| rails_env == 'development' || rails_env = "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
