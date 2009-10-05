@@ -117,8 +117,23 @@ jQuery(function($) {
         $("#calendar_panel:visible").slideToggle(1000);
         $("#documents_panel:visible").slideToggle(1000);
         $("#chat_panel").slideToggle(1000);
-		e.stopPropagation();
+		    e.stopPropagation();
         e.preventDefault();
         return false;
     });
+   $("#news_articles .article .body p.less a").bind("click", function (e){
+     $(this).parent().parent().slideToggle(1000);
+     $(this).parent().parent().parent().find(".lede .more").toggle();
+     e.stopPropagation();
+     e.preventDefault();
+     return false;
+   });
+   $("#news_articles .article .lede p.more a").bind("click", function (e){
+     parent = $(this).parent().parent().parent();
+     parent.find(".body").slideToggle(1000);
+     $(this).parent().toggle();;
+     e.stopPropagation();
+     e.preventDefault();
+     return false;
+   });
 });
