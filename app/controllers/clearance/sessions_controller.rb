@@ -3,6 +3,7 @@ class Clearance::SessionsController < ApplicationController
 
   protect_from_forgery :except => :create
   filter_parameter_logging :password
+  layout "non_application"
   
   skip_before_filter :login_required, :except => ["destroy"]
 
