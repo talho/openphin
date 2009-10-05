@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   has_many :role_memberships, :dependent => :delete_all
   has_many :role_requests, :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
-  
+
   has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
   has_many :jurisdictions, :through => :role_memberships 
   has_many :roles, :through => :role_memberships
@@ -65,6 +65,9 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email, :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
   validates_presence_of     :password, :if => :password_required?
   validates_confirmation_of :password, :if => :password_required?
+  validates_associated :role_requests
+  validates_associated :role_memberships
+  validate :must_have_one_public_role
 
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
     
@@ -133,6 +136,14 @@ class User < ActiveRecord::Base
   
   def has_non_public_role?
     self.roles.any?{|role| role.approval_required? || role == Role.admin || role == Role.superadmin }
+  end
+
+  def has_public_role?
+    self.roles.any?{|role| role == Role.public}
+  end
+
+  def has_public_role_request?
+    self.role_requests.any?{|request| request.role == Role.public}
   end
 
   alias_attribute :name, :display_name
@@ -261,5 +272,9 @@ private
 
   def set_display_name
     self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
+  end
+
+  def must_have_one_public_role
+    errors.add("role_memberships", "Must have at least one public role") unless has_public_role? || has_public_role_request?
   end
 end

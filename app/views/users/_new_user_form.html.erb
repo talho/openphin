@@ -1,4 +1,25 @@
-  <%= f.error_messages %><br/>
+<% if user.errors.size > 0 %>
+  <div id="errorExplanation" class="errorExplanation">
+    <% errsize = user.errors['role_requests'].nil? ? user.errors.size : user.errors.size - 1 %>
+    <% errsize -= 1 if user.errors["role_requests_jurisdiction"] && user.errors["role_memberships"] %>
+    <h2><%= "#{errsize} #{errsize > 1 ? 'errors' : 'error'}"%> prohibited this user from being saved</h2>
+    <p>There were problems with the following fields:</p>
+  <% user.errors.each do |attr,msg| %>
+    <ul>
+      <%= case attr
+        when "role_requests"
+          ""
+        when "role_requests_jurisdiction"
+          "<li>Home jurisdiction can't be blank</li>" unless user.errors["role_memberships"]
+        when "role_memberships"
+          "<li>Home jurisdiction can't be blank</li>"
+         else
+          "<li>#{attr.humanize} #{msg}</li>"
+      end %>
+    </ul>
+  <% end %>
+  </div>
+<% end %>
   <%= f.label(:first_name, "First Name") %><br/>
   <%= f.text_field(:first_name) %><br/>
   <%= f.label(:last_name, "Last Name") %><br/>

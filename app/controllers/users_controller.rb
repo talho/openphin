@@ -54,8 +54,7 @@ class UsersController < ApplicationController
       params[:user].delete("description")
     end
 
-    params[:user][:role_requests_attributes].delete("0") if params[:user][:role_requests_attributes]["0"]["jurisdiction_id"].blank?
-
+    remove_blank_role_requests
     assign_public_role_if_no_role_is_provided
 
     @user = User.new(params[:user])

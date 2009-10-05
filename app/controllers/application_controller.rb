@@ -112,7 +112,13 @@ class ApplicationController < ActionController::Base
     def assign_public_role_if_no_role_is_provided
       role_requests = params[:user][:role_requests_attributes]
       role_requests.each_value do |role_request|
-        role_request["role_id"] = Role.public.id if role_request["role_id"].blank?
+        role_request["role_id"] = Role.public.id if role_request["role_id"].blank? && !role_request["jurisdiction_id"].blank?
+      end
+    end
+
+    def remove_blank_role_requests
+      params[:user][:role_requests_attributes].each do |key,value|
+        params[:user][:role_requests_attributes].delete(key) if value["jurisdiction_id"].blank? && value["role_id"].blank?
       end
     end
 end

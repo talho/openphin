@@ -115,6 +115,8 @@ ul#associations li														{float:left; list-style:none; width:200px; heigh
 ul#associations li a													{display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
 ul#associations li.texas_phin a								{background:url(images/texas_phin.png) no-repeat; width:141px; height:83px;}
 ul#associations li.texas_dshs a								{background:url(images/texas_dshs.png) no-repeat; width:200px; height:47px;}
+div.details p a             									{display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
+div.details p.texas_dshs a                    {background:url(images/texas_dshs-larger.png) no-repeat; width:410px; height:51px;}
 
 #edit .details label													{display:block;}
 #edit .details input,

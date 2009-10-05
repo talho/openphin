@@ -11,15 +11,18 @@ class Admin::UsersController < ApplicationController
   end
   
   def create
+    remove_blank_role_requests
     assign_public_role_if_no_role_is_provided
-    
+
     @user = User.new(params[:user])
-    @user.role_requests.each do |role_request|
-      role_request.requester = current_user
-      if current_user.is_admin_for?(role_request.jurisdiction)
-        role_request.approver = current_user
+    if @user.valid?
+      @user.role_requests.each do |role_request|
+        role_request.requester = current_user
+        if current_user.is_admin_for?(role_request.jurisdiction)
+          role_request.approver = current_user
+        end
       end
-    end
+    end 
     
     respond_to do |format|
       if @user.save
@@ -38,5 +41,5 @@ class Admin::UsersController < ApplicationController
       end
     end
   end
-  
+
 end
