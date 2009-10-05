@@ -6,7 +6,7 @@
 
 <% @jurisdictions.each do |jurisdiction| %>
   <tr>
-    <td><%= jurisdiction.name %></td>
+    <td><%=h jurisdiction.name %></td>
     <td><%= link_to 'Show', jurisdiction %></td>
     <td><%= link_to 'Edit', edit_jurisdiction_path(jurisdiction) %></td>
     <td><%= link_to 'Destroy', jurisdiction, :confirm => 'Are you sure?', :method => :delete %></td>

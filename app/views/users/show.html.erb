@@ -1,26 +1,26 @@
 <h2><%=@user.display_name %></h2>
 <%= link_to "Public Profile", user_profile_path(@user) if @user.public %>
 <div>
-  <b>Description</b>: <%= @user.description %>
+  <b>Description</b>: <%=h @user.description %>
 </div>
 <div>
-  <b>Real Name</b>: <%= @user.last_name  %>, <%= @user.first_name %>
+  <b>Real Name</b>: <%=h @user.last_name  %>, <%=h @user.first_name %>
 
 </div>
 <div>
-  <b>Title</b>: <%= @user.title %>
+  <b>Title</b>: <%=h @user.title %>
 </div>
 <div>
   <b>Email Address</b> <%= link_to @user.email, "mailto:#{@user.email}" %>
 </div>
 <div>
-  <b>Preferred Language</b>: <%= @user.preferred_language %>
+  <b>Preferred Language</b>: <%=h @user.preferred_language %>
 </div>
 <div>
   <h4>Roles</h4>
   <ul>
     <% @user.roles.each do |role| %>
-        <li><%=role.name %></li>
+        <li><%=h role.name %></li>
     <% end %>
   </ul>
 </div>

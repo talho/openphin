@@ -1,5 +1,5 @@
 <ul class="roles data-list">
   <% user.role_memberships.user_roles.each do |r| %>
-  <li><%= r.role.name%> in <%= r.jurisdiction.name%> <%= link_to "Remove Role", role_assignment_path(r.id), :method => :delete, :class => 'destroy' if !r.role.is_public? && (user == current_user || current_user.is_admin_for?(r.jurisdiction)) %></li>
+  <li><%=h r.role.name%> in <%=h r.jurisdiction.name%> <%= link_to "Remove Role", role_assignment_path(r.id), :method => :delete, :class => 'destroy' if !r.role.is_public? && (user == current_user || current_user.is_admin_for?(r.jurisdiction)) %></li>
   <% end %>
 </ul>

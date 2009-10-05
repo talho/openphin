@@ -1,42 +1,42 @@
 <h3><%=@jurisdiction.name %></h3>
 <div>
-  <b>Description</b>: <%= @jurisdiction.description %>
+  <b>Description</b>: <%=h @jurisdiction.description %>
 </div>
 <div>
-  <b>Fax</b>: <%= @jurisdiction.fax %>
+  <b>Fax</b>: <%=h @jurisdiction.fax %>
 </div>
 <div>
-  <b>City</b>: <%= @jurisdiction.locality %>
+  <b>City</b>: <%=h @jurisdiction.locality %>
 </div>
 <div>
-  <b>Zip Code</b>: <%= @jurisdiction.postal_code %>
+  <b>Zip Code</b>: <%=h @jurisdiction.postal_code %>
 </div>
 <div>
-  <b>State</b>: <%= @jurisdiction.state %>
+  <b>State</b>: <%=h @jurisdiction.state %>
 </div>
 <div>
-  <b>Street Address</b>: <%= @jurisdiction.street %>
+  <b>Street Address</b>: <%=h @jurisdiction.street %>
 </div>
 <div>
-  <b>Phone Number</b>: <%= @jurisdiction.phone %>
+  <b>Phone Number</b>: <%=h @jurisdiction.phone %>
 </div>
 <div>
-  <b>County</b>: <%= @jurisdiction.county %>
+  <b>County</b>: <%=h @jurisdiction.county %>
 </div>
 <div>
-  <b>Alerting Jurisdictions</b>: <%= @jurisdiction.alerting_jurisdictions %>
+  <b>Alerting Jurisdictions</b>: <%=h @jurisdiction.alerting_jurisdictions %>
 </div>
 <div>
-  <b>Primary Organization Type</b>: <%= @jurisdiction.primary_organization_type %>
+  <b>Primary Organization Type</b>: <%=h @jurisdiction.primary_organization_type %>
 </div>
 <h3><%= link_to 'Parent Jurisdiction', jurisdiction_path(@jurisdiction.parent) if !@jurisdiction.root? %></h3>
 <% if !@jurisdiction.leaf? %>
   <div>
-    <b>Child Jurisdictions<b>
+    <b>Child Jurisdictions</b>
     <ul>
       <% @jurisdiction.children.each do |child| %>
         <li>
-          <%= link_to child.name, jurisdiction_path(child) %>
+          <%= link_to h(child.name), jurisdiction_path(child) %>
         </li>
       <% end %>
     </ul>
