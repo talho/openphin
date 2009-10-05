@@ -1,6 +1,6 @@
 class SearchesController < ApplicationController
   before_filter :non_public_role_required
-  app_toolbar "han"
+  #app_toolbar "han"
   def show  
     if !params[:tag].blank?
       search_size = 300

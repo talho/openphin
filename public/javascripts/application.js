@@ -94,11 +94,31 @@ jQuery(function($) {
 		else name_synched = false;
 	});
     $('a.destroy').removeAttr('onclick');
-	 $("#calendar_panel").hide();
+     $("#calendar_panel").hide();
+     $("#documents_panel").hide();
+     $("#chat_panel").hide();
 	$(".calendar").bind("click", function (e){
-		$("#calendar_panel").slideToggle(1000);
-		e.stopPropagation();
+        $("#documents_panel:visible").slideToggle(1000);
+        $("#chat_panel:visible").slideToggle(1000);
+        $("#calendar_panel").slideToggle(1000);
+        e.stopPropagation();
 		e.preventDefault();
 		return false;
 	});
+    $(".documents").bind("click", function (e){
+        $("#calendar_panel:visible").slideToggle(1000);
+        $("#chat_panel:visible").slideToggle(1000);
+        $("#documents_panel").slideToggle(1000);
+		e.stopPropagation();
+        e.preventDefault();
+        return false;
+    });
+    $(".chat").bind("click", function (e){
+        $("#calendar_panel:visible").slideToggle(1000);
+        $("#documents_panel:visible").slideToggle(1000);
+        $("#chat_panel").slideToggle(1000);
+		e.stopPropagation();
+        e.preventDefault();
+        return false;
+    });
 });

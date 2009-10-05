@@ -10,10 +10,20 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   before_filter :login_required
+
+  layout :choose_layout
   
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
-  
+
+  def choose_layout
+    if signed_in?
+      return "application"
+    else
+      return "non_application"
+    end 
+  end
+
   def phin_oid_prefix
     "#{PHIN_PARTNER_OID}.#{PHIN_APP_OID}.#{PHIN_ENV_OID}"
   end

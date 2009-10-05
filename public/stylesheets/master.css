@@ -54,7 +54,6 @@ table td 																			{padding:5px 20px 5px 0;}
 #footer																				{position:absolute; bottom:0; height:30px; border-top:1px solid #111; background:#333; left:0; right:0; padding:0 20px;}
 #footer ul                                    {list-style-type:none; margin:0; padding:0;}
 #footer li                                    {list-style:none; font-size:11px; float:left; height:22px; line-height:22px; margin:4px 10px 4px 0;}
-#footer li.chat                               {float:right;}
 #footer li a                                  {color:#fff; display:block; height:22px; padding:0 12px 0 0; background:url(images/footer_button.png) 100% 0;}
 #footer li a span                             {display:block; height:22px; padding:0; background:url(images/footer_button.png);}
 #footer li a b                                {display:block; height:22px; padding:0 0 0 30px;}
@@ -64,8 +63,10 @@ table td 																			{padding:5px 20px 5px 0;}
 
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-
-
+#documents_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
+#chat_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #news_articles                                {margin:0 -55px; width:760px;}
 #news_articles div.main                       {width:495px; float:left;}
 #news_articles div.main p                     {font-size:15px;}
