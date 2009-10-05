@@ -18,7 +18,7 @@
   			<li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
   			<li><%= link_to s("RollCall"), dashboard_path, :class => "rollcall" %></li>
 
-  			<li><%= link_to s("FAQs"), dashboard_path, :class => "faqs" %></li>
+  			<li><%= link_to s("FAQs"), faqs_path, :class => "faqs" %></li>
   		</ul>
       <%- if signed_in? -%>
         <p><%= link_to 'My Dashboard', dashboard_path %> |

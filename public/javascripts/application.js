@@ -129,7 +129,6 @@ jQuery(function($) {
      return false;
    });
 	 $("#comingsoon a.close").bind("click", toggleComingSoon);
-	 $("a.faqs").bind("click", toggleComingSoon);
 	 $("a.rollcall").bind("click", toggleComingSoon);
 
 });
