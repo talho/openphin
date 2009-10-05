@@ -87,7 +87,7 @@ table td 																			{padding:5px 20px 5px 0;}
 #news_articles .more a                        {float: right;}
 #news_articles .less a                        {float: right;}
 
-#feature 																			{width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.jpg) no-repeat;}
+#feature 																			{width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
 #content p																		{margin:0 0 15px; line-height:1.6;}
 #content div.details													{width:410px; float:left;}
 #content div.aside														{width:210px; float:right;}
