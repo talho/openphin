@@ -16,9 +16,9 @@
       <h1><%= link_to 'TXPhin', root_path %></h1>
       <ul>
   			<li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
-  			<li><%= link_to s("RollCall"), dashboard_path %></li>
-  			<li><%= link_to s("Links"), dashboard_path %></li>
-  			<li><%= link_to s("FAQs"), dashboard_path %></li>
+  			<li><%= link_to s("RollCall"), dashboard_path, :class => "rollcall" %></li>
+  			<li><%= link_to s("Links"), dashboard_path, :class => "links" %></li>
+  			<li><%= link_to s("FAQs"), dashboard_path, :class => "faqs" %></li>
   		</ul>
       <%- if signed_in? -%>
         <p><%= link_to 'My Dashboard', dashboard_path %> |
@@ -32,6 +32,7 @@
       <%- end -%>
     </div>
     <div id='app_toolbar'>
+
   		<%- if signed_in? -%>
   			<%= render :partial => "toolbars/#{toolbar}" %>
   		<%- else -%>
@@ -42,7 +43,15 @@
   		<%- end -%>
     </div>
   </div>
+  <div id='app_alert'>
+		<div id='comingsoon'>
+					<h1>This content is coming soon!</h1>
+					OpenPHIN has reached 1.0, but we're not resting!  We're working hard to bring new functionality and applications to users of this groundbreaking software.  Check back often for new developments!
+		  <a class='close'>Close</a>
+		</div>
+  </div>
   <div id="wrapper">
+
     <div class="flash">
       <%- [:notice, :instructions, :completed, :error].each do |type| -%>
         <%- if flash[type] -%>

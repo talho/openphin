@@ -136,4 +136,15 @@ jQuery(function($) {
      e.preventDefault();
      return false;
    });
+	 $("#comingsoon a.close").bind("click", toggleComingSoon);
+	 $("a.faqs").bind("click", toggleComingSoon);
+	 $("a.links").bind("click", toggleComingSoon);
+	 $("a.rollcall").bind("click", toggleComingSoon);
+
 });
+
+function toggleComingSoon(e){
+	$("#comingsoon").slideToggle(1000);
+	e.stopPropagation();
+	return false;
+}
