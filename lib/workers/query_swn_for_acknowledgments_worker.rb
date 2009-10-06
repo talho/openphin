@@ -87,4 +87,3 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
     end
   end
 end
-

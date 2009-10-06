@@ -13,10 +13,18 @@ set :rails_env, 'production'
 # your SCM below:
 # set :scm, :subversion
 RAILS_ENV="production"
+task :production do
+	role :app, "txphin.texashan.org"
+	role :web, "txphin.texashan.org"
+	role :db,  "txphin.texashan.org", :primary => true
+end
 
-role :app, "openphin.texashan.org"
-role :web, "openphin.texashan.org"
-role :db,  "openphin.texashan.org", :primary => true
+task :staging do
+	role :app, "openphin.texashan.org"
+	role :web, "openphin.texashan.org"
+	role :db,  "openphin.texashan.org", :primary => true
+end
+
 set :scm, :git
 set :branch, 'master'
 set :use_sudo, false
@@ -77,6 +85,12 @@ desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
   rails_env = fetch(:rails_env, RAILS_ENV)
   run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
+end
+
+desc "index users for search"
+task :index, :roles => :db, :only => {:primary => true} do
+	rails_env = fetch(:rails_env, RAILS_ENV)
+  run "cd #{current_path}; rake ts:index RAILS_ENV=#{rails_env}"
 end
 
 set :pivotal_tracker_project_id, 19881

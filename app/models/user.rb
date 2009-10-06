@@ -104,6 +104,7 @@ class User < ActiveRecord::Base
     indexes last_name, :sortable => true
     indexes display_name
     indexes title
+    indexes email
 
     set_property :delta => :delayed
   end
