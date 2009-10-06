@@ -7,6 +7,10 @@ class DashboardController < ApplicationController
 
   def about
   end
+
+  def hud
+    DashboardController.app_toolbar "han"
+  end
   
 	def faqs
     DashboardController.app_toolbar "faqs"
