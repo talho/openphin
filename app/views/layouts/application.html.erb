@@ -15,10 +15,9 @@
     <div id="portal_toolbar">
       <h1><%= link_to 'TXPhin', root_path %></h1>
       <ul>
-  			<li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
-  			<li><%= link_to s("RollCall"), dashboard_path, :class => "rollcall" %></li>
-
-  			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path, :class => "faqs" %></li>
+        <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), alerts_path %></li>
+        <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("RollCall"), roll_calls_path %></li>
+  			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
   		</ul>
       <%- if signed_in? -%>
         <p><%= link_to 'My Dashboard', dashboard_path %> |
