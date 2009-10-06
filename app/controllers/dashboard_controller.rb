@@ -7,6 +7,8 @@ class DashboardController < ApplicationController
 
   def about
   end
+  
 	def faqs
+    DashboardController.app_toolbar "faqs"
 	end
 end

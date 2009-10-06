@@ -1,5 +1,5 @@
 <ul>
-  <li class="current"><%= link_to(s('Dashboard'), alerts_path) %></li>
+  <li class="current"><%= link_to(s('HAN Home'), alerts_path) %></li>
   <%= content_tag(:li, link_to(s('Send an Alert'), new_alert_path, :class => 'sendalert')) if current_user.alerter? %>
 <%- if current_user.is_admin? -%>
   <li><%= link_to s('View Pending Requests'), admin_pending_requests_path, :class => '.viewpendingrequests' %></li>
