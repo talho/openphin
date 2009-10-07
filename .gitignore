@@ -13,7 +13,6 @@ tmp/*
 .rake_tasks
 db/schema.rb
 vendor/plugins/cucumber
-vendor/plugins/hoptoad_notifier
 .project
 .loadpath
 .tmp*
