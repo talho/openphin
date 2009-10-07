@@ -5,5 +5,5 @@ if File.exists?(file)
 end
 
 HoptoadNotifier.configure do |config|
-  config.api_key = OpenPHIN_config[:hoptoad_api_key]
+  config.api_key = OpenPHIN_config[:hoptoad_api_key] unless OpenPHIN_config[:hoptoad_api_key].blank?
 end
