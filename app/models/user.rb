@@ -48,11 +48,11 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :role_requests
 
   has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
-  has_many :jurisdictions, :through => :role_memberships 
-  has_many :roles, :through => :role_memberships
+  has_many :jurisdictions, :through => :role_memberships, :uniq => true
+  has_many :roles, :through => :role_memberships, :uniq => true 
+  has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts
-  has_many :received_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
 
@@ -67,7 +67,6 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :if => :password_required?
   validates_associated :role_requests
   validates_associated :role_memberships
-  validate :must_have_one_public_role
 
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
     
@@ -98,7 +97,7 @@ class User < ActiveRecord::Base
 #  }
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
-  
+
   define_index do
     indexes first_name, :sortable => true
     indexes last_name, :sortable => true
@@ -117,6 +116,10 @@ class User < ActiveRecord::Base
 
   def is_admin_for?(jurisdiction)
     jurisdiction.admins.include?(self)
+  end
+
+  def is_alerter_for?(jurisdiction)
+    jurisdiction.alerting_users.include?(self)
   end
   
   def is_super_admin?
@@ -142,6 +145,11 @@ class User < ActiveRecord::Base
   def has_public_role?
     self.roles.any?{|role| role == Role.public}
   end
+
+  def has_public_role_in?(jurisdiction)
+    self.role_memberships.any?{|rm| rm.role == Role.public && rm.jurisdiction == jurisdiction}
+  end
+
 
   def has_public_role_request?
     self.role_requests.any?{|request| request.role == Role.public}
@@ -202,7 +210,7 @@ class User < ActiveRecord::Base
   def alerter?
     !role_memberships.alerter.empty?
   end
-  
+
   def formatted_email
     "#{name} <#{email}>"
   end
@@ -239,7 +247,20 @@ class User < ActiveRecord::Base
 private
 
   def assign_public_role
-    public_role = Role.find_by_name("Public")
+    public_role = Role.public
+    if (role_requests.nil? && role_memberships.nil?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
+      role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
+    else
+      rr = role_requests
+      rr.each do |request|
+        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+        RoleRequest.find_by_id(request.id).destroy
+      end unless role_requests.nil? || role_memberships.public_roles.count != 0
+      role_memberships.each do |request|
+        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+      end if role_memberships.public_roles.count == 0
+    end
+
     role_requests.find_all_by_role_id(public_role).each do |request|
       if request.approver.nil?
         role_memberships.create!(
@@ -273,9 +294,5 @@ private
 
   def set_display_name
     self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
-  end
-
-  def must_have_one_public_role
-    errors.add("role_memberships", "Must have at least one public role") unless has_public_role? || has_public_role_request?
   end
 end

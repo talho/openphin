@@ -16,7 +16,7 @@ Feature: Viewing recent alerts on dashboard
       | people      | Martin Fowler |
     And I am logged in as "martin@example.com"
     
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see an alert with the summary:
       | title       | rolling pig pox |
       | severity    | Moderate |
@@ -25,7 +25,7 @@ Feature: Viewing recent alerts on dashboard
       | acknowledge | Yes      |
 
     Given 19 more alerts are sent to me
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see 20 alerts
     And I should see an alert with the summary:
       | title       | rolling pig pox |
@@ -35,7 +35,7 @@ Feature: Viewing recent alerts on dashboard
       | acknowledge | Yes      |
     
     Given 1 more alert is sent to me
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see 20 alerts
     And I should not see an alert titled "rolling pig pox"
   

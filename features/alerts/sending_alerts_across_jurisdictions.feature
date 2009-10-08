@@ -31,7 +31,7 @@ Feature: Sending alerts across jurisdictions
     And the role "Health Officer" is an alerter
     And I am logged in as "zach.dennis@example.com"
     And I am allowed to send alerts
-    When I go to the Dashboard page
+    When I go to the han page
     And I follow "Send an Alert"
 
   Scenario: Sending an alert to sibling jurisdictions

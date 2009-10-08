@@ -34,6 +34,7 @@ class Jurisdiction < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
+  has_many :alerts, :foreign_key => 'from_jurisdiction_id'
 
   named_scope :admin, :include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }
   named_scope :federal, :conditions => "parent_id IS NULL"
@@ -51,6 +52,10 @@ class Jurisdiction < ActiveRecord::Base
   
   def han_coordinators
     users.with_role(Role.han_coordinator)
+  end
+
+  def alerting_users
+    Role.alerters.map{|role| users.with_role(role)}.uniq.flatten
   end
 
   def parent

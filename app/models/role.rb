@@ -17,6 +17,8 @@ class Role < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
+
+  named_scope :alerters, :conditions => {:alerter => true}
   
   Defaults = {
     :admin => 'Admin',
@@ -45,7 +47,7 @@ class Role < ActiveRecord::Base
   def self.han_coordinator
     find_or_create_by_name Defaults[:han_coordinator]
   end
-  
+
   named_scope :user_roles, :conditions => { :user_role => true }
   named_scope :approval_roles, :conditions => { :approval_required => true }
   

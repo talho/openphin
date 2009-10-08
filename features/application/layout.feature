@@ -10,7 +10,9 @@ Feature: Application layout should have communications, portal & application too
 		  | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
 	  And an article exists
 	  And an article exists
-	  And an article exists
+    And an article exists
+    And an article exists
+    And an article exists
 
 	Scenario:
     Given I am logged in as "martin@example.com"
@@ -18,15 +20,14 @@ Feature: Application layout should have communications, portal & application too
 		Then I should see the following menu:
 			| name | portal_toolbar       |
 			| item | HAN                  |
-			| item | RoleCall             |
+			| item | RollCall             |
 			| item | FAQs                 |
-			| item | Forum                |
 	  And I should see the following menu:
 			| name | comm_toolbar         |
 			| item | Calendar             |
 			| item | Chat                 |
 			| item | Documents            |
 			| item | Links                |
-		And I should see 3 "article" sections
+		And I should see 5 "article" sections
 
 				

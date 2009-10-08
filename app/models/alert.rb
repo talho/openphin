@@ -218,7 +218,7 @@ class Alert < ActiveRecord::Base
           jurisdictions << Jurisdiction.root.children.nonforeign
         end
       end
-      roles << Role.approval_roles if roles && roles.empty?
+      roles << Role.all if roles && roles.empty?
     end
     # 1 - explode all known users and batch deliver to them
     find_user_recipients.each do |user|

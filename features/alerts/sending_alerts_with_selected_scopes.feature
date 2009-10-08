@@ -25,16 +25,24 @@ Feature: Creating and sending alerts
       | Jason Phipps    | jason.phipps@example.com   | WMD Coordinator | Potter County  |
       | Dan Morrison    | dan.morrison@example.com   | Health Officer  | Ottawa County  | 
       | Brian Ryckbost  | brian.ryckbost@example.com | Health Officer  | Tarrant County |
-      
+    And "john.smith@example.com" is not public in "Texas"
+    And "brian.simms@example.com" is not public in "Texas"
+    And "ed.mcguyver@example.com" is not public in "Texas"
+    And "ethan.waldo@example.com" is not public in "Texas"
+    And "keith.gaddis@example.com" is not public in "Texas"
+    And "jason.phipps@example.com" is not public in "Texas"
+    And "dan.morrison@example.com" is not public in "Texas"
+    And "brian.ryckbost@example.com" is not public in "Texas"
+
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |  
     And the following users belong to the Red Cross:
-      | John Smith | Ed McGuyver | Jason Phipps | Dan Morrison | Brian Ryckbost |
+      | John Smith | Ed McGuyver | Dan Morrison | Brian Ryckbost |
 
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the Dashboard page
+    When I go to the han page
     And I follow "Send an Alert"
 
   Scenario: Sending an alert directly to a user

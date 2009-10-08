@@ -11,7 +11,7 @@ Feature: Signing up for an account
     And a child jurisdiction named Dallas County
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
-      | Quincy Jones   | quincy.jones@example.com   | 
+      | Quincy Jones   | quincy.jones@example.com   |
       | Jonas Brothers | jonas.brothers@example.com |
     And a role named Public
     And an approval role named Health Alert and Communications Coordinator
@@ -29,7 +29,7 @@ Feature: Signing up for an account
     Then I should see "Thanks for signing up"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the communication device
-      | Email | john@example.com | 
+      | Email | john@example.com |
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
@@ -116,6 +116,7 @@ Feature: Signing up for an account
     
     Given I have confirmed my account for "john@example.com"
     When I log in as "john@example.com"
+    And I follow "Han"
     Then I should see "Awaiting Approval"
     
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"

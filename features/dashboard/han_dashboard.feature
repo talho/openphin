@@ -25,7 +25,7 @@ Feature: Viewing the dashboard
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
     And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see 1 pending role request
 
     Scenario: Dashboard should show the most recent approved role requests
@@ -35,8 +35,8 @@ Feature: Viewing the dashboard
     And I am logged in as "john.smith@example.com"
     And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
     And "admin1@dallascounty.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
-    When I go to the dashboard page
-    Then I should see 2 recent role approval
+    When I go to the han page
+    Then I should see 1 recent role approval
 
 
     Scenario: Dashboard should show only the panels each user has access to
@@ -45,7 +45,7 @@ Feature: Viewing the dashboard
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see a signout link
     And I should not see a sendalert link
     And I should not see a viewrole link
@@ -58,7 +58,7 @@ Feature: Viewing the dashboard
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
     And I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see a signout link
     And I should see a sendalert link
     And I should not see a viewrole link
@@ -68,7 +68,7 @@ Feature: Viewing the dashboard
 
     Scenario: Dashboard should show the admin navigation
     And I am logged in as "admin1@dallascounty.com"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see a signout link
     And I should not see a sendalert link
     And I should not see a viewrole link
@@ -79,7 +79,7 @@ Feature: Viewing the dashboard
     Scenario: Dashboard should show the admin alerter navigation
     And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
     And I am logged in as "admin1@dallascounty.com"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see a signout link
     And I should see a sendalert link
     And I should not see a viewrole link

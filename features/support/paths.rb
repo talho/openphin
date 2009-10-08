@@ -25,7 +25,7 @@ module NavigationHelpers
       when /the roles requests page for an admin/
         admin_role_requests_path
 	    when /the HAN/i
-	      alerts_path
+	      hud_path
       when /the alert log/i
         alerts_path
       when /the user edit page/i

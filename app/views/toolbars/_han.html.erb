@@ -2,7 +2,7 @@
   <li<%= " class=\"current\"" if controller.action_name == "hud" && controller.controller_name == "dashboard" %>><%= link_to(s('HAN Home'), hud_path) %></li>
 <%- if current_user.alerter? -%>
   <li<%= " class=\"current\"" if controller.action_name == "new" && controller.controller_name == "alerts" %>>
-  <%= link_to(s('Send an Alert'), new_alert_path, :class => "sendalert") %>
+  <%= link_to(s('Send an Alert'), new_alert_path, :class => ".sendalert") %>
   </li>
 <%- end -%>
 <%- if current_user.is_admin? -%>
@@ -11,5 +11,6 @@
 <%- if current_user.alerter? -%>
   <li<%= " class=\"current\"" if (controller.action_name == "index" && controller.controller_name == "alerts") || (controller.action_name == "edit" && controller.controller_name == "alerts") %>>
   <%= link_to(s('View Alerts'), alerts_path, :class => '.viewalerts') %>
+  </li>
 <%- end -%>
 </ul>

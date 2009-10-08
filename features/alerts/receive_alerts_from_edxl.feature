@@ -40,6 +40,10 @@ Feature: Alerts from EDXL
     | Zach Dennis | zach@example.com | Health Officer | Texas |
     | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
     | Ethan Waldo | ethan@example.com | Public | Potter County |
+    And "bob@example.com" is not public in "Texas"
+    And "jphipps@example.com" is not public in "Texas"
+    And "daniel@example.com" is not public in "Texas"
+    And "ethan@example.com" is not public in "Texas"
 
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
@@ -181,28 +185,28 @@ Feature: Alerts from EDXL
   Scenario:  Receiving a cascade alert without jurisdictions specified should alert only state jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_state.edxl
     Then the following users should receive the email:
-     | People        | keith@example.com,brandon@example.com, zach@example.com |
+     | People        | keith@example.com,brandon@example.com, zach@example.com, mjensen@cdc.gov |
      | subject       | Cascade alert sent from Federal jurisdiction to TX    |
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
     And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "jphipps@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "daniel@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
-    And "mjensen@cdc.gov" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "keith@example.com"
     And I go to the alerts page
     Then I should see 1 alerts
     When I log in as "bob@example.com"
     And I go to the alerts page
     Then I should see 0 alerts
+    When I log in as "mjensen@cdc.gov"
+    And I go to the alerts page
+    Then I should see 1 alerts
 
     Scenario:  Receiving a cascade alert without jurisdictions specified should alert state and local jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_statelocal.edxl
     Then the following users should receive the email:
-     | People        | keith@example.com,bob@example.com,jphipps@example.com,wisecoordinator@example.com,daniel@example.com,brandon@example.com,zach@example.com |
+     | People        | keith@example.com,bob@example.com,jphipps@example.com,wisecoordinator@example.com,daniel@example.com,brandon@example.com,zach@example.com,ethan@example.com,mjensen@cdc.gov |
      | subject       | Cascade alert sent from Federal jurisdiction to TX    |
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
-    And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
-    And "mjensen@cdc.gov" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "bob@example.com"
     And I go to the alerts page
     Then I should see 1 alerts
@@ -218,7 +222,7 @@ Feature: Alerts from EDXL
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
     And "brandon@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "zach@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
-    And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
+    And "mark@cdc.gov" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "bob@example.com"
     And I go to the alerts page
     Then I should see 1 alerts

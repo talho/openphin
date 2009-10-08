@@ -74,7 +74,7 @@ Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jur
   request = current_user.role_requests.unapproved.detect{ |request| request.jurisdiction == jurisdiction && request.role == role }
   request.should_not be_nil
   
-  visit dashboard_path
+  visit hud_path
   response.should have_selector( ".pending_role_requests") do |req|
     req.should contain(role_name)
     req.should contain(jurisdiction_name)
@@ -103,5 +103,5 @@ Then /^I should see (\d) recent role approvals?$/ do |num|
   else
     response.should have_selector(".recent_role_approvals .approval")
   end
-  current_user.role_memberships.recent.flatten.size.should == num.to_i
+  current_user.role_memberships.not_public_roles.recent.flatten.size.should == num.to_i
 end

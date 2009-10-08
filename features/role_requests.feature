@@ -85,7 +85,7 @@ Feature: Role Requests
     And the following users should not receive any emails
       | roles         | Dallas County / Admin |
     
-    When I go to the dashboard page
+    When I go to the han page
     And I should see 0 pending role requests
   
   Scenario: Admin requests a role within a child of their jurisdiction should go through normal approval process

@@ -7,3 +7,8 @@ one:
 two:
   name: MyString
   approval_required: false
+
+public:
+  name :Public
+  approval_required: false
+  user_role: true

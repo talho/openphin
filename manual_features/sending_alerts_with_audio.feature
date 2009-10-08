@@ -13,7 +13,7 @@ Feature: Sending audio alerts
  Scenario: Sending a phone alert with an audio file
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the dashboard page
+    When I go to the han page
     And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |
@@ -50,7 +50,7 @@ Feature: Sending audio alerts
     
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the dashboard page
+    When I go to the han page
     And I follow "Send an Alert"
     When I fill out the alert form with:
       | People | Keith Gaddis |

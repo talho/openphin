@@ -6,12 +6,12 @@ should be able to manage organization enrollements
 
  Background:
     Given the following entities exist:
-        | Jurisdiction      | Dallas County           |
-        | Jurisdiction      | Texas                   |
-        | Jurisdiction      | Tarrant County          |
-        | Jurisdiction      | Denton County           |
-        | Organization Type | Non-Profit Organization |
-        | Role              | Public                  |
+        | Jurisdiction            | Texas                   |
+        | Child Jurisdiction      | Dallas County           |
+        | Child Jurisdiction      | Tarrant County          |
+        | Child Jurisdiction      | Denton County           |
+        | Organization Type       | Non-Profit Organization |
+        | Role                    | Public                  |
     And the following administrators exist:
         | keith@texashan.org     | Texas |
         | bob@example.com        | Dallas County |
@@ -20,7 +20,7 @@ should be able to manage organization enrollements
         | Gopher Lovers of America      | staff@salvationarmydallas.org | Texas, Dallas County         | John Smith   | john@example.com |
   Scenario: approving an organization signup
     Given I am logged in as "keith@texashan.org"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see the organization "Gopher Lovers of America" is awaiting approval for "keith@texashan.org"
     When I follow "View Details"
     Then I should see "Gopher Lovers of America"
@@ -33,7 +33,7 @@ should be able to manage organization enrollements
       | body contains | Thanks for signing up.  Your users may now begin enrollment.|
     When I sign out
     Given I am logged in as "bob@example.com"
-    When I go to the dashboard page
+    When I go to the han page
     Then I should see the organization "Gopher Lovers of America" is awaiting approval for "bob@example.com"
 
     When I follow "Approve"
@@ -45,7 +45,7 @@ should be able to manage organization enrollements
 
 Scenario: denying an organization signup
 	Given I am logged in as "keith@texashan.org"
-	When I go to the dashboard page
+	When I go to the han page
 	And I follow "Deny"
 	Then I should not see the organization "Gopher Lovers of America" is awaiting approval
 	And "Gopher Lovers of America" contact should receive the following email:

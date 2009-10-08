@@ -54,7 +54,7 @@ Feature: An admin managing users
     Then I should see the profile edit form
 
     When I fill in the form with the following info:
-      | Description                       | A developer |
+      | Job description                   | A developer |
       | Preferred name to be displayed    | Keith G. |
       | Preferred language                | English |
       | Job title                         | Developer |

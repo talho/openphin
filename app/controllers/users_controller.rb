@@ -58,7 +58,6 @@ class UsersController < ApplicationController
     assign_public_role_if_no_role_is_provided
 
     @user = User.new(params[:user])
-    @user.role_requests << RoleRequest.new(:jurisdiction_id => params[:user][:role_requests_attributes]['0'][:jurisdiction_id], :role_id => Role.public.id)
 
     respond_to do |format|
       if @user.save

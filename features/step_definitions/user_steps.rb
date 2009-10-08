@@ -8,7 +8,11 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
   first_name, last_name = name.split
   user = User.find_by_email(email) ||
     Factory(:user, :first_name => first_name, :last_name => last_name, :email => email)
-  user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
+  if role == "Public"
+    user.role_memberships.create!(:role => Given("a role named Public"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}")) if !user.has_public_role_in?(Given("a jurisdiction named #{jurisdiction}"))
+  else
+    user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
+  end
 end
 
 Given 'the following users exist:' do |table|
@@ -35,6 +39,9 @@ Given "the following administrators exist:" do |table|
   table.raw.each do |row|
     admin = Factory(:user, :email => row[0])
     jurisdiction = Jurisdiction.find_by_name(row[1]) || Factory(:jurisdiction, :name => row[1])
+    admin.role_memberships.each do |rm|
+      rm.destroy
+    end
     RoleMembership.create!(:user => admin, :jurisdiction => jurisdiction, :role => admin_role)
   end
 end
@@ -68,6 +75,14 @@ Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, r
   role=Role.find_by_name!(role_name)
   role_request=user.role_requests.find_by_role_id!(role.id)
   role_request.approve!(role_request.jurisdiction.admins.first)
+end
+
+Given /^"([^\"]*)" is not public in "([^\"]*)"$/ do |user_email, jurisdiction_name|
+  user=User.find_by_email(user_email)
+  role=Role.public
+  jurisdiction=Jurisdiction.find_by_name!(jurisdiction_name)
+  role_membership=user.role_memberships.find_by_role_id_and_jurisdiction_id(role.id,jurisdiction.id)
+  role_membership.destroy if !role_membership.nil?
 end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
