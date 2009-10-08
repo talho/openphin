@@ -7,17 +7,30 @@ class Admin::RoleAssignmentsController < ApplicationController
   end
   
   def create
-    jurisdiction = Jurisdiction.find(params[:role_assigns][:jurisdiction_id])
-    if current_user.is_admin_for?(jurisdiction)
-      role = Role.find(params[:role_assigns][:role_id])
-      users = User.find_all_by_id(params[:role_assigns][:user_ids])
-      User.assign_role(role, jurisdiction, users)
-      users.each do |user|
-        AppMailer.deliver_role_assigned(role, jurisdiction, user, current_user)
-      end
-      connector = users.size == 1 ? "has" : "have"
-      flash[:notice] = "#{users.map(&:email).to_sentence} #{connector} been approved for the role #{role.name} in #{jurisdiction.name}"
+    jurisdiction = Jurisdiction.find(params[:role_assigns][:jurisdiction_id]) unless params[:role_assigns][:jurisdiction_id].blank?
+    if jurisdiction.nil?
+      flash[:error] = "No jurisdiction was specified"
       redirect_to admin_role_requests_path
+    elsif current_user.is_admin_for?(jurisdiction)
+      role = Role.find(params[:role_assigns][:role_id]) unless params[:role_assigns][:role_id].blank?
+      if role.nil?
+        flash[:error] = "No role was specified"
+        redirect_to admin_role_requests_path
+      else
+        users = User.find_all_by_id(params[:role_assigns][:user_ids]) unless params[:role_assigns][:user_ids]
+        if users.nil?
+          flash[:error] = "No users were specified"
+          redirect_to admin_role_requests_path
+        else
+          User.assign_role(role, jurisdiction, users)
+          users.each do |user|
+            AppMailer.deliver_role_assigned(role, jurisdiction, user, current_user)
+          end
+          connector = users.size == 1 ? "has" : "have"
+          flash[:notice] = "#{users.map(&:email).to_sentence} #{connector} been approved for the role #{role.name} in #{jurisdiction.name}"
+          redirect_to admin_role_requests_path
+        end 
+      end
     else
       flash[:notice] = "The role assignment is outside of your authorized jurisdiction."
       redirect_to admin_role_requests_path

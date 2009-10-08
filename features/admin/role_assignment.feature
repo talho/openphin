@@ -97,3 +97,42 @@ Feature: Assigning roles to users for roles
     And I go to the roles requests page for an admin
     When I follow "Assign Role"
     Then I should explicitly not see "Potter County" in the "Jurisdiction" dropdown
+
+  Scenario: Role assignment should not occur if no jurisdictation is assigned
+    Given I am logged in as "admin@dallas.gov"
+    And I go to the roles requests page for an admin
+    And I follow "Assign Role"
+    When I fill out the assign roles form with:
+      | People | John Smith |
+      | Role | Health Officer |
+    Then "john@example.com" should not receive an email
+    And I should not see "john@example.com has been approved for the role Health Officer in Dallas County"
+    And "john@example.com" should not have the "Health Officer" role in "Dallas County"
+	  And "admin@dallas.gov" should not receive an email
+    And I should see "No jurisdiction was specified"
+
+  Scenario: Role assignment should not occur if no role is assigned
+    Given I am logged in as "admin@dallas.gov"
+    And I go to the roles requests page for an admin
+    And I follow "Assign Role"
+    When I fill out the assign roles form with:
+      | People | John Smith |
+      | Jurisdiction | Dallas County |
+    Then "john@example.com" should not receive an email
+    And I should not see "john@example.com has been approved for the role Health Officer in Dallas County"
+    And "john@example.com" should not have the "Health Officer" role in "Dallas County"
+	  And "admin@dallas.gov" should not receive an email
+    And I should see "No role was specified"
+
+  Scenario: Role assignment should not occur if no users are assigned
+      Given I am logged in as "admin@dallas.gov"
+      And I go to the roles requests page for an admin
+      And I follow "Assign Role"
+      When I fill out the assign roles form with:
+        | Role         | Health Officer |
+        | Jurisdiction | Dallas County  |
+      Then "john@example.com" should not receive an email
+      And I should not see "john@example.com has been approved for the role Health Officer in Dallas County"
+      And "john@example.com" should not have the "Health Officer" role in "Dallas County"
+      And "admin@dallas.gov" should not receive an email
+      And I should see "No users were specified"
