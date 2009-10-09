@@ -8,7 +8,6 @@ class Admin::RoleAssignmentsController < ApplicationController
   
   def create
     jurisdiction = Jurisdiction.find(params[:role_assigns][:jurisdiction_id]) unless params[:role_assigns][:jurisdiction_id].blank?
-    debugger
     if jurisdiction.nil?
       flash[:error] = "No jurisdiction was specified"
       redirect_to admin_role_requests_path

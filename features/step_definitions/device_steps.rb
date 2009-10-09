@@ -56,7 +56,6 @@ Then /^I should see in my list of devices$/ do |table|
 end
 
 Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
-	debugger
   find_email(email_address, table).should_not be_nil
 end
 
