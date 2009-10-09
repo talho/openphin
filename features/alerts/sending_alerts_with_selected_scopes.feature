@@ -134,7 +134,7 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -161,7 +161,7 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -189,7 +189,7 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -217,7 +217,7 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -245,7 +245,7 @@ Feature: Creating and sending alerts
     And I should be on the alerts page
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -276,7 +276,7 @@ Feature: Creating and sending alerts
     And "ethan.waldo@example.com" should not receive an email
     And the following users should receive the email:
       | People        | brian.ryckbost@example.com |
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |

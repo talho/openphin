@@ -12,12 +12,12 @@ class Admin::RoleAssignmentsController < ApplicationController
       flash[:error] = "No jurisdiction was specified"
       redirect_to admin_role_requests_path
     elsif current_user.is_admin_for?(jurisdiction)
-      role = Role.find(params[:role_assigns][:role_id]) unless params[:role_assigns][:role_id].blank?
+      role = Role.find(params[:role_assigns][:role_id]) if params[:role_assigns][:role_id]
       if role.nil?
         flash[:error] = "No role was specified"
         redirect_to admin_role_requests_path
       else
-        users = User.find_all_by_id(params[:role_assigns][:user_ids]) unless params[:role_assigns][:user_ids]
+        users = User.find_all_by_id(params[:role_assigns][:user_ids]) if params[:role_assigns][:user_ids]
         if users.nil?
           flash[:error] = "No users were specified"
           redirect_to admin_role_requests_path
