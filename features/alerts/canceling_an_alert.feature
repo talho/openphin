@@ -53,7 +53,7 @@ Feature: Canceling an alert
     And I should see an alert titled "[Cancel] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert [Cancel] - Flying Monkey Disease |
+      | subject       | Moderate Health Alert "[Cancel] - Flying Monkey Disease" |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
       | body contains | Alert ID:  |
       | body contains | Reference:  |

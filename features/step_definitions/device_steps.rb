@@ -66,7 +66,7 @@ end
 
 Then /^the following users should receive the email:$/ do |table|
   When "delayed jobs are processed"
-  
+
   headers = table.headers
   recipients = if headers.first == "roles"
     jurisdiction_name, role_name = headers.last.split("/").map(&:strip)

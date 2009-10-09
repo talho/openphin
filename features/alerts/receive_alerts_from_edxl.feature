@@ -73,7 +73,7 @@ Feature: Alerts from EDXL
       | role | Communicable/Infectious Disease Coordinators |
     And the following users should receive the email:
       | People        | keith@example.com, bob@example.com, daniel@example.com, jphipps@example.com, zach@example.com |
-      | subject       | Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
+      | subject       | Severe Health Alert Test "Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     And "ethan@example.com" should not receive an email with the subject "Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees"
     And "brandon@example.com" should not receive an email with the subject "Severe Health Alert Test Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees"
@@ -99,6 +99,7 @@ Feature: Alerts from EDXL
       | program_type | Alert |
       | jurisdiction | Texas |
       | role | Health Alert and Communications Coordinator |
+	   
     And the following users should receive the email:
      | People        | mjensen@cdc.gov,keith@example.com |
      | subject       | Cascade alert sent from Federal jurisdiction to TX    |
@@ -125,7 +126,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-184" has an original alert "CDC-2009-183"
     And the following users should receive the email:
       | People        | keith@example.com |
-      | subject       | Severe Health Alert Test [Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
+      | subject       | Severe Health Alert Test "[Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the alerts page
@@ -147,7 +148,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-185" has an original alert "CDC-2009-183"
     And the following users should receive the email:
       | People        | keith@example.com |
-      | subject       | Severe Health Alert Test [Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
+      | subject       | Severe Health Alert Test "[Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the alerts page
