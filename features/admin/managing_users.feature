@@ -83,3 +83,22 @@ Feature: An admin managing users
 
       Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
       And I should see "Role Health Officer removed from Jane Smith in Dallas County"
+
+    Scenario: Add user as admin should not occur if no home jurisdictation is specified
+    When I create a user account with the following info:
+      | Email          | john@example.com |
+      | Password       | Password1        |
+      | Password confirmation | Password1 |
+      | First name     | John             |
+      | Last name      | Smith            |
+      | Preferred name | Jonathan Smith   |
+      | Home Jurisdiction |               |
+      | Are you with any of these organizations | Red Cross        |
+      | What is your primary role | Health Alert and Communications Coordinator |
+      | Preferred language | English      |
+      | Are you a public health professional? | <checked> |
+    Then "john@example.com" should not receive an email
+    And I should not see "Thanks for signing up"
+    And "john@example.com" should not exist
+	  And "bob.jones@example.com" should not receive an email
+    And I should see "Home jurisdiction can't be blank"
