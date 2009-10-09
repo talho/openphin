@@ -48,6 +48,7 @@ module FeatureHelpers
             check id
           end
         when "Home Jurisdiction"
+          value = "" if value.nil?  
           select Regexp.new(value), :from => "user_role_requests_attributes_0_jurisdiction_id"
         when "State Jurisdiction"
           check Jurisdiction.find_by_name(value).name

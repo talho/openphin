@@ -87,7 +87,7 @@ end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
-  fill_in_user_signup_form("Email" => email)
+  fill_in_user_signup_form("Email" => email, "State Jurisdiction" => "Texas")
   click_button "Sign Up"
 end
 
@@ -138,5 +138,9 @@ Then '"$email" should not have the "$role" role request for "$jurisdiction"' do 
   r = Role.find_by_name!(role)
   m = RoleRequest.find_by_role_id_and_jurisdiction_id_and_user_id(r.id, j.id, p.id)
   m.should be_nil
+end
+
+Then '"$email" should not exist' do |email|
+  User.find_by_email(email).should be_nil
 end
 

@@ -57,17 +57,24 @@ class UsersController < ApplicationController
     remove_blank_role_requests
     assign_public_role_if_no_role_is_provided
 
-    @user = User.new(params[:user])
+    @user = User.new params[:user]
+    # Used to compound errors with @user.errors.add so user sees all things that aren't valid on post
+    @user.save if !@user.valid?
 
-    respond_to do |format|
-      if @user.save
-        SignupMailer.deliver_confirmation(@user)
-        format.html 
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{DOMAIN}."
-      else    
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+    if params[:user][:role_requests_attributes].blank?
+      @user.errors.add "Home jurisdiction", "can't be blank"
+      render :action => "new"
+    else
+      respond_to do |format|
+        if @user.save
+          SignupMailer.deliver_confirmation(@user)
+          format.html
+          format.xml  { render :xml => @user, :status => :created, :location => @user }
+          flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{DOMAIN}."
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

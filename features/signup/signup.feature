@@ -80,11 +80,13 @@ Feature: Signing up for an account
       | First name     | <blank>        |
       | Last name      | <blank>        |
       | Preferred name | <blank>        |
+      | Home Jurisdiction| <blank>      |
     Then I should see:
       | Email can't be blank |
       | Password can't be blank |
       | First name can't be blank |
       | Last name can't be blank |
+      | Home jurisdiction can't be blank |
        
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
@@ -151,5 +153,21 @@ Feature: Signing up for an account
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
 
-    
-      
+  Scenario: Sign up should not occur if no home jurisdictation is specified
+    When I signup for an account with the following info:
+      | Email          | john@example.com |
+      | Password       | Password1        |
+      | Password confirmation | Password1 |
+      | First name     | John             |
+      | Last name      | Smith            |
+      | Preferred name | Jonathan Smith   |
+      | Home Jurisdiction |               |
+      | Are you with any of these organizations | Red Cross        |
+      | What is your primary role | Health Alert and Communications Coordinator |
+      | Preferred language | English      |
+      | Are you a public health professional? | <checked> |
+    Then "john@example.com" should not receive an email
+    And I should not see "Thanks for signing up"
+    And "john@example.com" should not exist
+	  And "admin@dallas.gov" should not receive an email
+    And I should see "Home jurisdiction can't be blank"

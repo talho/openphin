@@ -36,3 +36,8 @@ Then /^I should explicitly not see the "(.*)" role as an option$/ do |name|
   role = Role.find_by_name!(name)
   response.should_not have_selector("input[name*=role_id]", :value => role.id.to_s)
 end
+
+Then '"$email" should not have the "$role" role' do |email, role|
+  user = User.find_by_email!(email)
+  user.has_public_role?.should be_false
+end
