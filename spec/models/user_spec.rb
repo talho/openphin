@@ -37,6 +37,8 @@ describe User do
   
   describe "validations" do
     before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       @user = Factory.build(:user)
     end
     
@@ -71,6 +73,8 @@ describe User do
   
   describe "creating a user" do
     before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       Role.find_or_create_by_name("Public")
     end
     
@@ -91,14 +95,20 @@ describe User do
     end
     
     context "when the user is created without any role requests" do
-      it "should not assign a public role membership" do
+      it "assign one public role membership" do
+        @jurisdiction=Factory(:jurisdiction)
+        Factory(:jurisdiction).move_to_child_of(@jurisdiction)
         user = Factory(:user, :role_requests => [])
-        user.role_memberships.should be_empty
+        user.role_memberships.size.should == 1
       end
     end
   end
 
-  describe "phin_oid" do 
+  describe "phin_oid" do
+    before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)      
+    end
     it "should be generated on create" do
       Factory(:user).phin_oid.should_not be_blank
     end
@@ -118,8 +128,9 @@ describe User do
   
   describe "#is_admin_for?" do
     before(:each) do
-      @user = Factory(:user)
       @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+      @user = Factory(:user)
       Factory(:role_membership, :jurisdiction => @jurisdiction, :role => Role.admin, :user => @user)
     end
     
@@ -134,6 +145,11 @@ describe User do
   end
   
   describe "display_name" do
+    before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+    end
+
     it "should default to full name if display name not specified" do
       user = User.create(:first_name => 'Brandon', :last_name => 'Keepers', :email => "brandon@example.com", :password => "Password1")
       user.display_name.should == 'Brandon Keepers'
@@ -146,6 +162,11 @@ describe User do
   end
   
   describe "alerter?" do
+    before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+    end
+
     it "should return false if user does not have any roles" do
       Factory(:user, :role_memberships => []).alerter?.should be_false
     end
@@ -164,6 +185,11 @@ describe User do
   end
   
   describe "alerts_within_jurisdictions" do
+    before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+    end
+
     it "should include alerts in user's jurisdictions" do
       user = Factory(:user)
       jurisdiction = Factory(:jurisdiction)
@@ -192,6 +218,8 @@ describe User do
   end
   
   it "should create the role membership to the given list of users" do
+    @jurisdiction = Factory(:jurisdiction)
+    Factory(:jurisdiction).move_to_child_of(@jurisdiction)
     user1 = Factory(:user)
     user2 = Factory(:user)
     role = Factory(:role)
@@ -202,11 +230,12 @@ describe User do
   
   describe "alerter_jurisdictions" do
     before do
+      jurisdiction1 = Factory(:jurisdiction)
+      jurisdiction2 = Factory(:jurisdiction)
+      jurisdiction2.move_to_child_of(jurisdiction1)
       @user = Factory(:user)
       role1 = Factory(:role, :alerter => true)
       role2 = Factory(:role, :alerter => true)
-      jurisdiction1 = Factory(:jurisdiction)
-      jurisdiction2 = Factory(:jurisdiction)
       User.assign_role(role1, jurisdiction1, [@user])
       User.assign_role(role1, jurisdiction2, [@user])
       User.assign_role(role2, jurisdiction2, [@user])
@@ -225,14 +254,17 @@ describe User do
 
   describe "adding roles" do
     it "should not allow the same role and jurisdiction to be added twice" do
+      jur=Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(jur)
       user=Factory(:user)
       role=Factory(:role)
-      jur=Factory(:jurisdiction)
       user.role_memberships.create(:role => role, :jurisdiction => jur)
       user.role_memberships.build(:role => role, :jurisdiction => jur)
       user.should_not be_valid
     end
     it "should not allow a role request to duplicate a role" do
+      jur=Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(jur)
       user=Factory(:user)
       role=Factory(:role)
       jur=Factory(:jurisdiction)

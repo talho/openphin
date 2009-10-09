@@ -6,6 +6,8 @@ describe Device::SMSDevice do
 
   describe 'validations' do
     before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       @sms = Factory(:sms_device)
     end
     it "should be valid" do

@@ -2,8 +2,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SearchesController do
   before(:each) do
+    @jurisdiction1 =Factory(:jurisdiction)
+    @jurisdiction2 = Factory(:jurisdiction)
+    @jurisdiction2.move_to_child_of(@jurisdiction1)
     user = Factory(:user)
-    Factory(:role_membership, :user => user, :role => Factory(:role, :approval_required => true), :jurisdiction => Factory(:jurisdiction))
+    Factory(:role_membership, :user => user, :role => Factory(:role, :approval_required => true), :jurisdiction => @jurisdiction2)
     login_as(user)
   end
   

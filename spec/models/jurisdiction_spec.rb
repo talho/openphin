@@ -51,26 +51,28 @@ describe Jurisdiction do
   
   describe "associations" do
     it "should have many users through its role memberships" do
+      jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(jurisdiction)
+      other_jurisdiction = Factory(:jurisdiction)
       user1 = Factory(:user)
       user2 = Factory(:user)
       unexpected_user = Factory(:user)
       
-      jurisdiction = Factory(:jurisdiction)
-      other_jurisdiction = Factory(:jurisdiction)
       Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
       Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
       Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
       
       jurisdiction.users.should == [user1, user2]
     end
+    
     it "should not include users in child jurisdictions" do
+      jurisdiction = Factory(:jurisdiction)
+      other_jurisdiction = Factory(:jurisdiction)
+      other_jurisdiction.move_to_child_of(jurisdiction)
       user1 = Factory(:user)
       user2 = Factory(:user)
       unexpected_user = Factory(:user)
       
-      jurisdiction = Factory(:jurisdiction)
-      other_jurisdiction = Factory(:jurisdiction)
-      other_jurisdiction.move_to_child_of(jurisdiction)
       Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
       Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
       Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)

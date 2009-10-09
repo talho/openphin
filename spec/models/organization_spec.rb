@@ -37,6 +37,8 @@ describe Organization do
   describe "validations" do
 
     before(:each) do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       @organization = Factory.build(:organization)
     end
 
@@ -94,6 +96,8 @@ describe Organization do
 
   describe "default scope" do
     before do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       Organization.create! :name => 'Banana', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
       Organization.create! :name => 'Apple', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
       Organization.create! :name => 'Cucumber', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
@@ -106,6 +110,8 @@ describe Organization do
   
   describe "parent/child relationships" do
     it "should return an array of people from .users" do
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
       o=Factory(:organization, :name => "APHC")
       p=Factory(:user)
       o.users << p

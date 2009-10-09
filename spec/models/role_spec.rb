@@ -29,7 +29,7 @@ describe Role do
   
   describe "validations" do
     before(:each) do
-      @role = Factory.build(:role, :name => "Public")
+      @role = Factory.build(:role, :name => "Public") unless @role = Role.find_by_name('Public')
     end
     
     it "should be valid" do
@@ -37,7 +37,7 @@ describe Role do
     end
     
     it "should be invalid if a Role already exists with same name" do
-      Factory(:role, :name => "Public")
+      @role = Role.new(:name => "Public")
       @role.valid?.should be_false
     end
   end

@@ -16,14 +16,6 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  def choose_layout
-    if signed_in?
-      return "application"
-    else
-      return "non_application"
-    end 
-  end
-
   def phin_oid_prefix
     "#{PHIN_PARTNER_OID}.#{PHIN_APP_OID}.#{PHIN_ENV_OID}"
   end
@@ -90,6 +82,14 @@ class ApplicationController < ActionController::Base
 		    @toolbar = toolbar
 	    end
 	    @toolbar	    
+    end
+
+    def choose_layout
+      if signed_in?
+        return "application"
+      else
+        return "non_application"
+      end
     end
 
 

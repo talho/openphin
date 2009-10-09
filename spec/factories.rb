@@ -96,9 +96,8 @@ Factory.define :role_membership do |m|
 end
 
 Factory.define :role_request do |m|
-  user=Factory(:user)
-  m.user user
-  m.requester user
+  m.association :user
+  m.association :requester
   m.association :jurisdiction
   m.association :role
 end
