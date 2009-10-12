@@ -94,13 +94,13 @@
 	  <% end %>
     </div>
   </div>
-  <div id="audience">    
+  <div id="audience">
     <% if @update.blank? && @cancel.blank? %>
+    <% cache(:key => "alert_audience_spec") do  %>
     <fieldset class="filterable list">
       <legend>Jurisdictions</legend>
       <%= jurisdiction_list(form) %>
     </fieldset>
-    
     <fieldset class="filterable list">
       <legend>Limit Roles</legend>
       <ul class="check_selector">
@@ -122,6 +122,7 @@
         <%- end -%>
       </ul>
     </fieldset>
+    <%- end -%>
     
     <fieldset class="people">
       <legend>People</legend>
@@ -134,7 +135,6 @@
     
     <%= form.submit "Preview Message" %>
     <%- end -%>
-    
   </div>
 </div>
 
