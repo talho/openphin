@@ -127,7 +127,27 @@ module FeatureHelpers
       end
     end
 
+    def fill_in_group_form(table = nil)
+      table.rows_hash.each do |label, value|
+        fill_in_group_field label, value
+      end
+    end
 
+    def fill_in_group_field(label, value)
+      case label
+        when "Users"
+        value.split(',').each do |name|
+          user = Given "a user named #{name.strip}"
+          fill_in 'group_user_ids', :with => user.id.to_s
+        end
+      when 'Name'
+        fill_in "group_name", :with => value
+      when /Jurisdiction[s]?/, /Role[s]?/
+        value.split(',').map(&:strip).each{ |r| check r }
+      else
+        raise "Unexpected: #{label} with value #{value}. You may need to update this step."
+      end
+    end
   end
 
 end

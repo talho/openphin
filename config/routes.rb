@@ -29,6 +29,7 @@ ActionController::Routing::Routes.draw do |map|
     organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   end
   map.resources :roll_calls
+  map.resources :admin_groups, :controller => "admin/groups"
   
   map.resource :search
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"

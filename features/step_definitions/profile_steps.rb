@@ -33,6 +33,11 @@ Then /^I should see the profile page$/ do
 	response.should have_selector(".user_profile")
 end
 
+Then /^I should see the profile page for "([^\"]*)"$/ do |email|
+  user = User.find_by_email!(email)
+  URI.parse(current_url).path.should == user_profile_path(user)
+end
+
 Then /^I should not see any errors$/ do
   response.template.assigns['user'].errors.should be_empty
 end

@@ -1,0 +1,28 @@
+<div id="audience">
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+  <fieldset class="filterable list">
+    <legend>Jurisdictions</legend>
+    <%= group_jurisdiction_list(form) %>
+  </fieldset>
+
+  <fieldset class="filterable list">
+    <legend>Limit Roles</legend>
+    <ul class="check_selector roles">
+    <%- Role.user_roles.each do |r| -%>
+      <li><%= check_box_tag 'group[role_ids][]', r.id, form.object.role_ids.include?(r.id), :id => "group_role_#{r.id}" %>
+        <%= label_tag "group_role_#{r.id}", r.name, :class => "role" %>
+      </li>
+    <%- end -%>
+    </ul>
+  </fieldset>
+
+  <fieldset class="people">
+    <legend>People</legend>
+    <%- form.object.users.each do |user| -%>
+      <%= hidden_field_tag "group[user_ids][]", user.id, :class => "user" %>
+    <%- end -%>
+
+    <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
+  </fieldset>
+</div>

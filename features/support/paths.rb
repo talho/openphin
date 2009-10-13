@@ -3,7 +3,7 @@ module NavigationHelpers
     case page_name
 
       when /the homepage/i
-        root_path
+        root_path                    g
       when /the dashboard page/i
         dashboard_path
       when /the sign up page/i
@@ -42,7 +42,8 @@ module NavigationHelpers
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update")
       when /the cancel alert page/i
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel")
-
+      when /the add groups? page/i
+        new_admin_group_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

@@ -1,0 +1,21 @@
+<h2 class="name"><%=h @group.name %></h2>
+<h3>Jurisdictions</h3>
+<ul class="jurisdictions">
+  <% @group.jurisdictions.each do |jurisdiction| %>
+    <li class="jurisdiction"><%= jurisdiction.name %></li>
+  <% end %>
+</ul>
+
+<h3>Role</h3>
+<ul class="roles">
+  <% @group.roles.each do |role| %>
+    <li class="role"><%= role.name %></li>
+  <% end %>
+</ul>
+
+<h3>Users</h3>
+<ul class="users">
+  <% @group.users.each do |user| %>
+    <li class="user"><%= link_to user.display_name, user_profile_path(user) %></li>
+  <% end %>
+</ul>
