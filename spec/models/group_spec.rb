@@ -17,6 +17,7 @@ describe Group do
     before(:each) do
       @group=Factory(:group)
     end
+      
 
     it "should create a new instance given valid attributes" do
       @group.should be_valid  
