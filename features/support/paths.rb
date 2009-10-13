@@ -3,7 +3,7 @@ module NavigationHelpers
     case page_name
 
       when /the homepage/i
-        root_path
+        root_path                    g
       when /the dashboard page/i
         dashboard_path
       when /the sign up page/i

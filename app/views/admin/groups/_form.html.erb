@@ -32,4 +32,5 @@
     <%= form.label :owner_jurisdiction_id, "Owner Jurisdiction" %>
     <%= form.select :owner_jurisdiction_id, current_user.alerting_jurisdictions.map{|j| [j.name,j.id]} %>
   </div>
+
 </div>

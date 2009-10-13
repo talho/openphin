@@ -13,16 +13,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Group do
-  before(:each) do
-    jurisdiction = Factory(:jurisdiction)
-    Factory(:jurisdiction).move_to_child_of(jurisdiction)
-    @valid_attributes = {
-      :owner_id => Factory(:user).id,
-      :scope => "Personal"
-    }
-  end
+  describe "validations" do
+    before(:each) do
+      @group=Factory(:group)
+    end
 
-  it "should create a new instance given valid attributes" do
-    Group.create!(@valid_attributes)
+    it "should create a new instance given valid attributes" do
+      @group.should be_valid  
+    end
   end
 end

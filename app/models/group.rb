@@ -12,6 +12,8 @@
 
 class Group < ActiveRecord::Base
   #attr_protected :owner_id
+  validates_presence_of :owner
+
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
   has_and_belongs_to_many :jurisdictions
