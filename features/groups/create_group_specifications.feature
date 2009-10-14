@@ -191,6 +191,7 @@ Feature: Creating groups
       When I go to the groups page
       Then I should see "Dallas County Health Officer Group"
 
+
     Scenario: adding a jurisdiction scoped group should not be viewable by other alerts in other jurisdictions
       When I go to the add groups page
       Then I should see the add group form
@@ -214,6 +215,7 @@ Feature: Creating groups
       Given I am logged in as "jim.smith@example.com"
       When I go to the groups page
       Then I should not see "Dallas County Health Officer Group"
+
 
     Scenario: adding a global scoped group should be viewable by alerters in the same or other jursidictions
       When I go to the add groups page

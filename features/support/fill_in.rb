@@ -144,8 +144,8 @@ module FeatureHelpers
         fill_in "group_#{label.downcase}", :with => value
       when /^Jurisdiction[s]$/, /Role[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
-        when 'Owner Jurisdiction'
-          select value, :from => label
+      when 'Owner Jurisdiction'
+        select value, :from => label
        else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end

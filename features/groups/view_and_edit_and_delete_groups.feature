@@ -22,7 +22,7 @@ I should be able to view, edit and delete user groups
     Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
     And the following groups for "jill.smith@example.com" exist:
-      | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com |
+      | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com | Personal |
     Given I am logged in as "jill.smith@example.com"
 
     Scenario: going to view a user group as an admin
