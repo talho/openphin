@@ -5,10 +5,12 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
     jurisdictions = row[1]
     roles = row[2]
     users = row[3]
+    scope = row[4]
     group = Factory(:group, :owner => owner, :name => name,
             :jurisdictions => Jurisdiction.find_all_by_name(jurisdictions.split(',')),
             :roles => Role.find_all_by_name(roles.split(',')),
-            :users => User.find_all_by_display_name(users.split(',')))
+            :users => User.find_all_by_display_name(users.split(',')),
+            :scope => scope)
   end
 end
 

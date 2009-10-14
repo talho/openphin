@@ -55,10 +55,12 @@ I should be able to add user groups to my profile
       When I fill out the group form with:
         | Name          | Dallas County Group |
         | Jurisdictions | Dallas County       |
+        | Scope         | Personal            |
       And I press "Save"
       Then I should see the following group summary:
         | name          | Dallas County Group |
         | jurisdictions | Dallas County       |
+        | scope         | Personal            |
 
     Scenario: adding a user group with roles
       When I go to the add groups page
@@ -70,10 +72,12 @@ I should be able to add user groups to my profile
       When I fill out the group form with:
         | Name  | Health Officer Group |
         | Roles | Health Officer       |
+        | Scope | Personal             |
       And I press "Save"
       Then I should see the following group summary:
         | name  | Health Officer Group |
         | roles | Health Officer       |
+        | scope | Personal             |
 
     Scenario: adding a user group with jurisdictions and roles
       When I go to the add groups page
@@ -89,11 +93,13 @@ I should be able to add user groups to my profile
         | Name          | Dallas County Health Officer Group |
         | Jurisdictions | Dallas County                      |
         | Roles         | Health Officer                     |
+        | Scope         | Personal                           |
       And I press "Save"
       Then I should see the following group summary:
         | name          | Dallas County Health Officer Group |
         | jurisdictions | Dallas County                      |
         | roles         | Health Officer                     |
+        | scope         | Personal                           |
 
     Scenario: adding a user group with individual users
       When I go to the add groups page
@@ -102,10 +108,12 @@ I should be able to add user groups to my profile
       When I fill out the group form with:
         | Name  | User list Group |
         | Users | Jane Smith      |
+        | Scope | Personal        |
       Then I press "Save"
       Then I should see the following group summary:
         | name  | User list Group |
         | users | Jane Smith      |
+        | scope | Personal        |
       And I follow "Jane Smith"
       Then I should see the profile page for "jane.smith@example.com"
             

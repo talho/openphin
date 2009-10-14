@@ -140,11 +140,11 @@ module FeatureHelpers
           user = Given "a user named #{name.strip}"
           fill_in 'group_user_ids', :with => user.id.to_s
         end
-      when 'Name'
-        fill_in "group_name", :with => value
+      when 'Name', 'Scope'
+        fill_in "group_#{label.downcase}", :with => value
       when /Jurisdiction[s]?/, /Role[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
-      else
+       else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end
     end

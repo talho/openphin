@@ -27,5 +27,7 @@
 
       <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %>
     </fieldset>
+    <%= form.label :scope, 'Scope'%>
+    <%= form.select :scope, ['Personal', 'Jurisdiction', 'Global'] %>
   </div>
 </div>

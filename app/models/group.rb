@@ -18,5 +18,8 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :users
 
+  SCOPES = ['Personal', 'Jurisdiction', 'Global']
+
   validates_presence_of :owner
+  validates_inclusion_of :scope, :in => SCOPES
 end
