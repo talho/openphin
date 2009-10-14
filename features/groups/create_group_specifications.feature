@@ -5,6 +5,7 @@ Feature: Creating groups
 
   Background:
     Given the following entities exists:
+      | Jurisdiction | Texas          |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
@@ -13,6 +14,8 @@ Feature: Creating groups
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
+      | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
+      | Will Smith      | will.smith@example.com   | Admin  | Potter County |
     Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
 
@@ -140,3 +143,97 @@ Feature: Creating groups
       | name               | Dallas County Health Officer Group  |
       | scope              | Jurisdiction                        |
       | owner_jurisdiction | Wise County                         |
+
+    Scenario: adding a personal scoped group should not be viewable by others
+      When I go to the add groups page
+      Then I should see the add group form
+      Then I should see the following jurisdictions:
+        | Dallas County |
+        | Potter County |
+      Then I should see the following roles:
+        | Health Officer |
+        | Epidemiologist |
+        | Public         |
+      When I fill out the group form with:
+        | Name          | Dallas County Health Officer Group |
+        | Jurisdictions | Dallas County                      |
+        | Roles         | Health Officer                     |
+        | Scope         | Personal                           |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Group |
+        | scope              | Personal                           |
+      Given I am logged in as "will.smith@example.com"
+      When I go to the groups page
+      Then I should not see "Dallas County Health Officer Group"
+
+    Scenario: adding a jurisdiction scoped group should be viewable by other alerters in the same jurisdiction
+      When I go to the add groups page
+      Then I should see the add group form
+      Then I should see the following jurisdictions:
+        | Dallas County |
+        | Potter County |
+      Then I should see the following roles:
+        | Health Officer |
+        | Epidemiologist |
+        | Public         |
+      When I fill out the group form with:
+        | Name               | Dallas County Health Officer Group |
+        | Jurisdictions      | Dallas County                      |
+        | Roles              | Health Officer                     |
+        | Scope              | Jurisdiction                       |
+        | Owner Jurisdiction | Potter County                      |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Group |
+        | scope              | Jurisdiction                       |
+      Given I am logged in as "will.smith@example.com"
+      When I go to the groups page
+      Then I should see "Dallas County Health Officer Group"
+
+    Scenario: adding a jurisdiction scoped group should not be viewable by other alerts in other jurisdictions
+      When I go to the add groups page
+      Then I should see the add group form
+      Then I should see the following jurisdictions:
+        | Dallas County |
+        | Potter County |
+      Then I should see the following roles:
+        | Health Officer |
+        | Epidemiologist |
+        | Public         |
+      When I fill out the group form with:
+        | Name               | Dallas County Health Officer Group |
+        | Jurisdictions      | Dallas County                      |
+        | Roles              | Health Officer                     |
+        | Scope              | Jurisdiction                       |
+        | Owner Jurisdiction | Potter County                      |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Group |
+        | scope              | Jurisdiction                       |
+      Given I am logged in as "jim.smith@example.com"
+      When I go to the groups page
+      Then I should not see "Dallas County Health Officer Group"
+
+    Scenario: adding a global scoped group should be viewable by alerters in the same or other jursidictions
+      When I go to the add groups page
+      Then I should see the add group form
+      Then I should see the following jurisdictions:
+        | Dallas County |
+        | Potter County |
+      Then I should see the following roles:
+        | Health Officer |
+        | Epidemiologist |
+        | Public         |
+      When I fill out the group form with:
+        | Name               | Dallas County Health Officer Group |
+        | Jurisdictions      | Dallas County                      |
+        | Roles              | Health Officer                     |
+        | Scope              | Global                             |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Group |
+        | scope              | Global                             |
+      Given I am logged in as "jim.smith@example.com"
+      When I go to the groups page
+      Then I should see "Dallas County Health Officer Group"

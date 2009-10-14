@@ -3,7 +3,7 @@ class Admin::GroupsController < ApplicationController
   app_toolbar "groups"
 
   def index
-    @groups = current_user.groups
+    @groups = current_user.viewable_groups
     if @groups.empty?
       render :text => "You currently have no groups.", :layout => "application"
     else

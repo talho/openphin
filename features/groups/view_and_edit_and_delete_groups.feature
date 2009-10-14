@@ -5,6 +5,7 @@ I should be able to view, edit and delete user groups
 
   Background:
     Given the following entities exists:
+      | Jurisdiction | Texas          |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
@@ -13,8 +14,11 @@ I should be able to view, edit and delete user groups
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
+      | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
+      | Will Smith      | will.smith@example.com   | Admin  | Potter County |
     And the following groups for "jill.smith@example.com" exist:
-      | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com | Personal |
+      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     |
+      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction |
     Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
 
@@ -132,3 +136,36 @@ I should be able to view, edit and delete user groups
             | name               | Dallas County Health Officer Group  |
             | scope              | Jurisdiction                        |
             | owner_jurisdiction | Wise County                         |
+
+
+    Scenario: updating a jurisdiction scoped group to another jurisdiction should be viewable by alerters in the new jurisdiction
+      Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Dallas County"
+      When I load the edit group page for "Dallas County Health Officer Jurisdiction Group"
+      Then I should see "Scope"
+      When I fill out the group form with:
+        | Scope              | Jurisdiction   |
+        | Owner Jurisdiction | Dallas County  |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Jurisdiction Group  |
+        | scope              | Jurisdiction                                     |
+        | owner_jurisdiction | Dallas County                                    |
+      Given I am logged in as "jim.smith@example.com"
+      When I go to the groups page
+      Then I should see "Dallas County Health Officer Jurisdiction Group"
+
+    Scenario: updating a jurisdiction scoped group to another jurisdiction should not be viewable by alerters in the old jurisdiction
+      Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Dallas County"
+      When I load the edit group page for "Dallas County Health Officer Jurisdiction Group"
+      Then I should see "Scope"
+      When I fill out the group form with:
+        | Scope              | Jurisdiction   |
+        | Owner Jurisdiction | Dallas County  |
+      Then I press "Save"
+      Then I should see the following group summary:
+        | name               | Dallas County Health Officer Jurisdiction Group  |
+        | scope              | Jurisdiction                                     |
+        | owner_jurisdiction | Dallas County                                    |
+      Given I am logged in as "will.smith@example.com"
+      When I go to the groups page
+      Then I should not see "Dallas County Health Officer Jurisdiction Group"

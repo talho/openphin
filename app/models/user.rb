@@ -245,6 +245,10 @@ class User < ActiveRecord::Base
     return self.token
   end
 
+  def viewable_groups
+    groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
+  end
+
 private
 
   def assign_public_role
