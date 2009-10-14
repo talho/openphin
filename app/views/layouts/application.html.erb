@@ -23,7 +23,7 @@
         <p><%= link_to 'My Dashboard', dashboard_path %> |
           <%= link_to(s('Find People'), search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %> |
           <%= link_to 'Add a User', new_admin_user_path if signed_in? && current_user.is_admin? %> |
-          <%= link_to 'Add Groups', new_admin_group_path if signed_in? && current_user.is_admin? %> |
+          <%= link_to 'Manage Groups', admin_groups_path if signed_in? && current_user.is_admin? %> |
           <%= link_to 'My Account', edit_user_profile_path(current_user), :class => '.edit_profile' %> |
           <%= link_to 'About TXPHIN', about_path, :class => '.about' %> |
           <%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></p>

@@ -20,6 +20,7 @@
   <fieldset class="people">
     <legend>People</legend>
     <%- form.object.users.each do |user| -%>
+      <%= label_tag "group_user_#{}", "People" %>
       <%= hidden_field_tag "group[user_ids][]", user.id, :class => "user" %>
     <%- end -%>
 

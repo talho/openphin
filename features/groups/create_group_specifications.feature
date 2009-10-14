@@ -17,14 +17,20 @@ I should be able to add user groups to my profile
 
     Scenario: going to add a user group as an admin
       When I go to the dashboard page
-      Then I should see "Add Groups"
-      And I follow "Add Groups"
+      Then I should see "Manage Groups"
+      And I follow "Manage Groups"
+      Then I should be on the groups page
+      Then I should see "Add Group"
+      And I follow "Add Group"
       Then I should be on the add groups page
 
     Scenario: going to add a user group as a non-admin user
       Given I am logged in as "john.smith@example.com"
       When I go to the dashboard page
-      Then I should not see "Add Groups"
+      Then I should not see "Manage Groups"
+      When I go to the groups page
+      Then I should see "That resource does not exist or you do not have access to it."
+      And I should be redirected to the dashboard page
       When I go to the add groups page
       Then I should see "That resource does not exist or you do not have access to it."
       And I should be redirected to the dashboard page
@@ -32,11 +38,14 @@ I should be able to add user groups to my profile
     Scenario: going to add a user group as a public user
       Given I am logged in as "jane.smith@example.com"
       When I go to the dashboard page
-      Then I should not see "Add Groups"
+      Then I should not see "Manage Groups"
+      When I go to the groups page
+      Then I should see "That resource does not exist or you do not have access to it."
+      And I should be redirected to the dashboard page
       When I go to the add groups page
       Then I should see "That resource does not exist or you do not have access to it."
       And I should be redirected to the dashboard page
-
+    
     Scenario: adding a user group with jurisdictions
       When I go to the add groups page
       Then I should see the add group form

@@ -70,11 +70,6 @@ When 'I send a message recording "$filename"' do |filename|
   File.new("#{RAILS_ROOT}/message_recordings/tmp/#{current_user.token}.wav","w").close
 end
 
-When /^I load (.*) for "([^\"]*)"$/ do |page, alert_title|
-  visit path_to(page, alert_title)
-end
-
-
 Then 'I should see a preview of the message' do
   response.should have_tag('#preview')
 end

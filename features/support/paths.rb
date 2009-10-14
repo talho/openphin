@@ -42,8 +42,14 @@ module NavigationHelpers
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update")
       when /the cancel alert page/i
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel")
+      when /the groups page/i
+        admin_groups_path
       when /the add groups? page/i
         new_admin_group_path
+      when /the group page/i
+        admin_group_path(Group.find_by_name!(arg))
+      when /the edit group page/i
+        edit_admin_group_path(Group.find_by_name!(arg))
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

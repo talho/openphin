@@ -90,6 +90,10 @@ When /^I attach the file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
   attach_file(field, path)
 end
 
+When /^I load (.*) for "([^\"]*)"$/ do |page, title|
+  visit path_to(page, title)
+end
+
 Then /^I should see "([^\"]*)"$/ do |text|
   response.should contain(text)
 end
@@ -122,4 +126,8 @@ end
 
 Then /^I should be redirected to (.+)$/ do |page_name|
   URI.parse(current_url).path.should == path_to(page_name)
+end
+
+Then /^I have loaded (.*) for "([^\"]*)"$/ do |page, title|
+  URI.parse(current_url).path.should == path_to(page,title)
 end

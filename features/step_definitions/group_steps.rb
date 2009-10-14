@@ -1,3 +1,17 @@
+Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
+  owner = User.find_by_email!(email)
+  table.raw.each do |row|
+    name = row[0]
+    jurisdictions = row[1]
+    roles = row[2]
+    users = row[3]
+    group = Factory(:group, :owner => owner, :name => name,
+            :jurisdictions => Jurisdiction.find_all_by_name(jurisdictions.split(',')),
+            :roles => Role.find_all_by_name(roles.split(',')),
+            :users => User.find_all_by_display_name(users.split(',')))
+  end
+end
+
 Then /^I should see the add group form$/ do
   response.should have_selector("#audience") do |form|
 	  form.should have_selector("#group_name")
