@@ -16,6 +16,7 @@ I should be able to view, edit and delete user groups
     And the following groups for "jill.smith@example.com" exist:
       | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com | Personal |
     Given I am logged in as "jill.smith@example.com"
+    And the role "Admin" is an alerter
 
     Scenario: going to view a user group as an admin
       When I go to the dashboard page
@@ -108,3 +109,26 @@ I should be able to view, edit and delete user groups
       Then I should see "Successfully deleted the group Dallas County Health Officer Group."
       When I go to the groups page
       Then I should not see "Dallas County Health Officer Group"
+
+      Scenario: updating changed scope
+        When I load the edit group page for "Dallas County Health Officer Group"
+        Then I should see "Scope"
+        When I fill out the group form with:
+          | Scope  | Global |
+        Then I press "Save"
+        Then I should see the following group summary:
+          | name  | Dallas County Health Officer Group       |
+          | scope | Global                |
+
+        Scenario: selecting the jurisdiction when scope is jurisdictaion
+          Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
+          When I load the edit group page for "Dallas County Health Officer Group"
+          Then I should see "Scope"
+          When I fill out the group form with:
+            | Scope              | Jurisdiction |
+            | Owner Jurisdiction | Wise County  |
+          Then I press "Save"
+          Then I should see the following group summary:
+            | name               | Dallas County Health Officer Group  |
+            | scope              | Jurisdiction                        |
+            | owner_jurisdiction | Wise County                         |

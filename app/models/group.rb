@@ -13,13 +13,15 @@
 class Group < ActiveRecord::Base
   #attr_protected :owner_id
   belongs_to :owner, :class_name => "User"
-
+  belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :users
+
 
   SCOPES = ['Personal', 'Jurisdiction', 'Global']
 
   validates_presence_of :owner
   validates_inclusion_of :scope, :in => SCOPES
+  validates_presence_of :owner_jurisdiction, :if => Proc.new{|group| group.scope == "Jurisdiction"}
 end

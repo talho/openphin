@@ -4,7 +4,11 @@ module ApplicationHelper
     present user if user 
   end
   
-  def s(str)
-    "<span>#{str}</span>"
+  def s(str,options=nil)
+    content_tag :span, str, options
+  end
+
+  def d(str,options=nil)
+    content_tag :div, str, options
   end
 end

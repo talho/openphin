@@ -17,7 +17,8 @@ describe Group do
     jurisdiction = Factory(:jurisdiction)
     Factory(:jurisdiction).move_to_child_of(jurisdiction)
     @valid_attributes = {
-      :owner_id => Factory(:user).id
+      :owner_id => Factory(:user).id,
+      :scope => "Personal"
     }
   end
 

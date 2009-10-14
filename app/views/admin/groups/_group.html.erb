@@ -21,4 +21,6 @@
 </ul>
 
 <h3>Scope</h3>
-<p class="scope"><%=h @group.scope %></p>
+<p class="scope"><%=h @group.scope %> <br/>
+<%= s(@group.owner_jurisdiction.name,:class => "owner_jurisdiction") if @group.owner_jurisdiction %> 
+</p>
