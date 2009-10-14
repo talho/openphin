@@ -24,6 +24,7 @@ I should be able to view, edit and delete user groups
     And the following groups for "jill.smith@example.com" exist:
       | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com | Personal |
     Given I am logged in as "jill.smith@example.com"
+    And the role "Admin" is an alerter
 
     Scenario: going to view a user group as an admin
       When I go to the dashboard page
@@ -139,7 +140,6 @@ I should be able to view, edit and delete user groups
             | name               | Dallas County Health Officer Group  |
             | scope              | Jurisdiction                        |
             | owner_jurisdiction | Wise County                         |
-
 
     Scenario: updating a jurisdiction scoped group to another jurisdiction should be viewable by alerters in the new jurisdiction
       Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Dallas County"

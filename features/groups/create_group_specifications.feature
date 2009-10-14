@@ -239,3 +239,4 @@ Feature: Creating groups
       Given I am logged in as "jim.smith@example.com"
       When I go to the groups page
       Then I should see "Dallas County Health Officer Group"
+
