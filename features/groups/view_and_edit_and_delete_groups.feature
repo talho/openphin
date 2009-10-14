@@ -21,6 +21,9 @@ I should be able to view, edit and delete user groups
       | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction |
     Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
+    And the following groups for "jill.smith@example.com" exist:
+      | Dallas County Health Officer Group | Dallas County | Health Officer | john.smith@example.com |
+    Given I am logged in as "jill.smith@example.com"
 
     Scenario: going to view a user group as an admin
       When I go to the dashboard page
