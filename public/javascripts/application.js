@@ -47,17 +47,7 @@ jQuery(function($) {
   
   $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
   
-  $("#alert_user_ids").fcbkcomplete({
-    json_url: '/search',
-    json_cache: true,
-    filter_case: false,
-    filter_hide: true,
-    filter_selected: true,
-    firstselected: true,
-    newel: true
-  });
-
-  $("#role_assigns_user_ids").fcbkcomplete({
+  $(".search_user_ids").fcbkcomplete({
     json_url: '/search',
     json_cache: true,
     filter_case: false,

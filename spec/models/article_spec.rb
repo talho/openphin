@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: articles
+#
+#  id         :integer(4)      not null, primary key
+#  author_id  :integer(4)
+#  pub_date   :integer(4)
+#  title      :string(255)
+#  lede       :text
+#  body       :text
+#  visible    :boolean(1)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Article do

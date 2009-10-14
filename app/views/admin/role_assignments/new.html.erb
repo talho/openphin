@@ -6,7 +6,7 @@
   <fieldset>
     <legend>People</legend>
     <%= hidden_field_tag 'role_assigns[user_ids][]', nil, :id => :role_assigns_user_id %>
-    <%= f.select :user_ids, [], {}, :multiple => :multiple %>
+    <%= f.select :user_ids, [], {}, :multiple => :multiple, :class => "search_user_ids" %>
   </fieldset>
 
   <p>

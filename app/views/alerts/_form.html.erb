@@ -130,7 +130,7 @@
         <%= hidden_field_tag "alert[user_ids][]", user.id %>
       <%- end -%>
 
-      <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple %>
+      <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %>
     </fieldset>
     
     <%= form.submit "Preview Message" %>
