@@ -8,7 +8,7 @@ Given '$role is a non public role' do |role_name|
   role.update_attributes(:approval_required => true)
 end
 
-Given 'the role "$role" is an alerter' do |role|
+Given /^the role "([^\"]*)" is an alerter$/ do |role|
   Role.find_by_name(role).update_attributes! :alerter => true
 end
 

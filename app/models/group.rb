@@ -12,16 +12,15 @@
 
 class Group < ActiveRecord::Base
   #attr_protected :owner_id
-<<<<<<< HEAD
   validates_presence_of :owner
 
-=======
->>>>>>> added scope jurisdictions to groups
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :users
+  has_many :group_snapshots
+  has_many :alerts, :through => :group_snapshots
 
 
   SCOPES = ['Personal', 'Jurisdiction', 'Global']
@@ -33,12 +32,23 @@ class Group < ActiveRecord::Base
   validates_presence_of :owner
   validates_inclusion_of :scope, :in => SCOPES
   validates_presence_of :owner_jurisdiction, :if => Proc.new{|group| group.scope == "Jurisdiction"}
-<<<<<<< HEAD
 
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq
     Group.find_all_by_owner_jurisdiction_id(jur_ids)
   end
-=======
->>>>>>> added scope jurisdictions to groups
+
+	def create_snapshot
+		snap=group_snapshots.create
+		snap.users = users
+		if jurisdictions.any? && roles.any?
+			snap.users << jurisdictions.map{|j| j.users.with_roles(roles)}.flatten
+    elsif jurisdictions.any? && roles.empty?
+			snap.users << jurisdictions.map(&:users).flatten
+    elsif jurisdictions.empty? && roles.any?
+			snap.users << roles.map(&:users).flatten
+    end
+    snap.save
+		snap
+	end
 end

@@ -6,7 +6,6 @@ Feature: Creating and sending alerts
 
   Background:
     Given the following entities exists:
-      | Organization | Red Cross             |
       | Jurisdiction | Dallas County         |
       | Jurisdiction | Tarrant County        |
       | Jurisdiction | Wise County           |
@@ -36,8 +35,6 @@ Feature: Creating and sending alerts
 
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |  
-    And the following users belong to the Red Cross:
-      | John Smith | Ed McGuyver | Dan Morrison | Brian Ryckbost |
 
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
@@ -75,7 +72,6 @@ Feature: Creating and sending alerts
     When I fill out the alert form with:
       | Jurisdictions | Dallas County, Potter County            |
       | Roles | Health Officer, Epidemiologist                  |
-      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
       | Message  | For more details, keep on reading...         |
@@ -89,7 +85,6 @@ Feature: Creating and sending alerts
     And I should see a preview of the message with:
       | Jurisdictions | Dallas County, Potter County            |
       | Roles | Health Officer, Epidemiologist                  |
-      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
       | Message  | For more details, keep on reading...         |
@@ -106,7 +101,6 @@ Feature: Creating and sending alerts
     Then I should see a preview of the message with:
       | Jurisdictions | Dallas County, Potter County            |
       | Roles | Health Officer, Epidemiologist                  |
-      | Organizations | Red Cross                               |
       | People   | Keith Gaddis                                 |
       | Title    | Something Different                          |
       | Message  | For more details, keep on reading...         |
@@ -201,7 +195,6 @@ Feature: Creating and sending alerts
   Scenario: Sending an alert to an Jurisdictions/Organizations scopes who the alerts are sent to
     When I fill out the alert form with:
       | Jurisdictions | Dallas County |
-      | Organizations | Red Cross |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
@@ -226,61 +219,5 @@ Feature: Creating and sending alerts
     And "fix the above step to include an alert id" should be implemented
 
       
-  Scenario: Sending an alert to an Jurisdictions/Organizations when the organization contains sub-organizations scopes who the alerts are sent to
-    When I fill out the alert form with:
-      | Jurisdictions | Dallas County |
-      | Organizations | Red Cross |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | <unchecked> |
-      | Communication methods | E-mail |
   
-    And I press "Preview Message"
-    Then I should see a preview of the message
-
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
-    And the following users should receive the email:
-      | People        | john.smith@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
-    And "jason.phipps@example.com" should not receive an email with the subject "Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow"
-    And "fix the above step to include an alert id" should be implemented
-
-            
-  Scenario: Sending an alert to specific Jurisdictions/Roles/Organizations scopes who the alerts are sent to
-    When I fill out the alert form with:
-      | Jurisdictions | Tarrant County  |
-      | Roles         | Health Officer |
-      | Organization  | Red Cross |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | <unchecked> |
-      | Communication methods | E-mail |
-  
-    And I press "Preview Message"
-    Then I should see a preview of the message
-
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
-    And "ethan.waldo@example.com" should not receive an email
-    And the following users should receive the email:
-      | People        | brian.ryckbost@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
 

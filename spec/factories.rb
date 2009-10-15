@@ -145,8 +145,6 @@ end
 
 Factory.define :group do |m|
   m.sequence(:name){|t| "Name ##{t}"}
-  m.association :owner
-  m.association :jurisdictions
-  m.association :roles
-  m.association :users
+  m.association :owner, :factory => :user
+	m.scope "Personal"
 end

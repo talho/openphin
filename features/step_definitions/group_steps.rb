@@ -1,12 +1,9 @@
 Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
   owner = User.find_by_email!(email)
   table.raw.each do |row|
-    name = row[0]
-    jurisdictions = row[1]
-    roles = row[2]
-    users = row[3]
-    scope = row[4]
+    name, jurisdictions, roles, users, scope, owner_jurisdiction = row
     group = Factory(:group, :owner => owner, :name => name,
+            :owner_jurisdiction => Jurisdiction.find_by_name(owner_jurisdiction),
             :jurisdictions => Jurisdiction.find_all_by_name(jurisdictions.split(',')),
             :roles => Role.find_all_by_name(roles.split(',')),
             :users => User.find_all_by_display_name(users.split(',')),
@@ -21,12 +18,6 @@ Then /^I should see the add group form$/ do
 	  form.should have_selector(".jurisdictions")
     form.should have_selector(".roles")
     form.should have_selector(".people")
-  end
-end
-
-Then /^I should see the following jurisdictions:$/ do |table|
-  table.raw.each do |row|
-    response.should have_selector(".jurisdiction", :content => row[0])
   end
 end
 
@@ -46,4 +37,9 @@ end
 
 When "I fill out the group form with:" do |table|
   fill_in_group_form table
+end
+
+Then /^I should see "(.*)" as a groups option$/ do |name|
+  group = Group.find_by_name!(name)
+  response.should have_selector("input[name='alert[group_ids][]']", :value => group.id.to_s)
 end

@@ -98,7 +98,7 @@ module FeatureHelpers
         end
       when 'Communication methods'
         check value
-      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/
+      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")

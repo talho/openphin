@@ -52,20 +52,18 @@ class Alert < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :organizations
+  has_and_belongs_to_many :group_snapshots
+  has_many :groups, :through => :group_snapshots
   has_many :alert_device_types, :dependent => :delete_all
   has_many :alert_attempts, :dependent => :destroy
   has_many :deliveries, :through => :alert_attempts
   has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
   has_many :acknowledged_users,
-           #:class_name => "User",
-           #:foreign_key => :user_id,
            :source => :user,
            :through => :alert_attempts,
            :uniq => true,
            :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
   has_many :unacknowledged_users,
-           #:class_name => "User",
-           #:foreign_key => :user_id,
            :source => :user,
            :through => :alert_attempts,
            :uniq => true,
@@ -332,16 +330,21 @@ class Alert < ActiveRecord::Base
   end
 
   def find_user_recipients
-    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
-    user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
-    user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
+    #memoize this fairly expensive query
+    if @_user_recips.nil?
+      user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
+      user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
+      user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
 
-    user_ids_for_delivery += user_ids
+      user_ids_for_delivery += user_ids
 
-    user_ids_for_delivery += required_han_coordinators
+      user_ids_for_delivery += required_han_coordinators
+      user_ids_for_delivery += groups.map(&:create_snapshot).map{|snap| snap.alert=self; snap.users}.flatten.map(&:id)
 
-    User.find(user_ids_for_delivery)
-  end
+      @_user_recips=User.find(user_ids_for_delivery)
+    end
+    @_user_recips
+   end
 
   def total_jurisdictions
     (jurisdictions + find_user_recipients.map(&:jurisdictions).flatten).uniq

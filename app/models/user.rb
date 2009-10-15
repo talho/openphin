@@ -88,6 +88,10 @@ class User < ActiveRecord::Base
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
   }
+  named_scope :with_roles, lambda {|roles|
+    roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
+    { :conditions => [ "role_memberships.role_id in (?)", roles.map(&:id) ], :include => :role_memberships}
+  }
   named_scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
@@ -108,7 +112,11 @@ class User < ActiveRecord::Base
 
     set_property :delta => :delayed
   end
-  
+
+	def visible_groups
+		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
+  end
+
   def self.assign_role(role, jurisdiction, users)
     users.each do |u|
       u.role_memberships.create(:role => role, :jurisdiction => jurisdiction)

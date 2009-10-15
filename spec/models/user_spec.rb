@@ -273,4 +273,37 @@ describe User do
       user.should_not be_valid
     end
   end
+
+	describe "visible groups" do
+		before(:each) do
+			@owner = Factory(:user)
+			@nonowner = Factory(:user)
+			@global_nonowner = Factory(:user)
+			jurisdiction = Factory(:jurisdiction)
+			state = Factory(:jurisdiction)
+			jurisdiction.move_to_child_of(state)
+			@alerter = Factory(:role, :alerter => true)
+			Factory(:role_membership, :role => @alerter, :jurisdiction => jurisdiction, :user => @owner)
+			Factory(:role_membership, :role => @alerter, :jurisdiction => jurisdiction, :user => @nonowner)
+			Factory(:role_membership, :role => @alerter, :jurisdiction => state, :user => @global_nonowner)
+			@g1 = Factory(:group, :owner => @owner, :scope => "Personal")
+			@g2 = Factory(:group, :owner => @owner, :scope => "Jurisdiction", :owner_jurisdiction => jurisdiction)
+			@g3 = Factory(:group, :owner => @owner, :scope => "Global")
+		end
+		it "should return all owned groups" do
+			@owner.visible_groups.should include(@g1)
+			@owner.visible_groups.should include(@g2)
+			@owner.visible_groups.should include(@g3)
+		end
+		it "should return all jurisdiction-scoped groups for user's jurisdictions" do
+			@nonowner.visible_groups.should include(@g2)
+		end
+		it "should not return any jurisdiction-scoped groups for jurisdictions that user is not a member of" do
+			@global_nonowner.visible_groups.should_not include(@g1)
+			@global_nonowner.visible_groups.should_not include(@g2)
+		end
+		it "should return all globally-scoped groups" do
+			@global_nonowner.visible_groups.should include(@g3)
+		end
+	end
 end

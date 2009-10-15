@@ -26,3 +26,9 @@ Then /^I should not see "(.*)" as a from jurisdiction option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
   response.should_not have_selector("select[name*=from_jurisdiction_id] option", :value => jurisdiction.id.to_s)
 end
+
+Then /^I should see the following jurisdictions:$/ do |table|
+  table.raw.each do |row|
+    response.should have_selector(".jurisdiction", :content => row[0])
+  end
+end

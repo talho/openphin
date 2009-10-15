@@ -21,7 +21,7 @@ Given 'the following users exist:' do |table|
   end
 end
 
-Given 'I am logged in as "$email"' do |email|
+Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user
 end

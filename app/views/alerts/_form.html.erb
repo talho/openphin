@@ -113,11 +113,11 @@
     </fieldset>
         
     <fieldset class="filterable list last">
-      <legend>Organizations</legend>
+      <legend>Groups</legend>
       <ul class="check_selector">
-        <%- Organization.approved.each do |o| -%>
-          <li><%= check_box_tag 'alert[organization_ids][]', o.id, form.object.organization_ids.include?(o.id), :id => "alert_org_#{o.id}" %>
-          <%= label_tag "alert_org_#{o.id}", o.name %>
+        <%- current_user.visible_groups.each do |grp| -%>
+          <li><%= check_box_tag 'alert[group_ids][]', grp.id, form.object.group_ids.include?(grp.id), :id => "alert_group_#{grp.id}" %>
+          <%= label_tag "alert_group_#{grp.id}", grp.name %>
           </li>
         <%- end -%>
       </ul>
