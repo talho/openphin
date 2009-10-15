@@ -88,29 +88,6 @@ Feature: Role Requests
     When I go to the han page
     And I should see 0 pending role requests
   
-  Scenario: Admin requests a role within a child of their jurisdiction should go through normal approval process
-    Given I am logged in as "admin@texas.com"
-    When I go to the request a role page
-    And I fill out the role request form with:
-      | Jurisdiction  | Tarrant County |
-      | Role | Health Officer |
-    Then I should see that I have a pending role request
-    Then I should see "Your request to be a Health Officer in Tarrant County has been submitted"
-    Then I should see I am awaiting approval for Health Officer in Tarrant County
-    
-    And I should see that I have a pending role request
-    And "admin@texas.com" should receive the email:
-      | subject       | Request submitted for Health Officer in Tarrant County |
-      | body contains | Health Officer in Tarrant County |
-
-    And the following users should receive the email:
-      | roles         | Tarrant County / Admin |
-      | subject       | User requesting role Health Officer in Tarrant County |
-      | body contains | requested assignment |
-      | body contains | Zach Dennis (admin@texas.com) |
-      | body contains | Health Officer |
-      | body contains | Tarrant County  |
-    
   Scenario: Requesting a role should not display system-roles
     Given there is an system only Admin role
     And the following users exist:

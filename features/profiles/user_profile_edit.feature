@@ -8,7 +8,10 @@ I should be able to edit my profile
       | Organization | Red Cross      |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
+      | Jurisdiction | Texas          |
       | Role         | Health Officer |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Public | Potter County |

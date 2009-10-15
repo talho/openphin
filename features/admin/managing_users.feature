@@ -5,13 +5,20 @@ Feature: An admin managing users
   
   Background:
     Given an organization named Red Cross
-    And a child jurisdiction named Dallas County
+    And the following entities exist:
+      | Jurisdiction | Texas         |
+      | Jurisdiction | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
       | Quincy Jones   | quincy.jones@example.com   | 
       | Jonas Brothers | jonas.brothers@example.com |
+    And Texas has the following administrators:
+      | Joe Smith      | joe.smith@example.com      |
+    And "jonas.brothers@example.com" is not public in "Texas"
     And a role named Public
     And jonas.brothers@example.com has a public profile
     And an approval role named Health Alert and Communications Coordinator
@@ -71,6 +78,30 @@ Feature: An admin managing users
     And I should not see any errors
     And I should see "Profile information saved"
     
+    Scenario: Editing a user's profile as an administrator of an parent jurisdiction
+      Given I am logged in as "joe.smith@example.com"
+      When I view the profile page for jonas.brothers@example.com
+      And I follow "Edit"
+      Then I should see the profile edit form
+
+      When I fill in the form with the following info:
+        | Job description                   | A developer |
+        | Preferred name to be displayed    | Keith G. |
+        | Preferred language                | English |
+        | Job title                         | Developer |
+        | Bio                               | Maybe the austin powers reference was too much |
+        | Credentials                       | Rock star, Certified |
+        | Experience                        | Summer camp director  |
+        | Employer                          | State of Texas |
+        # | First name                        | Keith  |
+        # | Last name                         | Gaddis |
+        # | Email                             | kbg@example.com |
+      And I attach the file at "spec/fixtures/keith.jpg" to "user_photo"
+      And I press "Save"
+      Then I should see the profile page
+      And I should not see any errors
+      And I should see "Profile information saved"
+
     Scenario: Editing a user's profile and deleting roles
       Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
       When I view the profile page for jane.smith@example.com

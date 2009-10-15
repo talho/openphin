@@ -123,8 +123,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def is_admin_for?(jurisdiction)
-    jurisdiction.admins.include?(self)
+  def is_admin_for?(other)
+    role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
   end
 
   def is_alerter_for?(jurisdiction)
