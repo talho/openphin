@@ -18,8 +18,8 @@ Feature: Viewing groups
       | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
     And the following groups for "jill.smith@example.com" exist:
-      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     |
-      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction |
+      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Dallas County |
+      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
     Given I am logged in as "jill.smith@example.com"
 
   Scenario: going to view a user group as an admin

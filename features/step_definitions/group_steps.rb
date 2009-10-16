@@ -7,8 +7,7 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
             :jurisdictions => Jurisdiction.find_all_by_name(jurisdictions.split(',')),
             :roles => Role.find_all_by_name(roles.split(',')),
             :users => User.find_all_by_display_name(users.split(',')),
-            :scope => scope,
-            :owner_jurisdiction_id => owner.jurisdictions.first ? owner.jurisdictions.first : nil)
+            :scope => scope)
   end
 end
 
