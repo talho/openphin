@@ -30,8 +30,10 @@ class Group < ActiveRecord::Base
   named_scope :global, lambda{{:conditions => ["scope = ?", "Global"]}}
 
   validates_presence_of :owner
+  validates_length_of :name, :allow_nil => false, :allow_blank => false, :within => 1..254 
   validates_inclusion_of :scope, :in => SCOPES
   validates_presence_of :owner_jurisdiction, :if => Proc.new{|group| group.scope == "Jurisdiction"}
+  validate :at_least_one_scope?
 
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq
@@ -50,5 +52,12 @@ class Group < ActiveRecord::Base
     end
     snap.save
 		snap
-	end
+  end
+
+  private
+  def at_least_one_scope?
+    if roles.empty? & jurisdictions.empty? & users.empty?
+      errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
+    end
+  end
 end

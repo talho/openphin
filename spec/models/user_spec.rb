@@ -286,9 +286,9 @@ describe User do
 			Factory(:role_membership, :role => @alerter, :jurisdiction => jurisdiction, :user => @owner)
 			Factory(:role_membership, :role => @alerter, :jurisdiction => jurisdiction, :user => @nonowner)
 			Factory(:role_membership, :role => @alerter, :jurisdiction => state, :user => @global_nonowner)
-			@g1 = Factory(:group, :owner => @owner, :scope => "Personal")
-			@g2 = Factory(:group, :owner => @owner, :scope => "Jurisdiction", :owner_jurisdiction => jurisdiction)
-			@g3 = Factory(:group, :owner => @owner, :scope => "Global")
+			@g1 = Factory(:group, :owner => @owner, :scope => "Personal", :users => [Factory(:user)])
+			@g2 = Factory(:group, :owner => @owner, :scope => "Jurisdiction", :owner_jurisdiction => jurisdiction, :jurisdictions => [Factory(:jurisdiction)])
+			@g3 = Factory(:group, :owner => @owner, :scope => "Global", :users => [Factory(:user)])
 		end
 		it "should return all owned groups" do
 			@owner.visible_groups.should include(@g1)

@@ -16,7 +16,9 @@ describe Group do
 
 	describe "validations" do
 		before(:each) do
-			@group=Factory(:group)
+      @jurisdiction = Factory(:jurisdiction)
+      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+			@group=Factory(:group, :users => [Factory(:user)])
 		end
 
 		it "be valid" do
@@ -38,7 +40,7 @@ describe Group do
 
     end
 		it "should return a GroupSnapshot model" do
-      Factory(:group).create_snapshot.class.should == GroupSnapshot
+      Factory(:group, :users => [Factory(:user)]).create_snapshot.class.should == GroupSnapshot
 		end
 		it "should include users with both jurisdiction and roles specified" do
       snap=Factory(:group, :jurisdictions => [@j1], :roles => [@r1]).create_snapshot

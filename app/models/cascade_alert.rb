@@ -42,7 +42,7 @@ class CascadeAlert
         alert.roles.each do |role|
           xml.value role.name unless role.name == "Health Alert and Communications Coordinator"
         end
-      end
+      end unless alert.roles.size == 0
       xml.distributionReference alert.distribution_reference unless alert.message_type == 'Alert'
       xml.explicitAddress do
         xml.explicitAddressScheme "e-mail"

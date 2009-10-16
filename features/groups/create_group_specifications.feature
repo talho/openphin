@@ -240,3 +240,14 @@ Feature: Creating groups
       When I go to the groups page
       Then I should see "Dallas County Health Officer Group"
 
+    Scenario: adding a scoped group without all data to see error
+      When I go to the add groups page
+      Then I should see the add group form
+      Then I should see the following jurisdictions:
+        | Dallas County |
+        | Potter County |
+      When I fill out the group form with:
+        | Name          | Dallas County Group |
+      And I press "Save"
+      Then I should not see "Dallas County Group"
+      And I should see "You must select at least one role, one jurisdiction, or one user."
