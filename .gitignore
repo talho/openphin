@@ -20,6 +20,7 @@ vendor/plugins/hoptoad_notifier
 public/system/photos
 config/paperclip.yml
 config/*.sphinx.conf
+config/sphinx.yml
 db/sphinx
 log/searchd.*.pid
 coverage/
