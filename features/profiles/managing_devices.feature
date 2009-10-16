@@ -35,3 +35,6 @@ Feature: Managing devices when editing user profiles
     And "john.smith@example.com" should not have the communication device
       | Email |  |
 
+  Scenario: Adding a device as an admin
+  Scenario: Adding a device as an admin of a parent jurisdiction
+

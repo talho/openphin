@@ -128,10 +128,12 @@ describe User do
   
   describe "#is_admin_for?" do
     before(:each) do
+      parent = Factory(:jurisdiction)
       @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+      @jurisdiction.move_to_child_of(parent)
       @user = Factory(:user)
       Factory(:role_membership, :jurisdiction => @jurisdiction, :role => Role.admin, :user => @user)
+      @user.reload
     end
     
     it "should return true if the user is an admin for the given jurisdiction" do
@@ -140,6 +142,7 @@ describe User do
     
     it "should return false if the user is not an admin for the given jurisdiction" do
       j2=Factory(:jurisdiction)
+      j2.move_to_child_of(@jurisdiction.parent)
       @user.is_admin_for?(j2).should == false
     end
   end

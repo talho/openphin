@@ -57,6 +57,8 @@ describe RoleRequest do
         @role_membership = Factory(:role_membership, :role => @admin_role, :jurisdiction => @jurisdiction, :user => @admin)
         @role = Factory(:role, :name => "Foobar", :approval_required => true)
         @request = Factory.build(:role_request, :user => @user, :requester => @admin, :jurisdiction => @jurisdiction, :role => @role, :approver => nil)
+        @admin.reload
+        @user.reload
       end
 
       it "should approve the request" do
