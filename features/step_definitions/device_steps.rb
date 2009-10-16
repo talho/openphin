@@ -18,6 +18,12 @@ When '"$email" acknowledges the phone alert' do |email|
   a.save!
 end
 
+When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|
+  user = User.find_by_email!(user_email)
+  device = user.devices.first
+  delete_via_redirect device_path(device)
+end
+
 Then /^"([^"]+). should have the communication device$/ do |email, table|
   user = User.find_by_email!(email)
   table.rows_hash.each do |type, value|

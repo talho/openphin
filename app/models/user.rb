@@ -124,8 +124,16 @@ class User < ActiveRecord::Base
   end
 
   def is_admin_for?(other)
-    return true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
-    false
+    if other.class == Jurisdiction
+      true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
+    elsif other.class == Array
+      other.each do |jurisdiction|
+        return true if role_memberships.detect{|r| r.role==Role.admin && jurisdiction.is_or_is_descendant_of?(r.jurisdiction)}
+      end
+      false
+    else
+      false
+    end
   end
 
   def is_alerter_for?(jurisdiction)

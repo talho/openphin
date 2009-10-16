@@ -6,11 +6,14 @@ Feature: Managing devices when editing user profiles
   Background:
     Given the following entities exists:
       | Organization | Red Cross      |
+      | Jurisdiction | Texas          |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And the following administrators exist:
+      | admin@potter.gov | Potter County |
     And I am logged in as "john.smith@example.com"
 		
   Scenario: Adding a device
@@ -35,6 +38,13 @@ Feature: Managing devices when editing user profiles
     And "john.smith@example.com" should not have the communication device
       | Email |  |
 
+  Scenario: Malicious admin cannot remove devices from users they can't administer
+    Given I am logged in as "admin@potter.gov"
+    When I maliciously post a destroy for a device for "john.smith@example.com"
+    Then I should see "This resource does not exist or is not available."
+    And I can't test 'should redirect_to' because of webrat bug
+    And I should be on the homepage
+
   Scenario: Adding a device as an admin
   Scenario: Adding a device as an admin of a parent jurisdiction
-
+    

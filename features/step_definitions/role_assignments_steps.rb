@@ -8,7 +8,7 @@ When /^I maliciously post the assign role form with:$/ do |table|
 end
 
 When /^I maliciously post a deny for a role assignment for "([^\"]*)"$/ do |user_email|
-  user = User.find_by_email(user_email)
+  user = User.find_by_email!(user_email)
   role_assignment = user.role_memberships.first
   delete_via_redirect role_assignment_path(role_assignment)
 end
