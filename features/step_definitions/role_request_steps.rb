@@ -57,6 +57,12 @@ Then /^I should see (\d*) pending role requests?$/ do |num|
   current_user.role_requests.unapproved.flatten.size.should == num.to_i
 end
 
+When /^I maliciously post a deny for a role request for "([^\"]*)"$/ do |user_email|
+  user = User.find_by_email(user_email)
+  role_request = user.role_requests.first
+  delete_via_redirect admin_role_request_path(role_request)
+end
+
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
   visit admin_role_requests_path
   response.should_not have_selector( ".pending_role_requests") do |req|
@@ -104,4 +110,8 @@ Then /^I should see (\d) recent role approvals?$/ do |num|
     response.should have_selector(".recent_role_approvals .approval")
   end
   current_user.role_memberships.not_public_roles.recent.flatten.size.should == num.to_i
+end
+
+Then /^I can't test 'should redirect_to' because of webrat bug$/ do
+  true
 end

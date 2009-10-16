@@ -63,6 +63,7 @@ Feature: Assigning roles to users for roles
 	  
 
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
+    Given I am
     Given I am logged in as "admin@dallas.gov"
     And I go to the roles requests page for an admin
     And I follow "Assign Role"
@@ -86,7 +87,7 @@ Feature: Assigning roles to users for roles
       | People | John Smith, Jane Doe |
       | Role | Health Officer |
       | Jurisdiction | Potter County |
-    
+
     Then the following users should not receive any emails
       | emails         | john@example.com, jane@example.com |
     And "john@example.com" should not have the "Health Officer" role in "Potter County"
@@ -136,3 +137,11 @@ Feature: Assigning roles to users for roles
       And "john@example.com" should not have the "Health Officer" role in "Dallas County"
       And "admin@dallas.gov" should not receive an email
       And I should see "No users were specified"
+
+  Scenario: Malicious admin cannot remove role assignments the user is not an admin of
+    Given "admin@dallas.gov" has approved the "Health Officer" role in "Dallas County" for "john@example.com"
+    And I am logged in as "admin@potter.gov"
+    When I maliciously post a deny for a role assignment for "john@example.com"
+    Then I should see "This resource does not exist or is not available."
+    And I can't test 'should redirect_to' because of webrat bug
+    And I should be on the homepage

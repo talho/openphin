@@ -15,7 +15,7 @@ module NavigationHelpers
       when /the request a role page/i
         new_role_request_path
       when /the pending requests page/i
-        new_admin_pending_requests_path
+        admin_pending_requests_path
       when /the new alert page/i
         new_alert_path
       when /the alerts page/i
@@ -50,6 +50,10 @@ module NavigationHelpers
         admin_group_path(Group.find_by_name!(arg))
       when /the edit group page/i
         edit_admin_group_path(Group.find_by_name!(arg))
+      when /the add role assignments? page/i
+        new_admin_role_assignment_path
+      when /the add admin role requests? page/i
+        new_admin_role_request_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

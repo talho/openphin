@@ -41,18 +41,25 @@ class Admin::RoleAssignmentsController < ApplicationController
   def destroy
     role_assignment = RoleMembership.find(params[:id])
     if role_assignment.blank?
-      flash[:notice] = "Invalid role membership specified"
+      flash[:error] = "Invalid role membership specified"
+      if session[:return_to].blank?
+        redirect_to dashboard_path
+      else
+        redirect_to session[:return_to]
+      end
+    elsif current_user.is_admin_for?(role_assignment.jurisdiction)
+      name = role_assignment.role.name
+      jurisdiction = role_assignment.jurisdiction.name
+      user = role_assignment.user.display_name
+      role_assignment.destroy
+      flash[:notice] = "Role #{name} removed from #{user} in #{jurisdiction}"
       if session[:return_to].blank?
         redirect_to dashboard_path
       else
         redirect_to session[:return_to]
       end
     else
-      name = role_assignment.role.name
-      jurisdiction = role_assignment.jurisdiction.name
-      user = role_assignment.user.display_name
-      role_assignment.destroy
-      flash[:notice] = "Role #{name} removed from #{user} in #{jurisdiction}"
+      flash[:notice] = "This resource does not exist or is not available."
       if session[:return_to].blank?
         redirect_to dashboard_path
       else

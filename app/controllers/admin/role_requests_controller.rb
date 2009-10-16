@@ -50,11 +50,16 @@ class Admin::RoleRequestsController < ApplicationController
   # DELETE /role_requests/1.xml
   def destroy
     @role_request = RoleRequest.find(params[:id])
-    @role_request.destroy
-
     respond_to do |format|
-      format.html { redirect_to(role_requests_url) }
-      format.xml  { head :ok }
+      if @role_request && current_user.is_admin_for?(@role_request.jurisdiction)
+        @role_request.destroy
+        format.html { redirect_to(admin_pending_requests_path) }
+        format.xml  { head :ok }
+      else
+        flash[:error] = "This resource does not exist or is not available."
+        format.html { redirect_to(admin_pending_requests_path) }
+        format.xml { render :xml => @role_request.errors, :status => :unprocessable_entity }
+      end
     end
   end
 
