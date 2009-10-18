@@ -2,21 +2,21 @@
 <div><h5 class='group_header'>Jurisdictions</h5>
 <ul class="group_jurisdictions">
   <% @group.jurisdictions.each do |jurisdiction| %>
-    <li class="jurisdiction"><%= jurisdiction.name %></li>
+    <li class="jurisdiction"><%= jurisdiction.name %><%= ", " unless jurisdiction == @group.jurisdictions.last %></li>
   <% end %>
 </ul>
 </div>
 <div><h5 class='group_header'>Role</h5>
 <ul class="group_roles">
   <% @group.roles.each do |role| %>
-    <li class="role"><%= role.name %></li>
+    <li class="role"><%= role.name %><%= ", " unless role == @group.roles.last %></li>
   <% end %>
 </ul></div>
 <div>
 <h5 class='group_header'>Users</h5>
 <ul class="group_users">
   <% @group.users.each do |user| %>
-    <li class="user"><%= link_to user.display_name, user_profile_path(user) %></li>
+    <li class="user"><%= link_to user.display_name, user_profile_path(user) %><%= ", " unless user == @group.users.last %></li>
   <% end %>
 </ul>
 </div>
@@ -30,7 +30,7 @@
 <div><h5 class='group_header'>Who's in this group?</h5>
 <ul class='group_rcpts'>
   <% @group.current_users.each do |user| %>
-    <%= content_tag :li, link_to(user.display_name, user_profile_path(user)), :class => "group_rcpt" %><%= "," unless user=@group.current_users.last %>
+    <li class='group_rcpt'><%= link_to(user.display_name, user_profile_path(user))%><%= "," unless user==@group.current_users.last %></li>
   <% end %>
 </ul>
 </div>
