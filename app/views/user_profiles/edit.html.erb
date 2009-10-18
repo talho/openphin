@@ -1,4 +1,4 @@
-<script type='text/javascript'>var DEVICE_POST_URL = "<%= user_devices_path(current_user) %>"</script>
+<script type='text/javascript'>var DEVICE_POST_URL = "<%= user_devices_path(@user) %>"</script>
 
 <div class="profile_edit">
   <% form_for @user, :url => user_profile_path(@user), :html => {:multipart => true} do |form| %>

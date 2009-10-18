@@ -81,7 +81,7 @@ Feature: Viewing groups
     And I press "Save"
     Then I should see the following group summary:
       | name          | Dallas and Potter County Group |
-      | jurisdictions | Dallas County,Potter County    |
+      | group_jurisdictions | Dallas County,Potter County    |
 
   Scenario: updating a user group with roles
     When I load the edit group page for "Dallas County Health Officer Group"
@@ -95,7 +95,7 @@ Feature: Viewing groups
     And I press "Save"
     Then I should see the following group summary:
       | name  | Health Officer and Epidemiologist Group |
-      | roles | Health Officer,Epidemiologist           |
+      | group_roles | Health Officer,Epidemiologist           |
 
   Scenario: updating a user group with individual users
     When I load the edit group page for "Dallas County Health Officer Group"
@@ -106,7 +106,7 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name  | User list Group       |
-      | users | Jane Smith            |
+      | group_users | Jane Smith            |
     And I follow "Jane Smith"
     Then I should see the profile page for "jane.smith@example.com"
 
@@ -126,7 +126,7 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name  | Dallas County Health Officer Group       |
-      | scope | Global                                   |
+      | group_scope | Global                                   |
 
   Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
@@ -138,7 +138,7 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name               | Dallas County Health Officer Group  |
-      | scope              | Jurisdiction                        |
+      | group_scope              | Jurisdiction                        |
       | owner_jurisdiction | Wise County                         |
 
   Scenario: updating a jurisdiction scoped group to another jurisdiction should be viewable by alerters in the new jurisdiction
@@ -151,7 +151,7 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name               | Dallas County Health Officer Jurisdiction Group  |
-      | scope              | Jurisdiction                                     |
+      | group_scope              | Jurisdiction                                     |
       | owner_jurisdiction | Dallas County                                    |
     Given I am logged in as "jim.smith@example.com"
     When I go to the groups page
@@ -167,7 +167,7 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name               | Dallas County Health Officer Jurisdiction Group  |
-      | scope              | Jurisdiction                                     |
+      | group_scope              | Jurisdiction                                     |
       | owner_jurisdiction | Dallas County                                    |
     Given I am logged in as "will.smith@example.com"
     When I go to the groups page

@@ -19,7 +19,7 @@ class Role < ActiveRecord::Base
   has_many :users, :through => :role_memberships
 
   named_scope :alerters, :conditions => {:alerter => true}
-  
+  default_scope :order => "user_role, name ASC" 
   Defaults = {
     :admin => 'Admin',
     :org_admin => 'OrgAdmin',
@@ -65,5 +65,10 @@ class Role < ActiveRecord::Base
       return true
     end
     false
+  end
+
+  def display_name
+    return "System:#{name}" unless user_role?
+    name
   end
 end

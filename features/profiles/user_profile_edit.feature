@@ -16,6 +16,7 @@ I should be able to edit my profile
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Public | Potter County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
+      | Bob Smith       | bob.smith@example.com    | Superadmin  | Texas    |
 
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"

@@ -63,8 +63,8 @@ Feature: Creating groups
     And I press "Save"
     Then I should see the following group summary:
       | name          | Dallas County Group |
-      | jurisdictions | Dallas County       |
-      | scope         | Personal            |
+      | group_jurisdictions | Dallas County       |
+      | group_scope         | Personal            |
 
   Scenario: adding a user group with roles
     When I go to the add groups page
@@ -80,8 +80,8 @@ Feature: Creating groups
     And I press "Save"
     Then I should see the following group summary:
       | name  | Health Officer Group |
-      | roles | Health Officer       |
-      | scope | Personal             |
+      | group_roles | Health Officer       |
+      | group_scope | Personal             |
 
   Scenario: adding a user group with jurisdictions and roles
     When I go to the add groups page
@@ -101,9 +101,9 @@ Feature: Creating groups
     And I press "Save"
     Then I should see the following group summary:
       | name          | Dallas County Health Officer Group |
-      | jurisdictions | Dallas County                      |
-      | roles         | Health Officer                     |
-      | scope         | Personal                           |
+      | group_jurisdictions | Dallas County                      |
+      | group_roles         | Health Officer                     |
+      | group_scope         | Personal                           |
 
   Scenario: adding a user group with individual users
     When I go to the add groups page
@@ -116,8 +116,8 @@ Feature: Creating groups
     Then I press "Save"
     Then I should see the following group summary:
       | name  | User list Group |
-      | users | Jane Smith      |
-      | scope | Personal        |
+      | group_users | Jane Smith      |
+      | group_scope | Personal        |
     And I follow "Jane Smith"
     Then I should see the profile page for "jane.smith@example.com"
 
@@ -141,7 +141,7 @@ Feature: Creating groups
     Then I press "Save"
     Then I should see the following group summary:
       | name               | Dallas County Health Officer Group  |
-      | scope              | Jurisdiction                        |
+      | group_scope        | Jurisdiction                        |
       | owner_jurisdiction | Wise County                         |
 
     Scenario: adding a personal scoped group should not be viewable by others
@@ -162,7 +162,7 @@ Feature: Creating groups
       Then I press "Save"
       Then I should see the following group summary:
         | name               | Dallas County Health Officer Group |
-        | scope              | Personal                           |
+        | group_scope              | Personal                           |
       Given I am logged in as "will.smith@example.com"
       When I go to the groups page
       Then I should not see "Dallas County Health Officer Group"
@@ -186,7 +186,7 @@ Feature: Creating groups
       Then I press "Save"
       Then I should see the following group summary:
         | name               | Dallas County Health Officer Group |
-        | scope              | Jurisdiction                       |
+        | group_scope              | Jurisdiction                       |
       Given I am logged in as "will.smith@example.com"
       When I go to the groups page
       Then I should see "Dallas County Health Officer Group"
@@ -211,7 +211,7 @@ Feature: Creating groups
       Then I press "Save"
       Then I should see the following group summary:
         | name               | Dallas County Health Officer Group |
-        | scope              | Jurisdiction                       |
+        | group_scope              | Jurisdiction                       |
       Given I am logged in as "jim.smith@example.com"
       When I go to the groups page
       Then I should not see "Dallas County Health Officer Group"
@@ -235,7 +235,7 @@ Feature: Creating groups
       Then I press "Save"
       Then I should see the following group summary:
         | name               | Dallas County Health Officer Group |
-        | scope              | Global                             |
+        | group_scope              | Global                             |
       Given I am logged in as "jim.smith@example.com"
       When I go to the groups page
       Then I should see "Dallas County Health Officer Group"

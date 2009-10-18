@@ -16,7 +16,7 @@
 
   <p>
     <%= f.label :role_id, "Role" %><br/>
-    <%= f.collection_select :role_id, Role.user_roles, :id, :name, :include_blank => true %><br/>
+    <%= f.collection_select :role_id, current_user.is_super_admin? ? Role.all : Role.user_roles, :id, :display_name, :include_blank => true %><br/>
   </p>
 
   <p>
