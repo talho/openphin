@@ -14,6 +14,8 @@ Feature: Viewing groups
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
+      | Health Officer1 | ho1@example.com   | Health Officer | Dallas County |
+      | Health Officer2 | ho2@example.com   | Health Officer | Dallas County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
       | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
@@ -29,6 +31,8 @@ Feature: Viewing groups
     Then I should see "Dallas County Health Officer Group"
     And I follow "Dallas County Health Officer Group"
     Then I have loaded the group page for "Dallas County Health Officer Group"
+    And I should see that the group includes:
+      | Health Officer1, Health Officer2 |
 
   Scenario: going to edit a user group as an admin
     When I go to the dashboard page
@@ -122,9 +126,9 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name  | Dallas County Health Officer Group       |
-      | scope | Global                |
+      | scope | Global                                   |
 
-  Scenario: selecting the jurisdiction when scope is jurisdictaion
+  Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
     When I load the edit group page for "Dallas County Health Officer Group"
     Then I should see "Scope"

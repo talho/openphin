@@ -24,3 +24,10 @@
 <p class="scope"><%=h @group.scope %> <br/>
 <%= s(@group.owner_jurisdiction.name,:class => "owner_jurisdiction") if @group.owner_jurisdiction %> 
 </p>
+
+<h3>Who's in this group?</h3>
+<ul>
+  <% @group.current_users.each do |user| %>
+    <%= content_tag :li, user.name, :class => "group_rcpt" %>
+  <% end %>
+</ul>

@@ -42,16 +42,24 @@ class Group < ActiveRecord::Base
 
 	def create_snapshot
 		snap=group_snapshots.create
-		snap.users = users
-		if jurisdictions.any? && roles.any?
-			snap.users << jurisdictions.map{|j| j.users.with_roles(roles)}.flatten
-    elsif jurisdictions.any? && roles.empty?
-			snap.users << jurisdictions.map(&:users).flatten
-    elsif jurisdictions.empty? && roles.any?
-			snap.users << roles.map(&:users).flatten
-    end
+		snap.users = current_users
     snap.save
 		snap
+  end
+
+  def current_users
+    unless @_current_users
+      userlist=users
+      if jurisdictions.any? && roles.any?
+        userlist << jurisdictions.map{|j| j.users.with_roles(roles)}.flatten
+      elsif jurisdictions.any? && roles.empty?
+        userlist << jurisdictions.map(&:users).flatten
+      elsif jurisdictions.empty? && roles.any?
+        userlist << roles.map(&:users).flatten
+      end
+      @_current_users=userlist
+    end
+    @_current_users
   end
 
   private
