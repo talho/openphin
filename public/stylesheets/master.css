@@ -208,6 +208,16 @@ ul#alerts li.more div.extended                {display:block;}
 ul#alerts li.more a.view_less                 {display:block;}
 ul#alerts li.more a.view_more                 {display:none;}
 
+ul.group_jurisdictions                        {list-style-type:none;margin:5px;padding:0; display:block;}
+ul.group_jurisdictions li                     {list-style:none; float:left;}
+ul.group_roles                                {list-style-type:none;margin:5px;padding:0; display:block;}
+ul.group_roles li                             {list-style:none; float:left;}
+ul.group_users                                {list-style-type:none;margin:5px;padding:0; display:block;}
+ul.group_users li                             {list-style:none; float:left;}
+ul.group_rcpts                                {list-style-type:none;margin:5px;padding:0; display:block;}
+ul.group_rcpts li                             {list-style:none; float:left;}
+h5.group_header                               {display:block;clear:both;}
+
 .data-list                                    {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
 .data-list li,
 .data-list p                                  {margin:0; padding:5px 30px 5px 10px; position:relative; list-style:none; border-bottom:1px solid #d9d9d9;}

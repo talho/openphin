@@ -134,6 +134,7 @@ class User < ActiveRecord::Base
     else
       false
     end
+    false
   end
 
   def is_alerter_for?(jurisdiction)

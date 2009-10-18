@@ -1,33 +1,36 @@
 <h2 class="name"><%=h @group.name %></h2>
-<h3>Jurisdictions</h3>
-<ul class="jurisdictions">
+<div><h5 class='group_header'>Jurisdictions</h5>
+<ul class="group_jurisdictions">
   <% @group.jurisdictions.each do |jurisdiction| %>
     <li class="jurisdiction"><%= jurisdiction.name %></li>
   <% end %>
 </ul>
-
-<h3>Role</h3>
-<ul class="roles">
+</div>
+<div><h5 class='group_header'>Role</h5>
+<ul class="group_roles">
   <% @group.roles.each do |role| %>
     <li class="role"><%= role.name %></li>
   <% end %>
-</ul>
-
-<h3>Users</h3>
-<ul class="users">
+</ul></div>
+<div>
+<h5 class='group_header'>Users</h5>
+<ul class="group_users">
   <% @group.users.each do |user| %>
     <li class="user"><%= link_to user.display_name, user_profile_path(user) %></li>
   <% end %>
 </ul>
-
-<h3>Scope</h3>
-<p class="scope"><%=h @group.scope %> <br/>
-<%= s(@group.owner_jurisdiction.name,:class => "owner_jurisdiction") if @group.owner_jurisdiction %> 
+</div>
+<div>
+<h5 class='group_header'>Scope</h5>
+<p class="group_scope"><%=h @group.scope %> <br/>
+<%= s(@group.owner_jurisdiction.name,:class => "owner_jurisdiction") if @group.owner_jurisdiction %>
 </p>
+</div>
 
-<h3>Who's in this group?</h3>
-<ul>
+<div><h5 class='group_header'>Who's in this group?</h5>
+<ul class='group_rcpts'>
   <% @group.current_users.each do |user| %>
-    <%= content_tag :li, user.name, :class => "group_rcpt" %>
+    <%= content_tag :li, link_to(user.display_name, user_profile_path(user)), :class => "group_rcpt" %><%= "," unless user=@group.current_users.last %>
   <% end %>
 </ul>
+</div>
