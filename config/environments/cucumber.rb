@@ -30,7 +30,8 @@ config.gem "thoughtbot-factory_girl",
   :source => "http://gems.github.com"
 config.gem 'bmabey-database_cleaner', :lib => 'database_cleaner',
   :source => 'http://gems.github.com'
-  
+config.gem 'spork'
+
 PHIN_PARTNER_OID="1.3.6.1.4.1.1"
 PHIN_APP_OID="1"
 PHIN_ENV_OID="3"
