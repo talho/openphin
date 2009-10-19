@@ -2,23 +2,14 @@ class DevicesController < ApplicationController
   before_filter {|controller| controller.admin_or_self_required(:user_id)}
   protect_from_forgery :except => :create
   app_toolbar "han"
-  
+
   def destroy
     @device = Device.find(params[:id])
-    if current_user.is_admin_for?(@device.user.jurisdictions)
-      @device.destroy
-      begin
-        redirect_to :back
-      rescue
-        redirect_to dashboard_path
-      end
-    else
-      flash[:error] = "This resource does not exist or is not available."
-      begin
-        redirect_to :back
-      rescue
-        redirect_to dashboard_path
-      end
+    @device.destroy
+    begin
+      redirect_to :back
+    rescue
+      redirect_to dashboard_path
     end
   end
 
