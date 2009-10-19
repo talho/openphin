@@ -10,7 +10,7 @@ config/database.yml
 test
 tmp/*
 .DS_Store
-.rake_tasks
+.rake_tasks*
 db/schema.rb
 vendor/plugins/cucumber
 vendor/plugins/hoptoad_notifier
