@@ -1,0 +1,6 @@
+<% form_for Folder.new do |form| %>
+  <%= form.label :name, 'Folder Name' %>
+  <%= form.text_field :name %>
+  
+  <%= form.submit 'Create' %>
+<% end %>

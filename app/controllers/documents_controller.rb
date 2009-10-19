@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
   def index
     @documents = current_user.documents
+    @folders = current_user.folders
   end
   
   def create
