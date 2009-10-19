@@ -13,7 +13,7 @@
 #
 
 class Document < ActiveRecord::Base
-  has_attached_file :file
+  has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
   validates_attachment_presence :file
   
   def to_s
