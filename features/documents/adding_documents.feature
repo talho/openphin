@@ -4,7 +4,20 @@ Feature: Adding documents to document sharing
   I should be able to add documents to my store
 
   Background:
-    Given I am logged in as a user with an approval role
+    Given the following administrators exist:
+      | admin@dallas.gov | Dallas County |
+    And I am logged in as "admin@dallas.gov"
+    
+  Scenario: Adding a document to private storage
+    When I go to the Documents page
+    And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+    And I press "Upload"
+    Then I should see "keith.jpg"
+    
+    When I follow "keith.jpg"
+    Then I should receive the file:
+      | Filename     | keith.jpg  |
+      | Content Type | image/jpeg |
 
   Scenario: Viewing documents
     When I click the documents tab
@@ -12,12 +25,6 @@ Feature: Adding documents to document sharing
 
     When I follow a document link
     Then it should download to my computer
-    
-  Scenario: Adding a document to private storage
-    When I click "Upload Document"
-    And I browse to the file
-    And I click "Upload"
-    Then I should see the document in my root folder
 
   Scenario: Sending a document to users identified in a group
     Given I have a document in my root folder

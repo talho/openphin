@@ -1,0 +1,9 @@
+<% form_for Document.new, :html => {:multipart => true} do |f| %>
+  <%= f.label :file, 'Upload Document' %>
+  <%= f.file_field :file %>
+  <%= f.submit 'Upload' %>
+<% end %>
+
+<ul>
+<%= render @documents %>
+</ul>

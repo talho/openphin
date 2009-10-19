@@ -56,6 +56,7 @@ class User < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
+  has_many :documents, :foreign_key => "owner_id"
 
   #TODO Move this into plugin for rollcall later
   def school_districts
