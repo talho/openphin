@@ -35,3 +35,4 @@ config/phone.yml
 config/system.yml
 .loadpath
 diagrams/
+attachments

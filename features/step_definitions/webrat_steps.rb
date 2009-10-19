@@ -90,6 +90,10 @@ When /^I attach the file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
   attach_file(field, path)
 end
 
+When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
+  attach_file(field, path, mime)
+end
+
 When /^I load (.*) for "([^\"]*)"$/ do |page, title|
   visit path_to(page, title)
 end
