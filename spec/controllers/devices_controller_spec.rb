@@ -12,22 +12,22 @@ describe DevicesController do
   end
 
   it "should destroy when owner is logged in" do
-    device_ct=Device.all.size
     user = Factory(:user)
-    device = user.devices.first
+    device = Factory(:email_device, :user => user)
     login_as(user)
-    delete(:destroy, {:user_id => user.id, :id => device.id}).session["flash"].should be_nil
-    Device.all.size.should == device_ct
+    lambda {
+      delete(:destroy, {:user_id => user.id, :id => device.id}).session["flash"].should be_blank
+    }.should change(Device, :count).by(-1)
   end
 
   it "should not destroy when another user is logged in" do
     user = Factory(:user)
     user2 = Factory(:user)
-    device = user2.devices.first
+    device = Factory(:email_device, :user => user2)
     login_as(user)
-    delete(:destroy, {:user_id => user2.id, :id => device.id}).session["flash"][:error].should_not be_blank
-    Device.all.size.should_not == 0
-    device.destroy
+    lambda {
+      delete(:destroy, {:user_id => user2.id, :id => device.id}).session["flash"][:error].should_not be_blank
+    }.should_not change(Device, :count)
   end
 
   it "should destroy when admin is logged in" do
