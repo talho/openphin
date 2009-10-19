@@ -344,7 +344,7 @@ class Alert < ActiveRecord::Base
       @_user_recips=User.find(user_ids_for_delivery)
     end
     @_user_recips
-   end
+  end
 
   def total_jurisdictions
     (jurisdictions + find_user_recipients.map(&:jurisdictions).flatten).uniq

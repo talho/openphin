@@ -1,7 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
 #  map.resources :user_profiles, :as => "profile"
 
-  map.resources :jurisdictions, :devices, :documents, :folders
+  map.resources :jurisdictions, :devices, :folders
+  map.resources :documents, :has_many => :shares
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"

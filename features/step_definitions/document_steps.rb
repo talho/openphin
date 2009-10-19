@@ -2,6 +2,10 @@ Given 'I have the document "$filename" in my root folder' do |filename|
   @current_user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
 end
 
+When "I fill out the document sharing form with:" do |table|
+  fill_in_alert_form table
+end
+
 Then 'I should receive the file:' do |table|
   table.rows_hash.each do |header, value|
     case header

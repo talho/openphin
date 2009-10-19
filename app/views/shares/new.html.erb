@@ -1,0 +1,7 @@
+<% form_for [@document, @share] do |form| %>
+  <div id="audience">
+    <%= render 'audiences/fields', :form => form %>
+
+    <%= form.submit "Share" %>
+  </div>
+<% end %>
