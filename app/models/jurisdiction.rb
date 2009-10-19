@@ -61,6 +61,10 @@ class Jurisdiction < ActiveRecord::Base
   def parent
     Jurisdiction.find(parent_id) unless !Jurisdiction.exists?(parent_id)
   end
+
+  def self.non_foreign_state_before_descendants
+    Jurisdiction.state.nonforeign | Jurisdiction.state.nonforeign.map{|jurisdiction| jurisdiction.descendants}.flatten.sort_by{|jurisdiction| jurisdiction.name}
+  end
   
   def to_s
     name
