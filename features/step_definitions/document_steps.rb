@@ -1,3 +1,7 @@
+Given 'I have the document "$filename" in my root folder' do |filename|
+  @current_user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
+end
+
 Then 'I should receive the file:' do |table|
   table.rows_hash.each do |header, value|
     case header

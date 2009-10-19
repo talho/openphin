@@ -20,11 +20,14 @@ Feature: Adding documents to document sharing
       | Content Type | image/jpeg |
 
   Scenario: Viewing documents
-    When I click the documents tab
-    Then I should see my documents and folders
+    Given I have the document "keith.jpg" in my root folder
+    When I go to the Documents page
+    Then I should see "keith.jpg"
 
-    When I follow a document link
-    Then it should download to my computer
+    When I follow "keith.jpg"
+    Then I should receive the file:
+      | Filename     | keith.jpg  |
+      | Content Type | image/jpeg |
 
   Scenario: Sending a document to users identified in a group
     Given I have a document in my root folder
