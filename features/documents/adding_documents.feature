@@ -46,6 +46,16 @@ Feature: Adding documents to document sharing
     Then I should see "Less Important"
 
   Scenario: Creating nested folders to organize documents
+    When I go to the Documents page
+    And I fill in "Folder Name" with "Everything" 
+    And I select "Root" from "Inside"
+    And I press "Create"
+    Then I should see "Everything"
+
+    And I fill in "Folder Name" with "Some Things"
+    And I select " Everything" from "Inside"
+    And I press "Create"
+    Then I should see "Some Things"
 
   Scenario: Receiving documents from other users
     Given another user has sent me a document

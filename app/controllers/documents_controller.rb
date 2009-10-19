@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   def index
     @documents = current_user.documents
-    @folders = current_user.folders
+    @folders = current_user.folders.roots
   end
   
   def create
