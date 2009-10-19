@@ -9,6 +9,8 @@ Feature: Signing up for an account
     Given an organization named Red Cross
     And a jurisdiction named Texas
     And a child jurisdiction named Dallas County
+    And Texas has the following administrators:
+      | Bob Dole       | bob.dole@example.com      |
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
       | Quincy Jones   | quincy.jones@example.com   |
@@ -42,7 +44,7 @@ Feature: Signing up for an account
       | First name     | John             |
       | Last name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | State Jurisdiction | Texas        |
+      | Home Jurisdiction | Texas        |
       | Preferred language | English      |
     Then I should see "Thanks for signing up"
     And "john@example.com" should not have the "Public" role in "Dallas County"
@@ -124,7 +126,43 @@ Feature: Signing up for an account
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
     Then I should not see "Awaiting Approval"
-    
+
+  Scenario: Signing up as a public health professionals in Texas
+    When I signup for an account with the following info:
+      | Email          | john@example.com |
+      | Password       | Password1        |
+      | Password confirmation | Password1 |
+      | First name     | John             |
+      | Last name      | Smith            |
+      | Preferred name | Jonathan Smith   |
+      | Home Jurisdiction | Texas    |
+      | What is your primary role | Health Alert and Communications Coordinator |
+      | Preferred language | English      |
+      | Are you a public health professional? | <checked> |
+    Then I should see "Thanks for signing up"
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+    And "john@example.com" should have the "Public" role for "Texas"
+    And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Texas"
+
+    And the following users should receive the email:
+      | roles         | Texas / Admin |
+      | subject       | User requesting role Health Alert and Communications Coordinator in Texas |
+      | body contains | requested assignment |
+      | body contains | Jonathan Smith (john@example.com) |
+      | body contains | Health Alert and Communications Coordinator |
+      | body contains | Texas |
+
+    Given I have confirmed my account for "john@example.com"
+    When I log in as "john@example.com"
+    And I follow "Han"
+    Then I should see "Awaiting Approval"
+
+    Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
+    When I log in as "john@example.com"
+    Then I should not see "Awaiting Approval"
+
   Scenario: Signing up should not display system-roles
     Given there is an system only Admin role
     When I go to the sign up page

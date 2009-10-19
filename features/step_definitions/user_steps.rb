@@ -87,7 +87,7 @@ end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
-  fill_in_user_signup_form("Email" => email, "State Jurisdiction" => "Texas")
+  fill_in_user_signup_form("Email" => email, "Home Jurisdiction" => "Texas")
   click_button "Sign Up"
 end
 

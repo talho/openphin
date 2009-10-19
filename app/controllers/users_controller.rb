@@ -59,7 +59,7 @@ class UsersController < ApplicationController
 
     @user = User.new params[:user]
     # Used to compound errors with @user.errors.add so user sees all things that aren't valid on post
-    @user.save if !@user.valid?
+    @user.save unless @user.valid?
 
     if params[:user][:role_requests_attributes].blank?
       @user.errors.add "Home jurisdiction", "can't be blank"
