@@ -36,6 +36,14 @@ Feature: Adding documents to document sharing
     Then members of the group should see the document in their "Inbox" folder
 
   Scenario: Creating folders to organize documents
+    When I go to the Documents page
+    And I fill in "Folder Name" with "Important" 
+    And I press "Create"
+    Then I should see "Important"
+    
+    And I fill in "Folder Name" with "Less Important" 
+    And I press "Create"
+    Then I should see "Less Important"
 
   Scenario: Creating nested folders to organize documents
 
