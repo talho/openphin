@@ -31,7 +31,7 @@ Feature: Adding documents to document sharing
 
   Scenario: Receiving documents from other users
     Given another user has sent me a document
-    I should see the document in my Inbox folder
+    Then I should see the document in my Inbox folder
 
   Scenario: forwarding documents to another group of recipients
     When I go to the documents page
