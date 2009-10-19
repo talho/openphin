@@ -98,6 +98,7 @@ describe Organization do
     before do
       @jurisdiction = Factory(:jurisdiction)
       Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+      Organization.delete_all
       Organization.create! :name => 'Banana', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
       Organization.create! :name => 'Apple', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
       Organization.create! :name => 'Cucumber', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
@@ -128,7 +129,8 @@ describe Organization do
         organization2 = Factory(:organization)
         OrganizationRequest.create!(:approved => true, :jurisdiction => Factory(:jurisdiction), :organization => organization2)
         approved_orgs = [organization1, organization2]
-        Organization.approved.should == approved_orgs
+        Organization.approved.should include(*approved_orgs)
+        Organization.approved.should_not include(unapproved_org)
       end
     end
   end
