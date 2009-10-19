@@ -29,12 +29,6 @@ Feature: Adding documents to document sharing
       | Filename     | keith.jpg  |
       | Content Type | image/jpeg |
 
-  Scenario: Sending a document to users identified in a group
-    Given I have a document in my root folder
-    When I select a group
-    And I click "Send to group"
-    Then members of the group should see the document in their "Inbox" folder
-
   Scenario: Creating folders to organize documents
     When I go to the Documents page
     And I fill in "Folder Name" with "Important" 
@@ -56,6 +50,23 @@ Feature: Adding documents to document sharing
     And I select " Everything" from "Inside"
     And I press "Create"
     Then I should see "Some Things"
+
+  Scenario: Sending a document to users identified in a group
+    Given I have the document "keith.jpg" in my root folder
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |    And the following groups for "admin@dallas.gov" exist:
+      | Jane Smith      | jane.smith@example.com   | Public | Dallas County |    And the following groups for "admin@dallas.gov" exist:
+      | Dallas Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
+
+    When I follow "Share"
+    And I select "Dallas Group" from "Group"
+    And I press "Send to Group"
+    
+    Given I am logged in as "john.smith@example.com"
+    Then I should see "keith.jpg"
+
+    Given I am logged in as "jane.smith@example.com"
+    Then I should not see "keith.jpg"
 
   Scenario: Receiving documents from other users
     Given another user has sent me a document

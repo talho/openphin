@@ -1,0 +1,34 @@
+<fieldset class="filterable list">
+  <legend>Jurisdictions</legend>
+  <%= jurisdiction_list(form) %>
+</fieldset>
+<fieldset class="filterable list">
+  <legend>Limit Roles</legend>
+  <ul class="check_selector">
+    <%- Role.user_roles.each do |r| -%>
+      <li><%= check_box_tag "#{form.object_name}[role_ids][]", r.id, form.object.role_ids.include?(r.id), :id => "#{form.object_name}_role_#{r.id}" %>
+      <%= label_tag "#{form.object_name}_role_#{r.id}", r.name %>
+      </li>
+    <%- end -%>
+  </ul>
+</fieldset>
+
+<fieldset class="filterable list last">
+  <legend>Groups</legend>
+  <ul class="check_selector">
+    <%- current_user.visible_groups.each do |grp| -%>
+      <li><%= check_box_tag "#{form.object_name}[group_ids][]", grp.id, form.object.group_ids.include?(grp.id), :id => "#{form.object_name}_group_#{grp.id}" %>
+      <%= label_tag "#{form.object_name}_group_#{grp.id}", grp.name %>
+      </li>
+    <%- end -%>
+  </ul>
+</fieldset>
+
+<fieldset class="people">
+  <legend>People</legend>
+  <%- form.object.users.each do |user| -%>
+    <%= hidden_field_tag "#{form.object_name}[user_ids][]", user.id %>
+  <%- end -%>
+
+  <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %>
+</fieldset>
