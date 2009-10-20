@@ -42,6 +42,7 @@ Feature: Viewing the alert log
     And an alert with:
       | from_jurisdiction | Dallas County |
       | title             | Hello World   |
+      | jurisdictions     | Dallas County |
     When I am on the alert log
     Then I should see an alert titled "Hello World"
   
