@@ -126,9 +126,7 @@ class Alert < ActiveRecord::Base
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
-      self.audiences.map do |audience|
-        alert.targets.build :audience => audience
-      end
+      alert.audiences = self.audiences
     end
   end
 
@@ -143,9 +141,7 @@ class Alert < ActiveRecord::Base
       alert.title = "[Update] - #{title}"
       alert.message_type = MessageTypes[:update]
       alert.original_alert = self
-      self.audiences.map do |audience|
-        alert.targets.build :audience => audience
-      end
+      alert.audiences = self.audiences
     end
   end
 

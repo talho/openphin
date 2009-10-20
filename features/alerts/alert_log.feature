@@ -61,6 +61,7 @@ Feature: Viewing the alert log
       | author            | Sam Body      |
       | from_jurisdiction | Potter County |
       | title             | Hello World   |
+      | jurisdiction      | Potter County |
     When I am on the alert log
     Then I should not see an alert titled "Hello World"
  

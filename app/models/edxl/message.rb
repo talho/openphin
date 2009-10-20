@@ -124,18 +124,20 @@ module EDXL
             :reference => alert.references,
             :ack_distribution_reference => "#{message.distribution_id},#{message.sender_id},#{Time.parse(message.datetime_sent).utc.iso8601(3)}"
           )
-
+          
+          audience = a.audiences.build
+          
           message.fips_codes.each do |code|
             j = Jurisdiction.find_by_fips_code(code)
-            a.jurisdictions << j if j
+            audience.jurisdictions << j if j
           end
           message.roles.each do |role|
             role = Role.find_by_name(role.strip)
-            a.roles << role if role
+            audience.roles << role if role
           end
           message.users.each do |email|
             user=User.find_by_email(email)
-            a.users << user if user
+            audience.users << user if user
           end
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
