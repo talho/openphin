@@ -31,8 +31,6 @@
 #  photo_updated_at   :datetime
 #
 
-# Required Attributes: :cn, :sn, :organizations
-
 class User < ActiveRecord::Base
   extend Clearance::User::ClassMethods
   include Clearance::User::InstanceMethods
@@ -128,7 +126,7 @@ class User < ActiveRecord::Base
     indexes display_name
     indexes title
     indexes email
-
+  
     set_property :delta => :delayed
   end
 
