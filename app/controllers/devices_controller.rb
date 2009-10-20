@@ -5,11 +5,20 @@ class DevicesController < ApplicationController
 
   def destroy
     @device = Device.find(params[:id])
-    @device.destroy
-    begin
-      redirect_to :back
-    rescue
-      redirect_to dashboard_path
+    if current_user.is_admin_for?(@device.user.jurisdictions)
+      @device.destroy
+      begin
+        redirect_to :back
+      rescue
+        redirect_to dashboard_path
+      end
+    else
+      flash[:error] = "This resource does not exist or is not available."
+      begin
+        redirect_to :back
+      rescue
+        redirect_to dashboard_path
+      end
     end
   end
 
