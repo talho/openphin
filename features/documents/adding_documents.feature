@@ -54,8 +54,10 @@ Feature: Adding documents to document sharing
   Scenario: Sending a document to users identified in a group
     Given I have the document "keith.jpg" in my root folder
     And the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |    And the following groups for "admin@dallas.gov" exist:
-      | Jane Smith      | jane.smith@example.com   | Public | Dallas County |    And the following groups for "admin@dallas.gov" exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And the following groups for "admin@dallas.gov" exist:
+      | Jane Smith      | jane.smith@example.com   | Public | Dallas County |    
+    And the following groups for "admin@dallas.gov" exist:
       | Dallas Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
 
     When I follow "Share"
