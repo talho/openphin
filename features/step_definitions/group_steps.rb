@@ -40,7 +40,7 @@ end
 
 Then /^I should see "(.*)" as a groups option$/ do |name|
   group = Group.find_by_name!(name)
-  response.should have_selector("input[name='alert[group_ids][]']", :value => group.id.to_s)
+  response.should have_selector("input[name='alert[audience_ids][]']", :value => group.id.to_s)
 end
 Then /^I should see that the group includes\:$/ do |table|
   table.raw.each do |row|

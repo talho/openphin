@@ -2,7 +2,7 @@ module FeatureHelpers
   module BuilderMethods
     def create_alert_with(attributes)
       attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
-      jurisdictions = attributes.delete('jurisdictions').to_s.split(',').map{|m| Jurisdiction.find_by_name(m.strip)}
+      jurisdictions = (attributes.delete('jurisdictions') || attributes.delete('jurisdiction')).to_s.split(',').map{|m| Jurisdiction.find_by_name(m.strip)}
       roles = attributes.delete('roles').to_s.split(',').map{|m| Role.find_or_create_by_name(m.strip)}
       users = attributes.delete('people').to_s.split(',').map{ |m|
         first_name, last_name = m.split(/\s+/) 
@@ -20,7 +20,7 @@ module FeatureHelpers
       end
 
       if attributes.has_key?("communication methods")
-        attributes['device_types']= attributes.delete('communication methods').split(",").map{|device_name| "Device::#{device_name}Device"}
+        attributes['device_types']= attributes.delete('communication methods').split(",").map{|device_name| "Device::#{device_name.strip}Device"}
       end
 
       if attributes.has_key?("delivery time")

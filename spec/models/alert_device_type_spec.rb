@@ -14,8 +14,8 @@ require 'spec_helper'
 describe AlertDeviceType do
   
   describe "device_type" do
-    it "should constantize class for 'Phone'" do
-      AlertDeviceType.new(:device => 'Phone').device_type.should == Service::Phone
+    it "should constantize class for 'Device::Phone'" do
+      AlertDeviceType.new(:device => 'Device::Phone').device_type.should == Device::Phone
     end
     
     it "should not do evil things" do
