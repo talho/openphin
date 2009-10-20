@@ -13,6 +13,6 @@ class AlertDeviceType < ActiveRecord::Base
   belongs_to :alert
   
   def device_type
-    self.device.constantize
+    "Service::#{device}".constantize
   end
 end
