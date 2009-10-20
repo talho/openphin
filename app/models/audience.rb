@@ -29,6 +29,11 @@ class Audience < ActiveRecord::Base
   def foreign_jurisdictions
     Array(jurisdictions.foreign.root)
   end
+  
+  #TODO: opportunity for optimization:  perform this function in SQL, not using map
+  def foreign_users
+    @foreign_users ||= users.reject{|u| u.jurisdictions.foreign.empty? }
+  end
 
   def recipients
     # if users.empty?

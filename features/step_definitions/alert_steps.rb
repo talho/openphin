@@ -13,7 +13,7 @@ Given /^(\d+) (?:more alerts are|more alert is) sent to me$/ do |n|
   n.to_i.times do |i|
     # always make these alerts happen after the last alert for the user
     alert = create_alert_with "people" => current_user.name, "created_at" => last_alert.created_at + 1.second
-    alert.deliver_batch
+    alert.batch_deliver
   end
 end
 
@@ -172,11 +172,7 @@ end
 
 Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
   alert = Alert.find_by_identifier(alert_id)
-  if(alert.organizations.empty?)
     Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first.sys_acknowledged_at?.should be_true
-  else
-    alert.organizations.first.deliveries.first.sys_acknowledged_at?.should be_true
-  end
 end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|

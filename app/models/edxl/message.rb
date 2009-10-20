@@ -97,7 +97,7 @@ module EDXL
       returning super do |message|
         message.alerts.each do |alert|
           next if options[:no_delivery]
-          a = ::Alert.create!(
+          a = ::Alert.new(
             :identifier => alert.identifier,
             :message_type => message.distribution_type,
             :references => alert.references,
@@ -139,6 +139,8 @@ module EDXL
             user=User.find_by_email(email)
             audience.users << user if user
           end
+          
+          a.save!
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
 
@@ -152,9 +154,9 @@ module EDXL
           a.batch_deliver
           Dir.ensure_exists(File.join(Agency[:phin_ms_path]))
 
-          f=File.open(File.join(Agency[:phin_ms_path], "#{a.identifier}-ACK.edxl"), 'w' )
-          f.write(a.to_ack_edxl)
-          f.close     
+          File.open(File.join(Agency[:phin_ms_path], "#{a.identifier}-ACK.edxl"), 'w' ) do |f|
+            f.write(a.to_ack_edxl)
+          end
         end
       end
     end
@@ -183,15 +185,9 @@ module EDXL
     
     def acknowledge
       if !alert.nil?
-        if alert.organizations.empty?
-          d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
-          d.sys_acknowledged_at = Time.zone.now
-          d.save!
-        else
-          d = alert.alert_attempts.first.deliveries.first
-          d.sys_acknowledged_at = Time.zone.now
-          d.save!
-        end
+        d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
+        d.sys_acknowledged_at = Time.zone.now
+        d.save!
       end
     end
 
