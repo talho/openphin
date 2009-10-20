@@ -48,6 +48,7 @@ class Alert < ActiveRecord::Base
   belongs_to :from_organization, :class_name => 'Organization'
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   belongs_to :original_alert, :class_name => 'Alert'
+  has_one :audience, :as => :item
   has_and_belongs_to_many :users
   has_and_belongs_to_many :jurisdictions
   has_and_belongs_to_many :roles

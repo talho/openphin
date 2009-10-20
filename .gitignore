@@ -36,3 +36,5 @@ config/system.yml
 .loadpath
 diagrams/
 attachments
+test
+spec/fixtures/*.yml

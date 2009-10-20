@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: groups
+# Table name: audiences
 #
 #  id                    :integer(4)      not null, primary key
 #  name                  :string(255)
@@ -9,6 +9,7 @@
 #  created_at            :datetime
 #  updated_at            :datetime
 #  owner_jurisdiction_id :integer(4)
+#  type                  :string(255)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
