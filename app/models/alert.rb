@@ -250,11 +250,6 @@ class Alert < ActiveRecord::Base
       write_attribute("sent_at", Time.zone.now)
     end
   end
-  
-  #TODO: opportunity for optimization:  perform this function in SQL, not using map
-  def foreign_users
-    @foreign_users ||= users.map{|u| u if u.jurisdictions.foreign.all.any? }.compact
-  end
 
   def sender
     from_jurisdiction.nil? ? from_organization_name :  from_jurisdiction.name
