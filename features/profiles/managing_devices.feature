@@ -10,6 +10,8 @@ Feature: Managing devices when editing user profiles
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And the following administrators exist:
