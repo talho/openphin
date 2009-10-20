@@ -5,7 +5,7 @@ class DevicesController < ApplicationController
 
   def destroy
     @device = Device.find(params[:id])
-    if current_user.is_admin_for?(@device.user.jurisdictions)
+    if current_user == @device.user || current_user.is_admin_for?(@device.user.jurisdictions)
       @device.destroy
       begin
         redirect_to :back
