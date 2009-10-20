@@ -85,7 +85,7 @@ module FeatureHelpers
         when "People"
         value.split(',').each do |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'alert_user_ids', :with => user.id.to_s
+          fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
         end
       when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time'
         select value, :from => label unless label == 'Delivery Time'

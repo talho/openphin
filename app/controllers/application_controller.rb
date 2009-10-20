@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
     
     def can_view_alert
       alert = Alert.find(params[:id])
-      unless !alert.nil? && alert.find_user_recipients.include?(current_user)
+      unless !alert.nil? && alert.recipients.include?(current_user)
         flash[:error] = "That resource does not exist or you do not have access to it."
         redirect_to dashboard_path
       end
