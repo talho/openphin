@@ -83,7 +83,8 @@ class UserProfilesController < ApplicationController
 
     params[:user][:role_requests_attributes].each do |index, role_requests|
       if (role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?) ||
-          !RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_requests['role_id'], role_requests['jurisdiction_id']).nil?
+          (RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_requests['role_id'], role_requests['jurisdiction_id']) &&
+              params[:user_id] == current_user.id)
         params[:user][:role_requests_attributes].delete(index)
       else
         role_requests[:requester_id] = current_user.id 

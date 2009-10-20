@@ -11,7 +11,7 @@
 
   <p>
     <%= f.label :jurisdiction_id,  "Jurisdiction" %><br/>
-    <%= f.collection_select :jurisdiction_id, current_user.jurisdictions.admin, :id, :name, :include_blank => true %><br/>
+    <%= f.collection_select :jurisdiction_id, current_user.jurisdictions.admin.map{|jur| jur.self_and_descendants}.flatten.uniq, :id, :name, :include_blank => true %><br/>
   </p>
 
   <p>
