@@ -46,7 +46,7 @@ class RoleRequest < ActiveRecord::Base
   end
   
   def approve!(approving_user)
-    if !RoleMembership.already_exists?(user, role, jurisdiction)
+    unless RoleMembership.already_exists?(user, role, jurisdiction)
       self.approver=approving_user
       create_role_membership(:user => user, :role => role, :jurisdiction => jurisdiction)
       self.save
