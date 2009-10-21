@@ -13,7 +13,7 @@
 #
 
 class Group < Audience
-  has_many :group_snapshots
+  has_many :group_snapshots, :foreign_key => 'audience_id'
   has_many :alerts, :through => :group_snapshots
   
   SCOPES = ['Personal', 'Jurisdiction', 'Global']

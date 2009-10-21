@@ -4,7 +4,7 @@ describe 'alerts/new.html.erb' do
 
   before do
     template.stub!(:current_user).and_return stub_model(User)
-    @alert = mock_model(Alert).as_null_object
+    @alert = Alert.new
     assigns[:alert] = @alert
     Jurisdiction.create
     template.stub!(:current_user).and_return(stub_model(User))
