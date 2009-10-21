@@ -54,6 +54,9 @@ module NavigationHelpers
         new_admin_role_assignment_path
       when /the add admin role requests? page/i
         new_admin_role_request_path
+      #add plugin paths here
+      when /the rollcall page/i
+        rollcall_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

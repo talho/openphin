@@ -187,6 +187,9 @@ Then /^I can see the jurisdiction alert acknowledgement rate for "([^\"]*)" in "
   response.should have_selector(".jur_ackpct") do |elm|
 	  elm.should have_selector(".jurisdiction", :content => jurisdiction_name)
 	  elm.should have_selector(".percentage", :content => percentage)
+
+    elm.should have_selector("user.name:nth-child(1)", :content => "alice")
+    elm.should have_selector("user.name:nth-child(2)", :content => "bob")
   end
 end
 
