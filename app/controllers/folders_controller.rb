@@ -1,4 +1,6 @@
 class FoldersController < ApplicationController
+  before_filter :non_public_role_required
+
   def create
     @folder = current_user.folders.build(params[:folder])
     @folder.save!

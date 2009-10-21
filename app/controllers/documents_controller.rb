@@ -1,4 +1,6 @@
 class DocumentsController < ApplicationController
+  before_filter :non_public_role_required
+  
   def index
     @documents = current_user.documents.inbox
   end

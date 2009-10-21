@@ -74,4 +74,3 @@ Feature: Adding documents to document sharing
     When I follow "Rockstars"
     Then I should see "keith.jpg"
     
-  Scenario: sharing documents without having an approved role membership
