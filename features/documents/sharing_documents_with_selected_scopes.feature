@@ -39,7 +39,7 @@ Feature: Sharing documents with selected scopes
     And the role "Health Officer" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I have the document "sample.wav" in my root folder
+    And I have the document "sample.wav" in my inbox
     When I go to the Documents page
     And I follow "Share"
 
@@ -141,6 +141,9 @@ Feature: Sharing documents with selected scopes
     Given I am logged in as "ed.mcguyver@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
+    
+  Scenario: Sharing a document with groups
+  
 
   Scenario: forwarding documents to another group of recipients
     When I fill out the document sharing form with:
