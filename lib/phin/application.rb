@@ -31,6 +31,9 @@ module Phin
         end
       end
 
+      def register_phin_application
+        
+      end
       def role_required(role_or_roles)
         access_roles.concat(role_or_roles.is_a?(String) ? [role_or_roles] : role_or_roles)
       end

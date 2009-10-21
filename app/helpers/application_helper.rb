@@ -24,7 +24,6 @@ module ApplicationHelper
   def portal_toolbar
     output = "<h1><a href='/'>TXPhin</a></h1>"
     output+="<ul>"
-    debugger
     @controller.applications.each do |name, app|
       output+="<li#{" class='current'" if app.entry == controller.class}>#{link_to(name, url_for(:controller => app.entry.controller_name))}</li>";
     end

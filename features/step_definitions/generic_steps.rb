@@ -55,6 +55,7 @@ Then /^I should not see an "([^\"]+)" button$/ do |button_text|
 end
 
 Then /^I should see the following menu\:$/ do |table|
+  debugger
 	name = table.raw[0][1]
 	response.should have_selector("##{name}") do |menu|
 		table.rows.each do |row|
