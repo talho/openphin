@@ -6,15 +6,15 @@ Feature: Sharing documents with selected scopes
 
   Background:
     Given the following entities exists:
-      | Jurisdiction | Dallas County         |
-      | Jurisdiction | Tarrant County        |
-      | Jurisdiction | Wise County           |
-      | Jurisdiction | Potter County         |
-      | Jurisdiction | Texas                 |
-      | Role         | Health Officer        |
-      | Role         | Immunization Director |
-      | Role         | Epidemiologist        |
-      | Role         | WMD Coordinator       |
+      | Jurisdiction  | Dallas County         |
+      | Jurisdiction  | Tarrant County        |
+      | Jurisdiction  | Wise County           |
+      | Jurisdiction  | Potter County         |
+      | Jurisdiction  | Texas                 |
+      | Approval Role | Health Officer        |
+      | Approval Role | Immunization Director |
+      | Approval Role | Epidemiologist        |
+      | Approval Role | WMD Coordinator       |
     And the following users exist:
       | John Smith      | john.smith@example.com     | Health Officer  | Dallas County  |
       | Brian Simms     | brian.simms@example.com    | Epidemiologist  | Dallas County  |
@@ -60,7 +60,7 @@ Feature: Sharing documents with selected scopes
 
   Scenario: Sharing a document with multiple users
     When I fill out the document sharing form with:
-      | People | Keith Gaddis, Dan Morrison |
+      | People | Keith Gaddis, Dan Morrison, Ed McGuyver |
 
     And I press "Share"
     Then I should see "Successfully shared the document"
@@ -70,6 +70,7 @@ Feature: Sharing documents with selected scopes
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
+    And "ed.mcguyver@example.com" should not receive an email
 
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the Documents page
@@ -88,10 +89,11 @@ Feature: Sharing documents with selected scopes
     And I should be on the Documents page
 
     And the following users should receive the email:
-      | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
+      | People        | john.smith@example.com, brian.simms@example.com |
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
-
+    And "ed.mcguyver@example.com" should not receive an email
+    
     Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
@@ -130,9 +132,10 @@ Feature: Sharing documents with selected scopes
     And I should be on the Documents page
 
     And the following users should receive the email:
-      | People        | john.smith@example.com, ed.mcguyver@example.com |
+      | People        | john.smith@example.com |
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
+    And "ed.mcguyver@example.com" should not receive an email
 
     Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
@@ -140,7 +143,7 @@ Feature: Sharing documents with selected scopes
     
     Given I am logged in as "ed.mcguyver@example.com"
     When I go to the Documents page
-    Then I should see "sample.wav"
+    Then I should not see "sample.wav"
     
   Scenario: Sharing a document with groups
   
