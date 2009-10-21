@@ -76,7 +76,7 @@ Feature: Sending CDC test cases
     Then I should see a preview of the message
 
     When I press "Send"
-    Then I should see "Successfully sent the alert"
+    Then I should see "Successfully sent the alert"    
     And a foreign alert "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
 
   Scenario: Test case 2--Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections

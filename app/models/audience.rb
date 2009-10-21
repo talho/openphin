@@ -27,7 +27,12 @@ class Audience < ActiveRecord::Base
   end
   
   def foreign_jurisdictions
-    Array(jurisdictions.foreign.root)
+    first_foreign = jurisdictions.foreign.first
+    if first_foreign
+      [first_foreign.root]
+    else
+      []
+    end
   end
   
   #TODO: opportunity for optimization:  perform this function in SQL, not using map
@@ -36,18 +41,6 @@ class Audience < ActiveRecord::Base
   end
 
   def recipients
-    # if users.empty?
-    #   if jurisdictions && jurisdictions.empty?
-    #     if jurisdictional_level =~ /local/i
-    #       jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
-    #     end
-    #     if jurisdictional_level =~ /state/i
-    #       jurisdictions << Jurisdiction.root.children.nonforeign
-    #     end
-    #   end
-    # end
-    # roles = Role.all if roles.empty?
-    
     user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
     user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
 
