@@ -2,11 +2,12 @@ class DocumentsController < ApplicationController
   def index
     @documents = current_user.documents
     @folders = current_user.folders.roots
+    @share = Share.new
   end
   
   def create
-    @document = current_user.documents.build(params[:document])
-    @document.save!
+    @share = current_user.shares.build(params[:share])
+    @share.save!
     redirect_to documents_path
   end
   

@@ -54,7 +54,7 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
    
-   Given I am signed in as "keith.gaddis@example.com"
+   Given I am logged in as "keith.gaddis@example.com"
    When I go to the Documents page
    Then I should see "sample.wav"
 
@@ -71,11 +71,11 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
 
-    Given I am signed in as "keith.gaddis@example.com"
+    Given I am logged in as "keith.gaddis@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
 
-    Given I am signed in as "dan.morrison@example.com"
+    Given I am logged in as "dan.morrison@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
 
@@ -92,11 +92,11 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
 
-    Given I am signed in as "john.smith@example.com"
+    Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
     
-    Given I am signed in as "brian.simms@example.com"
+    Given I am logged in as "brian.simms@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
 
@@ -113,11 +113,11 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
    
-    Given I am signed in as "john.smith@example.com"
+    Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
 
-    Given I am signed in as "ethan.waldo@example.com"
+    Given I am logged in as "ethan.waldo@example.com"
     When I go to the Documents page
     Then I should see "sample.wav" 
    
@@ -134,10 +134,10 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
 
-    Given I am signed in as "john.smith@example.com"
+    Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
     
-    Given I am signed in as "ed.mcguyver@example.com"
+    Given I am logged in as "ed.mcguyver@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
