@@ -1,5 +1,0 @@
-default: -r ../../../features/step_definitions -r ../../../features/support -r features/support -r features/step_definitions 
-progress: -r ../../../features/step_definitions -r ../../../features/support -r features/support -r features/step_definitions --format progress
-autotest: -r features/support -r features/step_definitions --format progress --color
-autotest-all: -r features/support -r features/step_definitions --format progress --color
-
