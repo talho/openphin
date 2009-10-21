@@ -20,10 +20,7 @@
 =end
 
 class RollcallController < ApplicationController
-#  include Phin::Application
-#  phin_application "Rollcall", :entry => true
   app_toolbar "rollcall"
-#  role_required "Rollcall"
 
   def index
     
