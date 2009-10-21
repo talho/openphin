@@ -15,7 +15,7 @@ class PhinmsPickupWorker < BackgrounDRb::MetaWorker
         error_filename = File.join(PHINMS_ERROR, file)
         xml=""
         begin
-          unless File.directory?(filename)
+          unless filename.first == "."
             xml= File.read(filename)
             if EDXL::MessageContainer.parse(xml).distribution_type == 'Ack'
               PHINMS_RECEIVE_LOGGER.debug "Parsing acknowledgement"
