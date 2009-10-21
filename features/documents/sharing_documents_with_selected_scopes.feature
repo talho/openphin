@@ -54,9 +54,9 @@ Feature: Sharing documents with selected scopes
       | subject       | John Smith shared a document with you |
       | body contains | To view this document |
    
-   Given I am logged in as "keith.gaddis@example.com"
-   When I go to the Documents page
-   Then I should see "sample.wav"
+    Given I am logged in as "keith.gaddis@example.com"
+    When I go to the Documents page
+    Then I should see "sample.wav"
 
   Scenario: Sharing a document with multiple users
     When I fill out the document sharing form with:
@@ -141,3 +141,26 @@ Feature: Sharing documents with selected scopes
     Given I am logged in as "ed.mcguyver@example.com"
     When I go to the Documents page
     Then I should see "sample.wav"
+
+  Scenario: forwarding documents to another group of recipients
+    When I fill out the document sharing form with:
+      | People   | Keith Gaddis |
+    And I press "Share"
+
+    Given I am logged in as "keith.gaddis@example.com"
+    When I go to the Documents page
+    Then I should see "sample.wav"
+    And I follow "Share"
+    When I fill out the document sharing form with:
+      | People   | Brian Simms |
+    And I press "Share"
+
+    Then I should see "Successfully shared the document"
+    And "brian.simms@example.com" should receive the email:
+       | subject       | John Smith shared a document with you |
+       | body contains | To view this document |
+
+    Given I am logged in as "brian.simms@example.com"
+    When I go to the Documents page
+    Then I should see "sample.wav"
+    
