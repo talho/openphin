@@ -1,14 +1,12 @@
 class DocumentsController < ApplicationController
   def index
-    @documents = current_user.documents
-    @folders = current_user.folders.roots
-    @share = Share.new
+    @documents = current_user.documents.inbox
   end
   
   def create
     @share = current_user.shares.build(params[:share])
     @share.save!
-    redirect_to documents_path
+    redirect_to @share.folder ? @share.folder : documents_path
   end
   
   def show

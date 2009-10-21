@@ -1,7 +1,14 @@
-<%= render 'form' %>
+<%= render 'documents/form' %>
+
+<h3>Folders</h3>
+<ul>
+  <li><%= link_to 'Inbox', documents_path %></li>
+  <%= render current_user.folders.roots %>
+</ul>
+
+<h3>Documents</h3>
 <ul>
   <%= render @documents %>
-  <%= render @folders %>
 </ul>
 
 <%= render 'folders/form' %>
