@@ -63,7 +63,8 @@ Feature: Adding documents to document sharing
   Scenario: Moving a document into a folder
     Given I have a folder named "Rockstars"
     And I have the document "keith.jpg" in my inbox
-    When I follow "Move"
+    When I go to the Documents page
+    And I follow "Move"
     And I select " Rockstars" from "Folder"
     And I press "Move"
 

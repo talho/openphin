@@ -11,4 +11,19 @@ class SharesController < ApplicationController
     flash[:notice] = 'Successfully shared the document'
     redirect_to documents_path
   end
+  
+  def edit
+    find_share
+  end
+  
+  def update
+    find_share
+    @share.update_attributes(params[:share])
+    redirect_to documents_path
+  end
+  
+private
+  def find_share
+    @share = current_user.shares.find_by_id_and_document_id(params[:id], params[:document_id])
+  end
 end

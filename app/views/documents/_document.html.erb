@@ -1,4 +1,5 @@
 <% content_tag_for :li, document do %>
   <%= link_to h(document), document %>
   <%= link_to 'Share', new_document_share_path(document) %>
+  <%= link_to 'Move', edit_document_share_path(document, current_user.shares.find_by_document_id(document.id)) %>
 <% end %>
