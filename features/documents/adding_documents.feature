@@ -9,9 +9,18 @@ Feature: Adding documents to document sharing
     And I am logged in as "admin@dallas.gov"
     
   Scenario: Adding a document to private storage
+    Given I have a folder named "Rockstars"
     When I go to the Documents page
     And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+    And I select " Rockstars" from "Folder"
     And I press "Upload"
+    
+    Then I should see "keith.jpg"
+    
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    
+    When I follow "Rockstars"
     Then I should see "keith.jpg"
     
     When I follow "keith.jpg"

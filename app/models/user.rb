@@ -55,7 +55,11 @@ class User < ActiveRecord::Base
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :shares
-  has_many :documents, :through => :shares
+  has_many :documents, :through => :shares do
+    def inbox
+      scoped :conditions => 'shares.folder_id IS NULL'
+    end
+  end
   has_many :folders
 
   validates_presence_of     :email
