@@ -29,7 +29,7 @@ Feature: Adding documents to document sharing
       | Content Type | image/jpeg |
 
   Scenario: Viewing documents
-    Given I have the document "keith.jpg" in my root folder
+    Given I have the document "keith.jpg" in my inbox
     When I go to the Documents page
     Then I should see "keith.jpg"
 
@@ -60,8 +60,17 @@ Feature: Adding documents to document sharing
     And I press "Create"
     Then I should see "Some Things"
 
-  Scenario: removing a document from sharing
+  Scenario: Moving a document into a folder
+    Given I have a folder named "Rockstars"
+    And I have the document "keith.jpg" in my inbox
+    When I follow "Move"
+    And I select " Rockstars" from "Folder"
+    And I press "Move"
 
-  Scenario: copying a document from another user into personal folder
-
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    
+    When I follow "Rockstars"
+    Then I should see "keith.jpg"
+    
   Scenario: sharing documents without having an approved role membership
