@@ -16,12 +16,19 @@ Given /^"([^\"]*)" has the following schools:$/ do |isd, table|
   end
 end
 
-Given /^"([^\"]*)" has the following absenteeism data:$/ do |isd, table|
+Given /^"([^\"]*)" has the following current absenteeism data:$/ do |isd, table|
   table.hashes.each do |row|
-    row["Date"] = Date.today.strftime("%Y-%m-%d") if row["Date"] == "today"
-    SchoolAbsenseReport.create!(:school => School.find_by_name!(row["SchoolName"]),
-                                :report_date => '#{row["Date"] row["Time"]}',
+#    row["Date"] = Date.today.strftime("%Y-%m-%d") if row["Date"] == "today"
+    date=Date.today + row["Day"].to_i.days
+    AbsenteeReport.create!(:school => School.find_by_name!(row["SchoolName"]),
+                                :report_date => "#{date} 00:00:00",
                                 :enrolled => row["Enrolled"],
                                 :absent => row["Absent"])
+  end
+end
+Then /^I should see an absenteeism summary with the data\:$/ do |table|
+  table.hashes.each do |row|
+    response.should have_selector(".report_date", :content => (Date.today + row["Day"].to_i.days).strftime("%Y-%m-%d"))
+    response.should have_selector(".absentee_pct", :content => row["Percentage"])
   end
 end

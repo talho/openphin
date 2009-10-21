@@ -1,6 +1,6 @@
-class CreateSchoolAbsenseReports < ActiveRecord::Migration
+class CreateSchoolAbsenceReports < ActiveRecord::Migration
   def self.up
-    create_table :school_absense_reports do |t|
+    create_table :school_absence_reports do |t|
       t.integer :school_id
       t.datetime :report_date
       t.integer :enrolled
@@ -10,6 +10,6 @@ class CreateSchoolAbsenseReports < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :school_absense_reports
+    drop_table :school_absence_reports
   end
 end

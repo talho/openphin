@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe SchoolAbsenseReport do
+describe AbsenteeReport do
   before(:each) do
     @valid_attributes = {
       
@@ -8,6 +8,6 @@ describe SchoolAbsenseReport do
   end
 
   it "should create a new instance given valid attributes" do
-    SchoolAbsenseReport.create!(@valid_attributes)
+    AbsenteeReport.create!(@valid_attributes)
   end
 end

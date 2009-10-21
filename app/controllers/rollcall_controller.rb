@@ -23,6 +23,6 @@ class RollcallController < ApplicationController
   app_toolbar "rollcall"
 
   def index
-    
+    @districts = current_user.jurisdictions.map(&:school_districts).flatten!
   end
 end
