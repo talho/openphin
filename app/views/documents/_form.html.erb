@@ -1,0 +1,8 @@
+<% form_for @share, :url => documents_path, :html => {:multipart => true} do |f| %>
+  <%- f.object.build_document -%>
+  <% f.fields_for :document do |d| %>
+    <%= d.label :file, 'Upload Document' %>
+    <%= d.file_field :file %>
+  <% end %>
+  <%= f.submit 'Upload' %>
+<% end %>

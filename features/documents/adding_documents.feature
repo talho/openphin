@@ -51,25 +51,6 @@ Feature: Adding documents to document sharing
     And I press "Create"
     Then I should see "Some Things"
 
-  Scenario: Sending a document to users identified in a group
-    Given I have the document "keith.jpg" in my root folder
-    And the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |
-    And the following groups for "admin@dallas.gov" exist:
-      | Jane Smith      | jane.smith@example.com   | Public | Dallas County |    
-    And the following groups for "admin@dallas.gov" exist:
-      | Dallas Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
-
-    When I follow "Share"
-    And I select "Dallas Group" from "Group"
-    And I press "Send to Group"
-    
-    Given I am logged in as "john.smith@example.com"
-    Then I should see "keith.jpg"
-
-    Given I am logged in as "jane.smith@example.com"
-    Then I should not see "keith.jpg"
-
   Scenario: Receiving documents from other users
     Given another user has sent me a document
     Then I should see the document in my Inbox folder

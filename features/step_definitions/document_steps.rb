@@ -3,7 +3,7 @@ Given 'I have the document "$filename" in my root folder' do |filename|
 end
 
 When "I fill out the document sharing form with:" do |table|
-  fill_in_alert_form table
+  fill_in_audience_form table
 end
 
 Then 'I should receive the file:' do |table|
