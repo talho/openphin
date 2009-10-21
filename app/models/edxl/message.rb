@@ -93,6 +93,22 @@ module EDXL
       parameter.value if parameter
     end
 
+    def self.set_jurisdictions_for_level(alert)
+      alert.audiences.each do |audience|
+        if audience.users.empty?
+          if audience.jurisdictions.empty?
+            if alert.jurisdictional_level =~ /local/i
+              audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+            end
+            if alert.jurisdictional_level =~ /state/i
+              audience.jurisdictions << Jurisdiction.root.children.nonforeign
+            end
+          end
+          audience.roles = Role.all if audience.roles.empty?
+        end
+      end
+    end
+
     def self.parse(xml, options = {})
       returning super do |message|
         message.alerts.each do |alert|
@@ -140,6 +156,7 @@ module EDXL
             audience.users << user if user
           end
           
+          set_jurisdictions_for_level(a)
           a.save!
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
@@ -184,11 +201,12 @@ module EDXL
     end
     
     def acknowledge
-      if !alert.nil?
-        d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
-        d.sys_acknowledged_at = Time.zone.now
-        d.save!
-      end
+      # FIXME: Fragile and broken. :(
+      # if !alert.nil?
+      #   d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
+      #   d.sys_acknowledged_at = Time.zone.now
+      #   d.save!
+      # end
     end
 
     def self.parse(xml, options = {})

@@ -36,7 +36,7 @@ Feature: Alerts from EDXL
     | Jason Phipps | jphipps@example.com | Chief Epidemiologist | Potter County |
     | Wise Coordinator | wisecoordinator@example.com | Health Alert and Communications Coordinator | Wise County |
     | Daniel Morrison | daniel@example.com | Health Officer | Wise County |
-    | Brandon Keeper | brandon@example.com | Health Officer | Texas |
+    | Brandon Keepers | brandon@example.com | Health Officer | Texas |
     | Zach Dennis | zach@example.com | Health Officer | Texas |
     | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
     | Ethan Waldo | ethan@example.com | Public | Potter County |
