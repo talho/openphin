@@ -36,9 +36,10 @@ describe "AlertAttempt" do
 			u2.role_memberships.create!(:role => role, :jurisdiction => @j2)
 			u3.role_memberships.create!(:role => role, :jurisdiction => @j3)
 			u4.role_memberships.create!(:role => Factory(:role), :jurisdiction => @j2)
-			@alert.jurisdictions<< @j1
-			@alert.jurisdictions<< @j2
-			@alert.roles<< role
+			audience = @alert.audiences.build
+			audience.jurisdictions << @j1
+			audience.jurisdictions << @j2
+			audience.roles << role
 			@alert.alert_attempts.create!(:user => u1)
 			@alert.alert_attempts.create!(:user => u2, :acknowledged_at => Time.zone.now)
 			@alert.reload

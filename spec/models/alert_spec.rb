@@ -269,27 +269,6 @@ describe Alert do
     end
   end
 
-  describe "foreign users" do
-    it "should detect and return users with foreign jurisdictions named in the alert" do
-      j1=Factory(:jurisdiction, :foreign => true)
-      j2=Factory(:jurisdiction)
-      u1 = Factory(:user)
-      role = Factory(:role)
-      Factory(:role_membership, :user => u1, :role => role, :jurisdiction => j1)
-      u2 = Factory(:user)
-      Factory(:role_membership, :user => u2, :role => role, :jurisdiction => j2)
-      u3 = Factory(:user)
-      Factory(:role_membership, :user => u3, :role => role, :jurisdiction => j1)
-      Factory(:role_membership, :user => u3, :role => role, :jurisdiction => j2)
-
-      alert=Factory(:alert, :users => [u1,u2,u3])
-      alert.foreign_users.should include(u1)
-      alert.foreign_users.should_not include(u2)
-      alert.foreign_users.should include(u3)
-
-    end
-  end
-
   describe "jurisdictional level" do
     before(:each) do
       @federal=Factory(:jurisdiction,  :foreign => true)
@@ -299,19 +278,19 @@ describe Alert do
       @local.move_to_child_of(@state) 
     end
     it "should have 'Federal' with a foreign root" do
-      alert=Factory(:alert, :jurisdictions => [@federal])
+      alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@federal])])
       alert.jurisdictional_level.should == "Federal"
     end
     it "should have 'State' with a foreign intermediate node" do
-      alert=Factory(:alert, :jurisdictions => [@state])
+      alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@state])])
       alert.jurisdictional_level.should == "State"
     end
     it "should have 'Local' with a foreign terminal leaf node" do
-      alert=Factory(:alert, :jurisdictions => [@local])
+      alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@local])])
       alert.jurisdictional_level.should == "Local"
     end
     it "should have comma-separated list with multiple levels" do
-      alert=Factory(:alert, :jurisdictions => [@federal, @state, @local])
+      alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@federal, @state, @local])])
       alert.jurisdictional_level.should == "Federal,State,Local"
     end
   end
