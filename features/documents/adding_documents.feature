@@ -60,17 +60,6 @@ Feature: Adding documents to document sharing
     And I press "Create"
     Then I should see "Some Things"
 
-  Scenario: Receiving documents from other users
-    Given another user has sent me a document
-    Then I should see the document in my Inbox folder
-
-  Scenario: forwarding documents to another group of recipients
-    When I go to the documents page
-    And I click on a document
-    And I select a group
-    And I click "Forward to Group"
-    Then members of the group should see the document in their inbox folder
-
   Scenario: removing a document from sharing
 
   Scenario: copying a document from another user into personal folder
