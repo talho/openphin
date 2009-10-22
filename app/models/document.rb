@@ -18,6 +18,8 @@ class Document < ActiveRecord::Base
   
   has_many :targets, :as => :item, :after_add => :share
   has_many :audiences, :through => :targets
+  accepts_nested_attributes_for :audiences
+  
   has_many :shares
   
   def to_s
@@ -25,7 +27,7 @@ class Document < ActiveRecord::Base
   end
   
   def share(target)
-    recipients = target.audience.recipients.select(&:has_non_public_role?)
+    recipients = target.audience.recipients(:include_public => false)
     recipients.each do |user|
       shares.create! :user => user
     end

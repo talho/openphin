@@ -59,7 +59,6 @@ Background:
       | Groups        | G2                                           |
     And I press "Share"
 
-    And I press "Share"
     Then I should see "Successfully shared the document"
     And I should be on the Documents page
     And "bob.smith@example.com" should receive the email:

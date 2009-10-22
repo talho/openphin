@@ -6,13 +6,13 @@ end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
+  jurisdiction = Given("a jurisdiction named #{jurisdiction}")
   user = User.find_by_email(email) ||
     Factory(:user, :first_name => first_name, :last_name => last_name, :email => email)
-  if role == "Public"
-    user.role_memberships.create!(:role => Given("a role named Public"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}")) if !user.has_public_role_in?(Given("a jurisdiction named #{jurisdiction}"))
-  else
-    user.role_memberships.create!(:role => Given("a role named #{role}"), :jurisdiction => Given("a jurisdiction named #{jurisdiction}"))
-  end
+  user.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
+    :jurisdiction_id => jurisdiction.id,
+    :role_id => Given("a role named #{role}").id
+  )
 end
 
 Given 'the following users exist:' do |table|

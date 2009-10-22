@@ -27,7 +27,7 @@ class Role < ActiveRecord::Base
     :public => 'Public',
     :han_coordinator => 'Health Alert and Communications Coordinator'
   }
-    
+  
   def self.admin
     find_or_create_by_name_and_approval_required_and_user_role Defaults[:admin],true,false
   end
@@ -43,7 +43,7 @@ class Role < ActiveRecord::Base
   def self.public
     find_or_create_by_name Defaults[:public]
   end
-  
+
   def self.han_coordinator
     find_or_create_by_name Defaults[:han_coordinator]
   end
