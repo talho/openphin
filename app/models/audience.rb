@@ -40,13 +40,19 @@ class Audience < ActiveRecord::Base
     @foreign_users ||= users.reject{|u| u.jurisdictions.foreign.empty? }
   end
 
-  def recipients
-    user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
+  def recipients(options = {})
+    options = {:include_public => true}.merge(options)
+    user_ids_for_delivery = jurisdictions.map do |jurisdiction|
+      memberships = jurisdiction.role_memberships
+      memberships = memberships.not_public_roles unless options[:include_public]
+      memberships.map(&:user_id)
+    end.flatten.uniq
     user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
 
     user_ids_for_delivery += user_ids
 
-    User.find(user_ids_for_delivery)
+    users = User.find(user_ids_for_delivery)
+    options[:include_public] ? users : users.select(&:has_non_public_role?)
   end
 
   private

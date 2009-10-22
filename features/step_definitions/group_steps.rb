@@ -39,9 +39,9 @@ When "I fill out the group form with:" do |table|
 end
 
 Then /^I should see "(.*)" as a groups option$/ do |name|
-  group = Group.find_by_name!(name)
-  response.should have_selector("input[name='alert[audience_ids][]']", :value => group.id.to_s)
+  response.should have_selector(".groups label", :content => name)
 end
+
 Then /^I should see that the group includes\:$/ do |table|
   table.raw.each do |row|
     row[0].split(",").each do |name|
