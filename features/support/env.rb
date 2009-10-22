@@ -13,7 +13,7 @@ Spork.prefork do
 # Cucumber::Rails.use_transactional_fixtures
 # Cucumber::Rails.bypass_rescue # Comment out this line if you want Rails own error handling
   # (e.g. rescue_action_in_public / rescue_responses / rescue_from)
-  Cucumber::Rails::World.use_transactional_fixtures = false
+  Cucumber::Rails::World.use_transactional_fixtures = true
   require 'webrat'
 
   Webrat.configure do |config|
@@ -28,21 +28,37 @@ Spork.prefork do
 
   World ActionController::RecordIdentifier
 
-  ts = ThinkingSphinx::Configuration.instance
-  ts.build
-  FileUtils.mkdir_p ts.searchd_file_path
-  ts.controller.index
-  ts.controller.start
-  at_exit do
-    ts.controller.stop
-  end
+  TS = ThinkingSphinx::Configuration.instance
   ThinkingSphinx.deltas_enabled = true
   ThinkingSphinx.updates_enabled = true
   ThinkingSphinx.suppress_delta_output = true
+  
+  Before('@sphinx') do
+    TS.build
+    FileUtils.mkdir_p TS.searchd_file_path
+    TS.controller.start
+  end
 
-# Re-generate the index before each Scenario
-  Before do
-    ts.controller.index
+  After('@sphinx') do
+    TS.controller.stop
+    reset_database!
+  end
+  
+  def without_transactions
+    @__cucumber_ar_connection.open_transactions.times do
+      @__cucumber_ar_connection.commit_db_transaction
+    end
+    yield
+    @__cucumber_ar_connection.open_transactions.times do
+      @__cucumber_ar_connection.begin_db_transaction
+    end
+  end
+  
+  def reset_database!
+    # http://github.com/bmabey/database_cleaner
+    require 'database_cleaner'
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
   end
 
 end
@@ -54,12 +70,8 @@ Spork.each_run do
     FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
   end
 
-# http://github.com/bmabey/database_cleaner
-  require 'database_cleaner'
-  DatabaseCleaner.strategy = :truncation
   Before do
     ActionMailer::Base.deliveries = []
-    DatabaseCleaner.clean
     # load application-wide fixtures
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
   end
