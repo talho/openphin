@@ -24,5 +24,23 @@ class RollcallController < ApplicationController
 
   def index
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
+
+    reports = current_user.recent_absentee_reports
+    reports_schools = reports.map(&:school).flatten.uniq
+    reports_districts = reports_schools.map(&:district).flatten.uniq
+    @statistics = {}
+    reports_districts.each do |district|
+      @statistics[district.name] = {} unless @statistics[district.name]
+      reports_schools.each do |school|
+        if school.district == district
+          @statistics[district.name][school.display_name] = [] unless @statistics[district.name][school.display_name]
+          reports.each do |report|
+            if report.school == school
+              @statistics[district.name][school.display_name] << report
+            end
+          end
+        end
+      end
+    end
   end
 end

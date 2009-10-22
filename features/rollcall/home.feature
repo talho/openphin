@@ -29,7 +29,7 @@ Feature: Rollcall status screen
       | -1    | LEWIS ES    | 500      | 10     |
       | -2    | LEWIS ES    | 500      | 15     |
       | -3    | LEWIS ES    | 500      | 5      |
-      | -4    | LEWIS ES    | 500      | 10     |
+      | -4    | LEWIS ES    | 500      | 60     |
       | 0     | SOUTHMAYDES | 100      | 2      |
       | -1    | SOUTHMAYDES | 100      | 5      |
       | -2    | SOUTHMAYDES | 100      | 15     |
@@ -65,11 +65,10 @@ Scenario: Seeing the average absenteeism graph(s)
     | -2  | 6.83        |
     | -3  | 4.83        |
     | -4  | 2.67        |
-  And I see WTF is going on
-  And I want to debug
 
 Scenario: Seeing the abseentism alert summary
   Given I am logged in as "nurse.betty@example.com"
   When I go to the rollcall page
-  Then I should see an "orange" rollcall alert for "SICKKIDS ES" with 15% absenteeism
+  Then I should see an "low" rollcall summary for "LEWIS ES" with 12.0% absenteeism
+  Then I should see an "medium" rollcall summary for "SOUTHMAYDES" with 15.0% absenteeism
   And I should not see a rollcall alert for "BERRY ES"

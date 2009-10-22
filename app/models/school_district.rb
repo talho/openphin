@@ -13,7 +13,7 @@ class SchoolDistrict < ActiveRecord::Base
       end
     end
     unless absentees.empty?
-      absentees.reduce(0,:+)/absentees.size
+      absentees.inject(&:+)/absentees.size
     else
       0
     end
