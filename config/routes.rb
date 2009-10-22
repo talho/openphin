@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :channels
+
 #  map.resources :user_profiles, :as => "profile"
 
   map.resources :jurisdictions, :devices, :folders
