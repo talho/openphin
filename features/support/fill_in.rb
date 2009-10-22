@@ -105,7 +105,7 @@ module FeatureHelpers
       when "People"
         value.split(',').each do |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'audience_user_ids', :with => user.id.to_s
+          fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
