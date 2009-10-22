@@ -5,11 +5,12 @@ Feature: Creating document channels
 
   Background:
     Given the following administrators exist:
-      | admin@dallas.gov | Dallas County |
+      | admin@dallas.gov  | Dallas County |
+      | brandon@texas.gov | Texas |
     And I am logged in as "admin@dallas.gov"
+    When I go to the Documents page
 
   Scenario: Creating a new channel
-    When I go to the Documents page
     And I follow "New Channel"
     And I fill in "Name" with "Discovery"
     And I press "Create"
@@ -18,7 +19,40 @@ Feature: Creating document channels
     And I should see "Discovery"
   
   Scenario: Adding other owners of a channel
+    # FIXME: pull out next 3 steps into 1 step
+    When I follow "New Channel"
+    And I fill in "Name" with "Project X"
+    And I press "Create"
+    
+    Given I am logged in as "brandon@texas.gov"
+    When I go to the Documents page
+    Then I should not see "Project X"
+    
+    Given I am logged in as "admin@dallas.gov"
+    When I go to the Documents page
+    And I follow "Project X"
+    And I follow "Add Another Owner" 
+    
+    When I fill out the channel owner form with:
+      | People | Brandon Keepers |
+    And I press "Add"
+    Then I should see "Additional owner has been added to this channel"
+    
+    Given I am logged in as "brandon@texas.gov"
+    When I go to the Documents page
+    Then I should see "Project X"
+  
   Scenario: Adding a document to a channel
+    Given I have the channel "Channel 4"
+    And I have the document "sample.wav" in my inbox
+    And I follow "Share with channel"
+    And I choose "Channel 4"
+    And I press "Share"
+    
+    Then I should see "Document was successfully shared with the channel"
+    When I follow "Channel 4"
+    Then I should see "sample.wav"
+  
   Scenario: Inviting users to a channel
   Scenario: Ignoring a channel sent to a user by another user
   Scenario: Removing document from channel
