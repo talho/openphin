@@ -1,10 +1,10 @@
 <%- group_form ||= false -%>
 
-<fieldset class="filterable list">
+<fieldset class="filterable list jurisdictions">
   <legend>Jurisdictions</legend>
   <%= jurisdiction_list(form) %>
 </fieldset>
-<fieldset class="filterable list">
+<fieldset class="filterable list roles">
   <legend>Limit Roles</legend>
   <ul class="check_selector">
     <%- Role.user_roles.each do |r| -%>
