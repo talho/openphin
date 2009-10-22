@@ -29,6 +29,6 @@ end
 
 Then /^I should see the following jurisdictions:$/ do |table|
   table.raw.each do |row|
-    response.should have_selector(".jurisdiction", :content => row[0])
+    response.should have_selector(".jurisdictions *", :content => row[0])
   end
 end

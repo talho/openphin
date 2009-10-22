@@ -22,14 +22,18 @@ end
 
 Then /^I should see the following roles:$/ do |table|
   table.raw.each do |row|
-    response.should have_selector(".role", :content => row[0])
+    response.should have_selector(".roles li", :content => row[0])
   end
 end
 
 Then /^I should see the following group summary:$/ do |table|
   table.rows_hash.each do |key, value|
     value.split(',').each do |item|
-      response.should have_selector(".#{key.singularize}", :content => item)
+      if key =~ /(name|group_scope|owner_jurisdiction)/i
+        response.should have_selector(".#{key}", :content => item)
+      else
+        response.should have_selector(".#{key} *", :content => item)
+      end
     end  
   end
 end
