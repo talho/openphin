@@ -73,4 +73,6 @@ Feature: Adding documents to document sharing
     
     When I follow "Rockstars"
     Then I should see "keith.jpg"
-    
+  
+  Scenario: Updating a shared document
+    # should not update for other users
