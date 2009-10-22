@@ -4,18 +4,18 @@ Feature: Sharing documents using groups
 	I want to select a predefined group from the alert audience screen
 
 Background:
-	Given the following users exist:
+  Given the following entities exist:
+  	| Approval Role | Epidemiologist |
+  	| Approval Role | Health Officer |
+  	| Approval Role | BT Coordinator |
+    | Jurisdiction  | Potter County  |
+	And the following users exist:
 		| John Smith | john.smith@example.com | Admin          | Tarrant County |
 		| Jane Smith | jane.smith@example.com | Health Officer | Tarrant County |
 		| Bob Smith  | bob.smith@example.com  | Epidemiologist | Texas          |
 	And the role "Admin" is an alerter
 	And the role "Health officer" is an alerter
 	And the role "Epidemiologist" is an alerter
-	And the following entities exist:
-		| Approval Role | Epidemiologist |
-		| Approval Role | Health Officer |
-		| Approval Role | BT Coordinator |
-    | Jurisdiction  | Potter County  |
 	And the following groups for "john.smith@example.com" exist:
 	  | G1 | Tarrant County | Health Officer |  | Personal     | |
 	  | G2 | Texas          | Epidemiologist |  | Global       | |
