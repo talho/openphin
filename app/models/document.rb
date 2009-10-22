@@ -25,9 +25,10 @@ class Document < ActiveRecord::Base
   end
   
   def share(target)
-    target.audience.recipients.each do |user|
+    recipients = target.audience.recipients.select(&:has_non_public_role?)
+    recipients.each do |user|
       shares.create! :user => user
     end
-    DocumentMailer.deliver_document(self, target)
+    DocumentMailer.deliver_document(self, target, recipients)
   end
 end
