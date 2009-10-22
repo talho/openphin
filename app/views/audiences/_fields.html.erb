@@ -1,3 +1,5 @@
+<%- group_form ||= false -%>
+
 <fieldset class="filterable list">
   <legend>Jurisdictions</legend>
   <%= jurisdiction_list(form) %>
@@ -16,19 +18,21 @@
   </ul>
 </fieldset>
 
-<fieldset class="filterable list last">
-  <legend>Groups</legend>
-  <ul class="check_selector">
-    <%- current_user.visible_groups.each do |group| -%>
-      <li>
-          <%= check_box_tag "#{form.object_name}[audience_ids][]", group.id,
-              form.object.audiences.include?(group),
-              :id => "#{form.object_name}_audience_#{group.id}" %>
-          <%= label_tag "#{form.object_name}_audience_#{group.id}", group.name %>
-      </li>
-    <%- end -%>
-  </ul>
-</fieldset>
+<%- if group_form -%>
+  <fieldset class="filterable list last">
+    <legend>Groups</legend>
+    <ul class="check_selector">
+      <%- current_user.visible_groups.each do |group| -%>
+        <li>
+            <%= check_box_tag "#{group_form.object_name}[audience_ids][]", group.id,
+                group_form.object.audiences.include?(group),
+                :id => "#{group_form.object_name}_audience_#{group.id}" %>
+            <%= label_tag "#{group_form.object_name}_audience_#{group.id}", group.name %>
+        </li>
+      <%- end -%>
+    </ul>
+  </fieldset>
+<%- end -%>
 
 <fieldset class="people">
   <legend>People</legend>

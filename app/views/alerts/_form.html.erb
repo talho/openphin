@@ -98,7 +98,9 @@
     <%- if @update.blank? && @cancel.blank? -%>
       <% form.object.audiences.build if form.object.audiences.empty? %>
       <% form.fields_for :audiences do |audience| %>
-        <%= render 'audiences/fields', :form => audience unless audience.object.is_a?(Group) %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => form %>
+        <% end %>
       <% end %>
       
       <%= form.submit "Preview Message" %>
