@@ -9,9 +9,3 @@ end
 When /^I search for "([^\"]*)"$/ do |query|
   visit search_path(:q => query)
 end
-
-Given /^the search index was generated$/ do
-  without_transactions do
-    TS.controller.index
-  end
-end

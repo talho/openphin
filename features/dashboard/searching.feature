@@ -1,4 +1,3 @@
-@sphinx
 Feature: Searching for users
   In order to quickly find people I want to communicate with
   As a logged in user
@@ -23,7 +22,7 @@ Feature: Searching for users
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
     And Health Officer is a non public role
     And HAN Coordinator is a non public role
-    And the search index was generated
+      And delayed jobs are processed
   
   Scenario: Searching for a user
     Given I am logged in as "amy@example.com"
