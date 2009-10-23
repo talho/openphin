@@ -83,5 +83,11 @@ Feature: School
       | -2  | 3.0         |
       | -3  | 1.0         |
       | -4  | 12.0        |
+    When I follow "Next"
+    Then I should see school data for "SOUTHMAYDES"
+    Then I should not see the link "Next"
+    When I follow "Prev"
+    Then I should see school data for "LEWIS ES"
     When I follow "Prev"
     Then I should see school data for "BERRY ES"
+    Then I should not see the link "Prev"
