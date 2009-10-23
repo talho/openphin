@@ -25,6 +25,18 @@ class RollcallController < ApplicationController
   def index
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
 
+
+    @chart=Gchart.line(:size => "600x400",
+                      :title => "Average Absenteeism",
+                      :axis_with_labels => "x,y",
+                      :axis_labels => [(-6..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")],
+                      :max => 30,
+                      :legend => @districts.map(&:name),
+                      :data => @districts.map{|d| d.recent_absentee_rates(7).map{|m|m*100}},
+                      :custom => "chxr=1,0,30",
+                      :encoding => "text",
+                      :max_value => 30
+    )
     reports = current_user.recent_absentee_reports
     reports_schools = reports.map(&:school).flatten.uniq
     reports_districts = reports_schools.map(&:district).flatten.uniq

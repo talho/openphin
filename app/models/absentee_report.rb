@@ -7,6 +7,11 @@ class AbsenteeReport < ActiveRecord::Base
       :conditions => {:report_date => date}
     }
   }
+  named_scope :for_date_range, lambda{ |start, finish|
+    {
+      :conditions => ["report_date >= ? and report_date <= ?", start, finish]
+    }
+  }
   named_scope :recent, lambda{{:limit => '20', :order => "report_date DESC"}}
   named_scope :absenses, lambda{{:conditions => ['absentee_reports.absent / absentee_reports.enrolled >= .11']}}
 

@@ -6,16 +6,16 @@ class SchoolDistrict < ActiveRecord::Base
   def average_absence_rate(date=nil)
     date=Date.today if date.nil?
     absentees=absentee_reports.for_date(date).map do |report|
-      unless report.enrolled.blank?
-        report.absent.to_f/report.enrolled.to_f
-      else
-        0
-      end
+      report.enrolled.blank? ? 0 : report.absent.to_f/report.enrolled.to_f
     end
-    unless absentees.empty?
-      absentees.inject(&:+)/absentees.size
-    else
-      0
+
+    absentees.empty? ? 0 : (absentees.reduce(0,:+)/absentees.size).round(4)
+  end
+  def recent_absentee_rates(days)
+    avgs=Array.new
+    (Date.today-(days-1).days).upto Date.today do |date|
+      avgs.push(average_absence_rate(date))
     end
+    avgs
   end
 end

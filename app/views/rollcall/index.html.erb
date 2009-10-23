@@ -1,17 +1,8 @@
+
+  <div class='rollcall_chart'>
+    <%=  image_tag @chart %>
+  </div>
 <% @districts.each do |dist| %>
-  <h3><%= dist.name  %></h3>
-  <table>
-    <tr>
-      <td>Date</td>
-      <td>Absentee Percentage</td>
-    </tr>
-    <% Date.today.downto (Date.today-7.days) do |date| %>
-      <tr>
-        <td class='report_date'><%= date.strftime("%Y-%m-%d") %></td>
-        <td class='absentee_pct'><%= (dist.average_absence_rate(date) * 100).to_f.round(2) %></td>
-      </tr>
-    <% end %>
-  </table>
   <div>
     <p>Absenteeism Summary</p>
     <div class="rollcall_summary">
@@ -39,3 +30,4 @@
     </div>
   </div>
 <% end %>
+

@@ -52,8 +52,8 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
   #TODO: add these back in later
-  #config.gem "libxslt-ruby"
-  #config.gem "libxml-ruby"
+#  config.gem "libxslt-ruby"
+#  config.gem "libxml-ruby"
   config.gem "hpricot", :version => "=0.6"
   
   config.gem 'thoughtbot-clearance',
@@ -75,6 +75,9 @@ Rails::Initializer.run do |config|
     :source => 'http://gems.github.com',
     :version => '0.1.15'
   config.gem 'validatable', :version => '1.6.7'
+  config.gem 'mattetti-googlecharts',
+    :lib => 'gchart',
+    :source => 'http://gems.github.com'
 end
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')
