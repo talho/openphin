@@ -153,3 +153,8 @@ Factory.define :group do |m|
   m.association :owner, :factory => :user
 	m.scope "Personal"
 end
+
+Factory.define :target do |m|
+  m.association :audience, :factory => :group
+  m.association :item, :factory => :alert
+end
