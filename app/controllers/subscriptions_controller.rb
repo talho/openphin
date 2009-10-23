@@ -3,22 +3,22 @@ class SubscriptionsController < ApplicationController
   
   def new
     @channel = current_user.owned_channels.find(params[:channel_id])
-    @subscription = @channel.subscriptions.build(:owner => true)
+    @subscription = @channel.subscriptions.build
   end
   
   def create
     @channel = current_user.owned_channels.find(params[:channel_id])
     @audience = Audience.new(params[:audience])
     @channel.targets.create! :audience => @audience, :creator => current_user
-    @channel.promote_to_owner(@audience)
+    @channel.promote_to_owner(@audience) if params[:owner]
     if params[:channel]
       params[:channel][:audience_ids].each do |id|
         @channel.targets.create! :audience_id => id, :creator => current_user
-        @channel.promote_to_owner(Audience.find(id))
+        @channel.promote_to_owner(Audience.find(id)) if params[:owner]
       end
     end
 
-    flash[:notice] = "Additional owner has been added to this channel"
+    flash[:notice] = "Additional #{params[:owner] ? 'owners' : 'users'} have been added to this channel"
     redirect_to documents_path
   end
 
