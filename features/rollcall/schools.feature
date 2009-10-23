@@ -1,7 +1,7 @@
-Feature: Rollcall status screen
-  In order to view general information about school surveillance data
+Feature: School
+  In order to view absentee and ILI surveillance data for a school
   As a permitted user
-  I should see status information when I browse to the Rollcall Home screen
+  I should see absentee and ILI graphs when I browse to the Rollcall School View screen
 
   Background:
     Given the following entities exist:
@@ -41,33 +41,47 @@ Feature: Rollcall status screen
       | -3    | BERRY ES    | 200      | 10     |
       | -4    | BERRY ES    | 200      | 10     |
 
-Scenario: Accessing the Rollcall application
-  Given I am logged in as "nurse.betty@example.com"
-  When I go to the dashboard page
-  Then I should see the following menu:
-    | name | portal_toolbar |
-    | item | Rollcall       |
-  
-Scenario: Viewing the Home screen
-  Given I am logged in as "nurse.betty@example.com"
-  When I go to the rollcall page
-  Then I should see the following menu:
+  Scenario: Viewing the School View screen
+    Given I am logged in as "nurse.betty@example.com"
+    When I go to the dashboard page
+    And I follow "Rollcall"
+    Then I should see the following menu:
 			| name | app_toolbar |
 			| item | Main        |
       | item | School View |
+    When I follow "School View"
+    Then I should be on the schools page
 
-Scenario: Seeing the average absenteeism graph(s)
-  Given I am logged in as "nurse.betty@example.com"
-  When I go to the rollcall page
-  Then I should see an absenteeism graph with the following:
-    | data        | 0,0,8.0,5.33,6.83,4.83,2.67 |
-    | data-label  | Houston ISD                  |
-    | title       | Average % Absenteeism        |
-    | range       | 0,30                         |
+  Scenario: Selecting a district and school from the dropdown
+    Given I am logged in as "nurse.betty@example.com"
+    When I go to the dashboard page
+    And I follow "Rollcall"
+    And I follow "School View"
+    When I select "Houston ISD" from "District"
+    And I press "Choose"
+    And I select "LEWIS ES" from "School"
+    And I press "Choose"
+    Then I should see school data for "LEWIS ES"
 
-Scenario: Seeing the abseentism alert summary
-  Given I am logged in as "nurse.betty@example.com"
-  When I go to the rollcall page
-  Then I should see an "low" rollcall summary for "LEWIS ES" with 12.0% absenteeism
-  Then I should see an "medium" rollcall summary for "SOUTHMAYDES" with 15.0% absenteeism
-  And I should not see a rollcall alert for "BERRY ES"
+  Scenario: Viewing the first school and going from there
+    Given I am logged in as "nurse.betty@example.com"
+    When I go to the schools page
+    Then I should see school data for "BERRY ES"
+    And I should see an absenteeism summary with the data:
+      | Day | Percentage  |
+      | 0   | 5.0         |
+      | -1  | 7.5         |
+      | -2  | 2.5         |
+      | -3  | 5.0         |
+      | -4  | 5.0         |
+    When I follow "Next"
+    Then I should see school data for "LEWIS ES"
+    And I should see an absenteeism summary with the data:
+      | Day | Percentage  |
+      | 0   | 1.0         |
+      | -1  | 2.0         |
+      | -2  | 3.0         |
+      | -3  | 1.0         |
+      | -4  | 12.0        |
+    When I follow "Prev"
+    Then I should see school data for "BERRY ES"

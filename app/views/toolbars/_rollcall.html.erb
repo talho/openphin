@@ -1,3 +1,4 @@
 <ul>
-  <li><%= link_to "Main", rollcall_path %></li>
+  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "rollcall" %>><%= link_to "Main", rollcall_path %></li>
+  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "schools" %>><%= link_to "School View", schools_path %></li>
 </ul>

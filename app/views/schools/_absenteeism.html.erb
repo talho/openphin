@@ -1,0 +1,19 @@
+<div class="school_data">
+  <div class="school">
+    <h3><%= @school.display_name %></h3>
+    <table>
+      <tr>
+        <td>Date</td>
+        <td>Absentee Percentage</td>
+      </tr>
+      <% Date.today.downto(Date.today-30.days) do |date| %>
+        <tr>
+          <td class='report_date'><%= date.strftime("%Y-%m-%d") %></td>
+          <td class='absentee_pct'><%= (@school.average_absence_rate(date) * 100).to_f.round(2) %></td>
+        </tr>
+      <% end %>
+    </table>
+    <span class="prev"><%= " #{@prev_school.nil? ? 'Prev' : link_to('Prev', school_path(@prev_school))} " %></span>
+    <span class="next"><%= " #{@next_school.nil? ? 'Next' : link_to('Next', school_path(@next_school))} " %></span>
+  </div>
+</div>

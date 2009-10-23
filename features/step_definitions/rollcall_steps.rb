@@ -11,3 +11,9 @@ end
 Then /^I should not see a rollcall alert for "([^\"]*)"$/ do |school|
   response.should_not have_selector(".school", :content => school)
 end
+
+Then /^I should see school data for "([^\"]*)"$/ do |school|
+  response.should have_selector(".school_data") do |elm|
+    elm.should have_selector(".school", :content => school)
+  end
+end

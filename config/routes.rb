@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
   map.rollcall "/rollcall", :controller => "rollcall"
+  map.resources :schools
 
   # The priority is based upon order of creation: first created -> highest priority.
 

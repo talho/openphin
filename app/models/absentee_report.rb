@@ -12,7 +12,7 @@ class AbsenteeReport < ActiveRecord::Base
       :conditions => ["report_date >= ? and report_date <= ?", start, finish]
     }
   }
-  named_scope :recent, lambda{{:limit => '20', :order => "report_date DESC"}}
+  named_scope :recent, lambda{|limit| {:limit => limit, :order => "report_date DESC"}}
   named_scope :absenses, lambda{{:conditions => ['absentee_reports.absent / absentee_reports.enrolled >= .11']}}
 
   def absentee_percentage
