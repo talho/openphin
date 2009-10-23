@@ -14,8 +14,8 @@ Feature: Viewing groups
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
-      | Health Officer1 | ho1@example.com   | Health Officer | Dallas County |
-      | Health Officer2 | ho2@example.com   | Health Officer | Dallas County |
+      | Health Officer2 | ho1@example.com   | Health Officer | Dallas County |
+      | Health Officer1 | ho2@example.com   | Health Officer | Dallas County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
       | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
@@ -24,15 +24,24 @@ Feature: Viewing groups
       | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
     Given I am logged in as "jill.smith@example.com"
 
-  Scenario: going to view a user group as an admin
+    Scenario: going to view a user group as an admin
+      When I go to the dashboard page
+      Then I should see "Manage Groups"
+      When I follow "Manage Groups"
+      Then I should see "Dallas County Health Officer Group"
+      And I follow "Dallas County Health Officer Group"
+      Then I have loaded the group page for "Dallas County Health Officer Group"
+      And I should see that the group includes:
+        | Health Officer1, Health Officer2 |
+
+  Scenario: going to view a user group as an admin 
     When I go to the dashboard page
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
     And I follow "Dallas County Health Officer Group"
-    Then I have loaded the group page for "Dallas County Health Officer Group"
-    And I should see that the group includes:
-      | Health Officer1, Health Officer2 |
+    Then I should see the user "Health Officer1" immediately before "Health Officer2"
+
 
   Scenario: going to edit a user group as an admin
     When I go to the dashboard page

@@ -20,15 +20,15 @@
   <% end %>
   </div>
 <% end %>
-  <%= f.label(:first_name, "First Name") %><br/>
+  <%= f.label(:first_name, "First Name *") %><br/>
   <%= f.text_field(:first_name) %><br/>
-  <%= f.label(:last_name, "Last Name") %><br/>
+  <%= f.label(:last_name, "Last Name *") %><br/>
   <%= f.text_field(:last_name) %><br/>
   <%= f.label(:display_name, "Preferred name to be displayed") %><br/>
   <%= f.text_field(:display_name) %><br/>
-  <%= f.label(:email, "Email address") %><br/>
+  <%= f.label(:email, "Email address *") %><br/>
   <%= f.text_field(:email) %><br/>
-  <%= f.label(:password, "Password") %><br/>
+  <%= f.label :password, "Password *" %><b> (6 chars minimum with no special characters, at least 1 digit and at least 1 capital letter.)</b><br/>
   <%= f.password_field(:password) %><br/>
   <%= f.label(:password_confirmation,"Password Confirmation") %><br/>
   <%= f.password_field(:password_confirmation) %><br/>
@@ -41,7 +41,7 @@
   
   <% user.role_requests.build if user.role_requests.empty? %>
   <% f.fields_for :role_requests do |r| %>
-    <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide'" %><br/>
+    <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %><br/>
     <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %><br/>
     <%= label_tag "health_professional", "Are you a public health professional?" %>
     <%= check_box_tag "health_professional", 1, params[:health_professional] %>

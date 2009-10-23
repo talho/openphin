@@ -29,7 +29,7 @@
 
 <div><h5 class='group_header'>Who's in this group?</h5>
 <ul class='group_rcpts'>
-  <% @group.current_users.each do |user| %>
+  <% @group.current_users.sort{|x,y| x.last_name<=>y.last_name }.each do |user| %>
     <li class='group_rcpt'><%= link_to(user.display_name, user_profile_path(user))%><%= "," unless user==@group.current_users.last %></li>
   <% end %>
 </ul>

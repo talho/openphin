@@ -29,15 +29,15 @@ class Role < ActiveRecord::Base
   }
     
   def self.admin
-    find_or_create_by_name Defaults[:admin]
+    find_or_create_by_name_and_approval_required_and_user_role Defaults[:admin],true,false
   end
   
   def self.org_admin
-    find_or_create_by_name Defaults[:org_admin]
+    find_or_create_by_name_and_approval_required_and_user_role Defaults[:org_admin],true,false
   end
 
   def self.superadmin
-    find_or_create_by_name Defaults[:superadmin]
+    find_or_create_by_name_and_approval_required_and_user_role Defaults[:superadmin],true,false
   end
   
   def self.public
