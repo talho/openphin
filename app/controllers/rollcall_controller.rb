@@ -27,7 +27,7 @@ class RollcallController < ApplicationController
 
 
     @chart=Gchart.line(:size => "600x400",
-                      :title => "Average Absenteeism",
+                      :title => "Average % Absenteeism",
                       :axis_with_labels => "x,y",
                       :axis_labels => [(-6..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")],
                       :max => 30,

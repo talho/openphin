@@ -54,19 +54,15 @@ Scenario: Viewing the Home screen
   Then I should see the following menu:
 			| name | app_toolbar |
 			| item | Main        |
-  And I see WTF is going on
 
 Scenario: Seeing the average absenteeism graph(s)
   Given I am logged in as "nurse.betty@example.com"
   When I go to the rollcall page
-  Then I should see an absenteeism graph with the data:
-    | 0           |
-    | 0           |
-    | 4.67        |
-    | 5.33        |
-    | 6.83        |
-    | 4.83        |
-    | 2.67        |
+  Then I should see an absenteeism graph with the following:
+    | data        | 0,0,4.67,5.33,6.83,4.83,2.67 |
+    | data-label  | Houston ISD                  |
+    | title       | Average % Absenteeism        |
+    | range       | 0,30                         |
 
 Scenario: Seeing the abseentism alert summary
   Given I am logged in as "nurse.betty@example.com"
