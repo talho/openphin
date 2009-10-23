@@ -15,4 +15,14 @@ class Target < ActiveRecord::Base
   belongs_to :item, :polymorphic => true
   belongs_to :audience
   belongs_to :creator, :class_name => 'User'
+  has_and_belongs_to_many :users
+  
+  after_create :save_snapshot_of_users
+  
+private
+  
+  def save_snapshot_of_users
+    self.users = audience.recipients
+  end
+
 end

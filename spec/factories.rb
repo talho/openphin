@@ -166,3 +166,7 @@ Factory.define :school do |m|
   m.sequence(:school_number)
    m.association :district
 end
+Factory.define :target do |m|
+  m.association :audience, :factory => :group
+  m.association :item, :factory => :alert
+end
