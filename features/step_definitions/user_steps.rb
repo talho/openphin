@@ -77,6 +77,11 @@ Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, r
   role_request.approve!(role_request.jurisdiction.admins.first)
 end
 
+Given "a user in a non-public role" do
+  role = Factory(:role, :approval_required => true)
+  Factory(:user, :role_memberships => [Factory(:role_membership, :role => role)])
+end
+
 Given /^"([^\"]*)" is not public in "([^\"]*)"$/ do |user_email, jurisdiction_name|
   user=User.find_by_email(user_email)
   role=Role.public
