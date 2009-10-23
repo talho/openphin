@@ -59,7 +59,7 @@ Scenario: Seeing the average absenteeism graph(s)
   Given I am logged in as "nurse.betty@example.com"
   When I go to the rollcall page
   Then I should see an absenteeism graph with the following:
-    | data        | 0,0,4.67,5.33,6.83,4.83,2.67 |
+    | data        | 0,0,8.0,5.33,6.83,4.83,2.67 |
     | data-label  | Houston ISD                  |
     | title       | Average % Absenteeism        |
     | range       | 0,30                         |
