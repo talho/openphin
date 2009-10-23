@@ -5,6 +5,20 @@
         <%= render 'audiences/fields', :form => audience, :group_form => form %>
       <% end %>
     <% end %>
+    
+    <fieldset class="filterable list channels">
+      <legend>Select Channels</legend>
+      <ul class="check_selector">
+        <%- current_user.channels.each do |c| -%>
+          <li>
+            <%- id = [form.object_name.parameterize('_'), dom_id(c)].join('_') -%>
+            <%= check_box_tag "#{form.object_name}[channel_ids][]", c.id,
+                form.object.channel_ids.include?(c.id), :id => id %>
+            <%= label_tag id, c.name %>
+          </li>
+        <%- end -%>
+      </ul>
+    </fieldset>
   </div>
   <%= form.submit "Share" %>
 <% end %>

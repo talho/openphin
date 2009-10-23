@@ -16,6 +16,7 @@ class Document < ActiveRecord::Base
   has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
   validates_attachment_presence :file
   
+  has_and_belongs_to_many :channels
   has_many :targets, :as => :item, :after_add => :share
   has_many :audiences, :through => :targets
   accepts_nested_attributes_for :audiences
