@@ -7,7 +7,7 @@
   <h3>Channels</h3>
   <%= link_to 'New Channel', new_channel_path %>
   <ul>
-    <%= render Channel.all %>
+    <%= render current_user.channels %>
   </ul>
 </aside>
 

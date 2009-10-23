@@ -1,17 +1,22 @@
 class ChannelsController < ApplicationController
+  before_filter :non_public_role_required
+  
   def new
-    @channel = Channel.new
+    @channel = current_user.channels.build
   end
 
   def create
-    @channel = Channel.new(params[:channel])
-    @channel.save!
+    subscription = current_user.subscriptions.build(
+      :owner => true, 
+      :channel => Channel.new(params[:channel])
+    )
+    subscription.save!
     flash[:notice] = 'Successfully created the channel'
-    redirect_to @channel
+    redirect_to subscription.channel
   end
   
   def show
-    @channel = Channel.find(params[:id])
+    @channel = current_user.channels.find(params[:id])
     @documents = []
     render 'documents/index'
   end

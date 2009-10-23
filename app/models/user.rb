@@ -61,6 +61,9 @@ class User < ActiveRecord::Base
     end
   end
   has_many :folders
+  has_many :subscriptions
+  has_many :channels, :through => :subscriptions
+  has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
 
   validates_presence_of     :email
   validates_presence_of     :first_name

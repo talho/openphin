@@ -1,3 +1,4 @@
 <% content_tag_for :li, channel do %>
   <%= link_to h(channel), channel %>
+  | <%= link_to 'Add Another Owner', new_channel_subscription_path(channel)  %>
 <% end %>
