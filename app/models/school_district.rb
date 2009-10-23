@@ -9,7 +9,7 @@ class SchoolDistrict < ActiveRecord::Base
       report.enrolled.blank? ? 0 : report.absent.to_f/report.enrolled.to_f
     end
 
-    absentees.empty? ? 0 : (absentees.reduce(0,:+)/absentees.size).round(4)
+    absentees.empty? ? 0 : (absentees.inject(&:+)/absentees.size).round(4)
   end
   def recent_absentee_rates(days)
     avgs=Array.new

@@ -1,33 +1,31 @@
 
-  <div class='rollcall_chart'>
-    <%=  image_tag @chart %>
+<div class='rollcall_chart'>
+  <%=  image_tag @chart %>
+</div>
+<div>
+  <p>Absenteeism Summary</p>
+  <div class="rollcall_summary">
+    <ul class="rollcall_summary">
+      <li><p>Districts</p></li>
+      <% @statistics.each do |district,schools| %>
+        <li class="district">
+          <p><%= district %></p>
+          <ul>
+            <li><p>Schools</p></li>
+            <% schools.each do |school,reports| %>
+              <li class="school">
+                <ul>
+                  <li><p><%= school %></p></li>
+                  <% reports.each do |report| %>
+                    <li class="<%= report.severity %>"><span><%= report.report_date %></span> - <span class="absense"><%= report.absentee_percentage %>%</span></li>
+                  <% end %>
+                </ul>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+    </ul>
   </div>
-<% @districts.each do |dist| %>
-  <div>
-    <p>Absenteeism Summary</p>
-    <div class="rollcall_summary">
-      <ul class="rollcall_summary">
-        <li><p>Districts</p></li>
-        <% @statistics.each do |district,schools| %>
-          <li class="district">
-            <p><%= district %></p>
-            <ul>
-              <li><p>Schools</p></li>
-              <% schools.each do |school,reports| %>
-                <li class="school">
-                  <ul>
-                    <li><p><%= school %></p></li>
-                    <% reports.each do |report| %>
-                      <li class="<%= report.severity %>"><span><%= report.report_date %></span> - <span class="absense"><%= report.absentee_percentage %>%</span></li>
-                    <% end %>
-                  </ul>
-                </li>
-              <% end %>
-            </ul>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-<% end %>
+</div>
 
