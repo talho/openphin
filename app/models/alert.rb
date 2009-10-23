@@ -275,7 +275,7 @@ class Alert < ActiveRecord::Base
   end
 
   def recipients
-    (audiences.map(&:recipients).flatten + User.find(required_han_coordinators)).uniq
+    (targets.map(&:users).flatten + User.find(required_han_coordinators)).uniq
   end
 
   def total_jurisdictions
