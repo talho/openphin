@@ -60,6 +60,19 @@ Feature: Creating document channels
     When I follow "Channel 4"
     Then I should see "sample.wav"
   
+  Scenario: User copying a document out of channel
+    Given I have been added to the channel "Vacation Photos"
+    And a document "keith.jpg" is in the channel "Vacation Photos"
+    And I have a folder named "Hilarious"
+    When I go to the Documents page
+    And I follow "Copy"
+    And I select " Hilarious" from "Folder"
+    And I press "Copy"
+    Then I should see "Successfully copied the document"
+        
+    When I follow "Hilarious"
+    Then I should see "keith.jpg"
+  
   Scenario: Inviting users to a channel
     Given I created the channel "Avian Flus"
     And I go to the Documents page
@@ -84,6 +97,5 @@ Feature: Creating document channels
     
   Scenario: Ignoring a channel sent to a user by another user
   Scenario: Removing document from channel
-  Scenario: User copying a document out of channel
   Scenario: Deleting a channel
   
