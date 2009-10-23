@@ -6,5 +6,11 @@
       <% end %>
     <% end %>
   </div>
+  
+  <p>
+    <%= check_box_tag 'owner', '1' %>
+    <%= label_tag 'owner', 'Make these people owners' %>
+  </p>
+  
   <%= form.submit 'Add' %>
 <% end %>

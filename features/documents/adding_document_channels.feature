@@ -34,19 +34,21 @@ Feature: Creating document channels
     Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     And I follow "Project X"
-    And I follow "Add Another Owner" 
+    And I follow "Invite" 
     
-    When I fill out the channel owner form with:
+    When I fill out the channel invitation form with:
       | People | Brandon Keepers |
+    And I check "Make these people owners"
+      
     And I press "Add"
-    Then I should see "Additional owner has been added to this channel"
+    Then I should see "Additional owners have been added to this channel"
     
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should see "Project X"
   
   Scenario: Adding a document to a channel
-    Given I have the channel "Channel 4"
+    Given I created the channel "Channel 4"
     And I have the document "sample.wav" in my inbox
     And I follow "Share with channel"
     And I choose "Channel 4"
@@ -57,6 +59,27 @@ Feature: Creating document channels
     Then I should see "sample.wav"
   
   Scenario: Inviting users to a channel
+    Given I created the channel "Avian Flus"
+    And I go to the Documents page
+
+    Given I am logged in as "brandon.keepers@example.com"
+    When I go to the Documents page
+    Then I should not see "Avian Flus"
+  
+    Given I am logged in as "john.smith@example.com"
+    When I go to the Documents page
+    And I follow "Avian Flus"
+    And I follow "Invite" 
+  
+    When I fill out the channel invitation form with:
+      | People | Brandon Keepers |
+    And I press "Add"
+    Then I should see "Additional users have been added to this channel"
+  
+    Given I am logged in as "brandon.keepers@example.com"
+    When I go to the Documents page
+    Then I should see "Avian Flus"
+    
   Scenario: Ignoring a channel sent to a user by another user
   Scenario: Removing document from channel
   Scenario: User copying a document out of channel
