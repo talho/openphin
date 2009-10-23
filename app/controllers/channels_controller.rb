@@ -17,7 +17,7 @@ class ChannelsController < ApplicationController
   
   def show
     @channel = current_user.channels.find(params[:id])
-    @documents = []
+    @documents = @channel.documents
     render 'documents/index'
   end
 end

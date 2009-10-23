@@ -50,11 +50,13 @@ Feature: Creating document channels
   Scenario: Adding a document to a channel
     Given I created the channel "Channel 4"
     And I have the document "sample.wav" in my inbox
-    And I follow "Share with channel"
-    And I choose "Channel 4"
+    When I go to the Documents page
+    And I follow "Share"
+    And I check "Channel 4"
     And I press "Share"
     
-    Then I should see "Document was successfully shared with the channel"
+    Then I should see "Successfully shared the document"
+    And I should be on the Documents page
     When I follow "Channel 4"
     Then I should see "sample.wav"
   
