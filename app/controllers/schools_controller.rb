@@ -13,7 +13,7 @@ class SchoolsController < ApplicationController
     end
 
     if @school
-      @prev_school = schools[schools.index(@school) - 1]
+      @prev_school = schools[schools.index(@school) - 1] unless schools.index(@school) - 1 < 0
       @next_school = schools[schools.index(@school) + 1]
       @district = @school.district
     end
@@ -44,7 +44,7 @@ class SchoolsController < ApplicationController
     end
 
     if @school
-      @prev_school = schools[schools.index(@school) - 1]
+      @prev_school = schools[schools.index(@school) - 1] unless schools.index(@school) - 1 < 0
       @next_school = schools[schools.index(@school) + 1]
       @district = @school.district
     end

@@ -1,4 +1,4 @@
 <ul>
-  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "rollcall" %>><%= link_to "Main", rollcall_path %></li>
-  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "schools" %>><%= link_to "School View", schools_path %></li>
+  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "rollcall" %>><%= link_to s("Main"), rollcall_path %></li>
+  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "schools" %>><%= link_to s("School View"), schools_path %></li>
 </ul>
