@@ -281,6 +281,11 @@ class Alert < ActiveRecord::Base
   def total_jurisdictions
     (audiences.map(&:jurisdictions).flatten + recipients.map(&:jurisdictions).flatten).uniq
   end
+  
+  # used by Target to determine if public users should be included in recipients
+  def include_public_users?
+    true
+  end
 
 private
   def set_message_type

@@ -26,11 +26,15 @@ class Document < ActiveRecord::Base
     file_file_name
   end
   
+  # used by Target to determine if public users should be included in recipients
+  def include_public_users?
+    false
+  end
+  
   def share(target)
-    recipients = target.audience.recipients(:include_public => false)
-    recipients.each do |user|
+    target.users.each do |user|
       shares.create! :user => user
     end
-    DocumentMailer.deliver_document(self, target, recipients)
+    DocumentMailer.deliver_document(self, target)
   end
 end
