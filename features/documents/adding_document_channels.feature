@@ -4,10 +4,15 @@ Feature: Creating document channels
   I should be able to create a document channel that other users can subscribe to
 
   Background:
-    Given the following administrators exist:
-      | admin@dallas.gov  | Dallas County |
-      | brandon@texas.gov | Texas |
-    And I am logged in as "admin@dallas.gov"
+    Given the following entities exists:
+      | Jurisdiction  | Dallas County  |
+      | Jurisdiction  | Texas          |
+      | Approval Role | Health Officer |
+      | Approval Role | Epidemiologist |
+    And the following users exist:
+      | John Smith      | john.smith@example.com      | Health Officer  | Dallas County |
+      | Brandon Keepers | brandon.keepers@example.com | Epidemiologist  | Texas         |
+    And I am logged in as "john.smith@example.com"
     When I go to the Documents page
 
   Scenario: Creating a new channel
@@ -19,16 +24,14 @@ Feature: Creating document channels
     And I should see "Discovery"
   
   Scenario: Adding other owners of a channel
-    # FIXME: pull out next 3 steps into 1 step
-    When I follow "New Channel"
-    And I fill in "Name" with "Project X"
-    And I press "Create"
-    
-    Given I am logged in as "brandon@texas.gov"
+    Given I created the channel "Project X"
+    And I go to the Documents page
+  
+    Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should not see "Project X"
     
-    Given I am logged in as "admin@dallas.gov"
+    Given I am logged in as "john.smith@example.com"
     When I go to the Documents page
     And I follow "Project X"
     And I follow "Add Another Owner" 
@@ -38,7 +41,7 @@ Feature: Creating document channels
     And I press "Add"
     Then I should see "Additional owner has been added to this channel"
     
-    Given I am logged in as "brandon@texas.gov"
+    Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should see "Project X"
   

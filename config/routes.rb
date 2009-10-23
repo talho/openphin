@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :channels
+  map.resources :channels, :has_many => :subscriptions
 
 #  map.resources :user_profiles, :as => "profile"
 
