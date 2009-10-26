@@ -23,6 +23,7 @@ Feature: School
       | Nurse Betty  | nurse.betty@example.com | Rollcall       | Houston |
       | Epi Smith    | epi.smith@example.com   | Epidemiologist | Houston |
       | Epi Smith    | epi.smith@example.com   | Rollcall       | Houston |
+      | Normal Epi   | normal.epi@example.com  | Epidemiologist | Houston |
     And "Houston ISD" has the following current absenteeism data:
       | Day   | SchoolName  | Enrolled | Absent |
       | 0     | LEWIS ES    | 500      | 5      |
@@ -51,6 +52,12 @@ Feature: School
       | item | School View |
     When I follow "School View"
     Then I should be on the rollcall schools page
+
+  Scenario: Accessing the School View in the Rollcall application as a non-rollcall user
+    Given I am logged in as "normal.epi@example.com"
+    When I go to the rollcall schools page
+    Then I should see "That resource does not exist or you do not have access to it."
+    And I should be on the dashboard page
 
   Scenario: Selecting a district and school from the dropdown
     Given I am logged in as "nurse.betty@example.com"

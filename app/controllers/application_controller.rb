@@ -36,6 +36,15 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  #TODO needs to be moved to rollcall plugin
+    def rollcall_required
+      unless current_user.role_memberships.detect{ |rm| rm.role == Role.find_by_name('rollcall')}
+        flash[:error] = "That resource does not exist or you do not have access to it."
+        redirect_to dashboard_path
+        false
+      end
+    end
   
     def folder_or_inbox_path(document)
       document.folder || documents_path

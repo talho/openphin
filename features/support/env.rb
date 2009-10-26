@@ -64,7 +64,4 @@ Spork.each_run do
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
   end
 
-  After do 
-    reset_database!
-  end
 end

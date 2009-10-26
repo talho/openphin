@@ -171,7 +171,7 @@ Factory.define :school do |m|
   m.sequence(:school_number)
    m.association :district
 end
-<<<<<<< HEAD:spec/factories.rb
+
 Factory.define :target do |m|
   m.association :audience, :factory => :group
   m.association :item, :factory => :alert
@@ -185,5 +185,3 @@ Factory.define :document do |m|
   m.association :user
   m.file {|f| File.open(__FILE__)}
 end
-=======
->>>>>>> a6b4f0d53b6da0ee5d7e1a7e846a72e684e12c35:spec/factories.rb

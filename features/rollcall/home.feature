@@ -23,6 +23,7 @@ Feature: Rollcall status screen
       | Nurse Betty  | nurse.betty@example.com | Rollcall       | Houston |
       | Epi Smith    | epi.smith@example.com   | Epidemiologist | Houston |
       | Epi Smith    | epi.smith@example.com   | Rollcall       | Houston |
+      | Normal Epi   | normal.epi@example.com  | Epidemiologist | Houston |
     And "Houston ISD" has the following current absenteeism data:
       | Day   | SchoolName  | Enrolled | Absent |
       | 0     | LEWIS ES    | 500      | 5      |
@@ -47,7 +48,19 @@ Scenario: Accessing the Rollcall application
   Then I should see the following menu:
     | name | portal_toolbar |
     | item | Rollcall       |
-  
+
+Scenario: Accessing the Rollcall application as a non-rollcall user
+  Given I am logged in as "normal.epi@example.com"
+  When I go to the dashboard page
+  Then I should see the following menu:
+    | name | portal_toolbar |
+    | item | Rollcall       |
+  When I follow "Rollcall"
+  Then I should see "That resource does not exist or you do not have access to it."
+  And I should not see "School View"
+  And I should not see "Absenteeism Summary"
+  And I should be on the dashboard page
+
 Scenario: Viewing the Home screen
   Given I am logged in as "nurse.betty@example.com"
   When I go to the rollcall page

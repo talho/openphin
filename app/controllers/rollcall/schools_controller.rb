@@ -1,7 +1,10 @@
 class Rollcall::SchoolsController < ApplicationController
-  app_toolbar "rollcall"
+  before_filter :rollcall_required
 
   def index
+    toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
+    Rollcall::SchoolsController.app_toolbar toolbar
+
     schools = current_user.schools.sort_by{|school| school.display_name}
 
     if params["district"] && !params["district"][:id].blank? && (!params["school"] || params["school"][:id].blank?)
@@ -51,6 +54,9 @@ class Rollcall::SchoolsController < ApplicationController
   end
 
   def show
+    toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
+    Rollcall::SchoolsController.app_toolbar toolbar
+
     schools = current_user.schools.sort_by{|school| school.display_name}
     @school = School.find(params[:id])
 

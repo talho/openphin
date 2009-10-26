@@ -20,9 +20,12 @@
 =end
 
 class Rollcall::RollcallController < ApplicationController
-  app_toolbar "rollcall"
+  before_filter :rollcall_required
 
   def index
+    toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
+    Rollcall::RollcallController.app_toolbar toolbar
+
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
     if @districts.empty?
       render "about"
