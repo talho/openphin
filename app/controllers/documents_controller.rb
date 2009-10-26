@@ -8,29 +8,29 @@ class DocumentsController < ApplicationController
   def create
     @document = current_user.documents.build(params[:document])
     @document.save!
-    redirect_to_folder
+    redirect_to folder_or_inbox_path(@document)
   end
   
   def show
-    @document = current_user.documents.find(params[:id])
+    @document = Document.viewable_by(current_user).find(params[:id])
     send_file @document.file.path, :type => @document.file_content_type, :disposition => 'attachment'
   end
   
   def edit
-    @document = current_user.documents.find(params[:id])
+    @document = Document.editable_by(current_user).find(params[:id])
   end
   
   def update
-    @document = current_user.documents.find(params[:id])
+    @document = Document.editable_by(current_user).find(params[:id])
     if @document.update_attributes(params[:document])
-      redirect_to_folder
+      redirect_to folder_or_inbox_path(@document)
     else 
       render :edit
     end
   end
   
-private
-  def redirect_to_folder
-    redirect_to @document.folder ? @document.folder : documents_path
+  def copy
+    @document = Document.viewable_by(current_user).find(params[:id])
   end
+  
 end

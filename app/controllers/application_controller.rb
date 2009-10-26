@@ -33,6 +33,11 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  
+    def folder_or_inbox_path(document)
+      document.folder || documents_path
+    end
+    
     def login_required
       store_location
       unless signed_in?

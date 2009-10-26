@@ -2,8 +2,7 @@
   <%= form.label :file, form.object.new_record? ? 'Upload Document' : 'Upload a new version' %>
   <%= form.file_field :file %>
 
-  <%= form.label :folder_id %>
-  <%= form.select :folder_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" }, :include_blank => true %>
+  <%= render 'documents/folder_fields', :form => form %>
   
   <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
 <% end %>
