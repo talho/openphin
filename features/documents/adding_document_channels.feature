@@ -52,14 +52,18 @@ Feature: Creating document channels
   
   Scenario: Adding a document to a channel
     Given I created the channel "Channel 4"
+    And "Brandon Keepers" has been added to the channel "Channel 4"
     And I have the document "sample.wav" in my inbox
     When I go to the Documents page
     And I follow "Share"
     And I check "Channel 4"
     And I press "Share"
-    
     Then I should see "Successfully shared the document"
     And I should be on the Documents page
+    And "brandon.keepers@example.com" should receive the email:
+      | subject       | A document has been added to the channel "Channel 4" |
+      | body contains | To view this document |
+    
     When I follow "Channel 4"
     Then I should see "sample.wav"
   
@@ -76,6 +80,24 @@ Feature: Creating document channels
         
     When I follow "Hilarious"
     Then I should see "keith.jpg"
+ 
+  Scenario: Updating a document in a channel
+    Given I created the channel "Vacation Photos"
+    And "Brandon Keepers" has been added to the channel "Vacation Photos"
+    And a document "keith.jpg" is in the channel "Vacation Photos"
+    When I go to the Documents page
+    And I follow "Vacation Photos"
+    And I follow "Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/sample.wav" to "Upload a new version"
+    And I press "Update"
+    
+    And I go to the Documents page
+    And I follow "Vacation Photos"
+    Then I should not see "keith.jpg"
+    Then I should see "sample.wav"
+    And "brandon.keepers@example.com" should receive the email:
+      | subject       | A document has been updated |
+      | body contains | To view this document       |
   
   Scenario: Inviting users to a channel
     Given I created the channel "Avian Flus"
