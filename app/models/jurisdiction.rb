@@ -52,6 +52,10 @@ class Jurisdiction < ActiveRecord::Base
   def admins
     users.with_role(Role.admin)
   end
+
+  def super_admins
+    users.with_role(Role.superadmin)
+  end
   
   def han_coordinators
     users.with_role(Role.han_coordinator)

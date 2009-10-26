@@ -167,7 +167,7 @@ class User < ActiveRecord::Base
   
   def is_super_admin?
     j = Jurisdiction.find_by_name('Texas')
-    j.admins.include?(self) unless j.nil?
+    j.super_admins.include?(self) unless j.nil?
   end
 
   def is_admin?
