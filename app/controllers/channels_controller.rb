@@ -27,4 +27,11 @@ class ChannelsController < ApplicationController
     flash[:notice] = "Successfully unsubscribed from the channel"
     redirect_to documents_path
   end
+  
+  def destroy
+    @channel = current_user.owned_channels.find(params[:id])
+    @channel.destroy
+    flash[:notice] = "Successfully deleted the channel"
+    redirect_to documents_path
+  end
 end

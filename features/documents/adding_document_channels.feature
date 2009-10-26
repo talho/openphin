@@ -114,4 +114,11 @@ Feature: Creating document channels
       
   Scenario: Removing document from channel
   Scenario: Deleting a channel
+    Given I created the channel "Avian Flus"
+    When I go to the Documents page
+    And I follow "Delete Channel"
+    Then I should be on the Documents page
+    And I should not see "Avian Flus" 
+  
+    
   
