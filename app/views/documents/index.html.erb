@@ -11,6 +11,10 @@
   </ul>
 </aside>
 
+<% if @channel %>
+  <%= button_to 'Unsubscribe', unsubscribe_channel_path(@channel), :method => :delete %>
+<% end %>
+
 <h3>Documents</h3>
 <ul>
   <%= render @documents %>
