@@ -24,6 +24,24 @@ class Document < ActiveRecord::Base
   belongs_to :user
   belongs_to :folder
   
+  named_scope :viewable_by, lambda{|user|
+    {:conditions => ['documents.user_id = :user OR subscriptions.user_id = :user', {:user => user}],
+    :include => {:channels => :subscriptions}}
+  }
+
+  named_scope :editable_by, lambda{|user|
+    {:conditions => ['documents.user_id = :user OR (subscriptions.user_id = :user AND subscriptions.owner = :true)', {:user => user, :true => true}],
+    :include => {:channels => :subscriptions}}
+  }
+  
+  def viewable_by?(user)
+    Document.viewable_by(user).exists?(id)
+  end
+  
+  def editable_by?(user)
+    Document.editable_by(user).exists?(id)
+  end
+  
   def to_s
     file_file_name
   end
@@ -35,8 +53,12 @@ class Document < ActiveRecord::Base
   
   def share(target)
     target.users.each do |user|
-      user.documents.create! :file => self.file
+      self.copy(user)
     end
     DocumentMailer.deliver_document(self, target)
+  end
+  
+  def copy(user)
+    user.documents.create! :file => self.file
   end
 end

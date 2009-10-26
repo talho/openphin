@@ -12,7 +12,7 @@ Given 'I created the channel "$name"' do |name|
 end
 
 Given 'I have been added to the channel "$name"' do |name|
-  channel = Given(%Q|a channel named "#{channel}"|)
+  channel = Given(%Q|a channel named "#{name}"|)
   channel.users << current_user
 end
 

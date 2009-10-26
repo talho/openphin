@@ -1,0 +1,2 @@
+module CopyDocumentsHelper
+end

@@ -65,6 +65,7 @@ Feature: Creating document channels
     And a document "keith.jpg" is in the channel "Vacation Photos"
     And I have a folder named "Hilarious"
     When I go to the Documents page
+    And I follow "Vacation Photos"
     And I follow "Copy"
     And I select " Hilarious" from "Folder"
     And I press "Copy"
