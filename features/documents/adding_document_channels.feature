@@ -102,7 +102,16 @@ Feature: Creating document channels
     When I go to the Documents page
     Then I should see "Avian Flus"
     
-  Scenario: Unsubscribing from a channel    
+  Scenario: Unsubscribing from a channel
+    Given I have been added to the channel "Kitty Pictures"
+    When I go to the Documents page
+    And I follow "Kitty Pictures"
+    And I press "Unsubscribe"
+    Then I should see "Successfully unsubscribed from the channel"
+
+    When I go to the Documents page
+    Then I should not see "Kitty Pictures"
+      
   Scenario: Removing document from channel
   Scenario: Deleting a channel
   

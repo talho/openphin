@@ -20,4 +20,11 @@ class ChannelsController < ApplicationController
     @documents = @channel.documents
     render 'documents/index'
   end
+  
+  def unsubscribe
+    @subscription = current_user.subscriptions.find_by_channel_id!(params[:id])
+    @subscription.destroy
+    flash[:notice] = "Successfully unsubscribed from the channel"
+    redirect_to documents_path
+  end
 end
