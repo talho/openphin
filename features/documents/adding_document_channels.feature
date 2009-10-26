@@ -113,6 +113,15 @@ Feature: Creating document channels
     Then I should not see "Kitty Pictures"
       
   Scenario: Removing document from channel
+    Given I created the channel "Channel 4"
+    And a document "keith.jpg" is in the channel "Channel 4"
+    
+    When I go to the Documents page
+    And I follow "Channel 4"
+    And I press "Remove from channel"
+    Then I should see "Successfully removed the document from the channel"
+    And I should not see "keith.jpg"
+  
   Scenario: Deleting a channel
     Given I created the channel "Avian Flus"
     When I go to the Documents page

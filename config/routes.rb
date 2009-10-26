@@ -8,6 +8,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
   end
+  map.channel_document 'channels/:channel_id/documents/:id',
+    :controller => 'documents', :action => 'remove_from_channel',
+    :conditions => {:method => :delete}
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"
