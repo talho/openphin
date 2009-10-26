@@ -6,7 +6,7 @@ class LinkChannelsToDocuments < ActiveRecord::Migration
     end
     
     add_index :channels_documents, :document_id
-    add_index :channels_documents, :document_id
+    add_index :channels_documents, :channel_id
     add_index :channels_documents, [:document_id, :channel_id]
   end
 
