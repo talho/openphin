@@ -63,7 +63,7 @@ Feature: School
     And I press "Choose"
     Then I should see school data for "LEWIS ES"
 
-  Scenario: Viewing the first school and going from there
+  Scenario: Viewing the first school and second
     Given I am logged in as "nurse.betty@example.com"
     When I go to the rollcall schools page
     Then I should see school data for "BERRY ES"
@@ -74,7 +74,8 @@ Feature: School
       | -2  | 2.5         |
       | -3  | 5.0         |
       | -4  | 5.0         |
-    When I follow "Next"
+    And I select "LEWIS ES" from "School"
+    And I press "Choose"
     Then I should see school data for "LEWIS ES"
     And I should see an absenteeism summary with the data:
       | Day | Percentage  |
@@ -83,11 +84,3 @@ Feature: School
       | -2  | 3.0         |
       | -3  | 1.0         |
       | -4  | 12.0        |
-    When I follow "Next"
-    Then I should see school data for "SOUTHMAYDES"
-    Then I should not see the link "Next"
-    When I follow "Prev"
-    Then I should see school data for "LEWIS ES"
-    When I follow "Prev"
-    Then I should see school data for "BERRY ES"
-    Then I should not see the link "Prev"
