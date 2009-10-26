@@ -57,6 +57,23 @@ class User < ActiveRecord::Base
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
+  #TODO Move this into plugin for rollcall later
+  def school_districts
+    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
+  end
+
+  def schools
+    school_districts.map{|district| district.schools}.flatten.uniq
+  end
+
+  def absentee_reports
+    schools.map{|school| school.absentee_reports}.flatten.uniq
+  end
+
+  def recent_absentee_reports
+    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
+  end
+
   validates_presence_of     :email
   validates_presence_of     :first_name
   validates_presence_of     :last_name

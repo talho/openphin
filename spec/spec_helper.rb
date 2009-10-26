@@ -17,7 +17,7 @@ Spec::Runner.configure do |config|
   
   config.include Webrat::Matchers, :type => [:view]
   config.extend SpecHelpers::ModelMacros, :type => [:model]
-  config.extend SpecHelpers::ControllerMacros, :type => [:controller]
-  config.include SpecHelpers::ControllerHelpers, :type => [:controller]
+  config.extend SpecHelpers::ControllerMacros, :type => [:controller, :integration]
+  config.include SpecHelpers::ControllerHelpers, :type => [:controller, :integration]
   config.include CachingPresenter::InstantiationMethods, :type => [:view]
 end

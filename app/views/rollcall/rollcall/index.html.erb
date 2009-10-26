@@ -1,0 +1,38 @@
+
+<div class='rollcall_chart_options'>
+  <% form_tag rollcall_path do  %>
+    <%= label_tag :timespan, "Show last" %>
+    <%= select_tag :timespan, options_for_select([7,14,21,30,60,90])  %>
+    <label>days of data</label>
+    <%= submit_tag "Modify graph" %>
+  <% end %>
+</div>
+  <div class='rollcall_chart'>
+    <%=  image_tag @chart %>
+  </div>
+
+<h2>Absenteeism Summary</h2>
+<div class="rollcall_summary">
+  <ul class="rollcall_summary">
+    <li><p>Districts</p></li>
+    <% @statistics.each do |district,schools| %>
+      <li class="district">
+        <p><%= district %></p>
+        <ul>
+          <li><p>Schools</p></li>
+          <% schools.each do |school,reports| %>
+            <li class="school">
+              <ul>
+                <li><p><%= school %></p></li>
+                <% reports.each do |report| %>
+                  <li class="<%= report.severity %>"><span><%= report.report_date %></span> - <span class="absense"><%= report.absentee_percentage %>%</span></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</div>
+

@@ -28,7 +28,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organizations do |organization|
     organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   end
-  map.resources :roll_calls
   map.resources :admin_groups, :controller => "admin/groups"
   
   map.resource :search
@@ -37,6 +36,11 @@ ActionController::Routing::Routes.draw do |map|
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
+
+
+  #Rollcall routes, to be moved into plugin
+  map.rollcall "/rollcall", :controller => "rollcall/rollcall"
+  map.resources :schools, :controller => "rollcall/schools"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -7,16 +7,17 @@
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', :cache => 'all' %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', :cache => 'all' %>
 </head>
 <body>
 <div id="application">
   <div id="header">
     <div id="portal_toolbar">
+
       <h1><%= link_to 'TXPhin', root_path %></h1>
       <ul>
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
-        <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("RollCall"), roll_calls_path %></li>
+        <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
   			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
   		</ul>
       <%- if signed_in? -%>

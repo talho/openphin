@@ -10,7 +10,10 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
     group = Factory(:group, options)
    end
 end
-
+Then /^I should see the user "(.*)" immediately before "(.*)"$/ do |user1, user2|
+  response.should have_selector("li:nth-child(1)", :content => user1)
+  response.should have_selector("li:nth-child(2)", :content => user1)
+end
 Then /^I should see the add group form$/ do
   response.should have_selector("#audience") do |form|
 	  form.should have_selector("#group_name")
