@@ -60,7 +60,7 @@ class Rollcall::RollcallController < ApplicationController
             @statistics[district.name][school.display_name] = [] unless @statistics[district.name][school.display_name]
             reports.each do |report|
               if report.school == school
-                @statistics[district.name][school.display_name] << report
+                @statistics[district.name][school.display_name] << report unless @statistics[district.name][school.display_name].size  == 4
               end
             end
           end
