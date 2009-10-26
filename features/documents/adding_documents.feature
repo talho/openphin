@@ -84,6 +84,3 @@ Feature: Adding documents to document sharing
     When I go to the Documents page
     Then I should not see "keith.jpg"
     Then I should see "sample.wav"
-  
-  Scenario: Updating a shared document
-    # should not update for other users

@@ -96,7 +96,7 @@ Feature: Creating document channels
     When I go to the Documents page
     Then I should see "Avian Flus"
     
-  Scenario: Ignoring a channel sent to a user by another user
+  Scenario: Unsubscribing from a channel    
   Scenario: Removing document from channel
   Scenario: Deleting a channel
   
