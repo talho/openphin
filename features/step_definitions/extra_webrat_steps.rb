@@ -7,3 +7,7 @@ end
 Then /^I should see the link "([^\"]*)" that goes to "([^\"]*)"$/ do |value, link|
   response.should have_selector("a", :content => value, :href => link)
 end
+
+Then /^I should not see the link "([^\"]*)"$/ do |value|
+  response.should_not have_selector("a", :content => value)
+end

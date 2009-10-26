@@ -13,8 +13,11 @@ class ApplicationController < ActionController::Base
 
   layout :choose_layout
   
+  cattr_accessor :applications
+  @@applications=HashWithIndifferentAccess.new
+  
   # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
+  filter_parameter_logging :password
 
   def phin_oid_prefix
     "#{PHIN_PARTNER_OID}.#{PHIN_APP_OID}.#{PHIN_ENV_OID}"
@@ -61,7 +64,7 @@ class ApplicationController < ActionController::Base
         false 
       end
     end
-
+    
     def can_view_alert
       alert = Alert.find(params[:id])
       unless !alert.nil? && alert.recipients.include?(current_user)

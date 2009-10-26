@@ -56,6 +56,13 @@ module NavigationHelpers
         new_admin_role_request_path
       when /the Documents page/i
         documents_path
+      #add plugin paths here
+      when /the rollcall page/i
+        rollcall_path
+      when /the rollcall schools page/i
+        schools_path
+      when /the rollcall school page/i
+        school_path(School.find_by_name!(arg))
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

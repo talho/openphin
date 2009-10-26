@@ -158,3 +158,16 @@ Factory.define :document do |m|
   m.association :user
   m.file {|f| File.open(__FILE__)}
 end
+
+Factory.define :school_district do |m|
+  m.sequence(:name){|t| "Name ##{t}"}
+  m.association :jurisdiction
+end
+
+Factory.define :school do |m|
+  m.sequence(:name){|t| "Name ##{t}"}
+  m.sequence(:display_name) {|t| "Display Name ##{t}"}
+  m.level "ES"
+  m.sequence(:school_number)
+   m.association :district
+end
