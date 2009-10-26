@@ -25,6 +25,8 @@ class RoleMembership < ActiveRecord::Base
   named_scope :public_roles, :include => :role, :conditions => {:role_id => Role.public.id}
   named_scope :not_public_roles, :include => :role, :conditions => ["role_id != ?", Role.public.id]
 
+  named_scope :all_roles, :include => :role
+
   named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}
   named_scope :recent, :conditions => ["created_at > ?",1.days.ago]
   

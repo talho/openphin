@@ -1,14 +1,14 @@
 Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
-  owner = User.find_by_email!(email)
   table.raw.each do |row|
+    owner = User.find_by_email!(email)
     name, jurisdictions, roles, users, scope, owner_jurisdiction = row
-    group = Factory(:group, :owner => owner, :name => name,
-            :owner_jurisdiction => Jurisdiction.find_by_name(owner_jurisdiction),
-            :jurisdictions => Jurisdiction.find_all_by_name(jurisdictions.split(',')),
-            :roles => Role.find_all_by_name(roles.split(',')),
-            :users => User.find_all_by_display_name(users.split(',')),
-            :scope => scope)
-  end
+    options = {:owner => owner, :name => name, :scope => scope}
+    options[:jurisdictions] = Jurisdiction.find_all_by_name(jurisdictions.split(',')) unless jurisdictions.blank?
+    options[:owner_jurisdiction] = Jurisdiction.find_by_name(owner_jurisdiction) unless owner_jurisdiction.blank?
+    options[:roles] = Role.find_all_by_name(roles.split(',')) unless roles.blank?
+    options[:users] = User.find_all_by_display_name(users.split(',')) unless users.blank?
+    group = Factory(:group, options)
+   end
 end
 
 Then /^I should see the add group form$/ do
@@ -52,4 +52,10 @@ Then /^I should see that the group includes\:$/ do |table|
       response.should have_selector(".group_rcpt", :content => name.strip)
     end
   end
+end
+
+Then /^I should see the user "(.*)" immediately before "(.*)"$/ do
+|user1, user2|
+   response.should have_selector("li.group_rcpt:nth-child(1)", :content => user1)
+   response.should have_selector("li.group_rcpt:nth-child(2)", :content => user2)
 end
