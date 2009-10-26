@@ -16,6 +16,12 @@ Given 'I have been added to the channel "$name"' do |name|
   channel.users << current_user
 end
 
+Given '"$user_name" has been added to the channel "$channel_name"' do |user_name, channel_name|
+  user = Given(%Q|a user named #{user_name}|)
+  channel = Given(%Q|a channel named "#{channel_name}"|)
+  channel.users << user
+end
+
 Given 'a document "$document" is in the channel "$channel"' do |filename, channel|
   user = Given('a user in a non-public role')
   document = user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
