@@ -4,5 +4,6 @@
   <%= link_to 'Move/Edit', edit_document_path(document) if document.editable_by?(current_user) %>
   <% if @channel %>
     <%= link_to 'Copy', document_copy_path(document) %>
+    <%= button_to 'Remove from channel', channel_document_path(@channel, document), :method => :delete %>
   <% end %>
 <% end %>

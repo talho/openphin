@@ -33,4 +33,12 @@ class DocumentsController < ApplicationController
     @document = Document.viewable_by(current_user).find(params[:id])
   end
   
+  def remove_from_channel
+    @document = Document.editable_by(current_user).find(params[:id])
+    @channel = current_user.channels.find(params[:channel_id])
+    @channel.documents.delete(@document)
+    flash[:notice] = "Successfully removed the document from the channel"
+    redirect_to @channel
+  end
+  
 end
