@@ -6,13 +6,31 @@ class DocumentsController < ApplicationController
   end
   
   def create
-    @share = current_user.shares.build(params[:share])
-    @share.save!
-    redirect_to @share.folder ? @share.folder : documents_path
+    @document = current_user.documents.build(params[:document])
+    @document.save!
+    redirect_to_folder
   end
   
   def show
     @document = current_user.documents.find(params[:id])
     send_file @document.file.path, :type => @document.file_content_type, :disposition => 'attachment'
+  end
+  
+  def edit
+    @document = current_user.documents.find(params[:id])
+  end
+  
+  def update
+    @document = current_user.documents.find(params[:id])
+    if @document.update_attributes(params[:document])
+      redirect_to_folder
+    else 
+      render :edit
+    end
+  end
+  
+private
+  def redirect_to_folder
+    redirect_to @document.folder ? @document.folder : documents_path
   end
 end

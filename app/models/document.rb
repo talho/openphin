@@ -20,8 +20,9 @@ class Document < ActiveRecord::Base
   has_many :targets, :as => :item, :after_add => :share
   has_many :audiences, :through => :targets
   accepts_nested_attributes_for :audiences
-  
-  has_many :shares
+    
+  belongs_to :user
+  belongs_to :folder
   
   def to_s
     file_file_name
@@ -34,7 +35,7 @@ class Document < ActiveRecord::Base
   
   def share(target)
     target.users.each do |user|
-      shares.create! :user => user
+      user.documents.create! :file => self.file
     end
     DocumentMailer.deliver_document(self, target)
   end

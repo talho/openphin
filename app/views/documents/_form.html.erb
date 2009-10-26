@@ -1,10 +1,9 @@
-<% form_for @share || Share.new, :url => documents_path, :html => {:multipart => true} do |f| %>
-  <%- f.object.build_document -%>
-  <% f.fields_for :document do |d| %>
-    <%= d.label :file, 'Upload Document' %>
-    <%= d.file_field :file %>
-  <% end %>
-  <%= f.label :folder_id %>
-  <%= f.select :folder_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" }, :include_blank => true %>
-  <%= f.submit 'Upload' %>
+<% form_for @document || Document.new, :html => {:multipart => true} do |form| %>
+  <%= form.label :file, form.object.new_record? ? 'Upload Document' : 'Upload a new version' %>
+  <%= form.file_field :file %>
+
+  <%= form.label :folder_id %>
+  <%= form.select :folder_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" }, :include_blank => true %>
+  
+  <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
 <% end %>

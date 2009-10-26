@@ -66,13 +66,24 @@ Feature: Adding documents to document sharing
     When I go to the Documents page
     And I follow "Move"
     And I select " Rockstars" from "Folder"
-    And I press "Move"
+    And I press "Update"
 
     When I go to the Documents page
     Then I should not see "keith.jpg"
     
     When I follow "Rockstars"
     Then I should see "keith.jpg"
+  
+  Scenario: Updating a document
+    Given I have the document "keith.jpg" in my inbox
+    When I go to the Documents page
+    And I follow "Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/sample.wav" to "Upload a new version"
+    And I press "Update"
+
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    Then I should see "sample.wav"
   
   Scenario: Updating a shared document
     # should not update for other users
