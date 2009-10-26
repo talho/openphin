@@ -52,24 +52,41 @@ class Rollcall::RollcallController < ApplicationController
                          :encoding => "text"
 #                         :max_value => 30
       )
-      reports = current_user.recent_absentee_reports
-      reports_schools = reports.map(&:school).flatten.uniq
-      reports_districts = reports_schools.map(&:district).flatten.uniq
-      @statistics = {}
-      reports_districts.each do |district|
-        @statistics[district.name] = {} unless @statistics[district.name]
-        reports_schools.each do |school|
-          if school.district == district
-            @statistics[district.name][school.display_name] = [] unless @statistics[district.name][school.display_name]
-            reports.each do |report|
-              if report.school == school
-                @statistics[district.name][school.display_name] << report unless @statistics[district.name][school.display_name].size  == 4
-              end
+    end
+    ethans_crazy_absenteeism_summary_code
+  end
+
+  private
+  def ethans_crazy_absenteeism_summary_code
+    reports = current_user.recent_absentee_reports
+    reports_schools = reports.map(&:school).flatten.uniq
+    reports_districts = reports_schools.map(&:district).flatten.uniq
+    @statistics = {}
+    stat = {}
+    reports_districts.each do |district|
+      stat[district.name] = {} unless stat[district.name]
+      reports_schools.each do |school|
+        if school.district == district
+          stat[district.name][school.display_name] = [] unless stat[district.name][school.display_name]
+          reports.each do |report|
+            if report.school == school
+              stat[district.name][school.display_name] << report
+              stat[district.name][school.display_name] = stat[district.name][school.display_name].sort{|a,b| b.absentee_percentage <=> a.absentee_percentage}
             end
           end
         end
       end
     end
+    stat.each do |district_name, district|
+      district.each do |school_name, school|
+        stat[district_name][school_name] = school[0..3]
+      end
+    end
+    stat.each do |district_name, district|
+      @statistics[district_name] = {} unless @statistics[district_name]
+      @statistics[district_name] = district.sort{|a,b|
+        stat[district_name][b.first].first.absentee_percentage <=> stat[district_name][a.first].first.absentee_percentage
+      }
+    end
   end
-
 end
