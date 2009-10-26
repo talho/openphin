@@ -1,4 +1,8 @@
 <div class="school_data">
+  <div class='rollcall_graph'>
+    <%= image_tag @school_chart unless @school_chart.nil? %>
+  </div>
+
   <div class="school">
     <h3><%= @school.display_name %></h3>
     <table>

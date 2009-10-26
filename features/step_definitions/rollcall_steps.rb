@@ -1,3 +1,17 @@
+When /^I drop the following file in the rollcall directory\:$/ do |erb_file_template|
+  file=ERB.new(erb_file_template.gsub("|", "\t")).result
+  f=File.open(File.join(File.dirname(__FILE__), '..', '..', 'tmp', 'rollcall', 'Attendance_test.txt'), 'w')
+  f.write(file)
+  f.close
+end
+When /^the rollcall background worker processes$/ do
+  RollcallDataImporter.process_uploads
+end
+
+Then /^I should not see a rollcall alert for "([^\"]*)"$/ do |school|
+  response.should_not have_selector(".school", :content => school)
+end
+
 Then /^I should see an "([^\"]*)" rollcall summary for "([^\"]*)" with (.*) absenteeism$/ do |severity, school, percent|
   response.should have_selector(".rollcall_summary") do |elm|
     elm.should have_selector(".school", :content => school) do |elm2|
@@ -6,10 +20,6 @@ Then /^I should see an "([^\"]*)" rollcall summary for "([^\"]*)" with (.*) abse
       end
     end
   end
-end
-
-Then /^I should not see a rollcall alert for "([^\"]*)"$/ do |school|
-  response.should_not have_selector(".school", :content => school)
 end
 
 Then /^I should see school data for "([^\"]*)"$/ do |school|

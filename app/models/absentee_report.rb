@@ -14,7 +14,6 @@ class AbsenteeReport < ActiveRecord::Base
   }
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "report_date DESC"}}
   named_scope :absenses, lambda{{:conditions => ['absentee_reports.absent / absentee_reports.enrolled >= .11']}}
-
   def absentee_percentage
     ((absent.to_f / enrolled.to_f) * 100).to_f.round(2)
   end

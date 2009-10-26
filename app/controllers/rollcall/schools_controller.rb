@@ -1,4 +1,4 @@
-class SchoolsController < ApplicationController
+class Rollcall::SchoolsController < ApplicationController
   app_toolbar "rollcall"
 
   def index
@@ -21,11 +21,11 @@ class SchoolsController < ApplicationController
     respond_to do |format|
       if @school && schools.include?(@school)
         format.html
-        format.xml  { render :xml => @school }
+        format.xml { render :xml => @school }
       else
         flash[:error] = "You do not have any schools"
         format.html
-        format.xml  { render :xml => "", :status => :unprocessable_entity }
+        format.xml { render :xml => "", :status => :unprocessable_entity }
       end
     end
   end
@@ -47,16 +47,38 @@ class SchoolsController < ApplicationController
       @prev_school = schools[schools.index(@school) - 1] unless schools.index(@school) - 1 < 0
       @next_school = schools[schools.index(@school) + 1]
       @district = @school.district
+
+      params[:timespan]="7" if params[:timespan].blank?
+      timespan=params[:timespan].to_i
+
+      #labels should be 1:week if timespan is greater than 1 week
+      if timespan > 7
+        xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
+      else
+        xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
+      end
+      
+      @school_chart=Gchart.line(:size => "600x400",
+                                :title => "Recent Absenteeism",
+                                :axis_with_labels => "x,y",
+                                :axis_labels => xlabels,
+                                :max => 30,
+                                :legend => @school.display_name,
+                                :data => @school.absentee_reports.recent(7).map{|rep| (rep.absent.to_f / rep.enrolled.to_f).round(4)*100}.reverse,
+                                :custom => "chxr=1,0,30",
+                                :encoding => "text",
+                                :max_value => 30
+      )
     end
 
     respond_to do |format|
       if @school && schools.include?(@school)
         format.html
-        format.xml  { render :xml => @school }
+        format.xml { render :xml => @school }
       else
         flash[:error] = "You do not have any schools or school does not exist"
         format.html
-        format.xml  { render :xml => "", :status => :unprocessable_entity }
+        format.xml { render :xml => "", :status => :unprocessable_entity }
       end
     end
   end

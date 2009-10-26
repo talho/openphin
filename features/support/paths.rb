@@ -57,9 +57,9 @@ module NavigationHelpers
       #add plugin paths here
       when /the rollcall page/i
         rollcall_path
-      when /the schools page/i
+      when /the rollcall schools page/i
         schools_path
-      when /the school page/i
+      when /the rollcall school page/i
         school_path(School.find_by_name!(arg))
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."

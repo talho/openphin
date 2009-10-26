@@ -50,7 +50,7 @@ Feature: School
 			| item | Main        |
       | item | School View |
     When I follow "School View"
-    Then I should be on the schools page
+    Then I should be on the rollcall schools page
 
   Scenario: Selecting a district and school from the dropdown
     Given I am logged in as "nurse.betty@example.com"
@@ -65,7 +65,7 @@ Feature: School
 
   Scenario: Viewing the first school and going from there
     Given I am logged in as "nurse.betty@example.com"
-    When I go to the schools page
+    When I go to the rollcall schools page
     Then I should see school data for "BERRY ES"
     And I should see an absenteeism summary with the data:
       | Day | Percentage  |

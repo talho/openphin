@@ -1,7 +1,15 @@
 
-<div class='rollcall_chart'>
-  <%=  image_tag @chart %>
+<div class='rollcall_chart_options'>
+  <% form_tag rollcall_path do  %>
+    <%= label_tag :timespan, "Show last" %>
+    <%= select_tag :timespan, options_for_select([7,14,21,30,60,90])  %>
+    <label>days of data</label>
+    <%= submit_tag "Modify graph" %>
+  <% end %>
 </div>
+  <div class='rollcall_chart'>
+    <%=  image_tag @chart %>
+  </div>
 
 <h2>Absenteeism Summary</h2>
 <div class="rollcall_summary">
