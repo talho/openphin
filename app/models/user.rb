@@ -54,10 +54,9 @@ class User < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
-  has_many :shares
-  has_many :documents, :through => :shares do
+  has_many :documents do
     def inbox
-      scoped :conditions => 'shares.folder_id IS NULL'
+      scoped :conditions => 'documents.folder_id IS NULL'
     end
   end
   has_many :folders

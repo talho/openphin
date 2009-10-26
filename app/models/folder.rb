@@ -14,8 +14,7 @@
 
 class Folder < ActiveRecord::Base
   belongs_to :user
-  has_many :shares
-  has_many :documents, :through => :shares
+  has_many :documents
   
   acts_as_nested_set :scope => :user_id
   
