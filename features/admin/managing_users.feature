@@ -107,7 +107,7 @@ Feature: An admin managing users
       Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
       And I should see the profile edit form
       And I should see "Health Officer in Dallas County"
-      And I follow "Remove Role"
+      When I follow "Remove Role"
 
       Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
       And I should see "Role Health Officer removed from Jane Smith in Dallas County"
