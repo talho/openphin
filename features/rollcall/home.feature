@@ -63,7 +63,7 @@ Scenario: Seeing the average absenteeism graph(s)
     | data        | 0,0,8.0,5.33,6.83,4.83,2.67 |
     | data-label  | Houston ISD                  |
     | title       | Average % Absenteeism        |
-    | range       | 0,30                         |
+    | range       | 0,8.0                         |
 
 Scenario: Seeing the abseentism alert summary
   Given I am logged in as "nurse.betty@example.com"

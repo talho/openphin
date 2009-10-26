@@ -42,12 +42,12 @@ class Rollcall::RollcallController < ApplicationController
                          :title => "Average % Absenteeism",
                          :axis_with_labels => "x,y",
                          :axis_labels => xlabels,
-                         :max => 30,
+#                         :max => 30,
                          :legend => @districts.map(&:name),
                          :data => @districts.map{|d| d.recent_absentee_rates(timespan).map{|m|m*100}},
-                         :custom => "chxr=1,0,30",
-                         :encoding => "text",
-                         :max_value => 30
+#                         :custom => "chxr=1,0,30",
+                         :encoding => "text"
+#                         :max_value => 30
       )
       reports = current_user.recent_absentee_reports
       reports_schools = reports.map(&:school).flatten.uniq
