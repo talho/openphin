@@ -23,6 +23,7 @@ Feature: School
       | Nurse Betty  | nurse.betty@example.com | Rollcall       | Houston |
       | Epi Smith    | epi.smith@example.com   | Epidemiologist | Houston |
       | Epi Smith    | epi.smith@example.com   | Rollcall       | Houston |
+      | Normal Epi   | normal.epi@example.com  | Epidemiologist | Houston |
     And "Houston ISD" has the following current absenteeism data:
       | Day   | SchoolName  | Enrolled | Absent |
       | 0     | LEWIS ES    | 500      | 5      |
@@ -52,6 +53,12 @@ Feature: School
     When I follow "School View"
     Then I should be on the rollcall schools page
 
+  Scenario: Accessing the School View in the Rollcall application as a non-rollcall user
+    Given I am logged in as "normal.epi@example.com"
+    When I go to the rollcall schools page
+    Then I should see "That resource does not exist or you do not have access to it."
+    And I should be on the dashboard page
+
   Scenario: Selecting a district and school from the dropdown
     Given I am logged in as "nurse.betty@example.com"
     When I go to the dashboard page
@@ -63,7 +70,7 @@ Feature: School
     And I press "Choose"
     Then I should see school data for "LEWIS ES"
 
-  Scenario: Viewing the first school and going from there
+  Scenario: Viewing the first school and second
     Given I am logged in as "nurse.betty@example.com"
     When I go to the rollcall schools page
     Then I should see school data for "BERRY ES"
@@ -74,7 +81,8 @@ Feature: School
       | -2  | 2.5         |
       | -3  | 5.0         |
       | -4  | 5.0         |
-    When I follow "Next"
+    And I select "LEWIS ES" from "School"
+    And I press "Choose"
     Then I should see school data for "LEWIS ES"
     And I should see an absenteeism summary with the data:
       | Day | Percentage  |
@@ -83,11 +91,3 @@ Feature: School
       | -2  | 3.0         |
       | -3  | 1.0         |
       | -4  | 12.0        |
-    When I follow "Next"
-    Then I should see school data for "SOUTHMAYDES"
-    Then I should not see the link "Next"
-    When I follow "Prev"
-    Then I should see school data for "LEWIS ES"
-    When I follow "Prev"
-    Then I should see school data for "BERRY ES"
-    Then I should not see the link "Prev"

@@ -1,33 +1,14 @@
 <h1>Profile for <%= @user.display_name %></h1>
 
-<% form_for(@user) do |f| %>
+<% tagged_form_for(@user) do |f| %>
   <%= f.error_messages %>
-    <%= f.hidden_field :user_id %>
-  <p>
-    <%= f.label :photo %><br />
-    <%= f.text_field :photo %>
-  </p>
-  <p>
-    <%= f.label :public %><br />
-    <%= f.check_box :public %>
-  </p>
-  <p>
-    <%= f.label :credentials %><br />
-    <%= f.text_area :credentials %>
-  </p>
-  <p>
-    <%= f.label :employer %><br />
-    <%= f.text_field :employer %>
-  </p>
-  <p>
-    <%= f.label :experience %><br />
-    <%= f.text_area :experience %>
-  </p>
-  <p>
-    <%= f.label :bio %><br />
-    <%= f.text_area :bio %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
+  <%= f.hidden_field :user_id %>
+  <%= f.text_field :photo %>
+  <%= f.check_box :public %>
+  <%= f.text_area :credentials %>
+  <%= f.text_field :employer %>
+  <%= f.text_area :experience %>
+  <%= f.text_area :bio %>
+  <%= f.submit 'Create' %>
 <% end %>
+

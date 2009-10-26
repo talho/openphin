@@ -10,6 +10,8 @@ Feature: Viewing groups
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
       | Role         | Epidemiologist |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County |
     And the role "Admin" is an alerter
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
@@ -20,8 +22,8 @@ Feature: Viewing groups
       | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
     And the following groups for "jill.smith@example.com" exist:
-      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Dallas County |
-      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Dallas County |
+      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Potter County |
     Given I am logged in as "jill.smith@example.com"
 
     Scenario: going to view a user group as an admin

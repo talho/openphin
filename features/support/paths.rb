@@ -63,6 +63,8 @@ module NavigationHelpers
         schools_path
       when /the rollcall school page/i
         school_path(School.find_by_name!(arg))
+      when /the Documents page/i
+        documents_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

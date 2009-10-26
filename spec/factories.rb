@@ -72,11 +72,11 @@ Factory.define :alert do |m|
   m.severity 'Moderate'
   m.delivery_time 60
   m.from_jurisdiction { Factory(:jurisdiction) }
-  m.audiences {|a| [a.association :audience] }
+  m.audiences {|a| [a.association(:audience)] }
 end
 
 Factory.define(:audience) do |a|
-  a.users {|u| [u.association :user] }
+  a.users {|u| [u.association(:user)] }
 end
 
 Factory.define :alert_attempt do |m|
@@ -170,4 +170,18 @@ Factory.define :school do |m|
   m.level "ES"
   m.sequence(:school_number)
    m.association :district
+end
+
+Factory.define :target do |m|
+  m.association :audience, :factory => :group
+  m.association :item, :factory => :alert
+end
+
+Factory.define :channel do |m|
+  m.sequence(:name){|t| "Channel ##{t}"}
+end
+
+Factory.define :document do |m|
+  m.association :user
+  m.file {|f| File.open(__FILE__)}
 end

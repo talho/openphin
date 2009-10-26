@@ -291,6 +291,10 @@ class User < ActiveRecord::Base
     groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
   end
 
+  def is_an_admin?
+    (roles & [Role.admin,Role.superadmin]).empty?
+  end
+  
 private
 
   def assign_public_role
@@ -342,4 +346,5 @@ private
   def set_display_name
     self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
   end
+  
 end

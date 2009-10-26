@@ -19,6 +19,7 @@ class DevicesController < ApplicationController
       rescue
         redirect_to dashboard_path
       end
+
     end
   end
 
