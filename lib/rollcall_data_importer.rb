@@ -1,6 +1,8 @@
 class RollcallDataImporter
   def self.process_uploads
     pickup_dir=File.join(File.dirname(__FILE__), "..", "tmp", "rollcall")
+    Dir.ensure_exists(pickup_dir)
+    Dir.ensure_exists(File.join(pickup_dir, "archive"))
 
     if File.exist?(pickup_dir)
       Dir[File.join(pickup_dir, "Attendance_*")].each do |file|
