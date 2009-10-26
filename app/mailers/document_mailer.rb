@@ -7,4 +7,10 @@ class DocumentMailer < ActionMailer::Base
     body :document => document
   end
   
+  def channel_invitation(channel, target)
+    bcc target.users.map(&:formatted_email)
+    from DO_NOT_REPLY
+    subject "#{target.creator.name} invited you to a channel"
+    body :channel => channel
+  end  
 end

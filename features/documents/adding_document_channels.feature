@@ -42,6 +42,9 @@ Feature: Creating document channels
       
     And I press "Add"
     Then I should see "Additional owners have been added to this channel"
+    And "brandon.keepers@example.com" should receive the email:
+      | subject       | John Smith added you to a channel |
+      | body contains | To view this channel |
     
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
@@ -91,7 +94,10 @@ Feature: Creating document channels
       | People | Brandon Keepers |
     And I press "Add"
     Then I should see "Additional users have been added to this channel"
-  
+    And "brandon.keepers@example.com" should receive the email:
+      | subject       | John Smith added you to a channel |
+      | body contains | To view this channel |
+    
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should see "Avian Flus"

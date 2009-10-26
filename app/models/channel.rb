@@ -28,6 +28,7 @@ class Channel < ActiveRecord::Base
     target.users.each do |user|
       subscriptions.find_or_create_by_user_id user.id
     end
+    DocumentMailer.deliver_channel_invitation(self, target)
   end
   
   def promote_to_owner(audience)
