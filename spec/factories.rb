@@ -72,11 +72,11 @@ Factory.define :alert do |m|
   m.severity 'Moderate'
   m.delivery_time 60
   m.from_jurisdiction { Factory(:jurisdiction) }
-  m.audiences {|a| [a.association :audience] }
+  m.audiences {|a| [a.association(:audience)] }
 end
 
 Factory.define(:audience) do |a|
-  a.users {|u| [u.association :user] }
+  a.users {|u| [u.association(:user)] }
 end
 
 Factory.define :alert_attempt do |m|
