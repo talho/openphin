@@ -1,0 +1,24 @@
+<aside>
+  <h3>Folders</h3>
+  <ul>
+    <li><%= link_to 'Inbox', documents_path %></li>
+    <%= render current_user.folders.roots %>
+  </ul>
+  <h3>Channels</h3>
+  <%= link_to 'New Channel', new_channel_path %>
+  <ul>
+    <%= render current_user.channels %>
+  </ul>
+</aside>
+
+<% if @channel %>
+  <%= button_to 'Unsubscribe', unsubscribe_channel_path(@channel), :method => :delete %>
+<% end %>
+
+<h3>Documents</h3>
+<ul>
+  <%= render @documents %>
+</ul>
+
+<%= render 'documents/form' %>
+<%= render 'folders/form' %>

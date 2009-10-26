@@ -31,8 +31,6 @@
 #  photo_updated_at   :datetime
 #
 
-# Required Attributes: :cn, :sn, :organizations
-
 class User < ActiveRecord::Base
   extend Clearance::User::ClassMethods
   include Clearance::User::InstanceMethods
@@ -56,6 +54,32 @@ class User < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
+  has_many :documents do
+    def inbox
+      scoped :conditions => 'documents.folder_id IS NULL'
+    end
+  end
+  has_many :folders
+  has_many :subscriptions
+  has_many :channels, :through => :subscriptions
+  has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
+
+  #TODO Move this into plugin for rollcall later
+  def school_districts
+    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
+  end
+
+  def schools
+    school_districts.map{|district| district.schools}.flatten.uniq
+  end
+
+  def absentee_reports
+    schools.map{|school| school.absentee_reports}.flatten.uniq
+  end
+
+  def recent_absentee_reports
+    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
+  end
 
   validates_presence_of     :email
   validates_presence_of     :first_name
@@ -109,7 +133,7 @@ class User < ActiveRecord::Base
     indexes display_name
     indexes title
     indexes email
-
+  
     set_property :delta => :delayed
   end
 
@@ -143,7 +167,7 @@ class User < ActiveRecord::Base
   
   def is_super_admin?
     j = Jurisdiction.find_by_name('Texas')
-    j.admins.include?(self) unless j.nil?
+    j.super_admins.include?(self) unless j.nil?
   end
 
   def is_admin?

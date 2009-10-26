@@ -13,6 +13,6 @@ class AlertDeviceType < ActiveRecord::Base
   belongs_to :alert
   
   def device_type
-    eval self.device
+    self.device.constantize
   end
 end

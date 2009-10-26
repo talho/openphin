@@ -76,17 +76,39 @@ module FeatureHelpers
       end
       
       fields.each do |label, value|
-        fill_in_alert_field label, value unless label == "Delivery Time"
+        fill_in_alert_field(label, value) unless label == "Delivery Time"
+      end
+    end
+
+    def fill_in_audience_form(table)
+      table.rows_hash.each do |field, value|
+        fill_in_audience_field field, value
+      end
+    end
+    
+    def fill_in_audience_field(label, value)
+      case label
+      when "People"
+        value.split(',').each do |name|
+          user = Given "a user named #{name.strip}"
+          fill_in 'audience_user_ids', :with => user.id.to_s
+        end
+      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
+        value.split(',').map(&:strip).each{ |r| check r }
+      else
+        false
       end
     end
   
     def fill_in_alert_field(label, value)
       case label
-        when "People"
+      when "People"
         value.split(',').each do |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'alert_user_ids', :with => user.id.to_s
+          fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
         end
+      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
+        value.split(',').map(&:strip).each{ |r| check r }
       when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time'
         select value, :from => label unless label == 'Delivery Time'
       when 'Acknowledge', 'Sensitive'
@@ -98,8 +120,6 @@ module FeatureHelpers
         end
       when 'Communication methods'
         check value
-      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
-        value.split(',').map(&:strip).each{ |r| check r }
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
       when "Short Message"

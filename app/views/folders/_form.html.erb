@@ -1,0 +1,9 @@
+<% form_for Folder.new do |form| %>
+  <%= form.label :name, 'Folder Name' %>
+  <%= form.text_field :name %>
+  
+  <%= form.label :parent_id, 'Inside' %>
+  <%= form.select :parent_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" }, :include_blank => 'Root' %>
+  
+  <%= form.submit 'Create' %>
+<% end %>

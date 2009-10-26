@@ -93,11 +93,27 @@ module EDXL
       parameter.value if parameter
     end
 
+    def self.set_jurisdictions_for_level(alert)
+      alert.audiences.each do |audience|
+        if audience.users.empty?
+          if audience.jurisdictions.empty?
+            if alert.jurisdictional_level =~ /local/i
+              audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+            end
+            if alert.jurisdictional_level =~ /state/i
+              audience.jurisdictions << Jurisdiction.root.children.nonforeign
+            end
+          end
+          audience.roles = Role.all if audience.roles.empty?
+        end
+      end
+    end
+
     def self.parse(xml, options = {})
       returning super do |message|
         message.alerts.each do |alert|
           next if options[:no_delivery]
-          a = ::Alert.create!(
+          a = ::Alert.new(
             :identifier => alert.identifier,
             :message_type => message.distribution_type,
             :references => alert.references,
@@ -124,19 +140,24 @@ module EDXL
             :reference => alert.references,
             :ack_distribution_reference => "#{message.distribution_id},#{message.sender_id},#{Time.parse(message.datetime_sent).utc.iso8601(3)}"
           )
-
+          
+          audience = a.audiences.build
+          
           message.fips_codes.each do |code|
             j = Jurisdiction.find_by_fips_code(code)
-            a.jurisdictions << j if j
+            audience.jurisdictions << j if j
           end
           message.roles.each do |role|
             role = Role.find_by_name(role.strip)
-            a.roles << role if role
+            audience.roles << role if role
           end
           message.users.each do |email|
             user=User.find_by_email(email)
-            a.users << user if user
+            audience.users << user if user
           end
+          
+          set_jurisdictions_for_level(a)
+          a.save!
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
 
@@ -150,9 +171,9 @@ module EDXL
           a.batch_deliver
           Dir.ensure_exists(File.join(Agency[:phin_ms_path]))
 
-          f=File.open(File.join(Agency[:phin_ms_path], "#{a.identifier}-ACK.edxl"), 'w' )
-          f.write(a.to_ack_edxl)
-          f.close     
+          File.open(File.join(Agency[:phin_ms_path], "#{a.identifier}-ACK.edxl"), 'w' ) do |f|
+            f.write(a.to_ack_edxl)
+          end
         end
       end
     end
@@ -180,17 +201,12 @@ module EDXL
     end
     
     def acknowledge
-      if !alert.nil?
-        if alert.organizations.empty?
-          d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
-          d.sys_acknowledged_at = Time.zone.now
-          d.save!
-        else
-          d = alert.alert_attempts.first.deliveries.first
-          d.sys_acknowledged_at = Time.zone.now
-          d.save!
-        end
-      end
+      # FIXME: Fragile and broken. :(
+      # if !alert.nil?
+      #   d = Jurisdiction.federal.first.alert_attempts.find_by_alert_id(alert.id).deliveries.first
+      #   d.sys_acknowledged_at = Time.zone.now
+      #   d.save!
+      # end
     end
 
     def self.parse(xml, options = {})
@@ -200,68 +216,3 @@ module EDXL
     end
   end
 end
-
-
-# class CapParameter
-#   include HappyMapper
-#   namespace "http://schemas.google.com/analytics/2009"
-#   element :name, String, :tag => "valueName"
-#   element :value, String
-# end
-# class CapInfo
-#   include HappyMapper
-#   namespace "http://schemas.google.com/analytics/2009"
-#   tag "info"
-#   element :category, String
-#   element :event, String
-#   element :urgency, String
-#   element :severity, String
-#   element :certainty, String
-#   element :sender_name, String, :tag => "senderName"
-#   element :headline, String
-#   element :description, String
-#   element :instruction, String
-#   element :contact, String
-#   has_many :parameters, CapParameter
-# end
-# class EmbeddedXmlContent
-#   include HappyMapper
-#   tag "embeddedXMLContent"
-#   has_one :alert, CapAlert
-# end
-# class XmlContent
-#   include HappyMapper
-#   tag "xmlContent"
-#   has_one :embedded_content, EmbeddedXmlContent
-# end
-# class ContentObject
-#   include HappyMapper
-#   tag "contentObject"
-#   has_one :xml_content, XmlContent
-#   element :confidentiality, String
-# end
-# class TargetArea
-#   include HappyMapper
-# 
-#   tag "targetArea"
-#   element "country", String
-#   has_many "location_code", String, :tag => "locCodeUN"
-# end
-# class RecipientRole
-#   include HappyMapper
-# 
-# 
-#   tag "recipientRole"
-#   element :value_list_urn, String, :tag => "valueListURN"
-#   has_many :values, String
-# end
-# class ExplicitAddress
-#   include HappyMapper
-# 
-# 
-#   tag "explicitAddress"
-#   element :explicit_address_scheme, String, :tag => "explicitAddressScheme"
-#   has_many :explicit_address_value, String, :tag => "explicitAddressValue"
-# end
-# 
-# 

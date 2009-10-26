@@ -46,12 +46,12 @@ Feature: Sending CDC test cases
 
   Scenario: Trying to send cascading alert that should not cascade
      When I fill out the alert form with:
-       | Jurisdictions | Texas                                   |
-       | Role         | Bioterrorism Coordinator                    |
-       | Title    | H1N1 SNS push packs to be delivered tomorrow |
-       | Message  | For more details, keep on reading...         |
-       | Acknowledge | <unchecked>                               |
-       | Communication methods | E-mail                          |
+       | Jurisdictions         | Texas                                        |
+       | Role                  | Bioterrorism Coordinator                     |
+       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+       | Message               | For more details, keep on reading...         |
+       | Acknowledge           | <unchecked>                                  |
+       | Communication methods | E-mail                                       |
 
      And I press "Preview Message"
      Then I should see a preview of the message
@@ -76,7 +76,7 @@ Feature: Sending CDC test cases
     Then I should see a preview of the message
 
     When I press "Send"
-    Then I should see "Successfully sent the alert"
+    Then I should see "Successfully sent the alert"    
     And a foreign alert "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)" is sent
 
   Scenario: Test case 2--Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections

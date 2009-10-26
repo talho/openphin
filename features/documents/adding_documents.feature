@@ -4,44 +4,83 @@ Feature: Adding documents to document sharing
   I should be able to add documents to my store
 
   Background:
-    Given I am logged in as a user with an approval role
-
-  Scenario: Viewing documents
-    When I click the documents tab
-    Then I should see my documents and folders
-
-    When I follow a document link
-    Then it should download to my computer
+    Given the following administrators exist:
+      | admin@dallas.gov | Dallas County |
+    And I am logged in as "admin@dallas.gov"
     
   Scenario: Adding a document to private storage
-    When I click "Upload Document"
-    And I browse to the file
-    And I click "Upload"
-    Then I should see the document in my root folder
+    Given I have a folder named "Rockstars"
+    When I go to the Documents page
+    And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+    And I select " Rockstars" from "Folder"
+    And I press "Upload"
+    
+    Then I should see "keith.jpg"
+    
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    
+    When I follow "Rockstars"
+    Then I should see "keith.jpg"
+    
+    When I follow "keith.jpg"
+    Then I should receive the file:
+      | Filename     | keith.jpg  |
+      | Content Type | image/jpeg |
 
-  Scenario: Sending a document to users identified in a group
-    Given I have a document in my root folder
-    When I select a group
-    And I click "Send to group"
-    Then members of the group should see the document in their "Inbox" folder
+  Scenario: Viewing documents
+    Given I have the document "keith.jpg" in my inbox
+    When I go to the Documents page
+    Then I should see "keith.jpg"
+
+    When I follow "keith.jpg"
+    Then I should receive the file:
+      | Filename     | keith.jpg  |
+      | Content Type | image/jpeg |
 
   Scenario: Creating folders to organize documents
+    When I go to the Documents page
+    And I fill in "Folder Name" with "Important" 
+    And I press "Create"
+    Then I should see "Important"
+    
+    And I fill in "Folder Name" with "Less Important" 
+    And I press "Create"
+    Then I should see "Less Important"
 
   Scenario: Creating nested folders to organize documents
+    When I go to the Documents page
+    And I fill in "Folder Name" with "Everything" 
+    And I select "Root" from "Inside"
+    And I press "Create"
+    Then I should see "Everything"
 
-  Scenario: Receiving documents from other users
-    Given another user has sent me a document
-    Then I should see the document in my Inbox folder
+    And I fill in "Folder Name" with "Some Things"
+    And I select " Everything" from "Inside"
+    And I press "Create"
+    Then I should see "Some Things"
 
-  Scenario: forwarding documents to another group of recipients
-    When I go to the documents page
-    And I click on a document
-    And I select a group
-    And I click "Forward to Group"
-    Then members of the group should see the document in their inbox folder
+  Scenario: Moving a document into a folder
+    Given I have a folder named "Rockstars"
+    And I have the document "keith.jpg" in my inbox
+    When I go to the Documents page
+    And I follow "Move"
+    And I select " Rockstars" from "Folder"
+    And I press "Update"
 
-  Scenario: removing a document from sharing
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    
+    When I follow "Rockstars"
+    Then I should see "keith.jpg"
+  
+  Scenario: Updating a document
+    Given I have the document "keith.jpg" in my inbox
+    When I go to the Documents page
+    And I follow "Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/sample.wav" to "Upload a new version"
+    And I press "Update"
 
-  Scenario: copying a document from another user into personal folder
-
-  Scenario: sharing documents without having an approved role membership
+    When I go to the Documents page
+    Then I should not see "keith.jpg"
+    Then I should see "sample.wav"

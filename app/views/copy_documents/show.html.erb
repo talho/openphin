@@ -1,0 +1,4 @@
+<% form_for @document, :url => document_copy_path(@document), :html => {:method => :post} do |form| %>
+  <%= render 'documents/folder_fields', :form => form %>
+  <%= form.submit 'Copy' %>
+<% end %>

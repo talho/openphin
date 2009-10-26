@@ -12,8 +12,9 @@ end
 
 # System-roles
 # Post file-in to assure there setting from file-in overwrites
+Role.admin
+Role.superadmin
+Role.org_admin
 Role.seed_many(:name, [
-  {:name => Role::Defaults[:admin], :approval_required => false, :user_role => false},
-  {:name => Role::Defaults[:org_admin], :approval_required => false, :user_role => false},
-  {:name => Role::Defaults[:superadmin], :approval_required => false, :user_role => false}
+  {:name => "Rollcall",                   :approval_required => false, :user_role => false}
 ])

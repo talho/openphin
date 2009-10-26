@@ -22,14 +22,18 @@ end
 
 Then /^I should see the following roles:$/ do |table|
   table.raw.each do |row|
-    response.should have_selector(".role", :content => row[0])
+    response.should have_selector(".roles li", :content => row[0])
   end
 end
 
 Then /^I should see the following group summary:$/ do |table|
   table.rows_hash.each do |key, value|
     value.split(',').each do |item|
-      response.should have_selector(".#{key.singularize}", :content => item)
+      if key =~ /(name|group_scope|owner_jurisdiction)/i
+        response.should have_selector(".#{key}", :content => item)
+      else
+        response.should have_selector(".#{key} *", :content => item)
+      end
     end  
   end
 end
@@ -39,9 +43,9 @@ When "I fill out the group form with:" do |table|
 end
 
 Then /^I should see "(.*)" as a groups option$/ do |name|
-  group = Group.find_by_name!(name)
-  response.should have_selector("input[name='alert[group_ids][]']", :value => group.id.to_s)
+  response.should have_selector(".groups label", :content => name)
 end
+
 Then /^I should see that the group includes\:$/ do |table|
   table.raw.each do |row|
     row[0].split(",").each do |name|
@@ -50,8 +54,7 @@ Then /^I should see that the group includes\:$/ do |table|
   end
 end
 
-Then /^I should see the user "(.*)" immediately before "(.*)"$/ do
-|user1, user2|
+Then /^I should see the user "(.*)" immediately before "(.*)"$/ do |user1, user2|
    response.should have_selector("li.group_rcpt:nth-child(1)", :content => user1)
    response.should have_selector("li.group_rcpt:nth-child(2)", :content => user2)
 end

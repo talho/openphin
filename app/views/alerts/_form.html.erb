@@ -95,45 +95,15 @@
     </div>
   </div>
   <div id="audience">
-    <% if @update.blank? && @cancel.blank? %>
-    <% cache(:key => "alert_audience_spec") do  %>
-    <fieldset class="filterable list">
-      <legend>Jurisdictions</legend>
-      <%= jurisdiction_list(form) %>
-    </fieldset>
-    <fieldset class="filterable list">
-      <legend>Limit Roles</legend>
-      <ul class="check_selector">
-        <%- Role.user_roles.each do |r| -%>
-          <li><%= check_box_tag 'alert[role_ids][]', r.id, form.object.role_ids.include?(r.id), :id => "alert_role_#{r.id}" %>
-          <%= label_tag "alert_role_#{r.id}", r.name %>
-          </li>
-        <%- end -%>
-      </ul>
-    </fieldset>
-        
-    <fieldset class="filterable list last">
-      <legend>Groups</legend>
-      <ul class="check_selector">
-        <%- current_user.visible_groups.each do |grp| -%>
-          <li><%= check_box_tag 'alert[group_ids][]', grp.id, form.object.group_ids.include?(grp.id), :id => "alert_group_#{grp.id}" %>
-          <%= label_tag "alert_group_#{grp.id}", grp.name %>
-          </li>
-        <%- end -%>
-      </ul>
-    </fieldset>
-    <%- end -%>
-    
-    <fieldset class="people">
-      <legend>People</legend>
-      <%- form.object.users.each do |user| -%>
-        <%= hidden_field_tag "alert[user_ids][]", user.id %>
-      <%- end -%>
-
-      <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %>
-    </fieldset>
-    
-    <%= form.submit "Preview Message" %>
+    <%- if @update.blank? && @cancel.blank? -%>
+      <% form.object.audiences.build if form.object.audiences.empty? %>
+      <% form.fields_for :audiences do |audience| %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => form %>
+        <% end %>
+      <% end %>
+      
+      <%= form.submit "Preview Message" %>
     <%- end -%>
   </div>
 </div>

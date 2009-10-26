@@ -1,0 +1,8 @@
+<% content_tag_for :li, folder do %>
+  <%= link_to h(folder), folder %>
+  <%- unless folder.children.empty? -%>
+    <ul>
+      <%= render folder.children %>
+    </ul>
+  <%- end -%>
+<% end %>

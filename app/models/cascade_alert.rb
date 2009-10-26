@@ -6,6 +6,10 @@ class CascadeAlert
     self.alert = alert
   end
   
+  def audience
+    alert.audiences.detect{|a| !a.is_a?(Group) }
+  end
+  
   def yes_no(boolean)
     boolean ? 'Yes' : 'No'
   end
@@ -38,26 +42,26 @@ class CascadeAlert
       xml.combinedConfidentiality confidentiality
       xml.recipientRole do
         xml.valueListUrn 'urn:phin:role'
-        xml.value "Health Alert and Communications Coordinator" if alert.roles.size > 0
-        alert.roles.each do |role|
+        xml.value "Health Alert and Communications Coordinator" if audience.roles.size > 0
+        audience.roles.each do |role|
           xml.value role.name unless role.name == "Health Alert and Communications Coordinator"
         end
-      end unless alert.roles.size == 0
+      end unless audience.roles.size == 0
       xml.distributionReference alert.distribution_reference unless alert.message_type == 'Alert'
       xml.explicitAddress do
         xml.explicitAddressScheme "e-mail"
-        alert.foreign_users.each do |user|
+        audience.foreign_users.each do |user|
           xml.explicitAddressValue user.email
         end
-      end if alert.foreign_users.any?
+      end if audience.foreign_users.any?
       xml.targetArea do
-        alert.jurisdictions.foreign.each do |j|
+        audience.jurisdictions.foreign.each do |j|
           xml.locCodeUN j.fips_code
         end
-      end if alert.jurisdictions.foreign.any? && !alert.jurisdictions.foreign.map(&:fips_code).compact.empty?
+      end if audience.jurisdictions.foreign.any? && !audience.jurisdictions.foreign.map(&:fips_code).compact.empty?
       # xml.targetArea do
       #   xml.country 'US'
-      #   alert.jurisdictions.each do
+      #   audience.jurisdictions.each do
       #     xml.locCodeUN jurisdiction.fips_code
       #   end
       # end

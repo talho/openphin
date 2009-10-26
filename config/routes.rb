@@ -1,7 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :channels, :has_many => :subscriptions,
+    :member => {:unsubscribe => :delete}
+
 #  map.resources :user_profiles, :as => "profile"
 
-  map.resources :jurisdictions, :devices
+  map.resources :jurisdictions, :devices, :folders
+  map.resources :documents, :has_many => :shares do |documents|
+    documents.resource :copy, :controller => 'copy_documents'
+  end
+  map.channel_document 'channels/:channel_id/documents/:id',
+    :controller => 'documents', :action => 'remove_from_channel',
+    :conditions => {:method => :delete}
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"
@@ -28,7 +37,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organizations do |organization|
     organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   end
-  map.resources :roll_calls
   map.resources :admin_groups, :controller => "admin/groups"
   
   map.resource :search
@@ -37,6 +45,11 @@ ActionController::Routing::Routes.draw do |map|
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
+
+
+  #Rollcall routes, to be moved into plugin
+  map.rollcall "/rollcall", :controller => "rollcall/rollcall"
+  map.resources :schools, :controller => "rollcall/schools"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

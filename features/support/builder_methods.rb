@@ -2,17 +2,13 @@ module FeatureHelpers
   module BuilderMethods
     def create_alert_with(attributes)
       attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
-      attributes['jurisdictions'] = attributes['jurisdictions'].split(',').map{|m| Jurisdiction.find_by_name(m.strip)} unless attributes['jurisdictions'].blank?
-      attributes['organizations'] = attributes['organizations'].split(',').map{|m| Organization.find_by_name(m.strip)} unless attributes['organizations'].blank?
-      attributes['roles'] = attributes['roles'].split(',').map{|m| Role.find_or_create_by_name(m.strip)} unless attributes['roles'].blank?
-
-      if attributes.has_key?('people')
-        attributes['user_ids'] = attributes.delete('people').split(',').map{ |m|
-          first_name, last_name = m.split(/\s+/) 
-          User.find_by_first_name_and_last_name(first_name, last_name)
-        } 
-      end
-  
+      jurisdictions = (attributes.delete('jurisdictions') || attributes.delete('jurisdiction')).to_s.split(',').map{|m| Jurisdiction.find_by_name(m.strip)}
+      roles = attributes.delete('roles').to_s.split(',').map{|m| Role.find_or_create_by_name(m.strip)}
+      users = attributes.delete('people').to_s.split(',').map{ |m|
+        first_name, last_name = m.split(/\s+/) 
+        User.find_by_first_name_and_last_name(first_name, last_name)
+      }
+      
       if attributes['author'].blank?
         attributes['author_id'] = current_user.id unless current_user.nil?
       else
@@ -24,7 +20,7 @@ module FeatureHelpers
       end
 
       if attributes.has_key?("communication methods")
-        attributes['device_types']= attributes.delete('communication methods').split(",").map{|device_name| "Device::#{device_name}Device"}
+        attributes['device_types']= attributes.delete('communication methods').split(",").map{|device_name| "Device::#{device_name.strip}Device"}
       end
 
       if attributes.has_key?("delivery time")
@@ -45,7 +41,9 @@ module FeatureHelpers
         end
       end
 
-      Factory(:alert, attributes)  
+      returning Factory(:alert, attributes) do |alert|
+        alert.audiences.create! :jurisdictions => jurisdictions, :roles => roles, :users => users
+      end
     end
   end
 end

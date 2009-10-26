@@ -10,3 +10,4 @@ require 'rake/rdoctask'
 require 'tasks/rails'
 
 task :build => %w(db:migrate spec features)
+task :db => %w(db:migrate db:test:prepare)

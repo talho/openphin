@@ -30,15 +30,6 @@ Factory.define :user do |pp|
   pp.email_confirmed { true }
 end
 
-Factory.define :user_profile do |m|
-  m.public true
-  m.credentials "Some fancy credentials"
-  m.employer "Acme Fireworks"
-  m.experience "hunting wabbits"
-  m.bio "The details of my early life are really quite inconsequential..."
-  m.user {|profile| profile.association :user, Factory(:user) }
-end
-
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
 Factory.define :jurisdiction do |jur|
   jur.name { Factory.next(:jurisdiction_name) }
@@ -81,6 +72,11 @@ Factory.define :alert do |m|
   m.severity 'Moderate'
   m.delivery_time 60
   m.from_jurisdiction { Factory(:jurisdiction) }
+  m.audiences {|a| [a.association :audience] }
+end
+
+Factory.define(:audience) do |a|
+  a.users {|u| [u.association :user] }
 end
 
 Factory.define :alert_attempt do |m|
@@ -147,4 +143,31 @@ Factory.define :group do |m|
   m.sequence(:name){|t| "Name ##{t}"}
   m.association :owner, :factory => :user
 	m.scope "Personal"
+end
+
+Factory.define :target do |m|
+  m.association :audience, :factory => :group
+  m.association :item, :factory => :alert
+end
+
+Factory.define :channel do |m|
+  m.sequence(:name){|t| "Channel ##{t}"}
+end
+
+Factory.define :document do |m|
+  m.association :user
+  m.file {|f| File.open(__FILE__)}
+end
+
+Factory.define :school_district do |m|
+  m.sequence(:name){|t| "Name ##{t}"}
+  m.association :jurisdiction
+end
+
+Factory.define :school do |m|
+  m.sequence(:name){|t| "Name ##{t}"}
+  m.sequence(:display_name) {|t| "Display Name ##{t}"}
+  m.level "ES"
+  m.sequence(:school_number)
+   m.association :district
 end

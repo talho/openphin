@@ -48,12 +48,11 @@ class Alert < ActiveRecord::Base
   belongs_to :from_organization, :class_name => 'Organization'
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   belongs_to :original_alert, :class_name => 'Alert'
-  has_and_belongs_to_many :users
-  has_and_belongs_to_many :jurisdictions
-  has_and_belongs_to_many :roles
-  has_and_belongs_to_many :organizations
-  has_and_belongs_to_many :group_snapshots
-  has_many :groups, :through => :group_snapshots
+  
+  has_many :targets, :as => :item
+  has_many :audiences, :through => :targets
+  accepts_nested_attributes_for :audiences
+  
   has_many :alert_device_types, :dependent => :delete_all
   has_many :alert_attempts, :dependent => :destroy
   has_many :deliveries, :through => :alert_attempts
@@ -127,18 +126,7 @@ class Alert < ActiveRecord::Base
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
-      self.jurisdictions.each do |jurisdiction|
-        alert.jurisdictions << jurisdiction
-      end
-      self.organizations.each do |organization|
-        alert.organizations << organization
-      end
-      self.roles.each do |role|
-        alert.roles << role
-      end
-      self.users.each do |user|
-        alert.users << user
-      end
+      alert.audiences = self.audiences
     end
   end
 
@@ -153,18 +141,7 @@ class Alert < ActiveRecord::Base
       alert.title = "[Update] - #{title}"
       alert.message_type = MessageTypes[:update]
       alert.original_alert = self
-      self.jurisdictions.each do |jurisdiction|
-        alert.jurisdictions << jurisdiction
-      end
-      self.organizations.each do |organization|
-        alert.organizations << organization
-      end
-      self.roles.each do |role|
-        alert.roles << role
-      end
-      self.users.each do |user|
-        alert.users << user
-      end
+      alert.audiences = self.audiences
     end
   end
 
@@ -191,44 +168,17 @@ class Alert < ActiveRecord::Base
     minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"    
   end
   
-  def deliver
-    # 1 - explode all known users and deliver to them
-    find_user_recipients.each do |user|
-      alert_attempts.create!(:user => user).deliver
-    end
-    # 2 - deliver to foreign orgs
-    #if jurisdictions.any?(&:root?)
-      jurisdictions.select(&:foreign).each do |jurisdiction|
-        alert_attempts.create!(:jurisdiction => jurisdiction).deliver
-      end
-    #end
-  end
-  #handle_asynchronously :deliver
-  
   def batch_deliver
-    #0: take care of the case where there is no jurisdiction specified or no role specified
-    if users.empty?
-      if jurisdictions && jurisdictions.empty?
-        if jurisdictional_level =~ /local/i
-          jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
-        end
-        if jurisdictional_level =~ /state/i
-          jurisdictions << Jurisdiction.root.children.nonforeign
-        end
-      end
-      roles << Role.all if roles && roles.empty?
-    end
-    # 1 - explode all known users and batch deliver to them
-    find_user_recipients.each do |user|
+    recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
-    # 2 - batch deliver to foreign jurisdictions
-    if jurisdictions && jurisdictions.any?(&:foreign?)
-      alert_attempts.create!(:jurisdiction => jurisdictions.foreign.first.root).batch_deliver  
+    audiences.each do |audience|
+      audience.foreign_jurisdictions.each do |jurisdiction|
+        alert_attempts.create!(:jurisdiction => jurisdiction).batch_deliver  
+      end
     end
-
     alert_device_types.each do |device_type|
-      device_type.device.constantize.batch_deliver(self)
+      device_type.device_type.batch_deliver(self)
     end
   end
   
@@ -286,7 +236,7 @@ class Alert < ActiveRecord::Base
 
   def set_jurisdictional_level
     if !Jurisdiction.find_by_name(sender).nil?
-      jurs=Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', jurisdiction_ids])
+      jurs = Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', audiences.map(&:jurisdiction_ids).flatten.uniq])
       level=[]
       level << "Federal" if jurs.detect{|j| j.root?}
       level << "State" if jurs.detect{|j| !j.root? && !j.leaf?}
@@ -299,11 +249,6 @@ class Alert < ActiveRecord::Base
     if sent_at.blank?
       write_attribute("sent_at", Time.zone.now)
     end
-  end
-  
-  #TODO: opportunity for optimization:  perform this function in SQL, not using map
-  def foreign_users
-    @foreign_users ||= users.map{|u| u if u.jurisdictions.foreign.all.any? }.compact
   end
 
   def sender
@@ -329,25 +274,17 @@ class Alert < ActiveRecord::Base
 
   end
 
-  def find_user_recipients
-    #memoize this fairly expensive query
-    if @_user_recips.nil?
-      user_ids_for_delivery = jurisdictions.map(&:user_ids).flatten
-      user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
-      user_ids_for_delivery &= organizations.map(&:user_ids).flatten unless organizations.empty?
-
-      user_ids_for_delivery += user_ids
-
-      user_ids_for_delivery += required_han_coordinators
-      user_ids_for_delivery += groups.map(&:create_snapshot).map{|snap| snap.alert=self; snap.users}.flatten.map(&:id)
-
-      @_user_recips=User.find(user_ids_for_delivery)
-    end
-    @_user_recips
-   end
+  def recipients
+    (targets.map(&:users).flatten + User.find(required_han_coordinators)).uniq
+  end
 
   def total_jurisdictions
-    (jurisdictions + find_user_recipients.map(&:jurisdictions).flatten).uniq
+    (audiences.map(&:jurisdictions).flatten + recipients.map(&:jurisdictions).flatten).uniq
+  end
+  
+  # used by Target to determine if public users should be included in recipients
+  def include_public_users?
+    true
   end
 
 private
@@ -392,6 +329,7 @@ private
   
   def required_han_coordinators
     # Keith says: "Do not fuck with this method."
+    jurisdictions = audiences.map(&:jurisdictions).flatten.uniq
     unless jurisdictions.empty?
       # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
       if from_jurisdiction.nil?
