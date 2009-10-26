@@ -16,7 +16,7 @@ class SharesController < ApplicationController
           @document.targets.create! :audience_id => id, :creator => current_user
         end
       end
-      @document.channel_ids += params[:document][:channel_ids]
+      @document.channel_ids += params[:document][:channel_ids] if params[:document][:channel_ids]
       @document.save!
     end
     flash[:notice] = 'Successfully shared the document'
