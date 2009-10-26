@@ -20,7 +20,7 @@
 =end
 
 class Rollcall::RollcallController < ApplicationController
-  before_filter :rollcall_required
+  before_filter :rollcall_required, :except => "index"
 
   def index
     toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
