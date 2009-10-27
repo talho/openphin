@@ -60,6 +60,7 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
   And I should not see "School View"
   And I should not see "Absenteeism Summary"
   And I should be on the about rollcall page
+
   
 Scenario: Viewing the Home screen
   Given I am logged in as "nurse.betty@example.com"
