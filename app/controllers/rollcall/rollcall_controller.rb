@@ -53,7 +53,7 @@ class Rollcall::RollcallController < ApplicationController
                          :axis_labels => xlabels,
                          :legend => @districts.map(&:name),
                          :data => @districts.map{|d| d.recent_absentee_rates(timespan).map{|m|m*100}},
-                         :encoding => "text"
+                        :encoding => "text"
       )
       ethans_crazy_absenteeism_summary_code
     end
