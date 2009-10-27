@@ -27,7 +27,7 @@ class Rollcall::RollcallController < ApplicationController
     Rollcall::RollcallController.app_toolbar toolbar
 
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
-    if @districts.empty?
+    if @districts.empty? || !current_user.roles.include?(Role.find_by_name('Rollcall'))
       render "about"
     else
 
@@ -52,8 +52,8 @@ class Rollcall::RollcallController < ApplicationController
                          :encoding => "text"
 #                         :max_value => 30
       )
+      ethans_crazy_absenteeism_summary_code
     end
-    ethans_crazy_absenteeism_summary_code
   end
 
   private

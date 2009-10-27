@@ -56,10 +56,10 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
     | name | portal_toolbar |
     | item | Rollcall       |
   When I follow "Rollcall"
-  Then I should see "That resource does not exist or you do not have access to it."
-  And I should not see "School View"
+  And I see WTF is going on
+  Then I should not see "School View"
   And I should not see "Absenteeism Summary"
-  And I should be on the dashboard page
+  And I should be on the rollcall page
 
 Scenario: Viewing the Home screen
   Given I am logged in as "nurse.betty@example.com"
