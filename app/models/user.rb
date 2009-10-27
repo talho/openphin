@@ -171,10 +171,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    self.jurisdictions.each do |j|
-      return true if j.admins.include?(self)
-    end
-    false
+    self.roles.include?(Role.admin) || self.roles.include?(Role.superadmin) ? true : false
   end
 
   def is_org_approver?

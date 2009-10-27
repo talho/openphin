@@ -1,6 +1,6 @@
 class Admin::RoleRequestsController < ApplicationController
   before_filter :admin_required
-  app_toolbar "han"
+  app_toolbar "admin"
   
   # GET /role_requests
   # GET /role_requests.xml
@@ -53,11 +53,11 @@ class Admin::RoleRequestsController < ApplicationController
     respond_to do |format|
       if @role_request && current_user.is_admin_for?(@role_request.jurisdiction)
         @role_request.destroy
-        format.html { redirect_to(admin_pending_requests_path) }
+        format.html { redirect_to(admin_role_requests_path) }
         format.xml  { head :ok }
       else
         flash[:error] = "This resource does not exist or is not available."
-        format.html { redirect_to(admin_pending_requests_path) }
+        format.html { redirect_to(admin_role_requests_path) }
         format.xml { render :xml => @role_request.errors, :status => :unprocessable_entity }
       end
     end

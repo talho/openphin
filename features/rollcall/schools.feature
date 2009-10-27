@@ -56,8 +56,8 @@ Feature: School
   Scenario: Accessing the School View in the Rollcall application as a non-rollcall user
     Given I am logged in as "normal.epi@example.com"
     When I go to the rollcall schools page
-    Then I should see "That resource does not exist or you do not have access to it."
-    And I should be on the dashboard page
+    Then I should see "You have not been given access to the Rollcall application."
+    And I should be on the about rollcall page
 
   Scenario: Selecting a district and school from the dropdown
     Given I am logged in as "nurse.betty@example.com"

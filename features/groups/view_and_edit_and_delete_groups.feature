@@ -14,13 +14,13 @@ Feature: Viewing groups
       | Dallas County | Potter County |
     And the role "Admin" is an alerter
     And the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |
+      | John Smith      | john.smith@example.com   | Public         | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
-      | Health Officer2 | ho1@example.com   | Health Officer | Dallas County |
-      | Health Officer1 | ho2@example.com   | Health Officer | Dallas County |
-      | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
-      | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
-      | Will Smith      | will.smith@example.com   | Admin  | Potter County |
+      | Health Officer2 | ho1@example.com          | Health Officer | Dallas County |
+      | Health Officer1 | ho2@example.com          | Health Officer | Dallas County |
+      | Jill Smith      | jill.smith@example.com   | Admin          | Potter County |
+      | Jim Smith       | jim.smith@example.com    | Admin          | Dallas County |
+      | Will Smith      | will.smith@example.com   | Admin          | Potter County |
     And the following groups for "jill.smith@example.com" exist:
       | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
       | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Potter County |

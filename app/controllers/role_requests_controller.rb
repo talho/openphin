@@ -1,5 +1,9 @@
 class RoleRequestsController < ApplicationController
-	app_toolbar "han"
+  app_toolbar "accounts"
+
+  def index
+
+  end
 
   def new
     @role_request = RoleRequest.new
@@ -21,9 +25,9 @@ class RoleRequestsController < ApplicationController
         format.html { redirect_to dashboard_path }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @role_request.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @role_request.errors, :status => :unprocessable_entity }
       end
     end
   end
-  
+
 end

@@ -16,5 +16,5 @@ Role.admin
 Role.superadmin
 Role.org_admin
 Role.seed_many(:name, [
-  {:name => "Rollcall",                   :approval_required => false, :user_role => false}
+  {:name => "Rollcall",                   :approval_required => true, :user_role => false}
 ])

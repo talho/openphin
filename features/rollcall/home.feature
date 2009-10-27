@@ -56,9 +56,10 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
     | name | portal_toolbar |
     | item | Rollcall       |
   When I follow "Rollcall"
-  Then I should not see "School View"
+  Then I should see "You have not been given access to the Rollcall application."
+  And I should not see "School View"
   And I should not see "Absenteeism Summary"
-  And I should be on the rollcall page
+  And I should be on the about rollcall page
 
   
 Scenario: Viewing the Home screen
