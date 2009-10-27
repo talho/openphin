@@ -89,7 +89,7 @@ Feature: Signing up for an account
       | First name can't be blank |
       | Last name can't be blank |
       | Home Jurisdiction needs to be selected |
-       
+
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
       | Email          | john@example.com |
@@ -210,4 +210,8 @@ Feature: Signing up for an account
     And I should not see "Thanks for signing up"
     And "john@example.com" should not exist
 	  And "admin@dallas.gov" should not receive an email
+<<<<<<< HEAD
     And I should see "Home Jurisdiction needs to be selected"
+=======
+    And I should see " Home jurisdiction needs to be selected"
+>>>>>>> Role select required feature if the health professionals is selected
