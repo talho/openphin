@@ -9,7 +9,7 @@ module FeatureHelpers
        "Last name"=> "Smith",
        "Preferred name"=> "Jonathan Smith",
        "Are you with any of these organizations"=> "Red Cross",
-       "What is your primary role"=> "Health Alert and Communications Coordinator",
+       "Are you a public health professional?" => '<unchecked>',
        "Preferred language"=> "English"
       }
       

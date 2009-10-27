@@ -92,7 +92,11 @@ end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
-  fill_in_user_signup_form("Email" => email, "Home Jurisdiction" => "Texas")
+  fill_in_user_signup_form("Email" => email, 
+    "Home Jurisdiction" => "Texas", 
+    "What is your primary role" => "Health Alert and Communications Coordinator", 
+    "Are you a public health professional?" => "checked"
+  )
   click_button "Sign Up"
 end
 
