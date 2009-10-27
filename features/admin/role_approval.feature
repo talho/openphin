@@ -19,7 +19,7 @@ Feature: Approving users for roles
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
     Then I should see "john@example.com" is awaiting approval for "Health Officer"
-    And I follow "View Pending Requests"
+    And I follow "Pending Role Requests"
     Then I should see "john@example.com" is awaiting approval for "Health Officer"
     When I approve "john@example.com" in the role "Health Officer"
     Then "john@example.com" should receive the email:

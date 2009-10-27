@@ -1,0 +1,17 @@
+<% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
+  <h4>Awaiting Approval</h4>
+  <ul class="pending_role_requests">
+    <% current_user.role_requests.unapproved.each do |request| %>
+      <li class="request"><%=h request.jurisdiction.name %>: <%=h request.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if current_user.role_memberships.recent.any? %>
+  <h4>Recently Approved Roles</h4>
+  <ul class="recent_role_approvals">
+    <% current_user.role_memberships.not_public_roles.recent.each do |recent| %>
+      <li class="approval"><%=h recent.jurisdiction.name %> : <%=h recent.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>

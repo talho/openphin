@@ -1,0 +1,4 @@
+<ul>
+  <li<%= " class='current'" if request.request_uri==admin_role_requests_path %>><%= link_to "Pending Role Requests", admin_role_requests_path %></li>
+  <li<%= " class='current'" if request.request_uri==new_role_assignment_path %>><%= link_to "Assign Roles", new_role_assignment_path %></li>
+</ul>

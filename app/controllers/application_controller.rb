@@ -39,9 +39,9 @@ class ApplicationController < ActionController::Base
 
   #TODO needs to be moved to rollcall plugin
     def rollcall_required
-      unless current_user.role_memberships.detect{ |rm| rm.role == Role.find_by_name('rollcall')}
-        flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to dashboard_path
+      unless current_user.role_memberships.detect{ |rm| rm.role == Role.find_by_name('Rollcall')}
+        flash[:error] = "You have not been given access to the Rollcall application.  Email your OpenPHIN administrator for help."
+        redirect_to about_rollcall_path
         false
       end
     end
@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     end
 
     def admin_required
-      unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin }
+      unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
         flash[:error] = "That resource does not exist or you do not have access to it."
         redirect_to dashboard_path
         false

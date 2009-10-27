@@ -1,4 +1,6 @@
 <ul>
   <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "rollcall" %>><%= link_to s("Main"), rollcall_path %></li>
+  <% if current_user.roles.include?(Role.find_by_name("Rollcall")) %>
   <li<%= " class=\"current\"" if (controller.action_name == "index" || controller.action_name == "show") && controller.controller_name == "schools" %>><%= link_to s("School View"), schools_path %></li>
+  <% end %>
 </ul>

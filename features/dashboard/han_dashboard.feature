@@ -25,7 +25,7 @@ Feature: Viewing the dashboard
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
     And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
-    When I go to the han page
+    When I go to the user account roles page
     Then I should see 1 pending role request
 
     Scenario: Dashboard should show the most recent approved role requests
@@ -35,7 +35,7 @@ Feature: Viewing the dashboard
     And I am logged in as "john.smith@example.com"
     And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
     And "admin1@dallascounty.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
-    When I go to the han page
+    When I go to the user account roles page
     Then I should see 1 recent role approval
 
 
