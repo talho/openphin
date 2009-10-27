@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_or_self_required(var = :id)
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin } || current_user.id.to_s == params[var]
+    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == params[var]
       flash[:error] = "That resource does not exist or you do not have access to it."
       redirect_to dashboard_path
       false

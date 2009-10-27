@@ -148,6 +148,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin_for?(other)
+    return true if roles.include?(Role.superadmin)
     if other.class == Jurisdiction
       return true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
     elsif other.class == Array

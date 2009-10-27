@@ -11,6 +11,7 @@ Feature: Assigning roles to users for roles
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
       | Role         | Epidemiologist |
+      | System role  | Superadmin     |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County |
     And Health Officer is a non public role
@@ -22,6 +23,8 @@ Feature: Assigning roles to users for roles
     And the following users exist:
       | John Smith      | john@example.com   | Public | Dallas County |
       | Jane Doe        | jane@example.com   | Public | Dallas County |
+      | Bob  Doe        |  bob@example.com   | Public | Potter County |
+      | Super  Doe      |  super@example.com | Superadmin | Texas     |
 
   Scenario: Admin can assign roles to users in their jurisdictions
     Given I am logged in as "admin@dallas.gov"
@@ -113,7 +116,6 @@ Feature: Assigning roles to users for roles
 	  And "admin@dallas.gov" should not receive an email
 
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
-    Given I am
     Given I am logged in as "admin@dallas.gov"
     And I go to the roles requests page for an admin
     And I follow "Assign Role"
@@ -195,3 +197,32 @@ Feature: Assigning roles to users for roles
     Then I should see "This resource does not exist or is not available."
     And I can't test 'should redirect_to' because of webrat bug
     And I should be on the homepage
+
+  Scenario: Assigning system roles to a user in my jurisdiction
+    Given I am logged in as "admin@potter.gov"
+    When I edit the profile for "bob@example.com"
+    Then I should see "System:Admin" in the role select
+    And I select "System:Admin" from "Role"
+    And I select "Potter County" from "Jurisdiction"
+    And I press "Save"
+    Then I should see "System:Admin"
+
+  Scenario: Superadmin can assign system roles to a user in child jurisdiction
+    Given I am logged in as "super@example.com"
+    When I edit the profile for "bob@example.com"
+    Then I should see "System:Admin" in the role select
+    And I select "System:Admin" from "Role"
+    And I select "Potter County" from "Jurisdiction"
+    And I press "Save"
+    Then I should see "System:Admin"
+
+  Scenario: Assigning system roles to a user in a child of my jurisdiction
+    Given I am logged in as "admin@state.tx.us"
+    When I edit the profile for "bob@example.com"
+    Then I should see "System:Admin" in the role select
+    And I select "System:Admin" from "Role"
+    And I select "Potter County" from "Jurisdiction"
+    And I press "Save"
+    Then I should see "System:Admin"
+
+    

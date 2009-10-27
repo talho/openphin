@@ -4,12 +4,12 @@ Given '$email has a $public profile' do |email, pub|
   user.save!
 end
 
-When 'I view the profile page for $email' do |email|
+When /I view the profile page for "([^\"]*)"/ do |email|
   user = User.find_by_email!(email)
   visit user_profile_path(user)
 end
 
-When 'I edit the profile for $email' do |email|
+When /I edit the profile for "([^\"]*)"/ do |email|
   user = User.find_by_email!(email)
   visit edit_user_profile_path(user)
 end
