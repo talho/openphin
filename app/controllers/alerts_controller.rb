@@ -14,6 +14,11 @@ class AlertsController < ApplicationController
   
   def show
     @alert = present Alert.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
+    end
+
   end
   
   def new
