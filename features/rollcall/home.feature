@@ -56,7 +56,6 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
     | name | portal_toolbar |
     | item | Rollcall       |
   When I follow "Rollcall"
-  And I see WTF is going on
   Then I should not see "School View"
   And I should not see "Absenteeism Summary"
   And I should be on the rollcall page
