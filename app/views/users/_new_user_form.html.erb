@@ -10,9 +10,11 @@
         when "role_requests"
           ""
         when "role_requests_jurisdiction"
-          "<li>Home jurisdiction can't be blank</li>" unless user.errors["role_memberships"]
+          "<li>Home jurisdiction needs to be selected.</li>" unless user.errors["role_memberships"]
+        when "role_requests_role"
+          "<li>Primary role needs to be selected.</li>"
         when "role_memberships"
-          "<li>Home jurisdiction can't be blank</li>"
+          "<li>Home jurisdiction needs to be selected.</li>"
          else
           "<li>#{attr.humanize} #{msg}</li>"
       end %>

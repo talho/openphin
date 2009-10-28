@@ -68,7 +68,9 @@ end
 Given /^a[n]? approval role named (.*)$/ do |name|
   r = Factory(:role, :name => name, :approval_required => true)
 end
-
+Given /^a[n]? system role named (.*)$/ do |name|
+  r = Factory(:role, :name => name, :approval_required => true, :user_role => false)
+end
 Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   jurisdictions = table.raw.first
   parent = Given "a jurisdiction named #{parent_name}"

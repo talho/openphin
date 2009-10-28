@@ -69,7 +69,7 @@ Feature: Signing up for an account
       | What is your primary role | Health Alert and Communications Coordinator |
       | Are you a public health professional? | <unchecked> |
       
-    Then I should see "Thanks for signing up"
+    Then I should see "Thanks for signing up!"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should not have the "Health Alert and Communications Coordinator" role request for "Dallas County"
     
@@ -88,7 +88,7 @@ Feature: Signing up for an account
       | Password can't be blank |
       | First name can't be blank |
       | Last name can't be blank |
-      | Home jurisdiction can't be blank |
+      | Home jurisdiction needs to be selected |
        
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
@@ -210,4 +210,4 @@ Feature: Signing up for an account
     And I should not see "Thanks for signing up"
     And "john@example.com" should not exist
 	  And "admin@dallas.gov" should not receive an email
-    And I should see "Home jurisdiction can't be blank"
+    And I should see " Home jurisdiction needs to be selected"

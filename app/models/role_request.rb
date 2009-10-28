@@ -75,4 +75,5 @@ class RoleRequest < ActiveRecord::Base
   def set_requester_if_nil
     requester = user if requester.blank?
   end
+    
 end

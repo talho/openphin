@@ -1,6 +1,6 @@
 <p class="select rel_2">
   <%= f.label :role_id, "Role" %>
-  <%= f.collection_select :role_id, current_user.is_super_admin? ? Role.all : Role.user_roles, :id, :display_name, {:include_blank => true}, :class => "role_select" %>
+  <%= f.collection_select :role_id, current_user.is_admin? ? Role.all : Role.user_roles, :id, :display_name, {:include_blank => true}, :class => "role_select" %>
 </p>
 <p class="select rel_1">
   <%= f.label :jurisdiction_id,  "Jurisdiction" %>

@@ -55,16 +55,17 @@ class UsersController < ApplicationController
     end
 
     remove_blank_role_requests
-    assign_public_role_if_no_role_is_provided
 
     @user = User.new params[:user]
     # Used to compound errors with @user.errors.add so user sees all things that aren't valid on post
     @user.save unless @user.valid?
 
-    if params[:user][:role_requests_attributes].blank?
-      @user.errors.add "Home jurisdiction", "can't be blank"
+    if params[:user][:role_requests_attributes].blank? || params[:user][:role_requests_attributes]["0"][:jurisdiction_id].blank?
+      @user.errors.add "Home jurisdiction", "needs to be selected"
       render :action => "new"
     else
+      assign_public_role_if_no_role_is_provided
+      @user = User.new params[:user]
       respond_to do |format|
         if @user.save
           SignupMailer.deliver_confirmation(@user)
