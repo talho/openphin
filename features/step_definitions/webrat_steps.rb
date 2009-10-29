@@ -165,11 +165,13 @@ Then /^I should not see \/([^\/]*)\/ within "([^\"]*)"$/ do |regexp, selector|
 end
 
 Then /^the "([^\"]*)" field should contain "([^\"]*)"$/ do |field, value|
-  field_labeled(field).value.should =~ /#{value}/
+  regexp = Regexp.new(regexp)
+  field_labeled(field).value.should contain(regexp)
 end
 
 Then /^the "([^\"]*)" field should not contain "([^\"]*)"$/ do |field, value|
-  field_labeled(field).value.should_not =~ /#{value}/
+  regexp = Regexp.new(regexp)
+  field_labeled(field).value.should_not contain(regexp)
 end
 
 Then /^the "([^\"]*)" checkbox should be checked$/ do |label|
