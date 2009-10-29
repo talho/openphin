@@ -187,3 +187,20 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+Then /^I should see:$/ do |table|
+  table.raw.each do |row|
+  response.should contain(row.join)
+end
+
+Then /^I should be on (.+)$/ do |page_name|
+  URI.parse(current_url).path.should == path_to(page_name)
+end
+
+Then /^I should be redirected to (.+)$/ do |page_name|
+  URI.parse(current_url).path.should == path_to(page_name)
+end
+
+Then /^I have loaded (.*) for "([^\"]*)"$/ do |page, title|
+  URI.parse(current_url).path.should == path_to(page,title)
+end
