@@ -222,7 +222,7 @@ ul.group_rcpts li                             {list-style:none; float:left; marg
 h5.group_header                               {display:block;clear:both;}
 
 
-div.rollcall_chart                            {position:absolute; top:0px; left:320px;}
+div.rollcall_chart                            {position:absolute; top:0px; left:320px;margin:20px 20px 0 0;}
 div.rollcall_summary                          {position:absolute; top:0px; left:10px; width:300px;min-height:400px;border-right:2px dotted #ccc;}
 ul.rollcall_summary                           {margin:0;padding:0;list-style-type:none; font-weight:bold; font-size:18px;position:relative;}
 ul.rollcall_summary li                        {list-style:none;}

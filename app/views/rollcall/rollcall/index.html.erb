@@ -31,7 +31,7 @@
                   </div>
                   <ul class='school_alerts'>
                     <% reports.each do |report| %>
-                      <li class='school_alert'>
+                      <li class='school_alert <%= report.severity %>'>
                         <%= image_tag("/stylesheets/images/status_extreme.png",   :class => 'severity') if report.severity == "high"   %>
                         <%= image_tag( "/stylesheets/images/status_severe.png",   :class => 'severity') if report.severity == "medium" %>
                         <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if report.severity == "low"    %>

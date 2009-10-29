@@ -32,12 +32,10 @@ class Rollcall::SchoolsController < ApplicationController
                                 :title => "Recent Absenteeism",
                                 :axis_with_labels => "x,y",
                                 :axis_labels => xlabels,
-                                :max => 30,
                                 :legend => @school.display_name,
                                 :data => @school.absentee_reports.recent(7).map{|rep| (rep.absent.to_f / rep.enrolled.to_f).round(4)*100}.reverse,
-                                :custom => "chxr=1,0,30",
-                                :encoding => "text",
-                                :max_value => 30
+                                :custom => "chdlp=b",
+                                :encoding => "text"
       )
     end
 
