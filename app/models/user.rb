@@ -175,6 +175,10 @@ class User < ActiveRecord::Base
     self.roles.include?(Role.admin) || self.roles.include?(Role.superadmin) ? true : false
   end
 
+  def is_jurisdiction_admin?
+    self.roles.include?(Role.admin)
+  end
+
   def is_org_approver?
     self.roles.detect{|role| role == Role.org_admin }
   end
@@ -288,11 +292,7 @@ class User < ActiveRecord::Base
   def viewable_groups
     groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
   end
-
-  def is_an_admin?
-    (roles & [Role.admin,Role.superadmin]).empty?
-  end
-  
+   
 private
 
   def assign_public_role

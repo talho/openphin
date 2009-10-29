@@ -1,21 +1,14 @@
 <div class="school_data">
+  <h2 class='school'><%= @school.display_name %></h2>
+  <div class='rollcall_chart_options'>
+    <% form_tag school_path(@school), :method => :get do %>
+      <%= label_tag :timespan, "Show last" %>
+      <%= select_tag :timespan, options_for_select([7, 14, 21, 30, 60, 90]) %>
+      <label>days of data</label>
+      <%= submit_tag "Modify graph" %>
+    <% end %>
+  </div>
   <div class='rollcall_graph'>
     <%= image_tag @school_chart unless @school_chart.nil? %>
-  </div>
-
-  <div class="school">
-    <h3><%= @school.display_name %></h3>
-    <table>
-      <tr>
-        <td>Date</td>
-        <td>Absentee Percentage</td>
-      </tr>
-      <% Date.today.downto(Date.today-30.days) do |date| %>
-        <tr>
-          <td class='report_date'><%= date.strftime("%Y-%m-%d") %></td>
-          <td class='absentee_pct'><%= (@school.average_absence_rate(date) * 100).to_f.round(2) %></td>
-        </tr>
-      <% end %>
-    </table>
   </div>
 </div>

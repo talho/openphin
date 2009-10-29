@@ -1,38 +1,54 @@
-
-<div class='rollcall_chart_options'>
-  <% form_tag rollcall_path do  %>
-    <%= label_tag :timespan, "Show last" %>
-    <%= select_tag :timespan, options_for_select([7,14,21,30,60,90])  %>
-    <label>days of data</label>
-    <%= submit_tag "Modify graph" %>
-  <% end %>
-</div>
-  <div class='rollcall_chart'>
-    <%=  image_tag @chart %>
+<div class='rollcall_chart'>
+  <div class='rollcall_chart_options'>
+    <% form_tag rollcall_path do %>
+      <%= label_tag :timespan, "Show last" %>
+      <%= select_tag :timespan, options_for_select([7, 14, 21, 30, 60, 90]) %>
+      <label>days of data</label>
+      <%= submit_tag "Modify graph" %>
+    <% end %>
   </div>
+  <%= image_tag @chart %>
+</div>
 
-<h2>Absenteeism Summary</h2>
 <div class="rollcall_summary">
   <ul class="rollcall_summary">
-    <li><p>Districts</p></li>
-    <% @statistics.each do |district,schools| %>
-      <li class="district">
-        <p><%= link_to district, "#{url_for(schools_path)}?district[id]=#{SchoolDistrict.find_by_name(district).id}" %></p>
-        <ul>
-          <li><p>Schools</p></li>
-          <% schools.each do |school,reports| %>
-            <li class="school">
-              <ul>
-                <li><p><%= link_to school, "#{url_for(schools_path)}?school[id]=#{School.find_by_display_name(school).id}" %></p></li>
-                <% reports.each do |report| %>
-                  <li class="<%= report.severity %>"><span><%= report.report_date %></span> - <span class="absense"><%= report.absentee_percentage %>%</span></li>
-                <% end %>
-              </ul>
-            </li>
-          <% end %>
+    <% @statistics.each do |district, schools| %>
+      <li class='district_summary'>
+
+        <ul class="district">
+
+          <li>
+            <a class="district_name"><%= district %> <span class='expander'>&gt;&gt;</span></a>
+            <ul class='schools'>
+              <% schools.each do |school, reports| %>
+                <li class="school">
+                  <div class='school_head'>
+                    <a class='school_name'><%= school %></a>
+                    <%= image_tag("/stylesheets/images/status_extreme.png", :class => 'severity') if reports.detect{|r| r.severity == "high"} %>
+                    <%= image_tag( "/stylesheets/images/status_severe.png", :class => 'severity') if reports.detect{|r| r.severity == "medium"} %>
+                    <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if reports.detect{|r| r.severity == "low"} %>
+
+                  </div>
+                  <ul class='school_alerts'>
+                    <% reports.each do |report| %>
+                      <li class='school_alert <%= report.severity %>'>
+                        <%= image_tag("/stylesheets/images/status_extreme.png",   :class => 'severity') if report.severity == "high"   %>
+                        <%= image_tag( "/stylesheets/images/status_severe.png",   :class => 'severity') if report.severity == "medium" %>
+                        <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if report.severity == "low"    %>
+                        <span><%= report.report_date.strftime("%m/%d") %></span> -
+                        <span class="absence"><%= report.absentee_percentage %>%</span></li>
+                    <% end %>
+                  </ul>
+                  <span class='more'><%= link_to "More info...", school %></span>
+                </li>
+              <% end %>
+            </ul>
+          </li>
         </ul>
       </li>
+      </ul>
+      </li>
     <% end %>
-  </ul>
-</div>
+    </ul>
+    </div>
 

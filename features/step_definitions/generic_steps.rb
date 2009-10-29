@@ -61,8 +61,12 @@ Then /^I should see the following menu\:$/ do |table|
 			key, value = row[0], row[1]
 			case key
 				when "item"
-					menu.should have_selector("*", :content => value)
-			end
+					menu.should have_selector("li a", :content => value)
+        when "current item"
+          menu.should have_selector("li.current a", :content => value)
+        else
+          raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
+ 			end
 		end
 	end
 
