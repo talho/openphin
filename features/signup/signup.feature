@@ -210,8 +210,4 @@ Feature: Signing up for an account
     And I should not see "Thanks for signing up"
     And "john@example.com" should not exist
 	  And "admin@dallas.gov" should not receive an email
-<<<<<<< HEAD
     And I should see "Home Jurisdiction needs to be selected"
-=======
-    And I should see " Home jurisdiction needs to be selected"
->>>>>>> Role select required feature if the health professionals is selected
