@@ -41,8 +41,14 @@
 
 jQuery(function($) {
   $('#health_professional').toggleCheckbox('#health_professional_fields').click(function() {
-    $(this).toggleCheckbox('#health_professional_fields');
-    $('fieldset#health_professional_fields *:input').val('');
+	$('#health_professional_fields').toggle();
+	$('fieldset#health_professional_fields *:input').val('');
+
+    var public = $.map($("fieldset#health_professional_fields option"), function(item) {
+      if ($(item).text() == "Public") return item;
+    });
+    $(public).attr("selected", "selected");
+    $('fieldset#health_professional_fields select#user_role_requests_attributes_0_role_id').selectedIndex = $(public).val();
   });
   
   $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
