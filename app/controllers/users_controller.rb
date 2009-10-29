@@ -32,6 +32,7 @@ class UsersController < ApplicationController
   # GET /users/new.xml
   def new
     @user = User.new
+    @selected_role = Role.public.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -49,8 +50,9 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
+
     unless params[:health_professional]
-      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public
+      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
       params[:user].delete("organization_ids")
       params[:user].delete("description")
     end
@@ -70,6 +72,7 @@ class UsersController < ApplicationController
         format.xml  { render :xml => @user, :status => :created, :location => @user }
         flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{DOMAIN}."
       else
+        @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
