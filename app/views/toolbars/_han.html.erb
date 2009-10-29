@@ -5,9 +5,6 @@
   <%= link_to(s('Send an Alert'), new_alert_path, :class => ".sendalert") %>
   </li>
 <%- end -%>
-<%- if current_user.is_admin? -%>
-  <li<%= " class=\"current\"" if controller.action_name == "index" && controller.controller_name == "pending_requests" %>><%= link_to s('View Pending Requests'), admin_pending_requests_path, :class => '.viewpendingrequests' %></li>
-<%- end -%>
 <%- if current_user.alerter? -%>
   <li<%= " class=\"current\"" if (controller.action_name == "index" && controller.controller_name == "alerts") || (controller.action_name == "edit" && controller.controller_name == "alerts") %>>
   <%= link_to(s('View Alerts'), alerts_path, :class => '.viewalerts') %>
