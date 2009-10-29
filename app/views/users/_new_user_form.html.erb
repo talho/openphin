@@ -1,62 +1,40 @@
-<% if user.errors.size > 0 %>
-  <div id="errorExplanation" class="errorExplanation">
-    <% errsize = user.errors['role_requests'].nil? ? user.errors.size : user.errors.size - 1 %>
-    <% errsize -= 1 if user.errors["role_requests_jurisdiction"] && user.errors["role_memberships"] %>
-    <h2><%= "#{errsize} #{errsize > 1 ? 'errors' : 'error'}"%> prohibited this user from being saved</h2>
-    <p>There were problems with the following fields:</p>
-  <% user.errors.each do |attr,msg| %>
-    <ul>
-      <%= case attr
-        when "role_requests"
-          ""
-        when "role_requests_jurisdiction"
-          "<li>Home jurisdiction needs to be selected.</li>" unless user.errors["role_memberships"]
-        when "role_requests_role"
-          "<li>Primary role needs to be selected.</li>"
-        when "role_memberships"
-          "<li>Home jurisdiction needs to be selected.</li>"
-         else
-          "<li>#{attr.humanize} #{msg}</li>"
-      end %>
-    </ul>
-  <% end %>
-  </div>
+<%= f.error_messages %>
+<%= f.label(:first_name, "First Name *") %><br/>
+<%= f.text_field(:first_name) %><br/>
+<%= f.label(:last_name, "Last Name *") %><br/>
+<%= f.text_field(:last_name) %><br/>
+<%= f.label(:display_name, "Preferred name to be displayed") %><br/>
+<%= f.text_field(:display_name) %><br/>
+<%= f.label(:email, "Email address *") %><br/>
+<%= f.text_field(:email) %><br/>
+<%= f.label :password, "Password *" %><b> (6 chars minimum with no special characters, at least 1 digit and at least 1 capital letter.)</b><br/>
+<%= f.password_field(:password) %><br/>
+<%= f.label(:password_confirmation,"Password Confirmation") %><br/>
+<%= f.password_field(:password_confirmation) %><br/>
+
+
+<%= f.label(:preferred_language, "Preferred language") %><br/>
+<%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
+<%= f.label(:title, "Job title") %><br/>
+<%= f.text_field(:title) %><br/>
+
+<% user.role_requests.build if user.role_requests.empty? %>
+<% f.fields_for :role_requests do |r| %>
+  <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %><br/>
+  <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %><br/>
+  <%= label_tag "health_professional", "Are you a public health professional?" %>
+  <%= check_box_tag "health_professional", 1, params[:health_professional] %>
+  <fieldset id='health_professional_fields'>
+    <legend>Health Professional Information</legend>
+    <%= r.label :role_id, "What is your primary role in public health or emergency response?" %><br/>
+    <%= label_tag "(Your role will be 'Public' if you do not check that you are a public health professional)" %>
+    <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, {:include_blank => false, :selected => Role.public.id} %><br/>
+    <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
+    <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
+    
+    <p>
+      <%= f.label(:description, "Please describe your role within your organization") %><br/>
+      <%= f.text_area(:description, :rows => "8") %><br/>
+    </p>
+  </fieldset>
 <% end %>
-  <%= f.label(:first_name, "First Name *") %><br/>
-  <%= f.text_field(:first_name) %><br/>
-  <%= f.label(:last_name, "Last Name *") %><br/>
-  <%= f.text_field(:last_name) %><br/>
-  <%= f.label(:display_name, "Preferred name to be displayed") %><br/>
-  <%= f.text_field(:display_name) %><br/>
-  <%= f.label(:email, "Email address *") %><br/>
-  <%= f.text_field(:email) %><br/>
-  <%= f.label :password, "Password *" %><b> (6 chars minimum with no special characters, at least 1 digit and at least 1 capital letter.)</b><br/>
-  <%= f.password_field(:password) %><br/>
-  <%= f.label(:password_confirmation,"Password Confirmation") %><br/>
-  <%= f.password_field(:password_confirmation) %><br/>
-
-
-  <%= f.label(:preferred_language, "Preferred language") %><br/>
-  <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
-  <%= f.label(:title, "Job title") %><br/>
-  <%= f.text_field(:title) %><br/>
-  
-  <% user.role_requests.build if user.role_requests.empty? %>
-  <% f.fields_for :role_requests do |r| %>
-    <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %><br/>
-    <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %><br/>
-    <%= label_tag "health_professional", "Are you a public health professional?" %>
-    <%= check_box_tag "health_professional", 1, params[:health_professional] %>
-    <fieldset id='health_professional_fields'>
-      <legend>Health Professional Information</legend>
-      <%= r.label :role_id, "What is your primary role in public health or emergency response?" %><br/>
-      <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, :include_blank => true %><br/>
-      <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
-      <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
-      
-      <p>
-        <%= f.label(:description, "Please describe your role within your organization") %><br/>
-        <%= f.text_area(:description, :rows => "8") %><br/>
-      </p>
-    </fieldset>
-  <% end %>

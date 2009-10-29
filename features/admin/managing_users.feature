@@ -36,6 +36,7 @@ Feature: An admin managing users
       | Home Jurisdiction  | Dallas County    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
+      | Are you a public health professional? | <checked> |
     Then "john.smith@example.com" should have the "Public" role for "Dallas County"
     And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
     
@@ -129,4 +130,4 @@ Feature: An admin managing users
     And I should not see "Thanks for signing up"
     And "john@example.com" should not exist
 	  And "bob.jones@example.com" should not receive an email
-    And I should see "Home jurisdiction can't be blank"
+    And I should see "Home Jurisdiction needs to be selected"

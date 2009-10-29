@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   helper_method :toolbar
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter :login_required
+  before_filter :login_required, :set_locale
 
   layout :choose_layout
   
@@ -135,7 +135,11 @@ class ApplicationController < ActionController::Base
 
     def remove_blank_role_requests
       params[:user][:role_requests_attributes].each do |key,value|
-        params[:user][:role_requests_attributes].delete(key) if value["jurisdiction_id"].blank?
+        params[:user][:role_requests_attributes].delete(key) if (value["jurisdiction_id"].blank? && value["role_id"].blank?)
       end
+    end
+    
+    def set_locale
+      I18n.locale = :en
     end
 end
