@@ -44,6 +44,8 @@ module NavigationHelpers
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update")
       when /the cancel alert page/i
         url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel")
+      when /the admin add user page/i
+        new_admin_user_path
       when /the groups page/i
         admin_groups_path
       when /the add groups? page/i
