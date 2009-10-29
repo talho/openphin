@@ -190,7 +190,8 @@ end
 
 Then /^I should see:$/ do |table|
   table.raw.each do |row|
-  response.should contain(row.join)
+    response.should contain(row.join)
+  end
 end
 
 Then /^I should be on (.+)$/ do |page_name|
