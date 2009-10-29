@@ -89,7 +89,7 @@ Feature: Signing up for an account
       | First name can't be blank |
       | Last name can't be blank |
       | Home Jurisdiction needs to be selected |
-       
+
   Scenario: Signing up as a public health professionals
     When I signup for an account with the following info:
       | Email          | john@example.com |

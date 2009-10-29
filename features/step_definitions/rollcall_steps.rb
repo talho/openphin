@@ -18,7 +18,7 @@ Then /^I should see an "([^\"]*)" rollcall summary for "([^\"]*)" with (.*) abse
   response.should have_selector(".rollcall_summary") do |elm|
     elm.should have_selector(".school", :content => school) do |elm2|
       elm2.should have_selector(".#{severity}") do |elm3|
-        elm3.should have_selector(".absense", :content => percent)
+        elm3.should have_selector(".absence", :content => percent)
       end
     end
   end

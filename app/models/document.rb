@@ -10,6 +10,8 @@
 #  file_updated_at   :datetime
 #  created_at        :datetime
 #  updated_at        :datetime
+#  user_id           :integer(4)
+#  folder_id         :integer(4)
 #
 
 class Document < ActiveRecord::Base
