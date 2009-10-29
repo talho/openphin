@@ -201,3 +201,11 @@ end
 Then /^I have loaded (.*) for "([^\"]*)"$/ do |page, title|
   URI.parse(current_url).path.should == path_to(page,title)
 end
+
+When /^I load (.*) for "([^\"]*)"$/ do |page, title|
+  visit path_to(page, title)
+end
+
+When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
+  attach_file(field, path, mime)
+end
