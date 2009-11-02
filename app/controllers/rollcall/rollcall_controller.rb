@@ -34,7 +34,7 @@ class Rollcall::RollcallController < ApplicationController
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
     if @districts.empty? || !current_user.roles.include?(Role.find_by_name('Rollcall'))
       flash[:notice] = "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
-      redirect_to "about"
+      render "about"
     else
 
       params[:timespan]="7" if params[:timespan].blank?
@@ -47,16 +47,14 @@ class Rollcall::RollcallController < ApplicationController
       else
         xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
       end
-      @chart=Gchart.send(chart_type, :size => "600x400",
+      @chart=Gchart.send(chart_type, :size => "500x350",
                          :title => "Average % Absenteeism",
                          :axis_with_labels => "x,y",
                          :axis_labels => xlabels,
-                         #                         :max => 30,
                          :legend => @districts.map(&:name),
                          :data => @districts.map{|d| d.recent_absentee_rates(timespan).map{|m|m*100}},
-                         #                         :custom => "chxr=1,0,30",
+                         :custom => "chdlp=b",
                          :encoding => "text"
-#                         :max_value => 30
       )
       ethans_crazy_absenteeism_summary_code
     end

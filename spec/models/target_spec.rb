@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: targets
+#
+#  id          :integer(4)      not null, primary key
+#  audience_id :integer(4)
+#  item_id     :integer(4)
+#  item_type   :string(255)
+#  created_at  :datetime
+#  updated_at  :datetime
+#  creator_id  :integer(4)
+#
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Target do

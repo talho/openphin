@@ -9,8 +9,9 @@ Feature: Rollcall status screen
       | Role         | Epidemiologist  |
       | Jurisdiction | Texas           |
       | Jurisdiction | Houston         |
+      | Jurisdiction | Tarrant         |
     And Texas is the parent jurisdiction of:
-      | Houston |
+      | Houston | Tarrant |
     And Houston has the following school districts:
       | Houston ISD |
     And "Houston ISD" has the following schools:
@@ -24,6 +25,7 @@ Feature: Rollcall status screen
       | Epi Smith    | epi.smith@example.com   | Epidemiologist | Houston |
       | Epi Smith    | epi.smith@example.com   | Rollcall       | Houston |
       | Normal Epi   | normal.epi@example.com  | Epidemiologist | Houston |
+      | No Schools   | noschools@example.com   | Rollcall       | Tarrant |
     And "Houston ISD" has the following current absenteeism data:
       | Day   | SchoolName  | Enrolled | Absent |
       | 0     | LEWIS ES    | 500      | 5      |
@@ -61,6 +63,10 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
   And I should not see "Absenteeism Summary"
   And I should be on the about rollcall page
 
+Scenario: Accessing Rollcall as a user with no school districts in jurisdiction
+  Given I am logged in as "noschools@example.com"
+  When I go to the rollcall page
+  Then I should see "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
   
 Scenario: Viewing the Home screen
   Given I am logged in as "nurse.betty@example.com"
@@ -69,6 +75,7 @@ Scenario: Viewing the Home screen
 			| name | app_toolbar |
 			| item | Main        |
       | item | School View |
+      | item | About Rollcall |
 
 Scenario: Seeing the average absenteeism graph(s)
   Given I am logged in as "nurse.betty@example.com"

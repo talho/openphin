@@ -188,9 +188,9 @@ span.extreme                                  {background-image:url(images/statu
 span.severe                                   {background-image:url(images/status_severe.png);}
 span.moderate                                 {background-image:url(images/status_moderate.png);}
 span.minor                                    {background-image:url(images/status_minor.png);}
-li.low                                        {background:url(images/status_moderate.png) no-repeat; display:block; float: left; padding-left:26px;}
-li.medium                                     {background:url(images/status_severe.png) no-repeat; display:block; float: left; padding-left:26px;}
-li.high                                        {background:url(images/status_extreme.png) no-repeat; display:block; float: left; padding-left:26px;}
+li.low                                        {background:url(images/status_moderate.png) no-repeat; display:block; float: left; padding:0 26px;}
+li.medium                                     {background:url(images/status_severe.png) no-repeat; display:block; float: left; padding:0 26px;}
+li.high                                        {background:url(images/status_extreme.png) no-repeat; display:block; float: left; padding:0 26px;}
 #content div.summary p                        {margin-bottom:0;}
 #content div.summary p.title                  {text-align:right;}
 #content div.summary span.actions             {float:right;}
@@ -221,15 +221,23 @@ ul.group_rcpts                                {list-style-type:none;margin:5px;p
 ul.group_rcpts li                             {list-style:none; float:left; margin-left:3px;}
 h5.group_header                               {display:block;clear:both;}
 
-div.rollcall_summary                          {margin:0 -24px 0; padding:0; border-top:1px solid #d9d9d9;}
-ul.rollcall_summary                           {margin:0; font-weight: bold; padding-left: 5px; list-style:none; border:1px solid #d9d9d9; border-top:none; border-bottom:none;}
-ul.rollcall_summary li                        {list-style:none}
-#content ul.rollcall_summary li p             {margin: 0; padding:0px;}
-ul.rollcall_summary li.district               {margin:0; padding:8px 24px; width:650px; float:left; list-style:none; border:1px solid #d9d9d9; border-top:none; background:url(images/fade_down.png) repeat-x bottom left;}
-ul.rollcall_summary li.district p             {padding-left: 20px;}
-ul.rollcall_summary li.district li            {border: none;}
-ul.rollcall_summary li.school li              {border: none;}
-ul.rollcall_summary li.school p               {padding-left: 0px;}
+
+div.rollcall_chart                            {position:absolute; top:0px; left:320px;margin:20px 20px 0 0;}
+div.rollcall_summary                          {position:absolute; top:0px; left:10px; width:300px;min-height:400px;border-right:2px dotted #ccc;}
+ul.rollcall_summary                           {margin:0;padding:0;list-style-type:none; font-weight:bold; font-size:18px;position:relative;}
+ul.rollcall_summary li                        {list-style:none;}
+li.district_summary                           {padding:10px;}
+ul.district                                   {margin:5px;padding:10px;list-style-type:none;position:relative}
+li.district                                   {list-style:none}
+ul.schools                                    {margin:0;padding:0;list-style-type:none; font-weight:normal; font-size:12px;border-top:2px solid #ccc;}
+li.school                                     {list-style:none;margin:5px;padding-left:5px}
+ul.school_alerts                              {margin:0;padding-left:15px;}
+li.school li.school_alert                     {float:none; }
+img.severity                                  {width:10px;}
+li.school                                     {position:relative;}
+ul.school_alerts                              {border-top: 2px dotted #888;}
+li.school span.more                           {position:absolute;right:5px;bottom:0px;}
+li.school_bordered                            {border:2px solid #369;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
 
 .data-list                                    {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
 .data-list li,

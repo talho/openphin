@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: absentee_reports
+#
+#  id          :integer(4)      not null, primary key
+#  school_id   :integer(4)
+#  report_date :date
+#  enrolled    :integer(4)
+#  absent      :integer(4)
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 class AbsenteeReport < ActiveRecord::Base
   belongs_to :school
   has_one :district, :through => :school
