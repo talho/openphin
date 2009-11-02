@@ -39,3 +39,4 @@ attachments
 test
 spec/fixtures/*.yml
 files
+db/database_structure.yml
