@@ -231,11 +231,10 @@ ul.district                                   {margin:5px;padding:10px;list-styl
 li.district                                   {list-style:none}
 ul.schools                                    {margin:0;padding:0;list-style-type:none; font-weight:normal; font-size:12px;border-top:2px solid #ccc;}
 li.school                                     {list-style:none;margin:5px;padding-left:5px}
-ul.school_alerts                              {margin:0;padding-left:15px;}
-li.school li.school_alert                     {float:none; }
+ul.school_alerts                              {margin:0;padding-left:15px;border-top: 2px dotted #888;}
+li.school li.school_alert                     {float:none; background:none; }
 img.severity                                  {width:10px;}
 li.school                                     {position:relative;}
-ul.school_alerts                              {border-top: 2px dotted #888;}
 li.school span.more                           {position:absolute;right:5px;bottom:0px;}
 li.school_bordered                            {border:2px solid #369;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
 
