@@ -260,9 +260,35 @@ r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:ju
                                                                              :user_id => u.id)
 u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
-                                                                             :role_id => Role.superadmin.id,
-                                                                             :user_id => u.id)
+u = User.seed(:email) do |m|
+  m.first_name = 'Richard'
+  m.last_name = 'Boldway'
+  m.display_name = 'Richard Boldway'
+  m.email = 'richard@boldway.org'
+  m.email_confirmed = true
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
+  r.user_id = u.id
+end
 u.role_memberships << r
 
 u = User.find_or_create_by_email(:email => "pradeep.vittal@dshs.state.tx.us") { |m|
