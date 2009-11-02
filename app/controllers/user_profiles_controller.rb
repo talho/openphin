@@ -107,6 +107,7 @@ class UserProfilesController < ApplicationController
           rr = @user.role_requests.find_by_role_id_and_jurisdiction_id(role_requests['role_id'], role_requests['jurisdiction_id'])
           if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
             rr.approve!(current_user)
+            AppMailer.deliver_role_assigned(role, jurisdiction, user, approver) unless user == approver
           end
         end
         flash[:notice] = 'Profile information saved.'
