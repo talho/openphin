@@ -12,31 +12,33 @@
 
 <div class="rollcall_summary">
   <ul class="rollcall_summary">
-    <% @statistics.each do |district, schools| %>
+    <% @districts.each do |district| %>
       <li class='district_summary'>
 
         <ul class="district">
 
           <li>
-            <a class="district_name"><%= district %> <span class='expander'>&gt;&gt;</span></a>
+            <a class="district_name"><%= district.name %> <span class='expander'>&gt;&gt;</span></a>
             <ul class='schools'>
-              <% schools.each do |school, reports| %>
+              <% district.schools.with_alerts.each do |school| %>
                 <li class="school">
                   <div class='school_head'>
-                    <a class='school_name'><%= school %></a>
-                    <%= image_tag("/stylesheets/images/status_extreme.png", :class => 'severity') if reports.detect{|r| r.severity == "high"} %>
-                    <%= image_tag( "/stylesheets/images/status_severe.png", :class => 'severity') if reports.detect{|r| r.severity == "medium"} %>
-                    <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if reports.detect{|r| r.severity == "low"} %>
+                    <a class='school_name'><%= school.display_name %></a>
+                    <%= image_tag("/stylesheets/images/status_extreme.png", :class => 'severity') unless school.absentee_reports.with_severity(:high).empty? %>
+                    <%= image_tag( "/stylesheets/images/status_severe.png", :class => 'severity') unless school.absentee_reports.with_severity(:medium).empty? %>
+                    <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') unless school.absentee_reports.with_severity(:low).empty? %>
 
                   </div>
                   <ul class='school_alerts'>
-                    <% reports.each do |report| %>
-                      <li class='school_alert <%= report.severity %>'>
-                        <%= image_tag("/stylesheets/images/status_extreme.png",   :class => 'severity') if report.severity == "high"   %>
-                        <%= image_tag( "/stylesheets/images/status_severe.png",   :class => 'severity') if report.severity == "medium" %>
-                        <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if report.severity == "low"    %>
-                        <span><%= report.report_date.strftime("%m/%d") %></span> -
-                        <span class="absence"><%= report.absentee_percentage %>%</span></li>
+                    <% [:high, :medium, :low].each do |severity| %>
+                      <% school.absentee_reports.recent(4).with_severity(severity).each do |report| %>
+                        <li class='school_alert <%= report.severity %>'>
+                          <%= image_tag("/stylesheets/images/status_extreme.png",   :class => 'severity') if report.severity == "high"   %>
+                          <%= image_tag( "/stylesheets/images/status_severe.png",   :class => 'severity') if report.severity == "medium" %>
+                          <%= image_tag( "/stylesheets/images/status_moderate.png", :class => 'severity') if report.severity == "low"    %>
+                          <span><%= report.report_date.strftime("%m/%d") %></span> -
+                          <span class="absence"><%= report.absentee_percentage %>%</span></li>
+                      <% end %>
                     <% end %>
                   </ul>
                   <span class='more'><%= link_to "More info...", school %></span>
