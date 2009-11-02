@@ -21,10 +21,10 @@ config.plugins = config.plugin_locators.map do |locator|
 end.flatten.map{|p| p.name.to_sym}
 config.plugins -= [:backgroundrb]
 
-config.gem "cucumber",    :lib => false,        :version => "=0.3.11"
+config.gem "cucumber",    :lib => false,        :version => ">=0.3.11"
 config.gem "rspec",       :lib => false,        :version => ">=1.2.7"
 config.gem "rspec-rails", :lib => false,        :version => ">=1.2.7"
-config.gem "nokogiri", :version => "=1.3.2"
+config.gem "nokogiri", :version => "=1.3.3"
 config.gem "thoughtbot-factory_girl",
   :lib    => "factory_girl",
   :source => "http://gems.github.com"
