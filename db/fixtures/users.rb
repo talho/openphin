@@ -331,3 +331,33 @@ r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
 end
 u.role_memberships << r
 
+u = User.seed(:email) do |m|
+  m.first_name = 'Richard'
+  m.last_name = 'Boldway'
+  m.display_name = 'Richard Boldway'
+  m.email = 'richard@boldway.org'
+  m.email_confirmed = true
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
+end
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.find_by_name('Public').id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.admin.id
+  r.user_id = u.id
+end
+u.role_memberships << r
+
+r = RoleMembership.seed(:jurisdiction_id, :role_id, :user_id) do |r|
+  r.jurisdiction_id = Jurisdiction.find_by_name('Bell').id
+  r.role_id = Role.find_by_name('Health Alert and Communications Coordinator').id
+  r.user_id = u.id
+end
+u.role_memberships << r
