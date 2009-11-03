@@ -1,4 +1,5 @@
 require 'vendor/plugins/thinking-sphinx/lib/thinking_sphinx/deploy/capistrano'
+load 'lib/testjour.rb'
 
 set :application, "openphin"
 set :repository,  "git://github.com/talho/openphin.git"
@@ -66,7 +67,6 @@ namespace :deploy do
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
 #      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
     end
-
   end
 
   desc "install any gem dependencies"
@@ -78,7 +78,13 @@ namespace :deploy do
   desc "restart backgroundrb"
   task :restart_backgroundrb, :role => :app do
     rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; script/backgroundrb restart -e production"
+    run "cd #{release_path}; STR=`script/backgroundrb status` && [ \"$STR\" = \"BackgrounDRb Not Running\" ] && (script/backgroundrb start -e #{rails_env})" unless rails_env == "test"
+  end
+
+  desc "restart delayed_job"
+  task :restart_delayed_job, :role => :app do
+    rails_env = fetch(:rails_env, RAILS_ENV)
+    run "cd #{release_path}; STR=`script/delayed_job status` && [ \"$STR\" = \"delayed_job: no instances running\" ] && (script/delayed_job start -e #{rails_env})" unless rails_env == "test"
   end
 end
 
@@ -98,11 +104,17 @@ end
 set :pivotal_tracker_project_id, 19881
 set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
-after :deploy, 'pivotal_tracker:deliver_stories'
+after :deploy, :role => :app do
+  rails_env = fetch(:rails_env, RAILS_ENV)
+  find_and_execute_task('pivotal_tracker:deliver_stories') unless rails_env="test"
+end
 
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:stop",    "thinking_sphinx:stop"
 after "deploy:start",   "delayed_job:start"
 after "deploy:start",   "thinking_sphinx:start"
-after "deploy:restart", "delayed_job:restart"
-after "deploy:restart", "thinking_sphinx:restart"
+after "deploy:restart", "deploy:restart_delayed_job"
+after "deploy:restart", :role => :app do
+  rails_env = fetch(:rails_env, RAILS_ENV)
+  find_and_execute_task("thinking_sphinx:running_start") unless rails_env="test"
+end
