@@ -15,7 +15,7 @@
 	url = git://github.com/collectiveidea/webrat.git
 [submodule "vendor/plugins/no-peeping-toms"]
 	path = vendor/plugins/no-peeping-toms
-	url = git://github.com/pat-maddox/no-peeping-toms.git
+	url = git://github.com/patmaddox/no-peeping-toms.git
 [submodule "vendor/plugins/happymapper"]
 	path = vendor/plugins/happymapper
 	url = git://github.com/talho/happymapper.git
