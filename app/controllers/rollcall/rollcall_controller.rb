@@ -48,7 +48,7 @@ class Rollcall::RollcallController < ApplicationController
         xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
       end
       @chart=Gchart.send(chart_type, :size => "500x350",
-                         :title => "Average % Absenteeism",
+                         :title => "Average % Absenteeism (Last #{params[:timespan]} Days)",
                          :axis_with_labels => "x,y",
                          :axis_labels => xlabels,
                          :legend => @districts.map(&:name),
