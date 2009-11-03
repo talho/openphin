@@ -75,6 +75,9 @@ Feature: School
     When I go to the rollcall schools page
     Then I should see school data for "BERRY ES"
     And I should see an absenteeism graph with the data:
+      | 0           |
+      | 0           |
+      | 0           |
       | 5.0         |
       | 5.0         |
       | 2.5         |
@@ -84,6 +87,9 @@ Feature: School
     And I press "Choose"
     Then I should see school data for "LEWIS ES"
     And I should see an absenteeism graph with the data:
+      | 0           |
+      | 0           |
+      | 0           |
       | 12.0        |
       | 1.0         |
       | 3.0         |
