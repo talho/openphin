@@ -12,6 +12,10 @@ task :testing do
 
 end
 
+task :testme do
+  puts get_branch
+end
+
 before :deploy, :role => :app do
   `git stash`
   `git push testjour #{get_branch}`
@@ -26,7 +30,7 @@ after :deploy, :role => :app do
 end
 
 def get_branch
-  `git branch`[/$\s+\*.+/].strip[2..-1]
+  `git branch`[/.+/].strip[2..-1]
 end
 
 def testjour_master
