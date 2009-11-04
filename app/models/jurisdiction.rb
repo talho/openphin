@@ -39,8 +39,8 @@ class Jurisdiction < ActiveRecord::Base
   #TODO move to rollcall plugin
   has_many :school_districts, :include => :schools
 
-  named_scope :admin, :include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }
-  named_scope :federal, :conditions => "parent_id IS NULL"
+  named_scope :admin, lambda{{:include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }}}
+  named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}
   named_scope :state, lambda {{:conditions => root ? "parent_id = #{root.id}" : "0=1"}}
   named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
   named_scope :parents, :conditions => "rgt - lft > 1", :order => :name

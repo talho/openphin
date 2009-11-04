@@ -21,6 +21,12 @@ class School < ActiveRecord::Base
 
   before_create :set_display_name
 
+  named_scope :with_alerts,
+              :include => :absentee_reports,
+              :select => "distinct schools.*",
+              :conditions => ["(absentee_reports.absent / absentee_reports.enrolled) >= 0.11 AND absentee_reports.report_date >= ?", 30.days.ago],
+              :order => "(absentee_reports.absent/absentee_reports.enrolled) desc"
+    
   def average_absence_rate(date=nil)
     date=Date.today if date.nil?
     absentees=absentee_reports.for_date(date).map do |report|

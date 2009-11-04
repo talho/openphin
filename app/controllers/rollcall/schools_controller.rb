@@ -27,13 +27,17 @@ class Rollcall::SchoolsController < ApplicationController
       else
         xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
       end
-
+ school_absentee_points = []
+      params[:timespan].to_i.days.ago.to_date.upto Date.today do |date|
+        report=@school.absentee_reports.for_date(date).first
+        school_absentee_points.push report.nil? ? 0 : report.absentee_percentage
+      end
       @school_chart=Gchart.line(:size => "600x400",
-                                :title => "Recent Absenteeism",
+                                :title => "Recent Absenteeism (Last #{params[:timespan]} Days)",
                                 :axis_with_labels => "x,y",
                                 :axis_labels => xlabels,
                                 :legend => @school.display_name,
-                                :data => @school.absentee_reports.recent(7).map{|rep| (rep.absent.to_f / rep.enrolled.to_f).round(4)*100}.reverse,
+                                :data => school_absentee_points,
                                 :custom => "chdlp=b",
                                 :encoding => "text"
       )
@@ -71,13 +75,18 @@ class Rollcall::SchoolsController < ApplicationController
         xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
       end
 
+      school_absentee_points = []
+      params[:timespan].to_i.days.ago.to_date.upto Date.today do |date|
+        report=@school.absentee_reports.for_date(date).first
+        school_absentee_points.push report.nil? ? 0 : report.absentee_percentage
+      end
       @school_chart=Gchart.line(:size => "600x400",
-                                :title => "Recent Absenteeism",
+                                :title => "Recent Absenteeism (Last #{params[:timespan]} Days)",
                                 :axis_with_labels => "x,y",
                                 :axis_labels => xlabels,
                                 :max => 30,
                                 :legend => @school.display_name,
-                                :data => @school.absentee_reports.recent(7).map{|rep| (rep.absent.to_f / rep.enrolled.to_f).round(4)*100}.reverse,
+                                :data => school_absentee_points,
                                 :custom => "chxr=1,0,30",
                                 :encoding => "text",
                                 :max_value => 30

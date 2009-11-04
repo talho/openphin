@@ -48,7 +48,7 @@ class Rollcall::RollcallController < ApplicationController
         xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
       end
       @chart=Gchart.send(chart_type, :size => "500x350",
-                         :title => "Average % Absenteeism",
+                         :title => "Average % Absenteeism (Last #{params[:timespan]} Days)",
                          :axis_with_labels => "x,y",
                          :axis_labels => xlabels,
                          :legend => @districts.map(&:name),
@@ -56,11 +56,16 @@ class Rollcall::RollcallController < ApplicationController
                          :custom => "chdlp=b",
                          :encoding => "text"
       )
-      ethans_crazy_absenteeism_summary_code
+#      ethans_crazy_absenteeism_summary_code
+      keiths_refactor
     end
   end
 
   private
+  def keiths_refactor
+    @districts = current_user.jurisdictions.map(&:school_districts).flatten!
+    
+  end
   def ethans_crazy_absenteeism_summary_code
     reports = current_user.recent_absentee_reports
     reports_schools = reports.map(&:school).flatten.uniq

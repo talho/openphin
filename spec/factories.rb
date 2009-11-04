@@ -168,9 +168,10 @@ Factory.define :school do |m|
   m.sequence(:name){|t| "Name ##{t}"}
   m.sequence(:display_name) {|t| "Display Name ##{t}"}
   m.level "ES"
-  m.sequence(:school_number)
-   m.association :district
+  m.sequence(:school_number) {|num| num}
+  m.association :district, :factory => :school_district
 end
+
 
 Factory.define :target do |m|
   m.association :audience, :factory => :group
