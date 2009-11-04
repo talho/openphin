@@ -33,7 +33,8 @@ after :deploy, :role => :app do
 end
 
 def get_branch
-  `git branch`[/.+/].strip[2..-1]
+  `git branch` =~ /^\*.(.*)/
+  $1
 end
 
 def testjour_master
