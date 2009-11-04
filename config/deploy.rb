@@ -79,13 +79,13 @@ namespace :deploy do
   desc "restart backgroundrb"
   task :restart_backgroundrb, :role => :app do
     rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; STR=`script/backgroundrb status` && [ \"$STR\" = \"BackgrounDRb Not Running\" ] && (script/backgroundrb start -e #{rails_env})" unless rails_env == "test"
+    run "cd #{release_path}; STR=`script/backgroundrb status` && if [ \"$STR\" = \"BackgrounDRb Not Running\" ] ; then script/backgroundrb start -e #{rails_env} ; fi" unless rails_env == "test"
   end
 
   desc "restart delayed_job"
   task :restart_delayed_job, :role => :app do
     rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; STR=`script/delayed_job status` && [ \"$STR\" = \"delayed_job: no instances running\" ] && (script/delayed_job start -e #{rails_env})" unless rails_env == "test"
+    run "cd #{release_path}; STR=`script/delayed_job status` && if [ \"$STR\" = \"delayed_job: no instances running\" ] ; then script/delayed_job start -e #{rails_env} ; fi" unless rails_env == "test"
   end
 end
 
