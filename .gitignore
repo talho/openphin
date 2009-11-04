@@ -40,3 +40,4 @@ test
 spec/fixtures/*.yml
 files
 db/database_structure.yml
+config/testjour.yml
