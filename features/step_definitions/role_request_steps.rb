@@ -57,10 +57,22 @@ Then /^I should see (\d*) pending role requests?$/ do |num|
   current_user.role_requests.unapproved.flatten.size.should == num.to_i
 end
 
-When /^I maliciously post a deny for a role request for "([^\"]*)"$/ do |user_email|
+When /^I maliciously post a delete for a role request for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   role_request = user.role_requests.first
   delete_via_redirect admin_role_request_path(role_request)
+end
+
+When /^I maliciously post an approve for a role request for "([^\"]*)"$/ do |user_email|
+  user = User.find_by_email!(user_email)
+  role_request = user.role_requests.first
+  visit approve_admin_role_request_path(role_request)
+end
+
+When /^I maliciously post a deny for a role request for "([^\"]*)"$/ do |user_email|
+  user = User.find_by_email!(user_email)
+  role_request = user.role_requests.first
+  visit deny_admin_role_request_path(role_request)
 end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|

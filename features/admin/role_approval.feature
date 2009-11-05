@@ -59,8 +59,21 @@ Feature: Approving users for roles
   Scenario: Malicious admin cannot remove role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"
-    When I maliciously post a deny for a role request for "john@example.com"
+    When I maliciously post a delete for a role request for "john@example.com"
     Then I should see "This resource does not exist or is not available."
     And I can't test 'should redirect_to' because of webrat bug
     And I should see "Assign Roles"
-    
+
+  Scenario: Malicious admin cannot approve role requests the user is not an admin of
+    Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
+    And I am logged in as "admin@potter.gov"
+    When I maliciously post an approve for a role request for "john@example.com"
+    Then I should see "This resource does not exist or is not available."
+    And I should be on the dashboard page
+
+  Scenario: Malicious admin cannot deny role requests the user is not an admin of
+    Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
+    And I am logged in as "admin@potter.gov"
+    When I maliciously post a deny for a role request for "john@example.com"
+    Then I should see "This resource does not exist or is not available."
+    And I should be on the dashboard page

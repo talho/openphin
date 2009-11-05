@@ -73,6 +73,9 @@ class Admin::RoleRequestsController < ApplicationController
         link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
         flash[:notice]="#{link} has been approved for the role #{request.role.name} in #{request.jurisdiction.name}"
         redirect_to :action => :index
+      else
+        flash[:error]="This resource does not exist or is not available."
+        redirect_to :dashboard
       end
     end
   end
@@ -86,6 +89,9 @@ class Admin::RoleRequestsController < ApplicationController
         link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
         flash[:notice]="#{link} has been denied for the role #{request.role.name} in #{request.jurisdiction.name}"
         redirect_to :action => :index
+      else
+        flash[:error]="This resource does not exist or is not available."
+        redirect_to :dashboard
       end
     end
   end
