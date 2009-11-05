@@ -2,6 +2,10 @@ Given /^all email has been delivered$/ do
   ActionMailer::Base.deliveries = []
 end
 
+Then /^"([^\"]*)" should have (\d*) emails?$/ do |email,count|
+  [find_email(email)].flatten.size.should == count.to_i
+end  
+
 Then /^I should not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
   field_labeled(label).element.inner_html.should_not contain(text)
 end

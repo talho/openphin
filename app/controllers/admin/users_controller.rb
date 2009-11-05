@@ -35,11 +35,6 @@ class Admin::UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         @user.confirm_email!
-        @user.role_requests.each do |role_request|
-          if current_user.is_admin_for?(role_request.jurisdiction)
-            ApprovalMailer.deliver_approval(role_request)
-          end
-        end
         flash[:notice] = 'The user has been successfully created.'
         format.html { redirect_to dashboard_path }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
