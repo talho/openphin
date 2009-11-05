@@ -264,4 +264,5 @@ r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:ju
                                                                              :role_id => Role.superadmin.id,
                                                                              :user_id => u.id)
 
+
 u.role_memberships << r
