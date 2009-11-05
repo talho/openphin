@@ -50,6 +50,7 @@ class RoleRequest < ActiveRecord::Base
       self.approver=approving_user
       create_role_membership(:user => user, :role => role, :jurisdiction => jurisdiction)
       self.save
+      AppMailer.deliver_role_assigned(role, jurisdiction, user, approver) unless user == approver
     end 
   end
   
