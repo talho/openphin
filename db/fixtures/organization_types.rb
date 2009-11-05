@@ -1,11 +1,5 @@
-OrganizationType.seed(:name) do |o|
-  o.name = 'Local Health Department'
-end
+OrganizationType.find_or_create_by_name(:name => "Local Health Department")
 
-OrganizationType.seed(:name) do |o|
-  o.name = 'State Health Department'
-end
+OrganizationType.find_or_create_by_name(:name => "State Health Department")
 
-OrganizationType.seed(:name) do |o|
-  o.name = 'Non-profit'
-end
+OrganizationType.find_or_create_by_name(:name => "Non-profit")

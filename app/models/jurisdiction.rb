@@ -47,7 +47,7 @@ class Jurisdiction < ActiveRecord::Base
   named_scope :foreign, :conditions => { :foreign => true }
   named_scope :nonforeign, :conditions => { :foreign => false }, :order => :name
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :fips_code, :allow_nil => true, :allow_blank => true
   
   def admins
     users.with_role(Role.admin)

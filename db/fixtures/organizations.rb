@@ -1,5 +1,4 @@
-Organization.seed(:name) do |o|
-  o.name = 'TALHO'
+Organization.find_or_create_by_name(:name => "TALHO") { |o|
   o.organization_type = Organization.find_by_name('Non-profit')
   o.approved = true
   o.description = "Texas Association of Local Health Officials"
@@ -14,4 +13,4 @@ Organization.seed(:name) do |o|
   o.contact_phone = "5125289691"
   o.email_confirmed = true
   o.queue = 'redcross'
-end
+}
