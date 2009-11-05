@@ -69,7 +69,6 @@ class Admin::RoleRequestsController < ApplicationController
     if request
       if current_user.is_admin_for?(request.jurisdiction)
         request.approve!(current_user)
-        ApprovalMailer.deliver_approval(request)
         link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
         flash[:notice]="#{link} has been approved for the role #{request.role.name} in #{request.jurisdiction.name}"
         redirect_to :action => :index
