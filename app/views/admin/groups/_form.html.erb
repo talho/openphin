@@ -4,11 +4,11 @@
     <%= form.label :name %>
     <%= form.text_field :name %><br/><br/>
     
-    <%= render 'audiences/fields', :form => form %>
     
     <%= form.label :scope, 'Scope'%>
     <%= form.select :scope, Group::SCOPES %>
     <%= form.label :owner_jurisdiction_id, "Owner Jurisdiction" %>
     <%= form.select :owner_jurisdiction_id, current_user.alerting_jurisdictions.map{|j| [j.name,j.id]} %>
+    <%= render 'audiences/fields', :form => form %>
   </div>
 </div>

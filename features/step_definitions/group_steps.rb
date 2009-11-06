@@ -6,7 +6,7 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
     options[:jurisdictions] = Jurisdiction.find_all_by_name(jurisdictions.split(',')) unless jurisdictions.blank?
     options[:owner_jurisdiction] = Jurisdiction.find_by_name(owner_jurisdiction) unless owner_jurisdiction.blank?
     options[:roles] = Role.find_all_by_name(roles.split(',')) unless roles.blank?
-    options[:users] = User.find_all_by_display_name(users.split(',')) unless users.blank?
+    options[:users] = User.find_all_by_email(users.split(',')) unless users.blank?
     group = Factory(:group, options)
    end
 end
@@ -57,4 +57,20 @@ end
 Then /^I should see the user "(.*)" immediately before "(.*)"$/ do |user1, user2|
    response.should have_selector("li.group_rcpt:nth-child(1)", :content => user1)
    response.should have_selector("li.group_rcpt:nth-child(2)", :content => user2)
+end
+
+Then /^the "([^\"]*)" group should not have the following members:$/ do |name, table|
+  group = Group.find_by_name(name)
+  table.rows_hash.each do |key, value|
+    case key
+    when "User" 
+      group.users.include?(User.find_by_email(value)).should_not be_true
+    when "Jurisdiction"
+      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should_not be_true
+    when "Role"
+      group.roles.include?(Roles.find_by_name(value)).should_not be_true
+    else
+      raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
+    end
+  end
 end

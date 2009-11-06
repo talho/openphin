@@ -65,6 +65,18 @@ class Admin::GroupsController < ApplicationController
           redirect_to admin_groups_path
     end 
   end
+  
+  def dismember
+    if params[:group_id]
+      if (@group = Group.find(params[:group_id]))
+        if (member = User.find(params[:member_id]))
+          @group.users.delete(member)
+        end
+      end
+    end
+    redirect_to(edit_admin_group_path(@group))
+  end
+
 
   def destroy
     @group = Group.find_by_id(params[:id])
