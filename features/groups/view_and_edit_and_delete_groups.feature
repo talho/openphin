@@ -32,11 +32,11 @@ Feature: Viewing groups
       When I follow "Manage Groups"
       Then I should see "Dallas County Health Officer Group"
       And I follow "Dallas County Health Officer Group"
-      Then I have loaded the group page for "Dallas County Health Officer Group"
+      Then I should be specifically on the group page for "Dallas County Health Officer Group"
       And I should see that the group includes:
         | Health Officer1, Health Officer2 |
 
-  Scenario: going to view a user group as an admin 
+  Scenario: going to view a user group ordering as an admin 
     When I go to the dashboard page
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
@@ -53,6 +53,31 @@ Feature: Viewing groups
     And I follow "Edit"
     Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
 
+  Scenario: going to edit a user group as an admin with deleting a user member
+    When I go to the dashboard page
+    Then I should see "Manage Groups"
+    When I follow "Manage Groups"
+    Then I should see "Dallas County Health Officer Group"
+    And I follow "Edit"
+    Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
+    And I should see "John Smith"
+    When I follow "Remove"
+    Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
+    And I should not see "John Smith" 
+    And the "Dallas County Health Officer Group" group should not have the following members:
+      | User  | john.smith@example.com |
+
+  Scenario: going to edit a user group as an admin with viewing the user member's profile
+    When I go to the dashboard page
+    Then I should see "Manage Groups"
+    When I follow "Manage Groups"
+    Then I should see "Dallas County Health Officer Group"
+    And I follow "Edit"
+    Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
+    And I should see "John Smith"
+    When I follow "John Smith"
+    Then I should be specifically on the user profile page for "john.smith@example.com"
+    
   Scenario: going to edit a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
     When I go to the dashboard page

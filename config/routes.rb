@@ -38,6 +38,7 @@ ActionController::Routing::Routes.draw do |map|
     organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   end
   map.resources :admin_groups, :controller => "admin/groups"
+  map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
   map.resource :search
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
