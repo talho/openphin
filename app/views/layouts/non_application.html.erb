@@ -14,7 +14,11 @@
   <div id="header">
       <div id="portal_toolbar">
         <h1><%= link_to 'TXPhin', root_path %></h1>
-          <p><%= link_to 'About TXPHIN', about_path %> | <%= link_to 'Sign Up', new_user_path %> | <%= link_to 'Sign In', sign_in_path %></p>
+          <ul class="actions">
+            <li><%= link_to s('About TXPHIN'), about_path %></li><li>&nbsp;|&nbsp;</li>
+              <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
+              <li><%= link_to s('Sign In'), sign_in_path %></li>
+          </ul>
       </div>
     </div>
     <div id="wrapper">

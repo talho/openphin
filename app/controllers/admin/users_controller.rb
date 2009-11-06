@@ -36,7 +36,7 @@ class Admin::UsersController < ApplicationController
       if @user.save
         @user.confirm_email!
         flash[:notice] = 'The user has been successfully created.'
-        format.html { redirect_to dashboard_path }
+        format.html { redirect_to new_admin_user_path }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }

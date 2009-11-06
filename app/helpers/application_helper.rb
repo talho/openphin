@@ -42,4 +42,20 @@ module ApplicationHelper
   def application_toolbar
     render :partial => @controller.toolbar
   end
+  
+  def tab_me(paths)
+    paths = [paths] unless paths.class.name == "Array" 
+    
+    paths.each do |path|
+      case path.class.name
+      when "Hash"
+        return " class='current'" if (path[:action].blank? && controller.controller_name == path[:controller]) || (controller.action_name == path[:action] && controller.controller_name == path[:controller])
+      when "String"
+        return " class='current'" if request.request_uri==path
+      else
+        ""
+      end
+    end
+    ""
+  end
 end

@@ -10,18 +10,18 @@ class Admin::RoleAssignmentsController < ApplicationController
     jurisdiction = Jurisdiction.find(params[:role_assigns][:jurisdiction_id]) unless params[:role_assigns][:jurisdiction_id].blank?
     if jurisdiction.nil?
       flash[:error] = "No jurisdiction was specified"
-      redirect_to admin_role_requests_path
+      redirect_to new_role_assignment_path
     elsif current_user.is_admin_for?(jurisdiction)
       role = Role.find(params[:role_assigns][:role_id]) unless params[:role_assigns][:role_id].blank?
       if role.nil?
         flash[:error] = "No role was specified"
-        redirect_to admin_role_requests_path
+        redirect_to new_role_assignment_path
       else
 	      params[:role_assigns][:user_ids].each_with_index{|userid, i| params[:role_assigns][:user_ids].delete_at(i) if userid.blank?}
         users = User.find_all_by_id(params[:role_assigns][:user_ids]) unless params[:role_assigns][:user_ids].blank?
         if users.nil?
           flash[:error] = "No users were specified"
-          redirect_to admin_role_requests_path
+          redirect_to new_role_assignment_path
         else
           User.assign_role(role, jurisdiction, users)
           users.each do |user|
@@ -29,12 +29,12 @@ class Admin::RoleAssignmentsController < ApplicationController
           end
           connector = users.size == 1 ? "has" : "have"
           flash[:notice] = "#{users.map(&:email).to_sentence} #{connector} been approved for the role #{role.name} in #{jurisdiction.name}"
-          redirect_to admin_role_requests_path
+          redirect_to new_role_assignment_path
         end 
       end
     else
       flash[:notice] = "The role assignment is outside of your authorized jurisdiction."
-      redirect_to admin_role_requests_path
+      redirect_to new_role_assignment_path
     end
   end
   

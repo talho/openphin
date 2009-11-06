@@ -22,7 +22,7 @@ class RoleRequestsController < ApplicationController
           RoleRequestMailer.deliver_user_notification_of_role_request @role_request
           flash[:notice] = "Your request to be a #{@role_request.role.name} in #{@role_request.jurisdiction.name} has been submitted"
         end
-        format.html { redirect_to dashboard_path }
+        format.html { redirect_to new_role_request_path }
       else
         format.html { render :action => "new" }
         format.xml { render :xml => @role_request.errors, :status => :unprocessable_entity }
