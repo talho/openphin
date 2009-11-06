@@ -8,6 +8,7 @@ class UserProfilesController < ApplicationController
   # GET /users
   # GET /users.xml
   def index
+    UserProfilesController.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     @users = User.all
 
     respond_to do |format|
@@ -19,6 +20,7 @@ class UserProfilesController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
+    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     @user = User.find(params[:user_id])
     
     respond_to do |format|
@@ -34,6 +36,7 @@ class UserProfilesController < ApplicationController
   # GET /users/new
   # GET /users/new.xml
   def new
+    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     User.new
 
     respond_to do |format|
@@ -44,12 +47,14 @@ class UserProfilesController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     find_user_and_profile
   end
 
   # POST /users
   # POST /users.xml
   def create
+    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     @user=User.find(params[:user_id])
 
     respond_to do |format|
@@ -67,6 +72,7 @@ class UserProfilesController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
+    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
     find_user_and_profile
 
     # Profile form will return blank devices due to hidden fields used to add devices via ajax

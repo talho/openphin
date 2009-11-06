@@ -40,15 +40,17 @@ table td 																			{padding:5px 20px 5px 0;}
 
 #application                                  {position:absolute; top:0; bottom:31px; left:0; right:0; overflow:auto;}
 #portal_toolbar                               {height:32px; background:url(images/app_header.png) repeat-x; line-height:32px;}
-#portal_toolbar p                             {float:right; margin:0 20px 0 0;}
+#portal_toolbar ul.actions                             {float:right; margin:0 20px 0 0;padding:0 0 0 0; font-weight:normal; display:inline;}
+#portal_toolbar ul.actions li:not(.current) a                             {margin:0 0px 0 0;padding:0 0 0 0; font-weight:normal; display:block;}
+#portal_toolbar ul.actions li:not(.current) a span                            {margin:0 0px 0 0;padding:0 0 0 0; font-weight:normal; display:block;}
 #portal_toolbar li.current a                  {background:url(images/app_header_tab.png); margin-bottom:-1px; height:33px; color:#fff;}
-#portal_toolbar li.current a span             {background:url(images/app_header_tab.png) 100% 0; line-height:30px; height:30px; padding-top:3px;}
+#portal_toolbar li.current a span             {background:url(images/app_header_tab.png) 100% 0; line-height:30px; height:30px; padding-top:3px; padding:0 12px 0 0;}
 
 #app_toolbar                                  {clear:both; height:30px; margin:0 0 20px; background:url(images/app_sub_header.png) repeat-x; line-height:30px; padding:0 20px; text-align:center;}
 #app_toolbar ul                               {display:inline; margin:0 auto; height:30px; float:none;}
 #app_toolbar li                               {float:none; display:inline-block;}
 #app_toolbar li a                             {line-height:28px; color:#D3FAFF;}
-#app_toolbar li.current a                     {background:url(images/app_sub_header_tab.png); color:#333; line-height:27px; height:30px;}
+#app_toolbar li.current a                     {background:url(images/app_sub_header_tab.png); color:#333; line-height:27px; height:30px;padding:0 0 0 12px;}
 #app_toolbar li.current a span                {background:url(images/app_sub_header_tab.png) 100% 0; line-height:27px; height:27px; padding-top:3px;}
 
 #app_alert                                    {position:relative}
