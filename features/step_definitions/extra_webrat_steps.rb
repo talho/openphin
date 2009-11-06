@@ -11,3 +11,7 @@ end
 Then /^I should not see the link "([^\"]*)"$/ do |value|
   response.should_not have_selector("a", :content => value)
 end
+
+Then /^I should be specifically on (.+) for "([^\"]*)"$/ do |page_name, arg|
+  URI.parse(current_url).path.should == path_to(page_name, arg)
+end

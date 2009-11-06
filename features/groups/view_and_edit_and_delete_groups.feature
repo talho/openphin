@@ -51,7 +51,7 @@ Feature: Viewing groups
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
     And I follow "Edit"
-    Then I have loaded the edit group page for "Dallas County Health Officer Group"
+    Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
 
   Scenario: going to edit a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
