@@ -50,6 +50,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
+    @selected_org = params[:user][:organization_ids][0].to_i if params[:user][:organization_ids]
 
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
