@@ -28,7 +28,7 @@
     <%= label_tag "(Your role will be 'Public' if you do not check that you are a public health professional)" %>
     <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, {:include_blank => false, :selected => @selected_role} %><br/>
     <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
-    <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name), :id => "user_organizations" %>
+    <%= select_tag "user[organization_ids][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name, :selected => @selected_org), :id => "user_organizations" %>
     
     <p>
       <%= f.label(:description, "Please describe your role within your organization") %><br/>

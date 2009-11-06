@@ -22,9 +22,10 @@ Feature: Approving users for roles
     And I follow "Pending Role Requests"
     Then I should see "john@example.com" is awaiting approval for "Health Officer"
     When I approve "john@example.com" in the role "Health Officer"
-    Then "john@example.com" should receive the email:
-      | subject       | Request approved    |
-      | body contains | You have been approved for the assignment of Health Officer in Dallas County |
+    Then "john@example.com" should have 1 email
+    And "john@example.com" should receive the email:
+      | subject       | Role assigned    |
+      | body contains | You have been assigned the role of Health Officer in Dallas County |
     And I should see "John Smith has been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
 
@@ -33,9 +34,10 @@ Feature: Approving users for roles
     When I log in as "admin@dallas.gov"
     Then I should see "john@example.com" is awaiting approval for "Health Officer"
     When I approve "john@example.com" in the role "Health Officer"
-    Then "john@example.com" should receive the email:
-      | subject       | Request approved    |
-      | body contains | You have been approved for the assignment of Health Officer in Dallas County |
+    Then "john@example.com" should have 1 email
+    And "john@example.com" should receive the email:
+      | subject       | Role assigned    |
+      | body contains | You have been assigned the role of Health Officer in Dallas County |
     And I should see "John Smith has been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
 

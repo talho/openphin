@@ -42,7 +42,7 @@
 jQuery(function($) {
   $('#health_professional').toggleCheckbox('#health_professional_fields').click(function() {
 	$('#health_professional_fields').toggle();
-	$('fieldset#health_professional_fields *:input').val('');
+	if($('#health_professional:checked').lenght > 0) $('fieldset#health_professional_fields *:input').val('');
 
     var public = $.map($("fieldset#health_professional_fields option"), function(item) {
       if ($(item).text() == "Public") return item;
