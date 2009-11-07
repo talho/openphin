@@ -20,10 +20,11 @@ class School < ActiveRecord::Base
   has_many :absentee_reports
 
   before_create :set_display_name
+  default_scope :order => "display_name"
 
   named_scope :with_alerts,
-              :include => :absentee_reports,
               :select => "distinct schools.*",
+              :include => :absentee_reports,
               :conditions => ["(absentee_reports.absent / absentee_reports.enrolled) >= 0.11 AND absentee_reports.report_date >= ?", 30.days.ago],
               :order => "(absentee_reports.absent/absentee_reports.enrolled) desc"
     

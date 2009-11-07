@@ -7,7 +7,9 @@
       <%= submit_tag "Modify graph" %>
     <% end %>
   </div>
-  <%= image_tag @chart %>
+  <% cache(:key => ["district_chart", @districts.map(&:id).join(":"), params[:timespan]]) do %>
+    <%= image_tag create_district_chart(@districts, params[:timespan]) %>
+  <% end %>
 </div>
 
 <div class="rollcall_summary">

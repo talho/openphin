@@ -1,5 +1,6 @@
 <div class="school_data">
   <h2 class='school'><%= @school.display_name %></h2>
+
   <div class='rollcall_chart_options'>
     <% form_tag school_path(@school), :method => :get do %>
       <%= label_tag :timespan, "Show last" %>
@@ -9,6 +10,8 @@
     <% end %>
   </div>
   <div class='rollcall_graph'>
-    <%= image_tag @school_chart unless @school_chart.nil? %>
+    <% cache(:key => ["school_chart", @school.id, params[:timespan]]) do %>
+      <%= image_tag create_school_chart(@school, params[:timespan]) %>
+    <% end %>
   </div>
 </div>

@@ -1,11 +1,12 @@
 class Rollcall::SchoolsController < ApplicationController
+  helper :rollcall
   before_filter :rollcall_required
 
   def index
     toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
     Rollcall::SchoolsController.app_toolbar toolbar
 
-    schools = current_user.schools.sort_by{|school| school.display_name}
+    schools = current_user.schools
 
     if params["district"] && !params["district"][:id].blank? && (!params["school"] || params["school"][:id].blank?)
       @school = SchoolDistrict.find(params["district"][:id]).schools.first
@@ -17,30 +18,6 @@ class Rollcall::SchoolsController < ApplicationController
 
     if @school
       @district = @school.district
-
-      params[:timespan]="7" if params[:timespan].blank?
-      timespan=params[:timespan].to_i
-
-      #labels should be 1:week if timespan is greater than 1 week
-      if timespan > 7
-        xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      else
-        xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      end
- school_absentee_points = []
-      params[:timespan].to_i.days.ago.to_date.upto Date.today do |date|
-        report=@school.absentee_reports.for_date(date).first
-        school_absentee_points.push report.nil? ? 0 : report.absentee_percentage
-      end
-      @school_chart=Gchart.line(:size => "600x400",
-                                :title => "Recent Absenteeism (Last #{params[:timespan]} Days)",
-                                :axis_with_labels => "x,y",
-                                :axis_labels => xlabels,
-                                :legend => @school.display_name,
-                                :data => school_absentee_points,
-                                :custom => "chdlp=b",
-                                :encoding => "text"
-      )
     end
 
     respond_to do |format|
@@ -64,33 +41,6 @@ class Rollcall::SchoolsController < ApplicationController
 
     if @school
       @district = @school.district
-
-      params[:timespan]="7" if params[:timespan].blank?
-      timespan=params[:timespan].to_i
-
-      #labels should be 1:week if timespan is greater than 1 week
-      if timespan > 7
-        xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      else
-        xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      end
-
-      school_absentee_points = []
-      params[:timespan].to_i.days.ago.to_date.upto Date.today do |date|
-        report=@school.absentee_reports.for_date(date).first
-        school_absentee_points.push report.nil? ? 0 : report.absentee_percentage
-      end
-      @school_chart=Gchart.line(:size => "600x400",
-                                :title => "Recent Absenteeism (Last #{params[:timespan]} Days)",
-                                :axis_with_labels => "x,y",
-                                :axis_labels => xlabels,
-                                :max => 30,
-                                :legend => @school.display_name,
-                                :data => school_absentee_points,
-                                :custom => "chxr=1,0,30",
-                                :encoding => "text",
-                                :max_value => 30
-      )
     end
 
     respond_to do |format|

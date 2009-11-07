@@ -11,7 +11,7 @@
 
 class SchoolDistrict < ActiveRecord::Base
   belongs_to :jurisdiction
-  has_many :schools, :foreign_key => "district_id", :include => :absentee_reports
+  has_many :schools, :foreign_key => "district_id"
   has_many :absentee_reports, :through => :schools
 
   def average_absence_rate(date=nil)
