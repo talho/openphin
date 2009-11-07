@@ -21,6 +21,7 @@
 
 class Rollcall::RollcallController < ApplicationController
   app_toolbar "rollcall"
+  helper :rollcall
 
   before_filter :rollcall_required, :except => :about
 
@@ -30,42 +31,14 @@ class Rollcall::RollcallController < ApplicationController
   def index
     toolbar = current_user.roles.include?(Role.find_by_name('Rollcall')) ? "rollcall" : "application"
     Rollcall::RollcallController.app_toolbar toolbar
-
     @districts = current_user.jurisdictions.map(&:school_districts).flatten!
     if @districts.empty? || !current_user.roles.include?(Role.find_by_name('Rollcall'))
       flash[:notice] = "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
       render "about"
-    else
-
-      params[:timespan]="7" if params[:timespan].blank?
-      chart_type=params[:chart_type] == "bar" ? "bar" : "line"
-      timespan=params[:timespan].to_i
-
-      #labels should be 1:week if timespan is greater than 1 week
-      if timespan > 7
-        xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      else
-        xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
-      end
-      @chart=Gchart.send(chart_type, :size => "500x350",
-                         :title => "Average % Absenteeism (Last #{params[:timespan]} Days)",
-                         :axis_with_labels => "x,y",
-                         :axis_labels => xlabels,
-                         :legend => @districts.map(&:name),
-                         :data => @districts.map{|d| d.recent_absentee_rates(timespan).map{|m|m*100}},
-                         :custom => "chdlp=b",
-                         :encoding => "text"
-      )
-#      ethans_crazy_absenteeism_summary_code
-      keiths_refactor
     end
   end
 
   private
-  def keiths_refactor
-    @districts = current_user.jurisdictions.map(&:school_districts).flatten!
-    
-  end
   def ethans_crazy_absenteeism_summary_code
     reports = current_user.recent_absentee_reports
     reports_schools = reports.map(&:school).flatten.uniq
