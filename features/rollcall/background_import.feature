@@ -44,5 +44,4 @@ Feature: Importing automated data
     | data        | 0,0,0,12.0,1.0,3.0,2.0,10.0   |
     | data-label  | LEWIS ES                    |
     | title       | Recent Absenteeism          |
-    | range       | 0,30                        |
 
