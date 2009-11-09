@@ -14,10 +14,10 @@ Feature: School
     And Houston has the following school districts:
       | Houston ISD |
     And "Houston ISD" has the following schools:
-      | Name        | SchoolID | Level |
-      | LEWIS ES    | 1        | ES    |
-      | SOUTHMAYDES | 2        | ES    |
-      | BERRY ES    | 3        | ES    |
+      | Name                 | DisplayName | SchoolID | Level |
+      | Lewis Elementary     | LEWIS ES    | 1        | ES    |
+      | Southmayd Elementary | SOUTHMAYDES | 2        | ES    |
+      | Berry Elementary     | BERRY ES    | 3        | ES    |
     And the following users exist:
       | Nurse Betty  | nurse.betty@example.com | SchoolNurse    | Houston |
       | Nurse Betty  | nurse.betty@example.com | Rollcall       | Houston |

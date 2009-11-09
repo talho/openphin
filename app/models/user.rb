@@ -70,11 +70,8 @@ class User < ActiveRecord::Base
   end
 
   def schools
-    school_districts.map{|district| district.schools}.flatten.uniq
-  end
-
-  def absentee_reports
-    schools.map{|school| school.absentee_reports}.flatten.uniq
+    School.find(:all, :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name")
+#    school_districts.map{|district| district.schools}.flatten.uniq
   end
 
   def recent_absentee_reports
