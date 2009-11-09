@@ -7,7 +7,6 @@ class Rollcall::SchoolsController < ApplicationController
     Rollcall::SchoolsController.app_toolbar toolbar
 
     schools = current_user.schools
-
     if params["district"] && !params["district"][:id].blank? && (!params["school"] || params["school"][:id].blank?)
       @school = SchoolDistrict.find(params["district"][:id]).schools.first
     elsif params["school"] && !params["school"][:id].blank?
