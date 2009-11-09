@@ -18,9 +18,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
+
 class AbsenteeAlert < RollcallAlert
   validates_presence_of :absentee_rate
   belongs_to :absentee_report
   belongs_to :school
   belongs_to :school_district
 end
+
