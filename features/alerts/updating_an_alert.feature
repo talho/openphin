@@ -127,7 +127,6 @@ Feature: Updating an alert
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
-    And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
   Scenario: Make sure re-submitting an update after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
