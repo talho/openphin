@@ -17,9 +17,6 @@ Feature: Adding documents to document sharing
     
     Then I should see "keith.jpg"
     
-    When I go to the Documents page
-    Then I should not see "keith.jpg"
-    
     When I follow "Rockstars"
     Then I should see "keith.jpg"
     
@@ -27,6 +24,19 @@ Feature: Adding documents to document sharing
     Then I should receive the file:
       | Filename     | keith.jpg  |
       | Content Type | image/jpeg |
+
+  Scenario: Adding a document to a folder that already contains a file by the same name
+    Given I have a folder named "Rockstars"
+    When I go to the Documents page
+    And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+    And I select " Rockstars" from "Folder"
+    And I press "Upload"
+
+    And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+    And I select " Rockstars" from "Folder"
+    And I press "Upload"
+    Then I should see "File name is already in use"
+
 
   Scenario: Viewing documents
     Given I have the document "keith.jpg" in my inbox
