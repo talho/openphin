@@ -28,21 +28,22 @@ module RollcallHelper
     school_line.tooltip = "<b>#val# %</b> Absent"
 
     xa= OpenFlashChart::XAxis.new
-#    xa.labels=OpenFlashChart::XAxisLabels.new(:labels => xlabels, :rotate => 315, :visible_steps => 7, :size => 18)
-    xa.labels=OpenFlashChart::XAxisLabels.new(:rotate => 315, :visible_steps => timespan > 14 ? 86400*7 : 86400, :size => 18)
-#    xa.steps = 7
-    xa.min = timespan.days.ago.to_time.beginning_of_day.tv_sec
-    xa.max = Time.zone.now.end_of_day.tv_sec
+    xa.labels=OpenFlashChart::XAxisLabels.new(:labels => xlabels, :rotate => 315, :visible_steps => 7, :size => 18)
+#    xa.labels=OpenFlashChart::XAxisLabels.new(:rotate => 315, :visible_steps => timespan > 14 ? 86400*7 : 86400, :size => 18)
+#    xa.steps = 86400
+    xa.steps = 7
+#    xa.min = timespan.days.ago.to_time.beginning_of_day.tv_sec
+#    xa.max = Time.zone.now.end_of_day.tv_sec
     school_chart.set_x_axis xa
 
     school_chart.y_axis = OpenFlashChart::YAxis.new(
         :steps => 2,
         :min => 0,
-        :max => school_absentee_points.max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b}.ceil
+        :max => school_absentee_points.max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b}
     )
 
     school_chart.add_element(school_line)
-#    school_chart.add_element(school_bar)
+    school_chart.add_element(school_bar)
     school_chart.to_s
   end
 
