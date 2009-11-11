@@ -12,6 +12,10 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'documents', :action => 'remove_from_channel',
     :conditions => {:method => :delete}
 
+  map.folder_document "folders/:folder_id/documents/:id", 
+    :controller=>"documents", :action=>"remove_from_folder", 
+    :conditions => {:method => :delete}
+
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"
   map.resources :role_assignments, :controller => "admin/role_assignments"

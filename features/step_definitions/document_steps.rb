@@ -2,6 +2,11 @@ Given 'I have the document "$filename" in my inbox' do |filename|
   @current_user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
 end
 
+Given /^I have the document "([^\"]*)" in "([^\"]*)"$/ do |filename, foldername|
+  @current_user.folders.find_or_create_by_name(
+    foldername).documents.create! :user_id => @current_user.id, :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
+end
+
 Given 'I have a folder named "$name"' do |name|
   current_user.folders.find_or_create_by_name(name)
 end

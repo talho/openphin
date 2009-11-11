@@ -1,7 +1,8 @@
 <% content_tag_for :li, document do %>
   <%= link_to h(document), document %>
-  <%= link_to 'Share', new_document_share_path(document) %>
+  <%= link_to 'Share',     new_document_share_path(document) %>
   <%= link_to 'Move/Edit', edit_document_path(document) if document.editable_by?(current_user) %>
+  <%= link_to 'Delete',    folder_document_path(@folder, document),:method => :delete, :class => "destroy" if @folder && document.editable_by?(current_user) %>
   <% if @channel %>
     <%= link_to 'Copy', document_copy_path(document) %>
     <%= button_to 'Remove from channel', channel_document_path(@channel, document), :method => :delete %>

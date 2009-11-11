@@ -3,6 +3,7 @@ class DocumentsController < ApplicationController
   
   def index
     @documents = current_user.documents.inbox
+    @folder = current_user.folders
   end
   
   def create
@@ -45,6 +46,15 @@ class DocumentsController < ApplicationController
     @channel.documents.delete(@document)
     flash[:notice] = "Successfully removed the document from the channel"
     redirect_to @channel
+  end
+  
+  def remove_from_folder
+    @document = Document.editable_by(current_user).find(params[:id])
+    @folder = current_user.folders.find(params[:folder_id])
+    @folder.documents.delete(@document)
+    @document.destroy
+    flash[:notice] = "Successfully removed the document from the folder."
+    redirect_to @folder
   end
   
 end

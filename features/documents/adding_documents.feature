@@ -94,3 +94,19 @@ Feature: Adding documents to document sharing
     When I go to the Documents page
     Then I should not see "keith.jpg"
     Then I should see "sample.wav"
+
+  Scenario: Deleting a document from a folder
+    Given I have a folder named "Rockstars"
+    And I have the document "keith.jpg" in "Rockstars"
+    
+    When I go to the Documents page
+    When I follow "Rockstars"
+    Then I should see "keith.jpg"
+     
+    When I follow "Delete"
+    Then I should see "Successfully removed the document from the folder"
+    When I go to the Documents page
+    When I follow "Rockstars"
+    Then I should not see "keith.jpg"
+   
+  
