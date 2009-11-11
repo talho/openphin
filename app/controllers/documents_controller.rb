@@ -6,13 +6,13 @@ class DocumentsController < ApplicationController
   end
   
   def create
-    @document = current_user.documents.build(params[:document])
-    
-    folder = current_user.folders.find(@document.folder_id)
-    unless folder.documents.detect{|x| x.file_file_name = @document.file_file_name}
+    folder = current_user.folders.find(params[:document][:folder_id].to_i)
+    unless folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
+      @document = current_user.documents.build(params[:document])
       @document.save!
     else
       flash[:error] = 'File name is already in use. Try renaming the file.'
+      @document = current_user.documents.build(params[:document])
     end
     redirect_to folder_or_inbox_path(@document)
   end
