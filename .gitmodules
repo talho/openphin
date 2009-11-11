@@ -43,3 +43,6 @@
 [submodule "vendor/plugins/googlecharts"]
 	path = vendor/plugins/googlecharts
 	url = git@github.com:talho/googlecharts.git
+[submodule "vendor/plugins/open_flash_chart"]
+	path = vendor/plugins/open_flash_chart
+	url = git://github.com/pullmonkey/open_flash_chart.git
