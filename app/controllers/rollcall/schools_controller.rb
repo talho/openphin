@@ -18,9 +18,10 @@ class Rollcall::SchoolsController < ApplicationController
     if @school
       @district = @school.district
     end
-
     respond_to do |format|
       if @school && schools.include?(@school)
+        @chart=open_flash_chart_object(600,300, school_chart_path(@school, params[:timespan]))
+
         format.html
         format.xml { render :xml => @school }
       else
@@ -44,6 +45,7 @@ class Rollcall::SchoolsController < ApplicationController
 
     respond_to do |format|
       if @school && schools.include?(@school)
+        @chart=open_flash_chart_object(600,300, school_chart_path(@school, params[:timespan]))
         format.html
         format.xml { render :xml => @school }
       else
@@ -53,4 +55,12 @@ class Rollcall::SchoolsController < ApplicationController
       end
     end
   end
+
+  def chart
+    @school = School.find(params[:school_id])
+    render :text => create_school_chart(@school, params[:timespan])
+  end
+
+  private
+  include RollcallHelper
 end
