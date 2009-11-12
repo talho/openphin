@@ -43,7 +43,7 @@ module RollcallHelper
     )
 
     school_chart.add_element(school_line)
-    school_chart.add_element(school_bar)
+#    school_chart.add_element(school_bar)
     school_chart.to_s
   end
 
