@@ -110,8 +110,7 @@ class DshsDataImporter
       if user.valid? && !jurisdiction.nil?
         begin
           user.save!
-          @bad = RoleMembership.create!(:user => user, :jurisdiction => jurisdiction, :role => Role.public) unless RoleMembership.alread_exists?(user,Role.public
-          ,jurisdiction)
+          @bad = RoleMembership.create!(:user => user, :jurisdiction => jurisdiction, :role => Role.public) unless RoleMembership.alread_exists?(user,Role.public,jurisdiction)
         rescue
           puts user
           debugger
