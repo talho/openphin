@@ -42,6 +42,19 @@ When "I fill out the group form with:" do |table|
   fill_in_group_form table
 end
 
+When /^I import the group file "([^\"]*)"$/ do |filename|
+  GroupImporter.import_groups(File.join(Rails.root, 'tmp', filename))
+end
+
+When /^I import the group file "([^\"]*)" with no update$/ do |filename|
+  GroupImporter.import_groups(File.join(Rails.root, 'tmp', filename), {:no_update => true })
+end
+
+Then /^the group "([^\"]*)" in "([^\"]*)" should exist$/ do |name, jurisdiction_name|
+  Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id).should_not be_nil
+end
+
+
 Then /^I should see "(.*)" as a groups option$/ do |name|
   response.should have_selector(".groups label", :content => name)
 end
@@ -59,16 +72,64 @@ Then /^I should see the user "(.*)" immediately before "(.*)"$/ do |user1, user2
    response.should have_selector("li.group_rcpt:nth-child(2)", :content => user2)
 end
 
+Then /^the "([^\"]*)" group should have the following members:$/ do |name, table|
+  group = Group.find_by_name(name)
+  table.rows_hash.each do |key, value|
+    case key
+    when "User"
+      group.users.include?(User.find_by_email(value)).should be_true
+    when "Jurisdiction"
+      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should be_true
+    when "Role"
+      group.roles.include?(Roles.find_by_name(value)).should be_true
+    else
+      raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
+    end
+  end
+  end
+
 Then /^the "([^\"]*)" group should not have the following members:$/ do |name, table|
   group = Group.find_by_name(name)
   table.rows_hash.each do |key, value|
     case key
     when "User" 
-      group.users.include?(User.find_by_email(value)).should_not be_true
+      group.users.include?(User.find_by_email(value)).should be_false
     when "Jurisdiction"
-      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should_not be_true
+      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should be_false
     when "Role"
-      group.roles.include?(Roles.find_by_name(value)).should_not be_true
+      group.roles.include?(Roles.find_by_name(value)).should be_false
+    else
+      raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
+    end
+  end
+end
+
+Then /^the "([^\"]*)" group in "([^\"]*)" should have the following members:$/ do |name, jurisdiction_name, table|
+  group = Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id)
+  table.rows_hash.each do |key, value|
+    case key
+    when "User"
+      group.users.include?(User.find_by_email(value)).should be_true
+    when "Jurisdiction"
+      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should be_true
+    when "Role"
+      group.roles.include?(Roles.find_by_name(value)).should be_true
+    else
+      raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
+    end
+  end
+  end
+
+Then /^the "([^\"]*)" group in "([^\"]*)" should not have the following members:$/ do |name, jurisdiction_name, table|
+  group = Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id)
+  table.rows_hash.each do |key, value|
+    case key
+    when "User"
+      group.users.include?(User.find_by_email(value)).should be_false
+    when "Jurisdiction"
+      group.jurisdictions.include?(Jurisdiction.find_by_name(value)).should be_false
+    when "Role"
+      group.roles.include?(Roles.find_by_name(value)).should be_false
     else
       raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
     end
