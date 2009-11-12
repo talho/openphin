@@ -2,6 +2,13 @@ Given /^all email has been delivered$/ do
   ActionMailer::Base.deliveries = []
 end
 
+
+Given /^the following file "([^\"]*)":$/ do |filename, text|
+  file=File.open(File.join(Rails.root, "tmp",filename), "w+")
+  file.write(text)
+  file.close
+end
+
 Then /^"([^\"]*)" should have (\d*) emails?$/ do |email,count|
   [find_email(email)].flatten.size.should == count.to_i
 end  
