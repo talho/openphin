@@ -51,7 +51,7 @@ Then /^"([^"]+). should not have the communication devices?$/ do |email, table|
           device = user.devices.email.detect{ |e| e.email_address == value }
           device.should be_nil
         else
-          user.devices.email.should be_empty
+          user.devices.email.size.should == 1
         end
       when /Fax/
         unless value.blank?
