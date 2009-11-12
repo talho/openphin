@@ -98,6 +98,24 @@ Feature: Importing users from a CSV
       | Phone | 5552346000 |
       | Phone | 5552346002 |
 
+  Scenario: Importing existing users should not change passwords or update existing info
+     Given the following users exist:
+      | Andy User      | andy@example.com   | Public | Region 6/5 South |
+    And "andy@example.com" has the password "Password123"
+    And andy@example.com has the following devices:
+      | Phone | 5552345000 |
+    And the following file "users.csv":
+    """
+    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
+    andy@example.com|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
+    """
+    When I import the user file "users.csv" with options "create/update"
+    And I go to the sign in page
+    And I sign in with "andy@example.com" and "Password123"
+    Then I should be signed in
+    When I load the user profile page for "andy@example.com"
+    Then I should see "Andy User"
+    And I should not see "Andy Contact"
 
 
 
