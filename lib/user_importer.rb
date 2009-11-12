@@ -44,7 +44,7 @@ class UserImporter
         end
         user.update_attributes(:first_name => first_name,
                                :last_name => last_name,
-                               :display_name => display_name)
+                               :display_name => display_name) if user.new_record?
         if user.valid?
           user.save
         else
@@ -52,10 +52,10 @@ class UserImporter
           next
         end
 
-        user.devices << create_device(Device::PhoneDevice, :phone, mobile) unless mobile.blank? || user.devices.phone.detect{|u| u.phone == mobile}
-        user.devices << create_device(Device::PhoneDevice, :phone, phone) unless phone.blank? || user.devices.phone.detect{|u| u.phone == phone}
-        user.devices << create_device(Device::FaxDevice, :fax, fax) unless fax.blank?  || user.devices.fax.detect{|u| u.fax == fax}
-        user.devices << create_device(Device::EmailDevice, :email_address, email) unless user.devices.email.detect{|u| u.email_address == email}
+        userdevices = user.devices
+        user.devices << create_device(Device::PhoneDevice, :phone, mobile) unless mobile.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == mobile}
+        user.devices << create_device(Device::PhoneDevice, :phone, phone) unless phone.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == phone}
+        user.devices << create_device(Device::FaxDevice, :fax, fax) unless fax.blank?  || userdevices.detect{|u| u.type == "Device::FaxDevice" && u.fax == fax}
         j=Jurisdiction.find_by_name(jurisdiction)
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)

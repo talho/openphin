@@ -14,7 +14,11 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
     :role_id => Given("a role named #{role}").id
   )
 end
-
+Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
+  u=User.find_by_email(email)
+  u.update_password(password,password)
+  u.save
+end
 Given 'the following users exist:' do |table|
   table.raw.each do |row|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
@@ -117,6 +121,12 @@ When /^I log in as "([^\"]*)"$/ do |user_email|
   login_as User.find_by_email!(user_email)
 end
 
+When /^I sign in with "([^\"]*)" and "([^\"]*)"$/ do |email, password|
+  visit sign_in_path
+  fill_in "Email", :with => email
+  fill_in "Password", :with => password
+  click_button "Sign In"
+end
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   user = User.find_by_email!(user_email)
