@@ -22,7 +22,9 @@ Feature: Importing users from a CSV
       | Jay User       | jay@example.com  | Epidemiologist                              | Tarrant          |
       | John User      | john@example.com | Epidemiologist                              | Ector            |
       | Bob User       | bob@example.com  | Health Officer                              | Ector            |
+      | Greg User      | greg@example.com | Epidemiologist                              |                  |
     And the user "Boss User" with the email "boss@example.com" has the role "Health Alert and Communications Coordinator" in "Texas"
+    And the user "Boss User" with the email "boss@example.com" has the role "Health Alert and Communications Coordinator" in "Ector"
 
   Scenario: Importing a well-formatted file
     Given the following file "groups.csv":
@@ -35,7 +37,7 @@ Feature: Importing users from a CSV
     """
     When I import the group file "groups.csv"
     Then the group "School Nurses" in "Region 6/5 South" should exist
-    And the group "School Nurses" in "Tarrant" should exist
+    And the group "School Nurses" in "Tarrant" should not exist
     And the group "EctorCoHAN" in "Ector" should exist
     And the "School Nurses" group in "Region 6/5 South" should have the following members:
       | User | jane@example.com |
@@ -43,12 +45,7 @@ Feature: Importing users from a CSV
       | User | jay@example.com  |
       | User | john@example.com |
       | User | bob@example.com  |
-    And the "School Nurses" group in "Tarrant" should have the following members:
-      | User | jay@example.com  |
-    And the "School Nurses" group in "Tarrant" should not have the following members:
-      | User | jane@example.com |
-      | User | john@example.com |
-      | User | bob@example.com  |
+    And I should see an error "Tarrant - School Nurses"
     And the "EctorCoHAN" group in "Ector" should have the following members:
       | User | john@example.com |
       | User | bob@example.com  |
