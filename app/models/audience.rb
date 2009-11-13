@@ -15,9 +15,9 @@
 class Audience < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
-  has_and_belongs_to_many :jurisdictions
-  has_and_belongs_to_many :roles
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :jurisdictions, :uniq => true
+  has_and_belongs_to_many :roles, :uniq => true
+  has_and_belongs_to_many :users, :uniq => true
 
   validate :at_least_one_recipient?
 

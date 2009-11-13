@@ -54,6 +54,9 @@ Then /^the group "([^\"]*)" in "([^\"]*)" should exist$/ do |name, jurisdiction_
   Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id).should_not be_nil
 end
 
+Then /^the group "([^\"]*)" in "([^\"]*)" should not exist$/ do |name, jurisdiction_name|
+  Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id).should be_nil
+end
 
 Then /^I should see "(.*)" as a groups option$/ do |name|
   response.should have_selector(".groups label", :content => name)
@@ -134,4 +137,8 @@ Then /^the "([^\"]*)" group in "([^\"]*)" should not have the following members:
       raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
     end
   end
+end
+
+Then /^I should see an error "([^\"]*)"$/ do |error|
+  IO.read('log/groups.log').include?(error).should be_true
 end

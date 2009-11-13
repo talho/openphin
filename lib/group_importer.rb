@@ -23,12 +23,14 @@ require 'fastercsv'
 class GroupImporter
   def self.import_groups(filename, options = {})
     options = {:col_sep => "|", :row_sep => "\n"}.merge(options)
+    file = File.open('log/groups.log', "w")
+    log = Logger.new(file)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
-        email = rec['email'].strip
-        jurisdiction = rec['jurisdiction'].strip
-        group_name = rec['group_name'].strip
-        if email.blank?
+        email = rec['email'].strip unless rec['email'].blank?
+        jurisdiction = rec['jurisdiction'].strip unless rec['email'].blank?
+        group_name = rec['group_name'].strip unless rec['group_name'].blank?
+        if email.blank? || jurisdiction.blank? || group_name.blank?
           STDERR.puts rec.values_at.join("|")
           next
         end
@@ -39,11 +41,15 @@ class GroupImporter
         group = Group.find_by_name_and_owner_jurisdiction_id(group_name, jur.id)
         if group.nil?
           admin = jur.alerting_users.first
-          admin = Jurisdiction.find_by_name("Texas").alerting_users.first if admin.nil?
+          if admin.nil?
+            log.info "#{jurisdiction} - #{group_name}"
+            file.fsync
+            next
+          end
           group = Group.create(:name => group_name, :owner_jurisdiction_id => jur.id, :scope => "Jurisdiction", :owner_id => admin.id)
         end
         next if group.nil?
-        group.users << user if group.new_record? || options[:no_update].blank?
+        group.users << user if (group.new_record? || options[:no_update].blank?) && !group.users.include?(user)
         group.save!
       end
     end
