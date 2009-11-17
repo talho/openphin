@@ -11,7 +11,7 @@ Given /^no documents exist$/ do
     else
       File.delete(File.join(path,filename))
     end
-  }
+  } if File.exist? path
 end
 
 Given 'I have the document "$filename" in my inbox' do |filename|
