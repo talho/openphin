@@ -13,4 +13,17 @@ class FoldersController < ApplicationController
     @documents = @folder.documents
     render 'documents/index'
   end
+  
+  def destroy
+    folders = current_user.folders
+    folder = folders.find(params[:id])
+    if !folder.nil? && folder.destroy 
+      flash[:notice] = "Successfully removed the folder"
+    else
+      flash[:error] = "Could not remove the document."
+    end
+      redirect_to documents_path
+  end
+  
 end
+                  

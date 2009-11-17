@@ -27,7 +27,7 @@ class Document < ActiveRecord::Base
   belongs_to :folder
   
   after_post_process :notify_channels_of_update
-  
+
   named_scope :viewable_by, lambda{|user|
     {:conditions => ['documents.user_id = :user OR subscriptions.user_id = :user', {:user => user}],
     :include => {:channels => :subscriptions}}
@@ -76,4 +76,30 @@ class Document < ActiveRecord::Base
   def copy(user)
     user.documents.create! :file => self.file
   end
+
+private
+  
+ 
+=begin
+  # callback used for delayed asynchronous processing
+  # save entry in database but holdoff upload processing
+  before_data_post_process do |document|
+    false if document.processing?  # do not process if just added
+  end
+  
+  # callback used for delayed asynchronous processing
+  # add the document to the delayed job queue
+  after_create do |document|
+    Delayed::Job.enqueue DocumentJob.new(document.id)
+  end
+  
+  # used for delayed asynchronous processing
+  def perform
+    self.processing = false # unlock for processing
+    data.reprocess! # do the processing
+    save
+  end
+=end
+  
+  
 end

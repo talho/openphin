@@ -44,7 +44,7 @@ class DocumentsController < ApplicationController
     @document = Document.editable_by(current_user).find(params[:id])
     @channel = current_user.channels.find(params[:channel_id])
     @channel.documents.delete(@document)
-    flash[:notice] = "Successfully removed the document from the channel"
+    flash[:notice] = "Successfully removed the document from the share"
     redirect_to @channel
   end
   

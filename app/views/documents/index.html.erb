@@ -4,8 +4,8 @@
     <li><%= link_to 'Inbox', documents_path %></li>
     <%= render current_user.folders.roots %>
   </ul>
-  <h3>Channels</h3>
-  <%= link_to 'New Channel', new_channel_path %>
+  <h3>Shares</h3>
+  <%= link_to 'New Share', new_channel_path %>
   <ul>
     <%= render current_user.channels %>
   </ul>

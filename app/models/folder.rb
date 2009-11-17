@@ -14,11 +14,12 @@
 
 class Folder < ActiveRecord::Base
   belongs_to :user
-  has_many :documents
+  has_many :documents, :dependent => :destroy
   
   acts_as_nested_set :scope => :user_id
   
   def to_s
     name
   end
+
 end

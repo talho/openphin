@@ -5,6 +5,6 @@
   <%= link_to 'Delete',    folder_document_path(@folder, document),:method => :delete, :class => "destroy" if @folder && document.editable_by?(current_user) %>
   <% if @channel %>
     <%= link_to 'Copy', document_copy_path(document) %>
-    <%= button_to 'Remove from channel', channel_document_path(@channel, document), :method => :delete %>
+    <%= button_to 'Remove from share', channel_document_path(@channel, document), :method => :delete %>
   <% end %>
 <% end %>

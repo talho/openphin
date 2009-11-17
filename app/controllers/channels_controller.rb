@@ -11,7 +11,7 @@ class ChannelsController < ApplicationController
       :channel => Channel.new(params[:channel])
     )
     subscription.save!
-    flash[:notice] = 'Successfully created the channel'
+    flash[:notice] = 'Successfully created the share'
     redirect_to subscription.channel
   end
   
@@ -22,16 +22,16 @@ class ChannelsController < ApplicationController
   end
   
   def unsubscribe
-    @subscription = current_user.subscriptions.find_by_channel_id!(params[:id])
-    @subscription.destroy
-    flash[:notice] = "Successfully unsubscribed from the channel"
+    subscriptions = current_user.subscriptions
+    subscriptions.delete subscriptions.find_by_channel_id!(params[:id])
+    flash[:notice] = "Successfully unsubscribed from the share"
     redirect_to documents_path
   end
   
   def destroy
     @channel = current_user.owned_channels.find(params[:id])
     @channel.destroy
-    flash[:notice] = "Successfully deleted the channel"
+    flash[:notice] = "Successfully deleted the share"
     redirect_to documents_path
   end
 end

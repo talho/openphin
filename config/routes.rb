@@ -4,6 +4,10 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
 
+map.delete_folder "folders/:id",
+  :controller=>"folders", :action=>"destroy",
+  :conditions => {:method => :delete}
+
   map.resources :jurisdictions, :devices, :folders
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
