@@ -1,7 +1,6 @@
-
 Given /^I have an? (.*) device$/ do |device_type|
   current_user.devices << Factory("#{device_type.downcase}_device")
-  
+
 end
 
 
@@ -24,28 +23,52 @@ When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email
   delete_via_redirect device_path(device)
 end
 
-Then /^"([^"]+). should have the communication device$/ do |email, table|
+Then /^"([^"]+). should have the communication devices?$/ do |email, table|
   user = User.find_by_email!(email)
   table.rows_hash.each do |type, value|
     case type
-    when /Email/
-      device = user.devices.email.detect{ |e| e.email_address == value }
-      device.should_not be_nil
-    else
-      raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+      when /Email/
+        device = user.devices.email.detect{ |e| e.email_address == value }
+        device.should_not be_nil
+      when /Fax/i
+        device=user.devices.fax.detect{|f| f.fax == value}
+        device.should_not be_nil
+      when /Phone/i
+        device=user.devices.phone.detect{|f| f.phone == value}
+        device.should_not be_nil
+      else
+        raise "The type '#{type}' is not supported, please update this step if you intended to use it"
     end
   end
 end
 
-Then /^"([^"]+). should not have the communication device$/ do |email, table|
+Then /^"([^"]+). should not have the communication devices?$/ do |email, table|
   user = User.find_by_email!(email)
   table.rows_hash.each do |type, value|
     case type
-    when /Email/
-      device = user.devices.email.detect{ |e| e.email_address == value }
-      device.should be_nil
-    else
-      raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+      when /Email/
+        unless value.blank?
+          device = user.devices.email.detect{ |e| e.email_address == value }
+          device.should be_nil
+        else
+          user.devices.email.size.should == 1
+        end
+      when /Fax/
+        unless value.blank?
+          device = user.devices.fax.detect{ |e| e.fax == value }
+          device.should be_nil
+        else
+          user.devices.fax.should be_empty
+        end
+      when /Phone/
+        unless value.blank?
+          device = user.devices.phone.detect{ |e| e.phone == value }
+          device.should be_nil
+        else
+          user.devices.phone.should be_empty
+        end
+      else
+        raise "The type '#{type}' is not supported, please update this step if you intended to use it"
     end
   end
 end
@@ -53,10 +76,10 @@ end
 Then /^I should see in my list of devices$/ do |table|
   table.rows_hash.each do |type, value|
     case type
-    when /Email/
-      response.should have_selector('#devices .device_email_device', :content => value)
-    else
-      raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+      when /Email/
+        response.should have_selector('#devices .device_email_device', :content => value)
+      else
+        raise "The type '#{type}' is not supported, please update this step if you intended to use it"
     end
   end
 end
@@ -79,20 +102,20 @@ Then /^the following users should receive the email:$/ do |table|
     jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
     jurisdiction.users.with_role(role_name)
   end
-  
+
   recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
-  
+
   recipients.each do |user|
     Then %Q{"#{user.email}" should receive the email:}, table
   end
 end
 
 Then '"$email" should not receive an email' do |email|
-  find_email(email).should be_nil  
+  find_email(email).should be_nil
 end
 
 Then '"$email" should not receive an email with the subject "$subject"' do |email, subject|
-  table = Cucumber::Ast::Table.new([['key','value'],['subject', subject]])
+  table = Cucumber::Ast::Table.new([['key', 'value'], ['subject', subject]])
   find_email(email, table).should be_nil
 end
 
@@ -105,17 +128,17 @@ Then "the following users should not receive any emails" do |table|
   elsif headers.first == "emails"
     headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
   end
-  
+
   recipients.each do |user|
     Then %Q{"#{user.email}" should not receive an email}
   end
 end
-  
+
 Then 'I should have a phone device with the phone "$text"' do |text|
   device = current_user.devices.phone.detect{ |device| device.phone == text }
   device.phone.should_not be_nil
 end
-  
+
 Then 'I should have a SMS device with the SMS number "$text"' do |text|
   device = current_user.devices.sms.detect{ |device| device.sms == text }
   device.sms.should_not be_nil
@@ -134,14 +157,14 @@ end
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
-      xml = Nokogiri::XML(phone_call.body)   
+      xml = Nokogiri::XML(phone_call.body)
       if row["recording"].blank?
         phone = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Voice"]/swn:address',
-                   {"swn" => "http://www.sendwordnow.com/notification"})).inner_text
+                            {"swn" => "http://www.sendwordnow.com/notification"})).inner_text
         message = xml.search( "//swn:notification/swn:body",
-                   {"swn" => "http://www.sendwordnow.com/notification"}).inner_text
+                              {"swn" => "http://www.sendwordnow.com/notification"}).inner_text
         message == row["message"] && phone == row["phone"]
-	      #SWN doesn't support recorded attachments
+        #SWN doesn't support recorded attachments
 #      else
 #        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
 #        phone = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
@@ -163,7 +186,7 @@ Then /^the following SMS calls should be made:$/ do |table|
       sms = note.xpath(".//swn:rcpts/*/swn:contactPnts/swn:contactPntInfo/swn:address", {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
       message == row["message"] && sms == "#{row['sms']}@sms.sendwordnow.com"
     end
-    call.should_not be_nil   
+    call.should_not be_nil
   end
 end
 
@@ -191,4 +214,19 @@ Then /^the following Blackberry calls should be made:$/ do |table|
     end
     call.should_not be_nil
   end
+end
+Given /^(.*) has the following devices:$/ do |useremail, table|
+  # table is a | Device | value |
+  user=User.find_by_email(useremail)
+  table.rows_hash.each do |type, value|
+    case type
+      when /email/i
+        Factory(:email_device, :email_address => value, :user => user)
+      when /fax/i
+        Factory(:fax_device, :fax => value, :user => user)
+      when /phone/i
+        Factory(:phone_device, :phone => value, :user => user)
+    end
+  end
+
 end

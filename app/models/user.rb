@@ -64,19 +64,7 @@ class User < ActiveRecord::Base
   has_many :channels, :through => :subscriptions
   has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
 
-  #TODO Move this into plugin for rollcall later
-  def school_districts
-    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
-  end
 
-  def schools
-    School.find(:all, :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name")
-#    school_districts.map{|district| district.schools}.flatten.uniq
-  end
-
-  def recent_absentee_reports
-    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
-  end
 
   validates_presence_of     :email
   validates_presence_of     :first_name
@@ -134,6 +122,19 @@ class User < ActiveRecord::Base
     set_property :delta => :delayed
   end
 
+   #TODO Move this into plugin for rollcall later
+  def school_districts
+    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
+  end
+
+  def schools
+    School.find(:all, :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name")
+#    school_districts.map{|district| district.schools}.flatten.uniq
+  end
+
+  def recent_absentee_reports
+    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
+  end
 	def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
   end

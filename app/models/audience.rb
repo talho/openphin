@@ -15,9 +15,9 @@
 class Audience < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
-  has_and_belongs_to_many :jurisdictions
-  has_and_belongs_to_many :roles
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :jurisdictions, :uniq => true
+  has_and_belongs_to_many :roles, :uniq => true
+  has_and_belongs_to_many :users, :uniq => true
 
   validate :at_least_one_recipient?
 
@@ -25,7 +25,7 @@ class Audience < ActiveRecord::Base
     jur_ids = jurisdictions.map(&:id).compact.uniq
     Group.find_all_by_owner_jurisdiction_id(jur_ids)
   end
-  
+
   def foreign_jurisdictions
     first_foreign = jurisdictions.foreign.first
     if first_foreign
@@ -34,25 +34,28 @@ class Audience < ActiveRecord::Base
       []
     end
   end
-  
+
   #TODO: opportunity for optimization:  perform this function in SQL, not using map
   def foreign_users
     @foreign_users ||= users.reject{|u| u.jurisdictions.foreign.empty? }
   end
 
   def recipients(options = {})
-    options = {:include_public => true}.merge(options)
-    user_ids_for_delivery = jurisdictions.map do |jurisdiction|
-      memberships = jurisdiction.role_memberships
-      memberships = memberships.not_public_roles unless options[:include_public]
-      memberships.map(&:user_id)
-    end.flatten.uniq
-    user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
+    unless @recips
+      options = {:include_public => true}.merge(options)
+      user_ids_for_delivery = jurisdictions.map do |jurisdiction|
+        memberships = jurisdiction.role_memberships
+        memberships = memberships.not_public_roles unless options[:include_public]
+        memberships.map(&:user_id)
+      end.flatten.uniq
+      user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
 
-    user_ids_for_delivery += user_ids
+      user_ids_for_delivery += user_ids
 
-    users = User.find(user_ids_for_delivery)
-    options[:include_public] ? users : users.select(&:has_non_public_role?)
+      @recips = User.find(user_ids_for_delivery, :order => "last_name")
+      options[:include_public] ? @recips : @recips.select(&:has_non_public_role?)
+    end
+    @recips
   end
 
   private
