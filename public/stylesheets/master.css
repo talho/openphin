@@ -265,8 +265,27 @@ a.button                                      {display:block;}
 .new_organization input, .new_organization select, .new_organization textarea {margin-bottom:10px;}
 .new_organization legend {font-size:1.4em; color:#369;}
 
-span.folders                                     {float: left;}
-span.files                                       {float: left; border-left: medium solid #ffffff; margin-left: 5px; padding-left: 5px; height: 100%;}
+span.folders                                    {float: left;}
+span.files                                      {float: left; border-left: medium solid #ffffff; margin-left: 5px; padding-left: 5px; height: 100%;}
+span.folders fieldset.list 						{height:180px; float:left;}
+span.folders fieldset ul                        {margin-left: 0px;}
+span.folders fieldset ul.check_selector			{float: left; top:0px; left:0; right:0; bottom:0px; overflow:auto; height: 160px; width: 180px;}
+span.folders fieldset ul.check_selector li						{position:relative; list-style:none;}
+span.folders fieldset ul.check_selector li ul				{margin:0; padding:0px; border-top:1px solid #ffffff;}
+
+span.folders fieldset ul.check_selector li li label  {margin:0; padding-left:44px;}
+span.folders fieldset ul.check_selector li li li label  {margin:0; padding-left:64px;}
+span.folders fieldset ul.check_selector li + li			{border-top:1px solid #ffffff;}
+span.folders fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
+span.folders fieldset ul.check_selector input				{position:absolute; left:6px; top:6px;}
+span.folders fieldset ul.check_selector li li input {left:24px;}
+span.folders fieldset ul.check_selector li li li input {left:44px;}
+span.folders fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:8px; height:20px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}
+span.folders fieldset ul.check_selector a.closed			{background:url(images/arrow_right.png) no-repeat center; width: 8px; height:20px;}
+span.folders fieldset ul.check_selector a:not(.toggle)      {margin-left: 10px;}
+span.folders fieldset ul.check_selector li li li a:not(.toggle)      {margin-left: 20px;}
+span.folders fieldset ul.check_selector li label			{background:#fff;}
+span.folders fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;

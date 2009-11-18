@@ -189,6 +189,15 @@ function reloadDocumentsPanel(site){
             reloadDocumentsPanel($(this).attr('href'));
             return false;
         });
+
+        $('ul.check_selector>li>ul>li').prepend('<a href="#" class="toggle closed">Toggle</a>');
+		$('ul.check_selector ul ul').hide();
+
+		$('ul.check_selector a.toggle').click(function() {
+			$(this).toggleClass('closed').siblings('ul').toggle();
+            $(this).parent().children(".select_all").toggle();
+			return false;
+		})
     });
 }
 
