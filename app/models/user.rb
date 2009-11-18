@@ -59,7 +59,11 @@ class User < ActiveRecord::Base
       scoped :conditions => 'documents.folder_id IS NULL'
     end
   end
-  has_many :folders
+  has_many :folders  do
+    def roots
+      scoped :conditions => 'folders.parent_id IS NULL'
+    end
+  end
   has_many :subscriptions
   has_many :channels, :through => :subscriptions
   has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}

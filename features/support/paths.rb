@@ -73,6 +73,8 @@ module NavigationHelpers
         about_rollcall_path
       when /the Documents page/i
         documents_path
+      when /the document viewing panel/i
+        documents_panel_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

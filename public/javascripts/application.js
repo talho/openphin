@@ -99,6 +99,7 @@ jQuery(function($) {
 			return false;
 		});
     $(".documents").bind("click", function (e){
+        reloadDocumentsPanel();
 	    return togglePanel("documents", e);
 
     });
@@ -155,3 +156,39 @@ function closeAllPanelsExcept(exception_name){
 	if(exception_name!="chat")      $("#chat_panel:visible").slideToggle(500);
 	if(exception_name!="calendar")  $("#calendar_panel:visible").slideToggle(500);
 }
+function reloadDocumentsPanel(site){
+    var dp = $("#documents_panel");
+    if(jQuery.trim(site) == "") site = "/documents_panel";
+    $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
+    dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+        if(textStatus != "success") {
+            alert("The documents panel could not be loaded.");
+            return;
+        }
+        var inbox_link = $(".folders li.inbox a");
+        var share_links = $(".folders li.share a");
+        var folder_links = $(".folders li.folder a");
+        inbox_link.bind("click", function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
+            reloadDocumentsPanel("");
+            return false;
+        });
+        share_links.bind("click", function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
+            reloadDocumentsPanel($(this).attr('href'));
+            return false;
+        });
+        folder_links.bind("click", function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
+            reloadDocumentsPanel($(this).attr('href'));
+            return false;
+        });
+    });
+}
+

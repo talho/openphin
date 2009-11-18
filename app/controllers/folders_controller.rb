@@ -1,5 +1,6 @@
 class FoldersController < ApplicationController
   before_filter :non_public_role_required
+  layout "application", :except => :panel_index
 
   def create
     @folder = current_user.folders.build(params[:folder])
@@ -23,6 +24,23 @@ class FoldersController < ApplicationController
       flash[:error] = "Could not remove the document."
     end
       redirect_to documents_path
+  end
+
+  def panel_index
+    @folders = current_user.folders.roots
+    @shares = current_user.channels
+    current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
+    current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
+    if current_folder
+      @name = current_folder.name
+      @documents = current_folder.documents
+    elsif current_channel
+      @name = current_channel.name
+      @documents = current_channel.documents
+    else
+      @name = "Inbox"
+      @documents = current_user.documents.inbox
+    end
   end
   
 end

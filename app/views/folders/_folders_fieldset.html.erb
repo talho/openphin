@@ -1,0 +1,20 @@
+<fieldset class="filterable list folders">
+  <legend>Select Folder</legend>
+  <ul class="check_selector">
+    <li class="inbox">
+      <%= link_to 'Inbox',documents_panel_path %>
+    </li>
+    <li>
+      Shares
+      <%- @shares.each do |c| -%>
+        <li class="share">
+            <%= link_to c.name,"#{documents_panel_path}?channel=#{c.id}" %>
+        </li>
+      <%- end -%>
+    </li>
+    <li>
+      Folders
+      <%= folders_links(@folders) %>
+    </li>
+  </ul>
+</fieldset>

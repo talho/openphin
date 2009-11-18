@@ -265,6 +265,8 @@ a.button                                      {display:block;}
 .new_organization input, .new_organization select, .new_organization textarea {margin-bottom:10px;}
 .new_organization legend {font-size:1.4em; color:#369;}
 
+span.folders                                     {float: left;}
+span.files                                       {float: left; border-left: medium solid #ffffff; margin-left: 5px; padding-left: 5px; height: 100%;}
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;

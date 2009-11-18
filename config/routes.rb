@@ -20,6 +20,10 @@ map.delete_folder "folders/:id",
     :controller=>"documents", :action=>"remove_from_folder", 
     :conditions => {:method => :delete}
 
+  map.documents_panel "documents_panel/:id",
+    :controller=>"folders", :action=>"panel_index",
+    :conditions => {:method => :get}
+
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"
   map.resources :role_assignments, :controller => "admin/role_assignments"
