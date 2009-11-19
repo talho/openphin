@@ -22,7 +22,8 @@ Feature: Searching for users
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
     And Health Officer is a non public role
     And HAN Coordinator is a non public role
-      And delayed jobs are processed
+    And delayed jobs are processed
+    And the sphinx daemon is running
   
   Scenario: Searching for a user
     Given I am logged in as "amy@example.com"
@@ -35,7 +36,6 @@ Feature: Searching for users
       
   Scenario: Searching for a user as a user with only a public role
     Given I am logged in as "john.smith@example.com"
-  
     When I go to the dashboard page
     Then I should not see "Search"
     When I search for "Smith"

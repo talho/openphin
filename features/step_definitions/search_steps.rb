@@ -1,3 +1,10 @@
+Given /^the sphinx daemon is running$/ do
+  begin
+    output = `ps -ef --width=300 | grep searchd | grep cucumber`
+  end while output.blank?
+  output.should_not be_blank
+end
+
 Then /^I see the following users in the search results$/ do |table|
   table.raw.each do |row|
     row[0].split(',').map(&:strip).each do |name|

@@ -21,6 +21,8 @@ Feature: Viewing user profiles
   	And the user "Sam Body" with the email "sam.body@example.com" has the role "Health Officer" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Potter County"
+    And delayed jobs are processed
+    And the sphinx daemon is running
     
   Scenario: Viewing a public profile
     Given sam.body@example.com has a public profile
