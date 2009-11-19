@@ -37,6 +37,7 @@ describe Role do
     end
     
     it "should be invalid if a Role already exists with same name" do
+      Role.public
       @role = Role.new(:name => "Public")
       @role.valid?.should be_false
     end
