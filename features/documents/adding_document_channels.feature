@@ -16,15 +16,15 @@ Feature: Creating document channels
     When I go to the Documents page
 
   Scenario: Creating a new channel
-    And I follow "New Channel"
+    And I follow "New Share"
     And I fill in "Name" with "Discovery"
     And I press "Create"
     
-    Then I should see "Successfully created the channel"
+    Then I should see "Successfully created the share"
     And I should see "Discovery"
   
-  Scenario: Adding other owners of a channel
-    Given I created the channel "Project X"
+  Scenario: Adding other owners of a share
+    Given I created the share "Project X"
     And I go to the Documents page
   
     Given I am logged in as "brandon.keepers@example.com"
@@ -36,23 +36,23 @@ Feature: Creating document channels
     And I follow "Project X"
     And I follow "Invite" 
     
-    When I fill out the channel invitation form with:
+    When I fill out the share invitation form with:
       | People | Brandon Keepers |
     And I check "Make these people owners"
       
     And I press "Add"
-    Then I should see "Additional owners have been added to this channel"
+    Then I should see "Additional owners have been added to this share"
     And "brandon.keepers@example.com" should receive the email:
-      | subject       | John Smith added you to a channel |
+      | subject       | John Smith added you to a share |
       | body contains | To view this channel |
     
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should see "Project X"
   
-  Scenario: Adding a document to a channel
-    Given I created the channel "Channel 4"
-    And "Brandon Keepers" has been added to the channel "Channel 4"
+  Scenario: Adding a document to a share
+    Given I created the share "Channel 4"
+    And "Brandon Keepers" has been added to the share "Channel 4"
     And I have the document "sample.wav" in my inbox
     When I go to the Documents page
     And I follow "Share"
@@ -61,15 +61,15 @@ Feature: Creating document channels
     Then I should see "Successfully shared the document"
     And I should be on the Documents page
     And "brandon.keepers@example.com" should receive the email:
-      | subject       | A document has been added to the channel "Channel 4" |
+      | subject       | A document has been added to the share "Channel 4" |
       | body contains | To view this document |
     
     When I follow "Channel 4"
     Then I should see "sample.wav"
   
-  Scenario: User copying a document out of channel
-    Given I have been added to the channel "Vacation Photos"
-    And a document "keith.jpg" is in the channel "Vacation Photos"
+  Scenario: User copying a document out of share
+    Given I have been added to the share "Vacation Photos"
+    And a document "keith.jpg" is in the share "Vacation Photos"
     And I have a folder named "Hilarious"
     When I go to the Documents page
     And I follow "Vacation Photos"
@@ -81,10 +81,10 @@ Feature: Creating document channels
     When I follow "Hilarious"
     Then I should see "keith.jpg"
  
-  Scenario: Updating a document in a channel
-    Given I created the channel "Vacation Photos"
-    And "Brandon Keepers" has been added to the channel "Vacation Photos"
-    And a document "keith.jpg" is in the channel "Vacation Photos"
+  Scenario: Updating a document in a share
+    Given I created the share "Vacation Photos"
+    And "Brandon Keepers" has been added to the share "Vacation Photos"
+    And a document "keith.jpg" is in the share "Vacation Photos"
     When I go to the Documents page
     And I follow "Vacation Photos"
     And I follow "Edit"
@@ -99,8 +99,8 @@ Feature: Creating document channels
       | subject       | A document has been updated |
       | body contains | To view this document       |
   
-  Scenario: Inviting users to a channel
-    Given I created the channel "Avian Flus"
+  Scenario: Inviting users to a share
+    Given I created the share "Avian Flus"
     And I go to the Documents page
 
     Given I am logged in as "brandon.keepers@example.com"
@@ -112,42 +112,42 @@ Feature: Creating document channels
     And I follow "Avian Flus"
     And I follow "Invite" 
   
-    When I fill out the channel invitation form with:
+    When I fill out the share invitation form with:
       | People | Brandon Keepers |
     And I press "Add"
-    Then I should see "Additional users have been added to this channel"
+    Then I should see "Additional users have been added to this share"
     And "brandon.keepers@example.com" should receive the email:
-      | subject       | John Smith added you to a channel |
+      | subject       | John Smith added you to a share |
       | body contains | To view this channel |
     
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     Then I should see "Avian Flus"
     
-  Scenario: Unsubscribing from a channel
-    Given I have been added to the channel "Kitty Pictures"
+  Scenario: Unsubscribing from a share
+    Given I have been added to the share "Kitty Pictures"
     When I go to the Documents page
     And I follow "Kitty Pictures"
     And I press "Unsubscribe"
-    Then I should see "Successfully unsubscribed from the channel"
+    Then I should see "Successfully unsubscribed from the share"
 
     When I go to the Documents page
     Then I should not see "Kitty Pictures"
       
-  Scenario: Removing document from channel
-    Given I created the channel "Channel 4"
-    And a document "keith.jpg" is in the channel "Channel 4"
+  Scenario: Removing document from share
+    Given I created the share "Channel 4"
+    And a document "keith.jpg" is in the share "Channel 4"
     
     When I go to the Documents page
     And I follow "Channel 4"
-    And I press "Remove from channel"
-    Then I should see "Successfully removed the document from the channel"
+    And I press "Remove from share"
+    Then I should see "Successfully removed the document from the share"
     And I should not see "keith.jpg"
   
-  Scenario: Deleting a channel
-    Given I created the channel "Avian Flus"
+  Scenario: Deleting a share
+    Given I created the share "Avian Flus"
     When I go to the Documents page
-    And I follow "Delete Channel"
+    And I follow "Delete Share"
     Then I should be on the Documents page
     And I should not see "Avian Flus" 
   

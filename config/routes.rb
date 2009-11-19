@@ -4,12 +4,20 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
 
+map.delete_folder "folders/:id",
+  :controller=>"folders", :action=>"destroy",
+  :conditions => {:method => :delete}
+
   map.resources :jurisdictions, :devices, :folders
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
   end
   map.channel_document 'channels/:channel_id/documents/:id',
     :controller => 'documents', :action => 'remove_from_channel',
+    :conditions => {:method => :delete}
+
+  map.folder_document "folders/:folder_id/documents/:id", 
+    :controller=>"documents", :action=>"remove_from_folder", 
     :conditions => {:method => :delete}
 
   map.resources :role_requests, :controller => "role_requests"

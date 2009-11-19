@@ -1,5 +1,12 @@
 <% content_tag_for :li, folder do %>
   <%= link_to h(folder), folder %>
+
+  <%- if folder.documents.empty? -%>
+    <%= link_to 'Delete', folder_path(folder), :class => "destroy" %>
+  <% else %>
+    <%= link_to "Delete", folder_path(folder),:confirm => "This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?", :class => "destroy" %>
+  <%- end -%>
+  
   <%- unless folder.children.empty? -%>
     <ul>
       <%= render folder.children %>

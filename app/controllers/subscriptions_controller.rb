@@ -18,7 +18,7 @@ class SubscriptionsController < ApplicationController
       end
     end
 
-    flash[:notice] = "Additional #{params[:owner] ? 'owners' : 'users'} have been added to this channel"
+    flash[:notice] = "Additional #{params[:owner] ? 'owners' : 'users'} have been added to this share"
     redirect_to documents_path
   end
 
