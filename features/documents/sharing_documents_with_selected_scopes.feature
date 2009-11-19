@@ -65,7 +65,7 @@ Feature: Sharing documents with selected scopes
     And I press "Share"
     Then I should see "Successfully shared the document"
     And I should be on the Documents page
-  
+
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | John Smith shared a document with you |
