@@ -23,8 +23,23 @@ Given /^I have the document "([^\"]*)" in "([^\"]*)"$/ do |filename, foldername|
     foldername).documents.create! :user_id => @current_user.id, :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
 end
 
-Given 'I have a folder named "$name"' do |name|
+Given /^I have a folder named "([^\"]*)"$/ do |name|
   current_user.folders.find_or_create_by_name(name)
+end
+
+Given /^I have a folder named "([^\"]*)" within "([^\"]*)"$/ do |subname,name|
+  folder = current_user.folders.find_or_create_by_name(name)
+  subfolder = current_user.folders.find_or_create_by_name(subname)
+  subfolder.move_to_child_of(folder)
+end
+
+Given 'I have "$count" folders named "$name" with the following documents:' do |count, name, table|
+  (1..count.to_i).each do |num|
+    current_user.folders.find_or_create_by_name("#{name}#{num.to_s}")
+    table.raw.each do |row|
+      Given(%Q|I have the document "#{row[0]}" in "#{name}#{num.to_s}"|)
+    end
+  end
 end
 
 When "I fill out the document sharing form with:" do |table|
@@ -57,4 +72,10 @@ Then /^the file "([^\"]*)" and folder "([^\"]*)" do not exist$/ do |filename, fo
 end
 Then /^I should see "([^\"]*)" has require confirmation$/ do |arg1|
   response.should have_selector(".folder a[onclick*=\"This folder contains files which will be deleted\"]", :content => "Delete")
+end
+
+Then 'I should see "$count" folders named "$folder"' do |count, name|
+  (1..count.to_i).each do |num|
+    Then(%Q|I should see "#{name}#{num.to_s}"|)
+  end
 end
