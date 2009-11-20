@@ -13,4 +13,6 @@
 class Subscription < ActiveRecord::Base
   belongs_to :channel
   belongs_to :user
+  
+  named_scope :publishers, :conditions => {:owner => true}
 end

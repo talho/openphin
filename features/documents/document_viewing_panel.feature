@@ -22,6 +22,8 @@ Feature: Using the document viewing panel
     And I should not see "keith.jpg"
     And I should not see "sample.wav"
     And I should not see "PCAMessageAlert.xml"
+    And I should not see "(Default FactoryUser)"
+    And I should not see "(Default FactoryUser,Default FactoryUser)"
 
   Scenario: Viewing documents in inbox
     When I follow "Inbox"
@@ -75,9 +77,11 @@ Feature: Using the document viewing panel
     | Content Type  | text/xml             |
 
   Scenario: Viewing documents in shares
+    Given I have been added as owner to the share "Public Stuff"
     When I go to the document viewing panel
     When I follow "Public Stuff"
     Then I should see "sample.wav"
+    And I should see "(Default FactoryUser)"
     And I should not see "keith.jpg"
     And I should not see "PCAMessageAlert.xml"
     And I should not see "PCAAckExample.xml"
@@ -85,3 +89,16 @@ Feature: Using the document viewing panel
     Then I should receive the file:
     | Filename      | sample.wav  |
     | Content Type  | application/x-wav |
+
+  Scenario: Viewing owners of a share
+    Given I have been added as owner to the share "Public Stuff"
+    When I go to the document viewing panel
+    When I follow "Public Stuff"
+    Then I should see "(Default FactoryUser)"
+
+  Scenario: Viewing multiple owners of a share
+    Given I have been added as owner to the share "Public Stuff"
+    And I have been added as owner to the share "Public Stuff"
+    When I go to the document viewing panel
+    When I follow "Public Stuff"
+    Then I should see "(Default FactoryUser,Default FactoryUser)"

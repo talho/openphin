@@ -9,6 +9,7 @@
       <%- @shares.each do |c| -%>
         <li class="share">
             <%= link_to c.name,"#{documents_panel_path}?channel=#{c.id}" %>
+            <%= "(#{User.find(c.subscriptions.publishers).map(&:display_name).join(",")})" %>
         </li>
       <%- end -%>
     </li>
