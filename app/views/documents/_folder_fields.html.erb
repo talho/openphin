@@ -1,2 +1,2 @@
 <%= form.label :folder_id %>
-<%= form.select :folder_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" }, :include_blank => true %>
+<%= form.select :folder_id, nested_set_options(current_user.folders.roots) {|i| "#{'-' * i.level} #{i}" } %>

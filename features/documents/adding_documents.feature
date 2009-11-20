@@ -12,6 +12,7 @@ Feature: Adding documents to document sharing
     Given I have a folder named "Rockstars"
     When I go to the Documents page
     And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
+#    And I should not see " " in the "Folder" dropdown  # the webrat contain method strips all spaces and this step fails
     And I select " Rockstars" from "Folder"
     And I press "Upload"
     
