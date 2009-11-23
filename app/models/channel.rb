@@ -11,15 +11,19 @@
 class Channel < ActiveRecord::Base
   has_and_belongs_to_many :documents
   has_many :subscriptions
-  has_many :users, :through => :subscriptions
+  has_many :users, :through => :subscriptions do
+    def owners
+      scoped :conditions => {:subscriptions => {:owner => true}}
+    end
+  end
   has_many :targets, :as => :item, :after_add => :subscribe
   has_many :audiences, :through => :targets
   accepts_nested_attributes_for :audiences
-  
+
   def owners
-    users.scoped :conditions => {:subscriptions => {:owner => true}}
+    users.owners
   end
-  
+
   def to_s
     name
   end
