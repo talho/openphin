@@ -54,7 +54,7 @@ class Admin::GroupsController < ApplicationController
           format.xml  { render :xml => @group, :status => :created, :location => @group }
           flash[:notice] = "Successfully updated the group #{params[:group][:name]}."
         else
-          format.html { render :action => "new" }
+          format.html { render :action => "edit" }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
         end
       end
