@@ -14,7 +14,8 @@ class Rollcall::SchoolsController < ApplicationController
     else
       @school = schools.first
     end
-
+    redirect_to @school
+    
     if @school
       @district = @school.district
     end
