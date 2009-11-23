@@ -28,8 +28,9 @@ Then /^I should see an absenteeism graph with the following\:$/ do |table|
         when /^title$/
           json['title']['text'].should == value
         when /^range$/
-          json['y-axis']['min'].should == 0
-          json['y-axis']['max'].should == value.to_f
+          min, max = value.split(',').map(&:to_f)
+          json['y_axis']['min'].should == min
+          json['y_axis']['max'].should == max
       end
     end
   end

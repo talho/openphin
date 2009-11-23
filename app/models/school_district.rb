@@ -10,17 +10,21 @@
 #
 
 class SchoolDistrict < ActiveRecord::Base
-  belongs_to :jurisdiction
-  has_many :schools, :foreign_key => "district_id"
-  has_many :absentee_reports, :through => :schools
+  belongs_to  :jurisdiction
+  has_many    :schools, :foreign_key => "district_id"
+  has_many    :absentee_reports, :through => :schools
+  has_many    :daily_infos, :class_name => "SchoolDistrictDailyInfo", :foreign_key => "school_district_id", :order => "report_date asc"
 
   def average_absence_rate(date=nil)
     date=Date.today if date.nil?
-    absentees=absentee_reports.for_date(date).map do |report|
-      report.enrolled.blank? ? 0 : report.absent.to_f/report.enrolled.to_f
-    end
 
-    absentees.empty? ? 0 : (absentees.inject(&:+)/absentees.size).round(4)
+    di=daily_infos.for_date(date).first
+    di = update_daily_info(date) if di.nil?
+    di.absentee_rate 
+  end
+
+  def update_daily_info(date)
+    daily_infos.create(:report_date => date)
   end
 
   def recent_absentee_rates(days)

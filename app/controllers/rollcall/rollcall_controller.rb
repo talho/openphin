@@ -36,5 +36,56 @@ class Rollcall::RollcallController < ApplicationController
       flash[:notice] = "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
       render "about"
     end
+    @chart=open_flash_chart_object(600, 300, rollcall_summary_chart_path(params[:timespan]))
+
   end
+
+  ##data for summary chart on rollcall index
+  def summary_chart
+    timespan = params[:timespan].nil? ? 7 : params[:timespan].to_i
+
+    summary_chart=OpenFlashChart.new("Absenteeism Rates (Last #{timespan} days)")
+    summary_chart.bg_colour = "#FFFFFF"
+
+    lines=current_user.school_districts.map do |d|
+      line=LineHollow.new
+      line.text = d.name
+      line.values=d.recent_absentee_rates(timespan)
+      line
+    end
+    max=current_user.school_districts.map{|d| d.recent_absentee_rates(timespan).max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b} }.max
+    xa= XAxis.new
+    xa.labels=XAxisLabels.new(:labels => generate_time_labels(timespan), :rotate => 315, :visible_steps => 7, :size => 18)
+    xa.steps = 7
+    summary_chart.set_x_axis xa
+
+    summary_chart.y_axis = YAxis.new(
+        :steps => 2,
+        :min => 0,
+        :max => max
+    )
+
+    lines.each do |l|
+      summary_chart.add_element(l)
+    end
+    render :text => summary_chart.to_s, :layout => false
+  end
+
+  private
+  def generate_time_labels(timespan)
+    xlabels=[]
+    timespan.days.ago.to_date.upto Date.today do |date|
+      if date.day == 1
+        #label beginning of month
+        xlabels.push date.strftime("%B %e")
+      elsif date.wday == 1
+        #label beginning of week
+        xlabels.push date.strftime("%a (Week %W)")
+      else
+        xlabels.push timespan > 14 ? "" : date.strftime("%m/%d")
+      end
+    end
+    xlabels
+  end
+
 end
