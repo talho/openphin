@@ -178,9 +178,6 @@ Factory.define :target do |m|
   m.association :item, :factory => :alert
 end
 
-Factory.define :channel do |m|
-  m.sequence(:name){|t| "Channel ##{t}"}
-end
 
 Factory.define :document do |m|
   m.association :user

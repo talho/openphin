@@ -4,6 +4,10 @@ Given "a user named $name" do |name|
     Factory(:user, :first_name => first_name, :last_name => last_name)
 end
 
+Given 'a user with the email "$email"' do |email|
+  User.find_by_email(email) || Factory(:user, :email => email)
+end
+
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
   jurisdiction = Given("a jurisdiction named #{jurisdiction}")

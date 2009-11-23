@@ -22,9 +22,13 @@ class ChannelsController < ApplicationController
   end
   
   def unsubscribe
-    subscriptions = current_user.subscriptions
-    subscriptions.delete subscriptions.find_by_channel_id!(params[:id])
-    flash[:notice] = "Successfully unsubscribed from the share"
+    subscription = current_user.subscriptions.find_by_channel_id!(params[:id])
+    if subscription.channel.owners.count == 1 && !subscription.channel.owners.include?(current_user)
+      current_user.subscriptions.delete subscription
+      flash[:notice] = "Successfully unsubscribed from the share"
+    else
+      flash[:notice] = "You can not be removed as owner, since you are the only owner"
+    end
     redirect_to documents_path
   end
   

@@ -52,7 +52,7 @@ Feature: Creating document channels
   
   Scenario: Adding a document to a share
     Given I created the share "Channel 4"
-    And "Brandon Keepers" has been added to the share "Channel 4"
+    And "brandon.keepers@example.com" has been added to the share "Channel 4"
     And I have the document "sample.wav" in my inbox
     When I go to the Documents page
     And I follow "Share"
@@ -82,7 +82,7 @@ Feature: Creating document channels
  
   Scenario: Updating a document in a share
     Given I created the share "Vacation Photos"
-    And "Brandon Keepers" has been added to the share "Vacation Photos"
+    And "brandon.keepers@example.com" has been added to the share "Vacation Photos"
     And a document "keith.jpg" is in the share "Vacation Photos"
     When I go to the Documents page
     And I follow "Vacation Photos"
@@ -125,6 +125,8 @@ Feature: Creating document channels
     
   Scenario: Unsubscribing from a share
     Given I have been added to the share "Kitty Pictures"
+    And "brandon.keepers@example.com" has been added to the share "Kitty Pictures"
+    And I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
     And I follow "Kitty Pictures"
     And I press "Unsubscribe"
@@ -133,6 +135,17 @@ Feature: Creating document channels
     When I go to the Documents page
     Then I should not see "Kitty Pictures"
       
+    Scenario: Unsubscribing from a share while I am the only owner
+      Given I have been added as owner to the share "Kitty Pictures"
+      And "brandon.keepers@example.com" has been added to the share "Kitty Pictures"
+      When I go to the Documents page
+      And I follow "Kitty Pictures"
+      And I press "Unsubscribe"
+      Then I should see "You can not be removed as owner, since you are the only owner"
+
+      When I go to the Documents page
+      Then I should see "Kitty Pictures"
+
   Scenario: Removing document from share
     Given I created the share "Channel 4"
     And a document "keith.jpg" is in the share "Channel 4"
