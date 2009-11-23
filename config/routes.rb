@@ -15,6 +15,10 @@ map.delete_folder "folders/:id",
   map.channel_document 'channels/:channel_id/documents/:id',
     :controller => 'documents', :action => 'remove_from_channel',
     :conditions => {:method => :delete}
+    
+  map.show_destroy_channel 'channels/:id/show_destroy',
+    :controller => 'channels', :action => 'show_destroy',
+    :conditions => {:method => :get}
 
   map.folder_document "folders/:folder_id/documents/:id", 
     :controller=>"documents", :action=>"remove_from_folder", 

@@ -73,6 +73,9 @@ module NavigationHelpers
         about_rollcall_path
       when /the Documents page/i
         documents_path
+      when /the show destroy Share page for "(.*)"$/i
+        channel = Channel.find_by_name($1)
+        show_destroy_channel_path(channel)
       when /the document viewing panel/i
         documents_panel_path
     else

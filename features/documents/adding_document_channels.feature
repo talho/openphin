@@ -59,7 +59,6 @@ Feature: Creating document channels
     And I check "Channel 4"
     And I press "Share"
     Then I should see "Successfully shared the document"
-    And I should be on the Documents page
     And "brandon.keepers@example.com" should receive the email:
       | subject       | A document has been added to the share "Channel 4" |
       | body contains | To view this document |
@@ -148,8 +147,10 @@ Feature: Creating document channels
     Given I created the share "Avian Flus"
     When I go to the Documents page
     And I follow "Delete Share"
-    Then I should be on the Documents page
-    And I should not see "Avian Flus" 
-  
+    Then I should be on the show destroy Share page for "Avian Flus"
+    And I should see "Avian Flus"
+    And I should see "John Smith"
+    Then I press "Delete"
+    When I go to the Documents page 
+    Then I should not see "Avian Flus"
     
-  

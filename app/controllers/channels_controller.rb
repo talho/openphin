@@ -34,4 +34,8 @@ class ChannelsController < ApplicationController
     flash[:notice] = "Successfully deleted the share"
     redirect_to documents_path
   end
+  
+  def show_destroy
+    @channel = current_user.owned_channels.find(params[:id])
+  end
 end
