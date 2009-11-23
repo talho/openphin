@@ -50,11 +50,12 @@ ActionController::Routing::Routes.draw do |map|
 
   #Rollcall routes, to be moved into plugin
   map.rollcall "/rollcall", :controller => "rollcall/rollcall"
+  map.rollcall_summary_chart '/rollcall/chart/:timespan',:controller => "rollcall/rollcall", :action => 'summary_chart', :timespan => 7
   map.about_rollcall "/rollcall/about", :controller => "rollcall/rollcall", :action => "about"
-  map.rollcall_summary_chart "/rollcall/chart", :controller => "rollcall/rollcall", :action => "summary_chart"
   map.resources :schools, :controller => "rollcall/schools" do |school|
     school.chart '/chart/:timespan', :controller => "rollcall/schools", :action => "chart", :timespan => 7
   end
+  map.resources :school_districts, :member => {:school => :post}, :controller =>"rollcall/school_districts"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

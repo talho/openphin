@@ -83,7 +83,7 @@ Scenario: Seeing the average absenteeism graph(s)
   Then I should see an absenteeism graph with the following:
     | data        | nil,nil,8.0,5.33,6.83,4.83,2.67 |
     | data-label  | Houston ISD                  |
-    | title       | Average % Absenteeism        |
+    | title       | Absenteeism Rates (Last 7 days) |
     | range       | 0,8.0                         |
 
 Scenario: Seeing the abseentism alert summary
