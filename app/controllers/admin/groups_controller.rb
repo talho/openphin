@@ -43,6 +43,9 @@ class Admin::GroupsController < ApplicationController
       flash[:error] = "This resource does not exist or is not available."
       redirect_to admin_groups_path
     else
+      params[:group]["jurisdiction_ids"] = [] if params[:group]["jurisdiction_ids"].blank?
+      params[:group]["role_ids"] = [] if params[:group]["role_ids"].blank?
+      params[:group]["user_ids"] = [] if params[:group]["user_ids"].blank?
       @group.update_attributes(params[:group])
 
       respond_to do |format|
@@ -51,7 +54,7 @@ class Admin::GroupsController < ApplicationController
           format.xml  { render :xml => @group, :status => :created, :location => @group }
           flash[:notice] = "Successfully updated the group #{params[:group][:name]}."
         else
-          format.html { render :action => "new" }
+          format.html { render :action => "edit" }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
         end
       end
