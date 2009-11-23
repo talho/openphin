@@ -67,6 +67,7 @@ map.delete_folder "folders/:id",
   #Rollcall routes, to be moved into plugin
   map.rollcall "/rollcall", :controller => "rollcall/rollcall"
   map.about_rollcall "/rollcall/about", :controller => "rollcall/rollcall", :action => "about"
+  map.rollcall_summary_chart "/rollcall/chart", :controller => "rollcall/rollcall", :action => "summary_chart"
   map.resources :schools, :controller => "rollcall/schools" do |school|
     school.chart '/chart/:timespan', :controller => "rollcall/schools", :action => "chart", :timespan => 7
   end
