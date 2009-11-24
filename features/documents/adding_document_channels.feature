@@ -124,7 +124,7 @@ Feature: Creating document channels
     Then I should see "Avian Flus"
     
   Scenario: Unsubscribing from a share
-    Given I have been added to the share "Kitty Pictures"
+    Given I have been added as owner to the share "Kitty Pictures"
     And "brandon.keepers@example.com" has been added to the share "Kitty Pictures"
     And I am logged in as "brandon.keepers@example.com"
     When I go to the Documents page
