@@ -4,6 +4,21 @@ Feature: Viewing recent alerts on dashboard
   As a user
   I want see alerts sent to me on the dashboard
   
+  Scenario: User should see the example alert if no alerts exist
+    Given the following users exist:
+      | Martin Fowler      | martin@example.com   | Public | Dallas County |
+    And I am logged in as "martin@example.com"
+
+    When I go to the han page
+    Then I should see an alert with the summary:
+      | title       | Example Health Alert - please click More to see the alert contents |
+      | severity    | Minor |
+      | status      | Test  |
+    And I should see an alert with the detail:
+      | message     | This is an example of a health alert. |
+      | acknowledge | No      |
+      | sensitive   | No      |
+
   Scenario: User should see the 20 most recent alerts sent to them
     Given the following users exist:
       | Martin Fowler      | martin@example.com   | Public | Dallas County |

@@ -7,7 +7,8 @@
 <fieldset class="filterable list roles">
   <legend>Limit Roles</legend>
   <ul class="check_selector">
-    <%- Role.user_roles.each do |r| -%>
+    <%- roles = (current_user.is_admin? ? Role.all : Role.user_roles) -%>
+    <%- roles.each do |r| -%>
       <li>
         <%- id = [form.object_name.parameterize('_'), dom_id(r)].join('_') -%>
         <%= check_box_tag "#{form.object_name}[role_ids][]", r.id,
