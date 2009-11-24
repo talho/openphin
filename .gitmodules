@@ -43,3 +43,6 @@
 [submodule "vendor/plugins/googlecharts"]
 	path = vendor/plugins/googlecharts
 	url = git@github.com:talho/googlecharts.git
+[submodule "vendor/plugins/csv_builder"]
+	path = vendor/plugins/csv_builder
+	url = git://github.com/econsultancy/csv_builder.git
