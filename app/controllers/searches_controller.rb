@@ -4,7 +4,7 @@ class SearchesController < ApplicationController
   def show  
     if !params[:tag].blank?
       search_size = 300
-      @results = User.search("*" + params[:tag].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any, :per_page => search_size)
+      @results = User.search("*" + params[:tag].split(/\s/).map{|x| x+'*'}.join(' '), :match_mode => :any, :per_page => search_size, :retry_stale => true)
     end
     
     respond_to do |format|
