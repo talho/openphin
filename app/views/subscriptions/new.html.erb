@@ -1,10 +1,12 @@
 <% form_for @channel, :url => channel_subscriptions_path, :html => {:method => :post} do |form| %>  
   <div id="audience">
-    <% fields_for Audience.new do |audience| %>
-      <% unless audience.object.is_a?(Group) %>
-        <%= render 'audiences/fields', :form => audience, :group_form => form %>
+    <div id="edit">
+      <% fields_for Audience.new do |audience| %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => form %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
   
   <p>
