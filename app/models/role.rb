@@ -19,7 +19,8 @@ class Role < ActiveRecord::Base
   has_many :users, :through => :role_memberships
 
   named_scope :alerters, :conditions => {:alerter => true}
-  default_scope :order => "user_role, name ASC" 
+  named_scope :alphabetical, :order => 'name'
+  default_scope :order => "user_role, name ASC"
   Defaults = {
     :admin => 'Admin',
     :org_admin => 'OrgAdmin',
@@ -27,11 +28,11 @@ class Role < ActiveRecord::Base
     :public => 'Public',
     :han_coordinator => 'Health Alert and Communications Coordinator'
   }
-  
+
   def self.admin
     find_or_create_by_name_and_approval_required_and_user_role Defaults[:admin],true,false
   end
-  
+
   def self.org_admin
     find_or_create_by_name_and_approval_required_and_user_role Defaults[:org_admin],true,false
   end
@@ -39,7 +40,7 @@ class Role < ActiveRecord::Base
   def self.superadmin
     find_or_create_by_name_and_approval_required_and_user_role Defaults[:superadmin],true,false
   end
-  
+
   def self.public
     find_or_create_by_name Defaults[:public]
   end
@@ -50,7 +51,7 @@ class Role < ActiveRecord::Base
 
   named_scope :user_roles, :conditions => { :user_role => true }
   named_scope :approval_roles, :conditions => { :approval_required => true }
-  
+
   validates_uniqueness_of :name
 
   def is_public?
@@ -59,7 +60,7 @@ class Role < ActiveRecord::Base
     end
     false
   end
-  
+
   def self.is_public?(role)
     if(role.name == Defaults[:public])
       return true
@@ -70,5 +71,9 @@ class Role < ActiveRecord::Base
   def display_name
     return "System:#{name}" unless user_role?
     name
+  end
+
+  def to_s
+    display_name
   end
 end

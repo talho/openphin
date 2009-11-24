@@ -7,24 +7,29 @@ class AlertsController < ApplicationController
   protect_from_forgery :except => [:upload, :playback]
 
   app_toolbar "han"
-  
+
   def index
     @alerts = present_collection current_user.viewable_alerts
   end
-  
+
   def show
     @alert = present Alert.find(params[:id])
     respond_to do |format|
       format.html
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
+      format.csv do
+        alerter_required
+        @filename = "alert-#{@alert.to_param}.csv"
+        @output_encoding = 'UTF-8'
+      end
     end
 
   end
-  
+
   def new
     @alert = present Alert.new_with_defaults
   end
-  
+
   def create
     @alert = present current_user.alerts.build(params[:alert])
     if params[:send]
@@ -47,7 +52,7 @@ class AlertsController < ApplicationController
       render :new
     end
   end
-  
+
   def edit
     alert = current_user.alerts.find params[:id]
     # TODO : Remove when devices refactored
@@ -64,7 +69,7 @@ class AlertsController < ApplicationController
     @update = true if params[:_action].downcase == "update"
     @cancel = true if params[:_action].downcase == "cancel"
   end
-  
+
   def update
     original_alert = current_user.alerts.find params[:id]
     # TODO : Remove when devices refactored
@@ -78,7 +83,7 @@ class AlertsController < ApplicationController
       redirect_to alerts_path
       return
     end
-    
+
     @alert = if params[:_action].downcase == 'cancel'
       @cancel = true
       original_alert.build_cancellation(params[:alert])
@@ -106,11 +111,11 @@ class AlertsController < ApplicationController
       render :edit
     end
   end
-  
+
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
     if alert_attempt.nil? || alert_attempt.acknowledged?
-      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
       If you believe this is in error, please contact support@#{DOMAIN}."
     else
       if params[:email].blank?
@@ -126,7 +131,7 @@ class AlertsController < ApplicationController
   def token_acknowledge
     alert_attempt = AlertAttempt.find_by_alert_id_and_token(params[:id], params[:token])
     if alert_attempt.nil? || alert_attempt.acknowledged?
-      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.  
+      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
       If you believe this is in error, please contact support@#{DOMAIN}."
     else
       if alert_attempt.alert.sensitive?
@@ -138,7 +143,7 @@ class AlertsController < ApplicationController
     end
     redirect_to dashboard_path
   end
-  
+
   def upload
     # Takes uploaded file info from JavaSonicRecorderUploader, copies to permanent location, and returns SUCCESS or ERROR
     user = User.find_by_token(params[:token]) if !params[:token].blank?
@@ -161,7 +166,7 @@ class AlertsController < ApplicationController
     end
     render :upload_success, :layout => false
   end
-  
+
   def playback
     filename = "#{RAILS_ROOT}/message_recordings/tmp/#{params[:token]}.wav"
     if File.exists?(filename)
@@ -170,14 +175,14 @@ class AlertsController < ApplicationController
     response.headers["Content-Type"] = 'audio/x-wav'
     render :play, :layout => false
   end
-  
+
 private
-  
+
   def alerter_required
     unless current_user.alerter?
       flash[:error] = "You do not have permission to send an alert."
       redirect_to root_path
     end
   end
-  
+
 end

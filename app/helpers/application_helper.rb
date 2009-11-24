@@ -11,14 +11,18 @@ module ApplicationHelper
   def d(str, options=nil)
     content_tag :div, str, options
   end
-  
+
+  def yn(value)
+    value ? 'Yes' : 'No'
+  end
+
   def tagged_form_for(name, *args, &block)
     options = args.last.is_a?(Hash) ? args.pop : {}
     options = options.merge(:builder => TaggedBuilder)
     args = (args << options)
     form_for(name, *args, &block)
   end
-  
+
 =begin
     output the portal toolbar in the following format:
       <h1><%= link_to 'TXPhin', root_path %></h1>
@@ -42,10 +46,10 @@ module ApplicationHelper
   def application_toolbar
     render :partial => @controller.toolbar
   end
-  
+
   def tab_me(paths)
-    paths = [paths] unless paths.class.name == "Array" 
-    
+    paths = [paths] unless paths.class.name == "Array"
+
     paths.each do |path|
       case path.class.name
       when "Hash"

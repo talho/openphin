@@ -24,8 +24,8 @@
 #
 
 class Jurisdiction < ActiveRecord::Base
-  acts_as_nested_set                                                    
-  
+  acts_as_nested_set
+
   has_and_belongs_to_many :organizations
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
@@ -46,9 +46,10 @@ class Jurisdiction < ActiveRecord::Base
   named_scope :parents, :conditions => "rgt - lft > 1", :order => :name
   named_scope :foreign, :conditions => { :foreign => true }
   named_scope :nonforeign, :conditions => { :foreign => false }, :order => :name
+  named_scope :alphabetical, :order => 'name'
 
   validates_uniqueness_of :fips_code, :allow_nil => true, :allow_blank => true
-  
+
   def admins
     users.with_role(Role.admin)
   end
@@ -56,7 +57,7 @@ class Jurisdiction < ActiveRecord::Base
   def super_admins
     users.with_role(Role.superadmin)
   end
-  
+
   def han_coordinators
     users.with_role(Role.han_coordinator)
   end
@@ -72,7 +73,7 @@ class Jurisdiction < ActiveRecord::Base
   def self.non_foreign_state_before_descendants
     Jurisdiction.state.nonforeign | Jurisdiction.state.nonforeign.map{|jurisdiction| jurisdiction.descendants}.flatten.sort_by{|jurisdiction| jurisdiction.name}
   end
-  
+
   def to_s
     name
   end
