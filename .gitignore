@@ -41,3 +41,5 @@ spec/fixtures/*.yml
 files
 db/development_structure.sql
 config/testjour.yml
+config/growl.yml
+config/bullet.yml

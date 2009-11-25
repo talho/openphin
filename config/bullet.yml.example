@@ -1,0 +1,29 @@
+development:
+  enable: true
+  alert_enable: false
+  logger_enable: true
+  console_enable: true
+  growl_enable: true
+  rails_logger_enable: true
+  disable_browser_cache_enable: true
+
+test: &TEST
+  enable: true
+  alert_enable: false
+  logger_enable: true
+  console_enable: true
+  growl_enable: true
+  rails_logger_enable: true
+  disable_browser_cache_enable: true
+
+production:
+  enable: false
+  alert_enable: false
+  logger_enable: false
+  console_enable: false
+  growl_enable: false
+  rails_logger_enable: false
+  disable_browser_cache_enable: false
+
+cucumber:
+  <<: *TEST
