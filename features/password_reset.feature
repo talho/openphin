@@ -30,4 +30,20 @@ Feature: Password reset
       Then I should be signed out
       And I sign in as "email@person.com/Newpassword1"
       Then I should be signed in
+      
+    Scenario: User responses to reset password email
+      Given I signed up with "email@person.com/Password1"
+      Given I try to change the password of "email@person.com" without token
+      Then I should see " The token from your link is missing"
 
+    Scenario: User responses to password reset by linking to edit action without a token
+      Given I signed up with "email@person.com/Password1"
+      And I try to change the password of "email@person.com" without token      
+      Then I should see "The token from your link is missing"
+      And I should see "PHIN stands for Public Health Information Network"
+
+    Scenario: User responses to password reset by linking to edit action with a incorrect token
+      Given I signed up with "email@person.com/Password1"
+      And I follow the password reset link with a damaged token sent to "email@person.com"      
+      Then I should see "The token from your link is incorrect"
+      And I should see "PHIN stands for Public Health Information Network"

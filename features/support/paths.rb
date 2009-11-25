@@ -12,6 +12,10 @@ module NavigationHelpers
         new_session_path
       when /the password reset request page/i
         new_password_path
+      when /the password edit page/i
+        edit_user_password_path(current_user,"4d4d3c3c")
+      when /the password edit page without a token/i
+        edit_user_password_path(current_user,"")
       when /the request a role page/i
         new_role_request_path
       when /the pending requests page/i
