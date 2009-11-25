@@ -1,10 +1,8 @@
 class AlterDeltaOnUsers < ActiveRecord::Migration
   def self.up
     change_column :users, :delta, :boolean, :null => false, :default => true
-    User.all.each do |user|
-      user.delta = true
-      user.save
-    end
+    sql = ActiveRecord::Base.connection();
+    sql.execute "UPDATE users SET delta=true"
   end
 
   def self.down
