@@ -87,13 +87,20 @@ class UserProfilesController < ApplicationController
       @device.user = @user
     end
 
-    params[:user][:role_requests_attributes].each do |index, role_requests|
-      if (role_requests[:role_id].blank? && role_requests[:jurisdiction_id].blank?) ||
-          (RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_requests['role_id'], role_requests['jurisdiction_id']) &&
-              params[:user_id] == current_user.id)
+    params[:user][:role_requests_attributes].each do |index, role_request|
+      if role_request[:role_id].blank? && role_request[:jurisdiction_id].blank?
         params[:user][:role_requests_attributes].delete(index)
-      else
-        role_requests[:requester_id] = current_user.id 
+        next
+      end
+      jurisdiction = Jurisdiction.find(role_request[:jurisdiction_id])
+      if jurisdiction && current_user.is_admin_for?(jurisdiction)
+        existing_request = RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_request['role_id'], role_request['jurisdiction_id'])
+        if existing_request
+          existing_request.destroy
+        end
+      end
+      unless params[:user_id] == current_user.id
+        role_request[:requester_id] = current_user.id 
       end
     end
 
