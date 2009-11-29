@@ -9,9 +9,18 @@ module RollcallHelper
 
     school_absentee_points = []
     xlabels=[]
+    y_max = 0
     timespan.days.ago.to_date.upto Date.today do |date|
       report=@school.absentee_reports.for_date(date).first
-      school_absentee_points.push report.nil? ? nil : report.absentee_percentage
+      if report.nil?
+        school_absentee_points.push nil
+      else
+        y_max = report.absentee_percentage if report.absentee_percentage > y_max
+        data_point_label = "#{report.report_date.strftime("%x")}
+Absent: #{report.absent}
+Enrolled: #{report.enrolled}"
+        school_absentee_points.push(OpenFlashChart::DotValue.new(report.absentee_percentage, nil, :tip => data_point_label))
+      end
       if date.day == 1
         xlabels.push date.strftime("%B %e")
       elsif date.wday == 1
@@ -19,13 +28,11 @@ module RollcallHelper
       else
         xlabels.push timespan > 14 ? "" : date.strftime("%m/%d")
       end
-#      xlabels.push date.wday == 1 ? date.strftime("%m/%d") : ""
     end
 
     school_line = OpenFlashChart::LineHollow.new
     school_line.text=@school.name
     school_line.values=school_absentee_points
-    school_line.tooltip = "<b>#val# %</b> Absent"
 
     xa= OpenFlashChart::XAxis.new
     xa.labels=OpenFlashChart::XAxisLabels.new(:labels => xlabels, :rotate => 315, :visible_steps => 7, :size => 18)
@@ -39,7 +46,7 @@ module RollcallHelper
     school_chart.y_axis = OpenFlashChart::YAxis.new(
         :steps => 2,
         :min => 0,
-        :max => school_absentee_points.max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b}
+        :max => y_max
     )
 
     school_chart.add_element(school_line)

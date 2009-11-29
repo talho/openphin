@@ -40,6 +40,8 @@ class Rollcall::RollcallController < ApplicationController
 
   end
 
+
+
   ##data for summary chart on rollcall index
   def summary_chart
     timespan = params[:timespan].nil? ? 7 : params[:timespan].to_i
@@ -50,7 +52,7 @@ class Rollcall::RollcallController < ApplicationController
     lines=current_user.school_districts.map do |d|
       line=LineHollow.new
       line.text = d.name
-      line.values=d.recent_absentee_rates(timespan)
+      line.values = recent_data(d, timespan)
       line
     end
     max=current_user.school_districts.map{|d| d.recent_absentee_rates(timespan).max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b} }.max
@@ -72,6 +74,13 @@ class Rollcall::RollcallController < ApplicationController
   end
 
   private
+  def recent_data(district, timespan)
+    data = []
+    timespan.days.ago.to_date.upto Date.today do |date|
+      data.push DotValue.new(district.average_absence_rate(date), nil, :tip => "#{date.strftime("%x")}\n#val#%")
+    end
+    data
+  end
   def generate_time_labels(timespan)
     xlabels=[]
     timespan.days.ago.to_date.upto Date.today do |date|
