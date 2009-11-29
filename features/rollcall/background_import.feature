@@ -41,7 +41,7 @@ Feature: Importing automated data
     And the rollcall background worker processes
     And I load the rollcall school page for "LEWIS ES"
     Then I should see an absenteeism graph with the following:
-    | data        | nil,nil,nil,12.0,1.0,3.0,2.0,10.0 |
+    | data        | nil,nil,12.0,1.0,3.0,2.0,10.0     |
     | data-label  | LEWIS ES                          |
     | title       | Absenteeism Rates (Last 7 days)   |
 
