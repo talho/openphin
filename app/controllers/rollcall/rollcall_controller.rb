@@ -76,7 +76,7 @@ class Rollcall::RollcallController < ApplicationController
   private
   def recent_data(district, timespan)
     data = []
-    timespan.days.ago.to_date.upto Date.today do |date|
+    (timespan-1).days.ago.to_date.upto Date.today do |date|
       data.push DotValue.new(district.average_absence_rate(date), nil, :tip => "#{date.strftime("%x")}\n#val#%")
     end
     data

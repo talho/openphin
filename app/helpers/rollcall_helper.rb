@@ -10,7 +10,7 @@ module RollcallHelper
     school_absentee_points = []
     xlabels=[]
     y_max = 0
-    timespan.days.ago.to_date.upto Date.today do |date|
+    (timespan-1).days.ago.to_date.upto Date.today do |date|
       report=@school.absentee_reports.for_date(date).first
       if report.nil?
         school_absentee_points.push nil

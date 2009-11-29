@@ -76,10 +76,10 @@ Feature: School
     Then I should see school data for "BERRY ES"
     And I should see an absenteeism graph with the following:
       | data-label  | Berry Elementary                 |
-      | data        | nil,nil,nil,5.0,5.0,2.5,7.5,5.0  |
+      | data        | nil,nil,5.0,5.0,2.5,7.5,5.0  |
     And I select "LEWIS ES" from "School"
     And I press "Choose"
     And I should see an absenteeism graph with the following:
       | data-label | Lewis Elementary                 |
-      | data       | nil,nil,nil,12.0,1.0,3.0,2.0,1.0 |
+      | data       | nil,nil,12.0,1.0,3.0,2.0,1.0 |
 

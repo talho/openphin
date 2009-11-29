@@ -37,17 +37,21 @@ class SchoolDistrictDailyInfo < ActiveRecord::Base
   before_create :update_stats
   validates_presence_of :school_district
   validates_presence_of :report_date
-  
+
   named_scope :for_date, lambda{|date| {
       :conditions => ["report_date = ?", date]
   }}
 
   def update_stats
-    write_attribute :total_enrollment, school_district.absentee_reports.for_date(report_date).sum(:enrolled)
-    write_attribute :total_absent, school_district.absentee_reports.for_date(report_date).sum(:absent)
-    rate = school_district.absentee_reports.average("absent/enrolled",
-        :conditions => ["report_date = ?", report_date]
-       )
-    write_attribute :absentee_rate , rate.nil? || report_date.cwday < 6 ? nil : rate.round(4)*100
+    total_enrolled=school_district.absentee_reports.for_date(report_date).sum(:enrolled)
+    if total_enrolled > 0
+      write_attribute :total_enrollment,total_enrolled
+      write_attribute :total_absent, school_district.absentee_reports.for_date(report_date).sum(:absent) 
+      rate = school_district.absentee_reports.average("absent/enrolled",
+                                                      :conditions => ["report_date = ?", report_date]
+      )
+      write_attribute :absentee_rate, rate.nil? || rate == 0  ? nil : rate.round(4)*100
+    end
+
   end
 end
