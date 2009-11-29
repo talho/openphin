@@ -48,6 +48,6 @@ class SchoolDistrictDailyInfo < ActiveRecord::Base
     rate = school_district.absentee_reports.average("absent/enrolled",
         :conditions => ["report_date = ?", report_date]
        )
-    write_attribute :absentee_rate , rate.nil? ? nil : rate.round(4)*100
+    write_attribute :absentee_rate , rate.nil? || report_date.cwday < 6 ? nil : rate.round(4)*100
   end
 end
