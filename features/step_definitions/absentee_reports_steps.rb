@@ -21,7 +21,6 @@ Then /^I should see an absenteeism graph with the following\:$/ do |table|
       property, value=row
       case property
         when /^data$/
-          debugger
           data_values = value.split(",").map{|v| v=="nil" ? nil : v.to_f}
           json['elements'].detect{|elm| elm["values"].map{|e| e.is_a?(Hash) ? e['value'] : e} == data_values }.should_not be_nil
         when /^data-label$/
