@@ -22,7 +22,6 @@ file = RAILS_ROOT + "/config/rack-bug.yml"
 rackbug_config=HashWithIndifferentAccess.new
 if File.exists?(file)
   rackbug_config.merge! YAML.load(IO.read(file))
-  puts rackbug_config["ip_masks"]
 end
 config.middleware.use("Rack::Bug",
                       :ip_masks => (rackbug_config["ip_masks"].blank? ? [IPAddr.new("127.0.0.1"), IPAddr.new("10.0.0.0/8"), IPAddr.new("172.16.0.0/12"), IPAddr.new("192.168.0.0/16")] : rackbug_config["ip_masks"].split(',').map {|ip| IPAddr.new(ip)}),
