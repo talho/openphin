@@ -12,6 +12,7 @@
               <%= link_to 'View', alert %>
               <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
               <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>
+              <%= link_to 'Export', formatted_alert_path(alert, :csv) if current_user.alerter? %>
             </span>
           </p>
           <p class="meta">
@@ -25,16 +26,16 @@
 			<%- if alert.acknowledge? -%>
             <span class="progress"><strong>Acknowledgments:</strong> <%= alert.acknowledged_percent.round %>%</span>
 			<%- end -%>
-		  </p> 
+		  </p>
         </div>
 	    <div class="extended preview">
 	  	  <div class="details">
             <p class="brief alertid"><strong>Alert ID:</strong> <%=h alert.identifier %></p>
-            
+
             <p class="brief"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
-              
+
 	  	    <p class="brief"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
-            
+
             <%- if !alert.original_alert_id.blank? -%>
             <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert.identifier %></p>
             <%- end -%>
@@ -55,7 +56,7 @@
               <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
             <% end %>
 			</div>
-            
+
             <h3>Acknowledgments (by device)</h3>
 			<div class="dev_ackpct">
             <% alert.alert_device_types.each do |d| %>

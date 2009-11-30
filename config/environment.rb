@@ -75,6 +75,8 @@ Rails::Initializer.run do |config|
     :source => 'http://gems.github.com',
     :version => '0.1.15'
   config.gem 'validatable', :version => '1.6.7'
+  config.gem 'bullet', :source => 'http://gemcutter.org'
+  config.gem 'ruby-growl', :source => 'http://gemcutter.org'
 end
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')

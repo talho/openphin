@@ -234,6 +234,12 @@ class Alert < ActiveRecord::Base
     end
   end
 
+  def self.default_alert
+    title = "Example Health Alert - please click More to see the alert contents"
+    message = "This is an example of a health alert.  You can see the title above and this is the alert body.\n\nThe status lets you know if this is an actual alert or just a test alert.  The severity lets you know the level of severity from Minor to Extreme severity.  The sensitive indicator lets you know if the alert is of a sensitive nature.\n\nYou can also see if the alert requires acknowledgment.  If the alert does require acknowlegment, an acknowledge button will appear so you can acknowledge the alert."
+    Alert.new(:title => title, :message => message, :severity => "Minor", :created_at => Time.zone.now, :status => "Test", :acknowledge => false, :sensitive => false)
+  end
+
   def set_jurisdictional_level
     if !Jurisdiction.find_by_name(sender).nil?
       jurs = Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', audiences.map(&:jurisdiction_ids).flatten.uniq])

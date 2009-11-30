@@ -10,8 +10,6 @@
     <% end %>
   </div>
   <div class='rollcall_graph'>
-    <% cache(:key => ["school_chart", @school.id, params[:timespan]]) do %>
-      <%= image_tag create_school_chart(@school, params[:timespan]) %>
-    <% end %>
+    <%= @chart %>
   </div>
 </div>

@@ -12,6 +12,8 @@ class DashboardController < ApplicationController
 
   def hud
     DashboardController.app_toolbar "han"
+
+    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts : [Alert.default_alert])
   end
   
 	def faqs

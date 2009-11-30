@@ -1,6 +1,6 @@
 Given /^the sphinx daemon is running$/ do
   begin
-    output = `ps -ef --width=300 | grep searchd | grep cucumber`
+    output = `COLUMNS=300 ps aux | grep searchd | grep cucumber`
   end while output.blank?
   output.should_not be_blank
 end

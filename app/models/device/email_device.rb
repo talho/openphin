@@ -19,10 +19,13 @@ class Device::EmailDevice < Device
   
   validates_presence_of     :email_address
   validates_format_of       :email_address, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
-#  validates_format_of       :email_address, :with => %r{.+@.+\..+}
 
   def self.display_name
     'E-mail'
+  end
+  
+  def to_s
+    super + ": #{email_address}"
   end
   
   def deliver(alert)

@@ -14,20 +14,24 @@
 #
 
 class Device::SMSDevice < Device
-  
+
   option_accessor :sms
   validates_format_of :sms, :with => /^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/
 
   before_validation :strip_extra_characters
-  
+
   def self.display_name
     'SMS'
   end
-  
+
+  def to_s
+    super + ": #{sms}"
+  end
+
   def deliver(alert)
     Service::SMS.deliver_alert(alert, user)
   end
-  
+
   def self.batch_deliver(alert)
     Service::SMS.batch_deliver_alert(alert)
   end

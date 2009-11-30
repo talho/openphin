@@ -43,6 +43,18 @@
 [submodule "vendor/plugins/googlecharts"]
 	path = vendor/plugins/googlecharts
 	url = git@github.com:talho/googlecharts.git
+[submodule "vendor/plugins/rails_indexes"]
+	path = vendor/plugins/rails_indexes
+	url = git://github.com/eladmeidar/rails_indexes.git
+[submodule "vendor/plugins/rack-bug"]
+	path = vendor/plugins/rack-bug
+	url = git://github.com/brynary/rack-bug.git
+[submodule "vendor/plugins/open_flash_chart"]
+	path = vendor/plugins/open_flash_chart
+	url = git://github.com/pullmonkey/open_flash_chart.git
+[submodule "vendor/plugins/serial"]
+	path = vendor/plugins/serial
+	url = git://github.com/karmajunkie/serial.git
 [submodule "vendor/plugins/csv_builder"]
 	path = vendor/plugins/csv_builder
 	url = git://github.com/econsultancy/csv_builder.git

@@ -73,6 +73,7 @@ Feature: Assigning roles to users for roles
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
+    And the sphinx daemon is running
     When I go to the dashboard page
     And I follow "Find People"
     When delayed jobs are processed
@@ -94,6 +95,7 @@ Feature: Assigning roles to users for roles
 	  
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile when a role request already exists
     Given I am logged in as "admin@state.tx.us"
+    And the sphinx daemon is running
     And "john@example.com" has requested to be a "Epidemiologist" for "Dallas County"
     And all email has been delivered
     When I go to the dashboard page

@@ -1,9 +1,9 @@
 <h2 class="title"><%=h @alert.title %></h2>
 <div class="details">
   <%=simple_format h(@alert.message), :class => 'message' %>
-  
+
   <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
-  
+
   <% @alert.audiences.each do |audience| %>
     <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h audience.jurisdictions.blank? ? 'None' : audience.jurisdictions.map(&:name).to_sentence %></p>
 
@@ -21,10 +21,10 @@
   <p class="status"><%=h @alert.status %></p>
 
   <h5>Acknowledge</h5>
-  <p class="acknowledge"><%=h @alert.acknowledge? ? 'Yes' : 'No' %></p>
+  <p class="acknowledge"><%=h yn(@alert.acknowledge?) %></p>
 
   <h5>Sensitive</h5>
-  <p class="sensitive"><%=h @alert.sensitive? ? 'Yes' : 'No' %></p>
+  <p class="sensitive"><%=h yn(@alert.sensitive?) %></p>
 
   <h5>Delivery Time</h5>
   <p class="delivery_time"><%=h @alert.human_delivery_time %></p>

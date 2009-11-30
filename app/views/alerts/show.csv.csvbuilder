@@ -1,0 +1,39 @@
+csv << [
+    'Alert date', @alert.sent_at.strftime('%m/%d/%y %H:%I'), '',
+    'Severity', @alert.severity]
+csv << [
+    'Title', @alert.title, '',
+    'Status', @alert.status]
+csv << [
+    'Sender', @alert.author.display_name, '',
+    'ACK Required', yn(@alert.status)]
+csv << [
+    'Sending Jurisdiction', @alert.from_jurisdiction]
+
+csv << ['']
+
+csv << ['Body', @alert.message]
+csv << ['Short body', @alert.short_message]
+
+csv << ['']
+csv << ['Audience']
+
+csv << ['Jurisdictions', @alert.audiences.map{|a| a.jurisdictions.alphabetical }].flatten
+csv << ['Roles', @alert.audiences.map{|a| a.roles.alphabetical }].flatten
+csv << ['Users', @alert.audiences.map{|a| a.users.alphabetical.map(&:display_name) }].flatten
+
+
+csv << ['']
+csv << ['Contacted Users']
+csv << ['Name', 'Email', 'Devices', 'Acknowledged Alert']
+
+@alert.alert_attempts.each do |alert_attempt|
+  row = []
+  row << alert_attempt.user.display_name
+  row << alert_attempt.user.email
+  row << alert_attempt.devices.map(&:to_s).join(', ')
+  row << alert_attempt.acknowledged_alert_device_type
+  csv << row
+end
+
+

@@ -1,0 +1,3 @@
+:ip_masks: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+:pasword: secret
+:secret_key: epT5uCIchlsHCeR9dloOeAPG66PtHd9K8l0q9avitiaA/KUrY7DE52hD4yWY+8z1

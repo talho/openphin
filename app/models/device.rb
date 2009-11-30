@@ -16,14 +16,14 @@
 class Device < ActiveRecord::Base
   has_many :deliveries
   belongs_to :user
-  
+
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
   named_scope :sms, :conditions => "type = 'Device::SMSDevice'"
   named_scope :fax, :conditions => "type = 'Device::FaxDevice'"
   named_scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
   named_scope :im, :conditions => "type = 'Device::IMDevice'"
-  
+
   serialize :options, Hash
 
   Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice] #, Device::IMDevice]
@@ -32,6 +32,14 @@ class Device < ActiveRecord::Base
 
   def parent
     :user
+  end
+
+  def self.display_name
+    'Device'
+  end
+
+  def to_s
+    self.class.display_name
   end
 
   def to_dsml(builder=nil)
@@ -70,7 +78,7 @@ class Device < ActiveRecord::Base
       devices = Device.find_all_by_user_id_and_type(user_id, type)
       devices = Device.find(:all, :conditions => ['id != ? AND user_id = ? AND type = ?', id, user_id, type]) if(!id.nil? && devices.map(&:id).include?(id))
       errors.add_to_base("Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
-    end  
+    end
   end
 end
 

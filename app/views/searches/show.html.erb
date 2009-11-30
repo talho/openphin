@@ -1,8 +1,19 @@
 <div id="search-results">
   <%= render :partial => "search" %>
+  <table>
+    <tr>
+      <%- unless @result.blank? -%>
+        <td>Name</td><td>Email</td><td>Role Assignments</td>
+      <%- end -%>
+    </tr>
   <%- @results.each do |result| -%>
-    <p>
-      <%= link_to h(result.name), user_profile_path(result), :class => 'name' %>
-    </p>
+    <tr>
+      <td><%= link_to h(result.name), user_profile_path(result), :class => 'name' %></td>
+      <td><%=h result.email %></td>
+      <%- result.role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort.join("<br/>").each do |member| -%>
+        <td><%= member %></td>
+      <%- end -%>
+    </tr>
   <%- end if !@results.blank?-%>
+  </table>
 </div>

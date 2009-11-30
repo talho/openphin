@@ -21,6 +21,7 @@ class RoleRequest < ActiveRecord::Base
       req.errors.add("User is already a member of this role and jurisdiction")
     end
   end
+  validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction."
   
   attr_protected :approver_id
 

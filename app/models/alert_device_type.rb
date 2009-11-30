@@ -11,8 +11,12 @@
 
 class AlertDeviceType < ActiveRecord::Base
   belongs_to :alert
-  
+
   def device_type
     self.device.constantize
+  end
+
+  def to_s
+    device_type.demodulize
   end
 end

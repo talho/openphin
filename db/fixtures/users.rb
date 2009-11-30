@@ -234,6 +234,7 @@ u.role_memberships << r
 r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Armstrong').id,
                                                                              :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
                                                                              :user_id => u.id)
+<<<<<<< HEAD
 u.role_memberships << r
 
 u = User.find_or_create_by_email(:email => "rboldway@talho.org") { |m|
@@ -258,10 +259,36 @@ u.role_memberships << r
 r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
                                                                              :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
                                                                              :user_id => u.id)
+=======
+>>>>>>> f0a76abb3114bb683db526cfc14e993a9b3207ab
+u.role_memberships << r
+
+u = User.find_or_create_by_email(:email => "rboldway@talho.org") { |m|
+  m.first_name = 'Richard'
+  m.last_name = 'Boldway'
+  m.display_name = 'Richard Boldway'
+<<<<<<< HEAD
+  m.email = 'richard@boldway.org'
+=======
+>>>>>>> f0a76abb3114bb683db526cfc14e993a9b3207ab
+  m.email_confirmed = true
+  m.password = 'Password1'
+  m.password_confirmation = 'Password1'
+}
+
+r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
+                                                                             :role_id => Role.find_by_name('Public').id,
+                                                                             :user_id => u.id)
 u.role_memberships << r
 
 r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
-                                                                             :role_id => Role.superadmin.id,
+                                                                             :role_id => Role.admin.id,
+                                                                             :user_id => u.id)
+u.role_memberships << r
+
+
+r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
+                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
                                                                              :user_id => u.id)
 u.role_memberships << r
 
@@ -284,7 +311,7 @@ r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:ju
                                                                              :user_id => u.id)
 u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
                                                                              :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
                                                                              :user_id => u.id)
 u.role_memberships << r

@@ -33,6 +33,19 @@ Feature: Searching for users
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
+    And I should see "john.smith@example.com"
+    And I should see "Public in Dallas County"
+    And I should see "jane.smith@example.com"
+    And I should see "Health Officer in Tarrant Count"
+  
+  Scenario: Searching for a user by email address
+    Given I am logged in as "amy@example.com"
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "example"
+    And I press "Search"
+    Then I see the following users in the search results
+      | John Smith, Jane Smith, Amy Body, Sam Body |
       
   Scenario: Searching for a user as a user with only a public role
     Given I am logged in as "john.smith@example.com"
