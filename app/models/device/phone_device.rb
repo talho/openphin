@@ -14,7 +14,7 @@
 #
 
 class Device::PhoneDevice < Device
-  
+
   option_accessor :phone
   validates_format_of :phone, :with => /^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/
   before_validation :strip_extra_characters
@@ -22,11 +22,15 @@ class Device::PhoneDevice < Device
   def self.display_name
     'Phone'
   end
-  
+
+  def to_s
+    super + ": #{phone}"
+  end
+
   def deliver(alert)
     Service::Phone.deliver_alert(alert, user)
   end
-  
+
   def self.batch_deliver(alert)
     Service::Phone.batch_deliver_alert(alert)
   end

@@ -121,7 +121,7 @@ Feature: Creating groups
     And I follow "Jane Smith"
     Then I should see the profile page for "jane.smith@example.com"
 
-  Scenario: selecting the jurisdiction when scope is jurisdictaion
+  Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
     When I go to the add groups page
     Then I should see the add group form
@@ -217,7 +217,7 @@ Feature: Creating groups
       Then I should not see "Dallas County Health Officer Group"
 
 
-    Scenario: adding a global scoped group should be viewable by alerters in the same or other jursidictions
+    Scenario: adding a global scoped group should be viewable by alerters in the same or other jurisdictions
       When I go to the add groups page
       Then I should see the add group form
       Then I should see the following jurisdictions:

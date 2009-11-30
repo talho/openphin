@@ -62,7 +62,7 @@ When 'I click "$link" on "$title"' do |link, title|
 end
 
 When 'I follow the acknowledge alert link' do
-  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
 end
 
@@ -126,7 +126,7 @@ Then 'an alert exists with:' do |table|
         first_name, last_name = user.split(" ")
         alert.audiences.map(&:users).flatten.should include(User.find_by_first_name_and_last_name(first_name, last_name))
       end
-      
+
     else
       alert.send(attr).should == value
     end
@@ -200,12 +200,12 @@ Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^
 end
 
 Then /^the alert should be acknowledged$/ do
-  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   attempt.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
 end
 
 Then /^the alert should not be acknowledged$/ do
-  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last 
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   attempt.acknowledged_at.should be_blank
 end
 
@@ -250,5 +250,24 @@ Then /^the system acknowledgment for alert "([^\"]*)" should contain the followi
   ack_msg=EDXL::AckMessage.parse(ack, :no_delivery => true)
   table.raw.each do |row|
     ack_msg.send(row[0]).should == row[1]
+  end
+end
+
+Then 'I should see the csv report for the alert titled "$title"' do |title|
+  alert = Alert.find_by_title(title)
+  response.body.should include(title)
+  response.body.should include(alert.from_jurisdiction.to_s)
+  response.body.should include(alert.author.display_name.to_s)
+  response.body.should include('Contacted Users')
+  alert.audiences.each do |audience|
+    audience.users.each do |user|
+      response.body.should include(user.display_name)
+    end
+    audience.jurisdictions.each do |jurisdiction|
+      response.body.should include(jurisdiction.name)
+    end
+    audience.roles.each do |role|
+      response.body.should include(role.name)
+    end
   end
 end

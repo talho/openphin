@@ -22,6 +22,10 @@ class Device::BlackberryDevice < Device
     'Blackberry PIN'
   end
   
+  def to_s
+    super + ": #{blackberry}"
+  end
+  
   def deliver(alert)
     Service::Blackberry.deliver_alert(alert)
   end
