@@ -51,7 +51,7 @@ Feature: School
       | item | Main        |
       | item | School View |
     When I follow "School View"
-    Then I should be on the rollcall schools page
+    Then I should see school data for "BERRY ES"
 
   Scenario: Accessing the School View in the Rollcall application as a non-rollcall user
     Given I am logged in as "normal.epi@example.com"
@@ -74,24 +74,12 @@ Feature: School
     Given I am logged in as "nurse.betty@example.com"
     When I go to the rollcall schools page
     Then I should see school data for "BERRY ES"
-    And I should see an absenteeism graph with the data:
-      | 0           |
-      | 0           |
-      | 0           |
-      | 5.0         |
-      | 5.0         |
-      | 2.5         |
-      | 7.5         |
-      | 5.0         |
+    And I should see an absenteeism graph with the following:
+      | data-label  | Berry Elementary                 |
+      | data        | nil,nil,5.0,5.0,2.5,7.5,5.0  |
     And I select "LEWIS ES" from "School"
     And I press "Choose"
-    Then I should see school data for "LEWIS ES"
-    And I should see an absenteeism graph with the data:
-      | 0           |
-      | 0           |
-      | 0           |
-      | 12.0        |
-      | 1.0         |
-      | 3.0         |
-      | 2.0         |
-      | 1.0         |
+    And I should see an absenteeism graph with the following:
+      | data-label | Lewis Elementary                 |
+      | data       | nil,nil,12.0,1.0,3.0,2.0,1.0 |
+

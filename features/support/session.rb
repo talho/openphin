@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: rollcall_alerts
-#
-#  id                 :integer(4)      not null, primary key
-#  severity           :integer(4)
-#  type               :string(255)
-#  absentee_report_id :integer(4)
-#  school_id          :integer(4)
-#  school_district_id :integer(4)
-#  absentee_rate      :float
-#  created_at         :datetime
-#  updated_at         :datetime
-#
-
 =begin
     OpenPHIN is an opensource implementation of the CDC guidelines for 
     a public health information network.
@@ -34,10 +19,14 @@
 
 =end
 
-class AbsenteeAlert < RollcallAlert
-  validates_presence_of :absentee_rate
-  belongs_to :absentee_report
-  belongs_to :school
-  belongs_to :school_district
+module ActionController
+  module Integration
+    class Session
+      def in_a_separate_session
+        old = @response.clone
+        yield
+        @response = old
+      end
+    end
+  end
 end
-

@@ -8,7 +8,7 @@
     <% end %>
   </div>
   <% cache(:key => ["district_chart", @districts.map(&:id).join(":"), params[:timespan]]) do %>
-    <%= image_tag create_district_chart(@districts, params[:timespan]) %>
+    <%= @chart %>
   <% end %>
 </div>
 

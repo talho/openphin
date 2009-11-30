@@ -1,5 +1,5 @@
 <div class="school_selection">
-  <% form_for :schools, @school, :url => schools_path, :html => { :method => :get} do |form| %>
+  <% form_for :schools, @school, :url => school_school_district_path(@district) do |form| %>
     <%= label_tag "district_id", "District" %>
     <%= collection_select(:district, :id, current_user.school_districts, :id, :name, :selected => @district.id) %>
     <%= label_tag "school_id", "School" %>
