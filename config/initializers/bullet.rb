@@ -32,7 +32,7 @@ if bullet_enable
       growl_host = config[:host] if config.has_key?(:host)
       growl_password = config[:password] if config.has_key?(:password)
     end
-    Bullet.growl_host = growl_host
+    Bullet.growl_host = growl_host if defined? Bullet.growl_host
     Bullet.growl_password = growl_password
   end
   Bullet.growl = bullet_growl_enable
