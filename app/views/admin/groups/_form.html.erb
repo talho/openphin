@@ -2,13 +2,15 @@
 <div id="edit">
   <div id="audience">
     <%= form.label :name %>
-    <%= form.text_field :name %><br/><br/>
-    
-    
-    <%= form.label :scope, 'Scope'%>
-    <%= form.select :scope, Group::SCOPES %>
-    <%= form.label :owner_jurisdiction_id, "Owner Jurisdiction" %>
-    <%= form.select :owner_jurisdiction_id, current_user.alerting_jurisdictions.map{|j| [j.name,j.id]} %>
+    <%= form.text_field :name %>
+    <br/><br/>
+
+
+    <div class='scoping'><%= form.label :scope, 'Scope' %>
+      <%= form.select :scope, Group::SCOPES %>
+      <%= form.label :owner_jurisdiction_id, "Owner Jurisdiction" %>
+      <%= form.select :owner_jurisdiction_id, current_user.alerting_jurisdictions.map{|j| [j.name, j.id]} %>
+    </div>
     <%= render 'audiences/fields', :form => form %>
   </div>
 </div>

@@ -6,7 +6,7 @@
   <%= f.label :jurisdiction_id,  "Jurisdiction" %>
   <%= f.collection_select :jurisdiction_id, Jurisdiction.nonroot, :id, :name, {:include_blank => true}, :class => "jurisdiction_select" %>
 </p>
-<p>
+<p class='clear'>
 	Roles ensure that you receive health alerts in the jurisdictions you work in with the role that you have been assigned.
 </p>
 <p>

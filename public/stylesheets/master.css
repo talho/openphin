@@ -247,6 +247,7 @@ li.school_bordered                            {border:2px solid #369;border-radi
 
 form p.rel_1                                  {width:195px; float:left; margin:0 20px 0 0;}
 form p.rel_2                                  {width:195px; float:right; clear:none;}
+form p.clear                                  {clear:both}
 form p.text input                             {width:97%;}
 form div.details p                            {clear:left;}
 form p.select select                          {width:97%;}
@@ -256,6 +257,12 @@ fieldset div.list_filter 											{position:absolute; bottom:0; height:19px; b
 fieldset div.list_filter input								{width:187px;}
 fieldset div.list_filter input.empty					{color:#999;}
 fieldset.people																{clear:both; margin:0 0 15px;}
+
+fieldset.people span.member                   {position:relative;padding: 0 5px;}
+fieldset.people span.member a.destroy         {position:relative; top:1px;visibility:hidden;}
+fieldset.people span.member a.destroy img     {width:12px;}
+fieldset.people span.member:hover             {border:1px solid #369;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px;}
+fieldset.people span.member:hover a.destroy         {visibility:visible}
 
 form button,
 form input.submit,
