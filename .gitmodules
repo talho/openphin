@@ -57,4 +57,4 @@
 	url = git://github.com/pullmonkey/open_flash_chart.git
 [submodule "vendor/plugins/serial"]
 	path = vendor/plugins/serial
-	url = git://github.com:karmajunkie/serial.git
+	url = git://github.com/karmajunkie/serial.git
