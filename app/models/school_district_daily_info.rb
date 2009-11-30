@@ -1,16 +1,13 @@
 # == Schema Information
 #
-# Table name: rollcall_alerts
+# Table name: school_district_daily_infos
 #
 #  id                 :integer(4)      not null, primary key
-#  severity           :integer(4)
-#  type               :string(255)
-#  absentee_report_id :integer(4)
-#  school_id          :integer(4)
-#  school_district_id :integer(4)
+#  report_date        :date
 #  absentee_rate      :float
-#  created_at         :datetime
-#  updated_at         :datetime
+#  total_enrollment   :integer(4)
+#  total_absent       :integer(4)
+#  school_district_id :integer(4)
 #
 
 =begin
@@ -34,10 +31,27 @@
 
 =end
 
-class AbsenteeAlert < RollcallAlert
-  validates_presence_of :absentee_rate
-  belongs_to :absentee_report
-  belongs_to :school
+class SchoolDistrictDailyInfo < ActiveRecord::Base
   belongs_to :school_district
-end
 
+  before_create :update_stats
+  validates_presence_of :school_district
+  validates_presence_of :report_date
+
+  named_scope :for_date, lambda{|date| {
+      :conditions => ["report_date = ?", date]
+  }}
+
+  def update_stats
+    total_enrolled=school_district.absentee_reports.for_date(report_date).sum(:enrolled)
+    if total_enrolled > 0
+      write_attribute :total_enrollment,total_enrolled
+      write_attribute :total_absent, school_district.absentee_reports.for_date(report_date).sum(:absent) 
+      rate = school_district.absentee_reports.average("absent/enrolled",
+                                                      :conditions => ["report_date = ?", report_date]
+      )
+      write_attribute :absentee_rate, rate.nil? || rate == 0  ? nil : rate.round(4)*100
+    end
+
+  end
+end

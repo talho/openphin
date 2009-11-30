@@ -81,9 +81,9 @@ Scenario: Seeing the average absenteeism graph(s)
   Given I am logged in as "nurse.betty@example.com"
   When I go to the rollcall page
   Then I should see an absenteeism graph with the following:
-    | data        | 0,0,8.0,5.33,6.83,4.83,2.67 |
+    | data        | nil,nil,8.0,5.33,6.83,4.83,2.67 |
     | data-label  | Houston ISD                  |
-    | title       | Average % Absenteeism        |
+    | title       | Absenteeism Rates (Last 7 days) |
     | range       | 0,8.0                         |
 
 Scenario: Seeing the abseentism alert summary
@@ -99,4 +99,4 @@ Scenario: Changing the timespan of the absenteeism graph
   And I select "90" from "Show last"
   And I press "Modify graph"
   Then I should see an absenteeism graph with the following:
-    | data        | 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8.0,5.33,6.83,4.83,2.67 |
+    | data        | nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,8.0,5.33,6.83,4.83,2.67 |

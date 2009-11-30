@@ -36,39 +36,66 @@ class Rollcall::RollcallController < ApplicationController
       flash[:notice] = "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
       render "about"
     end
+    @chart=open_flash_chart_object(600, 300, rollcall_summary_chart_path(params[:timespan]))
+
+  end
+
+
+
+  ##data for summary chart on rollcall index
+  def summary_chart
+    timespan = params[:timespan].nil? ? 7 : params[:timespan].to_i
+
+    summary_chart=OpenFlashChart.new("Absenteeism Rates (Last #{timespan} days)")
+    summary_chart.bg_colour = "#FFFFFF"
+
+    lines=current_user.school_districts.map do |d|
+      line=LineHollow.new
+      line.text = d.name
+      line.values = recent_data(d, timespan)
+      line
+    end
+    max=current_user.school_districts.map{|d| d.recent_absentee_rates(timespan).max{|a,b| a=0 if a.nil?; b=0 if b.nil?; a <=> b} }.max
+    xa= XAxis.new
+    xa.labels=XAxisLabels.new(:labels => generate_time_labels(timespan), :rotate => 315, :visible_steps => 7, :size => 18)
+    xa.steps = 7
+    summary_chart.set_x_axis xa
+
+    summary_chart.y_axis = YAxis.new(
+        :steps => 2,
+        :min => 0,
+        :max => max
+    )
+
+    lines.each do |l|
+      summary_chart.add_element(l)
+    end
+    render :text => summary_chart.to_s, :layout => false
   end
 
   private
-  def ethans_crazy_absenteeism_summary_code
-    reports = current_user.recent_absentee_reports
-    reports_schools = reports.map(&:school).flatten.uniq
-    reports_districts = reports_schools.map(&:district).flatten.uniq
-    @statistics = {}
-    stat = {}
-    reports_districts.each do |district|
-      stat[district.name] = {} unless stat[district.name]
-      reports_schools.each do |school|
-        if school.district == district
-          stat[district.name][school.display_name] = [] unless stat[district.name][school.display_name]
-          reports.each do |report|
-            if report.school == school
-              stat[district.name][school.display_name] << report
-              stat[district.name][school.display_name] = stat[district.name][school.display_name].sort{|a, b| b.absentee_percentage <=> a.absentee_percentage}
-            end
-          end
-        end
-      end
+  def recent_data(district, timespan)
+    data = []
+    (timespan-1).days.ago.to_date.upto Date.today do |date|
+      rate=district.average_absence_rate(date)
+      data.push rate.nil? ? nil : DotValue.new(district.average_absence_rate(date), nil, :tip => "#{date.strftime("%x")}\n#val#%")
     end
-    stat.each do |district_name, district|
-      district.each do |school_name, school|
-        stat[district_name][school_name] = school[0..3]
-      end
-    end
-    stat.each do |district_name, district|
-      @statistics[district_name] = {} unless @statistics[district_name]
-      @statistics[district_name] = district.sort{|a, b|
-        stat[district_name][b.first].first.absentee_percentage <=> stat[district_name][a.first].first.absentee_percentage
-      }
-    end
+    data
   end
+  def generate_time_labels(timespan)
+    xlabels=[]
+    timespan.days.ago.to_date.upto Date.today do |date|
+      if date.day == 1
+        #label beginning of month
+        xlabels.push date.strftime("%B %e")
+      elsif date.wday == 1
+        #label beginning of week
+        xlabels.push date.strftime("%a (Week %W)")
+      else
+        xlabels.push timespan > 14 ? "" : date.strftime("%m/%d")
+      end
+    end
+    xlabels
+  end
+
 end
