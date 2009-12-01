@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 
-describe '/alerts/index.html.erb' do
+describe '/alerts/show.html.erb' do
 
   before do
     @alert = present Factory(:alert,
@@ -16,7 +16,7 @@ describe '/alerts/index.html.erb' do
   end
   
   def render
-    super 'alerts/index.html.erb'
+    super 'alerts/show.html.erb'
   end
   
   # | from_jurisdiction | Dallas County |

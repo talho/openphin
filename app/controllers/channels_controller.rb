@@ -6,19 +6,19 @@ class ChannelsController < ApplicationController
   end
 
   def create
+    @channel = current_user.channels.build
     subscription = current_user.subscriptions.build(
       :owner => true, 
       :channel => Channel.new(params[:channel])
     )
     subscription.save!
     flash[:notice] = 'Successfully created the share'
-    redirect_to subscription.channel
+    redirect_to documents_panel_path
   end
-  
+
   def show
     @channel = current_user.channels.find(params[:id])
     @documents = @channel.documents
-    render 'documents/index'
   end
   
   def unsubscribe

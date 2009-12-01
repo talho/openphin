@@ -8,7 +8,7 @@ class Admin::OrganizationRequestsController < ApplicationController
     @organization_requests = OrganizationRequest.unapproved.in_jurisdictions(current_user.jurisdictions)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # show.html.erb
       format.xml  { render :xml => @organization_requests }
     end
   end

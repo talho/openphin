@@ -1,0 +1,7 @@
+<div id="new_folder">
+  <%- form_for :folder, nil, :url => { :action => "create"} do |f| -%>
+    <%= f.label :name, "Folder Name" %>
+    <%= f.text_field :name %>
+    <%= f.submit "Create Folder" %>
+  <%- end -%>
+</div>

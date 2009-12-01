@@ -82,6 +82,8 @@ module NavigationHelpers
         show_destroy_channel_path(channel)
       when /the document viewing panel/i
         documents_panel_path
+      when /the folder inbox page/i
+        folder_inbox_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

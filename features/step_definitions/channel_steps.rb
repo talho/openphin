@@ -3,12 +3,9 @@ Given 'a share named "$name"' do |name|
 end
 
 Given 'I created the share "$name"' do |name|
-  When 'I follow "New Share"'
-  And %Q|I fill in "Name" with "#{name}"|
-  And 'I press "Create"'
-  
-  Then 'I should see "Successfully created the share"'
-  And %Q|I should see "#{name}"|
+  When 'I go to the document viewing panel'
+  And %Q|I fill in "Share Name" with "#{name}"|
+  And 'I press "Create Share"'
 end
 
 Given 'I have been added to the share "$name"' do |name|

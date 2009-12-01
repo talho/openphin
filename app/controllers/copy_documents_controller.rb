@@ -8,7 +8,7 @@ class CopyDocumentsController < ApplicationController
     @new_document = @document.copy(current_user)
     @new_document.update_attributes!(params[:document])
     flash[:notice] = 'Successfully copied the document'
-    redirect_to folder_or_inbox_path(@new_document)
+    redirect_to documents_panel_path
   end
   
 private
