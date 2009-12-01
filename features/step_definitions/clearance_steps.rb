@@ -70,6 +70,12 @@ When /^I follow the password reset link sent to "(.*)"$/ do |email|
   visit edit_user_password_path(:user_id => user, :token => user.token)
 end
 
+When /^I follow the password reset link with a damaged token sent to "(.*)"$/ do |email|
+  user = User.find_by_email(email)
+  visit edit_user_password_path(:user_id => user, :token => user.token<<"*")
+end
+
+
 When /^I try to change the password of "(.*)" without token$/ do |email|
   user = User.find_by_email(email)
   visit edit_user_password_path(:user_id => user)
