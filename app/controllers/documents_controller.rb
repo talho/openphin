@@ -3,7 +3,8 @@ class DocumentsController < ApplicationController
 
  layout nil
   def panel_index
-    @folders = current_user.folders.roots
+    @folders = [current_user.folders.roots].flatten
+    @folder = Folder.new
     @shares = current_user.channels
     current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
     current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
@@ -23,15 +24,16 @@ class DocumentsController < ApplicationController
     if params[:channel_id]
       if @channel = current_user.channels.find(params[:channel_id])
         @name = @channel.name
-        @documents = @channel.documents
+        @documents = [@channel.documents].flatten
       else
         flash[:error] = "Channel does not exist"
         redirect_to documents_panel_path
       end
     elsif params[:folder_id]
-      if folder = current_user.folders.find(params[:folder_id])
-        @name = folder.name
-        @documents = folder.documents
+      if @parent_folder = current_user.folders.find(params[:folder_id])
+        @name = @parent_folder.name
+        @folder = Folder.new
+        @documents = [@parent_folder.documents].flatten
       else
         flash[:error] = "Folder does not exist"
         redirect_to documents_panel_path
@@ -43,8 +45,8 @@ class DocumentsController < ApplicationController
   end
   
   def create
-    folder = current_user.folders.find(params[:document][:folder_id].to_i)
-    unless folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
+    @parent_folder = current_user.folders.find(params[:document][:folder_id].to_i) || Folder.new
+    unless @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
       @document = current_user.documents.build(params[:document])
       @document.save!
     else
@@ -66,7 +68,7 @@ class DocumentsController < ApplicationController
   def update
     @document = Document.editable_by(current_user).find(params[:id])
     if @document.update_attributes(params[:document])
-      redirect_to documents_panel_path
+      redirect_to folder_or_inbox_path(@document)
     else 
       render :edit
     end

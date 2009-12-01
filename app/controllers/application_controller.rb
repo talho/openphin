@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
     end
   
     def folder_or_inbox_path(document)
-      document.folder || documents_path
+      document.folder ? folder_documents_path(document.folder) : folder_inbox_path
     end
     
     def login_required

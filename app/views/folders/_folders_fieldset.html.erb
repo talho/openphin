@@ -22,9 +22,7 @@
     </li>
     <li>
       Folders
-      <%- form_for :folders do |f| -%>
-        <%= folders_links(@folders, f) %>
-      <%- end -%>
+      <%= render :partial => "folders/folder", :collection => @folders, :as => :folder %>
     </li>
   </ul>
 </fieldset>

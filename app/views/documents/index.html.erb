@@ -1,4 +1,23 @@
-<%- form_for :folder, nil do |f| -%>
+<div class="flash">
+  <%- [:notice, :instructions, :completed, :error].each do |type| -%>
+    <%- if flash[type] -%>
+      <p class="<%= type %>"><%= flash[type] %></p>
+    <%- end -%>
+  <%- end -%>
+</div>
+
+<%- form_for :document do |f| -%>
   <%= @name %> Detail
   <%= render :partial => "document", :collection => @documents, :as => :document, :locals => {:f => f} %>
 <%- end -%>
+<%- if @folder -%>
+  <div class="upload_document">
+    <%- form_for :document, documents_path, :html => {:multipart => true} do |f| -%>
+      <%= f.label :file, "Upload Document" %>
+      <%= f.file_field :file %>
+      <%= f.hidden_field :folder_id, :value => @parent_folder.id %>
+      <%= f.submit :upload %>
+    <%- end -%>
+  </div>
+<%- end -%>
+<%= render "folders/new_folder" if @folder %>

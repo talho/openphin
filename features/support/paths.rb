@@ -1,4 +1,6 @@
+
 module NavigationHelpers
+
   def path_to(page_name, arg=nil)
     case page_name
 

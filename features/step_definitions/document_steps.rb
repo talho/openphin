@@ -70,6 +70,7 @@ Then /^the file "([^\"]*)" and folder "([^\"]*)" do not exist$/ do |filename, fo
   Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
   Folder.find_by_name(foldername).should be_nil
 end
+
 Then /^I should see "([^\"]*)" has require confirmation$/ do |arg1|
   response.should have_selector(".folder a[onclick*=\"This folder contains files which will be deleted\"]", :content => "Delete")
 end

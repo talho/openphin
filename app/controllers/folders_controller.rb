@@ -6,7 +6,7 @@ class FoldersController < ApplicationController
     @folder = current_user.folders.build(params[:folder])
     @folder.save!
     @folder.move_to_child_of(current_user.folders.find(params[:folder][:parent_id])) unless params[:folder][:parent_id].blank?
-    redirect_to documents_panel_path
+    redirect_to :back
   end
   
   def show
@@ -22,7 +22,7 @@ class FoldersController < ApplicationController
     else
       flash[:error] = "Could not remove the document."
     end
-      redirect_to documents_path
+      redirect_to folder_inbox_path
   end
 end
                   

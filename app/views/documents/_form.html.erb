@@ -2,7 +2,11 @@
   <%= form.label :file, form.object.new_record? ? 'Upload Document' : 'Upload a new version' %>
   <%= form.file_field :file %>
 
+  <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
+<% end %>
+
+<% form_for @document || Document.new, :html => {:multipart => true} do |form| %>
   <%= render 'documents/folder_fields', :form => form %>
 
-  <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
+  <%= form.submit form.object.new_record? ? 'Upload' : 'Move to Folder'  %>
 <% end %>
