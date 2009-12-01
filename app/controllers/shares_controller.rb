@@ -11,11 +11,6 @@ class SharesController < ApplicationController
     @audience = Audience.new(params[:audience])
     @document.targets.create! :audience => @audience, :creator => current_user
     if params[:document]
-      if params[:document][:audience_ids]
-        params[:document][:audience_ids].each do |id|
-          @document.targets.create! :audience_id => id, :creator => current_user
-        end
-      end
       @document.channel_ids += params[:document][:channel_ids] if params[:document][:channel_ids]
       @document.save!
     end
