@@ -15,4 +15,6 @@ class Subscription < ActiveRecord::Base
   belongs_to :user
   
   named_scope :publishers, :conditions => {:owner => true}
+
+  validates_uniqueness_of :user_id, :scope => [:channel_id]
 end

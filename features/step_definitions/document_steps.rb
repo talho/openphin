@@ -46,6 +46,10 @@ When "I fill out the document sharing form with:" do |table|
   fill_in_audience_form table
 end
 
+When "I fill out the document sending form with:" do |table|
+  fill_in_audience_form table
+end
+
 Then 'I should receive the file:' do |table|
   table.rows_hash.each do |header, value|
     case header
@@ -57,6 +61,11 @@ Then 'I should receive the file:' do |table|
       raise "Unknown option: #{header}"
     end
   end
+end
+
+Then /^the file "([^\"]*)" in the inbox does not exist$/ do |filename, foldername|
+  Document.find_by_file_file_name(filename).should be_nil
+  Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
 end
 
 Then /^the file "([^\"]*)" in folder "([^\"]*)" does not exist$/ do |filename, foldername|

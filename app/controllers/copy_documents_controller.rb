@@ -1,5 +1,6 @@
 class CopyDocumentsController < ApplicationController
   before_filter :non_public_role_required, :find_document
+  layout "documents"
   
   def show
   end
@@ -16,7 +17,7 @@ class CopyDocumentsController < ApplicationController
   end
 
   def update
-    @document = current_user.documents.find(params[:document_id])
+    @document = Document.viewable_by(current_user).find(params[:document_id])
     @audience = Audience.new(params[:audience])
     @document.targets.create! :audience => @audience, :creator => current_user
     if params[:document]
@@ -28,7 +29,11 @@ class CopyDocumentsController < ApplicationController
       @document.save!
     end
     flash[:notice] = 'Successfully copied the document'
-    redirect_to folder_or_inbox_path(@document)
+    if current_user.documents.find(:first, @document.id)
+      redirect_to folder_or_inbox_path(@document)
+    else
+      redirect_to folder_inbox_path
+    end
   end
 
 private

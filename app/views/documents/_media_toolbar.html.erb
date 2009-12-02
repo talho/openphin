@@ -1,5 +1,12 @@
 <li>
+  <ul><%= link_to "New Folder", "#" %></ul>
   <ul><%= link_to "New Share", "#" %></ul>
-  <ul><%= link_to "Invite", "#" %></ul>
-  <ul><%= link_to "Unsubscribe", "#" %></ul>
+  <%- unless current_user.folders.empty? -%>
+    <ul><%= link_to "Move/Edit", "#" %></ul>
+    <ul><%= link_to "Rename Folder", "#" %></ul>
+  <%- end -%>
+  <%- unless current_user.channels.empty? -%>
+    <ul><%= link_to "Invite", "#" %></ul>
+    <ul><%= link_to "Unsubscribe", "#" %></ul>
+  <%- end -%>
 </li>

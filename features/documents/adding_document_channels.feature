@@ -22,6 +22,7 @@ Feature: Creating document channels
 
     Then I should be redirected to the document viewing panel
     And I should see "Discovery"
+    And I should see "(John Smith)"
 
   Scenario: Adding a document to a share
     Given I created the share "Channel 4"
@@ -70,8 +71,8 @@ Feature: Creating document channels
 
     When I fill out the share invitation form with:
       | People | Brandon Keepers |
-    And I press "Add"
-    Then I should be redirected to the document viewing panel
+    And I press "Invite"
+    Then I should be redirected to the folder inbox page
     And "brandon.keepers@example.com" should receive the email:
       | subject       | John Smith added you to a share |
       | body contains | To view this channel |

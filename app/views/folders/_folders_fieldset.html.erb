@@ -12,7 +12,7 @@
             <%= f.label :name, c.name, :style => "display: none;" %>
             <%= f.check_box(:name, {}, c.id) %>
             <%= link_to c.name,"#{channel_documents_path(c.id)}" %>
-            <%= "(#{User.find(c.subscriptions.publishers).map(&:display_name).join(",")})" %>
+            <%= "(#{User.find(c.owners).map(&:display_name).join(",")})" %>
             <%= link_to "Invite", new_channel_subscription_path(c.id) if c.owners.include?(current_user) %>
             <%= link_to "Unsubscribe", unsubscribe_channel_path(c.id), :class => "destroy" unless c.owners.include?(current_user) %>
             <%= link_to "Delete Share", show_destroy_channel_path(c.id) if c.owners.include?(current_user) %>

@@ -11,7 +11,7 @@ Feature: Adding documents to document sharing
   Scenario: Adding a document to private storage
     Given I have a folder named "Rockstars"
     When I go to the document viewing panel
-    When I follow "Rockstars"
+    And I follow "Rockstars"
     And I attach the "image/jpeg" file at "spec/fixtures/keith.jpg" to "Upload Document"
     And I press "Upload"
 
@@ -106,6 +106,22 @@ Feature: Adding documents to document sharing
     And I follow "Inbox"
     Then I should not see "keith.jpg"
     Then I should see "sample.wav"
+
+  Scenario: Deleting a document from the inbox
+    Given no documents exist
+    And I have the document "keith.jpg" in my inbox
+
+    When I go to the document viewing panel
+    When I follow "Inbox"
+    Then I should see "keith.jpg"
+
+    When I follow "Delete"
+    Then I should not see "keith.jpg"
+    When I go to the document viewing panel
+    When I follow "Inbox"
+
+    Then I should not see "keith.jpg"
+    And the file "keith.jpg" in the inbox does not exist
 
   Scenario: Deleting a document from a folder
     Given no documents exist

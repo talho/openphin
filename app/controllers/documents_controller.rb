@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   before_filter :non_public_role_required
 
- layout nil
+ layout "documents"
   def panel_index
     @folders = [current_user.folders.roots].flatten
     @folder = Folder.new
@@ -72,6 +72,13 @@ class DocumentsController < ApplicationController
     else 
       render :edit
     end
+  end
+
+  def destroy
+    @document = Document.editable_by(current_user).find(params[:id])
+    @document.destroy
+    flash[:notice] = "Successfully deleted the document from the inbox."
+    redirect_to folder_inbox_path
   end
 
   def inbox

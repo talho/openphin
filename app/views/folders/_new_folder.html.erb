@@ -2,7 +2,7 @@
   <%- form_for @folder do |f| -%>
     <%= f.label :name, "Folder Name" %>
     <%= f.text_field :name %>
-    <%= f.hidden_field :parent_id, :value => @folder.id if @folder && @folder.id %>
+    <%= f.hidden_field :parent_id, :value => @parent_folder.id if @parent_folder && @parent_folder.id %>
     <%= f.submit "Create Folder" %>
   <%- end -%>
 </div>

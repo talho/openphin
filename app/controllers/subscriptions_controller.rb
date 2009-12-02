@@ -19,7 +19,7 @@ class SubscriptionsController < ApplicationController
     end
 
     flash[:notice] = "Additional #{params[:owner] ? 'owners' : 'users'} have been added to this share"
-    redirect_to documents_path
+    redirect_to folder_inbox_path
   end
 
 end

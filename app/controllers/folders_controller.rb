@@ -1,6 +1,6 @@
 class FoldersController < ApplicationController
   before_filter :non_public_role_required
-  layout nil
+  layout "documents"
 
   def create
     @folder = current_user.folders.build(params[:folder])
