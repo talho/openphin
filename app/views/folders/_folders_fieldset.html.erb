@@ -5,24 +5,26 @@
       <%= link_to 'Inbox',folder_inbox_path %>
     </li>
     <li>
-      Shares
-      <%- form_for :channels do |f| -%>
+      <p>Shares</p>
+      <ul>
         <%- @shares.each do |c| -%>
           <li class="share">
-            <%= f.label :name, c.name, :style => "display: none;" %>
-            <%= f.check_box(:name, {}, c.id) %>
-            <%= link_to c.name,"#{channel_documents_path(c.id)}" %>
-            <%= "(#{User.find(c.owners).map(&:display_name).join(",")})" %>
-            <%= link_to "Invite", new_channel_subscription_path(c.id) if c.owners.include?(current_user) %>
-            <%= link_to "Unsubscribe", unsubscribe_channel_path(c.id), :class => "destroy" unless c.owners.include?(current_user) %>
-            <%= link_to "Delete Share", show_destroy_channel_path(c.id) if c.owners.include?(current_user) %>
+            <p>
+              <%= check_box_tag("share[id][#{c.id}]", c.id) %>
+              <%= link_to(label_tag("share[id][#{c.id}]", "#{link_to(c.name,channel_documents_path(c.id))} (#{User.find(c.owners).map(&:display_name).join(',')})"),channel_documents_path(c.id)) %>
+            </p>
+            <%= link_to "Invite", new_channel_subscription_path(c.id), :class => "invis" if c.owners.include?(current_user) %>
+            <%= link_to "Unsubscribe", unsubscribe_channel_path(c.id), :class => "invis destroy" unless c.owners.include?(current_user) %>
+            <%= link_to "Delete Share", show_destroy_channel_path(c.id), :class => "invis" if c.owners.include?(current_user) %>
           </li>
         <%- end -%>
-      <%- end -%>
+      </ul>
     </li>
     <li>
-      Folders
-      <%= render :partial => "folders/folder", :collection => @folders, :as => :folder %>
+      <p>Folders</p>
+      <ul class="folders">
+        <%= render :partial => "folders/folder", :collection => @folders, :as => :folder %>
+      </ul>
     </li>
   </ul>
 </fieldset>

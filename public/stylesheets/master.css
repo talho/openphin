@@ -74,7 +74,7 @@ div.help a                                    {color:#fff}
 
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-#documents_panel                               {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+#documents_panel                               {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
 																							 background: #ffffd6; position:absolute; height:200px; left:50px; bottom: 20px; width:340px;}
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
@@ -266,29 +266,45 @@ a.button                                      {display:block;}
 .new_organization legend {font-size:1.4em; color:#369;}
 
 span.container                                  {background-color:#ffffff;}
-span.folders                                    {float: left;}
+span.media-list                                 {float: left;}
 span.files                                      {float: left; border-left: medium solid #ffffff; margin-left: 5px; padding-left: 5px; height: 100%; overflow: auto;}
-span.files ul                                   {margin-left: 0px;}
-span.files li                                   {position: relative; list-style: none;}
-span.folders fieldset.list 						{height:180px; float:left;}
-span.folders fieldset ul                        {margin-left: 0px;}
-span.folders fieldset ul.check_selector			{float: left; top:0px; left:0; right:0; bottom:0px; overflow:auto; height: 160px; width: 180px;}
-span.folders fieldset ul.check_selector li						{position:relative; list-style:none;}
-span.folders fieldset ul.check_selector li ul				{margin:0; padding:0px; border-top:1px solid #ffffff;}
+#span.files ul                                  {margin-left: 0px;}
+#span.files li                                  {position: relative; list-style: none;}
+fieldset.folders ul.check_selector              {overflow: auto;}
+/*span.media_list fieldset.list 						{height:180px; float:left;}*/
+/*span.media_list fieldset ul                        {margin-left: 0px;}*/
+/*span.media_list fieldset ul.check_selector			{float: left; top:0px; left:0; right:0; bottom:0px; overflow:auto; height: 160px; width: 180px;}*/
+/*span.media_list fieldset ul.check_selector li						{position:relative; list-style:none;}*/
+/*span.media_list fieldset ul.check_selector li ul				{margin:0; padding:0px; border-top:1px solid #ffffff;}*/
 
-span.folders fieldset ul.check_selector li li label  {margin:0; padding-left:44px;}
-span.folders fieldset ul.check_selector li li li label  {margin:0; padding-left:64px;}
-span.folders fieldset ul.check_selector li + li			{border-top:1px solid #ffffff;}
-span.folders fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
-span.folders fieldset ul.check_selector input				{position:absolute; left:6px; top:6px;}
-span.folders fieldset ul.check_selector li li input {left:24px;}
-span.folders fieldset ul.check_selector li li li input {left:44px;}
-span.folders fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:8px; height:20px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}
-span.folders fieldset ul.check_selector a.closed			{background:url(images/arrow_right.png) no-repeat center; width: 8px; height:20px;}
-span.folders fieldset ul.check_selector a:not(.toggle)      {margin-left: 10px;}
-span.folders fieldset ul.check_selector li li li a:not(.toggle)      {margin-left: 20px;}
-span.folders fieldset ul.check_selector li label			{background:#fff;}
-span.folders fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}
+/*span.media_list fieldset ul.check_selector li li label  {margin:0; padding-left:44px;}*/
+/*span.media_list fieldset ul.check_selector li li li label  {margin:0; padding-left:64px;}*/
+/*span.media_list fieldset ul.check_selector li + li			{border-top:1px solid #ffffff;}*/
+/*span.media_list fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}*/
+/*span.media_list fieldset ul.check_selector li li input  {margin-left:10px;}*/
+/*span.media_list fieldset ul.check_selector li li li input {left:44px;}*/
+/*span.media_list fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:8px; height:20px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}*/
+/*span.media_list fieldset ul.check_selector a.closed			{background:url(images/arrow_right.png) no-repeat center; width: 8px; height:20px;}*/
+/*span.media_list fieldset ul.check_selector a:not(.toggle)      {margin-left: 10px;}*/
+/*span.media_list fieldset ul.check_selector li li li a:not(.toggle)      {margin-left: 20px;}*/
+/*span.media_list fieldset ul.check_selector li label			{background:#fff;}*/
+/*span.media_list fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}*/
+
+span.media_list div#new_folder                          {display: none;}
+span.media_list div#new_share                           {display: none;}
+span.media_list fieldset.list                 {height:180px; float:left;}
+span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
+ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
+ul.media_toolbar li                             {float: left; list-style-type: none; width: 20px; height: 20px; text-indent: -9999px;}
+ul.media_toolbar li#new_folder                  {background-color: yellow;}
+ul.media_toolbar li#new_share                   {background-color: red;}
+ul.media_toolbar li#move_edit                   {background-color: blue;}
+ul.media_toolbar li#rename_folder               {background-color: green;}
+ul.media_toolbar li#delete                      {background-color: orange;}
+ul.media_toolbar li#invite                      {background-color: lightblue;}
+ul.media_toolbar li#unsubscribe                 {background-color: black;}
+.invis                                                  {display: none;}
+
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;

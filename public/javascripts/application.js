@@ -2,11 +2,11 @@
 // This file is automatically included by javascript_include_tag :defaults
 (function($) {
   $.ajaxSettings.accepts.html = $.ajaxSettings.accepts.script;
-  
+
   $.authenticityToken = function() {
     return $('#authenticity-token').attr('content');
   };
-  
+
   $(document).ajaxSend(function(event, request, settings) {
     if (settings.type == 'post') {
       settings.data = (settings.data ? settings.data + "&" : "")
@@ -14,7 +14,7 @@
       request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }
   });
-  
+
   $.fn.toggleCheckbox = function(target) {
     return this.each(function() {
       $(target)[this.checked ? 'show' : 'hide']();
@@ -50,9 +50,9 @@ jQuery(function($) {
     $(public).attr("selected", "selected");
     $('fieldset#health_professional_fields select#user_role_requests_attributes_0_role_id').selectedIndex = $(public).val();
   });
-  
+
   $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
-  
+
   $(".search_user_ids").fcbkcomplete({
     json_url: '/search',
     json_cache: true,
@@ -165,9 +165,9 @@ function reloadDocumentsPanel(site){
             alert("The documents panel could not be loaded.");
             return;
         }
-        var inbox_link = $(".folders li.inbox a");
-        var share_links = $(".folders li.share a");
-        var folder_links = $(".folders li.folder a");
+        var inbox_link = $(".media_list li.inbox a");
+        var share_links = $(".media_list li.share a");
+        var folder_links = $(".media_list li.folder a");
         inbox_link.bind("click", function(e){
             e.stopPropagation();
             e.preventDefault();
@@ -190,14 +190,15 @@ function reloadDocumentsPanel(site){
             return false;
         });
 
-        $('ul.check_selector>li>ul>li').prepend('<a href="#" class="toggle closed">Toggle</a>');
-		$('ul.check_selector ul ul').hide();
+        $('ul.check_selector>li>ul.folders>li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
+        $('ul.check_selector>li>ul.folders>li>a>label').css('margin-left','20px')
+        $('ul.check_selector ul ul').hide();
 
-		$('ul.check_selector a.toggle').click(function() {
-			$(this).toggleClass('closed').siblings('ul').toggle();
-            $(this).parent().children(".select_all").toggle();
-			return false;
-		})
+		    $('ul.check_selector a.toggle').click(function() {
+			    $(this).toggleClass('closed').siblings('ul').toggle();
+          $(this).parent().children(".select_all").toggle();
+			    return false;
+		    })
     });
 }
 

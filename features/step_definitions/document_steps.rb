@@ -63,7 +63,7 @@ Then 'I should receive the file:' do |table|
   end
 end
 
-Then /^the file "([^\"]*)" in the inbox does not exist$/ do |filename, foldername|
+Then /^the file "([^\"]*)" in the inbox does not exist$/ do |filename|
   Document.find_by_file_file_name(filename).should be_nil
   Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
 end

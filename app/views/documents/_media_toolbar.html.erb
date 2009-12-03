@@ -1,12 +1,13 @@
-<li>
-  <ul><%= link_to "New Folder", "#" %></ul>
-  <ul><%= link_to "New Share", "#" %></ul>
+<ul class="media_toolbar">
+  <li id="new_folder"><%= link_to "New Folder", "#" %></li>
+  <li id="new_share"><%= link_to "New Share", "#" %></li>
   <%- unless current_user.folders.empty? -%>
-    <ul><%= link_to "Move/Edit", "#" %></ul>
-    <ul><%= link_to "Rename Folder", "#" %></ul>
+    <li id="move_edit"><%= link_to "Move/Edit", "#" %></li>
+    <li id="rename_folder"><%= link_to "Rename Folder", "#" %></li>
+    <li id="delete"><%= link_to "Delete", "#" %></li>
   <%- end -%>
   <%- unless current_user.channels.empty? -%>
-    <ul><%= link_to "Invite", "#" %></ul>
-    <ul><%= link_to "Unsubscribe", "#" %></ul>
+    <li id="invite"><%= link_to "Invite", "#" %></li>
+    <li id="unsubscribe"><%= link_to "Unsubscribe", "#" %></li>
   <%- end -%>
-</li>
+</ul>
