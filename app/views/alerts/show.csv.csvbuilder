@@ -29,11 +29,13 @@ csv << ['Name', 'Email', 'Devices', 'Acknowledged Alert']
 
 @alert.alert_attempts.each do |alert_attempt|
   row = []
-  row << alert_attempt.user.display_name
-  row << alert_attempt.user.email
+  if alert_attempt.user.blank?
+    row += ['','']
+  else
+    row << alert_attempt.user.display_name
+    row << alert_attempt.user.email
+  end
   row << alert_attempt.devices.map(&:to_s).join(', ')
   row << alert_attempt.acknowledged_alert_device_type
   csv << row
 end
-
-
