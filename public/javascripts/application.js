@@ -165,33 +165,24 @@ function reloadDocumentsPanel(site){
             alert("The documents panel could not be loaded.");
             return;
         }
-        var inbox_link = $(".media_list li.inbox a");
-        var share_links = $(".media_list li.share a");
-        var folder_links = $(".media_list li.folder a");
-        inbox_link.bind("click", function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
-            reloadDocumentsPanel("");
-            return false;
+        $(".media_list a").bind("click", function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          var dp = $("#documents_panel span.documents");
+          site = $(this).attr("href");
+          dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+            if(textStatus != "success") {
+              alert("Error loading, please try again.");
+              return;
+            }
+          });
+          return false;
         });
-        share_links.bind("click", function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
-            reloadDocumentsPanel($(this).attr('href'));
-            return false;
-        });
-        folder_links.bind("click", function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
-            reloadDocumentsPanel($(this).attr('href'));
-            return false;
-        });
+        var dp = $("#documents_panel span.documents");
+        dp.load("/inbox");
 
         $('ul.check_selector>li>ul.folders>li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
-        $('ul.check_selector>li>ul.folders>li>a>label').css('margin-left','20px')
+        $('ul.check_selector>li>ul.folders>li>a>label').css('margin-left','20px');
         $('ul.check_selector ul ul').hide();
 
 		    $('ul.check_selector a.toggle').click(function() {

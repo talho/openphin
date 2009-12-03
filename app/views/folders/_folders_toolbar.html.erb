@@ -1,3 +1,10 @@
-<ul>
-  <li><%= link_to "Add to Share", "#" %></li>
+<ul class="documents_toolbar">
+  <li id="send"><%= link_to 'Send', "#" %></li>
+  <li id="add_to_share"><%= link_to 'Add to Share', "#" %></li>
+  <li id="move_edit"><%= link_to 'Move/Edit', "#" %></li>
+  <li id="delete"><%= link_to 'Delete', "#" %></li>
+  <% if @channel %>
+    <li id="copy"><%= link_to 'Copy', "#" %></li>
+    <li id="remove_from_share"><%= link_to 'Remove from share', "#" %></li>
+  <%- end -%>
 </ul>

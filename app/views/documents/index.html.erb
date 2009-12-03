@@ -8,16 +8,19 @@
 
 <%- form_for :document do |f| -%>
   <%= @name %> Detail
-  <%= render :partial => "document", :collection => @documents, :as => :document, :locals => {:f => f} %>
+  <ul class="documents">
+    <%= render :partial => "document", :collection => @documents, :as => :document, :locals => {:f => f} %>
+  </ul>
 <%- end -%>
 <%- if @folder -%>
   <div class="upload_document">
     <%- form_for :document, documents_path, :html => {:multipart => true} do |f| -%>
       <%= f.label :file, "Upload Document" %>
-      <%= f.file_field :file %>
+      <%= f.file_field :file, :size => "16" %>
       <%= f.hidden_field :folder_id, :value => @parent_folder.id %>
       <%= f.submit :upload %>
     <%- end -%>
   </div>
 <%- end -%>
 <%= render "folders/new_folder" if @folder %>
+<%= render "folders/folders_toolbar" %>

@@ -75,7 +75,7 @@ div.help a                                    {color:#fff}
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #documents_panel                               {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
-																							 background: #ffffd6; position:absolute; height:200px; left:50px; bottom: 20px; width:340px;}
+																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -271,31 +271,20 @@ span.files                                      {float: left; border-left: mediu
 #span.files ul                                  {margin-left: 0px;}
 #span.files li                                  {position: relative; list-style: none;}
 fieldset.folders ul.check_selector              {overflow: auto;}
-/*span.media_list fieldset.list 						{height:180px; float:left;}*/
-/*span.media_list fieldset ul                        {margin-left: 0px;}*/
-/*span.media_list fieldset ul.check_selector			{float: left; top:0px; left:0; right:0; bottom:0px; overflow:auto; height: 160px; width: 180px;}*/
-/*span.media_list fieldset ul.check_selector li						{position:relative; list-style:none;}*/
-/*span.media_list fieldset ul.check_selector li ul				{margin:0; padding:0px; border-top:1px solid #ffffff;}*/
 
-/*span.media_list fieldset ul.check_selector li li label  {margin:0; padding-left:44px;}*/
-/*span.media_list fieldset ul.check_selector li li li label  {margin:0; padding-left:64px;}*/
-/*span.media_list fieldset ul.check_selector li + li			{border-top:1px solid #ffffff;}*/
-/*span.media_list fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}*/
-/*span.media_list fieldset ul.check_selector li li input  {margin-left:10px;}*/
-/*span.media_list fieldset ul.check_selector li li li input {left:44px;}*/
-/*span.media_list fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:8px; height:20px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}*/
-/*span.media_list fieldset ul.check_selector a.closed			{background:url(images/arrow_right.png) no-repeat center; width: 8px; height:20px;}*/
-/*span.media_list fieldset ul.check_selector a:not(.toggle)      {margin-left: 10px;}*/
-/*span.media_list fieldset ul.check_selector li li li a:not(.toggle)      {margin-left: 20px;}*/
-/*span.media_list fieldset ul.check_selector li label			{background:#fff;}*/
-/*span.media_list fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}*/
-
+span.container span#edit                        {float: left;}
+span.container span.documents                   {float: left; width: 200px; display: block; height: 250px; position: relative;}
 span.media_list div#new_folder                          {display: none;}
 span.media_list div#new_share                           {display: none;}
-span.media_list fieldset.list                 {height:180px; float:left;}
+span.documents div.upload_document              {display: none; bottom: 0px; position: absolute;}
+span.documents div#new_folder                   {display: none; bottom: 0px; position: absolute;}
+span.media_list fieldset.list                   {height:230px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
 ul.media_toolbar li                             {float: left; list-style-type: none; width: 20px; height: 20px; text-indent: -9999px;}
+ul.documents li                                 {list-style-type: none;}
+ul.documents_toolbar                            {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
+ul.documents_toolbar li                         {float: left; list-style-type: none; width: 20px; height: 20px; text-indent: -9999px;}
 ul.media_toolbar li#new_folder                  {background-color: yellow;}
 ul.media_toolbar li#new_share                   {background-color: red;}
 ul.media_toolbar li#move_edit                   {background-color: blue;}
@@ -303,7 +292,13 @@ ul.media_toolbar li#rename_folder               {background-color: green;}
 ul.media_toolbar li#delete                      {background-color: orange;}
 ul.media_toolbar li#invite                      {background-color: lightblue;}
 ul.media_toolbar li#unsubscribe                 {background-color: black;}
-.invis                                                  {display: none;}
+ul.documents_toolbar li#send                    {background-color: yellow;}
+ul.documents_toolbar li#add_to_share            {background-color: red;}
+ul.documents_toolbar li#move_edit               {background-color: blue;}
+ul.documents_toolbar li#delete                  {background-color: green;}
+ul.documents_toolbar li#copy                    {background-color: orange;}
+ul.documents_toolbar li#remove_from_share       {background-color: lightblue;}
+.invis                                          {display: none;}
 
 /* Alerts and notifications */
 .flash {

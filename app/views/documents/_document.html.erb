@@ -3,16 +3,16 @@
     <%= f.check_box :document %>
     <%= f.label(:document, link_to(document.file_file_name, document_path(document))) %>
   <%- end -%>
-  <%= link_to 'Send', new_document_copy_path(document) %>
-  <%= link_to 'Add to Share', new_document_share_path(document) %>
-  <%= link_to 'Move/Edit', edit_document_path(document) if document.editable_by?(current_user) %>
+    <%= link_to 'Send', new_document_copy_path(document), :class => "invis" %>
+    <%= link_to 'Add to Share', new_document_share_path(document), :class => "invis" %>
+    <%= link_to 'Move/Edit', edit_document_path(document), :class => "invis" if document.editable_by?(current_user) %>
   <%- if document.folder.nil? -%>
-    <%= link_to 'Delete', document_path(document),:method => :delete, :class => "destroy" if document.editable_by?(current_user) %>
+    <%= link_to 'Delete', document_path(document),:method => :delete, :class => "invis destroy" if document.editable_by?(current_user) %>
   <%- else -%>
-    <%= link_to 'Delete', folder_document_path(@parent_folder, document),:method => :delete, :class => "destroy" if @parent_folder && document.editable_by?(current_user) %>
+    <%= link_to 'Delete', folder_document_path(@parent_folder, document),:method => :delete, :class => "invis destroy" if @parent_folder && document.editable_by?(current_user) %>
   <%- end -%>
   <% if @channel %>
-    <%= link_to 'Copy', document_copy_path(document) %>
-    <%= link_to 'Remove from share', channel_document_path(@channel, document), :class => :destroy %>
+    <%= link_to 'Copy', document_copy_path(document), :class => "invis" %>
+    <%= link_to 'Remove from share', channel_document_path(@channel, document), :class => "invis destroy" %>
   <% end %>
 <% end %>
