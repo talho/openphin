@@ -28,17 +28,6 @@ Feature: Viewing the dashboard
     When I go to the user account roles page
     Then I should see 1 pending role request
 
-    Scenario: Dashboard should show the most recent approved role requests
-    Given the following users exist:
-          | John Smith      | john.smith@example.com   | Public | Dallas County |
-    And "admin1@texas.com" has approved the "Health Officer" role in "Dallas County" for "john.smith@example.com" 2 days ago
-    And I am logged in as "john.smith@example.com"
-    And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
-    And "admin1@dallascounty.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
-    When I go to the user account roles page
-    Then I should see 1 recent role approval
-
-
     Scenario: Dashboard should show only the panels each user has access to
     
     Scenario: Dashboard should show the user navigation
