@@ -3,21 +3,11 @@ class DocumentsController < ApplicationController
 
  layout "documents"
   def panel_index
-    @folders = [current_user.folders.roots].flatten
-    @folder = Folder.new
-    @shares = current_user.channels
-    current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
-    current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
-    if current_folder
-      @name = current_folder.name
-      @documents = current_folder.documents
-    elsif current_channel
-      @name = current_channel.name
-      @documents = current_channel.documents
-    else
-      @name = "Inbox"
-      @documents = current_user.documents.inbox
-    end
+    set_panel_defaults
+  end
+
+  def media_list
+    set_panel_defaults
   end
 
   def index
@@ -105,6 +95,25 @@ class DocumentsController < ApplicationController
     @document.destroy
     flash[:notice] = "Successfully removed the document from the folder."
     redirect_to @folder
+  end
+
+  private
+  def set_panel_defaults
+    @folders = [current_user.folders.roots].flatten
+    @folder = Folder.new
+    @shares = current_user.channels
+    current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
+    current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
+    if current_folder
+      @name = current_folder.name
+      @documents = current_folder.documents
+    elsif current_channel
+      @name = current_channel.name
+      @documents = current_channel.documents
+    else
+      @name = "Inbox"
+      @documents = current_user.documents.inbox
+    end
   end
   
 end

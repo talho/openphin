@@ -1,6 +1,7 @@
 class ChannelsController < ApplicationController
   before_filter :non_public_role_required
-  
+
+  layout "documents"
   def new
     @channel = current_user.channels.build
   end

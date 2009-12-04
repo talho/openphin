@@ -14,6 +14,10 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'documents', :action => 'panel_index',
     :conditions => {:method => :get}
 
+  map.media_list 'media_list',
+    :controller => 'documents', :action => 'media_list',
+    :conditions => {:method => :get}
+
   map.channel_documents 'channels/:channel_id/documents',
     :controller => 'documents', :action => 'index',
     :conditions => {:method => :get}

@@ -1,6 +1,7 @@
 class SharesController < ApplicationController
   before_filter :non_public_role_required
   
+  layout "documents"
   def new
     @document = current_user.documents.find(params[:document_id])
     @audience = Audience.new

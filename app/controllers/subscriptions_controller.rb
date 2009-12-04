@@ -1,6 +1,7 @@
 class SubscriptionsController < ApplicationController
   before_filter :non_public_role_required
   
+  layout "documents"
   def new
     @channel = current_user.owned_channels.find(params[:channel_id])
     @subscription = @channel.subscriptions.build

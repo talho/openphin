@@ -6,18 +6,8 @@
     </li>
     <li>
       <p>Shares</p>
-      <ul>
-        <%- @shares.each do |c| -%>
-          <li class="share">
-            <p>
-              <%= check_box_tag("share[id][#{c.id}]", c.id) %>
-              <%= link_to(label_tag("share[id][#{c.id}]", "#{link_to(c.name,channel_documents_path(c.id))} (#{User.find(c.owners).map(&:display_name).join(',')})"),channel_documents_path(c.id)) %>
-            </p>
-            <%= link_to "Invite", new_channel_subscription_path(c.id), :class => "invis" if c.owners.include?(current_user) %>
-            <%= link_to "Unsubscribe", unsubscribe_channel_path(c.id), :class => "invis destroy" unless c.owners.include?(current_user) %>
-            <%= link_to "Delete Share", show_destroy_channel_path(c.id), :class => "invis" if c.owners.include?(current_user) %>
-          </li>
-        <%- end -%>
+      <ul class="shares">
+        <%= render :partial => "channels/channel", :collection => @shares, :as => :channel %>
       </ul>
     </li>
     <li>

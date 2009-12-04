@@ -274,8 +274,8 @@ fieldset.folders ul.check_selector              {overflow: auto;}
 
 span.container span#edit                        {float: left;}
 span.container span.documents                   {float: left; width: 200px; display: block; height: 250px; position: relative;}
-span.media_list div#new_folder                          {display: none;}
-span.media_list div#new_share                           {display: none;}
+span.media_list div#new_folder                  {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.media_list div#new_share                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
 span.documents div.upload_document              {display: none; bottom: 0px; position: absolute;}
 span.documents div#new_folder                   {display: none; bottom: 0px; position: absolute;}
 span.media_list fieldset.list                   {height:230px; float:left;}
