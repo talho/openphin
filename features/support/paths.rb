@@ -39,7 +39,7 @@ module NavigationHelpers
       when /the user profile page$/i
         user_profile_path(User.find_by_email!(arg))
       when /^the user account roles page$/i
-        role_requests_path
+        new_role_request_path
       when /cancel the alert/
         edit_alert_path(Alert.last, :_action => "cancel")
       when /update the alert/

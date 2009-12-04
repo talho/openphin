@@ -40,10 +40,10 @@ Feature: Password reset
       Given I signed up with "email@person.com/Password1"
       And I try to change the password of "email@person.com" without token      
       Then I should see "The token from your link is missing"
-      And I should see "PHIN stands for Public Health Information Network"
+      And I should see "The Texas Public Health Information Network (PHIN) is an online portal containing"
 
     Scenario: User responses to password reset by linking to edit action with a incorrect token
       Given I signed up with "email@person.com/Password1"
       And I follow the password reset link with a damaged token sent to "email@person.com"      
       Then I should see "The token from your link is incorrect"
-      And I should see "PHIN stands for Public Health Information Network"
+      And I should see "The Texas Public Health Information Network (PHIN) is an online portal containing"
