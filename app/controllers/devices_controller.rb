@@ -1,5 +1,5 @@
 class DevicesController < ApplicationController
-  before_filter {|controller| controller.admin_or_self_required(:user_id)}
+  before_filter {|controller| controller.admin_or_self_required(:user_id) if controller.action_name == "create"}
   protect_from_forgery :except => :create
   app_toolbar "han"
 

@@ -24,13 +24,15 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_or_self_required(var = :id)
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == params[var]
+    ensure_admin_or_self(params[var])
+  end
+  def ensure_admin_or_self(user_id)
+    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
       flash[:error] = "That resource does not exist or you do not have access to it."
       redirect_to dashboard_path
       false
     end
   end
-
   def toolbar
 	  self.class.app_toolbar
   end
