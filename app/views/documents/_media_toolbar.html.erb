@@ -2,8 +2,10 @@
   <li id="new_folder"><%= link_to "New Folder", "#" %></li>
   <li id="new_share"><%= link_to "New Share", "#" %></li>
   <%- unless current_user.folders.empty? -%>
-    <li id="move_edit"><%= link_to "Move/Edit", "#" %></li>
-    <li id="rename_folder"><%= link_to "Rename Folder", "#" %></li>
+    <!--<li id="move_edit"><%= link_to "Move/Edit", "#" %></li>
+    <li id="rename_folder"><%= link_to "Rename Folder", "#" %></li> -->
+  <%- end -%>
+  <%- unless current_user.folders.empty? && current_user.channels.empty? -%>
     <li id="delete"><%= link_to "Delete", "#" %></li>
   <%- end -%>
   <%- unless current_user.channels.empty? -%>

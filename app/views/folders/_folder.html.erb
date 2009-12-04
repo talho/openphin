@@ -6,7 +6,7 @@
     <%- if folder.documents.empty? -%>
       <%= link_to 'Delete', folder, :class => "invis destroy", :method => :delete %>
     <% else %>
-      <%= link_to "Delete", folder, :confirm => "This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?", :class => "invis destroy", :method => :delete %>
+      <%= link_to "Delete", folder, :confirm => "This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?", :class => "invis destroy confirm", :method => :delete %>
     <%- end -%>
 
     <%- unless folder.children.empty? -%>

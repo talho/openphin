@@ -246,6 +246,7 @@ function setMediaNewFolderEvents() {
     return false;
   });
   new_folder.bind("click", function(e) {
+    $(".media_list div#new_share:visible").slideToggle("fast");
     $(".media_list div#new_folder").slideToggle("slow");
   });
 }
@@ -265,6 +266,7 @@ function setMediaNewShareEvents() {
     return false;
   });
   new_share.bind("click", function(e) {
+    $(".media_list div#new_folder:visible").slideToggle("fast");
     $(".media_list div#new_share").slideToggle("slow");
   });
 }
@@ -308,11 +310,28 @@ function setMediaDeleteItemEvents() {
           });
           return false;
         });
-        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; cursor: pointer;'>close</div>");
+        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
         $("#deletion #close").bind('click', function(e) {
            dp.remove();
         });
       });
+      return;
+    }
+
+    if($("ul.folders input:checked").length > 0) {
+      share = $("ul.folders input:checked:first")
+      delete_share = share.closest("li").children("a.destroy");
+      confirmed = share.closest("li").children("a.confirm").length;
+      site = delete_share.attr("href");
+      if((confirmed > 0 && confirm("'This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?")) || confirmed == 0) {
+        $.post(site,{_method: "delete"},function(data, textStatus) {
+          if(textStatus.toLowerCase() != "success") {
+            alert("Failed to delete folder, please try again.");
+            return false;
+          }
+          reloadMediaListPanel("");
+        });
+      }
     }
   });
 }
@@ -346,7 +365,7 @@ function setMediaInviteEvents() {
           });
           return false;
         });
-        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; cursor: pointer;'>close</div>");
+        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
         $("#invitation #close").bind('click', function(e) {
            dp.remove();
         });
@@ -368,8 +387,29 @@ function setMediaInviteEvents() {
 }
 
 function setMediaUnsubscribeEvents() {
-  var unsubscribe = $("ul.media_toolbar li#new_folder");
-  
+  var unsubscribe = $("ul.media_toolbar li#unsubscribe");
+
+  unsubscribe.bind("click", function(e) {
+    if($("ul.shares input:checked").length > 0) {
+      share = $("ul.shares input:checked:first");
+      unsubscribe = share.closest("li").children("a.unsubscribe");
+      if(unsubscribe.length == 0) {
+        alert("Cannot unsubscribe from this share.");
+        return;
+      }
+      site = unsubscribe.attr("href");
+      if(confirm("Are you sure you want to unsubscribe from this share?")) {
+        $.post(site,{_method: "delete"},function(data, textStatus) {
+          if(textStatus.toLowerCase() != "success") {
+            alert("Could not unsubscribe from share, please try again.");
+            return;
+          }
+          reloadMediaListPanel("");
+        });
+        return false;
+      }
+    }
+  });
 }
 
 function tieDocumentsDocumentNavigation(){
