@@ -281,17 +281,17 @@ span.documents div#new_folder                   {display: none; bottom: 0px; pos
 span.media_list fieldset.list                   {height:230px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
-ul.media_toolbar li                             {float: left; list-style-type: none; width: 20px; height: 20px; text-indent: -9999px;}
+ul.media_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
 ul.documents li                                 {list-style-type: none;}
 ul.documents_toolbar                            {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
-ul.documents_toolbar li                         {float: left; list-style-type: none; width: 20px; height: 20px; text-indent: -9999px;}
-ul.media_toolbar li#new_folder                  {background-color: yellow;}
-ul.media_toolbar li#new_share                   {background-color: red;}
+ul.documents_toolbar li                         {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
+ul.media_toolbar li#new_folder                  {background-image: url('images/folder_add.png');}
+ul.media_toolbar li#new_share                   {background-image: url('images/group_add.png');}
 ul.media_toolbar li#move_edit                   {background-color: blue;}
 ul.media_toolbar li#rename_folder               {background-color: green;}
-ul.media_toolbar li#delete                      {background-color: orange;}
-ul.media_toolbar li#invite                      {background-color: lightblue;}
-ul.media_toolbar li#unsubscribe                 {background-color: black;}
+ul.media_toolbar li#delete                      {background-image: url('images/folder_delete.png');}
+ul.media_toolbar li#invite                      {background-image: url('images/group_add.png');}
+ul.media_toolbar li#unsubscribe                 {background-image: url('images/group_delete.png');}
 ul.documents_toolbar li#send                    {background-color: yellow;}
 ul.documents_toolbar li#add_to_share            {background-color: red;}
 ul.documents_toolbar li#move_edit               {background-color: blue;}

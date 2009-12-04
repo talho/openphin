@@ -1,15 +1,15 @@
 <ul class="media_toolbar">
-  <li id="new_folder"><%= link_to "New Folder", "#" %></li>
-  <li id="new_share"><%= link_to "New Share", "#" %></li>
+  <li id="new_folder" alt="New Folder"><%= link_to "New Folder", "#" %></li>
+  <li id="new_share" alt="New Share"><%= link_to "New Share", "#" %></li>
   <%- unless current_user.folders.empty? -%>
-    <!--<li id="move_edit"><%= link_to "Move/Edit", "#" %></li>
-    <li id="rename_folder"><%= link_to "Rename Folder", "#" %></li> -->
+    <!--<li id="move_edit" alt="Move/Edit"><%= link_to "Move/Edit", "#" %></li>
+    <li id="rename_folder" alt="Rename"><%= link_to "Rename Folder", "#" %></li> -->
   <%- end -%>
   <%- unless current_user.folders.empty? && current_user.channels.empty? -%>
-    <li id="delete"><%= link_to "Delete", "#" %></li>
+    <li id="delete" alt="Delete Folder/Share"><%= link_to "Delete", "#" %></li>
   <%- end -%>
   <%- unless current_user.channels.empty? -%>
-    <li id="invite"><%= link_to "Invite", "#" %></li>
-    <li id="unsubscribe"><%= link_to "Unsubscribe", "#" %></li>
+    <li id="invite" alt="Invite Users to Share"><%= link_to "Invite", "#" %></li>
+    <li id="unsubscribe" alt="Unsubscribe from Share"><%= link_to "Unsubscribe", "#" %></li>
   <%- end -%>
 </ul>
