@@ -36,8 +36,8 @@ Feature: Viewing the alert log
     And Texas is the parent jurisdiction of:
       | Dallas County |  
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And an alert with:
       | from_jurisdiction | Dallas County |
@@ -45,6 +45,9 @@ Feature: Viewing the alert log
       | jurisdictions     | Dallas County |
     When I am on the alert log
     Then I should see an alert titled "Hello World"
+
+    When I follow "View"
+    Then I should see "Hello World"
   
   Scenario: Can't view alerts from outside jurisdictions
     Given the following entities exists:
