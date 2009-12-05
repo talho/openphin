@@ -58,7 +58,7 @@ jQuery(function($) {
     filter_hide: true,
     filter_selected: true,
     firstselected: true,
-    newel: true
+    newel: false
   });
 });
 
