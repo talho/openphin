@@ -132,8 +132,9 @@ class User < ActiveRecord::Base
     jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
   end
 
-  def schools
-    School.find(:all, :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name")
+  def schools(options={})
+    options={ :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name"}.merge(options)
+    School.find(:all, options)
 #    school_districts.map{|district| district.schools}.flatten.uniq
   end
 
