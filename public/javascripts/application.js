@@ -167,9 +167,11 @@ function reloadDocumentsPanel(site){
             return;
         }
         activateMediaPanelActions();
-
+        
         var dp = $("#documents_panel span.documents");
-        dp.load("/inbox");
+        dp.load("/inbox","",function(e) {
+          activateDocumentsPanelActions();
+        });
     });
 }
 
@@ -204,6 +206,7 @@ function activateMediaPanelActions() {
         alert("Error loading, please try again.");
         return;
       }
+      activateDocumentsPanelActions();
     });
     return false;
   });
@@ -412,14 +415,142 @@ function setMediaUnsubscribeEvents() {
   });
 }
 
+function reloadDocumentsDocumentPanel(site) {
+  if(typeof site == "undefined") site = "/inbox";
+
+  var dp = $("#documents_panel span.documents");
+  dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+    if(textStatus != "success") {
+      alert("Error loading, please try again.");
+      return;
+    }
+    activateDocumentsPanelActions();
+  });
+}
+
+function activateDocumentsPanelActions() {
+  $("span.documents a").bind("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var dp = $("#documents_panel span.documents");
+    site = $(this).attr("href");
+    dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+      if(textStatus != "success") {
+        alert("Error loading, please try again.");
+        return;
+      }
+       tieDocumentsDocumentNavigation();
+    });
+    return false;
+  });
+
+  tieDocumentsDocumentNavigation();
+}
+
 function tieDocumentsDocumentNavigation(){
+  setDocumentUploadEvents();
+  setDocumentNewFolderEvents();
+  setDocumentSendEvents();
+  setDocumentAddToShareEvents();
+  setDocumentMoveEditEvents();
+  setDocumentDeleteItemEvents();
+}
+
+function detectAuthenticityToken(responseXML) {
+  // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
+  // and can't detect the success of the iframe so always returns success
+  // Detects for the presence of the authenticity token meta tag in the fetched page
+
+  return responseXML.evaluate("count(//head/meta[@id='authenticity-token'])",responseXML, null, XPathResult.NUMBER_TYPE,null).numberValue;
+}
+
+function setDocumentUploadEvents() {
+  var upload_document = $("ul.documents_toolbar li#upload_document");
+  var upload_document_div = $("span.documents div.upload_document");
+  var upload_document_form = $("span.documents div.upload_document form");
+  var upload_document_submit = $("span.documents div.upload_document input#document_submit");
+  var new_folder_div = $("span.documents div#new_folder:visible");
+
+  upload_document_form.ajaxForm({
+    target: "span.documents",
+    complete: function(response, textStatus) {
+      loaded = detectAuthenticityToken(response.responseXML);
+      if(loaded > 0) {
+        upload_document_div.slideToggle("fast");
+        activateDocumentsPanelActions();
+      } else {
+        alert("Error creating new folder, please try again.");
+        reloadDocumentsDocumentPanel();
+      }
+    }
+  });
+
+  upload_document.bind("click", function(e) {
+    upload_document_div.slideToggle("slow");
+  });
+}
+
+function setDocumentNewFolderEvents() {
   var new_folder = $("ul.documents_toolbar li#new_folder");
-  var new_share = $("ul.documents_toolbar li#new_share");
+  var new_folder_div = $("span.documents div#new_folder");
+  var new_folder_submit = $("span.documents div#new_folder input#folder_submit");
+  var upload_document_div = $("ul.documents_toolbar div#upload_document:visible");
+
+  new_folder_submit.bind("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    if(upload_document_div.length > 0) upload_document_div.slideToggle("fast");
+    myform = $("span.documents div#new_folder form");
+    $.post(myform.attr("action"),myform.serializeArray(),function(data, textStatus) {
+      if(textStatus.toLowerCase() != "success") {
+        alert("Error creating new folder, please try again.");
+      }
+      reloadMediaListPanel();
+      new_folder_div.slideToggle("fast");
+    });
+    return false;
+  });
+
+  new_folder.bind("click", function(e) {
+    new_folder_div.slideToggle("slow");
+  });
+}
+
+function setDocumentSendEvents() {
+  var send = $("ul.documents_toolbar li#send");
+
+}
+
+function setDocumentAddToShareEvents() {
+  var add_to_share = $("ul.documents_toolbar li#add_to_share");
+
+}
+
+function setDocumentMoveEditEvents() {
   var move_edit = $("ul.documents_toolbar li#move_edit");
-  var rename_folder = $("ul.documents_toolbar li#rename_folder");
+
+}
+
+function setDocumentDeleteItemEvents() {
   var delete_item = $("ul.documents_toolbar li#delete");
-  var invite = $("ul.documents_toolbar li#new_folder");
-  var unsubscribe = $("ul.documents_toolbar li#new_folder");
-
-
+  
+  delete_item.bind("click", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    if($("ul.documents input:checked").length > 0) {
+      if(confirm("Are you sure you want to delete this item?")) {
+        item = $("ul.documents input:checked:first");
+        link = item.closest("li").children("a.destroy");
+        action = link.attr("href");
+        $("span.documents").load(action,{_method: "delete"},function(data, textStatus) {
+          if(textStatus.toLowerCase() != "success") {
+            alert("Failed to delete item, please try again.");
+            return false;
+          }
+          activateDocumentsPanelActions();
+        });
+      }
+    }
+    return false;
+  });
 }

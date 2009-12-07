@@ -1,10 +1,12 @@
 <ul class="documents_toolbar">
-  <li id="send"><%= link_to 'Send', "#" %></li>
-  <li id="add_to_share"><%= link_to 'Add to Share', "#" %></li>
-  <li id="move_edit"><%= link_to 'Move/Edit', "#" %></li>
-  <li id="delete"><%= link_to 'Delete', "#" %></li>
-  <% if @channel %>
-    <li id="copy"><%= link_to 'Copy', "#" %></li>
-    <li id="remove_from_share"><%= link_to 'Remove from share', "#" %></li>
+  <%- unless @parent_folder.nil? || @parent_folder.new_record? -%>
+    <li id="upload_document" title="Upload Document"><%= link_to 'Upload', "#" %></li>
+    <li id="new_folder" title="Create New Folder"><%= link_to 'New Folder', "#" %></li>
+  <%- end -%>
+  <%- unless @documents.empty? -%>
+    <li id="send" title="Send Document"><%= link_to 'Send', "#" %></li>
+    <li id="add_to_share" title="Share Document"><%= link_to 'Add to Share', "#" %></li>
+    <li id="move_edit" title="Move/Edit Document"><%= link_to 'Move/Edit', "#" %></li>
+    <li id="delete" title="Delete Document"><%= link_to 'Delete', "#" %></li>
   <%- end -%>
 </ul>

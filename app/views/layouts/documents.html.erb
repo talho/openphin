@@ -1,1 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <%- if protect_against_forgery? -%>
+    <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
+  <%- end -%>
+</head>
+<body>
 <%= yield %>
+</body>
+</html>

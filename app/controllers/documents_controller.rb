@@ -94,13 +94,14 @@ class DocumentsController < ApplicationController
     @folder.documents.delete(@document)
     @document.destroy
     flash[:notice] = "Successfully removed the document from the folder."
-    redirect_to @folder
+    redirect_to folder_documents_path(@folder)
   end
 
   private
   def set_panel_defaults
     @folders = [current_user.folders.roots].flatten
     @folder = Folder.new
+    @parent_folder = Folder.new
     @shares = current_user.channels
     current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
     current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
