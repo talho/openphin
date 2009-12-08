@@ -73,7 +73,7 @@ Feature: Creating document channels
     When I fill out the share invitation form with:
       | People | Brandon Keepers |
     And I press "Invite"
-    Then I should be redirected to the folder inbox page
+    Then I should be redirected to the document viewing panel
     And "brandon.keepers@example.com" should receive the email:
       | subject       | John Smith added you to a share |
       | body contains | To view this channel |

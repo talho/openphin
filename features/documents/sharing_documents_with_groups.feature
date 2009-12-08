@@ -91,7 +91,8 @@ Background:
     And I fill out the document sharing form with:
       | Groups        | G2            |
     And I press "Invite"
-
+    Then I should be redirected to the document viewing panel
+    When I follow "Rockstars"
     Then I should see "sample.wav"
     And "bob.smith@example.com" should receive the email:
       | subject       | John Smith invited you to a share |

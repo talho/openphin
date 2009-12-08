@@ -65,13 +65,16 @@ Feature: Adding documents to document sharing
     When I go to the document viewing panel
     And I fill in "Folder Name" with "Everything"
     And I press "Create Folder"
-    Then I should see "Everything"
+    Then I should be redirected to the document viewing panel
+    And I should see "Everything"
 
     When I follow "Everything"
     And I press "Create Folder"
     And I fill in "Folder Name" with "Some Things"
     And I press "Create Folder"
-    Then I should see "Everything Detail"
+    Then I should be redirected to the document viewing panel
+    When I follow "Some Things"
+    Then I should see "Some Things Detail"
 
   Scenario: Moving a document into a folder
     Given I have a folder named "Rockstars"
@@ -153,7 +156,7 @@ Feature: Adding documents to document sharing
 
     When I follow "Delete"
     Then I should not see "keith.jpg"
-    And I should be on the folder inbox page
+    And I should be on the document viewing panel
     Then I should not see "Rockstars"
 
     And I should not see "keith.jpg"

@@ -57,8 +57,7 @@ Feature: Sharing documents with selected scopes
       | People   | Keith Gaddis |
 
     And I press "Invite"
-    Then I should see "Additional users have been added to this share"
-    And I should be on the folder inbox page
+    Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this channel, go to: |
@@ -73,8 +72,7 @@ Feature: Sharing documents with selected scopes
       | People | Keith Gaddis, Dan Morrison, Ed McGuyver |
 
     And I press "Invite"
-    Then I should see "Additional users have been added to this share"
-    And I should be on the folder inbox page
+    Then I should be on the document viewing panel
 
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
@@ -97,8 +95,7 @@ Feature: Sharing documents with selected scopes
       | Jurisdictions | Dallas County |
 
     And I press "Invite"
-    Then I should see "Additional users have been added to this share"
-    And I should be on the folder inbox page
+    Then I should be on the document viewing panel
 
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com |
@@ -122,8 +119,7 @@ Feature: Sharing documents with selected scopes
       | Roles         | Health Officer                |
 
     And I press "Invite"
-    Then I should see "Additional users have been added to this share"
-    And I should be on the folder inbox page
+    Then I should be on the document viewing panel
 
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com, brian.ryckbost@example.com |
@@ -151,8 +147,7 @@ Feature: Sharing documents with selected scopes
       | Jurisdictions | Dallas County |
 
     And I press "Invite"
-    Then I should see "Additional users have been added to this share"
-    And I should be on the folder inbox page
+    Then I should be on the document viewing panel
 
     And the following users should receive the email:
       | People        | john.smith@example.com |
@@ -186,7 +181,7 @@ Feature: Sharing documents with selected scopes
       | People   | Brian Simms |
     And I press "Invite"
 
-    Then I should see "Additional users have been added to this share"
+    Then I should be on the document viewing panel
     And "brian.simms@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this channel, go to: |
@@ -212,7 +207,7 @@ Feature: Sharing documents with selected scopes
       | People   | Keith Gaddis |
     And I press "Invite"
 
-    Then I should see "Additional users have been added to this share"
+    Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this channel, go to: |
@@ -231,7 +226,7 @@ Feature: Sharing documents with selected scopes
     And I check "Make these people owners"
     And I press "Invite"
 
-    Then I should see "Additional owners have been added to this share"
+    Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this channel, go to: |
