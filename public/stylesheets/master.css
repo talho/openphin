@@ -278,6 +278,7 @@ span.media_list div#new_folder                  {display: none; position: absolu
 span.media_list div#new_share                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
 span.documents div.upload_document              {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
 span.documents div#new_folder                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.documents div#contents                     {height: 204px; overflow: auto;}
 span.media_list fieldset.list                   {height:230px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
@@ -290,14 +291,14 @@ ul.media_toolbar li#new_share                   {background-image: url('images/g
 ul.media_toolbar li#move_edit                   {background-color: blue; cursor:pointer;}
 ul.media_toolbar li#rename_folder               {background-color: green; cursor:pointer;}
 ul.media_toolbar li#delete                      {background-image: url('images/folder_delete.png'); cursor:pointer;}
-ul.media_toolbar li#invite                      {background-image: url('images/group_add.png'); cursor:pointer;}
+ul.media_toolbar li#invite                      {background-image: url('images/group_go.png'); cursor:pointer;}
 ul.media_toolbar li#unsubscribe                 {background-image: url('images/group_delete.png'); cursor:pointer;}
-ul.documents_toolbar li#upload_document         {background-color: black; cursor:pointer;}
-ul.documents_toolbar li#new_folder              {background-color: pink; cursor:pointer;}
-ul.documents_toolbar li#send                    {background-color: yellow; cursor:pointer;}
-ul.documents_toolbar li#add_to_share            {background-color: red; cursor:pointer;}
-ul.documents_toolbar li#move_edit               {background-color: blue; cursor:pointer;}
-ul.documents_toolbar li#delete                  {background-color: green; cursor:pointer;}
+ul.documents_toolbar li#upload_document         {background-image: url('images/folder_page.png'); cursor:pointer;}
+ul.documents_toolbar li#new_folder              {background-image: url('images/folder_add.png'); cursor:pointer;}
+ul.documents_toolbar li#send                    {background-image: url('images/page_copy.png'); cursor:pointer;}
+ul.documents_toolbar li#add_to_share            {background-image: url('images/group_go.png'); cursor:pointer;}
+ul.documents_toolbar li#move_edit               {background-image: url('images/page_edit.png'); cursor:pointer;}
+ul.documents_toolbar li#delete                  {background-image: url('images/page_delete.png'); cursor:pointer;}
 .invis                                          {display: none;}
 
 /* Alerts and notifications */
