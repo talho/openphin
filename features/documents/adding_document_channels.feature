@@ -37,25 +37,26 @@ Feature: Creating document channels
     Then "brandon.keepers@example.com" should receive the email:
       | subject       | A document has been added to the share "Channel 4" |
       | body contains | To view this document |
-    And I should be redirected to the document viewing panel
+    And I should be redirected to the folder inbox page
 
-    When I follow "Channel 4"
+    When I go to the document viewing panel
+    And I follow "Channel 4"
     Then I should see "sample.wav"
 
-  Scenario: User copying a document out of share
-    Given I have been added to the share "Vacation Photos"
-    And a document "keith.jpg" is in the share "Vacation Photos"
-    And I have a folder named "Hilarious"
-    When I go to the document viewing panel
-    And I follow "Vacation Photos"
-    And I check "keith.jpg"
-    And I follow "Copy"
-    And I select "Hilarious" from "Folder"
-    And I press "Copy"
-    Then I should be redirected to the document viewing panel
-
-    When I follow "Hilarious"
-    Then I should see "keith.jpg"
+#  Scenario: User copying a document out of share
+#    Given I have been added to the share "Vacation Photos"
+#    And a document "keith.jpg" is in the share "Vacation Photos"
+#    And I have a folder named "Hilarious"
+#    When I go to the document viewing panel
+#    And I follow "Vacation Photos"
+#    And I check "keith.jpg"
+#    And I follow "Copy"
+#    And I select "Hilarious" from "Folder"
+#    And I press "Copy"
+#    Then I should be redirected to the document viewing panel
+#
+#    When I follow "Hilarious"
+#    Then I should see "keith.jpg"
 
   Scenario: Inviting users to a share
     Given I created the share "Avian Flus"
@@ -110,9 +111,7 @@ Feature: Creating document channels
     And I follow "Channel 4"
     And I should see "Channel 4 Detail"
     And I should see "keith.jpg"
-    And I follow "Remove from share"
-    Then I should be redirected to the folder inbox page
-    When I go to the document viewing panel
+    And I follow "Delete"
     Then I should not see "keith.jpg"
 
   Scenario: Deleting a share

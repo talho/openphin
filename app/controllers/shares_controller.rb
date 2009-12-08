@@ -16,7 +16,7 @@ class SharesController < ApplicationController
       @document.save!
     end
     flash[:notice] = 'Successfully shared the document'
-    redirect_to documents_path
+    redirect_to folder_or_inbox_path(@document)
   end
 
 end

@@ -429,7 +429,7 @@ function reloadDocumentsDocumentPanel(site) {
 }
 
 function activateDocumentsPanelActions() {
-  $("span.documents a").bind("click", function(e) {
+  /*$("span.documents a").bind("click", function(e) {
     e.stopPropagation();
     e.preventDefault();
     var dp = $("#documents_panel span.documents");
@@ -442,7 +442,7 @@ function activateDocumentsPanelActions() {
        tieDocumentsDocumentNavigation();
     });
     return false;
-  });
+  });*/
 
   tieDocumentsDocumentNavigation();
 }
@@ -461,7 +461,7 @@ function detectAuthenticityToken(responseXML) {
   // and can't detect the success of the iframe so always returns success
   // Detects for the presence of the authenticity token meta tag in the fetched page
 
-  return responseXML.evaluate("count(//head/meta[@id='authenticity-token'])",responseXML, null, XPathResult.NUMBER_TYPE,null).numberValue;
+  return responseXML.evaluate("count(//head/meta[@id='authenticity-token'])",responseXML, null, XPathResult.NUMBER_TYPE,null).numberValue > 0 ? true : false;
 }
 
 function setDocumentUploadEvents() {
@@ -475,7 +475,7 @@ function setDocumentUploadEvents() {
     target: "span.documents",
     complete: function(response, textStatus) {
       loaded = detectAuthenticityToken(response.responseXML);
-      if(loaded > 0) {
+      if(loaded) {
         upload_document_div.slideToggle("fast");
         activateDocumentsPanelActions();
       } else {
@@ -518,17 +518,147 @@ function setDocumentNewFolderEvents() {
 
 function setDocumentSendEvents() {
   var send = $("ul.documents_toolbar li#send");
+  send.bind("click", function(e) {
+    if($("ul.documents input:checked").length > 0) {
+      $("span.documents").append("<div id='send' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sending panel...</div>");
+      var dp = $("span.documents div#send");
+      file = $("ul.documents input:checked:first");
+      link = file.closest("li").children("a.send");
+      site = link.attr("href");
+      dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+        if(textStatus != "success") {
+          alert("Error loading, please try again.");
+          return false;
+        }
+        $("form.edit_document").ajaxForm({
+          target: "span.documents",
+          success: function(data, textStatus) {
+            activateDocumentsPanelActions();
+            dp.remove();
+          },
+          error: function(request,textStatus,errorThrown) {
+            alert("Document was unable to be sent.  Please try again.");
+            dp.remove();
+          }
+        });
+        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
+        $("#send #close").bind('click', function(e) {
+          dp.remove();
+        });
 
+        $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
+
+        $(".search_user_ids").fcbkcomplete({
+          json_url: '/search',
+          json_cache: true,
+          filter_case: false,
+          filter_hide: true,
+          filter_selected: true,
+          firstselected: true,
+          newel: true
+        });
+      });
+    }
+  });
 }
 
 function setDocumentAddToShareEvents() {
   var add_to_share = $("ul.documents_toolbar li#add_to_share");
 
-}
+  add_to_share.bind("click", function(e) {
+    if($("ul.documents input:checked").length > 0) {
+      $("span.documents").append("<div id='send' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sharing panel...</div>");
+      var dp = $("span.documents div#send");
+      file = $("ul.documents input:checked:first");
+      link = file.closest("li").children("a.add_share");
+      site = link.attr("href");
+      dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+        if(textStatus != "success") {
+          alert("Error loading, please try again.");
+          return false;
+        }
+        $("form.edit_document").ajaxForm({
+          target: "span.documents",
+          success: function(data, textStatus) {
+            activateDocumentsPanelActions();
+            dp.remove();
+          },
+          error: function(request,textStatus,errorThrown) {
+            alert("Document was unable to be sent.  Please try again.");
+            dp.remove();
+          }
+        });
+        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
+        $("#send #close").bind('click', function(e) {
+          dp.remove();
+        });
 
+        $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
+
+        $(".search_user_ids").fcbkcomplete({
+          json_url: '/search',
+          json_cache: true,
+          filter_case: false,
+          filter_hide: true,
+          filter_selected: true,
+          firstselected: true,
+          newel: true
+        });
+      });
+    }
+  });
+}
+var booya = "";
 function setDocumentMoveEditEvents() {
   var move_edit = $("ul.documents_toolbar li#move_edit");
+  move_edit.bind("click", function(e) {
+    if($("ul.documents input:checked").length > 0) {
+      $("span.documents").append("<div id='move_edit' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; width: 250px;'>Loading move/edit panel...</div>");
+      var dp = $("span.documents div#move_edit");
+      file = $("ul.documents input:checked:first");
+      link = file.closest("li").children("a.move_edit");
+      site = link.attr("href");
+      dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+        if(textStatus != "success") {
+          alert("Error loading, please try again.");
+          return false;
+        }
 
+        child = $("form select#document_folder_id");
+        child.closest("form").ajaxForm({
+          target: "span.documents",
+          success: function(data, textStatus) {
+            activateDocumentsPanelActions();
+            dp.remove();
+          },
+          error: function(request,textStatus,errorThrown) {
+            alert("Document was unable to be sent.  Please try again.");
+            dp.remove();
+          }
+        });
+
+        child = $("form input#document_file");
+        child.closest("form").ajaxForm({
+          target: "span.documents",
+          complete: function(response, textStatus) {
+            booya = response.responseXML;
+            loaded = detectAuthenticityToken(response.responseXML);
+            dp.remove();
+            if(loaded) {
+              activateDocumentsPanelActions();
+            } else {
+              alert("Error updating document, please try again.");
+              reloadDocumentsDocumentPanel();
+            }
+          }
+        });
+        dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
+        $("#move_edit #close").bind('click', function(e) {
+          dp.remove();
+        });
+      });
+    }
+  });
 }
 
 function setDocumentDeleteItemEvents() {
@@ -538,7 +668,7 @@ function setDocumentDeleteItemEvents() {
     e.stopPropagation();
     e.preventDefault();
     if($("ul.documents input:checked").length > 0) {
-      if(confirm("Are you sure you want to delete this item?")) {
+      if(confirm("Are you sure you want to delete this item?  If this item is in a share, it will only remove it from the share and not from it's folder.")) {
         item = $("ul.documents input:checked:first");
         link = item.closest("li").children("a.destroy");
         action = link.attr("href");

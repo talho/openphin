@@ -15,7 +15,7 @@ Background:
 		| Bob Smith  | bob.smith@example.com  | Epidemiologist | Texas          |
 	And "john.smith@example.com" is not public in "Texas"
   And "jane.smith@example.com" is not public in "Texas"
-    And the following groups for "john.smith@example.com" exist:
+  And the following groups for "john.smith@example.com" exist:
 	  | G1 | Tarrant County | Health Officer |  | Personal     |                |
 	  | G2 | Texas          | Epidemiologist |  | Global       |                |
 	  | G3 | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |

@@ -31,6 +31,7 @@ Background:
     And I follow "Add to Share"
     And I check "Rockstars"
     And I press "Share"
+    When I go to the document viewing panel
     And I check "Rockstars"
     And I follow "Invite"
 		Then I should see "G1" as a groups option
@@ -49,6 +50,7 @@ Background:
     And I follow "Add to Share"
     And I check "Rockstars"
     And I press "Share"
+    When I go to the document viewing panel
     And I check "Rockstars"
     And I follow "Invite"
     Then I should see "G2" as a groups option
@@ -66,6 +68,7 @@ Background:
     And I follow "Add to Share"
     And I check "Rockstars"
     And I press "Share"
+    When I go to the document viewing panel
     And I check "Rockstars"
     And I follow "Invite"
     Then I should see "G2" as a groups option
@@ -82,6 +85,7 @@ Background:
     And I follow "Add to Share"
     And I check "Rockstars"
     And I press "Share"
+    When I go to the document viewing panel
     And I check "Rockstars"
     And I follow "Invite"
     And I fill out the document sharing form with:

@@ -1,7 +1,8 @@
 class DocumentsController < ApplicationController
   before_filter :non_public_role_required
 
- layout "documents"
+  layout "documents", :except => [:show]
+
   def panel_index
     set_panel_defaults
   end
@@ -85,7 +86,7 @@ class DocumentsController < ApplicationController
     @document = Document.editable_by(current_user).find(params[:id])
     @channel = current_user.channels.find(params[:channel_id])
     @channel.documents.delete(@document)
-    redirect_to folder_inbox_path
+    redirect_to channel_documents_path(@channel)
   end
   
   def remove_from_folder
@@ -94,7 +95,7 @@ class DocumentsController < ApplicationController
     @folder.documents.delete(@document)
     @document.destroy
     flash[:notice] = "Successfully removed the document from the folder."
-    redirect_to folder_documents_path(@folder)
+    redirect_to folder_or_inbox_path(@document)
   end
 
   private

@@ -48,6 +48,7 @@ Feature: Sharing documents with selected scopes
     And I follow "Add to Share"
     And I check "Rockstars"
     And I press "Share"
+    When I go to the document viewing panel
     And I check "Rockstars"
     And I follow "Invite"
 
