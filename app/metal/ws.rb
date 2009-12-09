@@ -1,7 +1,7 @@
 # Allow the metal piece to run in isolation
 require(File.dirname(__FILE__) + "/../../config/environment") unless defined?(Rails)
 require 'sinatra'
-Sinatra::Application.default_options.merge!(:run => false, :env => Rails.env)
+set :run => false, :environment => Rails.env
 Ws = Sinatra::Application unless defined? Ws
 
 helpers do

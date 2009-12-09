@@ -71,7 +71,6 @@ Feature: Updating an alert
     And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
   Scenario: Updating an alert as another alerter within the same jurisdiction
-    Given this is implemented
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     And I've sent an alert with:
@@ -120,7 +119,7 @@ Feature: Updating an alert
     And I should see an alert titled "[Update] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert [Update] - Flying Monkey Disease |
+      | subject       | [Update] - Flying Monkey Disease |
       | body contains | Title: [Update] - Flying Monkey Disease |
       | body contains | Alert ID:  |
       | body contains | Reference:  |
