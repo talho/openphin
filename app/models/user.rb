@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts
-  has_many :deliveries, :through => :alert_attempts
+  has_many :deliveries,    :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
     end
   end
   has_many :folders  do
-    def roots
+    def rootsm
       scoped :conditions => 'folders.parent_id IS NULL'
     end
   end
