@@ -305,8 +305,9 @@ ul.documents_toolbar li#delete                  {background-image: url('images/p
 div#deletion div#share                          {overflow: auto;}
 #edit.media_list fieldset ul.check_selector li ul {margin-left: 10px;}
 #edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 20px;}
-#edit.media_list fieldset ul.check_selector li ul label label {margin-left: 0px;}
+#edit.media_list fieldset ul.check_selector li ul.folders ul label {margin-left: 0px;}
 #edit.media_list fieldset ul.check_selector li ul input {left: 0px;}
+#edit.media_list fieldset ul.check_selector li li li li label  {padding-left:42px;}
 .invis                                          {display: none;}
 
 /* Alerts and notifications */
