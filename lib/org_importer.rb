@@ -21,7 +21,7 @@
 
 class OrgImporter
   def self.import_orgs(filename, options = {})
-    newOrgs=File.open(File.dirname(__FILE__) +  '/../db/fixtures/orglist.csv').read.split("\r")
+    newOrgs=File.open(filename).read.split("\r")
     
     newOrgs.each do|o|
       org = Organization.create! :name => o, :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization", :contact_display_name => "Bob Barker", :contact_email => "@bob@barker.com", :contact_phone => "555-555-5555"
