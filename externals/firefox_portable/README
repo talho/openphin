@@ -1,0 +1,84 @@
+Download FirefoxPortable 3.5.5
+
+\\.host\Shared Folders\My Documents\FirefoxPortable\FirefoxPortable.ini (new file)
+
+  # RunLocally for CD Live
+  # DisableSplashScreen to not see the FirefoxPortable logo
+  
+  [FirefoxPortable]
+  FirefoxDirectory=App\firefox
+  ProfileDirectory=Data\profile
+  PluginsDirectory=Data\plugins
+  SettingsDirectory=Data\settings
+  FirefoxExecutable=firefox.exe
+  AdditionalParameters=
+  LocalHomepage=
+  DisableSplashScreen=true
+  DisableIntelligentStart=false
+  AllowMultipleInstances=true
+  SkipChromeFix=false
+  SkipCompregFix=false
+  WaitForFirefox=false
+  RunLocally=true
+
+
+\\.host\Shared Folders\My Documents\FirefoxPortable\App\Firefox\chrome\en_US.jar (decompress,edit,re-compress) (7-zip)
+
+  \locale\branding\brand.dtd
+
+    was:
+      <!ENTITY  brandShortName        "Firefox">
+      <!ENTITY  brandFullName         "Mozilla Firefox">            
+      <!ENTITY  vendorShortName       "Mozilla">
+      <!ENTITY  logoCopyright         "Firefox and the Firefox logos are trademarks of the Mozilla Foundation. All rights reserved.">
+    now:
+      <!ENTITY  brandShortName        "Texas Phin">
+      <!ENTITY  brandFullName         "Texas Phin">            
+      <!ENTITY  vendorShortName       "DSHS">
+      <!ENTITY  logoCopyright         "">
+  
+
+\\.host\Shared Folders\My Documents\FirefoxPortable\App\DefaultData\profile\user.js
+
+  user_pref("browser.shell.checkDefaultBrowser", false);
+  user_pref("browser.tabs.autoHide", true);
+  pref("browser.bookmarks.max_backups",             0);
+  user_pref("browser.startup.homepage", "https://www.txphin.org");
+  user_pref("browser.sessionstore.resume_from_crash",false);
+  user_pref("browser.sessionstore.resume_session_once",false);
+  
+
+\\.host\Shared Folders\My Documents\FirefoxPortable\Data\profile\chrome\userChrome.css (new)
+
+    /*
+     * Edit this file and copy it as userChrome.css into your
+     * profile-directory/chrome/
+     */
+
+    /*
+     * This file can be used to customize the look of Mozilla's user interface
+     * You should consider using !important on rules which you want to
+     * override default settings.
+     */
+
+    /*
+     * Do not remove the @namespace line -- it's required for correct functioning
+     */
+    @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* set default namespace to XUL */
+
+
+
+    /*
+    * Remove the Location (URL)
+    */
+    #urlbar { display: none !important; }
+
+    /*
+    * Remove the search box
+    */
+    #searchbar { display: none !important; }
+    
+    
+    
+Install Hide Menubar 1.0.20090929 into FirefoxPortable
+

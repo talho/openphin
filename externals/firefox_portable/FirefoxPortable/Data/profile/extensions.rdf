@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NS1="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$5dxCt"
+                   NS1:locale="kn-IN"
+                   NS1:name="Hide Menubar"
+                   NS1:description="ನಿಮ್ಮ ಮುಖ್ಯ ಟೂಲ್‌ಬಾರ್ ಅನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅಡಗಿಸುವುದನ್ನು ಸಮರ್ಥಿಸುತ್ತದೆ, ನೀವು ALT ಗುಂಡಿಯನ್ನು ಅದುಮುವ ಮೂಲಕ ಅದನ್ನು ತಾತ್ಕಾಲಿಕವಾಗಿ ನೋಡಬಹುದು."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$ddxCt"
+                   NS1:locale="sk-SK"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Umožňuje automatické skrytie panela nástrojov Hlavná ponuka, stlačením klávesu ALT je možné dočasne ho zobraziť."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$YcxCt"
+                   NS1:locale="bg-BG"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Поддържа скриване на вашият Основен панел автоматично, можете да натиснете АЛТ бутона за да го покажете временно."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$adxCt"
+                   NS1:locale="pt-BR"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Ferramenta para esconder Barra de Tarefas do Menu Principal automaticamente, você pode pressionar a tecla ALT para mostrar temporariamente."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$cdxCt"
+                   NS1:locale="ru-RU"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Автоматически скрывает панель основного меню. Для временного её отображения нажмите клавишу Alt."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$8dxCt"
+                   NS1:locale="nl-NL"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Ondersteunt het automatisch verbergen van uw menubalk, u kunt de ALT-toets indrukken om de balk tijdelijk te zien."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$ldxCt"
+                   NS1:id="{3550f703-e582-4d05-9a08-453d09bdfdc6}"
+                   NS1:minVersion="3.0b1"
+                   NS1:maxVersion="3.1a1pre" />
+  <RDF:Seq RDF:about="urn:mozilla:item:root">
+    <RDF:li RDF:resource="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:hidemenubar@moztw.org"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="rdf:#$edxCt"
+                   NS1:locale="sr-RS"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Омогућава аутоматско сакривање траке са алаткама, али можете притиснути дугме алт да је привремено прикажете."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$0dxCt"
+                   NS1:locale="es-ES"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Permite ocultar la barra de menú automáticamente, puede pulsar la tecla ALT para mostrarla temporalmente."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$2dxCt"
+                   NS1:locale="fr-FR"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Masquer automatiquement la barre de menus, et pouvoir l'afficher momentanément en appuyant sur Alt."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$+cxCt"
+                   NS1:locale="de-DE"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Blendet automatisch die Menüleiste aus (&quot;Alt&quot;-Taste betätigen, um sie bedarfsweise wieder einzublenden)"
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$3dxCt"
+                   NS1:locale="it-IT"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Permette di nascondere automaticamente la barra dei menu. È possibile visualizzarla temporaneamente utilizzando il tasto ALT."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$6dxCt"
+                   NS1:locale="ko-KR"
+                   NS1:name="Hide Menubar"
+                   NS1:description="자동 주메뉴 숨기기를 지원합니다. ALT키를 눌러 일시적으로 보이게 할 수 있습니다."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$.cxCt"
+                   NS1:locale="da-DK"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Skjuler hovedmenu værktøjslinien automatisk, du kan vise den kortvarig når du trykker ALT tasten."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$idxCt"
+                   NS1:locale="zh-CN"
+                   NS1:name="Hide Menubar"
+                   NS1:description="支持自动隐藏主菜单工具栏，临时显示请按 ALT 键。"
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"
+                   NS1:installLocation="app-global"
+                   NS1:version="3.5.5"
+                   NS1:internalName="classic/1.0"
+                   NS1:locked="true"
+                   NS1:appManaged="true"
+                   NS1:name="Default"
+                   NS1:description="The default theme."
+                   NS1:creator="Mozilla"
+                   NS1:contributor="Mozilla Contributors">
+    <NS1:type NC:parseType="Integer">4</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$RAG3x2"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$hdxCt"
+                   NS1:locale="uk-UA"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Автоматично ховає панель основного меню. Для тимчасового її відображення натисніть клавішу Alt."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$ZcxCt"
+                   NS1:locale="ca-AD"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Et permet amagar la barra d'eines del teu menú principal automàticament i que es mostri temporalment apretant la tecla ALT."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$9dxCt"
+                   NS1:locale="pl-PL"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Automatycznie ukrywa menu główne umożliwiając jego tymczasowe przywrócenie przez wciśnięcie klawisza ALT."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$kdxCt"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.0"
+                   NS1:maxVersion="3.5.*" />
+  <RDF:Description RDF:about="rdf:#$1dxCt"
+                   NS1:locale="fi-FI"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Piilottaa päävalikon työkalupalkin automaattisesti, Alt-näppäintä painaen palkin saa tilapäisesti näkyviin."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$7dxCt"
+                   NS1:locale="mk-MK"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Поддржува автоматско скривање на алатникот со менијата, но вие можете да го притиснете копчето ALT за да го прикажите привремено."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$4dxCt"
+                   NS1:locale="ja-JP"
+                   NS1:name="Hide Menubar"
+                   NS1:description="メニューバーを自動的に隠します。一時的に表示させるにはAltキーを押してください。"
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$gdxCt"
+                   NS1:locale="tr-TR"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Ana Menü Çubuğu'nun kendiliğinden gizlenmesini, ALT tuşuna basılınca geçici olarak görünmesini sağlar."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$jdxCt"
+                   NS1:locale="zh-TW"
+                   NS1:name="Hide Menubar"
+                   NS1:description="讓選單工具列可自動隱藏，按[Alt]鍵可暫時顯示。"
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="urn:mozilla:item:hidemenubar@moztw.org"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.0.20090929"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Supports to hide your Mainmenu Toolbar automatically, you can press the ALT key to show it temporarily."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:localized RDF:resource="rdf:#$XcxCt"/>
+    <NS1:localized RDF:resource="rdf:#$YcxCt"/>
+    <NS1:localized RDF:resource="rdf:#$ZcxCt"/>
+    <NS1:localized RDF:resource="rdf:#$.cxCt"/>
+    <NS1:localized RDF:resource="rdf:#$+cxCt"/>
+    <NS1:localized RDF:resource="rdf:#$0dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$1dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$2dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$3dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$4dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$5dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$6dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$7dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$8dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$9dxCt"/>
+    <NS1:localized RDF:resource="rdf:#$adxCt"/>
+    <NS1:localized RDF:resource="rdf:#$bdxCt"/>
+    <NS1:localized RDF:resource="rdf:#$cdxCt"/>
+    <NS1:localized RDF:resource="rdf:#$ddxCt"/>
+    <NS1:localized RDF:resource="rdf:#$edxCt"/>
+    <NS1:localized RDF:resource="rdf:#$fdxCt"/>
+    <NS1:localized RDF:resource="rdf:#$gdxCt"/>
+    <NS1:localized RDF:resource="rdf:#$hdxCt"/>
+    <NS1:localized RDF:resource="rdf:#$idxCt"/>
+    <NS1:localized RDF:resource="rdf:#$jdxCt"/>
+    <NS1:targetApplication RDF:resource="rdf:#$kdxCt"/>
+    <NS1:targetApplication RDF:resource="rdf:#$ldxCt"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$RAG3x2"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.5.5"
+                   NS1:maxVersion="3.5.5" />
+  <RDF:Description RDF:about="rdf:#$fdxCt"
+                   NS1:locale="sv-SE"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Döljer huvudmenyn automatiskt. Genom att trycka på Alt-tangenten kan du tillfälligt uppvisa menyn."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$XcxCt"
+                   NS1:locale="ar"
+                   NS1:name="Hide Menubar"
+                   NS1:description="تأييد لاخفاء شريط أدوات القائمة الرئيسية ، يمكنك الضغط على مفتاح ALT لاظهاره بصورة مؤقتة."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+  <RDF:Description RDF:about="rdf:#$bdxCt"
+                   NS1:locale="pt-PT"
+                   NS1:name="Hide Menubar"
+                   NS1:description="Ferramenta para esconder Barra de Tarefas do Menu Principal automaticamente, pode carregar na tecla ALT para mostrar temporariamente."
+                   NS1:creator="yuoo2k"
+                   NS1:homepageURL="http://forum.moztw.org/viewtopic.php?t=15303" />
+</RDF:RDF>

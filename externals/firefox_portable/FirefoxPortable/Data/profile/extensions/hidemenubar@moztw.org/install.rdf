@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+ <Description about="urn:mozilla:install-manifest">
+    <em:id>hidemenubar@moztw.org</em:id>
+    <em:name>Hide Menubar</em:name>
+    <em:version>1.0.20090929</em:version>
+    <em:description>Supports to hide your Mainmenu Toolbar automatically, you can press the ALT key to show it temporarily.</em:description>
+    <em:creator>yuoo2k</em:creator>
+    <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+
+    <em:targetApplication> <!-- Firefox -->
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>3.0</em:minVersion>
+        <em:maxVersion>3.5.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:targetApplication> <!-- Thunderbird -->
+      <Description>
+        <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+        <em:minVersion>3.0b1</em:minVersion>
+        <em:maxVersion>3.1a1pre</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:localized>
+      <Description>
+        <em:locale>ar</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>تأييد لاخفاء شريط أدوات القائمة الرئيسية ، يمكنك الضغط على مفتاح ALT لاظهاره بصورة مؤقتة.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>bg-BG</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Поддържа скриване на вашият Основен панел автоматично, можете да натиснете АЛТ бутона за да го покажете временно.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>ca-AD</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Et permet amagar la barra d'eines del teu menú principal automàticament i que es mostri temporalment apretant la tecla ALT.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>da-DK</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Skjuler hovedmenu værktøjslinien automatisk, du kan vise den kortvarig når du trykker ALT tasten.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>de-DE</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Blendet automatisch die Menüleiste aus ("Alt"-Taste betätigen, um sie bedarfsweise wieder einzublenden)</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>es-ES</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Permite ocultar la barra de menú automáticamente, puede pulsar la tecla ALT para mostrarla temporalmente.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>fi-FI</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Piilottaa päävalikon työkalupalkin automaattisesti, Alt-näppäintä painaen palkin saa tilapäisesti näkyviin.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>fr-FR</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Masquer automatiquement la barre de menus, et pouvoir l'afficher momentanément en appuyant sur Alt.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>it-IT</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Permette di nascondere automaticamente la barra dei menu. È possibile visualizzarla temporaneamente utilizzando il tasto ALT.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>ja-JP</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>メニューバーを自動的に隠します。一時的に表示させるにはAltキーを押してください。</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>kn-IN</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>ನಿಮ್ಮ ಮುಖ್ಯ ಟೂಲ್‌ಬಾರ್ ಅನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅಡಗಿಸುವುದನ್ನು ಸಮರ್ಥಿಸುತ್ತದೆ, ನೀವು ALT ಗುಂಡಿಯನ್ನು ಅದುಮುವ ಮೂಲಕ ಅದನ್ನು ತಾತ್ಕಾಲಿಕವಾಗಿ ನೋಡಬಹುದು.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>ko-KR</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>자동 주메뉴 숨기기를 지원합니다. ALT키를 눌러 일시적으로 보이게 할 수 있습니다.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>mk-MK</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Поддржува автоматско скривање на алатникот со менијата, но вие можете да го притиснете копчето ALT за да го прикажите привремено.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>nl-NL</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Ondersteunt het automatisch verbergen van uw menubalk, u kunt de ALT-toets indrukken om de balk tijdelijk te zien.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>pl-PL</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Automatycznie ukrywa menu główne umożliwiając jego tymczasowe przywrócenie przez wciśnięcie klawisza ALT.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>pt-BR</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Ferramenta para esconder Barra de Tarefas do Menu Principal automaticamente, você pode pressionar a tecla ALT para mostrar temporariamente.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>pt-PT</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Ferramenta para esconder Barra de Tarefas do Menu Principal automaticamente, pode carregar na tecla ALT para mostrar temporariamente.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>ru-RU</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Автоматически скрывает панель основного меню. Для временного её отображения нажмите клавишу Alt.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>sk-SK</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Umožňuje automatické skrytie panela nástrojov Hlavná ponuka, stlačením klávesu ALT je možné dočasne ho zobraziť.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>sr-RS</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Омогућава аутоматско сакривање траке са алаткама, али можете притиснути дугме алт да је привремено прикажете.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>sv-SE</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Döljer huvudmenyn automatiskt. Genom att trycka på Alt-tangenten kan du tillfälligt uppvisa menyn.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>tr-TR</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Ana Menü Çubuğu'nun kendiliğinden gizlenmesini, ALT tuşuna basılınca geçici olarak görünmesini sağlar.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>uk-UA</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>Автоматично ховає панель основного меню. Для тимчасового її відображення натисніть клавішу Alt.</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>zh-CN</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>支持自动隐藏主菜单工具栏，临时显示请按 ALT 键。</em:description>
+      </Description>
+    </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>zh-TW</em:locale>
+        <em:name>Hide Menubar</em:name>
+        <em:creator>yuoo2k</em:creator>
+        <em:homepageURL>http://forum.moztw.org/viewtopic.php?t=15303</em:homepageURL>
+        <em:description>讓選單工具列可自動隱藏，按[Alt]鍵可暫時顯示。</em:description>
+      </Description>
+    </em:localized>
+
+ </Description>
+</RDF>
