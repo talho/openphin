@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
-  has_many :role_memberships, :dependent => :delete_all
+  has_many :role_memberships, :include => :jurisdiction, :dependent => :delete_all
   has_many :role_requests, :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
 
@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
+#  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :documents do
     def inbox
@@ -131,8 +132,9 @@ class User < ActiveRecord::Base
     jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
   end
 
-  def schools
-    School.find(:all, :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name")
+  def schools(options={})
+    options={ :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name"}.merge(options)
+    School.find(:all, options)
 #    school_districts.map{|district| district.schools}.flatten.uniq
   end
 

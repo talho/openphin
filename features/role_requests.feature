@@ -141,3 +141,5 @@ Feature: Role Requests
     And I am logged in as "john.smith@example.com"
     When I go to the roles requests page for an admin
     Then I should see "That resource does not exist or you do not have access to it"
+
+  Scenario: Viewing pending role requests

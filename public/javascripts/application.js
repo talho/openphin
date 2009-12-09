@@ -23,16 +23,14 @@
 
   $('a.destroy').live('click.namespace', function(event) {
     event.preventDefault();
-	event.stopImmediatePropagation();
+	  event.stopImmediatePropagation();
     if (confirm('Are you sure you want to delete?')) {
-      var form = $('<form method="POST"></form>')
-        .css({display:'none'})
-        .attr('action', this.href)
-        .append('<input type="hidden" name="_method" value="delete"/>')
-        .append('<input type="hidden" name="authenticity_token" value="' +
-          $.authenticityToken() + '"/>')
-        .insertAfter(this.parentNode);
-      form.submit();
+      $.ajax({
+        type: "POST",
+        url: this.href,
+        data: {"_method": "delete", "authenticity_token":$.authenticityToken()},
+        dataType: "html",
+        success: function(){ location.reload();}});
     }
     return false;
   });
@@ -60,7 +58,7 @@ jQuery(function($) {
     filter_hide: true,
     filter_selected: true,
     firstselected: true,
-    newel: true
+    newel: false
   });
 });
 

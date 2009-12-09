@@ -121,7 +121,7 @@ Feature: Signing up for an account
     Given I have confirmed my account for "john@example.com"
     When I log in as "john@example.com"
     And I follow "My Account"
-    And I follow "Roles"    
+    And I follow "Request Roles"    
     Then I should see "Awaiting Approval"
     
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
@@ -158,7 +158,7 @@ Feature: Signing up for an account
     Given I have confirmed my account for "john@example.com"
     When I log in as "john@example.com"
     And I follow "My Account"
-    And I follow "Roles"
+    And I follow "Request Roles"
     Then I should see "Awaiting Approval"
 
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"

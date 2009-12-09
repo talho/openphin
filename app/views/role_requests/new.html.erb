@@ -1,4 +1,14 @@
-<h1>Request a Role</h1>
+<% if current_user.role_requests && current_user.role_requests.unapproved.any? %>
+  <h4>Awaiting Approval</h4>
+  <ul class="pending_role_requests">
+    <% current_user.role_requests.unapproved.each do |request| %>
+      <li class="request"><%=h request.jurisdiction.name %>: <%=h request.role.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+
+<h4>Request a Role</h4>
 
 <% form_for(@role_request) do |f| %>
   <%= f.error_messages %>

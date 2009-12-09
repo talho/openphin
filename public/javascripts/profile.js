@@ -8,6 +8,25 @@
     $(this).hide();
     return false;
   });
+
+//  $("fieldset.devices a.destroy").live("click", function(){
+//    var device=this;
+//    $.ajax({
+//      type: "POST",
+//        url: $(device).attr("href"),
+//        data: {"_method": "delete"},
+//        dataType: "html",
+//        success: function(data, status){
+//          $(device).hide();
+//          $(".error").hide();
+//        },
+//        error: function(request, error){
+//          $(".error").show();
+//          $("#devices .data-list .error").text("There was an error deleting the device.");
+//          $("#devices .data-list .error").effect("highlight", {}, 3000);
+//        }
+//    })
+//  });
   
   $(document).ready(function() {
     $('.edit_user #device_type').change(function() {

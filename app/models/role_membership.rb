@@ -28,7 +28,7 @@ class RoleMembership < ActiveRecord::Base
   named_scope :all_roles, :include => :role
 
   named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}
-  named_scope :recent, lambda{{ :conditions => ["created_at > ?",1.days.ago] }}
+  named_scope :recent, lambda{{ :conditions => ["role_memberships.created_at > ?",1.days.ago] }}
   
   def self.already_exists?(user, role, jurisdiction)
     return true if RoleMembership.find_by_user_id_and_role_id_and_jurisdiction_id(user.id, role.id, jurisdiction.id)

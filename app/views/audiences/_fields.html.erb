@@ -42,7 +42,10 @@
   <p><%= label_tag 'Existing'%></p>
   <%- form.object.users.each do |user| -%>
     <%= hidden_field_tag "#{form.object_name}[user_ids][]", user.id %>
-    <%= label_tag user.name, link_to(user.name,user_profile_path(user)) %> <%= link_to 'Remove', dismember_admin_groups_path(form.object,user),:action => :dismember %>
+    <span class='member'>
+      <%= label_tag user.name, link_to(user.name,user_profile_path(user)) %>
+      <%= link_to image_tag("/stylesheets/images/cross-circle.png", :alt => "Remove"), dismember_admin_groups_path(form.object,user),:action => :dismember, :class => "destroy" %>
+    </span>
   <%- end -%>
 
 </fieldset>

@@ -29,6 +29,15 @@ Feature: Managing devices when editing user profiles
   	When I go to the edit profile page
     Then I should see in my list of devices
       | Email | johnny@example.com |
+
+  Scenario: Removing a device as a user
+    Given john.smith@example.com has the following devices:
+      | Phone | 5552345678 |
+    When I go to the edit profile page
+    And I follow "Delete Phone"
+    Then "john.smith@example.com" should not have the communication device
+      | Phone | 5552345678 |
+
       
   Scenario: Adding an invalid device
   	When I go to the edit profile page
