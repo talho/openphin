@@ -160,7 +160,7 @@ function closeAllPanelsExcept(exception_name){
 function reloadDocumentsPanel(site){
     var dp = $("#documents_panel");
     if(jQuery.trim(site) == "") site = "/documents_panel";
-    $("#documents_progress_panel").css("z-index", "10");
+    $("#documents_progress_panel").show();
     dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
         if(textStatus.toLowerCase() != "success") {
             alert("The documents panel could not be loaded.");
@@ -170,7 +170,7 @@ function reloadDocumentsPanel(site){
         
         var dp = $("#documents_panel span.documents");
         dp.load("/inbox","",function(e) {
-          $("#documents_progress_panel").css("z-index", "-10");
+          $("#documents_progress_panel").hide();
           activateDocumentsPanelActions();
         });
     });
@@ -201,14 +201,14 @@ function activateMediaPanelActions() {
     e.stopPropagation();
     e.preventDefault();
     var dp = $("#documents_panel span.documents");
-    $("#documents_progress_panel").css("z-index", "10");
+    $("#documents_progress_panel").show();
     site = $(this).attr("href");
     dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
       if(textStatus != "success") {
         alert("Error loading, please try again.");
         return;
       }
-      $("#documents_progress_panel").css("z-index", "-10");
+      $("#documents_progress_panel").hide();
       activateDocumentsPanelActions();
     });
     return false;
@@ -228,7 +228,11 @@ function activateMediaPanelActions() {
   $('ul.check_selector ul ul').hide();
 
   $('ul.check_selector a.toggle').click(function() {
-    $(this).toggleClass('closed').siblings('ul').toggle();
+    var p = $(this).parent();
+    p.find('ul').each(function() {
+      if($(this).parent().attr("id") == p.attr("id")) $(this).toggle();
+    });
+    $(this).toggleClass('closed');
     $(this).parent().children(".select_all").toggle();
     return false;
   })
@@ -253,7 +257,7 @@ function setMediaNewFolderEvents() {
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
-      $("#documents_progress_panel").css("z-index", "10");      
+      $("#documents_progress_panel").show();      
     },
     success: function(data, textStatus) {
       activateMediaPanelActions();
@@ -278,7 +282,7 @@ function setMediaNewShareEvents() {
   myform.ajaxForm({
       target: "#documents_panel",
       beforeSend: function(response) {
-        $("#documents_progress_panel").css("z-index", "10");
+        $("#documents_progress_panel").show();
       },
       success: function(data, textStatus) {
         activateMediaPanelActions();
@@ -327,7 +331,7 @@ function setMediaDeleteItemEvents() {
             target: "#documents_panel",
             beforeSend: function(response) {
               dp.remove();
-              $("#documents_progress_panel").css("z-index", "10");
+              $("#documents_progress_panel").show();
             },
             success: function(data, textStatus) {
               activateMediaPanelActions();
@@ -356,7 +360,7 @@ function setMediaDeleteItemEvents() {
       confirmed = share.closest("li").children("a.confirm").length;
       site = delete_share.attr("href");
       if((confirmed > 0 && confirm("'This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?")) || confirmed == 0) {
-        $("#documents_progress_panel").css("z-index", "10");      
+        $("#documents_progress_panel").show();      
         $("#documents_panel").load(site,{_method: "delete"},function(data, textStatus) {
           if(textStatus.toLowerCase() != "success") {
             alert("Failed to delete folder, please try again.");
@@ -389,7 +393,7 @@ function setMediaInviteEvents() {
         myform.ajaxForm({
           beforeSend: function(response) {
             dp.remove();
-            $("#documents_progress_panel").css("z-index", "10");
+            $("#documents_progress_panel").show();
           },
           target: "#documents_panel",
           success: function(data, textStatus) {
@@ -437,7 +441,7 @@ function setMediaUnsubscribeEvents() {
       }
       site = unsubscribe.attr("href");
       if(confirm("Are you sure you want to unsubscribe from this share?")) {
-        $("#documents_progress_panel").css("z-index", "10");
+        $("#documents_progress_panel").show();
         $("#documents_panel").load(site,{_method: "delete"},function(data, textStatus) {
           if(textStatus.toLowerCase() != "success") {
             alert("Could not unsubscribe from share, please try again.");
@@ -465,7 +469,7 @@ function reloadDocumentsDocumentPanel(site) {
 }
 
 function activateDocumentsPanelActions() {
-  $("#documents_progress_panel").css("z-index", "-10");
+  $("#documents_progress_panel").hide();
   $(".documents input:checkbox").bind("click", function(e) {
     if($(this).attr("checked") == true) {
       var item = this;
@@ -491,8 +495,7 @@ function detectAuthenticityToken(responseXML) {
   // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
   // and can't detect the success of the iframe so always returns success
   // Detects for the presence of the authenticity token meta tag in the fetched page
-
-  return responseXML.evaluate("count(//head/meta[@id='authenticity-token'])",responseXML, null, XPathResult.NUMBER_TYPE,null).numberValue > 0 ? true : false;
+  return $(responseXML.getElementsByTagName("meta")).filter("meta[name='authenticity-token']").length > 0 ? true : false
 }
 
 function setDocumentUploadEvents() {
@@ -503,7 +506,7 @@ function setDocumentUploadEvents() {
   upload_document_form.ajaxForm({
     target: "span.documents",
     beforeSend: function(response) {
-      $("#documents_progress_panel").css("z-index", "10");
+      $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
       loaded = detectAuthenticityToken(response.responseXML);
@@ -526,7 +529,7 @@ function setDocumentNewFolderEvents() {
   var myform = $("span.documents div#new_folder form");
   myform.ajaxForm({
     beforeSend: function(response) {
-      $("#documents_progress_panel").css("z-index", "10");
+      $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
       reloadDocumentsPanel();
@@ -560,7 +563,7 @@ function setDocumentSendEvents() {
           target: "span.documents",
           beforeSend: function(response) {
             dp.remove();
-            $("#documents_progress_panel").css("z-index", "10");
+            $("#documents_progress_panel").show();
           },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
@@ -612,7 +615,7 @@ function setDocumentAddToShareEvents() {
           target: "span.documents",
           beforeSend: function(response) {
             dp.remove();
-            $("#documents_progress_panel").css("z-index", "10");
+            $("#documents_progress_panel").show();
           },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
@@ -665,7 +668,7 @@ function setDocumentMoveEditEvents() {
           target: "span.documents",
           beforeSend: function(response) {
             dp.remove();
-            $("#documents_progress_panel").css("z-index", "10");
+            $("#documents_progress_panel").show();
           },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
@@ -706,8 +709,8 @@ function setDocumentDeleteItemEvents() {
     e.preventDefault();
     if($("ul.documents input:checked").length > 0) {
       if(confirm("Are you sure you want to delete this item?  If this item is in a share, it will only remove it from the share and not from it's folder.")) {
-        $("#documents_progress_panel").css("z-index", "10");
-        item = $("ul.documents input:checked:first");
+        $("#documents_progress_panel").show();
+        var item = $("ul.documents input:checked:first");
         link = item.closest("li").children("a.destroy");
         action = link.attr("href");
         $("span.documents").load(action,{_method: "delete"},function(data, textStatus) {
