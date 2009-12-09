@@ -99,7 +99,7 @@ jQuery(function($) {
 			return false;
 		});
     $(".documents").bind("click", function (e){
-        if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
+      if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
 	    return togglePanel("documents", e);
 
     });
@@ -160,7 +160,7 @@ function closeAllPanelsExcept(exception_name){
 function reloadDocumentsPanel(site){
     var dp = $("#documents_panel");
     if(jQuery.trim(site) == "") site = "/documents_panel";
-    $("#documents_panel span.container").replaceWith("Loading Documents, please wait...");
+    $("#documents_progress_panel").css("z-index", "10");
     dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
         if(textStatus.toLowerCase() != "success") {
             alert("The documents panel could not be loaded.");
@@ -170,6 +170,7 @@ function reloadDocumentsPanel(site){
         
         var dp = $("#documents_panel span.documents");
         dp.load("/inbox","",function(e) {
+          $("#documents_progress_panel").css("z-index", "-10");
           activateDocumentsPanelActions();
         });
     });
@@ -200,12 +201,14 @@ function activateMediaPanelActions() {
     e.stopPropagation();
     e.preventDefault();
     var dp = $("#documents_panel span.documents");
+    $("#documents_progress_panel").css("z-index", "10");
     site = $(this).attr("href");
     dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
       if(textStatus != "success") {
         alert("Error loading, please try again.");
         return;
       }
+      $("#documents_progress_panel").css("z-index", "-10");
       activateDocumentsPanelActions();
     });
     return false;
@@ -249,6 +252,9 @@ function setMediaNewFolderEvents() {
   var myform = $(".media_list div#new_folder form#new_folder");
   myform.ajaxForm({
     target: "#documents_panel",
+    beforeSend: function(response) {
+      $("#documents_progress_panel").css("z-index", "10");      
+    },
     success: function(data, textStatus) {
       activateMediaPanelActions();
       reloadDocumentsDocumentPanel();
@@ -271,6 +277,9 @@ function setMediaNewShareEvents() {
   var myform = $(".media_list div#new_share form");
   myform.ajaxForm({
       target: "#documents_panel",
+      beforeSend: function(response) {
+        $("#documents_progress_panel").css("z-index", "10");
+      },
       success: function(data, textStatus) {
         activateMediaPanelActions();
         reloadDocumentsDocumentPanel();
@@ -316,6 +325,10 @@ function setMediaDeleteItemEvents() {
           var myform = $("#deletion form");
           myform.ajaxForm({
             target: "#documents_panel",
+            beforeSend: function(response) {
+              dp.remove();
+              $("#documents_progress_panel").css("z-index", "10");
+            },
             success: function(data, textStatus) {
               activateMediaPanelActions();
               reloadDocumentsDocumentPanel();
@@ -343,6 +356,7 @@ function setMediaDeleteItemEvents() {
       confirmed = share.closest("li").children("a.confirm").length;
       site = delete_share.attr("href");
       if((confirmed > 0 && confirm("'This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?")) || confirmed == 0) {
+        $("#documents_progress_panel").css("z-index", "10");      
         $("#documents_panel").load(site,{_method: "delete"},function(data, textStatus) {
           if(textStatus.toLowerCase() != "success") {
             alert("Failed to delete folder, please try again.");
@@ -373,6 +387,10 @@ function setMediaInviteEvents() {
 
         var myform = $("#invitation form");
         myform.ajaxForm({
+          beforeSend: function(response) {
+            dp.remove();
+            $("#documents_progress_panel").css("z-index", "10");
+          },
           target: "#documents_panel",
           success: function(data, textStatus) {
             activateMediaPanelActions();
@@ -419,6 +437,7 @@ function setMediaUnsubscribeEvents() {
       }
       site = unsubscribe.attr("href");
       if(confirm("Are you sure you want to unsubscribe from this share?")) {
+        $("#documents_progress_panel").css("z-index", "10");
         $("#documents_panel").load(site,{_method: "delete"},function(data, textStatus) {
           if(textStatus.toLowerCase() != "success") {
             alert("Could not unsubscribe from share, please try again.");
@@ -446,6 +465,7 @@ function reloadDocumentsDocumentPanel(site) {
 }
 
 function activateDocumentsPanelActions() {
+  $("#documents_progress_panel").css("z-index", "-10");
   $(".documents input:checkbox").bind("click", function(e) {
     if($(this).attr("checked") == true) {
       var item = this;
@@ -482,6 +502,9 @@ function setDocumentUploadEvents() {
 
   upload_document_form.ajaxForm({
     target: "span.documents",
+    beforeSend: function(response) {
+      $("#documents_progress_panel").css("z-index", "10");
+    },
     complete: function(response, textStatus) {
       loaded = detectAuthenticityToken(response.responseXML);
       if(!loaded) alert("Error creating new folder, please try again.");
@@ -502,12 +525,11 @@ function setDocumentNewFolderEvents() {
 
   var myform = $("span.documents div#new_folder form");
   myform.ajaxForm({
-    target: "#documents_panel",
+    beforeSend: function(response) {
+      $("#documents_progress_panel").css("z-index", "10");
+    },
     complete: function(response, textStatus) {
-      loaded = detectAuthenticityToken(response.responseXML);
-      if(!loaded) alert("Error creating new folder, please try again.");
-      activateMediaPanelActions();
-      reloadDocumentsDocumentPanel();
+      reloadDocumentsPanel();
     }
   });
 
@@ -536,6 +558,10 @@ function setDocumentSendEvents() {
         }
         $("form.edit_document").ajaxForm({
           target: "span.documents",
+          beforeSend: function(response) {
+            dp.remove();
+            $("#documents_progress_panel").css("z-index", "10");
+          },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
             dp.remove();
@@ -584,6 +610,10 @@ function setDocumentAddToShareEvents() {
         }
         $("form.edit_document").ajaxForm({
           target: "span.documents",
+          beforeSend: function(response) {
+            dp.remove();
+            $("#documents_progress_panel").css("z-index", "10");
+          },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
             dp.remove();
@@ -633,13 +663,15 @@ function setDocumentMoveEditEvents() {
         child = $("form select#document_folder_id");
         child.closest("form").ajaxForm({
           target: "span.documents",
+          beforeSend: function(response) {
+            dp.remove();
+            $("#documents_progress_panel").css("z-index", "10");
+          },
           success: function(data, textStatus) {
             activateDocumentsPanelActions();
-            dp.remove();
           },
           error: function(request,textStatus,errorThrown) {
             alert("Document was unable to be sent.  Please try again.");
-            dp.remove();
           }
         });
 
@@ -674,6 +706,7 @@ function setDocumentDeleteItemEvents() {
     e.preventDefault();
     if($("ul.documents input:checked").length > 0) {
       if(confirm("Are you sure you want to delete this item?  If this item is in a share, it will only remove it from the share and not from it's folder.")) {
+        $("#documents_progress_panel").css("z-index", "10");
         item = $("ul.documents input:checked:first");
         link = item.closest("li").children("a.destroy");
         action = link.attr("href");
