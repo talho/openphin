@@ -1,0 +1,70 @@
+"C:\Program Files\Prism\prism.exe" -override "C:\Documents and Settings\Administrator\Application Data\WebApps\tx@prism.app\override.ini" -webapp texas.phin@prism.app
+
+C:\Program Files\Prism
+
+  chrome\
+  components\
+  defaults\
+  extensions\
+  modules\
+  xulrunner\
+  application.ini
+  openphin.ini
+  prism.exe
+  unins000.dat
+  unins000.exe
+
+
+C:\Documents and Settings\Administrator\Application Data\WebApps\tx@prism.app
+
+  icons\
+  localstore.json
+  override.ini
+    (
+      [App]
+      Vendor=Prism
+      Name=TX
+    )
+  webapp.ini
+    (
+      [Parameters]
+      id=tx@prism.app
+      name=TX
+      uri=https://www.txphin.org
+      icon=webapp
+      status=false
+      location=false
+      sidebar=false
+      navigation=false
+      trayicon=false
+    )
+  
+C:\Documents and Settings\Administrator\Application Data\Prism
+
+  profiles.ini
+    (
+      [General]
+      StartWithLastProfile=1
+
+      [Profile0]
+      Name=default
+      IsRelative=1
+      Path=Profiles/o80nudnq.default
+    )
+  
+  C:\Documents and Settings\Administrator\Application Data\Prism\TX
+
+    Profiles\
+    
+    zynk7feg.default\
+    
+    profiles.ini
+      (
+        [General]
+        StartWithLastProfile=1
+
+        [Profile0]
+        Name=default
+        IsRelative=1
+        Path=Profiles/zynk7feg.default
+      )
