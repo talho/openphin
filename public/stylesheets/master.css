@@ -303,6 +303,10 @@ ul.documents_toolbar li#add_to_share            {background-image: url('images/g
 ul.documents_toolbar li#move_edit               {background-image: url('images/page_edit.png'); cursor:pointer;}
 ul.documents_toolbar li#delete                  {background-image: url('images/page_delete.png'); cursor:pointer;}
 div#deletion div#share                          {overflow: auto;}
+#edit.media_list fieldset ul.check_selector li ul {margin-left: 10px;}
+#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 20px;}
+#edit.media_list fieldset ul.check_selector li ul label label {margin-left: 0px;}
+#edit.media_list fieldset ul.check_selector li ul input {left: 0px;}
 .invis                                          {display: none;}
 
 /* Alerts and notifications */

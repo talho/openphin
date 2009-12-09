@@ -223,8 +223,8 @@ function activateMediaPanelActions() {
     }
   });
 
-  $('ul.check_selector>li>ul.folders>li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
-  $('ul.check_selector>li>ul.folders>li>a>label').css('margin-left','20px');
+  $('ul.check_selector>li>ul.folders').find('li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
+  $('ul.check_selector>li>ul.folders').find('li>a>label').css('margin-left','20px');
   $('ul.check_selector ul ul').hide();
 
   $('ul.check_selector a.toggle').click(function() {
