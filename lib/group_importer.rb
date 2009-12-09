@@ -27,9 +27,9 @@ class GroupImporter
     log = Logger.new(file)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
- #       email = rec['email'].strip unless rec['email'].blank?
-#        jurisdiction = rec['jurisdiction'].strip unless rec['email'].blank?
-        org_name = rec['group_name'].strip unless rec['group_name'].blank?
+        email = rec['email'].strip unless rec['email'].blank?
+        jurisdiction = rec['jurisdiction'].strip unless rec['email'].blank?
+        group_name = rec['group_name'].strip unless rec['group_name'].blank?
         if group_name.blank? || jurisdiction.blank? || group_name.blank?
           STDERR.puts rec.values_at.join("|")
           next
@@ -53,5 +53,6 @@ class GroupImporter
         group.save!
       end
     end
+    file.close
   end
 end

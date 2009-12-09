@@ -140,5 +140,5 @@ Then /^the "([^\"]*)" group in "([^\"]*)" should not have the following members:
 end
 
 Then /^I should see an error "([^\"]*)"$/ do |error|
-  IO.read('log/groups.log').include?(error).should be_true
+  IO.read('log/group.log').include?(error).should be_true
 end
