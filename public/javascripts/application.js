@@ -255,7 +255,11 @@ function setMediaNewFolderEvents() {
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
-      $("#documents_progress_panel").show();      
+      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+        alert("You must specify a folder name");
+        return false;
+      }
+      $("#documents_progress_panel").show();
     },
     success: function(data, textStatus) {
       activateMediaPanelActions();
@@ -280,6 +284,10 @@ function setMediaNewShareEvents() {
   myform.ajaxForm({
       target: "#documents_panel",
       beforeSend: function(response) {
+        if(jQuery.trim($("form input#channel_name").val()) == "") {
+          alert("You must specify a share name");
+          return false;
+        }
         $("#documents_progress_panel").show();
       },
       success: function(data, textStatus) {
@@ -504,6 +512,10 @@ function setDocumentUploadEvents() {
   upload_document_form.ajaxForm({
     target: "span.documents",
     beforeSend: function(response) {
+      if(jQuery.trim($("form input#document_file").val()) == "") {
+        alert("You must select a file to upload.");
+        return false;
+      }
       $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
@@ -527,6 +539,10 @@ function setDocumentNewFolderEvents() {
   var myform = $("span.documents div#new_folder form");
   myform.ajaxForm({
     beforeSend: function(response) {
+      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+        alert("You must specify a folder name");
+        return false;
+      }
       $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
