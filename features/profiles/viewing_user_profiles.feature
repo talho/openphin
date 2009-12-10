@@ -26,19 +26,19 @@ Feature: Viewing user profiles
     
   Scenario: Viewing a public profile
     Given sam.body@example.com has a public profile
-    When I view the profile page for sam.body@example.com
+    When I view the profile page for "sam.body@example.com"
     Then I can see the profile
     And I should not see the following roles:
       | Health Officer | Dallas County |
     
   Scenario: Viewing a private profile
     Given sam.body@example.com has a private profile
-    When I view the profile page for sam.body@example.com
+    When I view the profile page for "sam.body@example.com"
     Then I can not see the profile
   
   Scenario: Viewing my private profile
     Given john.smith@example.com has a private profile
-    When I view the profile page for john.smith@example.com
+    When I view the profile page for "john.smith@example.com"
     Then I can see the profile
     And I can see the following roles:
       | Public         | Dallas County |
@@ -50,7 +50,7 @@ Feature: Viewing user profiles
     Given big.admin@example.com has a private profile
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Admin" in "Texas"
     And I am logged in as "big.admin@example.com"
-    When I view the profile page for big.admin@example.com
+    When I view the profile page for "big.admin@example.com"
     Then I can see the profile
     And I can see the following roles:
       | System:Admin   | Texas         |
@@ -61,7 +61,7 @@ Feature: Viewing user profiles
     Given big.admin@example.com has a private profile
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Superadmin" in "Texas"
     And I am logged in as "big.admin@example.com"
-    When I view the profile page for big.admin@example.com
+    When I view the profile page for "big.admin@example.com"
     Then I can see the profile
     And I can see the following roles:
       | System:Superadmin | Texas         |
@@ -72,7 +72,7 @@ Feature: Viewing user profiles
     Given john.smith@example.com has a private profile
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Admin" in "Dallas County"
     And I am logged in as "big.admin@example.com"
-    When I view the profile page for john.smith@example.com
+    When I view the profile page for "john.smith@example.com"
     And I can see the following roles:
       | Public         | Dallas County |
       | Health Officer | Dallas County |
