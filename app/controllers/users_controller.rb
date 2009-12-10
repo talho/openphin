@@ -134,8 +134,18 @@ class UsersController < ApplicationController
   
   def confirm
     if u=User.find_by_id_and_token(params[:user_id], params[:token])
-      u.confirm_email!
-      flash[:notice]="Your account has been confirmed."
+      unless u.email_confirmed?
+        u.confirm_email!
+        u.role_requests.each do |role_request|
+          next if role_request.approved?
+          role_request.jurisdiction.admins.each do |admin|
+            SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
+          end
+        end
+        flash[:notice]="Your account has been confirmed."
+      else
+        flash[:error]="Your account has already been confirmed."
+      end
     else
       flash[:error]="Invalid URL."
     end

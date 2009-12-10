@@ -39,7 +39,8 @@ Given 'I am allowed to send alerts' do
 end
 
 Given 'I have confirmed my account for "$email"' do |email|
-  User.find_by_email!(email).confirm_email!
+  user = User.find_by_email!(email)
+  visit user_confirmation_path(user.id, user.token)
 end
 
 Given "the following administrators exist:" do |table|
