@@ -12,7 +12,7 @@
       <li>
         <%- id = [form.object_name.parameterize('_'), dom_id(r)].join('_') -%>
         <%= check_box_tag "#{form.object_name}[role_ids][]", r.id,
-            form.object.role_ids.include?(r.id), :id => id %>
+            form.object.role_ids.include?(r.id), :id => id, :class => 'audience_role' %>
         <%= label_tag id, r.name %>
       </li>
     <%- end -%>
@@ -27,7 +27,7 @@
         <li>
             <%= check_box_tag "#{group_form.object_name}[audience_ids][]", group.id,
                 group_form.object.audiences.include?(group),
-                :id => "#{group_form.object_name}_audience_#{group.id}" %>
+                :id => "#{group_form.object_name}_audience_#{group.id}", :class => 'audience_group' %>
             <%= label_tag "#{group_form.object_name}_audience_#{group.id}", group.name %>
         </li>
       <%- end -%>
