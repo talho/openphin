@@ -8,7 +8,7 @@
 <ul class="progress">
   <li class="first"><a href="#details"><span>1. Details</span></a></li>
   <% if @update.blank? && @cancel.blank? %><li><a href="#audience"><span>2. Audience</span></a></li><% end %>
-  <li><a href="#preview"<%= ' class="current"' if @preview %>><span>3. Preview</span></a></li>
+  <li><a href="#preview" class='preview_alert<%= " current" if @preview %>'><span>3. Preview</span></a></li>
 </ul>
 <div id="edit">
   <%= hidden_field_tag :_action, params[:_action] %>
@@ -103,7 +103,7 @@
         <% end %>
       <% end %>
       
-      <%= form.submit "Preview Message" %>
+      <%= form.submit "Preview Message", :class => "preview_alert" %>
     <%- end -%>
   </div>
 </div>
