@@ -32,6 +32,7 @@ class AlertsController < ApplicationController
 
   def create
     @alert = present current_user.alerts.build(params[:alert])
+#    debugger
     if params[:send]
       if @alert.valid?
         @alert.save
@@ -54,14 +55,19 @@ class AlertsController < ApplicationController
   end
 
   def edit
-    alert = current_user.alerts.find params[:id]
+    alert = Alert.find params[:id]
     # TODO : Remove when devices refactored
     @device_types = []
     alert.device_types.each do |device_type|
       @device_types << device_type
     end
 
-    if !alert.original_alert.nil?
+    unless alert.is_updateable_by?(current_user)
+      flash[:error] = "You do not have permission to update or cancel this alert."
+      redirect_to alerts_path
+    end
+
+    unless alert.original_alert.nil?
       flash[:error] = "You cannot make changes to updated or cancelled alerts."
       redirect_to alerts_path
     end
@@ -71,13 +77,18 @@ class AlertsController < ApplicationController
   end
 
   def update
-    original_alert = current_user.alerts.find params[:id]
+    original_alert = Alert  .find params[:id]
     # TODO : Remove when devices refactored
     @device_types = []
     original_alert.device_types.each do |device_type|
       @device_types << device_type
     end
 
+    unless original_alert.is_updateable_by?(current_user)
+      flash[:error] = "You do not have permission to update or cancel this alert."
+      redirect_to alerts_path
+    end
+    
     if original_alert.cancelled?
       flash[:error] = "You cannot update or cancel an alert that has already been cancelled."
       redirect_to alerts_path
