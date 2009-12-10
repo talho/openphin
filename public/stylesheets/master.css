@@ -317,6 +317,9 @@ div#deletion div#share                          {overflow: auto;}
 #edit.media_list fieldset ul.check_selector li li li li label  {padding-left:42px;}
 .invis                                          {display: none;}
 
+#admin_user_profile                             {position: relative; float: left; width: 300px;}
+#admin_user_role_requests                       {position: relative; float: left; width: 300px;}
+
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;
