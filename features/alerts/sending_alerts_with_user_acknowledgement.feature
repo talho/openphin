@@ -113,8 +113,8 @@ Feature: Acknowledging an alert
 
        When delayed jobs are processed
        Then the following phone calls should be made:
-         | phone        | message              |
-         | 2105551212 | Chicken pox outbreak |
+         | phone      | message                                                                                           |
+         | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
        
        When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
        And delayed jobs are processed

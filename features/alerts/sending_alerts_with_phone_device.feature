@@ -44,8 +44,8 @@ Feature: Sending alerts to phones
     
     When delayed jobs are processed
     Then the following phone calls should be made:
-      | phone        | message              |
-      | 2105551212 | Chicken pox outbreak |
+      | phone      | message                                                                                           |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
     
   Scenario: Sending alerts to phone devices with acknowledgment
     Given I am logged in as "keith.gaddis@example.com"
@@ -81,8 +81,8 @@ Feature: Sending alerts to phones
     
     When delayed jobs are processed
     Then the following phone calls should be made:
-      | phone        | message              |
-      | 2105551212 | Chicken pox outbreak |
+      | phone      | message                                                                                           |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
     And I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
     
     When "keith.gaddis@example.com" acknowledges the phone alert

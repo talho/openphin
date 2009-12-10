@@ -77,7 +77,7 @@ class AlertsController < ApplicationController
   end
 
   def update
-    original_alert = Alert  .find params[:id]
+    original_alert = Alert.find params[:id]
     # TODO : Remove when devices refactored
     @device_types = []
     original_alert.device_types.each do |device_type|

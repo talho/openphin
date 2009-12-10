@@ -97,7 +97,7 @@ EOF
   def add_notification(xml)
     xml.swn(:notification) do
       xml.swn(:subject, alert.title)
-      xml.swn(:body, alert.short_message)
+      xml.swn(:body, "The following is an alert from the Texas Public Health Information Network.  #{alert.short_message}")
     end
   end
 
