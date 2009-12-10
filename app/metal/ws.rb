@@ -16,7 +16,7 @@ helpers do
   end
 
   def authorized?
-    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth  ||=  Rack::Auth::Basic::Request.new(request.env)
     @_user ||= User.authenticate(@auth.credentials[0], @auth.credentials[1]) if @auth && @auth.provided? && @auth.credentials
   end
 
@@ -24,5 +24,5 @@ end
 
 get "/ws/alerts" do
   protected!
-  current_user.recent.to_json
+  current_user.recent_alerts.to_json
 end
