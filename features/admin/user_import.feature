@@ -41,7 +41,6 @@ Feature: Online importing users from a uploaded CSV file
     And I go to the user batch page for an admin
     And I follow "Batch Users"
     And a jurisdiction named "Ector"
-    And I attach the file at "/Users/rich/projects/openphin/tmp/users.csv" to "Upload User CSV file"
+    And I attach the tmp file at "users.csv" to "Upload User CSV file"
     And I press "Upload"
-    And I see WTF is going on
     Then I should see "The user batch has been successfully submitted"
