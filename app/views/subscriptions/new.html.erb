@@ -1,4 +1,4 @@
-<% form_for @channel, :url => channel_subscriptions_path, :html => {:method => :post} do |form| %>  
+<% form_for @channel, :url => channel_subscriptions_path, :html => {:method => :post} do |form| %>
   <div id="audience">
     <div id="edit">
       <% fields_for Audience.new do |audience| %>
@@ -14,5 +14,5 @@
     <%= label_tag 'owner', 'Make these people owners' %>
   </p>
   
-  <%= form.submit 'Add' %>
+  <%= form.submit 'Invite' %>
 <% end %>

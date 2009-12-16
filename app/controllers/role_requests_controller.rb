@@ -1,10 +1,6 @@
 class RoleRequestsController < ApplicationController
   app_toolbar "accounts"
 
-  def index
-
-  end
-
   def new
     @role_request = RoleRequest.new
   end

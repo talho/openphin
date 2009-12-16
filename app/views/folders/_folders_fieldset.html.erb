@@ -2,20 +2,19 @@
   <legend>Select Folder</legend>
   <ul class="check_selector">
     <li class="inbox">
-      <%= link_to 'Inbox',documents_panel_path %>
+      <%= link_to 'Inbox',folder_inbox_path %>
     </li>
     <li>
-      Shares
-      <%- @shares.each do |c| -%>
-        <li class="share">
-            <%= link_to c.name,"#{documents_panel_path}?channel=#{c.id}" %>
-            <%= "(#{User.find(c.subscriptions.publishers).map(&:display_name).join(",")})" %>
-        </li>
-      <%- end -%>
+      <p>Shares</p>
+      <ul class="shares">
+        <%= render :partial => "channels/channel", :collection => @shares, :as => :channel %>
+      </ul>
     </li>
     <li>
-      Folders
-      <%= folders_links(@folders) %>
+      <p>Folders</p>
+      <ul class="folders">
+        <%= render :partial => "folders/folder", :collection => @folders, :as => :folder %>
+      </ul>
     </li>
   </ul>
 </fieldset>

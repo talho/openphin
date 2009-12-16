@@ -1,0 +1,8 @@
+<h3> <%= @name%></h3>
+<ul>
+<%- @documents.each do |d| -%>
+<li>
+  <%= link_to d.file_file_name, document_path(d.id) %>
+</li>
+<%- end -%>
+</ul>

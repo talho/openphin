@@ -109,19 +109,19 @@ Feature: Signing up for an account
       | body contains | Thanks for signing up |
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Dallas County"
-    
-    And the following users should receive the email:
+
+    Given I have confirmed my account for "john@example.com"
+    Then the following users should receive the email:
       | roles         | Dallas County / Admin |
       | subject       | User requesting role Health Alert and Communications Coordinator in Dallas County |
       | body contains | requested assignment |
       | body contains | Jonathan Smith (john@example.com) |
       | body contains | Health Alert and Communications Coordinator |
       | body contains | Dallas County |
-    
-    Given I have confirmed my account for "john@example.com"
+
     When I log in as "john@example.com"
     And I follow "My Account"
-    And I follow "Roles"    
+    And I follow "Request Roles"    
     Then I should see "Awaiting Approval"
     
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
@@ -147,7 +147,8 @@ Feature: Signing up for an account
     And "john@example.com" should have the "Public" role for "Texas"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Texas"
 
-    And the following users should receive the email:
+    Given I have confirmed my account for "john@example.com"
+    Then the following users should receive the email:
       | roles         | Texas / Admin |
       | subject       | User requesting role Health Alert and Communications Coordinator in Texas |
       | body contains | requested assignment |
@@ -155,10 +156,9 @@ Feature: Signing up for an account
       | body contains | Health Alert and Communications Coordinator |
       | body contains | Texas |
 
-    Given I have confirmed my account for "john@example.com"
     When I log in as "john@example.com"
     And I follow "My Account"
-    And I follow "Roles"
+    And I follow "Request Roles"
     Then I should see "Awaiting Approval"
 
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"

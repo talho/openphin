@@ -1,5 +1,5 @@
 <%- in_form ||= false -%>
 <% content_tag_for :p, blackberry_device do %>
   <%= blackberry_device.class.display_name %>: <%=h blackberry_device.blackberry %>
-  <%= link_to 'Delete', device_path(blackberry_device), :class => 'destroy' if in_form %>
+  <%= link_to 'Delete Blackberry', device_path(blackberry_device), :class => 'destroy' if in_form %>
 <% end %>

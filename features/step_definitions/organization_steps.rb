@@ -96,3 +96,6 @@ Then /^there is a "([^\"]*)" organization that is unapproved$/ do |name|
   organization.approved?.should == false
 end
 
+When /^I import the organization file "([^\"]*)"$/ do |filename|
+  OrgImporter.import_orgs(File.join(Rails.root, 'tmp', filename))
+end

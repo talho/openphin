@@ -7,7 +7,7 @@
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui','FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', :cache => 'all' %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', :cache => 'all' %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -82,13 +82,13 @@
    <img src='/images/calendar.png'/>
 </div>
 <div id='documents_panel'><span class="container"></span></div>
+<div id='documents_progress_panel'><div>Loading please wait...</div></div>
 <div id='chat_panel'>
    <img src='/images/chat.png'/>
 </div>
 <div id='links_panel'>
   <ul>
 		<li><%= link_to "EMResource", "http://www1.emsystem.com" %></li>
-    <li><%= link_to "New England Journal of Medicine", "http://content.nejm.com" %></li>
     <li><%= link_to "Texas Disaster Volunteer Registry", "http://texasdisastervolunteerregistry.org" %></li>
     <li><%= link_to "TIMS", "https://txphin.dshs.state.tx.us/tims/user/login.cfm" %></li>
     <li><%= link_to "Traction", "https://trac.dshs.state.tx.us/" %></li>
@@ -99,12 +99,12 @@
 <div id="footer">
 
   <ul id='comm_toolbar'>
-    <li class="calendar"><%= link_to s("<b>Calendar</b>"), dashboard_path %></li>
+    <li class="calendar"><%=  link_to s("<b>Calendar</b>"),  dashboard_path %></li>
     <li class="documents"><%= link_to s("<b>Documents</b>"), dashboard_path %></li>
-    <li class="chat"><%= link_to s("<b>Chat</b>"), dashboard_path %></li>
-    <li class='links'><%= link_to s("<b>Links</b>"), dashboard_path %></li>
+    <li class="chat"><%=      link_to s("<b>Chat</b>"),      dashboard_path %></li>
+    <li class='links'><%=     link_to s("<b>Links</b>"),     dashboard_path %></li>
   </ul>
-  <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %></div>
+  <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %>, or <%= link_to "click here", "/han_training.pdf" %> for a HAN tutorial.</div>
 	
 </div>
 </body>

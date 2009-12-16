@@ -8,7 +8,7 @@ class JurisdictionsController < ApplicationController
     @jurisdictions = Jurisdiction.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # show.html.erb
       format.xml  { render :xml => @jurisdictions }
     end
   end

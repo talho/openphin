@@ -1,6 +1,7 @@
 class SubscriptionsController < ApplicationController
   before_filter :non_public_role_required
   
+  layout "documents"
   def new
     @channel = current_user.owned_channels.find(params[:channel_id])
     @subscription = @channel.subscriptions.build
@@ -19,7 +20,7 @@ class SubscriptionsController < ApplicationController
     end
 
     flash[:notice] = "Additional #{params[:owner] ? 'owners' : 'users'} have been added to this share"
-    redirect_to documents_path
+    redirect_to documents_panel_path
   end
 
 end

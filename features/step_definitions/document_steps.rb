@@ -46,6 +46,10 @@ When "I fill out the document sharing form with:" do |table|
   fill_in_audience_form table
 end
 
+When "I fill out the document sending form with:" do |table|
+  fill_in_audience_form table
+end
+
 Then 'I should receive the file:' do |table|
   table.rows_hash.each do |header, value|
     case header
@@ -59,6 +63,11 @@ Then 'I should receive the file:' do |table|
   end
 end
 
+Then /^the file "([^\"]*)" in the inbox does not exist$/ do |filename|
+  Document.find_by_file_file_name(filename).should be_nil
+  Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
+end
+
 Then /^the file "([^\"]*)" in folder "([^\"]*)" does not exist$/ do |filename, foldername|
   Document.find_by_file_file_name(filename).should be_nil
   Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
@@ -70,6 +79,7 @@ Then /^the file "([^\"]*)" and folder "([^\"]*)" do not exist$/ do |filename, fo
   Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
   Folder.find_by_name(foldername).should be_nil
 end
+
 Then /^I should see "([^\"]*)" has require confirmation$/ do |arg1|
   response.should have_selector(".folder a[onclick*=\"This folder contains files which will be deleted\"]", :content => "Delete")
 end

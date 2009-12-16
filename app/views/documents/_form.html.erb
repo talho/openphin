@@ -1,8 +1,14 @@
 <% form_for @document || Document.new, :html => {:multipart => true} do |form| %>
   <%= form.label :file, form.object.new_record? ? 'Upload Document' : 'Upload a new version' %>
-  <%= form.file_field :file %>
-
-  <%= render 'documents/folder_fields', :form => form %>
+  <%= form.file_field :file, :size => "18" %>
 
   <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
+<% end %>
+<br/>
+<p style='text-align: center;'>-or-</p>
+<br/>
+<% form_for @document || Document.new, :html => {:multipart => true} do |form| %>
+  <%= render 'documents/folder_fields', :form => form %>
+
+  <%= form.submit form.object.new_record? ? 'Upload' : 'Move to Folder'  %>
 <% end %>

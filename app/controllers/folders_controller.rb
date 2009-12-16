@@ -1,18 +1,17 @@
 class FoldersController < ApplicationController
   before_filter :non_public_role_required
-  layout "application", :except => :panel_index
+  layout "documents"
 
   def create
     @folder = current_user.folders.build(params[:folder])
     @folder.save!
     @folder.move_to_child_of(current_user.folders.find(params[:folder][:parent_id])) unless params[:folder][:parent_id].blank?
-    redirect_to documents_path
+    redirect_to documents_panel_path
   end
   
   def show
     @folder = current_user.folders.find(params[:id])
     @documents = @folder.documents
-    render 'documents/index'
   end
   
   def destroy
@@ -23,25 +22,7 @@ class FoldersController < ApplicationController
     else
       flash[:error] = "Could not remove the document."
     end
-      redirect_to documents_path
+      redirect_to documents_panel_path
   end
-
-  def panel_index
-    @folders = current_user.folders.roots
-    @shares = current_user.channels
-    current_folder = current_user.folders.find(params[:id]) unless params[:id].blank?
-    current_channel = current_user.channels.find(params[:channel]) unless params[:channel].blank?
-    if current_folder
-      @name = current_folder.name
-      @documents = current_folder.documents
-    elsif current_channel
-      @name = current_channel.name
-      @documents = current_channel.documents
-    else
-      @name = "Inbox"
-      @documents = current_user.documents.inbox
-    end
-  end
-  
 end
                   

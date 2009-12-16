@@ -1,4 +1,6 @@
+
 module NavigationHelpers
+
   def path_to(page_name, arg=nil)
     case page_name
 
@@ -39,7 +41,7 @@ module NavigationHelpers
       when /the user profile page$/i
         user_profile_path(User.find_by_email!(arg))
       when /^the user account roles page$/i
-        role_requests_path
+        new_role_request_path
       when /cancel the alert/
         edit_alert_path(Alert.last, :_action => "cancel")
       when /update the alert/
@@ -84,6 +86,8 @@ module NavigationHelpers
         documents_panel_path
       when /the user batch page/i
         new_user_batch_path
+      when /the folder inbox page/i
+        folder_inbox_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

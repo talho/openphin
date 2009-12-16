@@ -1,6 +1,6 @@
 <% form_for :channel, @channel, :url => { :action => "destroy"}, :html => { :method => :delete}  do |f| %>
-  <%= f.submit "Delete" %>
+  <%= f.submit "Delete", :confirm => "Are you sure you want to delete this share?" %>
   <%= render "show" %>
-  <%= f.submit "Delete" %>
+  <%= f.submit "Delete", :confirm => "Are you sure you want to delete this share?" %>
 <% end %>
 

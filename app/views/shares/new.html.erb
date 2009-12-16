@@ -1,12 +1,6 @@
 <div id="edit">
   <% form_for @document, :url => document_shares_path, :html => {:method => :post} do |form| %>
     <div id="audience">
-      <% fields_for Audience.new do |audience| %>
-        <% unless audience.object.is_a?(Group) %>
-          <%= render 'audiences/fields', :form => audience, :group_form => form %>
-        <% end %>
-      <% end %>
-
       <fieldset class="filterable list channels">
         <legend>Select Channels</legend>
         <ul class="check_selector">

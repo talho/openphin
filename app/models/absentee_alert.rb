@@ -40,4 +40,3 @@ class AbsenteeAlert < RollcallAlert
   belongs_to :school
   belongs_to :school_district
 end
-

@@ -74,8 +74,11 @@ div.help a                                    {color:#fff}
 
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-#documents_panel                               {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
-																							 background: #ffffd6; position:absolute; height:200px; left:50px; bottom: 20px; width:340px;}
+#documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
+																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
+#documents_progress_panel                     {padding: 5px 5px 0 5px; filter: alpha(opacity=60); opacity:0.6; z-index: 10; display: none;
+																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
+#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -247,6 +250,7 @@ li.school_bordered                            {border:2px solid #369;border-radi
 
 form p.rel_1                                  {width:195px; float:left; margin:0 20px 0 0;}
 form p.rel_2                                  {width:195px; float:right; clear:none;}
+form p.clear                                  {clear:both}
 form p.text input                             {width:97%;}
 form div.details p                            {clear:left;}
 form p.select select                          {width:97%;}
@@ -257,6 +261,12 @@ fieldset div.list_filter input								{width:187px;}
 fieldset div.list_filter input.empty					{color:#999;}
 fieldset.people																{clear:both; margin:0 0 15px;}
 
+fieldset.people span.member                   {position:relative;padding: 0 5px;}
+fieldset.people span.member a.destroy         {position:relative; top:1px;visibility:hidden;}
+fieldset.people span.member a.destroy img     {width:12px;}
+fieldset.people span.member:hover             {border:1px solid #369;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px;}
+fieldset.people span.member:hover a.destroy         {visibility:visible}
+
 form button,
 form input.submit,
 a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
@@ -266,29 +276,50 @@ a.button                                      {display:block;}
 .new_organization legend {font-size:1.4em; color:#369;}
 
 span.container                                  {background-color:#ffffff;}
-span.folders                                    {float: left;}
+span.media-list                                 {float: left;}
 span.files                                      {float: left; border-left: medium solid #ffffff; margin-left: 5px; padding-left: 5px; height: 100%; overflow: auto;}
-span.files ul                                   {margin-left: 0px;}
-span.files li                                   {position: relative; list-style: none;}
-span.folders fieldset.list 						{height:180px; float:left;}
-span.folders fieldset ul                        {margin-left: 0px;}
-span.folders fieldset ul.check_selector			{float: left; top:0px; left:0; right:0; bottom:0px; overflow:auto; height: 160px; width: 180px;}
-span.folders fieldset ul.check_selector li						{position:relative; list-style:none;}
-span.folders fieldset ul.check_selector li ul				{margin:0; padding:0px; border-top:1px solid #ffffff;}
+#span.files ul                                  {margin-left: 0px;}
+#span.files li                                  {position: relative; list-style: none;}
+fieldset.folders ul.check_selector              {overflow: auto;}
 
-span.folders fieldset ul.check_selector li li label  {margin:0; padding-left:44px;}
-span.folders fieldset ul.check_selector li li li label  {margin:0; padding-left:64px;}
-span.folders fieldset ul.check_selector li + li			{border-top:1px solid #ffffff;}
-span.folders fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
-span.folders fieldset ul.check_selector input				{position:absolute; left:6px; top:6px;}
-span.folders fieldset ul.check_selector li li input {left:24px;}
-span.folders fieldset ul.check_selector li li li input {left:44px;}
-span.folders fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:8px; height:20px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}
-span.folders fieldset ul.check_selector a.closed			{background:url(images/arrow_right.png) no-repeat center; width: 8px; height:20px;}
-span.folders fieldset ul.check_selector a:not(.toggle)      {margin-left: 10px;}
-span.folders fieldset ul.check_selector li li li a:not(.toggle)      {margin-left: 20px;}
-span.folders fieldset ul.check_selector li label			{background:#fff;}
-span.folders fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}
+span.container span#edit                        {float: left;}
+span.container span.documents                   {float: left; width: 200px; display: block; height: 250px; position: relative;}
+span.media_list div#new_folder                  {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.media_list div#new_share                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.documents div.upload_document              {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.documents div#new_folder                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
+span.documents div#contents                     {height: 204px; overflow: auto;}
+span.media_list fieldset.list                   {height:230px; float:left;}
+span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
+ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
+ul.media_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
+ul.documents li                                 {list-style-type: none;}
+ul.documents_toolbar                            {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
+ul.documents_toolbar li                         {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
+ul.media_toolbar li#new_folder                  {background-image: url('images/folder_add.png'); cursor:pointer;}
+ul.media_toolbar li#new_share                   {background-image: url('images/group_add.png'); cursor:pointer;}
+ul.media_toolbar li#move_edit                   {background-color: blue; cursor:pointer;}
+ul.media_toolbar li#rename_folder               {background-color: green; cursor:pointer;}
+ul.media_toolbar li#delete                      {background-image: url('images/folder_delete.png'); cursor:pointer;}
+ul.media_toolbar li#invite                      {background-image: url('images/group_go.png'); cursor:pointer;}
+ul.media_toolbar li#unsubscribe                 {background-image: url('images/group_delete.png'); cursor:pointer;}
+ul.documents_toolbar li#upload_document         {background-image: url('images/folder_page.png'); cursor:pointer;}
+ul.documents_toolbar li#new_folder              {background-image: url('images/folder_add.png'); cursor:pointer;}
+ul.documents_toolbar li#send                    {background-image: url('images/page_copy.png'); cursor:pointer;}
+ul.documents_toolbar li#add_to_share            {background-image: url('images/group_go.png'); cursor:pointer;}
+ul.documents_toolbar li#move_edit               {background-image: url('images/page_edit.png'); cursor:pointer;}
+ul.documents_toolbar li#delete                  {background-image: url('images/page_delete.png'); cursor:pointer;}
+div#deletion div#share                          {overflow: auto;}
+#edit.media_list fieldset ul.check_selector li ul {margin-left: 10px;}
+#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 20px;}
+#edit.media_list fieldset ul.check_selector li ul.folders ul label {margin-left: 0px;}
+#edit.media_list fieldset ul.check_selector li ul input {left: 0px;}
+#edit.media_list fieldset ul.check_selector li li li li label  {padding-left:42px;}
+.invis                                          {display: none;}
+
+#admin_user_profile                             {position: relative; float: left; width: 300px;}
+#admin_user_role_requests                       {position: relative; float: left; width: 300px;}
+
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;

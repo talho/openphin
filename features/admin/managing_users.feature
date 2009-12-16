@@ -57,7 +57,7 @@ Feature: An admin managing users
     Then I should see error messages
     
   Scenario: Editing a user's profile
-    When I view the profile page for jonas.brothers@example.com
+    When I view the profile page for "jonas.brothers@example.com"
     And I follow "Edit"
     Then I should see the profile edit form
 
@@ -81,7 +81,7 @@ Feature: An admin managing users
     
     Scenario: Editing a user's profile as an administrator of an parent jurisdiction
       Given I am logged in as "joe.smith@example.com"
-      When I view the profile page for jonas.brothers@example.com
+      When I view the profile page for "jonas.brothers@example.com"
       And I follow "Edit"
       Then I should see the profile edit form
 
@@ -102,7 +102,7 @@ Feature: An admin managing users
 
     Scenario: Editing a user's profile and deleting roles
       Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
-      When I view the profile page for jane.smith@example.com
+      When I view the profile page for "jane.smith@example.com"
       And I follow "Edit"
 
       Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"

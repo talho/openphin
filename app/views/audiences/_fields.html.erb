@@ -12,7 +12,7 @@
       <li>
         <%- id = [form.object_name.parameterize('_'), dom_id(r)].join('_') -%>
         <%= check_box_tag "#{form.object_name}[role_ids][]", r.id,
-            form.object.role_ids.include?(r.id), :id => id %>
+            form.object.role_ids.include?(r.id), :id => id, :class => 'audience_role' %>
         <%= label_tag id, r.name %>
       </li>
     <%- end -%>
@@ -27,7 +27,7 @@
         <li>
             <%= check_box_tag "#{group_form.object_name}[audience_ids][]", group.id,
                 group_form.object.audiences.include?(group),
-                :id => "#{group_form.object_name}_audience_#{group.id}" %>
+                :id => "#{group_form.object_name}_audience_#{group.id}", :class => 'audience_group' %>
             <%= label_tag "#{group_form.object_name}_audience_#{group.id}", group.name %>
         </li>
       <%- end -%>
@@ -42,7 +42,10 @@
   <p><%= label_tag 'Existing'%></p>
   <%- form.object.users.each do |user| -%>
     <%= hidden_field_tag "#{form.object_name}[user_ids][]", user.id %>
-    <%= label_tag user.name, link_to(user.name,user_profile_path(user)) %> <%= link_to 'Remove', dismember_admin_groups_path(form.object,user),:action => :dismember %>
+    <span class='member'>
+      <%= label_tag user.name, link_to(user.name,user_profile_path(user)) %>
+      <%= link_to image_tag("/stylesheets/images/cross-circle.png", :alt => "Remove"), dismember_admin_groups_path(form.object,user),:action => :dismember, :class => "destroy" %>
+    </span>
   <%- end -%>
 
 </fieldset>

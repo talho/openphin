@@ -50,7 +50,7 @@ class Alert < ActiveRecord::Base
   belongs_to :original_alert, :class_name => 'Alert'
   
   has_many :targets, :as => :item
-  has_many :audiences, :through => :targets
+  has_many :audiences, :through => :targets, :include => :jurisdictions
   accepts_nested_attributes_for :audiences
   
   has_many :alert_device_types, :dependent => :delete_all
@@ -218,6 +218,9 @@ class Alert < ActiveRecord::Base
 		end
   end
 
+  def is_updateable_by?(user)
+    true if user.alerter_jurisdictions.include?(self.from_jurisdiction)
+  end
   def integrate_voice
     original_file_name = "#{RAILS_ROOT}/message_recordings/tmp/#{self.author.token}.wav"
     if RAILS_ENV == "test"

@@ -148,6 +148,8 @@ Feature: Sending CDC test cases
       | delivery time         | 72 hours                     |
       | people                | Mark Jensen,TLP7 CDC         |
       | communication methods | Email                        |
+      | from_jurisdiction     | Texas                        |
+    
     When I load the update alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Message               | The Centers for Disease Control and Prevention (CDC) and state health officials in 17 states based located and tested 42 of the 44 potentially exposed passengers. All of the exposed passengers tested had negative TST results. |
@@ -177,6 +179,7 @@ Feature: Sending CDC test cases
       | delivery time         | 72 hours                     |
       | people                | Mark Jensen,TLP7 CDC         |
       | communication methods | Email                        |
+      | from_jurisdiction     | Texas                        |
     When I load the cancel alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Message               | This alert has been cancelled.  |

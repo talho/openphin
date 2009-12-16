@@ -4,29 +4,47 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
 
-map.delete_folder "folders/:id",
-  :controller=>"folders", :action=>"destroy",
-  :conditions => {:method => :delete}
-
   map.resources :jurisdictions, :devices, :folders
+
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
   end
+
+  map.documents_panel 'documents_panel',
+    :controller => 'documents', :action => 'panel_index',
+    :conditions => {:method => :get}
+
+  map.media_list 'media_list',
+    :controller => 'documents', :action => 'media_list',
+    :conditions => {:method => :get}
+
+  map.channel_documents 'channels/:channel_id/documents',
+    :controller => 'documents', :action => 'index',
+    :conditions => {:method => :get}
+
   map.channel_document 'channels/:channel_id/documents/:id',
     :controller => 'documents', :action => 'remove_from_channel',
     :conditions => {:method => :delete}
-    
+
+  map.folder_documents "folders/:folder_id/documents",
+    :controller=>"documents", :action=>"index",
+    :conditions => {:method => :get}
+
+  map.folder_document "folders/:folder_id/documents/:id",
+    :controller=>"documents", :action=>"remove_from_folder",
+    :conditions => {:method => :delete}
+
+  map.folder_inbox "inbox",
+    :controller => "documents", :action => "inbox",
+    :conditions => {:method => :get}
+
   map.show_destroy_channel 'channels/:id/show_destroy',
     :controller => 'channels', :action => 'show_destroy',
     :conditions => {:method => :get}
 
-  map.folder_document "folders/:folder_id/documents/:id", 
-    :controller=>"documents", :action=>"remove_from_folder", 
+  map.delete_folder "folders/:id",
+    :controller=>"folders", :action=>"destroy",
     :conditions => {:method => :delete}
-
-  map.documents_panel "documents_panel/:id",
-    :controller=>"folders", :action=>"panel_index",
-    :conditions => {:method => :get}
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"

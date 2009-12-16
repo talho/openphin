@@ -17,6 +17,6 @@ class AlertDeviceType < ActiveRecord::Base
   end
 
   def to_s
-    device_type.demodulize
+    device_type.to_s.demodulize
   end
 end
