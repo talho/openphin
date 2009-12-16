@@ -21,4 +21,11 @@ class AppMailer < ActionMailer::Base
     body :exception_message => exception_message, :message => message
   end
   
+  def user_batch_error(email, exception_message, message="")
+    recipients email
+    from DO_NOT_REPLY
+    subject "User batching error: #{exception_message}"
+    body :exception_message => exception_message, :message => message
+  end
+
 end

@@ -142,6 +142,7 @@ end
 When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename, options|
   create = (options=~/create/i).nil? ? false : true
   update = (options=~/update/i).nil? ? false : true
+  $stderr = StringIO.new
   UserImporter.import_users(File.join(Rails.root, 'tmp', filename),
                             :default_jurisdiction => Jurisdiction.find_by_name("Texas"),
                             :create => create,
@@ -177,4 +178,18 @@ end
 Then '"$email" should not exist' do |email|
   User.find_by_email(email).should be_nil
 end
+
+Then "standard error stream should be empty" do
+  $stderr.string.should be_empty
+end
+
+Then "standard error stream should not be empty" do
+  $stderr.string.should_not be_empty
+end
+
+When /^I attach the tmp file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
+  full_path = "#{File.join(Rails.root,'tmp',path)}"
+  attach_file(field, full_path)
+end
+
 

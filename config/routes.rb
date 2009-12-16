@@ -62,7 +62,8 @@ map.delete_folder "folders/:id",
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
-
+  
+  map.resources :user_batch, :controller => "admin/user_batch"
 
   #Rollcall routes, to be moved into plugin
   map.rollcall "/rollcall", :controller => "rollcall/rollcall"

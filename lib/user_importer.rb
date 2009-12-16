@@ -27,7 +27,7 @@ class UserImporter
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
         if email.blank?
-          STDERR.puts rec.values_at.join("|")         
+          $stderr.puts rec.values_at.join("|")         
           next
         end
         if options[:update] && options[:create]
@@ -48,7 +48,7 @@ class UserImporter
         if user.valid?
           user.save
         else
-          STDERR.puts rec.values_at.join("|")
+          $stderr.puts rec.values_at.join("|")
           next
         end
 
