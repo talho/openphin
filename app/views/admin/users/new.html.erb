@@ -9,10 +9,3 @@
 <% end %>
 
 <%= error_messages_for("users")%>
-
-<% form_for( :users, 
-  :url => {:action => 'import'}, 
-  :html => {:multpart => true} ) do |form|
-    Upload you list: <%= form.file_field "uplaod_list" %> <br/>
-    <%= submit_tag "Upload file" %>
-<% end %>
