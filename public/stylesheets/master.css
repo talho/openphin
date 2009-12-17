@@ -49,6 +49,7 @@ table td 																			{padding:5px 20px 5px 0;}
 #app_toolbar                                  {clear:both; height:30px; margin:0 0 20px; background:url(images/app_sub_header.png) repeat-x; line-height:30px; padding:0 20px; text-align:center;}
 #app_toolbar ul                               {display:inline; margin:0 auto; height:30px; float:none;}
 #app_toolbar li                               {float:none; display:inline-block;}
+.ie7 #app_toolbar li                          {float:left;}
 #app_toolbar li a                             {line-height:28px; color:#D3FAFF;}
 #app_toolbar li.current a                     {background:url(images/app_sub_header_tab.png); color:#333; line-height:27px; height:30px;padding:0 0 0 12px;}
 #app_toolbar li.current a span                {background:url(images/app_sub_header_tab.png) 100% 0; line-height:27px; height:27px; padding-top:3px;}
