@@ -1,0 +1,18 @@
+<% form_for :user_batch, :url => {:action => 'create'}, :html => {:multipart => true} do |f| %>
+<p>
+  <%= f.label "Batch file entries have a jurisdiction field.  If empty, the default is used." %><br/>
+  <%= f.label "As an Jurisdiction Admin you can only add users to these jurisdictions." %>
+</p>
+<p>
+  <%= f.label :jurisdiction,  "Which of your jurisdictions do you choice for the default?" %>
+  <%= f.select( :jurisdiction, @jurisdictions, {:class => "home_jurisdiction"} )%>
+</p>
+<p class="file_data">
+  <%= f.label :file_data, 'Upload User CSV file' %>
+  <%= f.file_field :file_data %>
+</p>
+<p>
+  <%= f.submit 'Upload'  %>
+</p>
+<% end %>
+
