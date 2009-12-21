@@ -52,10 +52,10 @@ module ApplicationHelper
 
     paths.each do |path|
       case path.class.name
-      when "Hash"
+        when "Hash"
         return " class='current'" if (path[:action].blank? && controller.controller_name == path[:controller]) || (controller.action_name == path[:action] && controller.controller_name == path[:controller])
       when "String"
-        return " class='current'" if request.request_uri==path
+        return " class='current'" if request.request_uri.split('?')[0]==path
       else
         ""
       end
