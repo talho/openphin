@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
   def hud
     DashboardController.app_toolbar "han"
 
-    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts : [Alert.default_alert])
+    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts.paginate(:page => params[:page], :per_page => 10) : [Alert.default_alert])
   end
   
 	def faqs

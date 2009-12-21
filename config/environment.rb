@@ -78,6 +78,7 @@ Rails::Initializer.run do |config|
   config.gem 'bullet', :source => 'http://gemcutter.org'
   config.gem 'ruby-growl', :source => 'http://gemcutter.org'
   config.gem "sinatra"
+  config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
 end
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')

@@ -9,7 +9,7 @@ class AlertsController < ApplicationController
   app_toolbar "han"
 
   def index
-    @alerts = present_collection current_user.viewable_alerts
+    @alerts = present_collection(current_user.viewable_alerts.paginate(:page => params[:page], :per_page => 10))
   end
 
   def show
