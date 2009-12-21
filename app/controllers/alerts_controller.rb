@@ -136,7 +136,7 @@ class AlertsController < ApplicationController
       end
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
-    redirect_to dashboard_path
+    redirect_to hud_path
   end
 
   def token_acknowledge
@@ -152,7 +152,7 @@ class AlertsController < ApplicationController
         flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end
     end
-    redirect_to dashboard_path
+    redirect_to hud_path
   end
 
   def upload
