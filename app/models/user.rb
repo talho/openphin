@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts
   has_many :deliveries,    :through => :alert_attempts
-  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :limit => 20, :order => "alerts.created_at DESC"
+  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :documents do
