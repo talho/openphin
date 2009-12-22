@@ -13,7 +13,6 @@ class Admin::UsersController < ApplicationController
   
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
-    debugger
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
       params[:user].delete("organization_ids")
