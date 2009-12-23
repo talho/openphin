@@ -1,0 +1,14 @@
+<%- if @groups.empty? -%>
+  You currently have no groups.
+<%- else -%>
+  <table id="groups">
+    <tr>
+      <td><%= link_to "Name", "#{admin_groups_path}#{@page}#{@sort.blank? ? @reverse : ""}" %></td>
+      <td><%= link_to "Owner", "#{admin_groups_path}#{@page}&sort=owner#{@sort == "owner" ? @reverse : ""}" %></td>
+      <td><%= link_to "Scope", "#{admin_groups_path}#{@page}&sort=scope#{@sort == "scope" ? @reverse : ""}" %></td>
+      <td></td>
+    </tr>
+    <%= render :partial => "group_summary", :collection => @groups, :as => :group -%>
+  </table>
+  <%= will_paginate @groups %>
+<%- end -%>
