@@ -160,10 +160,10 @@ Then /^the following phone calls should be made:$/ do |table|
       xml = Nokogiri::XML(phone_call.body)
       if row["recording"].blank?
         phone = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Voice"]/swn:address',
-                            {"swn" => "http://www.sendwordnow.com/notification"})).inner_text
+                            {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
         message = xml.search( "//swn:notification/swn:body",
-                              {"swn" => "http://www.sendwordnow.com/notification"}).inner_text
-        message == row["message"] && phone == row["phone"]
+                              {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
+        message.include?(row["message"]) && phone.include?(row["phone"])
         #SWN doesn't support recorded attachments
 #      else
 #        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
