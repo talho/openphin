@@ -22,7 +22,7 @@ Agency: <%= @alert.from_jurisdiction.nil? ? @alert.from_organization_name : @ale
 <%- if !@alert.author.nil? -%>
 Sender: <%= @alert.author.display_name %>
 <%- end -%>
-Time Sent: <%= @alert.created_at %>
+Time Sent: <%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>
 
 <% if @alert.acknowledge? %>
 Please click <%= email_acknowledge_alert_url(@alert) %> and log in to acknowledge this alert

@@ -8,7 +8,7 @@
       </span>
     </p>
     <p class="meta">
-      <span class="created_at">Posted at <%= alert.created_at.to_s(:standard) %> <%= 'by '+link_to(h(alert.author.display_name), user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
+      <span class="created_at">Posted at <%= alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %> <%= 'by '+link_to(h(alert.author.display_name), user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
       <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
         <span class="status <%=h alert.status.downcase %>"><strong>Status:</strong> [<%=h alert.status.capitalize %>]</span>
       <%- end -%>
