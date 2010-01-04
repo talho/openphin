@@ -14,7 +14,9 @@ task :testing do
   set :deploy_to, "#{TestJour_config["root_path"]}/#{application}"
 
   before :deploy, :role => :app do
-    `git push testjour #{get_branch}`
+    `git push testjour #{get_branch} -f`
+    run "mkdir #{release_path}"
+    run "rm -rf #{release_path}/../*"
   end
 
   after :deploy, :role => :app do
