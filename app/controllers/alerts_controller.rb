@@ -9,7 +9,7 @@ class AlertsController < ApplicationController
   app_toolbar "han"
 
   def index
-    @alerts = present_collection current_user.viewable_alerts
+    @alerts = present_collection(current_user.viewable_alerts.paginate(:page => params[:page], :per_page => 10))
   end
 
   def show
@@ -135,7 +135,7 @@ class AlertsController < ApplicationController
       end
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
-    redirect_to dashboard_path
+    redirect_to hud_path
   end
 
   def token_acknowledge
@@ -151,7 +151,7 @@ class AlertsController < ApplicationController
         flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end
     end
-    redirect_to dashboard_path
+    redirect_to hud_path
   end
 
   def upload

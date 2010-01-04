@@ -104,14 +104,14 @@ EOF
   def add_recipients(xml)
     xml.swn(:rcpts) do
       users.each do |user|
-        user.devices.phone.each do |phone_device|
-          xml.swn(:rcpt) do
-            xml.swn(:id, user.id)
-            xml.swn(:firstName, user.first_name)
-            xml.swn(:lastName, user.last_name)
-            xml.swn(:contactPnts) do
+        xml.swn(:rcpt) do
+          xml.swn(:id, user.id)
+          xml.swn(:firstName, user.first_name)
+          xml.swn(:lastName, user.last_name)
+          xml.swn(:contactPnts) do
+            user.devices.phone.each do |phone_device|
               xml.swn(:contactPntInfo, :type => "Voice") do
-                xml.swn(:id, user.id)
+                xml.swn(:id, phone_device.id)
                 xml.swn(:label, "Phone Device")
                 xml.swn(:address, phone_device.phone)
               end

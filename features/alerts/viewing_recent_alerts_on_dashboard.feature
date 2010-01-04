@@ -41,18 +41,24 @@ Feature: Viewing recent alerts on dashboard
 
     Given 19 more alerts are sent to me
     When I go to the han page
-    Then I should see 20 alerts
+    Then I should see 10 alerts
+    When I follow "Next"
+    Then I should see 10 alerts
     And I should see an alert with the summary:
       | title       | rolling pig pox |
       | severity    | Moderate |
     And I should see an alert with the detail:
       | message     | the world is on fie |
       | acknowledge | Yes      |
-    
+
     Given 1 more alert is sent to me
     When I go to the han page
-    Then I should see 20 alerts
+    Then I should see 10 alerts
     And I should not see an alert titled "rolling pig pox"
+    When I follow "Next"
+    Then I should see 10 alerts
+    When I follow "Next"
+    Then I should see 1 alert
   
   
   

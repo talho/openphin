@@ -1,3 +1,14 @@
-<div class="group">
-  Name: <%= link_to group.name, admin_group_path(group) %> <%= link_to 'Edit', edit_admin_group_path(group)%> <%= link_to 'Destroy', admin_group_path(group), :method => :delete, :class => "destroy" %>
-</div><br/>
+<tr class="group">
+  <td>
+    <%= link_to group.name, admin_group_path(group) %>
+  </td>
+  <td>
+    <%= link_to group.owner.display_name, user_profile_path(group.owner) %>
+  </td>
+  <td>
+    <%= group.scope %>
+  </td>
+  <td>
+    <%= link_to 'Edit', edit_admin_group_path(group)%> <%= link_to 'Destroy', admin_group_path(group), :method => :delete, :class => "destroy" %>
+  </td>
+</tr>
