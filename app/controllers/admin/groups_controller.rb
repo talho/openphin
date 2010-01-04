@@ -1,6 +1,6 @@
 class Admin::GroupsController < ApplicationController
   before_filter :admin_required
-  app_toolbar "groups"
+  app_toolbar "admin"
 
   def index
     page = params[:page].blank? ? "1" : params[:page]

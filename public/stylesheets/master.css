@@ -321,6 +321,10 @@ div#deletion div#share                          {overflow: auto;}
 #admin_user_profile                             {position: relative; float: left; width: 300px;}
 #admin_user_role_requests                       {position: relative; float: left; width: 300px;}
 
+table#groups td                                 {border: 2px inset gray; padding: 5px 5px 5px 5px;}
+table#groups td.sortby                          {border: none;}
+table#groups td.editdestroy                     {border: none;}
+
 /* Alerts and notifications */
 .flash {
   margin: .8em .8em .4em;

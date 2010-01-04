@@ -69,4 +69,15 @@ class UserImporter
     dev.send("#{method}=", value.strip)
     dev
   end
+
+  def self.jurisdiction_transform(filename, options = {})
+    options = {:col_sep => "|", :row_sep => "\n", :default_jurisdiction => "Texas"}.merge(options)
+    FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
+      puts records.first.headers.join("|")
+      records.each do |rec|
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
+        puts rec.values_at.join("|") if jurisdiction == options[:default_jurisdiction]
+      end
+    end
+  end
 end

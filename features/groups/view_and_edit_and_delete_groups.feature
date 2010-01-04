@@ -28,6 +28,7 @@ Feature: Viewing groups
 
     Scenario: going to view a user group as an admin
       When I go to the dashboard page
+      And I follow "Admin"
       Then I should see "Manage Groups"
       When I follow "Manage Groups"
       Then I should see "Dallas County Health Officer Group"
@@ -38,6 +39,7 @@ Feature: Viewing groups
 
   Scenario: going to view a user group ordering as an admin 
     When I go to the dashboard page
+    And I follow "Admin"
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
@@ -47,6 +49,7 @@ Feature: Viewing groups
 
   Scenario: going to edit a user group as an admin
     When I go to the dashboard page
+    And I follow "Admin"
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
@@ -55,6 +58,7 @@ Feature: Viewing groups
 
   Scenario: going to edit a user group as an admin with deleting a user member
     When I go to the dashboard page
+    And I follow "Admin"
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
@@ -69,6 +73,7 @@ Feature: Viewing groups
 
   Scenario: going to edit a user group as an admin with viewing the user member's profile
     When I go to the dashboard page
+    And I follow "Admin"
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
     Then I should see "Dallas County Health Officer Group"
