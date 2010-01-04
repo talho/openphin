@@ -142,7 +142,7 @@ Then 'an alert should not exist with:' do |table|
     when 'people'
       value.split(",").each do |name|
         display_name = name.split(" ").join(" ")
-        alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include display_name
+        alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
       end
     else
       alert.send(attr).should == value
