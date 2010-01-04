@@ -13,6 +13,16 @@ task :testing do
   set :user, TestJour_config["master_user"]
   set :deploy_to, "#{TestJour_config["root_path"]}/#{application}"
 
+  namespace :deploy do
+    task :migrate do
+      run "cd #{current_path}; rake db:migrate:reset"
+      run "cd #{current_path}; mysqldump#{TestJour_config["dbusername"] ? " -u " + TestJour_config["dbusername"] : ""}#{TestJour_config["dbpassword"] ? " --password=" + TestJour_config["dbpassword"] : ""} -n -d openphin_development > #{shared_path}/development_structure.sql"
+    end
+  end
+
+  task :seed, :roles => :db, :only => {:primary => true} do
+  end
+  
   before :deploy, :role => :app do
     `git push testjour #{get_branch} -f`
     run "mkdir #{release_path}"
@@ -20,13 +30,6 @@ task :testing do
   end
 
   after :deploy, :role => :app do
-    begin
-      if migrations
-        run "cd #{current_path}; rake db:migrate:reset"
-        run "cd #{current_path}; mysqldump#{TestJour_config["dbusername"] ? " -u " + TestJour_config["dbusername"] : ""}#{TestJour_config["dbpassword"] ? " --password=" + TestJour_config["dbpassword"] : ""} -n -d openphin_development > #{shared_path}/development_structure.sql"
-      end
-    rescue
-    end
     run "/bin/cp #{shared_path}/development_structure.sql #{release_path}/db/development_structure.sql"
 
     run "cd #{current_path}; testjour #{get_slaves} --max-local-slaves=1 --create-mysql-db --mysql-db-name=openphin_test #{get_features}"
