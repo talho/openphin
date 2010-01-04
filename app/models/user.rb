@@ -322,7 +322,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # needs fixing
   def delayed_delete_by(requester_email,requester_ip)
     begin
       self.send_later(:delete_by,requester_email,requester_ip)
