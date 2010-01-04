@@ -82,6 +82,7 @@ ActionController::Routing::Routes.draw do |map|
   map.hud "/han", :controller => "dashboard", :action => "hud"
   
   map.resources :user_batch, :controller => "admin/user_batch"
+  map.resources :users_delete, :controller => "admin/users_delete"
 
   #Rollcall routes, to be moved into plugin
   map.rollcall "/rollcall", :controller => "rollcall/rollcall"

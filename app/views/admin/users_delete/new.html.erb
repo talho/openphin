@@ -1,0 +1,17 @@
+<h1>Deleting Users</h1>
+
+<% form_for :users, :url => {:action => 'create'} do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <fieldset>
+      <legend>People</legend>
+      <%= hidden_field_tag 'users[user_ids][]', nil, :id => :users_user_id %>
+      <%= f.select :user_ids, [], {}, :multiple => :multiple, :class => "search_user_ids" %>
+    </fieldset>
+  </p>
+  <br/>
+  <p>
+    <%= f.submit 'Delete Users' %>
+  </p>
+<% end %>

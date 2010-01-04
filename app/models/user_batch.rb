@@ -66,7 +66,7 @@ class UserBatch
         )
       unless $stderr.string.empty?
         # error created during import, send email to submitter
-        AppMailer.deliver_user_batch_error(@mail, "during import", $stderr.string) 
+        AppMailer.deliver_user_batch_error(@email, "during import", $stderr.string) 
       end
       $stderr = STDERR
     rescue ActiveRecord::RecordNotFound => e
@@ -74,7 +74,7 @@ class UserBatch
         AppMailer.deliver_system_error(e, "Could not find submitter of #{@email}.")
       else
         unless jurisdiction
-          AppMailer.deliver_user_batch_error(@mail, e, "Could not find the jurisdiction of #{@jurisdiction}.") 
+          AppMailer.deliver_user_batch_error(@email, e, "Could not find the jurisdiction of #{@jurisdiction}.") 
         end
       end
     rescue Errno::ENOENT

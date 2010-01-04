@@ -88,6 +88,8 @@ module NavigationHelpers
         new_user_batch_path
       when /the folder inbox page/i
         folder_inbox_path
+      when /the users delete page/i
+        new_users_delete_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

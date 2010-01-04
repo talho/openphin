@@ -133,6 +133,23 @@ Then 'an alert exists with:' do |table|
   end
 end
 
+Then 'an alert should not exist with:' do |table|
+  attrs = table.rows_hash
+  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
+      {:identifier => attrs['identifier'], :title => attrs['title']}])
+  attrs.each do |attr, value|
+    case attr
+    when 'people'
+      value.split(",").each do |name|
+        display_name = name.split(" ").join(" ")
+        alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include display_name
+      end
+    else
+      alert.send(attr).should == value
+    end
+  end
+end
+
 Then /^I should see (\d*) alerts?$/ do |n|
   response.should have_selector('.alert', :count => n.to_i)
 end

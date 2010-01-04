@@ -77,9 +77,11 @@ Feature: Sending alerts form
     And I fill out the alert form with:
       | People   | Jane Smith                                   |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
+
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | People            | Jane Smith |
+      
     And I press "Send"
     Then an alert exists with:
       | from_jurisdiction | Texas                                        |

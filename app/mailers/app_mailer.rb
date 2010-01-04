@@ -28,4 +28,11 @@ class AppMailer < ActionMailer::Base
     body :exception_message => exception_message, :message => message
   end
 
+  def user_delete_error(requester_email, message="")
+    recipients requester_email
+    from DO_NOT_REPLY
+    subject "Deleting of user error: #{message}"
+    body :message => message
+  end
+
 end

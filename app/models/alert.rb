@@ -174,7 +174,7 @@ class Alert < ActiveRecord::Base
     end
     audiences.each do |audience|
       audience.foreign_jurisdictions.each do |jurisdiction|
-        alert_attempts.create!(:jurisdiction => jurisdiction).batch_deliver  
+        alert_attempts.create!(:jurisdiction => jurisdiction).batch_deliver
       end
     end
     alert_device_types.each do |device_type|
