@@ -12,6 +12,10 @@ Please visit <%= url_for(:action => "show", :controller => "alerts", :id => @ale
 
 <%- else -%>
 
+<% if @alert.acknowledge? %>
+To acknowledge this alert, please click <%= token_acknowledge_alert_url(@alert, @alert_attempt.token) %>
+<% end %>
+
 <%= @alert.title %>
 
 Alert ID: <%= @alert.identifier %>
@@ -21,10 +25,6 @@ Reference: <%= @alert.original_alert_id %>
 Agency: <%= @jurisdiction.name %>
 Sender: <%= @author.display_name %>
 Time Sent: <%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>
-
-<% if @alert.acknowledge? %>
-To acknowledge this alert, please click <%= token_acknowledge_alert_url(@alert, @alert_attempt.token) %>
-<% end %>
 
 <%= @alert.message %>
 <%- end -%>
