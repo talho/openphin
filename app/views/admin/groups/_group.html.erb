@@ -15,7 +15,7 @@
 <div>
 <h5 class='group_header'>Users</h5>
 <ul class="group_users">
-  <% @group.users.each do |user| %>
+  <% @group.users.sort_by{|user| user.last_name}.each do |user| %>
     <li class="group_user"><%= link_to user.display_name, user_profile_path(user) %><%= ", " unless user == @group.users.last %></li>
   <% end %>
 </ul>
