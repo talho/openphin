@@ -4,14 +4,14 @@ class DocumentMailer < ActionMailer::Base
     bcc target.users.map(&:formatted_email)
     from DO_NOT_REPLY
     subject "#{target.creator.name} sent a document to you"
-    body :document => document
+    body :document => document, :target => target
   end
   
   def channel_invitation(channel, target)
     bcc target.users.map(&:formatted_email)
     from DO_NOT_REPLY
     subject "#{target.creator.name} invited you to a share"
-    body :channel => channel
+    body :channel => channel, :target => target
   end
   
   def document_addition(channel, document)

@@ -96,7 +96,7 @@ Background:
     Then I should see "sample.wav"
     And "bob.smith@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to:      |
+      | body contains | To view this share, go to:      |
 
     Given I am logged in as "bob.smith@example.com"
     When I go to the document viewing panel
