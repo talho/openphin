@@ -136,8 +136,10 @@ function toggleComingSoon(e){
 function togglePanel(panelname, e){
 	$("#"+panelname+"_panel").slideToggle(500);
 	closeAllPanelsExcept(panelname);
-	e.stopPropagation();
-	e.preventDefault();
+  if(typeof e != "undefined") {
+	  e.stopPropagation();
+	  e.preventDefault();
+  }
 	return false;
 }
 function closeAllPanels(){
@@ -155,7 +157,7 @@ function closeAllPanelsExcept(exception_name){
 	if(exception_name!="calendar")  $("#calendar_panel:visible").slideToggle(500);
 }
 
-function reloadDocumentsPanel(site){
+function reloadDocumentsPanel(site,contents){
     var dp = $("#documents_panel");
     if(jQuery.trim(site) == "") site = "/documents_panel";
     $("#documents_progress_panel").show();
@@ -167,7 +169,8 @@ function reloadDocumentsPanel(site){
         activateMediaPanelActions();
         
         var dp = $("#documents_panel span.documents");
-        dp.load("/inbox","",function(e) {
+        if(jQuery.trim(contents) == "") contents = "/inbox";
+        dp.load(contents,"",function(e) {
           $("#documents_progress_panel").hide();
           activateDocumentsPanelActions();
         });

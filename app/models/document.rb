@@ -63,13 +63,15 @@ class Document < ActiveRecord::Base
   end
   
   def share_with_channel(channel)
-    DocumentMailer.deliver_document_addition(channel) unless channel.users.empty?
+    DocumentMailer.deliver_document_addition(channel, self) unless channel.users.empty?
   end
   
   def notify_channels_of_update
-    recipients = channels.map(&:users).flatten.uniq
-    unless recipients.empty?
-      DocumentMailer.deliver_document_update(self, recipients)
+    channels.each do |channel|
+      recipients = channel.users
+      unless recipients.empty?
+        DocumentMailer.deliver_document_update(self, recipients, channel)
+      end
     end
   end
   

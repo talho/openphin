@@ -1,7 +1,9 @@
 class ChannelsController < ApplicationController
   before_filter :non_public_role_required
 
-  layout "documents"
+  layout "documents", :except => "popup_channel"
+  layout "application", :only => "popup_channel"
+
   def new
     @channel = current_user.channels.build
   end
@@ -41,6 +43,10 @@ class ChannelsController < ApplicationController
   end
   
   def show_destroy
+    @channel = current_user.owned_channels.find(params[:id])
+  end
+
+  def popup_channel
     @channel = current_user.owned_channels.find(params[:id])
   end
 end

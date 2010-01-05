@@ -1,7 +1,8 @@
 class DocumentsController < ApplicationController
   before_filter :non_public_role_required
 
-  layout "documents", :except => [:show]
+  layout "documents", :except => [:show, :popup_documents]
+  layout "application", :only => :popup_documents
 
   def panel_index
     set_panel_defaults
@@ -96,6 +97,10 @@ class DocumentsController < ApplicationController
     @document.destroy
     flash[:notice] = "Successfully removed the document from the folder."
     redirect_to folder_or_inbox_path(@document)
+  end
+
+  def popup_documents
+    
   end
 
   private
