@@ -97,7 +97,7 @@ jQuery(function($) {
 			return false;
 		});
     $(".documents").bind("click", function (e){
-      //if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
+      if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
 	    return togglePanel("documents", e);
 
     });
@@ -195,6 +195,7 @@ function reloadMediaListPanel(site, fetch_doc) {
 }
 
 function activateMediaPanelActions() {
+  documentsAlert();
   $(".media_list a").bind("click", function(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -319,6 +320,11 @@ function setMediaRenameFolderEvents() {
 function setMediaDeleteItemEvents() {
   var delete_item = $("ul.media_toolbar li#delete");
   delete_item.bind("click", function(e) {
+    if($("ul.shares input:checked").length == 0 && $("ul.folders input:checked").length == 0) {
+      alert("You must select a share or folder to delete.");
+      return;
+    }
+
     if($("ul.shares input:checked").length > 0) {
       share = $("ul.shares input:checked:first")
       delete_share = share.closest("li").children("a.remove_share");
@@ -430,6 +436,8 @@ function setMediaInviteEvents() {
           newel: true
         });
       });
+    } else {
+      alert("You must select a share to invite users.");
     }
   });
 }
@@ -457,6 +465,8 @@ function setMediaUnsubscribeEvents() {
         });
         return false;
       }
+    } else {
+      alert("You must select a share to unsubscribe from.");
     }
   });
 }
@@ -475,6 +485,7 @@ function reloadDocumentsDocumentPanel(site) {
 }
 
 function activateDocumentsPanelActions() {
+  documentsAlert();
   $("#documents_progress_panel").hide();
   $(".documents input:checkbox").bind("click", function(e) {
     if($(this).attr("checked") == true) {
@@ -605,6 +616,8 @@ function setDocumentSendEvents() {
           newel: true
         });
       });
+    } else {
+      alert("You must select a document to send.");
     }
   });
 }
@@ -657,6 +670,8 @@ function setDocumentAddToShareEvents() {
           newel: true
         });
       });
+    } else {
+      alert("You must select a document to add it to a share.");
     }
   });
 }
@@ -711,6 +726,8 @@ function setDocumentMoveEditEvents() {
           dp.remove();
         });
       });
+    } else {
+      alert("You must select a document to move or edit.");
     }
   });
 }
@@ -735,7 +752,14 @@ function setDocumentDeleteItemEvents() {
           activateDocumentsPanelActions();
         });
       }
+    } else {
+      alert("You must select a document to delete.");
     }
     return false;
   });
+}
+
+function documentsAlert() {
+  var error = $("div.flash p.error");
+  if(error.length > 0) alert(error.text());
 }

@@ -75,13 +75,11 @@ div.help a                                    {color:#fff}
 
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-#documents_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
-																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-/*#documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
+#documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
 																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
 #documents_progress_panel                     {padding: 5px 5px 0 5px; filter: alpha(opacity=60); opacity:0.6; z-index: 10; display: none;
 																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
-#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}*/
+#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -200,7 +198,7 @@ li.low                                        {background:url(images/status_mode
 li.medium                                     {background:url(images/status_severe.png) no-repeat; display:block; float: left; padding:0 26px;}
 li.high                                        {background:url(images/status_extreme.png) no-repeat; display:block; float: left; padding:0 26px;}
 #content div.summary p                        {margin-bottom:0;}
-#content div.summary p.title                  {text-align:right;}
+#content div.summary p.title                  {text-align:left;}
 #content div.summary span.actions             {float:right;}
 #content div.summary span.actions a           {color:#333; width:60px; float:left; height:17px; line-height:17px; text-align:center; background:url(images/button_small.png) no-repeat; margin-left:8px; font-size:11px;}
 #content p.brief                              {margin-right:20px; float:left;}

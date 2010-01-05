@@ -2,7 +2,7 @@
   <div class='rollcall_chart_options'>
     <% form_tag rollcall_path do %>
       <%= label_tag :timespan, "Show last" %>
-      <%= select_tag :timespan, options_for_select([7, 14, 21, 30, 60, 90],params[:timespan].to_i) %>
+      <%= select_tag :timespan, options_for_select([7, 14, 21, 30, 60, 90], params[:timespan].to_i) %>
       <label>days of data</label>
       <%= submit_tag "Modify graph" %>
     <% end %>

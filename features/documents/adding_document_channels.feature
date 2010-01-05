@@ -109,7 +109,7 @@ Feature: Creating document channels
 
     When I go to the document viewing panel
     And I follow "Channel 4"
-    And I should see "Channel 4 Detail"
+    And I should see "Contents of Channel 4"
     And I should see "keith.jpg"
     And I follow "Delete"
     Then I should not see "keith.jpg"

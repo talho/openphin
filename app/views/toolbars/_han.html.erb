@@ -4,7 +4,7 @@
   <li<%= tab_me [new_alert_path, {:action => "create", :controller => "alerts"}] %>><%= link_to(s('Send an Alert'), new_alert_path, :class => ".sendalert") %></li>
 <%- end -%>
 <%- if current_user.alerter? -%>
-  <li<%= tab_me [{:action => "index", :controller => "alerts"}, { :action => "edit", :controller => "alerts"}] %>><%= link_to(s('View Alerts'), alerts_path, :class => '.viewalerts') %></li>
+  <li<%= tab_me [{:action => "index", :controller => "alerts"}, { :action => "edit", :controller => "alerts"}] %>><%= link_to(s('Alert Log and Reporting'), alerts_path, :class => '.viewalerts') %></li>
 <%- end -%>
   <li style='padding-left:150px;'><%= link_to  "HAN Training Manual", "/han_training.pdf" %></li>
 </ul>
