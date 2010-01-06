@@ -33,6 +33,13 @@ class Device::EmailDevice < Device
   end
   
   def self.batch_deliver(alert)
-    AlertMailer.deliver_batch_alert(alert) unless alert.alert_attempts.nil?
+    users = alert.unacknowledged_users.map(&:formatted_email)
+    users.batch_process(50) do |emails|
+      begin
+        AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
+      rescue Net::SMTPSyntaxError => e
+        logger.error "Error mailing alert to the following recipients: #{emails.join}"
+      end
+    end
   end
 end
