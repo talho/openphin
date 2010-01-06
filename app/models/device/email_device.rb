@@ -38,7 +38,9 @@ class Device::EmailDevice < Device
       begin
         AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
       rescue Net::SMTPSyntaxError => e
-        logger.error "Error mailing alert to the following recipients: #{emails.join}"
+        logger.error "Error mailing alert to the following recipients: #{emails.join}\nException:#{e}"
+      rescue
+        logger.error e
       end
     end
   end
