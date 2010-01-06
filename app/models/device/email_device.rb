@@ -38,7 +38,16 @@ class Device::EmailDevice < Device
       begin
         AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
       rescue Net::SMTPSyntaxError => e
-        logger.error "Error mailing alert to the following recipients: #{emails.join}\nException:#{e}"
+        logger.error "Error mailing alert to the following recipients: #{emails.join(",")}\nException:#{e}"
+        logger.error "Attempting individual resends"
+        emails.each do |eml|
+          begin
+            AlertMailer.deliver_batch_alert(alert, eml)
+            logger.error "Resent to #{eml}"
+          rescue
+            logger.error "Unable to resend to #{eml}"
+          end
+        end
       rescue
         logger.error e
       end
