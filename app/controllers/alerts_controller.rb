@@ -9,7 +9,7 @@ class AlertsController < ApplicationController
   app_toolbar "han"
 
   def index
-    @alerts = present_collection current_user.viewable_alerts
+    @alerts = present_collection current_user.alerts_within_jurisdictions(params[:page])
   end
 
   def show
@@ -134,6 +134,7 @@ class AlertsController < ApplicationController
       else
         alert_attempt.acknowledge! "Device::EmailDevice"
       end
+      expire_log_entry(alert_attempt.alert)
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
     redirect_to dashboard_path
@@ -149,6 +150,7 @@ class AlertsController < ApplicationController
         flash[:error] = "You are not authorized to view this page."
       else
         alert_attempt.acknowledge! "Device::EmailDevice"
+        expire_log_entry(alert_attempt.alert)
         flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end
     end
@@ -189,6 +191,9 @@ class AlertsController < ApplicationController
 
 private
 
+  def expire_log_entry(alert)
+    expire_fragment(:controller => "alerts", :action => "index", :key => ['alert_log_entry', alert.id])    
+  end
   def alerter_required
     unless current_user.alerter?
       flash[:error] = "You do not have permission to send an alert."

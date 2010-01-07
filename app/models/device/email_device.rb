@@ -35,8 +35,9 @@ class Device::EmailDevice < Device
   
   def self.batch_deliver(alert)
     users = alert.unacknowledged_users.map(&:formatted_email)
-    users.batch_process(50) do |emails|
+    users.batch_process(50) do |emails| 
       begin
+        
         AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
       rescue Net::SMTPSyntaxError => e
         logger.error "Error mailing alert to the following recipients: #{emails.join(",")}\nException:#{e}"

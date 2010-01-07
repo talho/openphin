@@ -266,12 +266,19 @@ class User < ActiveRecord::Base
   end
   
   def viewable_alerts
-      (alerts_within_jurisdictions | recent_alerts).sort!{|a,b| b.created_at.utc.to_datetime <=> a.created_at.utc.to_datetime}
+      (alerts_within_jurisdictions)
   end
   
-  def alerts_within_jurisdictions
-    j = jurisdictions.map{|m| m.self_and_descendants}.flatten
-    Alert.all(:conditions => {:from_jurisdiction_id => j}, :order => "alerts.created_at DESC")
+  def alerts_within_jurisdictions(page=nil)
+    jurs=alerting_jurisdictions.sort_by(&:lft)
+    jurs=jurs.map{|j1| jurs.detect{|j2| j2.is_ancestor_of?(j1)} || j1}.uniq
+    ors=jurs.map{|j| "(jurisdictions.lft >= #{j.lft} AND jurisdictions.lft <= #{j.rgt})"}.join(" OR ")
+
+    Alert.paginate(:conditions => ors,
+                   :joins => "inner join jurisdictions on alerts.from_jurisdiction_id=jurisdictions.id",
+                   :order => "alerts.created_at DESC, alerts.id DESC",
+                   :page => page,
+                   :per_page => 10)
   end
   
   def cascade_alerts

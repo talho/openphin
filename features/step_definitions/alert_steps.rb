@@ -36,6 +36,26 @@ Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_a
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
 end
 
+
+Given /^(\d*) random alerts$/ do |count|
+  srand count.to_i
+  size=Jurisdiction.all.size
+  count.to_i.times do
+    j=Jurisdiction.find(rand(size)+1)
+    Factory(:alert, :from_jurisdiction => j)
+  end
+end
+
+Given /^(\d*) random alerts in (.*)$/ do |count, jurisdiction|
+  srand count.to_i
+  jurisdiction = Jurisdiction.find_by_name(jurisdiction)
+  size=jurisdiction.children.size
+  count.to_i.times do
+    j=jurisdiction.self_and_descendants[rand(size)]
+    Factory(:alert, :from_jurisdiction => j)
+  end
+end
+
 When /^PhinMS delivers the message: (.*)$/ do |filename|
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
   if(EDXL::MessageContainer.parse(xml).distribution_type == "Ack")

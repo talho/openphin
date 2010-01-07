@@ -11,11 +11,11 @@ Feature: Viewing the alert log
       | jurisdictions     | Dallas County |
     When I am on the alert log
     Then I should see an alert titled "Hello World"
-    
+
     When I click "View" on "Hello World"
     Then I can see the alert summary for "Hello World"
-    
-   Scenario: Viewing list of alerts sent directly to you
+
+  Scenario: Viewing list of alerts sent directly to you
     Given the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
@@ -28,13 +28,13 @@ Feature: Viewing the alert log
 
     When I click "View" on "Hello World"
     Then I can see the alert summary for "Hello World"
-    
+
   Scenario: Viewing list of alerts in child jurisdictions
     Given the following entities exists:
       | Jurisdiction | Texas                                    |
       | Jurisdiction | Dallas County                            |
     And Texas is the parent jurisdiction of:
-      | Dallas County |  
+      | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
     And the role "Health Alert and Communications Coordinator" is an alerter
@@ -48,7 +48,7 @@ Feature: Viewing the alert log
 
     When I follow "View"
     Then I should see "Hello World"
-  
+
   Scenario: Can't view alerts from outside jurisdictions
     Given the following entities exists:
       | Jurisdiction | Potter County                            |
@@ -67,13 +67,13 @@ Feature: Viewing the alert log
       | jurisdiction      | Potter County |
     When I am on the alert log
     Then I should not see an alert titled "Hello World"
- 
-   Scenario: Clicking back on a viewed alert
+
+  Scenario: Clicking back on a viewed alert
     Given the following entities exists:
       | Jurisdiction | Texas                                    |
       | Jurisdiction | Dallas County                            |
     And Texas is the parent jurisdiction of:
-      | Dallas County |  
+      | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
     And the role "HAN Coordinator" is an alerter
@@ -85,9 +85,9 @@ Feature: Viewing the alert log
     When I am on the alert log
     And I click "View" on "Hello World"
     And I press "Back"
-    Then I should see an alert titled "Hello World" 
-    
-  Scenario: Viewing percentage of recipients that have acknowledged     
+    Then I should see an alert titled "Hello World"
+
+  Scenario: Viewing percentage of recipients that have acknowledged
     Given the following entities exists:
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
@@ -129,4 +129,29 @@ Feature: Viewing the alert log
     And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 33%
     And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
 
-  Scenario: Viewing jurisdictions, organizations, roles and individual users that received an alert
+  Scenario: Viewing a really large alert log
+    Given the following entities exist:
+      | Jurisdiction | Texas |
+      | Jurisdiction | R1 |
+      | Jurisdiction | R2 |
+      | Jurisdiction | C1 |
+      | Jurisdiction | C2 |
+    And Texas is the parent jurisdiction of:
+      | R1|R2 |
+    And R1 is the parent jurisdiction of:
+      | C1|C2 |
+    And 15 jurisdictions that are children of R1
+    And 150 jurisdictions that are children of R2
+    And 20 random alerts in R1
+    And 20 random alerts in R2
+    And 10 random alerts in C1
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | R1 |
+      | John Smith      | john.smith@example.com   | HAN Coordinator | C1 |
+      | John Smith      | john.smith@example.com   | HAN Coordinator | R2 |
+    And "john.smith@example.com" is not public in "Texas"
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    When I am on the alert log
+    Then I should see 10 alerts
+

@@ -78,7 +78,10 @@ Rails::Initializer.run do |config|
   config.gem 'bullet', :source => 'http://gemcutter.org'
   config.gem 'ruby-growl', :source => 'http://gemcutter.org'
   config.gem "sinatra"
+  config.gem "will_paginate"
 end
+ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
+
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues", 'archive')
