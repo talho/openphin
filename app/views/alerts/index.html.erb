@@ -1,6 +1,6 @@
 <h2>Viewing Alerts</h2>
 
-<%= page_entries_info @alerts %>
+<%= page_entries_info @alerts unless @alerts.empty? %>
 <% paginated_section @alerts do %>
   <ul id="alerts">
     <% @alerts.each do |alert| %>
@@ -82,4 +82,4 @@
       <%- end -%>
     <%- end -%>
   </ul>
-<%- end -%>
+<%- end unless @alerts.empty? -%>

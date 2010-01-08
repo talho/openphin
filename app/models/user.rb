@@ -265,10 +265,6 @@ class User < ActiveRecord::Base
     "#{name} <#{email}>"
   end
   
-  def viewable_alerts
-      (alerts_within_jurisdictions)
-  end
-  
   def alerts_within_jurisdictions(page=nil)
     jurs=alerting_jurisdictions.sort_by(&:lft)
     jurs=jurs.map{|j1| jurs.detect{|j2| j2.is_ancestor_of?(j1)} || j1}.uniq

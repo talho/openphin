@@ -106,8 +106,9 @@ Feature: Alerts from EDXL
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
     And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "mjensen@cdc.gov"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
 
   
   Scenario: Receiving an EDXL alert udpate
@@ -116,8 +117,9 @@ Feature: Alerts from EDXL
       | identifier | CDC-2009-183 |
       | message_type | Alert |
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts     
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When PhinMS delivers the message: PCAMessageUpdate.xml
     Then an alert exists with:
       | identifier | CDC-2009-184 |
@@ -129,7 +131,7 @@ Feature: Alerts from EDXL
       | subject       | Severe Health Alert Test "[Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
-    And I go to the alerts page
+    And I go to the HAN page
     Then I should see 2 alerts     
   
   Scenario: Receiving an EDXL alert cancel
@@ -138,8 +140,9 @@ Feature: Alerts from EDXL
       | identifier | CDC-2009-183 |
       | message_type | Alert |
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts     
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When PhinMS delivers the message: PCAMessageCancel.xml
     Then an alert exists with:
       | identifier | CDC-2009-185 |
@@ -151,7 +154,7 @@ Feature: Alerts from EDXL
       | subject       | Severe Health Alert Test "[Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
-    And I go to the alerts page
+    And I go to the HAN page
     Then I should see 2 alerts     
 
   Scenario: Receiving an EDXL Acknowledgment that was originally sent via an organization
@@ -193,14 +196,17 @@ Feature: Alerts from EDXL
     And "jphipps@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "daniel@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When I log in as "bob@example.com"
-    And I go to the alerts page
-    Then I should see 0 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should see "Example Health Alert"
     When I log in as "mjensen@cdc.gov"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
 
     Scenario:  Receiving a cascade alert without jurisdictions specified should alert state and local jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_statelocal.edxl
@@ -209,11 +215,13 @@ Feature: Alerts from EDXL
      | subject       | Cascade alert sent from Federal jurisdiction to TX    |
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
     When I log in as "bob@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"      
 
     Scenario:  Receiving a cascade alert without jurisdictions specified should alert local jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_local.edxl
@@ -225,14 +233,17 @@ Feature: Alerts from EDXL
     And "zach@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "mark@cdc.gov" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "bob@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
     When I log in as "brandon@example.com"
-    And I go to the alerts page
-    Then I should see 0 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should see "Example Health Alert"
 
   Scenario:  Receiving a cascade alert without roles specified should alert all roles
     When PhinMS delivers the message: cdc_no_role.edxl
@@ -243,8 +254,9 @@ Feature: Alerts from EDXL
     And "ethan@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     And "jphipps@example.com" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "keith@example.com"
-    And I go to the alerts page
-    Then I should see 1 alerts
+    And I go to the HAN page
+    Then I should see 1 alert
+    And I should not see "Example Health Alert"
 
   Scenario:  Sending system-to-system ack when receiving a message
     When PhinMS delivers the message: test-CDC-cascade.edxl

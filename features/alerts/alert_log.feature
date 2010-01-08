@@ -21,7 +21,8 @@ Feature: Viewing the alert log
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And a sent alert with:
-      | people | John Smith |
+      | from_jurisdiction | Dallas County |
+      | people            | John Smith    |
       | title             | Hello World   |
     When I am on the alert log
     Then I should see an alert titled "Hello World"

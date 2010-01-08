@@ -9,7 +9,7 @@ Given "a sent alert with:" do |table|
 end
 
 Given /^(\d+) (?:more alerts are|more alert is) sent to me$/ do |n|
-  last_alert = current_user.viewable_alerts.last
+  last_alert = current_user.recent_alerts.last
   n.to_i.times do |i|
     # always make these alerts happen after the last alert for the user
     alert = create_alert_with "people" => current_user.name, "created_at" => last_alert.created_at + 1.second
