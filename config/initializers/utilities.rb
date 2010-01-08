@@ -36,3 +36,11 @@ Dir.class_eval <<-END
     }
   end
 END
+
+Array.class_eval <<-END
+  def batch_process(batch_size = 20)
+    ((self.size/batch_size.to_f).ceil).times do |iter|
+      yield self[batch_size*iter..(batch_size*(iter+1)-1)]
+    end
+  end
+END
