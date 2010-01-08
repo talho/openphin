@@ -212,9 +212,14 @@ describe User do
     end
     
     it "should not include alerts in other jurisdicitions" do
-      user = Factory(:user)
-      user.jurisdictions << Factory(:jurisdiction)
+      parent = Factory(:jurisdiction)
+      jurisdiction = Factory(:jurisdiction)
+      jurisdiction.move_to_child_of(parent)
       another = Factory(:jurisdiction)
+      another.move_to_child_of(parent)
+      user = Factory(:user)
+      role = Factory(:role, :alerter => true)
+      User.assign_role(role, jurisdiction, [user])
       alert = Factory(:alert, :from_jurisdiction => another)
       user.alerts_within_jurisdictions.should_not include(alert)
     end
