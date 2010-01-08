@@ -20,7 +20,8 @@ class Admin::GroupsController < ApplicationController
   end
 
   def show
-    @group = Group.find_by_id(params[:id]) 
+    group = Group.find_by_id(params[:id])
+    @group = group if current_user.viewable_groups.include?(group) 
   end
 
   def new
@@ -46,7 +47,8 @@ class Admin::GroupsController < ApplicationController
   end
 
   def update
-    @group = Group.find(params[:id])
+    group = Group.find_by_id(params[:id])
+    @group = group if current_user.viewable_groups.include?(group)
     if @group.nil?
       flash[:error] = "This resource does not exist or is not available."
       redirect_to admin_groups_path
@@ -70,7 +72,8 @@ class Admin::GroupsController < ApplicationController
   end
 
   def edit
-    @group = Group.find_by_id!(params[:id])
+    group = Group.find_by_id(params[:id])
+    @group = group if current_user.viewable_groups.include?(group)
     if @group.nil?
           flash[:error] = "This resource does not exist or is not available."
           redirect_to admin_groups_path
@@ -78,19 +81,17 @@ class Admin::GroupsController < ApplicationController
   end
   
   def dismember
-    if params[:group_id]
-      if (@group = Group.find(params[:group_id]))
-        if (member = User.find(params[:member_id]))
-          @group.users.delete(member)
-        end
-      end
-    end
-    redirect_to(edit_admin_group_path(@group))
+    group = Group.find(params[:group_id])
+    the_group = group if current_user.viewable_groups.include?(group)
+    member = User.find(params[:member_id])
+    the_group.users.delete(member) if the_group && member
+    redirect_to(edit_admin_group_path(the_group))
   end
 
 
   def destroy
-    @group = Group.find_by_id(params[:id])
+    group = Group.find(params[:id])
+    @group = group if current_user.viewable_groups.include?(group)
     name = @group.name
     respond_to do |format|
       if @group && @group.destroy
