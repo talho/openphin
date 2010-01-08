@@ -30,5 +30,5 @@ Feature: Alert Reports
   Scenario: A non-alerter cannot view a report of an alert
     Given I am logged in as "john.smith@example.com"
     When I am on the alert log
-    Then I should see an alert titled "Grant Sample"
+    Then I should not see an alert titled "Grant Sample"
     Then I should not see "Export"

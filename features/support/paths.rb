@@ -24,8 +24,6 @@ module NavigationHelpers
         admin_role_requests_path
       when /the new alert page/i
         new_alert_path
-      when /the alerts page/i
-        alerts_path
       when /the alerts acknowledge page/i
         alerts_acknowledge_path
       when /the roles requests page for an admin/

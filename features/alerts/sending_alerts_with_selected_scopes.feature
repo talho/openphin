@@ -58,7 +58,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
@@ -125,7 +125,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -152,7 +152,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -180,7 +180,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -207,7 +207,7 @@ Feature: Creating and sending alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And the following users should receive the email:
       | People        | john.smith@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |

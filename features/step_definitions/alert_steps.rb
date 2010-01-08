@@ -9,7 +9,7 @@ Given "a sent alert with:" do |table|
 end
 
 Given /^(\d+) (?:more alerts are|more alert is) sent to me$/ do |n|
-  last_alert = current_user.viewable_alerts.last
+  last_alert = current_user.recent_alerts.last
   n.to_i.times do |i|
     # always make these alerts happen after the last alert for the user
     alert = create_alert_with "people" => current_user.name, "created_at" => last_alert.created_at + 1.second
@@ -34,6 +34,26 @@ Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_a
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u)
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+end
+
+
+Given /^(\d*) random alerts$/ do |count|
+  srand count.to_i
+  size=Jurisdiction.all.size
+  count.to_i.times do
+    j=Jurisdiction.find(rand(size)+1)
+    Factory(:alert, :from_jurisdiction => j)
+  end
+end
+
+Given /^(\d*) random alerts in (.*)$/ do |count, jurisdiction|
+  srand count.to_i
+  jurisdiction = Jurisdiction.find_by_name(jurisdiction)
+  size=jurisdiction.children.size
+  count.to_i.times do
+    j=jurisdiction.self_and_descendants[rand(size)]
+    Factory(:alert, :from_jurisdiction => j)
+  end
 end
 
 When /^PhinMS delivers the message: (.*)$/ do |filename|

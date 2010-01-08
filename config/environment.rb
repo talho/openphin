@@ -80,6 +80,8 @@ Rails::Initializer.run do |config|
   config.gem "sinatra"
   config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
 end
+ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
+
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues", 'archive')

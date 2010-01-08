@@ -87,7 +87,7 @@ Feature: Sending alerts to phones
     
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
-    And I go to the Alerts page
+    And I go to the alert log
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 100%
 
   Scenario: Sending alerts to users with multiple phone devices
