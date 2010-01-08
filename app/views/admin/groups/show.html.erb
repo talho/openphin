@@ -1,1 +1,5 @@
-<%= render @group %>
+<%- if @group -%>
+  <%= render @group %>
+<%- else -%>
+  This groups does not exist or you do not have the authority to access this group.
+<%- end -%>
