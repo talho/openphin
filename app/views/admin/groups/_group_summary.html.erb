@@ -1,4 +1,5 @@
 <tr class="group">
+  <td class="sortby"></td>
   <td>
     <%= link_to group.name, admin_group_path(group) %>
   </td>
@@ -8,7 +9,7 @@
   <td>
     <%= group.scope %>
   </td>
-  <td>
+  <td class="editdestroy">
     <%= link_to 'Edit', edit_admin_group_path(group)%> <%= link_to 'Destroy', admin_group_path(group), :method => :delete, :class => "destroy" %>
   </td>
 </tr>

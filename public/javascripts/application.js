@@ -97,7 +97,7 @@ jQuery(function($) {
 			return false;
 		});
     $(".documents").bind("click", function (e){
-      if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
+      //if($("#documents_panel:hidden").length == 1) reloadDocumentsPanel();
 	    return togglePanel("documents", e);
 
     });

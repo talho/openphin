@@ -30,7 +30,7 @@ Feature: Sending sensitive alerts
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And "keith.gaddis@example.com" should receive the email:
       | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Sensitive: use secure means of retrieval |

@@ -81,6 +81,7 @@ class User < ActiveRecord::Base
   validates_length_of       :password, :minimum => 6, :too_short => "must be at least 6 characters long", :if => :password_required?
   validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
   validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
+  validates_format_of       :email, :with => %r{[^\.]$}
   validates_uniqueness_of   :email, :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
   validates_presence_of     :password, :if => :password_required?
   validates_confirmation_of :password, :if => :password_required?
@@ -272,13 +273,17 @@ class User < ActiveRecord::Base
     "#{name} <#{email}>"
   end
   
-  def viewable_alerts
-      (alerts_within_jurisdictions | recent_alerts).sort!{|a,b| b.created_at.utc.to_datetime <=> a.created_at.utc.to_datetime}
-  end
-  
-  def alerts_within_jurisdictions
-    j = jurisdictions.map{|m| m.self_and_descendants}.flatten
-    Alert.all(:conditions => {:from_jurisdiction_id => j}, :order => "alerts.created_at DESC")
+  def alerts_within_jurisdictions(page=nil)
+    jurs=alerting_jurisdictions.sort_by(&:lft)
+    jurs=jurs.map{|j1| jurs.detect{|j2| j2.is_ancestor_of?(j1)} || j1}.uniq
+    return [] if jurs.empty?
+    ors=jurs.map{|j| "(jurisdictions.lft >= #{j.lft} AND jurisdictions.lft <= #{j.rgt})"}.join(" OR ")
+
+    Alert.paginate(:conditions => ors,
+                   :joins => "inner join jurisdictions on alerts.from_jurisdiction_id=jurisdictions.id",
+                   :order => "alerts.created_at DESC, alerts.id DESC",
+                   :page => page,
+                   :per_page => 10)
   end
   
   def cascade_alerts

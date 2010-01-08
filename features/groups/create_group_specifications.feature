@@ -21,11 +21,11 @@ Feature: Creating groups
 
   Scenario: going to add a user group as an admin
     When I go to the dashboard page
+    And I follow "Admin"
     Then I should see "Manage Groups"
     And I follow "Manage Groups"
     Then I should be on the groups page
-    Then I should see "Add Group"
-    And I follow "Add Group"
+    And I press "Create New Group"
     Then I should be on the add groups page
 
   Scenario: going to add a user group as a non-admin user

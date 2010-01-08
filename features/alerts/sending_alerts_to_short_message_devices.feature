@@ -26,7 +26,7 @@
 
 #     When I press "Send"
 #     Then I should see "Successfully sent the alert"
-#     And I should be on the alerts page
+#     And I should be on the alert log
 #     And "keith.gaddis@att.example.com" should receive the SMS message:
 #       | body contains | For more details |
 # 

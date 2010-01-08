@@ -57,7 +57,7 @@ Feature: Updating an alert
     
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And I should see an alert titled "[Update] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
@@ -115,7 +115,7 @@ Feature: Updating an alert
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And I should be on the alerts page
+    And I should be on the alert log
     And I should see an alert titled "[Update] - Flying Monkey Disease"
     And the following users should receive the email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
@@ -149,5 +149,5 @@ Feature: Updating an alert
     Then I should see "Successfully sent the alert"
     When I re-submit an update for "Flying Monkey Disease"
     Then I should see "You cannot update or cancel an alert that has already been cancelled."
-    And I should be on the alerts page
+    And I should be on the alert log
     And I should see 2 alerts

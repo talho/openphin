@@ -19,6 +19,7 @@ class Device::EmailDevice < Device
   
   validates_presence_of     :email_address
   validates_format_of       :email_address, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
+  validates_format_of       :email_address, :with => %r{[^\.]$}
 
   def self.display_name
     'E-mail'
@@ -33,6 +34,25 @@ class Device::EmailDevice < Device
   end
   
   def self.batch_deliver(alert)
-    AlertMailer.deliver_batch_alert(alert) unless alert.alert_attempts.nil?
+    users = alert.unacknowledged_users.map(&:formatted_email)
+    users.batch_process(50) do |emails| 
+      begin
+        
+        AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
+      rescue Net::SMTPSyntaxError => e
+        logger.error "Error mailing alert to the following recipients: #{emails.join(",")}\nException:#{e}"
+        logger.error "Attempting individual resends"
+        emails.each do |eml|
+          begin
+            AlertMailer.deliver_batch_alert(alert, eml)
+            logger.error "Resent to #{eml}"
+          rescue
+            logger.error "Unable to resend to #{eml}"
+          end
+        end
+      rescue
+        logger.error e
+      end
+    end
   end
 end

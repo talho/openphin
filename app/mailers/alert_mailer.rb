@@ -17,11 +17,7 @@ class AlertMailer < ActionMailer::Base
     end
   end
   
-  def batch_alert(alert)
-    users = []
-    alert.unacknowledged_users.each do |user|
-      users << user.formatted_email
-    end
+  def batch_alert(alert, users)
     bcc users
     # TODO: should this show their job title instead of their role?
     # If role, which one?

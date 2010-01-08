@@ -75,11 +75,13 @@ div.help a                                    {color:#fff}
 
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
-#documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
+#documents_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
+																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
+/*#documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
 																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
 #documents_progress_panel                     {padding: 5px 5px 0 5px; filter: alpha(opacity=60); opacity:0.6; z-index: 10; display: none;
 																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
-#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}
+#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}*/
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -320,6 +322,10 @@ div#deletion div#share                          {overflow: auto;}
 
 #admin_user_profile                             {position: relative; float: left; width: 300px;}
 #admin_user_role_requests                       {position: relative; float: left; width: 300px;}
+
+table#groups td                                 {border: 2px inset gray; padding: 5px 5px 5px 5px;}
+table#groups td.sortby                          {border: none;}
+table#groups td.editdestroy                     {border: none;}
 
 /* Alerts and notifications */
 .flash {

@@ -7,8 +7,8 @@ Feature: Signing up for an account
   
   Background:
     Given an organization named Red Cross
-    And a jurisdiction named Texas
-    And a child jurisdiction named Dallas County
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
     And Texas has the following administrators:
       | Bob Dole       | bob.dole@example.com      |
     And Dallas County has the following administrators:

@@ -81,6 +81,7 @@ class Alert < ActiveRecord::Base
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
+  validates_presence_of :from_jurisdiction_id, :unless => Proc.new { |alert| alert.author_id.nil? }
   validates_length_of :short_message, :maximum => 160
   validates_length_of :caller_id, :is => 10, :allow_blank => true, :allow_nil => true
   validates_format_of :caller_id, :with => /^[0-9]*$/, :on => :create, :allow_blank => true, :allow_nil => true
