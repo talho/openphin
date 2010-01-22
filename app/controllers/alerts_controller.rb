@@ -32,7 +32,6 @@ class AlertsController < ApplicationController
 
   def create
     @alert = present current_user.alerts.build(params[:alert])
-#    debugger
     if params[:send]
       if @alert.valid?
         @alert.save

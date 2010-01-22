@@ -55,3 +55,19 @@ Background:
     Then I should see "Successfully sent the alert"
     Then "bob.smith@example.com" should receive the email:
       | subject | Moderate Health Alert Test "H1N1 SNS push packs to be delivered tomorrow" |
+
+  Scenario: Sending an alert to only a group with no other audience specified
+    Given I am logged in as "john.smith@example.com"
+    When I go to the new alert page
+    And I fill out the alert form with:
+      | Title        | H1N1 SNS push packs to be delivered tomorrow |
+      | Groups       | G2                                           |
+      | Severity     | Minor                                        |
+      | Status       | Test                                         |
+      | Communication methods      | E-mail                                       |
+    And I press "Preview Message"
+    Then I should see a preview of the message
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    Then "bob.smith@example.com" should receive the email:
+      | subject | Moderate Health Alert Test "H1N1 SNS push packs to be delivered tomorrow" |
