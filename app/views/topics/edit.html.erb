@@ -1,0 +1,27 @@
+<h1>Editing topic</h1>
+<br />
+<% form_for :topic,
+            :url=>forum_topic_path(@forum,@topic),
+            :html => { :method => :put } do |f| %>
+  <%= f.error_messages %>
+
+ <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name, :size => 80 %>
+  </p>
+  <p>
+  <% for_moderators_of @forum do -%>
+    <%= f.check_box :sticky %> Sticky <br />
+    <%= f.check_box :locked? %> Closed
+  <% end -%>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', forum_topics_path(@forum)  %>
+
+
+
+

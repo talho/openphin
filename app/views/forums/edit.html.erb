@@ -1,0 +1,23 @@
+<h2>Editing forum</h2>
+
+<% form_for(@forum) do |f| %>
+  <%= f.error_messages %>
+   <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p><%= link_to_add_fields "Add Topic", f, :topics %></p> 
+   <p>
+     <% for_moderators_of @forum do -%>
+       <%= f.check_box :hide %> <%= f.label :hide %>
+     <% end -%>
+   </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<p>
+  <%= link_to "Show", @forum %> |
+  <%= link_to "View All", forums_path %>
+</p>

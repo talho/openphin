@@ -1,0 +1,28 @@
+<h1>New forum</h1>
+
+<% form_for @forum do |form| %>
+  <%= form.error_messages %>
+  <div id="forum">
+    <p>
+      <%= form.label :name %><br />
+      <%= form.text_field :name, :size => 80 %>
+    </p>
+  </div>
+  <div id="audience">
+    <% form.object.build_audience if form.object.audience.nil? %>
+    <% form.fields_for :audience do |audience| %>
+      <% unless audience.object.is_a?(Group) %>
+        <%= render 'audiences/fields', :form => audience, :group_form => form %>
+      <% end %>
+    <% end %>
+  </div>
+  <div>
+    <p>
+      <%= form.submit 'Create Forum' %>
+    </p>
+  </div>
+
+<% end %>
+
+<%= link_to 'Back', forums_path %>
+

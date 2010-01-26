@@ -1,0 +1,27 @@
+<h1><%= @forum.name %></h1>  
+<p>
+<%= link_to "Forums", forums_path %> > <%= @forum.name %>
+</p>
+<p>
+  <%= link_to 'New topic', new_forum_topic_path %>
+</p>
+<% tt_index = 0 %>
+<ul>
+  <% @topics.each_with_index do |topic,idx| %>
+    <li id="topic_name_<%= idx %>" class="topic_name">
+      <%= link_to h(topic.name), forum_topic_path(@forum,topic) %>
+      <% for_moderators_of topic do -%>
+        <%= link_to 'Edit', edit_forum_topic_path(@forum,topic) %>
+      <% end -%>
+      <% for_super_admin do -%>
+          <%= link_to 'Remove', forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
+      <% end -%>
+      <br />
+      Started by <%=h topic.poster.name %> on <%= topic.created_at -%>
+      <br />
+      Recent comments: ________, _________
+    </li>
+    <br />
+  <% end %>
+</ul>
+
