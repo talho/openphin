@@ -19,7 +19,9 @@
       <br />
       Started by <%=h topic.poster.name %> on <%= topic.created_at -%>
       <br />
-      Recent comments: ________, _________
+      <% unless (comments_last = topic.comments.distinct_poster.recent(2)).blank? %>
+        Recent commenters: <%= comments_last.collect(&:poster).collect(&:name).join(", ") -%>
+      <% end %>
     </li>
     <br />
   <% end %>
