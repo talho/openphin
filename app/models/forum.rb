@@ -14,6 +14,8 @@ class Forum < ActiveRecord::Base
   accepts_nested_attributes_for :audience, 
             :allow_destroy => true   #destroy not necessary since forum deletion is not an option
   
+  named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  named_scope :distinct_poster, :group => :poster_id
 
   validates_presence_of  :name
 

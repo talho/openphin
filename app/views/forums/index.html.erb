@@ -11,7 +11,10 @@
       <% end %>
       <%= link_to 'Topics', forum_topics_path(forum) %>
       <br />
-      Lastest Topic: balh, blah, blah by Big Dude
+      <% if (topic_last = forum.topics.recent(1).first) %>
+        Lastest Topic: <%= link_to h(topic_last.name),forum_topic_path(forum,topic_last) -%> 
+        by <%= topic_last.poster.name %>
+      <% end %>
     </li>
   <% end %>
 </ul>

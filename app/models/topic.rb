@@ -5,11 +5,14 @@ class Topic < ActiveRecord::Base
   belongs_to :poster, :class_name => 'User'
 
   has_many :comments, :class_name => 'Topic', :foreign_key => :comment_id, 
-                      :order => "#{Topic.table_name}.created_at", 
+                      :order => "created_at ASC", 
                       :dependent => :destroy
   accepts_nested_attributes_for :comments, 
                       :reject_if => lambda { |a| a[:content].blank? }, 
                       :allow_destroy => true
+  
+  named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  named_scope :distinct_poster, :group => :poster_id
   
 
   validates_presence_of :poster_id, :forum_id, :name
@@ -30,3 +33,5 @@ class Topic < ActiveRecord::Base
   end
     
 end
+
+
