@@ -88,6 +88,12 @@ module NavigationHelpers
         folder_inbox_path
       when /the users delete page/i
         new_users_delete_path
+      when /the Forums page/i
+        forums_path
+      when /the Topics page for Forum "(.*)"$/i
+        forum_topics_path(Forum.find_by_name!($1))
+      when /the "(.*)" topic page for Forum "(.*)"$/i
+        forum_topic_path(Forum.find_by_name!($2),Topic.find_by_name!($1))
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

@@ -93,6 +93,8 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :school_districts, :member => {:school => :post}, :controller =>"rollcall/school_districts"
 
+  map.resources :forums, :has_many => :topics
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

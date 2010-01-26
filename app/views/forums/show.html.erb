@@ -1,0 +1,19 @@
+<h2>Forum: <%=h @forum.name %></h2>
+
+ <ul>  
+   <% for topic in @forum.topics %>  
+     <li>
+      <%= link_to h(topic.name), forum_topic_path(@forum,topic) %><br />
+      <%= topic.poster.name %> - <%= time_ago_in_words(topic.updated_at) %> ago <br />
+      Recent comments: link1, link2
+    </li>  
+   <% end %>  
+ </ul>  
+
+<p>
+  <%= link_to "Edit", edit_forum_path(@forum) %> |
+  <%= link_to "Remove", @forum, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", forums_path %>
+</p>
+
+

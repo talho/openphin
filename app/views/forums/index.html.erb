@@ -1,0 +1,18 @@
+<h2>Forums</h2>
+<p><%= link_to "New Forum", new_forum_path %></p>
+
+<ul>
+  <% for forum in @forums %>
+    <li>
+      <%= link_to h(forum.name), forum %>
+      <% for_moderators_of forum  do -%>
+        <%= link_to "Edit", edit_forum_path(forum) %>
+        <%#= link_to "Remove", forum, :confirm => 'Are you sure?', :method => :delete %>
+      <% end %>
+      <%= link_to 'Topics', forum_topics_path(forum) %>
+      <br />
+      Lastest Topic: balh, blah, blah by Big Dude
+    </li>
+  <% end %>
+</ul>
+

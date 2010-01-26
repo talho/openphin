@@ -1,0 +1,27 @@
+<h2>Topic: <%= @topic.name %></h2>
+<p>
+  <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
+</p>
+
+<p>
+  <%= link_to "Add Comment", :anchor => "add_comment" %>
+</p>
+
+<% unless @topic.comments.empty? %>
+  <% @topic.comments.each do |comment| %>
+    <%= comment.poster.name %> - <%= time_ago_in_words(comment.updated_at) %> ago <br />
+    <% for_moderators_of comment do -%>
+      <%#= link_to "Edit", edit_forum_topic_comment_url(:id => comment, :topic_id => comment.topic, :forum_id => comment.topic.forum) %>
+      <p><%=h comment.content %></p>
+    <% end -%>
+  <% end %>
+<% end %>
+ 
+<% form_for @topic, :url => forum_topic_path(@forum,@topic), :html => {:method => :put } do |f| %>
+  <%= f.error_messages %>
+  <% f.fields_for :comment_attributes do |comment_form| %>
+    <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
+    <%= render 'comment_fields', :f => comment_form %>
+  <% end %> 
+  <p><%= f.submit "Add Comment" %></p>
+<% end %>
