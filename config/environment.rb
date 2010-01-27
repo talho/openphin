@@ -79,6 +79,7 @@ Rails::Initializer.run do |config|
   config.gem 'ruby-growl', :source => 'http://gemcutter.org'
   config.gem "sinatra"
   config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
+  config.gem "RedCloth"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 

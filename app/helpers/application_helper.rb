@@ -82,5 +82,10 @@ module ApplicationHelper
     end
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"))
   end
+  
+  def textilize_alternate(text)
+    RedCloth.new(text.gsub(/</, '&lt;').gsub(/>/, '&gt;')).to_html
+  end
+  
 
 end

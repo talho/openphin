@@ -16,7 +16,7 @@
     <%= comment.poster.name %> - <%= time_ago_in_words(comment.updated_at) %> ago <br />
     <% for_moderators_of comment do -%>
       <%#= link_to "Edit", edit_forum_topic_comment_url(:id => comment, :topic_id => comment.topic, :forum_id => comment.topic.forum) %>
-      <p><%=h comment.content %></p>
+      <p><%=textilize comment.content %></p>
     <% end -%>
   <% end %>
 <% end %>
