@@ -70,5 +70,20 @@ I should be able to create topics to forums and place comments to these topics
     And I follow "Locating Grants"
     Then I should not see "Edit"
     
+  Scenario: Place textile text into a comment and verify that it is being html encoded
+    When I am logged in as "jane.smith@example.com"
+    And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
+    And I go to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
+    Then I should see "Measuring Fulfillment"
+    
+    When I follow "Add Comment"
+    And I fill in "topic_comment_attributes_content" with "*strong words* and _emphasized words_"
+    And I press "Add Comment"
+
+    Then I should be redirected to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
+    And I should see "Measuring Fulfillment"
+    # Unfortunely webrat filters out html tags so the redcloth html encoding can be verified here 
+    And I should see "strong words and emphasized words" 
+    
 
 

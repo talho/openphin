@@ -4,7 +4,7 @@ end
 
 Given 'I have the topic "$topic_name" to forum "$forum_name"' do |topic_name,forum_name|
   forum = Forum.create!(:name => forum_name)
-  topic = forum.topics.create!(:name => topic_name, :poster_id => @current_user.id, :forum_id => forum.id)
+  topic = forum.topics.create!(:name => topic_name, :poster_id => @current_user.id)
   forum.topics << topic
 end
 
