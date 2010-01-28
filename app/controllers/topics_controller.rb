@@ -62,7 +62,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.update_attributes(params[:topic])
         flash[:notice] = 'Topic was successfully updated.'
-        format.html { redirect_to forum_topic_url(@forum,@topic) }
+        format.html { redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url ) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

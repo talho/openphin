@@ -29,7 +29,21 @@ class Topic < ActiveRecord::Base
   end
   
   def comment_attributes=(attributes)
-    comments << comments.build(attributes)
+    if attributes.keys.first.kind_of? String
+      comments << comments.build(attributes)
+    else
+      debugger
+    end
+  end
+  
+  def dest_forum_id=(destination_forum_id)
+    if (dest_forum = Forum.find(destination_forum_id.to_i))
+      dest_forum.topics << self
+    end
+  end
+  
+  def dest_forum_id
+    forum_id
   end
     
 end

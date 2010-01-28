@@ -4,12 +4,10 @@
 <ul>
   <% for forum in @forums %>
     <li>
-      <%= link_to h(forum.name), forum %>
+      <%= link_to h(forum.name), forum_topics_path(forum) %>
       <% for_moderators_of forum  do -%>
         <%= link_to "Edit", edit_forum_path(forum) %>
-        <%#= link_to "Remove", forum, :confirm => 'Are you sure?', :method => :delete %>
       <% end %>
-      <%= link_to 'Topics', forum_topics_path(forum) %>
       <br />
       <% if (topic_last = forum.topics.recent(1).first) %>
         Lastest Topic: <%= link_to h(topic_last.name),forum_topic_path(forum,topic_last) -%> 
