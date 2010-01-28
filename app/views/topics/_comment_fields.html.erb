@@ -1,0 +1,8 @@
+<p class="comment_fields">
+  <%= f.label :content, "Comment" %>
+  <a name="add_comment"></a>
+  <%= f.text_area :content, :rows => 8 %>
+  <%= f.hidden_field :name, :value => Time.now %>  
+  <%= f.hidden_field :poster_id, :value => current_user.id -%>
+</p>
+

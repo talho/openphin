@@ -43,7 +43,6 @@
     And I should see "Forum was successfully updated"
     Then I should see "Seeking funding"
 
-    # this assumes that jane is in the audience
     When I am logged in as "jane.smith@example.com"
     And I go to the Forums page
     Then I should not see "Seeking funding"
@@ -73,7 +72,7 @@
 
 
   Scenario: Create a topic to a particular forum
-    When I am logged in as "jane.smith@example.com"
+    Given I am logged in as "jane.smith@example.com"
     And I have the forum named "Forum to verify sticky topics"
     And I go to the Forums page
     And I follow "Topics"
@@ -97,8 +96,38 @@
   Scenario: Delete a topic from a forum
     And I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-
-  Scenario: Make a topic sticky (promote to top of the list)
-    And I am logged in as "joe.smith@example.com"
-    And I go to the Forums page
     
+  Scenario: Move an existing forum topic to an alternate forum as a super-admin
+    Given I am logged in as "joe.smith@example.com"
+    And I have the forum named "Saving Money"
+    And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
+    And I go to the Topics page for Forum "Grant Capturing"
+    Then I should see "Measuring Fulfillment"
+    
+    When I follow "Edit"
+    And I select "Saving Money" from "Forum to be moved to"
+    And I press "Update"
+    Then I should see "Topic was successfully updated"
+    
+    When I go to the Forums page
+    And I follow "Saving Money"
+    Then I should see "Measuring Fulfillment"
+    
+    When I follow "Forums"
+    And I follow "Grant Capturing"
+    Then I should not see "Measuring Fulfillment"
+    
+  Scenario: Edit an existing comment to a topic as a super-admin or the original poster
+    Given I am logged in as "joe.smith@example.com"
+    And I have the comment "Walmart claims 100% fulfillment" to topic "Measuring Fulfillment" to forum "Grant Capturing"
+    And I go to the Topics page for Forum "Grant Capturing"
+    Then I should see "Measuring Fulfillment"
+
+    When I follow "Edit"
+    And I fill in "Comment" with "Look at who is counting"
+    And I press "Update"
+    Then I should see "Topic was successfully updated"
+    When I follow "Measuring Fulfillment"
+    And I should not see "Walmart claims 100% fulfillment"
+    And I should see "Look at who is counting"
+

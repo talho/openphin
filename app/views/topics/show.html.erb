@@ -8,15 +8,16 @@
   <br />
   Textile markup can be embedded into comments to offer improved readability, see
   <%= link_to "Textile Quick Reference", 
-    "http://redcloth.org/hobix.com/textile/quick.html", :popup => ['new_window','height=400,width=500,scrollbars=yes'] %>
+    "http://redcloth.org/hobix.com/textile/quick.html", :popup => ['new_window','height=400,width=520,scrollbars=yes'] %>
 </p>
 
 <% unless @topic.comments.empty? %>
   <% @topic.comments.each do |comment| %>
-    <%= comment.poster.name %> - <%= time_ago_in_words(comment.updated_at) %> ago <br />
+    <p>
+      <%= "#{comment.poster.name} - #{time_ago_in_words(comment.updated_at)} ago" %>
+      <%=textilize comment.content %>
+    </p>
     <% for_moderators_of comment do -%>
-      <%#= link_to "Edit", edit_forum_topic_comment_url(:id => comment, :topic_id => comment.topic, :forum_id => comment.topic.forum) %>
-      <p><%=textilize comment.content %></p>
     <% end -%>
   <% end %>
 <% end %>
@@ -29,7 +30,6 @@
   <% end %> 
   <p><%= f.submit "Add Comment" %></p>
 <% end %>
-
 
 
 

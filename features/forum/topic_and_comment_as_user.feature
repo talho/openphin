@@ -22,10 +22,11 @@ I should be able to create topics to forums and place comments to these topics
 
 
   Scenario: Create a topic and edit the topic as the poster
-    When I am logged in as "jane.smith@example.com"
+    Given I am logged in as "jane.smith@example.com"
     And I have the forum named "Funding methodology"
-    And I go to the Forums page
-    And I follow "Topics"
+    
+    When I go to the Forums page
+    And I follow "Funding methodology"
     And I follow "New topic"
     And I fill in "Name" with "Locating Grants in todays economy"
     And I press "Create"
@@ -39,11 +40,12 @@ I should be able to create topics to forums and place comments to these topics
     And I fill in "Name" with "todays economic impact on grants"
     And I press "Update"
 
-    Then I should be redirected to the "todays economic impact on grants" topic page for Forum "Funding methodology"
+    Then I should be redirected to the Topics page for Forum "Funding methodology"
     And I should see "Topic was successfully updated"
     And I should see "todays economic impact on grants"
- 
-    When I follow "Add Comment"
+     
+    When I follow "todays economic impact on grants"
+    And I follow "Add Comment"
     And I fill in "topic_comment_attributes_content" with "Grants in the East have become rare"
     And I press "Add Comment"
 
@@ -51,39 +53,25 @@ I should be able to create topics to forums and place comments to these topics
     And I should see "todays economic impact on grants"
     And I should see "Grants in the East have become rare"
 
-    Then I follow "Edit"
-    And I fill in "topic_comment_attributes_content" with "Revised: Grants in the East have become rare"
-    And I press "Update"
-
-    Then I should be redirected to the "todays economic impact on grants" topic page for Forum "Funding methodology"
-    And I should see "Revised: Grants in the East have become rare"
-
   Scenario: Create a topic and verify that others can not edit the topic and its comments
-    When I am logged in as "jane.smith@example.com"
+    Given I am logged in as "jane.smith@example.com"
     And I have the topic "Locating Grants" to forum "Funding methodology"
+    
     When I am logged in as "harry.simon@example.com"
-
     And I go to the Forums page
-    And I follow "Topics"
     Then I should not see "Edit"
 
-    And I follow "Locating Grants"
-    Then I should not see "Edit"
     
   Scenario: Place textile text into a comment and verify that it is being html encoded
-    When I am logged in as "jane.smith@example.com"
+    Given I am logged in as "jane.smith@example.com"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
-    And I go to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
-    Then I should see "Measuring Fulfillment"
     
-    When I follow "Add Comment"
-    And I fill in "topic_comment_attributes_content" with "*strong words* and _emphasized words_"
+    When I go to the Forums page
+    And I follow "Measuring Fulfillment"
+    And I fill in "Comment" with "*strong words* and _emphasized words_"
     And I press "Add Comment"
-
-    Then I should be redirected to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
-    And I should see "Measuring Fulfillment"
-    # Unfortunely webrat filters out html tags so the redcloth html encoding can be verified here 
-    And I should see "strong words and emphasized words" 
+    # Unfortunely webrat filters out html tags so the redcloth html encoding can not be verified here 
+    Then I should see "strong words and emphasized words" 
     
 
 

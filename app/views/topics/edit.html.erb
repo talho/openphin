@@ -1,8 +1,6 @@
-<h1>Editing topic</h1>
-<br />
-<% form_for :topic,
-            :url=>forum_topic_path(@forum,@topic),
-            :html => { :method => :put } do |f| %>
+<h2>Editing topic</h2>
+
+<% form_for :topic, :url=>forum_topic_path(@forum,@topic), :html => { :method => :put } do |f| %>
   <%= f.error_messages %>
 
  <p>
@@ -12,7 +10,16 @@
   <p>
   <% for_moderators_of @forum do -%>
     <%= f.check_box :sticky %> Sticky <br />
-    <%= f.check_box :locked? %> Closed
+    <%= f.check_box :locked? %> Closed<br />
+    <%= f.label :dest_forum_id, "Forum to be moved to" %>
+    <%= select(:topic, :dest_forum_id, 
+        Forum.all.map{|u| [u.name,u.id]}, :options =>{:prompt => "-Select a forum to move to"}) -%>
+    <% @topic.comments.each do |comment| %>
+      <% f.fields_for :comment_attributes,comment do |comment_form| %>
+        <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
+        <%= render 'comment_fields', :f => comment_form %>
+      <% end -%>
+    <% end -%> 
   <% end -%>
   </p>
   <p>
@@ -21,7 +28,3 @@
 <% end %>
 
 <%= link_to 'Back', forum_topics_path(@forum)  %>
-
-
-
-
