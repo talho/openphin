@@ -8,6 +8,10 @@
     <%= f.text_field :name, :size => 80 %>
   </p>
   <p>
+    <%= f.label :content, "Description" %>
+    <%= f.text_area :content, :rows => 6 %>
+  </p>
+  <p>
   <% for_moderators_of @forum do -%>
     <%= f.check_box :sticky %> Sticky <br />
     <%= f.check_box :locked? %> Closed<br />

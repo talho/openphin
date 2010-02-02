@@ -32,8 +32,13 @@ class ForumsController < ApplicationController
   def update
     @forum = Forum.find(params[:id])
     if @forum.update_attributes(params[:forum])
-      flash[:notice] = "Forum was successfully updated."
-      redirect_to forums_url
+      if params[:forum][:topics_attributes]
+        flash[:notice] = "Topic was successfully created."
+        redirect_to( forum_topics_path(@forum) )
+      else
+        flash[:notice] = "Forum was successfully updated."
+        redirect_to forums_path
+      end
     else
       render :action => 'edit'
     end

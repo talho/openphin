@@ -35,7 +35,8 @@
     When I follow "Edit"
     And I fill in "Name" with "Seeking funding"
     And I press "Update"
-    Then I should see "Seeking funding"
+    Then I should be redirected to the Forums page
+    And I should see "Seeking funding"
 
     And I follow "Edit"
     When I check "Hide"
@@ -75,18 +76,15 @@
     Given I am logged in as "jane.smith@example.com"
     And I have the forum named "Forum to verify sticky topics"
     And I go to the Forums page
-    And I follow "Topics"
-    And I follow "New topic"
+    And I follow "Forum to verify sticky topics"
     And I fill in "Name" with "First created but not sticky topic"
-    And I press "Create"
+    And I press "Add Topic"
 
-    Then I should be redirected to the Topics page for Forum "Forum to verify sticky topics"
-    And I should see "Topic was successfully created"
+    Then I should see "Topic was successfully created"
     And I should see "First created but not sticky topic"
 
-    When I follow "New topic"
-    And I fill in "Name" with "Sticky topic that was created later"
-    And I press "Create"
+    When I fill in "Name" with "Sticky topic that was created later"
+    And I press "Add Topic"
 
     Then I should be redirected to the Topics page for Forum "Forum to verify sticky topics"
     And I should see "Topic was successfully created"

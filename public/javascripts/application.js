@@ -125,7 +125,6 @@ jQuery(function($) {
    });
 	 $("#comingsoon a.close").bind("click", toggleComingSoon);
 	 $("a.rollcall").bind("click", toggleComingSoon);
-
 });
 
 function toggleComingSoon(e){
