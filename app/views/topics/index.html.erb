@@ -3,9 +3,17 @@
 <%= link_to "Forums", forums_path %> > <%= @forum.name %>
 </p>
 <p>
-  <%= link_to 'New topic', new_forum_topic_path %>
+  <% form_for @forum do |f| %>
+    <%= f.error_messages %>
+    <% f.fields_for "topics_attributes" do |t| %>
+      <%= t.hidden_field :forum_id, :value => @forum.id -%>
+      <div class="topics_attributes">
+        <%= render 'topic_fields', :f => t %>
+      </div>
+    <% end %> 
+    <p><%= f.submit "Add Topic" %></p>
+  <% end %>
 </p>
-<% tt_index = 0 %>
 <ul>
   <% @topics.each_with_index do |topic,idx| %>
     <li id="topic_name_<%= idx %>" class="topic_name">

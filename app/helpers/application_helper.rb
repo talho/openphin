@@ -75,9 +75,18 @@ module ApplicationHelper
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end
   
+    def link_to_add_fields_wa(name, f, association)
+  debugger
+      new_object = f.object.class.reflect_on_association(association).klass.new
+      fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+        render(association.to_s.singularize + "_fields", :f => builder)
+      end
+      link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"))
+    end
+
   def link_to_add_fields(name, f, association)
     new_object = f.object.class.reflect_on_association(association).klass.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+    fields = f.fields_for("topics_attributes[]", new_object, :child_index => "new_#{association}") do |builder|
       render(association.to_s.singularize + "_fields", :f => builder)
     end
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"))
@@ -86,6 +95,13 @@ module ApplicationHelper
   def textilize_alternate(text)
     RedCloth.new(text.gsub(/</, '&lt;').gsub(/>/, '&gt;')).to_html
   end
-  
+
+  def link_if_public(user)
+    if ( user.respond_to?("public") && user.public ) 
+      link_to user.name, user_profile_path(user)
+    else
+      user.name
+    end
+  end  
 
 end

@@ -6,12 +6,20 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
-  <p><%= link_to_add_fields "Add Topic", f, :topics %></p> 
+  <p><%#= link_to_add_fields "Add Topic", f, :topics %></p> 
    <p>
      <% for_moderators_of @forum do -%>
        <%= f.check_box :hide %> <%= f.label :hide %>
      <% end -%>
    </p>
+   <div id="audience">
+     <% f.object.build_audience if f.object.audience.nil? %>
+     <% f.fields_for :audience do |audience| %>
+       <% unless audience.object.is_a?(Group) %>
+         <%= render 'audiences/fields', :form => audience, :group_form => f %>
+       <% end %>
+     <% end %>
+   </div>
   <p>
     <%= f.submit 'Update' %>
   </p>

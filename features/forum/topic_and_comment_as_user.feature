@@ -27,9 +27,8 @@ I should be able to create topics to forums and place comments to these topics
     
     When I go to the Forums page
     And I follow "Funding methodology"
-    And I follow "New topic"
     And I fill in "Name" with "Locating Grants in todays economy"
-    And I press "Create"
+    And I press "Add Topic"
 
     Then I should be redirected to the Topics page for Forum "Funding methodology"
     And I should see "Topic was successfully created"

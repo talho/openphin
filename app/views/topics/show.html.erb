@@ -2,19 +2,16 @@
 <p>
   <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
 </p>
+<p><%= @topic.content %></p>
 
 <p>
   <%= link_to "Add Comment", :anchor => "add_comment" %>
-  <br />
-  Textile markup can be embedded into comments to offer improved readability, see
-  <%= link_to "Textile Quick Reference", 
-    "http://redcloth.org/hobix.com/textile/quick.html", :popup => ['new_window','height=400,width=520,scrollbars=yes'] %>
 </p>
 
 <% unless @topic.comments.empty? %>
   <% @topic.comments.each do |comment| %>
     <p>
-      <%= "#{comment.poster.name} - #{time_ago_in_words(comment.updated_at)} ago" %>
+      <%= link_if_public comment.poster -%><%= " - #{time_ago_in_words(comment.updated_at)} ago" -%>
       <%=textilize comment.content %>
     </p>
     <% for_moderators_of comment do -%>
@@ -30,6 +27,5 @@
   <% end %> 
   <p><%= f.submit "Add Comment" %></p>
 <% end %>
-
 
 
