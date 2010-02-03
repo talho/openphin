@@ -42,6 +42,14 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'channels', :action => 'show_destroy',
     :conditions => {:method => :get}
 
+  map.popup_channel 'channels/:id/popup_channel',
+    :controller => 'channels', :action => 'popup_channel',
+    :conditions => {:method => :get}
+
+  map.popup_documents 'popup_inbox',
+    :controller => 'documents', :action => 'popup_documents',
+    :conditions => {:method => :get}
+
   map.delete_folder "folders/:id",
     :controller=>"folders", :action=>"destroy",
     :conditions => {:method => :delete}

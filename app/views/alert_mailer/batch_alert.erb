@@ -11,6 +11,9 @@ Sensitive: use secure means of retrieval
 Please visit <%= url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https") %> to securely view this alert.
 
 <%- else -%>
+<% if @alert.acknowledge? %>
+Please click <%= email_acknowledge_alert_url(@alert) %> and log in to acknowledge this alert
+<% end %>
 
 Title: <%= @alert.title %>
 
@@ -23,10 +26,6 @@ Agency: <%= @alert.from_jurisdiction.nil? ? @alert.from_organization_name : @ale
 Sender: <%= @alert.author.display_name %>
 <%- end -%>
 Time Sent: <%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>
-
-<% if @alert.acknowledge? %>
-Please click <%= email_acknowledge_alert_url(@alert) %> and log in to acknowledge this alert
-<% end %>
 
 <%= @alert.message %>
 <%- end -%>

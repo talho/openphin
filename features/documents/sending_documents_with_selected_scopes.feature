@@ -70,8 +70,8 @@ Feature: Sending documents with selected scopes
     And I should be on the folder inbox page
 
     And the following users should receive the email:
-      | People       | keith.gaddis@example.com, dan.morrison@example.com |
-      | subject       | John Smith shared a document with you |
+      | People        | keith.gaddis@example.com, dan.morrison@example.com |
+      | subject       | John Smith sent a document to you |
       | body contains | To view this document |
     And "ed.mcguyver@example.com" should not receive an email
 
@@ -95,7 +95,7 @@ Feature: Sending documents with selected scopes
 
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com |
-      | subject       | John Smith shared a document with you |
+      | subject       | John Smith sent a document to you |
       | body contains | To view this document |
     And "ed.mcguyver@example.com" should not receive an email
     And "ethan.waldo@example.com" should not receive an email
@@ -121,7 +121,7 @@ Feature: Sending documents with selected scopes
 
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com, brian.ryckbost@example.com |
-      | subject       | John Smith shared a document with you |
+      | subject       | John Smith sent a document to you |
       | body contains | To view this document |
     And "brian.simms@example.com" should not receive an email
 

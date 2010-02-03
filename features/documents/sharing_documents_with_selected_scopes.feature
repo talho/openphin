@@ -60,7 +60,7 @@ Feature: Sharing documents with selected scopes
     Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
 
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the document viewing panel
@@ -77,7 +77,7 @@ Feature: Sharing documents with selected scopes
     And the following users should receive the email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
     And "ed.mcguyver@example.com" should not receive an email
 
     Given I am logged in as "keith.gaddis@example.com"
@@ -100,7 +100,7 @@ Feature: Sharing documents with selected scopes
     And the following users should receive the email:
       | People        | john.smith@example.com, brian.simms@example.com |
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
     And "ed.mcguyver@example.com" should not receive an email
 
     Given I am logged in as "john.smith@example.com"
@@ -124,7 +124,7 @@ Feature: Sharing documents with selected scopes
     And the following users should receive the email:
       | People        | john.smith@example.com, ethan.waldo@example.com, brian.ryckbost@example.com |
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
     And "brian.simms@example.com" should not receive an email
 
     Given I am logged in as "john.smith@example.com"
@@ -152,7 +152,7 @@ Feature: Sharing documents with selected scopes
     And the following users should receive the email:
       | People        | john.smith@example.com |
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
     And "ed.mcguyver@example.com" should not receive an email
 
     Given I am logged in as "john.smith@example.com"
@@ -184,7 +184,7 @@ Feature: Sharing documents with selected scopes
     Then I should be on the document viewing panel
     And "brian.simms@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
 
     Given I am logged in as "brian.simms@example.com"
     When I go to the Documents page
@@ -210,7 +210,7 @@ Feature: Sharing documents with selected scopes
     Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
 
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the document viewing panel
@@ -229,7 +229,7 @@ Feature: Sharing documents with selected scopes
     Then I should be on the document viewing panel
     And "keith.gaddis@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
-      | body contains | To view this channel, go to: |
+      | body contains | To view this share, go to: |
 
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the document viewing panel

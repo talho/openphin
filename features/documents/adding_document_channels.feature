@@ -75,8 +75,8 @@ Feature: Creating document channels
     And I press "Invite"
     Then I should be redirected to the document viewing panel
     And "brandon.keepers@example.com" should receive the email:
-      | subject       | John Smith added you to a share |
-      | body contains | To view this channel |
+      | subject       | John Smith invited you to a share |
+      | body contains | To view this share |
 
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the document viewing panel
@@ -109,7 +109,7 @@ Feature: Creating document channels
 
     When I go to the document viewing panel
     And I follow "Channel 4"
-    And I should see "Channel 4 Detail"
+    And I should see "Contents of Channel 4"
     And I should see "keith.jpg"
     And I follow "Delete"
     Then I should not see "keith.jpg"

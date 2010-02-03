@@ -74,7 +74,7 @@ Feature: Adding documents to document sharing
     And I press "Create Folder"
     Then I should be redirected to the document viewing panel
     When I follow "Some Things"
-    Then I should see "Some Things Detail"
+    Then I should see "Contents of Some Things"
 
   Scenario: Moving a document into a folder
     Given I have a folder named "Rockstars"

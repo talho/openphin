@@ -7,7 +7,7 @@ class AlertMailer < ActionMailer::Base
     from DO_NOT_REPLY
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
-    subject "#{severity} Health Alert#{status} \"#{alert.title}\""
+    subject "#{severity} Health Alert#{status} \"#{alert.title}\"#{alert.acknowledge? ? " *Acknowledgment required*" : ""}"
     body :alert => alert, :alert_attempt => user.alert_attempts.find_by_alert_id(alert.id)
     if !alert.message_recording_file_name.blank?
       attachment alert.message_recording.content_type do |a|
@@ -24,7 +24,7 @@ class AlertMailer < ActionMailer::Base
     from DO_NOT_REPLY
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
-    subject "#{severity} Health Alert#{status} \"#{alert.title}\""
+    subject "#{severity} Health Alert#{status} \"#{alert.title}\"#{alert.acknowledge? ? " *Acknowledgment required*" : ""}"
     body :alert => alert
     if !alert.message_recording_file_name.blank?
       attachment alert.message_recording.content_type do |a|

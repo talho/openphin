@@ -24,7 +24,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully sent the alert"
     When delayed jobs are processed
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert \"H1N1 SNS push packs to be delivered tomorrow\" *Acknowledgment required* |
       | body contains alert acknowledgment link | |
 
     When I sign out
@@ -47,7 +47,7 @@ Feature: Acknowledging an alert
     Then I should see "Successfully sent the alert"
     When delayed jobs are processed
     And "keith.gaddis@example.com" should receive the email:
-      | subject       | Health Alert H1N1 SNS push packs to be delivered tomorrow |
+      | subject       | Moderate Health Alert \"H1N1 SNS push packs to be delivered tomorrow\" *Acknowledgment required* |
       | body contains alert acknowledgment link | |
 
     When I sign out
@@ -70,7 +70,7 @@ Feature: Acknowledging an alert
      Then I should see "Successfully sent the alert"
      When delayed jobs are processed
      And "keith.gaddis@example.com" should receive the email:
-       | subject       | Health Alert from Dallas County |
+       | subject       | Moderate Health Alert \"H1N1 SNS push packs to be delivered tomorrow\" *Acknowledgment required* |
        | body does not contain alert acknowledgment link | |
 
      When I sign out
