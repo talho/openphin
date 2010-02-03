@@ -48,11 +48,11 @@ class Alert < ActiveRecord::Base
   belongs_to :from_organization, :class_name => 'Organization'
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   belongs_to :original_alert, :class_name => 'Alert'
-  
+
   has_many :targets, :as => :item
   has_many :audiences, :through => :targets, :include => :jurisdictions
   accepts_nested_attributes_for :audiences
-  
+
   has_many :alert_device_types, :dependent => :delete_all
   has_many :alert_attempts, :dependent => :destroy
   has_many :deliveries, :through => :alert_attempts
@@ -73,11 +73,14 @@ class Alert < ActiveRecord::Base
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
+  serialize :options, Hash
+  option_accessor :statistics
+
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   DeliveryTimes = [15, 60, 1440, 4320, 4420]
-  
+
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
@@ -85,10 +88,11 @@ class Alert < ActiveRecord::Base
   validates_length_of :short_message, :maximum => 160
   validates_length_of :caller_id, :is => 10, :allow_blank => true, :allow_nil => true
   validates_format_of :caller_id, :with => /^[0-9]*$/, :on => :create, :allow_blank => true, :allow_nil => true
-  validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
-  
+  validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav", "application/x-wav"]
+
   before_create :set_message_type
   before_create :set_sent_at
+  before_create :initialize_statistics
   after_create :create_console_alert_device_type
   before_save :set_jurisdictional_level
   after_save :set_identifier
@@ -96,14 +100,14 @@ class Alert < ActiveRecord::Base
   after_save :set_sender_id
   after_save :set_distribution_reference
   after_save :set_reference
-  
+
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
-    :select => "DISTINCT devices.type",
-    :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
-    :conditions => "alerts.id=#{object_id}"
+      :select => "DISTINCT devices.type",
+      :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
+      :conditions => "alerts.id=#{object_id}"
   }
-  
+
   def self.new_with_defaults(options={})
     defaults = {:delivery_time => 60, :severity => 'Minor'}
     self.new(options.merge(defaults))
@@ -115,7 +119,7 @@ class Alert < ActiveRecord::Base
     end
     true
   end
-  
+
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
     changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
@@ -131,7 +135,7 @@ class Alert < ActiveRecord::Base
     end
   end
 
-  def build_update(attrs={})  
+  def build_update(attrs={})
     attrs = attrs.stringify_keys
     changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
     overwrite_attrs = attrs.slice(*changeable_fields)
@@ -149,46 +153,48 @@ class Alert < ActiveRecord::Base
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
   end
-  
+
   def device_types=(types)
     alert_device_types.clear
     types.each do |type|
       alert_device_types.build :device => type
     end
   end
-  
+
   def device_types
     alert_device_types.map(&:device)
   end
-  
+
   def human_delivery_time
     self.class.human_delivery_time(delivery_time)
   end
-  
+
   def self.human_delivery_time(minutes)
-    minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"    
+    minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"
   end
-  
+
   def batch_deliver
     recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
     audiences.each do |audience|
       audience.foreign_jurisdictions.each do |jurisdiction|
-        alert_attempts.create!(:jurisdiction => jurisdiction).batch_deliver  
+        alert_attempts.create!(:jurisdiction => jurisdiction).batch_deliver
       end
     end
     alert_device_types.each do |device_type|
       device_type.device_type.batch_deliver(self)
     end
   end
-  
+
+  handle_asynchronously :batch_deliver
+
   def acknowledgments
     alert_attempts.all(:conditions => "acknowledged_at IS NOT NULL")
   end
-  
+
   def acknowledged_percent
-    if(alert_attempts.size > 0)
+    if (alert_attempts.size > 0)
       total = alert_attempts.size.to_f
       acked = alert_attempts.acknowledged.size.to_f
       (acked/total*100)
@@ -198,30 +204,29 @@ class Alert < ActiveRecord::Base
   end
 
   def acknowledged_percent_for_jurisdiction(jur)
-		total = attempted_users.with_jurisdiction(jur).size.to_f
-		if total > 0
-			acks = acknowledged_users.with_jurisdiction(jur).size.to_f
-			acks / total * 100
-		else
-			0
-		end
+    if jur.is_a?(Jurisdiction)
+      jur=statistics[:jurisdictions].detect{|j| j[:name] == jur.name}
+    end
+    total = jur[:total].to_f
+    total > 0 ? jur[:acks] / total : 0
 
   end
 
   def acknowledged_percent_for_device(device)
-		total = alert_attempts.with_device(device).size.to_f
-        total = alert_attempts.size.to_f if device.device == "Device::ConsoleDevice" 
-		if total > 0
-			acks = alert_attempts.acknowledged_by_device(device).size.to_f
-			acks / total * 100
-		else
-			0
-		end
+    total = alert_attempts.with_device(device).size.to_f
+    total = alert_attempts.size.to_f if device.device == "Device::ConsoleDevice"
+    if total > 0
+      acks = alert_attempts.acknowledged_by_device(device).size.to_f
+      acks / total * 100
+    else
+      0
+    end
   end
 
   def is_updateable_by?(user)
     true if user.alerter_jurisdictions.include?(self.from_jurisdiction)
   end
+
   def integrate_voice
     original_file_name = "#{RAILS_ROOT}/message_recordings/tmp/#{self.author.token}.wav"
     if RAILS_ENV == "test"
@@ -261,8 +266,27 @@ class Alert < ActiveRecord::Base
     end
   end
 
+  def initialize_statistics
+    self.statistics = Hash.new
+    self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
+    self.statistics[:devices] = alert_device_types.map{|d| {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}}
+  end
+
+  def update_statistics(options)
+    statistics[:device][options[:device]] += 1 if options[:device]
+    if options[:jurisdiction]
+      if options[:jurisdiction].is_a?(Array)
+        options[:jurisdiction].each{|j| jur=statistics[:jurisdictions].detect{|jd| jd.name=j.name}; jur+=1}
+      elsif options[:jurisdiction].is_a?(Jurisdiction)
+        jur=statistics[:jurisdictions].detect{|jd| jd.name=options[:jurisdiction].name}
+        jur+=1
+      end
+    end
+    self.save
+  end
+
   def sender
-    from_jurisdiction.nil? ? from_organization_name :  from_jurisdiction.name
+    from_jurisdiction.nil? ? from_organization_name : from_jurisdiction.name
   end
 
   def self.sender_id
@@ -285,23 +309,24 @@ class Alert < ActiveRecord::Base
   end
 
   def recipients
-    (targets.map(&:users).flatten + User.find(required_han_coordinators)).uniq
+    @recips ||= (targets.map(&:users).flatten + User.find(required_han_coordinators)).uniq
   end
 
   def total_jurisdictions
-    (audiences.map(&:jurisdictions).flatten + recipients.map(&:jurisdictions).flatten).uniq
+    @total_jurisdictions ||= (audiences.map(&:jurisdictions).flatten + recipients.map(&:jurisdictions).flatten).uniq
   end
-  
+
   # used by Target to determine if public users should be included in recipients
   def include_public_users?
     true
   end
 
-private
+
+  private
   def set_message_type
     self.message_type = MessageTypes[:alert] if self.message_type.blank?
   end
-  
+
   def set_identifier
     if identifier.nil?
       write_attribute(:identifier, "#{Agency[:agency_abbreviation]}-#{Time.zone.now.strftime("%Y")}-#{id}")
@@ -336,7 +361,7 @@ private
       self.save!
     end
   end
-  
+
   def required_han_coordinators
     # Keith says: "Do not fuck with this method."
     jurisdictions = audiences.map(&:jurisdictions).flatten.uniq
@@ -355,13 +380,13 @@ private
       intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
 
       # So we grab the lowest common ancestor; ancestory at the lowest level
-      good_ones = (unioned - intersected) + [intersected.max{|x,y| x.level <=> y.level }]
+      good_ones = (unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level }]
 
       # Finally, grab all those han coordinators
       good_ones.compact.map {|jurisdiction| jurisdiction.han_coordinators.map(&:id) }.flatten
     else
       []
-    end 
+    end
   end
 
   def create_console_alert_device_type

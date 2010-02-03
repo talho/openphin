@@ -54,27 +54,7 @@
             </div>
             <div class="aside">
               <%- if alert.acknowledge? -%>
-                <h3>Acknowledgments (by jurisdiction)</h3>
-
-                <div class="jur_ackpct">
-                  <% alert.total_jurisdictions.each do |d| %>
-                    <h5 class="jurisdiction"><%= h d.name %></h5>
-
-                    <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
-                  <% end %>
-                </div>
-
-                <h3>Acknowledgments (by device)</h3>
-
-                <div class="dev_ackpct">
-                  <% alert.alert_device_types.each do |d| %>
-                    <div class="<%= h d.device_type.display_name %>">
-                      <h5 class="device_type"><%= h d.device_type.display_name %></h5>
-
-                      <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
-                    </div>
-                  <% end %>
-                </div>
+                <%= render :partial => "alert_acknowledgements", :locals => {:alert => alert} %>
               <%- end -%>
             </div>
           </div>

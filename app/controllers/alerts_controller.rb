@@ -34,6 +34,7 @@ class AlertsController < ApplicationController
     @alert = present current_user.alerts.build(params[:alert])
     if params[:send]
       if @alert.valid?
+        params[:alert][:author_id]=current_user.id
         @alert.save
         @alert.integrate_voice
         @alert.batch_deliver

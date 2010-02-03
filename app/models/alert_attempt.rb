@@ -92,9 +92,11 @@ class AlertAttempt < ActiveRecord::Base
   end
   
   def acknowledge! alert_device_type = nil
+    device = alert_device_type || "Device::ConsoleDevice"
     update_attribute(:acknowledged_alert_device_type_id,
-      AlertDeviceType.find_by_alert_id_and_device(alert.id, alert_device_type.nil? ? "Device::ConsoleDevice" : alert_device_type ).id)
+      AlertDeviceType.find_by_alert_id_and_device(alert.id, device ).id)
     update_attribute(:acknowledged_at, Time.zone.now)
+    alert.update_statistics(:device => device, :jurisdiction => user.map(&:jurisdictions))
   end
   
   protected
