@@ -1,19 +1,14 @@
 <h1>New topic</h1><br />
 <p>
   <%= @forum.name %><br />
-  <%= link_to "Forums", forums_path %> > <%= @forum.name %>
+  <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
 </p>
 
 <% form_for @topic, :url  => forum_topics_path(@forum) do |f| %>
   <%= f.error_messages %>
+  <%= render 'topic_fields', :f => t %>
+  <%= f.hidden_field :poster_id, :value => current_user.id %>
   <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <%= f.hidden_field :poster_id, :value => current_user.id -%>
-  <p>
-    <%= f.submit 'Create' %>
+    <%= f.submit 'Add Topic' %>
   </p>
 <% end %>
-
-<%= link_to 'Back', forum_topics_path %>

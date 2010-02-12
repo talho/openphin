@@ -81,11 +81,20 @@ class TopicsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def update_comments
+    # update only the comments that have been checked for update
+    comment_ids = params[:comment_ids] || []
+    selected = params[:topic][:comments].reject{ |k,v| !comment_ids.include?(k) }
+    Topic.update(selected.keys,selected.values)
+    flash[:notice] = "Comments were successfully updated."  
+    redirect_to forum_topic_url(@forum,Topic.find(params[:id]))
+  end
 
 protected
 
   def find_forum
-    @forum = Forum.accessible_by(Forum.visible_to(current_user),current_user).detect{|f| f.id == params[:forum_id].to_i}
+    @forum = Forum.accessible_by(Forum.find_for(:all,current_user),current_user).detect{|f| f.id == params[:forum_id].to_i}
   end
 
   def find_topic

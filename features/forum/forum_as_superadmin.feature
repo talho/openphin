@@ -115,17 +115,18 @@
     And I follow "Grant Capturing"
     Then I should not see "Measuring Fulfillment"
     
-  Scenario: Edit an existing comment to a topic as a super-admin or the original poster
+  Scenario: Edit an existing comment to a topic as a super-admin or as the original poster
     Given I am logged in as "joe.smith@example.com"
     And I have the comment "Walmart claims 100% fulfillment" to topic "Measuring Fulfillment" to forum "Grant Capturing"
     And I go to the Topics page for Forum "Grant Capturing"
     Then I should see "Measuring Fulfillment"
 
     When I follow "Edit"
+    And I check "comment_ids_"
     And I fill in "Comment" with "Look at who is counting"
-    And I press "Update"
-    Then I should see "Topic was successfully updated"
-    When I follow "Measuring Fulfillment"
+    And I press "Update Comment"
+    Then I should see "Comments were successfully updated"
+    And I should be redirected to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
     And I should not see "Walmart claims 100% fulfillment"
     And I should see "Look at who is counting"
 

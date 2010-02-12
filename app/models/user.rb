@@ -336,6 +336,7 @@ class User < ActiveRecord::Base
   end
   
   def moderator_of?(object)
+    return is_super_admin? if object == Forum
     return false unless [Forum,Topic].include? object.class
     is_super_admin? || ( object.respond_to?('poster_id') && (self.id == object.poster_id) )
   end

@@ -1,4 +1,5 @@
 <h1>New forum</h1>
+<%= link_to 'Forums', forums_path %>
 
 <% form_for @forum do |f| %>
   <%= f.error_messages %>
@@ -27,5 +28,4 @@
 
 <% end %>
 
-<%= link_to 'Back', forums_path %>
 

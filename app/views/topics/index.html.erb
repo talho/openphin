@@ -1,19 +1,21 @@
 <h1><%= @forum.name %></h1>  
 <p>
-<%= link_to "Forums", forums_path %> > <%= @forum.name %>
+<%= link_to "Forums", forums_path %> > <%= @forum.name %><br />
 </p>
-<p>
+
+<div class="new_topic">
   <% form_for @forum do |f| %>
     <%= f.error_messages %>
     <% f.fields_for "topics_attributes" do |t| %>
-      <%= t.hidden_field :forum_id, :value => @forum.id -%>
-      <div class="topics_attributes">
+      <p>
         <%= render 'topic_fields', :f => t %>
-      </div>
+      </p>
+      <%= t.hidden_field :poster_id, :value => current_user.id %>
     <% end %> 
     <p><%= f.submit "Add Topic" %></p>
   <% end %>
-</p>
+</div>
+
 <ul>
   <% @topics.each_with_index do |topic,idx| %>
     <li id="topic_name_<%= idx %>" class="topic_name">
@@ -25,13 +27,18 @@
           <%= link_to 'Remove', forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
       <% end -%>
       <br />
-      Started by <%=h topic.poster.name %> on <%= topic.created_at -%>
+      <%= "Started by #{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
       <br />
       <% unless (comments_last = topic.comments.distinct_poster.recent(2)).blank? %>
-        Recent commenters: <%= comments_last.collect(&:poster).collect(&:name).join(", ") -%>
+        Recent commenters: 
+        <%= link_if_public comments_last[0].poster if comments_last[0] -%>      
+        <%= link_if_public comments_last[1].poster if comments_last[1] -%>      
       <% end %>
     </li>
     <br />
   <% end %>
 </ul>
+
+
+
 

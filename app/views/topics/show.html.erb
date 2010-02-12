@@ -8,22 +8,20 @@
   <%= link_to "Add Comment", :anchor => "add_comment" %>
 </p>
 
-<% unless @topic.comments.empty? %>
-  <% @topic.comments.each do |comment| %>
-    <p>
-      <%= link_if_public comment.poster -%><%= " - #{time_ago_in_words(comment.updated_at)} ago" -%>
-      <%=textilize comment.content %>
-    </p>
-    <% for_moderators_of comment do -%>
-    <% end -%>
-  <% end %>
+<% @topic.comments.each do |comment| %>
+  <p>
+    <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%>
+    <%=textilize comment.content %>
+  </p>
 <% end %>
  
 <% form_for @topic, :url => forum_topic_path(@forum,@topic), :html => {:method => :put } do |f| %>
   <%= f.error_messages %>
   <% f.fields_for :comment_attributes do |comment_form| %>
+    <%= render 'edit_comment_fields', :f => comment_form %>
+    <%= comment_form.hidden_field :name, :value => Time.now %>  
     <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
-    <%= render 'comment_fields', :f => comment_form %>
+    <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
   <% end %> 
   <p><%= f.submit "Add Comment" %></p>
 <% end %>

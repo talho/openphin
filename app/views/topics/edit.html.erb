@@ -1,34 +1,55 @@
 <h2>Editing topic</h2>
 
+<%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
+
 <% form_for :topic, :url=>forum_topic_path(@forum,@topic), :html => { :method => :put } do |f| %>
   <%= f.error_messages %>
 
- <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name, :size => 80 %>
-  </p>
-  <p>
-    <%= f.label :content, "Description" %>
-    <%= f.text_area :content, :rows => 6 %>
-  </p>
+  <%= render 'topic_fields', :f => f %>
   <p>
   <% for_moderators_of @forum do -%>
-    <%= f.check_box :sticky %> Sticky <br />
-    <%= f.check_box :locked? %> Closed<br />
+  <p>
+    <%= f.check_box :sticky %> Sticky
+  </p>
+  <p>
+    <%= f.check_box :locked? %> Closed 
+  </p>
+  <p>
     <%= f.label :dest_forum_id, "Forum to be moved to" %>
     <%= select(:topic, :dest_forum_id, 
         Forum.all.map{|u| [u.name,u.id]}, :options =>{:prompt => "-Select a forum to move to"}) -%>
-    <% @topic.comments.each do |comment| %>
-      <% f.fields_for :comment_attributes,comment do |comment_form| %>
-        <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
-        <%= render 'comment_fields', :f => comment_form %>
-      <% end -%>
-    <% end -%> 
+    </p>     
   <% end -%>
-  </p>
+  </p><br />
   <p>
     <%= f.submit 'Update' %>
   </p>
 <% end %>
 
-<%= link_to 'Back', forum_topics_path(@forum)  %>
+<h2>Edit these Comments</h2>
+
+<% form_for @topic, :url => update_comments_forum_topic_path(@forum,@topic) do |f| %>
+  <%= f.error_messages %>
+  
+  <% @topic.comments.each do |comment| %>
+    <p>
+      <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%>
+      <%=textilize comment.content %>
+    </p>
+    <% for_moderators_of comment do -%>
+      <% f.fields_for "comments[]",comment do |comment_form| %>
+        <div class="edit_comment">
+          <%= check_box_tag "comment_ids[]", comment.id %>Update this
+          <%= render 'edit_comment_fields', :f => comment_form %>
+          <%= comment_form.hidden_field :name, :value => Time.now %>  
+          <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
+          <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
+        </div>
+      <% end %>
+       
+    <% end -%>
+    
+  <% end %>
+  
+  <p><%= f.submit "Update Comment" %></p>
+<% end %>

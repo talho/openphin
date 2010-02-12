@@ -35,10 +35,10 @@ class Forum < ActiveRecord::Base
     build_audience(attributes)
   end
   
-  def self.visible_to(user)
-    user.is_super_admin? ? Forum.with_exclusive_scope { Forum.all } : Forum.all
+  def self.find_for(ids,user)
+    user.is_super_admin? ? self.with_exclusive_scope { self.find(ids) } : self.find(ids)
   end
-    
+  
   def accessible_to(user)
     return self if !audience || user.is_super_admin?
     audience.recipients.include?(user) ? self : nil
@@ -69,5 +69,7 @@ class Forum < ActiveRecord::Base
     #   end
     # end
   end
+  
+  protected
   
 end

@@ -26,6 +26,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the forum named "Funding methodology"
     
     When I go to the Forums page
+    And I should not see "New Forum"
     And I follow "Funding methodology"
     And I fill in "Name" with "Locating Grants in todays economy"
     And I press "Add Topic"

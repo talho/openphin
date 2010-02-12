@@ -1,10 +1,10 @@
 class ForumsController < ApplicationController
 
-  app_toolbar "forums"
   before_filter :non_public_role_required
+  app_toolbar "forums"
 
   def index
-    @forums = Forum.accessible_by(Forum.visible_to(current_user),current_user)
+    @forums = Forum.accessible_by(Forum.find_for(:all,current_user),current_user)
   end
   
   def show
@@ -26,11 +26,12 @@ class ForumsController < ApplicationController
   end
   
   def edit
-    @forum = Forum.accessible_by(Forum.visible_to(current_user),current_user).detect{|f| f.id == params[:id].to_i}
+    @forum = Forum.accessible_by(Forum.find_for(:all,current_user),current_user).detect{|f| f.id == params[:id].to_i}
   end
   
   def update
-    @forum = Forum.find(params[:id])
+#    @forum = Forum.find(params[:id])
+    @forum = Forum.find_for(params[:id],current_user)
     if @forum.update_attributes(params[:forum])
       if params[:forum][:topics_attributes]
         flash[:notice] = "Topic was successfully created."

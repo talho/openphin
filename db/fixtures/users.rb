@@ -258,6 +258,9 @@ u.role_memberships << r
 r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id,
                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
                                                                             :user_id => u.id)
+r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                             :role_id => Role.superadmin.id,
+                                                                             :user_id => u.id)
 u.role_memberships << r
 
 u = User.find_or_create_by_email(:email => "pradeep.vittal@dshs.state.tx.us") { |m|

@@ -30,18 +30,20 @@ class Topic < ActiveRecord::Base
   
   def comment_attributes=(attributes)
     # parses the comment attributes hash built by FormHelper
-    attributes.each do |key,value|
-      if value.kind_of?(Hash) && key.kind_of?(String) && !(key =~ /\D+/)
-        # a hash of comment hashes with the key is the index into the comments collection
-        next unless (0..(comments.count-1)).include?(index = key.to_i) 
-        # comments are stored as topics
-        comment = Topic.find comments[index].id
-        value.each{|ckey,cvalue| comment.update_attribute(ckey,cvalue)}
-      else
-        # a single comment to be built and appended to comments collection
-        comments << comments.build(attributes)        
-      end
-    end
+    comments << comments.build(attributes)        
+    
+    # attributes.each do |key,value|
+    #   if value.kind_of?(Hash) && key.kind_of?(String) && !(key =~ /\D+/)
+    #     # a hash of comment hashes with the key is the index into the comments collection
+    #     next unless (0..(comments.count-1)).include?(index = key.to_i) 
+    #     # comments are stored as topics
+    #     comment = Topic.find comments[index].id
+    #     value.each{|ckey,cvalue| comment.update_attribute(ckey,cvalue)}
+    #   else
+    #     # a single comment to be built and appended to comments collection
+    #     comments << comments.build(attributes)        
+    #   end
+    # end
   end
   
   def dest_forum_id=(destination_forum_id)

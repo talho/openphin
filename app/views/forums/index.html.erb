@@ -1,5 +1,10 @@
 <h2>Forums</h2>
-<p><%= link_to "New Forum", new_forum_path %></p>
+
+<% for_moderators_of Forum  do -%>
+  <p>
+    <%= link_to "New Forum", new_forum_path %>
+  </p>
+<% end %>
 
 <ul class="forums">
   <% for forum in @forums %>
@@ -11,10 +16,9 @@
       <br />
       <% if (topic_last = forum.topics.recent(1).first) %>
         <div class="forum_sub">
-          <%= "Lastest Topic: #{link_to h(topic_last.name),forum_topic_path(forum,topic_last)} by #{topic_last.poster.name}"-%>
+          <%= "Lastest Topic: #{link_to h(topic_last.name),forum_topic_path(forum,topic_last)} by #{h topic_last.poster.name}"-%>
         </div> 
       <% end %>
     </li>
   <% end %>
 </ul>
-
