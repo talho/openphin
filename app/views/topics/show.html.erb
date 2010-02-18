@@ -5,15 +5,18 @@
 <p><%= @topic.content %></p>
 
 <p>
+  <%= link_to image_tag("add.png"), :anchor => "add_comment" %>
   <%= link_to "Add Comment", :anchor => "add_comment" %>
 </p>
 
-<% @topic.comments.each do |comment| %>
-  <p>
-    <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%>
-    <%=textilize comment.content %>
-  </p>
-<% end %>
+<ul class="comments data-list">
+  <% @topic.comments.each do |comment| %>
+    <li>
+      <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%><br />
+      <%=textilize comment.content %>
+    </li>
+  <% end %>
+</ul>
  
 <% form_for @topic, :url => forum_topic_path(@forum,@topic), :html => {:method => :put } do |f| %>
   <%= f.error_messages %>

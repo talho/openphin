@@ -4,11 +4,11 @@ class ForumsController < ApplicationController
   app_toolbar "forums"
 
   def index
-    @forums = Forum.accessible_by(Forum.find_for(:all,current_user),current_user)
+    @forums = Forum.paginate_for(:all,current_user,params[:page] || 1)
   end
   
   def show
-    @forum = Forum.find(params[:id])
+    @forum = Forum.find_for(params[:id],current_user)
   end
   
   def new
@@ -16,6 +16,7 @@ class ForumsController < ApplicationController
   end
   
   def create
+    merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
     @forum = Forum.new(params[:forum])
     if @forum.save
       flash[:notice] = "Forum was successfully created."
@@ -26,14 +27,13 @@ class ForumsController < ApplicationController
   end
   
   def edit
-    @forum = Forum.accessible_by(Forum.find_for(:all,current_user),current_user).detect{|f| f.id == params[:id].to_i}
+    @forum = Forum.find_for(params[:id],current_user)
   end
   
   def update
-#    @forum = Forum.find(params[:id])
     @forum = Forum.find_for(params[:id],current_user)
     if @forum.update_attributes(params[:forum])
-      if params[:forum][:topics_attributes]
+      if params[:forum][:topic_attributes]
         flash[:notice] = "Topic was successfully created."
         redirect_to( forum_topics_path(@forum) )
       else
@@ -41,14 +41,25 @@ class ForumsController < ApplicationController
         redirect_to forums_path
       end
     else
-      render :action => 'edit'
+      redirect_to :back
     end
   end
   
   def destroy
-    @forum = Forum.find(params[:id])
+    @forum = Forum.find_for(params[:id],current_user)
     @forum.destroy
     flash[:notice] = "Forum was successfully removed."
     redirect_to forums_url
   end
+  
+protected
+
+  def merge_if(ahash,options={})
+    # only merge in the options if the attributes have other values indicating valid attributes
+    return ahash unless ( ahash.kind_of?(Hash) && options.kind_of?(Hash) )
+    if ahash
+      ahash.merge!(options)
+    end
+  end
+  
 end

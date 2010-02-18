@@ -14,14 +14,16 @@
        <%= f.check_box :hide %> <%= f.label :hide %>
      <% end -%>
    </p>
-   <div id="audience">
-     <% f.object.build_audience if f.object.audience.nil? %>
-     <% f.fields_for :audience do |audience| %>
-       <% unless audience.object.is_a?(Group) %>
-         <%= render 'audiences/fields', :form => audience, :group_form => f %>
+   <div id="edit">
+     <div id="audience">
+       <% f.object.build_audience if f.object.audience.nil? %>
+       <% f.fields_for :audience do |audience| %>
+         <% unless audience.object.is_a?(Group) %>
+           <%= render 'audiences/fields', :form => audience, :group_form => f %>
+         <% end %>
        <% end %>
-     <% end %>
-   </div>
+     </div>
+    </div>
   <p>
     <%= f.submit 'Update' %>
   </p>

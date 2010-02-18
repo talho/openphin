@@ -1,8 +1,10 @@
-<p class="comment_fields">
+<div class="comment_fields">
   <a name="add_comment"></a>
-  <%= f.label :content, "Comment" %>
-  <%= link_to "Textile Quick Reference", 
-    "http://redcloth.org/hobix.com/textile/quick.html", :popup => ['new_window','height=400,width=520,scrollbars=yes'] %>
-  <%= f.text_area :content, :rows => 8 %>
-</p>
+  <p>
+    <%= f.label :content, "Comment" %>
+    <%= link_to "Textile Quick Reference", 
+      "http://redcloth.org/hobix.com/textile/quick.html", :popup => ['new_window','height=400,width=520,scrollbars=yes'] %>
+    <%= f.text_area :content, :rows => 8 %>
+  </p>
+</div>
 

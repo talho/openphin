@@ -2,54 +2,59 @@
 
 <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
 
-<% form_for :topic, :url=>forum_topic_path(@forum,@topic), :html => { :method => :put } do |f| %>
-  <%= f.error_messages %>
-
-  <%= render 'topic_fields', :f => f %>
-  <p>
-  <% for_moderators_of @forum do -%>
-  <p>
-    <%= f.check_box :sticky %> Sticky
-  </p>
-  <p>
-    <%= f.check_box :locked? %> Closed 
-  </p>
-  <p>
-    <%= f.label :dest_forum_id, "Forum to be moved to" %>
-    <%= select(:topic, :dest_forum_id, 
-        Forum.all.map{|u| [u.name,u.id]}, :options =>{:prompt => "-Select a forum to move to"}) -%>
-    </p>     
-  <% end -%>
-  </p><br />
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<fieldset class="topic">
+  <legend>Editing Topic</legend>
+  <% form_for :topic, :url=>forum_topic_path(@forum,@topic), :html => { :method => :put } do |f| %>
+    <%= f.error_messages %>
+    <p>
+    <%= render 'topic_fields', :f => f %>
+    </p>
+    <p>
+    <% for_moderators_of @forum do -%>
+    <p>
+      <%= f.check_box :sticky %> Sticky
+    </p>
+    <p>
+      <%= f.check_box :locked? %> Closed 
+    </p>
+    <p>
+      <%= f.label :dest_forum_id, "Forum to be moved to" %>
+      <%= select(:topic, :dest_forum_id, 
+          Forum.all.map{|u| [u.name,u.id]}, :options =>{:prompt => "-Select a forum to move to"}) -%>
+      </p>     
+    <% end -%>
+    </p><br />
+    <p>
+      <%= f.submit 'Update' %>
+    </p>
+  <% end %>
+</fieldset>
 
 <h2>Edit these Comments</h2>
 
-<% form_for @topic, :url => update_comments_forum_topic_path(@forum,@topic) do |f| %>
-  <%= f.error_messages %>
+<fieldset class="comments">
+  <legend>Edit Comments</legend>
+  <ul class="comments data-list">
+  <% form_for @topic, :url => update_comments_forum_topic_path(@forum,@topic) do |f| %>
+    <%= f.error_messages %>
   
-  <% @topic.comments.each do |comment| %>
+    <% @topic.comments.each do |comment| %>
+      <li>
+        <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%><br />
+        <%=textilize comment.content %>
+        <% for_moderators_of comment do -%>
+          <% f.fields_for "comments[]",comment do |comment_form| %>
+           <div class="edit_comment">
+            <%= check_box_tag "comment_ids[]", comment.id %>Update this
+            <%= render 'edit_comment_fields', :f => comment_form %>
+          </div>
+          <% end %>
+        <% end -%>
+      </li>
+    <% end %>
     <p>
-      <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%>
-      <%=textilize comment.content %>
+      <%= f.submit "Update Comment" %>
     </p>
-    <% for_moderators_of comment do -%>
-      <% f.fields_for "comments[]",comment do |comment_form| %>
-        <div class="edit_comment">
-          <%= check_box_tag "comment_ids[]", comment.id %>Update this
-          <%= render 'edit_comment_fields', :f => comment_form %>
-          <%= comment_form.hidden_field :name, :value => Time.now %>  
-          <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
-          <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
-        </div>
-      <% end %>
-       
-    <% end -%>
-    
   <% end %>
-  
-  <p><%= f.submit "Update Comment" %></p>
-<% end %>
+  </ul>
+</fieldset>

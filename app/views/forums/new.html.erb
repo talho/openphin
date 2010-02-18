@@ -1,5 +1,7 @@
-<h1>New forum</h1>
-<%= link_to 'Forums', forums_path %>
+<h2>New forum</h2>
+<p>
+  <%= link_to 'Forums', forums_path %>
+</p>
 
 <% form_for @forum do |f| %>
   <%= f.error_messages %>
@@ -12,13 +14,15 @@
       <% end -%>
     </p>
   </div>
-  <div id="audience">
-    <% f.object.build_audience if f.object.audience.nil? %>
-    <% f.fields_for :audience do |audience| %>
-      <% unless audience.object.is_a?(Group) %>
-        <%= render 'audiences/fields', :form => audience, :group_form => f %>
+  <div id="edit">
+    <div id="audience">
+      <% f.object.build_audience if f.object.audience.nil? %>
+      <% f.fields_for :audience do |audience| %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => f %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
   <div>
     <p>

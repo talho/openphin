@@ -24,7 +24,7 @@
   Scenario: Create and edit a forum
     When I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "New forum"
+    And I follow "Add forum"
     And I fill in "Name" with "Funding methodology"
     And I press "Create"
 
@@ -52,7 +52,7 @@
   Scenario: Restrict the particular forum audience
     When I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "New forum"
+    And I follow "Add forum"
     And I fill in "Name" with "Funding methodology"
     And I fill out the audience form with:
       | Jurisdictions | Dallas County  |

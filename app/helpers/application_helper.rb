@@ -76,11 +76,7 @@ module ApplicationHelper
   end
 
   def link_if_public(user)
-    if ( user.respond_to?("public") && user.public ) 
-      link_to h(user.name), user_profile_path(user)
-    else
-      h(user.name)
-    end
+    ( user.respond_to?("public") && user.public ) ? link_to( h(user.name), user_profile_path(user) ) : h(user.name)
   end  
 
 end

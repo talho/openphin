@@ -11,6 +11,12 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   has_one   :audience, :autosave => true
+  
+  def audiences
+    # audiences/_fields excepts an array for has_many relationship
+    [audience]
+  end
+  
   accepts_nested_attributes_for :audience, 
             :allow_destroy => true   #destroy not necessary since forum deletion is not an option
   
@@ -34,42 +40,54 @@ class Forum < ActiveRecord::Base
   def audience_attributes=(attributes)
     build_audience(attributes)
   end
-  
-  def self.find_for(ids,user)
-    user.is_super_admin? ? self.with_exclusive_scope { self.find(ids) } : self.find(ids)
+      
+  def self.find_for(id,user)
+    # can I see the hidden forums?
+    result = user.is_super_admin? ? self.with_exclusive_scope { self.find(id) } : self.find(id)
+    return result unless result
+    unless result.kind_of?(Array)
+      forum = self.accessible_to(result,user)
+      return forum unless forum
+      forum = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum.id) } : self.find(forum.id)
+    else
+      result.select{|f| self.accessible_to(f,user) }
+      forum_ids = result.collect(&:id)
+      forums = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum_ids) } : self.find(forum_ids)
+    end
   end
   
-  def accessible_to(user)
-    return self if !audience || user.is_super_admin?
-    audience.recipients.include?(user) ? self : nil
+  def self.paginate_for(id,user,page)
+    # can I see the hidden forums?
+    result = user.is_super_admin? ? self.with_exclusive_scope { self.find(id) } : self.find(id)
+    return result unless result
+    unless result.kind_of?(Array)
+      forum = self.accessible_to(result,user)
+      return forum unless forum
+      forum = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum.id) } : self.find(forum.id)
+    else
+      result.select{|f| self.accessible_to(f,user) }
+      forum_ids = result.collect(&:id)
+      forums = user.is_super_admin? ? self.with_exclusive_scope { self.paginate(forum_ids,:page => page) } : self.paginate(forum_ids,:page => page)
+    end
   end
   
-  def self.accessible_by(forums,user)
-    forums.select{ |f|
-#      next unless f.respond_to?('accessible_to')
-      f.accessible_to(user)
-    }
+  def self.accessible_to(result,user)
+    # if no audience is specified then this forum is open to anyone
+    # if a audience is specified for this forum, am I in the audeience?
+    unless (audience = result.audience)
+      forum = result
+    else
+      forum = ( audience.owner == user || audience.recipients(:include_public=>false).include?(user) ) ? result : nil
+    end
   end
   
-  def topics_attributes=(attributes)
-    # parses the topic attributes hash built by FormBuilder
+  def topic_attributes=(attributes)
     topics << topics.build(attributes) 
-    # if attributes.kind_of? Array
-    #   # a topics to be built and appended to topics collection
-    #   attributes.first.delete("_destroy")
-    #   topics << topics.build(attributes.first) 
-    # else
-    #   if value.kind_of?(Hash)  && key.kind_of?(String)  && !(key =~ /\D+/)
-    #     attributes.each do |key,value|
-    #       # a hash of topic hashes with the key is the index into the topics collection
-    #       next unless (0..(topics.count-1)).include?(index = key.to_i) 
-    #       topic = Topic.find topics[index].id
-    #       value.each{|ckey,cvalue| topic.update_attribute(ckey,cvalue)}
-    #     end
-    #   end
-    # end
   end
   
-  protected
+  def self.per_page
+    # for paginate
+    5
+  end
   
 end

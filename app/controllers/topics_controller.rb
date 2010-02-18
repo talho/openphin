@@ -6,7 +6,7 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.xml
   def index
-    @topics = @forum.topics
+    @topics = Topic.paginate(@forum.topics.collect(&:id),:page => params[:page] || 1)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -94,11 +94,18 @@ class TopicsController < ApplicationController
 protected
 
   def find_forum
-    @forum = Forum.accessible_by(Forum.find_for(:all,current_user),current_user).detect{|f| f.id == params[:forum_id].to_i}
+    @forum = Forum.find_for(params[:forum_id],current_user)
   end
 
   def find_topic
     @topic = @forum.topics.find(params[:id])
   end
 
+    def merge_if(ahash,options={})
+      return ahash unless ( ahash.kind_of?(Hash) && options.kind_of?(Hash) )
+      if ahash
+        ahash.merge!(options)
+      end
+    end
+    
 end
