@@ -6,8 +6,8 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', 'menu', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', 'menu', :cache => 'all' %>
+  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', :cache => 'all' %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -104,7 +104,7 @@
     <li class='links'><%=     link_to s("<b>Links</b>"),     dashboard_path %></li>
   </ul>
   <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %>, or <%= link_to "click here", "/The Texas Public Health Information Network - General Training.pdf" %> for a TXPhin tutorial.</div>
-	<a href="http://apycom.com/" syt>jQuery Menu by Apycom</a>
+	
 </div>
 </body>
 </html>
