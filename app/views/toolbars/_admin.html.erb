@@ -1,8 +1,33 @@
 <ul>
-  <li<%= tab_me(admin_role_requests_path) %>><%= link_to s("Pending Role Requests"), admin_role_requests_path %></li>
-  <li<%= tab_me(new_role_assignment_path) %>><%= link_to s("Assign Roles"), new_role_assignment_path %></li>
-  <li<%= tab_me(new_admin_user_path) %>><%= link_to s("Add a User"), new_admin_user_path %></li>
+  <li<%= tab_me([admin_role_requests_path, new_role_assignment_path]) %>>
+    <%= link_to s("Manage Roles"), "#" %>
+    <ul>
+      <li<%= tab_me(admin_role_requests_path) %>>
+        <%= link_to s("Pending Role Requests"), admin_role_requests_path %>
+      </li>
+      <li<%= tab_me(new_role_assignment_path) %>>
+        <%= link_to s("Assign Roles"), new_role_assignment_path %>
+      </li>
+      <li class="end"><span></span></li>
+    </ul>
+  </li>
   <li<%= tab_me(admin_groups_path) %>><%= link_to s("Manage Groups"), admin_groups_path %></li>
-  <li<%= tab_me(new_user_batch_path) %>><%= link_to s("Batch Users"), new_user_batch_path %></li>
-  <li<%= tab_me(new_users_delete_path) %>><%= link_to s("Users Delete"), new_users_delete_path %></li>
+  <li<%= tab_me([new_admin_user_path, new_user_batch_path, new_users_delete_path]) %>>
+    <%= link_to s("Manage Users"), "#" %>
+    <ul>
+      <li<%= tab_me(new_admin_user_path) %>>
+        <%= link_to s("Add a User"), new_admin_user_path %>
+      </li>
+      <li<%= tab_me(new_users_delete_path) %>>
+        <%= link_to s("Invite Users"), new_users_delete_path %>
+      </li>
+      <li<%= tab_me(new_user_batch_path) %>>
+        <%= link_to s("Batch Users"), new_user_batch_path %>
+      </li>
+      <li<%= tab_me(new_users_delete_path) %>>
+        <%= link_to s("Delete a User"), new_users_delete_path %>
+      </li>
+      <li class="end"><span></span></li>
+    </ul>
+  </li>
 </ul>
