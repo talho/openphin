@@ -23,10 +23,10 @@
 <% form_for @topic, :url => forum_topic_path(@forum,@topic), :html => {:method => :put } do |f| %>
   <%= f.error_messages %>
   <% f.fields_for :comment_attributes do |comment_form| %>
-    <%= render 'edit_comment_fields', :f => comment_form %>
-    <%= comment_form.hidden_field :name, :value => Time.now %>  
-    <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
-    <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
+  <%= render 'edit_comment_fields', :f => comment_form %>
+  <%= comment_form.hidden_field :name, :value => Time.now %>  
+  <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
+  <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
   <% end %> 
   <p><%= f.submit "Add Comment" %></p>
 <% end %>

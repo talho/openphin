@@ -115,7 +115,7 @@
     And I follow "Grant Capturing"
     Then I should not see "Measuring Fulfillment"
     
-  Scenario: Edit an existing comment to a topic as a super-admin or as the original poster
+    Scenario: Edit an existing comment to a topic as a super-admin or as the original poster
     Given I am logged in as "joe.smith@example.com"
     And I have the comment "Walmart claims 100% fulfillment" to topic "Measuring Fulfillment" to forum "Grant Capturing"
     And I go to the Topics page for Forum "Grant Capturing"

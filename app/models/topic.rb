@@ -46,7 +46,7 @@ class Topic < ActiveRecord::Base
     # for paginate
     3
   end
-  
+
 end
 
 

@@ -9,11 +9,11 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
-   <p>
-     <% for_moderators_of @forum do -%>
-       <%= f.check_box :hide %> <%= f.label :hide %>
-     <% end -%>
-   </p>
+  <p>
+    <% for_moderators_of @forum do -%>
+      <%= f.check_box :hide %> <%= f.label :hide %>
+    <% end -%>
+  </p>
    <div id="edit">
      <div id="audience">
        <% f.object.build_audience if f.object.audience.nil? %>

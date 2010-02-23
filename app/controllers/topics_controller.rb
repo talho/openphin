@@ -101,11 +101,11 @@ protected
     @topic = @forum.topics.find(params[:id])
   end
 
-    def merge_if(ahash,options={})
-      return ahash unless ( ahash.kind_of?(Hash) && options.kind_of?(Hash) )
-      if ahash
-        ahash.merge!(options)
-      end
+  def merge_if(ahash,options={})
+    return ahash unless ( ahash.kind_of?(Hash) && options.kind_of?(Hash) )
+    if ahash
+      ahash.merge!(options)
     end
-    
+  end
+
 end

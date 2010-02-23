@@ -11,7 +11,6 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   has_one   :audience, :autosave => true
-  
   def audiences
     # audiences/_fields excepts an array for has_many relationship
     [audience]

@@ -27,13 +27,13 @@ class ForumsController < ApplicationController
   end
   
   def edit
-    @forum = Forum.find_for(params[:id],current_user)
-  end
-  
-  def update
-    @forum = Forum.find_for(params[:id],current_user)
-    if @forum.update_attributes(params[:forum])
-      if params[:forum][:topic_attributes]
+      @forum = Forum.find_for(params[:id],current_user)
+    end
+
+    def update
+      @forum = Forum.find_for(params[:id],current_user)
+      if @forum.update_attributes(params[:forum])
+        if params[:forum][:topic_attributes]
         flash[:notice] = "Topic was successfully created."
         redirect_to( forum_topics_path(@forum) )
       else
@@ -61,5 +61,5 @@ protected
       ahash.merge!(options)
     end
   end
-  
+
 end
