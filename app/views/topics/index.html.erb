@@ -1,43 +1,46 @@
-<h1><%= @forum.name %></h1>  
-<p>
+<h1><%= @forum.name %></h1>
+  
+<p class="forum breadcrumb">
 <%= link_to "Forums", forums_path %> > <%= @forum.name %><br />
 </p>
 
-<div class="new_topic">
-  <% form_for @forum do |f| %>
-    <%= f.error_messages %>
-    <% f.fields_for "topic_attributes" do |t| %>
-      <p>
-        <%= render 'topic_fields', :f => t %>
-      </p>
-      <%= t.hidden_field :poster_id, :value => current_user.id %>
-    <% end %> 
-    <p><%= f.submit "Add Topic" %></p>
-  <% end %>
-</div>
+<div class="topic">
+  <div class="new_topic">
+    <% form_for @forum do |f| %>
+      <%= f.error_messages %>
+      <% f.fields_for "topic_attributes" do |t| %>
+        <p>
+          <%= render 'topic_fields', :f => t %>
+        </p>
+        <%= t.hidden_field :poster_id, :value => current_user.id %>
+      <% end %> 
+      <p><%= f.submit "Add Topic" %></p>
+    <% end %>
+  </div>
 
-<ul class="topics data-list">
-  <% @topics.each_with_index do |topic,idx| %>
-    <li id="topic_name_<%= idx %>" class="topic_name">
-      <%= link_to h(topic.name), forum_topic_path(@forum,topic) %>
-      <% for_moderators_of topic do -%>
-        <%= link_to image_tag("pencil.png", :alt => "Edit"), edit_forum_topic_path(@forum,topic) %>
-      <% end -%>
-      <% for_super_admin do -%>
-          <%= link_to image_tag("cross-circle.png", :alt => "Remove"), forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
-      <% end -%>
+  <ul class="topics data-list">
+    <% @topics.each_with_index do |topic,idx| %>
+      <li id="topic_name_<%= idx %>" class="topic_name">
+        <%= link_to h(topic.name), forum_topic_path(@forum,topic) %>
+        <% for_moderators_of topic do -%>
+          <%= link_to image_tag("pencil.png", :alt => "Edit"), edit_forum_topic_path(@forum,topic) %>
+        <% end -%>
+        <% for_super_admin do -%>
+            <%= link_to image_tag("cross-circle.png", :alt => "Remove"), forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
+        <% end -%>
+        <br />
+        <%= "Started by #{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
+        <br />
+        <% unless (comments_last = topic.comments.distinct_poster.recent(2)).blank? %>
+          Recent commenters: 
+          <%= link_if_public comments_last[0].poster if comments_last[0] -%>      
+          <%= link_if_public comments_last[1].poster if comments_last[1] -%>      
+        <% end %>
+      </li>
       <br />
-      <%= "Started by #{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
-      <br />
-      <% unless (comments_last = topic.comments.distinct_poster.recent(2)).blank? %>
-        Recent commenters: 
-        <%= link_if_public comments_last[0].poster if comments_last[0] -%>      
-        <%= link_if_public comments_last[1].poster if comments_last[1] -%>      
-      <% end %>
-    </li>
-    <br />
-  <% end %>
-</ul>
+    <% end %>
+  </ul>
+</div>
 <%= will_paginate @topics %>
 
 

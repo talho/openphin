@@ -71,10 +71,6 @@ module ApplicationHelper
     current_user.is_super_admin? && concat(capture(&block))
   end
 
-  def textilize_alternate(text)
-    RedCloth.new(text.gsub(/</, '&lt;').gsub(/>/, '&gt;')).to_html
-  end
-
   def link_if_public(user)
     ( user.respond_to?("public") && user.public ) ? link_to( h(user.name), user_profile_path(user) ) : h(user.name)
   end  

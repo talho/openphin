@@ -1,6 +1,8 @@
 <h2>Editing topic</h2>
 
+<p class="forum breadcrumb">
 <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
+</p>
 
 <fieldset class="topic">
   <legend>Editing Topic</legend>
@@ -41,7 +43,7 @@
     <% @topic.comments.each do |comment| %>
       <li>
         <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%><br />
-        <%=textilize comment.content %>
+        <%=textilize_without_paragraph comment.content %>
         <% for_moderators_of comment do -%>
           <% f.fields_for "comments[]",comment do |comment_form| %>
            <div class="edit_comment">
