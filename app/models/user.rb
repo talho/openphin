@@ -58,7 +58,6 @@ class User < ActiveRecord::Base
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
-  has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :documents do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'

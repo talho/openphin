@@ -1,3 +1,9 @@
+Given /^"([^\"]*)" is a member of the organization "([^\"]*)"$/ do |email, org_name|
+	user = User.find_by_email(email) || Factory(:user, :email => email)
+	org = Organization.find_by_name(org_name) || Factory(:organization, :name => org_name)
+  org.members << user
+end
+
 Given /^there is an unapproved "([^\"]*)" organization with "([^\"]*)" as the contact$/ do |name, email|
 	contact = User.find_by_email(email) || Factory(:user, :email => email)
 	Factory(:organization, :name => name, :approved => false, :contact_email => email)

@@ -10,4 +10,5 @@ Organization.find_or_create_by_name(:name => "TALHO") { |o|
   o.contact = User.find_by_email("jason@texashan.org")
   o.email_confirmed = true
   o.queue = 'redcross'
+#  o.audience.member << User.first
 }

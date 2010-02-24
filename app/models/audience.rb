@@ -19,7 +19,7 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :roles, :uniq => true
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
 
-  validate :at_least_one_recipient?
+#  validate :at_least_one_recipient?
 
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq

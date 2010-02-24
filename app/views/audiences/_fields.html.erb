@@ -20,11 +20,11 @@
 </fieldset>
 
 <%- if group_form -%>
-  <fieldset class="filterable list last groups">
+  <fieldset class="filterable list last groups organization">
     <legend>Groups</legend>
     <ul class="check_selector">
-      <%- current_user.visible_groups.each do |group| -%>
-        <li>
+      <%- (current_user.visible_groups | Organization.all.map(&:group)).each do |group| -%>
+        <li class="<%= group.scope == "Organization" ? "org_color" : "group_color" %>">
             <%= check_box_tag "#{group_form.object_name}[audience_ids][]", group.id,
                 group_form.object.audiences.include?(group),
                 :id => "#{group_form.object_name}_audience_#{group.id}", :class => 'audience_group' %>

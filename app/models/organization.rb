@@ -32,7 +32,7 @@
 
 class Organization < ActiveRecord::Base
 
-  belongs_to :audience
+  belongs_to :group
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   belongs_to :contact, :class_name => "User"
@@ -45,7 +45,7 @@ class Organization < ActiveRecord::Base
     errors.add_to_base("City can't be blank") if self.locality.blank?
   end
   
-  before_create :set_token
+  before_create :set_token, :create_group
 
   default_scope :order => :name
   
@@ -56,6 +56,15 @@ class Organization < ActiveRecord::Base
       :conditions => [ 'organization_requests.jurisdiction_id IN (?)', jurs.map(&:id) ]
     }
   }
+  
+  attr_accessor :members
+  def members
+    group.users
+  end
+  
+  def <<(user)
+    group.users << user
+  end
 
   def approved?
     organization_requests.any?(&:approved)
@@ -117,5 +126,8 @@ class Organization < ActiveRecord::Base
   def set_token
     self.token = ActiveSupport::SecureRandom.hex
   end
-
+  
+  def create_group
+    self.group = Group.create!(:scope => "Organization", :name => self.name)
+  end
 end
