@@ -10,6 +10,7 @@ I should be able to edit my profile
       | Jurisdiction | Potter County  |
       | Jurisdiction | Texas          |
       | Role         | Health Officer |
+      | System role  | Superadmin     |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County |
     And the following users exist:
@@ -62,3 +63,23 @@ I should be able to edit my profile
     And I have an IM device
     When I go to the edit profile page
     Then I should see the profile edit form
+
+  Scenario: Adding a user to an organization as a SuperAdmin
+    Given the following entities exist:
+      | Organization | DSHS |
+    And I am logged in as "bob.smith@example.com"
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "Jane"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Jane Smith |
+    When I follow "Jane Smith"
+    And I follow "Edit this Person"
+    Then I should see "Organizations"
+    When I select "DSHS" from "organizations"
+    And I press "Save"
+    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Organizations"
+    And the "organizations" class selector should contain "DSHS"
+    

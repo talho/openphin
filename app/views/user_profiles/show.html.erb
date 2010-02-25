@@ -22,6 +22,9 @@
   
     <h4>Bio</h4>
     <%=simple_format @user.bio || 'None Given' %>
+
+    <h4>Organizations</h4>
+    <%= render 'users/organizations', :user => @user %>
   
     <% if current_user == @user || current_user.has_non_public_role? %>
     <h4>Roles</h4>

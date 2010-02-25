@@ -104,6 +104,15 @@ class UserProfilesController < ApplicationController
       end
     end
 
+    if params[:user_id] == "#{current_user.id}" || current_user.is_super_admin?
+      orgs = [params[:user][:organizations]].flatten
+      orgs.each do |o|
+        org = Organization.find(o)
+        org.group.users << User.find(params[:user_id])
+      end
+    end
+
+
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]
       params[:user].delete("photo")

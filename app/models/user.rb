@@ -48,7 +48,6 @@ class User < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   accepts_nested_attributes_for :role_requests
 
-  has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
@@ -149,8 +148,13 @@ class User < ActiveRecord::Base
   def recent_absentee_reports
     schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
   end
-	def visible_groups
+
+  def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
+  end
+
+  def organizations
+    Organization.with_user(self)
   end
 
   def self.assign_role(role, jurisdiction, users)

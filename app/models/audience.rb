@@ -21,6 +21,10 @@ class Audience < ActiveRecord::Base
 
 #  validate :at_least_one_recipient?
 
+  named_scope :with_user, lambda {|user|
+    { :conditions => [ "users.id = ?", user.id ], :joins => :users}
+  }
+
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq
     Group.find_all_by_owner_jurisdiction_id(jur_ids)

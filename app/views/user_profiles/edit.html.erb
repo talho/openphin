@@ -33,6 +33,12 @@
         <%= form.label :employer %>
         <%= form.text_field :employer, :cols => 60, :rows =>5 %>
       </p>
+      <%- if current_user.is_super_admin? || current_user == @user -%>
+        <p>
+          <%= form.label :organizations %>
+          <%= form.collection_select :organizations, Organization.all, :id, :name, {:include_blank => true} %>
+        </p>
+      <%- end -%>
     </fieldset>
     
       <fieldset>

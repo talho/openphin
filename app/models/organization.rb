@@ -56,6 +56,9 @@ class Organization < ActiveRecord::Base
       :conditions => [ 'organization_requests.jurisdiction_id IN (?)', jurs.map(&:id) ]
     }
   }
+  named_scope :with_user, lambda {|user|
+    { :conditions => ["`audiences`.id = `organizations`.group_id AND  (`audiences`.`type` = 'Group' ) AND `audiences`.id = `audiences_users`.audience_id AND `audiences_users`.user_id = `users`.id AND (`users`.id = ?)", user.id], :joins => ", audiences, audiences_users, users"}
+  }
   
   attr_accessor :members
   def members
