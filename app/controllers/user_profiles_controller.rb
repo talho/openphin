@@ -104,14 +104,10 @@ class UserProfilesController < ApplicationController
       end
     end
 
-    if params[:user_id] == "#{current_user.id}" || current_user.is_super_admin?
-      orgs = [params[:user][:organizations]].flatten
-      orgs.each do |o|
-        org = Organization.find(o)
-        org.group.users << User.find(params[:user_id])
-      end
+    omr = params[:user][:organization_membership_requests_attributes]
+    omr.each do |index, request|
+        request[:approver_id] = current_user.id if current_user.is_super_admin?
     end
-
 
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]
@@ -131,7 +127,17 @@ class UserProfilesController < ApplicationController
             rr.approve!(current_user)
           end
         end
-        flash[:notice] = 'Profile information saved.'
+        
+        params[:user][:organization_membership_requests_attributes].each do |index, request|
+          omr = @user.organization_membership_requests.find_by_organization_id(request['organization_id'])
+          if !omr.approved? && current_user.is_super_admin?
+            omr.approve!(current_user)
+          else
+            flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
+          end
+        end
+
+        flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
         format.html { redirect_to user_profile_path(@user) }
         format.xml { head :ok }
       else

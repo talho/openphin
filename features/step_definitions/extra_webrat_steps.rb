@@ -4,6 +4,10 @@ Then /^the "([^\"]*)" class selector should contain "([^\"]*)"$/ do |field, valu
   response.should have_selector("*", :class => field, :content => value)
 end
 
+Then /^the "([^\"]*)" class selector should not contain "([^\"]*)"$/ do |field, value|
+  response.should_not have_selector("*", :class => field, :content => value)
+end
+
 Then /^I should see the link "([^\"]*)" that goes to "([^\"]*)"$/ do |value, link|
   response.should have_selector("a", :content => value, :href => link)
 end

@@ -1,3 +1,4 @@
+
 # == Schema Information
 #
 # Table name: organizations
@@ -19,15 +20,12 @@
 #  updated_at                :datetime
 #  foreign                   :boolean(1)
 #  queue                     :string(255)
-#  organization_type_id      :integer(4)
 #  distribution_email        :string(255)
-#  contact_id                :integer(4)
-#  approved                  :boolean(1)
-#  contact_display_name      :string(255)
-#  contact_phone             :string(255)
-#  contact_email             :string(255)
+#  approved                  :boolean(1)      default(FALSE)
 #  token                     :string(128)
-#  email_confirmed           :boolean(1)      not null
+#  email_confirmed           :boolean(1)      default(FALSE), not null
+#  user_id                   :integer(4)
+#  group_id                  :integer(4)
 #
 
 class Organization < ActiveRecord::Base

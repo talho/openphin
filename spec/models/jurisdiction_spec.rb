@@ -1,28 +1,3 @@
-# == Schema Information
-#
-# Table name: jurisdictions
-#
-#  id                     :integer(4)      not null, primary key
-#  name                   :string(255)
-#  phin_oid               :string(255)
-#  description            :string(255)
-#  fax                    :string(255)
-#  locality               :string(255)
-#  postal_code            :string(255)
-#  state                  :string(255)
-#  street                 :string(255)
-#  phone                  :string(255)
-#  county                 :string(255)
-#  alerting_jurisdictions :string(255)
-#  parent_id              :integer(4)
-#  lft                    :integer(4)
-#  rgt                    :integer(4)
-#  created_at             :datetime
-#  updated_at             :datetime
-#  fips_code              :string(255)
-#  foreign                :boolean(1)      not null
-#
-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Jurisdiction do
@@ -112,3 +87,29 @@ describe Jurisdiction do
   #
   #end
 end
+
+# == Schema Information
+#
+# Table name: jurisdictions
+#
+#  id                     :integer(4)      not null, primary key
+#  name                   :string(255)
+#  phin_oid               :string(255)
+#  description            :string(255)
+#  fax                    :string(255)
+#  locality               :string(255)
+#  postal_code            :string(255)
+#  state                  :string(255)
+#  street                 :string(255)
+#  phone                  :string(255)
+#  county                 :string(255)
+#  alerting_jurisdictions :string(255)
+#  parent_id              :integer(4)
+#  lft                    :integer(4)
+#  rgt                    :integer(4)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  fips_code              :string(255)
+#  foreign                :boolean(1)      default(FALSE), not null
+#
+

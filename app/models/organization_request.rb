@@ -5,7 +5,7 @@
 #  id              :integer(4)      not null, primary key
 #  organization_id :integer(4)
 #  jurisdiction_id :integer(4)
-#  approved        :boolean(1)      not null
+#  approved        :boolean(1)      default(FALSE), not null
 #  approver_id     :integer(4)
 #  created_at      :datetime
 #  updated_at      :datetime
@@ -31,7 +31,7 @@ class OrganizationRequest < ActiveRecord::Base
   end
 
   def approve!(approving_user)
-    if approving_user.is_admin? && approving_user.jurisdictions.include?(jurisdiction) 
+    if approving_user.is_admin? && approving_user.jurisdictions.include?(jurisdiction)
       self.approved = true
       self.approver=approving_user
       self.save

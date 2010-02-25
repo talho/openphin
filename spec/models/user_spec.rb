@@ -1,36 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer(4)      not null, primary key
-#  last_name          :string(255)
-#  phin_oid           :string(255)
-#  description        :text
-#  display_name       :string(255)
-#  first_name         :string(255)
-#  email              :string(255)
-#  preferred_language :string(255)
-#  title              :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  encrypted_password :string(128)
-#  salt               :string(128)
-#  token              :string(128)
-#  token_expires_at   :datetime
-#  email_confirmed    :boolean(1)      not null
-#  phone              :string(255)
-#  delta              :boolean(1)
-#  credentials        :text
-#  bio                :text
-#  experience         :text
-#  employer           :string(255)
-#  photo_file_name    :string(255)
-#  photo_content_type :string(255)
-#  public             :boolean(1)
-#  photo_file_size    :integer(4)
-#  photo_updated_at   :datetime
-#
-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe User do
@@ -321,3 +288,40 @@ describe User do
 		end
 	end
 end
+
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer(4)      not null, primary key
+#  last_name          :string(255)
+#  phin_oid           :string(255)
+#  description        :text
+#  display_name       :string(255)
+#  first_name         :string(255)
+#  email              :string(255)
+#  preferred_language :string(255)
+#  title              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(128)
+#  salt               :string(128)
+#  token              :string(128)
+#  token_expires_at   :datetime
+#  email_confirmed    :boolean(1)      default(FALSE), not null
+#  phone              :string(255)
+#  delta              :boolean(1)      default(TRUE), not null
+#  credentials        :text
+#  bio                :text
+#  experience         :text
+#  employer           :string(255)
+#  photo_file_name    :string(255)
+#  photo_content_type :string(255)
+#  public             :boolean(1)
+#  photo_file_size    :integer(4)
+#  photo_updated_at   :datetime
+#  deleted_at         :datetime
+#  deleted_by         :string(255)
+#  deleted_from       :string(24)
+#
+

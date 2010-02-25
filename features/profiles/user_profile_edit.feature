@@ -82,4 +82,34 @@ I should be able to edit my profile
     Then I should be specifically on the user profile page for "jane.smith@example.com"
     And I should see "Organizations"
     And the "organizations" class selector should contain "DSHS"
-    
+
+  Scenario: Adding a user to an organization as a user
+    Given the following entities exist:
+      | Organization | DSHS |
+    And I am logged in as "jane.smith@example.com"
+    When I go to the dashboard page
+    And I follow "My Account"
+    Then I should see "Organizations"
+    When I select "DSHS" from "organizations"
+    And I press "Save"
+    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Organizations"
+    And the "organizations" class selector should not contain "DSHS"
+    And I should see "Your request to be a member of DSHS has been sent to an administrator for approval"
+    And "bob.smith@example.com" should receive the email:
+      | subject       | Request submitted for organization membership in DSHS |
+      | body contains | DSHS |
+
+    Given I am logged in as "bob.smith@example.com"
+    When I approve the "DSHS" membership for "jane.smith@example.com"
+    Then I should see "Jane Smith is now a member of DSHS"
+
+    And I am logged in as "jane.smith@example.com"
+    When I go to the dashboard page
+    And I follow "My Account"
+    Then I should see "Organizations"
+    And the "organizations" class selector should contain "DSHS"
+    And I press "Save"
+    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Organizations"
+    And the "organizations" class selector should contain "DSHS"

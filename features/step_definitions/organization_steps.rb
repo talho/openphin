@@ -28,6 +28,13 @@ Given /^the organization "([^\"]*)" has been approved$/ do |org_name|
   org.save!
 end
 
+When 'I approve the "([^\"]*)" membership for "$email"' do |org_name, email|
+  user = User.find_by_email!(email)
+  organization = Organization.find_by_name!(org_name)
+  request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(organization.id, user.id)
+  visit organization_membership_request_path(request.id, request.token)
+end
+
 When 'I signup for an organization account with the following info:' do |table|
   visit new_organization_path
   fill_in_signup_form(table)

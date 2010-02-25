@@ -17,9 +17,9 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean(1)      not null
+#  email_confirmed    :boolean(1)      default(FALSE), not null
 #  phone              :string(255)
-#  delta              :boolean(1)
+#  delta              :boolean(1)      default(TRUE), not null
 #  credentials        :text
 #  bio                :text
 #  experience         :text
@@ -29,6 +29,9 @@
 #  public             :boolean(1)
 #  photo_file_size    :integer(4)
 #  photo_updated_at   :datetime
+#  deleted_at         :datetime
+#  deleted_by         :string(255)
+#  deleted_from       :string(24)
 #
 
 class User < ActiveRecord::Base
@@ -46,7 +49,8 @@ class User < ActiveRecord::Base
   
   has_many :role_memberships, :include => :jurisdiction, :dependent => :delete_all
   has_many :role_requests, :dependent => :delete_all
-  accepts_nested_attributes_for :role_requests
+  has_many :organization_membership_requests, :dependent => :delete_all
+  accepts_nested_attributes_for :role_requests, :organization_membership_requests
 
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
@@ -86,7 +90,7 @@ class User < ActiveRecord::Base
   validates_associated :role_requests
   validates_associated :role_memberships
 
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
 	

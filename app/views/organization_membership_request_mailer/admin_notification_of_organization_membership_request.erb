@@ -1,0 +1,11 @@
+Please do not reply to this email.  Replies to this message will not be read or responded to.
+
+A user has requested an organization membership that needs approval from an admin.
+
+User <%= @request.user.name %> (<%= @request.user.email %>) is requesting to be added to the organization <%= @request.organization.name %>.
+
+You may approve or deny this request at the following location:
+
+<%= admin_organization_membership_requests_url %>
+
+Please be sure to verify the user's credentials for the organization he or she is requesting membership.  If in doubt, it is better to delay or deny the request until you can verify the user.
