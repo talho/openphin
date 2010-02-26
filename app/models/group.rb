@@ -15,8 +15,9 @@
 class Group < Audience
   SCOPES = ['Personal', 'Jurisdiction', 'Global', 'Organization']
   validates_inclusion_of :scope, :in => SCOPES
-  
-  validates_presence_of :owner, :if => Proc.new{|group| group.scope != "Organization"}
+  validate :at_least_one_recipient?, :unless => Proc.new{|group| group.scope == "Organization"}
+
+  validates_presence_of :owner, :unless => Proc.new{|group| group.scope == "Organization"}
   validates_length_of :name, :allow_nil => false, :allow_blank => false, :within => 1..254 
   validates_presence_of :owner_jurisdiction, :if => Proc.new{|group| group.scope == "Jurisdiction"}
   validates_uniqueness_of :name, :scope => [:scope], :if => Proc.new {|group| group.scope == "Global"}

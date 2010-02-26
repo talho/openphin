@@ -108,7 +108,7 @@ class UserProfilesController < ApplicationController
     omr.each do |index, request|
       params[:user][:organization_membership_requests_attributes].delete(index) if request[:organization_id].blank?
       request[:approver_id] = current_user.id if current_user.is_super_admin?
-    end
+    end unless omr.nil?
 
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]
@@ -136,7 +136,7 @@ class UserProfilesController < ApplicationController
           else
             flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
           end
-        end
+        end unless params[:user][:organization_membership_requests_attributes].nil?
 
         flash[:notice] = "" if flash[:notice].blank?
         flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."

@@ -20,7 +20,7 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   end
 
   def approve!(approving_user)
-    unless approved?
+    unless approved? || !approving_user.is_super_admin?
       organization.group.users << user
       self.approver=approving_user
       self.save

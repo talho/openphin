@@ -27,7 +27,6 @@ class AlertsController < ApplicationController
   end
 
   def new
-    debugger
     @alert = present Alert.new_with_defaults
   end
 
