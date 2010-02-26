@@ -6,6 +6,6 @@ User <%= @request.user.name %> (<%= @request.user.email %>) is requesting to be 
 
 You may approve or deny this request at the following location:
 
-<%= admin_organization_membership_requests_url %>
+<%= admin_organization_membership_request_url(@request.id) %>
 
 Please be sure to verify the user's credentials for the organization he or she is requesting membership.  If in doubt, it is better to delay or deny the request until you can verify the user.

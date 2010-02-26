@@ -49,6 +49,15 @@ When /^I deny the organization "([^\"]*)"$/ do |org_name|
   visit deny_admin_organization_path(Organization.find_by_name(org_name))
 end
 
+When /^I click the organization membership request approval link in the email for "([^\"]*)"$/ do |user_email|
+  email = ActionMailer::Base.deliveries.last
+  user = User.find_by_email!(user_email)
+  request = OrganizationMembershipRequest.find_by_user_id(user.id)
+  link = admin_organization_membership_request_path(request.id)
+  email.body.should contain(link)
+  visit link
+end
+
 When /^"([^\"]*)" clicks the organization confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   organization = Organization.find_by_contact_email!(user_email)
@@ -64,6 +73,14 @@ When /^"([^\"]*)" receives a "([^\"]*)" organization approval email$/ do |user_e
   email.subject.should contain("User requesting organization signup")
   link = admin_pending_requests_url(:host => HOST)
   email.body.should contain(link)
+end
+
+When /^I maliciously post an approver id$/ do
+  input = Nokogiri::XML::Node.new('input', response.dom)
+  input["name"] = "[user][organization_membership_requests_attributes][0][approver_id]"
+  input["value"] = "1"
+  input["type"] = "hidden"
+  response.dom.css('form').first.add_child(input)
 end
 
 Then /^I should see the organization "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |org_name, email|

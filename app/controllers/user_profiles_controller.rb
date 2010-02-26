@@ -106,7 +106,8 @@ class UserProfilesController < ApplicationController
 
     omr = params[:user][:organization_membership_requests_attributes]
     omr.each do |index, request|
-        request[:approver_id] = current_user.id if current_user.is_super_admin?
+      params[:user][:organization_membership_requests_attributes].delete(index) if request[:organization_id].blank?
+      request[:approver_id] = current_user.id if current_user.is_super_admin?
     end
 
     if !params[:user][:photo].blank?
@@ -137,6 +138,7 @@ class UserProfilesController < ApplicationController
           end
         end
 
+        flash[:notice] = "" if flash[:notice].blank?
         flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
         format.html { redirect_to user_profile_path(@user) }
         format.xml { head :ok }

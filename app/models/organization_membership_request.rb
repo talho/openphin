@@ -24,7 +24,7 @@ class OrganizationMembershipRequest < ActiveRecord::Base
       organization.group.users << user
       self.approver=approving_user
       self.save
-      AppMailer.deliver_user_notification_of_organization_membership_approval(organization, user, approver) unless user == approver
+      OrganizationMembershipRequestMailer.deliver_user_notification_of_organization_membership_approval(organization, user, approver) unless user == approver
     end
   end
 
