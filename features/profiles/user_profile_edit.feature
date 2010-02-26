@@ -131,4 +131,50 @@ I should be able to edit my profile
       And I should see "Your request to be a member of DSHS has been sent to an administrator for approval"
       And "bob.smith@example.com" should receive the email:
         | subject       | Request submitted for organization membership in DSHS |
-        | body contains | DSHS |      
+        | body contains | DSHS |
+
+    Scenario: Removing a user from an organization as an admin
+      Given the following entities exist:
+        | Organization | DSHS |
+      And "jane.smith@example.com" is a member of the organization "DSHS"
+      And I am logged in as "bob.smith@example.com"
+      When I specifically go to the user edit profile page for "jane.smith@example.com"
+      Then I should see "Organizations"
+      And I should see "DSHS"
+      When I follow "Remove Organization Membership" within ".organizations"
+      Then I should be specifically on the user profile page for "jane.smith@example.com"
+      And I should see "Organizations"
+      And I should not see "DSHS"
+      And "jane.smith@example.com" should receive the email:
+        | subject       | You have been removed from the organization DSHS |
+        | body contains | You have been removed from the organization DSHS |
+
+  Scenario: Removing a user from an organization as that user
+    Given the following entities exist:
+      | Organization | DSHS |
+    And "jane.smith@example.com" is a member of the organization "DSHS"
+    And I am logged in as "jane.smith@example.com"
+    When I specifically go to the user edit profile page for "jane.smith@example.com"
+    Then I should see "Organizations"
+    And I should see "DSHS"
+    When I follow "Remove Organization Membership" within ".organizations"
+    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Organizations"
+    And I should not see "DSHS"
+    And "jane.smith@example.com" should not receive an email
+
+  Scenario: Removing a user from an organization as another user
+    Given the following entities exist:
+      | Organization | DSHS |
+    And "jane.smith@example.com" is a member of the organization "DSHS"
+    And I am logged in as "jill.smith@example.com"
+    When I specifically go to the user edit profile page for "jane.smith@example.com"
+    Then I should see "Organizations"
+    And I should see "DSHS"
+    When I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
+    Then I should see "You do not have permission to carry out this action."
+    And I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Organizations"
+    And I should see "DSHS"
+    And "jane.smith@example.com" should not receive an email
+    And "bob.smith@example.com" should not receive an email

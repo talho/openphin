@@ -13,4 +13,11 @@ class OrganizationMembershipRequestMailer < ActionMailer::Base
     subject "Request submitted for organization membership in #{request.organization.name}."
     body :request => request
   end
+
+  def user_notification_of_organization_membership_removal(organization, user)
+    recipients user.email
+    from DO_NOT_REPLY
+    subject "You have been removed from the organization #{organization.name}"
+    body "You have been removed from the organization #{organization.name}"    
+  end
 end

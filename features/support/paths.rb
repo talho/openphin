@@ -38,6 +38,8 @@ module NavigationHelpers
         edit_user_profile_path(current_user)
       when /the user profile page$/i
         user_profile_path(User.find_by_email!(arg))
+      when /the user edit profile page$/i
+        edit_user_profile_path(User.find_by_email!(arg))
       when /^the user account roles page$/i
         new_role_request_path
       when /cancel the alert/

@@ -76,11 +76,24 @@ When /^"([^\"]*)" receives a "([^\"]*)" organization approval email$/ do |user_e
 end
 
 When /^I maliciously post an approver id$/ do
+  within("body") do |body| "" end # hack to make response.dom populate
   input = Nokogiri::XML::Node.new('input', response.dom)
   input["name"] = "[user][organization_membership_requests_attributes][0][approver_id]"
   input["value"] = "1"
   input["type"] = "hidden"
   response.dom.css('form').first.add_child(input)
+end
+
+When /^I maliciously attempt to remove "([^\"]*)" from "([^\"]*)"$/ do |email, org_name|
+  within("body") do |body| "" end # hack to make response.dom populate
+  user = User.find_by_email!(email)
+  org = Organization.find_by_name!(org_name)
+  input = Nokogiri::XML::Node.new('a', response.dom)
+  input["href"] = admin_organization_membership_request_path(:id => org.id, :user_id => user.id)
+  input.inner_html = "Remove Organization Membership"
+  input["class"] = "destroy"
+  response.dom.css('body').first.add_child(input)
+  click_link("Remove Organization Membership")
 end
 
 Then /^I should see the organization "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |org_name, email|
