@@ -180,13 +180,12 @@ form legend																		{padding:0 0 5px; display:block;}
 #edit fieldset ul.check_selector li li li label  {margin:0; padding-left:44px;}
 #edit fieldset ul.check_selector li li li li label  {margin:0; padding-left:64px;}
 #edit fieldset ul.check_selector li + li			{border-top:1px solid #efefef;}
-#edit fieldset ul.check_selector li label			{color:#999; font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
+#edit fieldset ul.check_selector li label			{font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
 #edit fieldset ul.check_selector input				{position:absolute; left:6px; top:6px;}
 #edit fieldset ul.check_selector li li li input {left:24px;}
 #edit fieldset ul.check_selector li li li li input {left:44px;}
 #edit fieldset ul.check_selector a.toggle			{position:absolute; top:0; left:0; width:24px; height:24px; overflow:hidden; background:url(images/arrow_down.png) no-repeat center; text-indent:-9000px; overflow:hidden;}
 #edit fieldset ul.check_selector a.closed			{background-image:url(images/arrow_right.png);}
-#edit fieldset ul.check_selector li label			{background:#fff;}
 #edit fieldset ul.check_selector li label.checked	{background:#EBF2FD; color:#333;}
 
 #alert_caller_id									{width: 80px;}
@@ -373,3 +372,8 @@ table#groups td.editdestroy                     {border: none;}
 a.faq            { font-weight:bold; font-size: 18px;}
 div.answer       { padding:20px; font-size:14px;}
 h1.faq           { font-size:24pt;font-weight:bold;}
+
+.org_color       { background-color: #00B1FF}
+span.org_color   { padding: 0 6px;}
+.group_color     { background-color: #D155FF}
+span.group_color { padding: 0 6px;}

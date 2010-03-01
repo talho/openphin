@@ -48,6 +48,7 @@ Factory.define :organization do |org|
   org.locality "Dallas"
   org.state "TX"
   org.postal_code "22212"
+  org.foreign "false"
 end
 
 Factory.sequence(:organization_type_name) {|jn| "Organization Type #{jn}"}

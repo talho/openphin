@@ -108,8 +108,6 @@ Feature: Sending alerts form
     Then I should see a preview of the message with:
       | Organization  | DSHS |
       
-    And "the rest" should be implemented
-      
     And I press "Send"
     Then an alert exists with:
       | from_jurisdiction | Texas                                        |
