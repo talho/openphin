@@ -60,6 +60,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organization_assignments, :controller => "admin/organization_assignments"
   map.resources :admin_pending_requests, :controller => "admin/pending_requests"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
+  map.resources :admin_invitations, :controller => "admin/invitations"
   map.resources :admin_organization_requests, :member => [:approve, :deny], :controller => "admin/organization_requests"
   map.resources :admin_organization_membership_requests, :member => [:approve, :deny], :controller => "admin/organization_membership_requests"
   map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete

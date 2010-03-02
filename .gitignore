@@ -44,3 +44,4 @@ config/testjour.yml
 config/growl.yml
 config/bullet.yml
 config/rack-bug.yml
+config/initializers/smtp.rb

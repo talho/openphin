@@ -12,14 +12,14 @@
     </ul>
   </li>
   <li<%= tab_me(admin_groups_path) %>><%= link_to s("Manage Groups"), admin_groups_path %></li>
-  <li<%= tab_me([new_admin_user_path, new_user_batch_path, new_users_delete_path]) %>>
+  <li<%= tab_me([new_admin_user_path, new_admin_invitation_path, new_user_batch_path, new_users_delete_path]) %>>
     <%= link_to s("Manage Users"), "#" %>
     <ul>
       <li<%= tab_me(new_admin_user_path) %>>
         <%= link_to s("Add a User"), new_admin_user_path %>
       </li>
-      <li<%= tab_me(new_users_delete_path) %>>
-        <%= link_to s("Invite Users"), new_users_delete_path %>
+      <li<%= tab_me(new_admin_invitation_path) %>>
+        <%= link_to s("Invite Users"), new_admin_invitation_path %>
       </li>
       <li<%= tab_me(new_user_batch_path) %>>
         <%= link_to s("Batch Users"), new_user_batch_path %>

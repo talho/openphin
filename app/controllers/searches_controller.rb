@@ -1,7 +1,10 @@
 class SearchesController < ApplicationController
+  
   before_filter :non_public_role_required
   #app_toolbar "han"
-  def show  
+  
+  def show 
+    debugger 
     if !params[:tag].blank?
       search_size = 300
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')

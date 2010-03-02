@@ -128,12 +128,14 @@ class User < ActiveRecord::Base
 
   # thinking sphinx stuff
   define_index do
-    indexes first_name, :sortable => true
-    indexes last_name, :sortable => true
+    indexes first_name,   :sortable => true
+    indexes last_name,    :sortable => true
     indexes display_name
     indexes title
     indexes email
-  
+    indexes phone
+    indexes roles.name,         :as => :role,         :facet => true
+    indexes jurisdictions.name, :as => :jurisdiction, :facet => true
     set_property :delta => :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
