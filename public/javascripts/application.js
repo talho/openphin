@@ -766,3 +766,76 @@ function documentsAlert() {
   var error = $("div.flash p.error");
   if(error.length > 0) alert(error.text());
 }
+
+jQuery(function($) {
+  var add_invitee_link = $("a#AddInvitee");
+
+  add_invitee_link.bind("click", addInvitee);
+});
+
+function addInvitee(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
+  var invitees_ul = $("ul#invitees-list");
+  var invitee_name = $("input#invitation_invitees_attributes_0_name");
+  var invitee_email = $("input#invitation_invitees_attributes_0_email");
+  var invitee_form = $("form#new_invitation");
+
+  var invitee_id = getNextInviteeId();
+  var invitee_li = $(document.createElement("li"));
+  invitee_li.text(invitee_name.val() + " " + invitee_email.val());
+  invitee_li.attr("id", "invitation_invitees_attributes_" + invitee_id);
+  invitee_li.attr("name", "invitation[invitees_attributes][" + invitee_id + "]");
+  invitees_ul.append(invitee_li);
+  
+  var invitee_hidden = $(document.createElement("input"));
+  invitee_hidden.attr("id","invitation_invitees_attributes_" + invitee_id + "_name");
+  invitee_hidden.attr("name","invitation[invitees_attributes][" + invitee_id + "][name]");
+  invitee_hidden.attr("type","hidden");
+  invitee_hidden.addClass("invitees");
+  invitee_hidden.val(invitee_name.val());
+  invitee_form.append(invitee_hidden);
+
+  invitee_hidden = $(document.createElement("input"));
+  invitee_hidden.attr("type","hidden");
+  invitee_hidden.attr("id","invitation_invitees_attributes_" + invitee_id + "_email");
+  invitee_hidden.attr("name","invitation[invitees_attributes][" + invitee_id + "][email]");
+  invitee_hidden.addClass("invitees");
+  invitee_hidden.val(invitee_email.val());
+  invitee_form.append(invitee_hidden);
+
+  invitee_rmlink = $(document.createElement("a"));
+  invitee_rmlink.attr("href", invitee_id);
+  invitee_rmlink.text("Remove");
+  invitee_rmlink.bind("click", removeInvitee);
+  invitee_li.append(invitee_rmlink);
+
+  return false;
+}
+
+function removeInvitee(e) {
+  var id = $(this).attr("href");
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  $("li[id=invitation_invitees_attributes_" + id + "]").remove();
+  $("input[id=invitation_invitees_attributes_" + id + "_name]").remove();
+  $("input[id=invitation_invitees_attributes_" + id + "_email]").remove();
+
+  return false;
+}
+
+function getNextInviteeId() {
+  var index = 1;
+  $("input:hidden.invitees").each(function() {
+    var name = $(this).attr("name");
+    name = name.slice(name.search(/\]/) + 1);
+    var start = name.search(/\[/) + 1;
+    var finish = name.search(/\]/);
+    if(parseInt(name.substring(start,finish)) >= index) index = parseInt(name.substring(start,finish)) + 1;
+  });
+  
+  return index;
+}

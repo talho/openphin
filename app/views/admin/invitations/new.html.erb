@@ -1,22 +1,38 @@
 <h2>Invite New People</h2>
 
-<% form_for @invitation, :url => admin_invitations_path do |form| %>
-  <%= form.label :name %>
-  <%= form.text_field :name %>
-  <%= form.label :subject %>
-  <%= form.text_field :subject %>
-  <%= form.label :body %>
-  <%= form.text_field :body %>
-  
-  <%= label_tag "default_organization", "Default Organization" %>
-  <%= select_tag("invitation[organization_id]",options_from_collection_for_select(Organization.non_foreign,:id,:name,:include_blank => true),:id => "default_organization") %>
-  
-  <% fields_for :invitee do |invitee_form| %>
-    <%= invitee_form.label :name, "Invitee Name"%>
-    <%= invitee_form.text_field :name %>
-    <%= invitee_form.label :email, "Invitee Email" %>
-    <%= invitee_form.text_field :email %>
-    <%= invitee_form.submit "Submit" %>
-  <% end %>
+<% form_for @invitation, :url => admin_invitations_path, :multipart => true do |form| %>
+  <p>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </p>
+  <p>
+    <%= form.label :subject %>
+    <%= form.text_field :subject %>
+  </p>
+  <p>
+    <%= form.label :body %>
+    <%= form.text_field :body %>
+  </p>
+
+  <p>
+    <%= label_tag "default_organization", "Default Organization" %>
+    <%= collection_select("invitation","organization_id", Organization.non_foreign, :id, :name, {:include_blank => true}, :id => "default_organization") %>
+  </p>
+
+  <p>
+    <%= form.label :csvfile, "CSV File" %>
+    <%= form.file_field :csvfile %> 
+  </p>
+  <p>
+    <% fields_for "invitation[invitees_attributes][0]" do |invitee_form| %>
+      <%= invitee_form.label :name, "Invitee Name"%>
+      <%= invitee_form.text_field :name %>
+      <%= invitee_form.label :email, "Invitee Email" %>
+      <%= invitee_form.text_field :email %>
+      <%= link_to("Add Invitee","#", :id => "AddInvitee") %>
+    <% end %>
+  </p>
+  <ul id="invitees-list"></ul>
+  <p><%= form.submit "Submit" %></p>
 <% end %>
 

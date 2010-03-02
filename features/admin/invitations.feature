@@ -25,3 +25,21 @@ Feature: Invitation System
     And I fill in "Invitee Email" with "jane.smith@example.com"
     When I press "Submit"
     Then I should see "Invitation was successfully sent."
+    And "jane.smith@example.com" is an invitee of "DSHS"
+    And "joe.smith@example.com" is not an invitee of "DSHS"
+        
+  Scenario: Create and Send an invite via a CSV file with invitees
+    When I follow "Admin"
+    And I follow "Invite Users"
+    And I should see "Invite New People"
+    And I fill in "Name" with "DSHS"
+    And I fill in "Subject" with "Please Join DSHS"
+    And I fill in "Body" with "Please click the link below to join DSHS."
+    And I select "DSHS" from "Default Organization"
+    When I attach the file at "spec/fixtures/invitees.csv" to "CSV File"
+    When I press "Submit"
+    Then I should see "Invitation was successfully sent."
+    And "bob@example.com" is an invitee of "DSHS"
+    And "john@example.com" is an invitee of "DSHS"
+  And "joe.smith@example.com" is not an invitee of "DSHS"
+        

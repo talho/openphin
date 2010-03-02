@@ -6,4 +6,10 @@ class Invitation < ActiveRecord::Base
   
   accepts_nested_attributes_for :invitees
   accepts_nested_attributes_for :default_organization
+
+  def invitees_attributes=(attributes)
+    attributes.each do |attr|
+      invitees << invitees.build(attr.last) unless attr.last["email"].blank? || invitees.map(&:email).include?(attr.last["email"])
+    end
+  end
 end

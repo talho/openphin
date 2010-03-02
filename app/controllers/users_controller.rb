@@ -33,7 +33,8 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @selected_role = Role.public.id
-
+    @selected_org = params[:organization].to_i unless params[:organization].blank? || Organization.non_foreign.find(:first, :conditions => ["id=#{params[:organization]}"]).nil?
+    params[:health_professional] = "1" if @selected_org
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @user }
