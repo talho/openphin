@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :tutorials
+
   map.resources :channels, :has_many => :subscriptions,
     :member => {:unsubscribe => :delete}
 
