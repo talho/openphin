@@ -781,6 +781,10 @@ function addInvitee(e) {
   var invitee_name = $("input#invitation_invitees_attributes_0_name");
   var invitee_email = $("input#invitation_invitees_attributes_0_email");
   var invitee_form = $("form#new_invitation");
+  if ($.trim(invitee_name.val()) == "" || $.trim(invitee_email.val()) == "") {
+	alert("Invitee must have a name and email.");
+	return false;
+  }
 
   var invitee_id = getNextInviteeId();
   var invitee_li = $(document.createElement("li"));
@@ -807,7 +811,8 @@ function addInvitee(e) {
 
   invitee_rmlink = $(document.createElement("a"));
   invitee_rmlink.attr("href", invitee_id);
-  invitee_rmlink.text("Remove");
+  invitee_rmlink.attr("alt","Remove");
+  invitee_rmlink.attr("class","destroy_no_verify");
   invitee_rmlink.bind("click", removeInvitee);
   invitee_li.append(invitee_rmlink);
 

@@ -377,3 +377,6 @@ h1.faq           { font-size:24pt;font-weight:bold;}
 span.org_color   { padding: 0 6px;}
 .group_color     { background-color: #D155FF}
 span.group_color { padding: 0 6px;}
+
+a.destroy_no_verify		{width:25px; height:25px; margin-top:-4px; position:absolute; background:url(images/cross-circle.png) no-repeat center;}
+ul#invitees-list li       {list-style:none outside none;}
