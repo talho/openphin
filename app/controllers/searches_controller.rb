@@ -4,7 +4,6 @@ class SearchesController < ApplicationController
   #app_toolbar "han"
   
   def show 
-    debugger 
     if !params[:tag].blank?
       search_size = 300
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')

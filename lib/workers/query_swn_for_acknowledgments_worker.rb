@@ -5,7 +5,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   end
 
   def query(args = nil)
-    Service::Phone::SWN::NotificationResponse.active.acknowledge.each do |nresult|
+    Service::Phone::SWN::AlertNotificationResponse.active.acknowledge.each do |nresult|
       @alert = nresult.alert
       next if @alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0
       result = Service::Phone::SWN::NotificationResultsRequest.build(nresult, Service::Phone.configuration.options)

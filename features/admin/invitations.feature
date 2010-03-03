@@ -27,7 +27,11 @@ Feature: Invitation System
     Then I should see "Invitation was successfully sent."
     And "jane.smith@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
-        
+    When delayed jobs are processed
+    Then the following Emails should be broadcasted:
+      | email                  | message                                   |
+      | jane.smith@example.com | Please click the link below to join DSHS. |
+
   Scenario: Create and Send an invite via a CSV file with invitees
     When I follow "Admin"
     And I follow "Invite Users"
@@ -41,5 +45,10 @@ Feature: Invitation System
     Then I should see "Invitation was successfully sent."
     And "bob@example.com" is an invitee of "DSHS"
     And "john@example.com" is an invitee of "DSHS"
-  And "joe.smith@example.com" is not an invitee of "DSHS"
-        
+    And "joe.smith@example.com" is not an invitee of "DSHS"
+    When delayed jobs are processed
+    Then the following Emails should be broadcasted:
+      | email            | message                                   |
+      | bob@example.com  | Please click the link below to join DSHS. |
+      | john@example.com | Please click the link below to join DSHS. |
+

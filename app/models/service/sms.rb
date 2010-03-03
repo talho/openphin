@@ -6,7 +6,7 @@ class Service::SMS < Service::Base
   def self.deliver_alert(alert, user, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     response = SWN.new(alert, config, [user])
-    SWN::NotificationResponse.build(response,alert)
+    SWN::AlertNotificationResponse.build(response,alert)
   end
 
     
@@ -14,8 +14,7 @@ class Service::SMS < Service::Base
     initialize_fake_delivery(config) if config.fake_delivery?
     users = alert.alert_attempts.with_device("Device::SMSDevice").map{ |aa| aa.user }
     response = SWN.new(alert, config, users).batch_deliver  
-    SWN::NotificationResponse.build(response,alert)
-
+    SWN::AlertNotificationResponse.build(response,alert)
   end
 
   class << self
@@ -34,25 +33,11 @@ class Service::SMS < Service::Base
   end
   
   class SWN
-    class Dialer
-      include HTTParty
-      
-      def initialize(url, username, password)
-        @url, @username, @password = url, username, password
-      end
-      
-      def deliver(body)
-        PHONE_LOGGER.info "Sending alert at #{Time.now}"
-        response = self.class.post(@url, 
-          :body => body, 
-          :basic_auth => {:username => @username, :password => @password},
-          :headers => { 'Content-Type' => 'text/xml', 'Accept' => 'text/xml/html', 'SOAPAction' => "\"http://www.sendwordnow.com/notification/sendNotification\""})
-        PHONE_LOGGER.info "21CC Response:\n#{response}\n\n"
-        return response
-      end
+    def initialize(alert, config, users)
+      @alert, @config, @users = alert, config, users
     end
-    
-    class NotificationResponse < ActiveRecord::Base
+
+    class AlertNotificationResponse < ActiveRecord::Base
       set_table_name "swn_notification_response"
       belongs_to :alert
 
@@ -66,10 +51,6 @@ class Service::SMS < Service::Base
           end
         end
       end
-    end
-
-    def initialize(alert, config, users)
-      @alert, @config, @users = alert, config, users
     end
 
     def deliver
@@ -109,12 +90,6 @@ class Service::SMS < Service::Base
       perform_delivery body
     end
     
-    private
-    
-    def perform_delivery(body)
-      Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
-    end
-
   end
   
 end

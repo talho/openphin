@@ -14,9 +14,17 @@ class Admin::InvitationsController < ApplicationController
   def create
     paramsWithCSVInvitees unless params[:invitation][:csvfile].blank?
     params[:invitation].delete("csvfile")
+    params[:invitation][:author_id] = current_user.id
+
+    addSignupLinkToBody
+
     @invitation = Invitation.new(params[:invitation])
     if @invitation.save
-      flash[:notice] = "Invitation was successfully sent."
+      if @invitation.deliver
+        flash[:notice] = "Invitation was successfully sent."
+      else
+        flash[:notice] = "Invitation was created but did not send."
+      end
       redirect_to admin_invitation_path(@invitation)
     end
   end
@@ -44,6 +52,13 @@ class Admin::InvitationsController < ApplicationController
         params[:invitation][:invitees_attributes]["#{next_index}"][:email] = record["email"]
         next_index += 1
       end
+    end
+  end
+
+  def addSignupLinkToBody
+    if params[:invitation][:organization_id]
+      link = "\n\n" + new_user_url + "?organization=" + params[:invitation][:organization_id]
+      params[:invitation][:body] = params[:invitation][:body] + link
     end
   end
   
