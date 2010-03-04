@@ -18,7 +18,9 @@ Subject
 
 <br />Invitees
 <ul id="invitees">
-  <% @invitation.invitees.each do |invitee| %>
-  <li><%= "#{invitee.name} &lt;#{invitee.email}&gt;" %></li>
+  <% @invitees = @invitation.invitees.paginate(:page=>1,:per_page=>10) %>
+  <% @invitees.each do |invitee| %>
+    <li><%= "#{invitee.name} &lt;#{invitee.email}&gt;" %></li>
   <% end %>
+  <br /><%= will_paginate @invitees %>
 </ul>
