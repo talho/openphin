@@ -1,10 +1,14 @@
 class Admin::InvitationsController < ApplicationController
   require 'fastercsv'
+  before_filter :admin_required
+  app_toolbar "admin"
 
   def index
+    @invitations = Invitation.all
   end
   
   def show
+    @invitation = Invitation.find(params[:id])
   end
   
   def new

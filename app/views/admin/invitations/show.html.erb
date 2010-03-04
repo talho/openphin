@@ -1,0 +1,24 @@
+<h2><%= @invitation.name %> Invitation</h2>
+
+Subject
+<div id="subject">
+<%= @invitation.subject %>
+</div>
+<br />
+
+<br />Body
+<div id="body">
+<%= @invitation.body %>
+</div><br />
+
+<br />Default Organization
+<div id="default_organization">
+<%= @invitation.default_organization.name %>
+</div><br />
+
+<br />Invitees
+<ul id="invitees">
+  <% @invitation.invitees.each do |invitee| %>
+  <li><%= "#{invitee.name} &lt;#{invitee.email}&gt;" %></li>
+  <% end %>
+</ul>

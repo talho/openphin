@@ -8,6 +8,7 @@ Feature: Invitation System
     Given the following entities exist:
       | Jurisdiction | Texas         |
       | Organization | DSHS          |
+      | Organization | TORCH         |
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
     And I am logged in as "joe.smith@example.com"
@@ -51,4 +52,35 @@ Feature: Invitation System
       | email            | message                                   |
       | bob@example.com  | Please click the link below to join DSHS. |
       | john@example.com | Please click the link below to join DSHS. |
+      
+  Scenario: View the list of existing invitations to organizations
+    Given an Invitation "DSHS" exists with:
+      | Subject      | Please Join DSHS                         |
+      | Body         | Please click the link below to join DSHS |
+      | Organization | DSHS                                     |
+    And an Invitation "TORCH" exists with:
+      | Subject      | Please Join TORCH                         |
+      | Body         | Please click the link below to join TORCH |
+      | Organization | TORCH                                     |
+    
+    And invitation "DSHS" has the following invitees:
+      | Jane | jane.smith@example.com |
+      | Bob  | bob.smith@example.com  |
+    And invitation "TORCH" has the following invitees:
+      | Joe | joe.smith@example.com |
+      
+    When I follow "Admin"
+    And I follow "View Invitations"
+    Then I should see "Existing Invitations"
+    And I should see "DSHS"
+    And I should see "TORCH"
+    
+    When I follow "DSHS"
+    Then I should see "DSHS Invitation"
+    And I should see "Please Join DSHS" within "#subject"
+    And I should see "Please click the link below to join DSHS" within "#body"
+    And I should see "DSHS" within "#default_organization"
+    And I should see "Jane <jane.smith@example.com>" within "#invitees"
+    And I should see "Bob <bob.smith@example.com>" within "#invitees"
+  
 

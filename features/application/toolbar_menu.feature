@@ -28,9 +28,16 @@ Feature: Application toolbars should have menus
     And I should see "Add a User"
     And I should see "Batch Users"
     And I should see "Delete a User"
-    And I should see "Invite Users"
   Scenario: Admin application has toolbar Manage Groups without a menu
     Then I should see "Admin"
     When I follow "Admin"
     Then I should see "Manage Groups"
     When I follow "Manage Groups"
+  Scenario: Admin application has toolbar Manage Invitations with a menu
+    Then I should see "Admin"
+    When I follow "Admin"
+    Then I should see "Manage Invitations"
+    When I follow "Manage Invitations"
+    And I should see "Invite Users"
+    And I should see "View Invitations"
+    

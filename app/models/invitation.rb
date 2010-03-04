@@ -16,7 +16,7 @@ class Invitation < ActiveRecord::Base
   
   has_many :invitees
   has_many :registered_users, :class_name => "User", :finder_sql => "SELECT users.* FROM users, invitees, invitations  WHERE (`users`.email = `invitees`.email AND `invitees`.invitation_id = `invitations`.id)"
-  has_one :default_organization, :class_name => "Organization"
+  belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
 
   validates_presence_of :author_id
