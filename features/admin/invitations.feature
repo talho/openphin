@@ -83,4 +83,87 @@ Feature: Invitation System
     And I should see "Jane <jane.smith@example.com>" within "#invitees"
     And I should see "Bob <bob.smith@example.com>" within "#invitees"
   
+  Scenario: Viewing invitation completion status by email
+    Given an Invitation "DSHS" exists with:
+      | Subject      | Please Join DSHS                         |
+      | Body         | Please click the link below to join DSHS |
+      | Organization | DSHS                                     |
+    And invitation "DSHS" has the following invitees:
+      | Jane Smith | jane.smith@example.com |
+      | Bob Smith  | bob.smith@example.com  |
+      | John Smith | john.smith@example.com |
+      | Bill Smith | bill.smith@example.com |
+      | Jim Smith  | jim.smith@example.com  |
+    And the user "Jame Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
+    And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
+    And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
 
+    When I follow "Admin"
+    And I follow "View Invitations"
+    Then I should see "DSHS"
+
+    When I follow "View Reports"
+    And I select "By Email" from "Report Type"
+    And I press "Submit"
+
+    Then I should see "Invitation report for DSHS by email address"
+    And I should see "Registrations complete: 60% (3)"
+    And I should see "Registrations incomplete: 40% (2)"
+    And I should see "Bill Smith" within "#invitee1"
+    And I should see "bill.smith@example.com" within "#invitee1"
+    And I should explictly see "Not Registered" within "tr#invitee1 td.status"
+    And I should see "Bob Smith" within "#invitee2"
+    And I should see "bob.smith@example.com" within "#invitee2"
+    And I should explictly see "Not Registered" within "#invitee2 td.status"
+    And I should see "Jane Smith" within "#invitee3"
+    And I should see "jane.smith@example.com" within "#invitee3"
+    And I should explictly see "Registered" within "#invitee3 td.status"
+    And I should see "Jim Smith" within "#invitee4"
+    And I should see "jim.smith@example.com" within "#invitee4"
+    And I should explictly see "Registered" within "#invitee4 td.status"
+    And I should see "John Smith" within "#invitee5"
+    And I should see "john.smith@example.com" within "#invitee5"
+    And I should explictly see "Registered" within "#invitee5 td.status"
+
+  Scenario: Viewing invitation completion status by email
+    Given an Invitation "DSHS" exists with:
+      | Subject      | Please Join DSHS                         |
+      | Body         | Please click the link below to join DSHS |
+      | Organization | DSHS                                     |
+    And invitation "DSHS" has the following invitees:
+      | Jane Smith | jane.smith@example.com |
+      | Bob Smith  | bob.smith@example.com  |
+      | John Smith | john.smith@example.com |
+      | Bill Smith | bill.smith@example.com |
+      | Jim Smith  | jim.smith@example.com  |
+    And the user "Jame Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
+    And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
+    And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
+    And "john.smith@example.com" is an unconfirmed user
+    
+    When I follow "Admin"
+    And I follow "View Invitations"
+    Then I should see "DSHS"
+
+    When I follow "View Reports"
+    And I select "By Registrations" from "Report Type"
+    And I press "Submit"
+
+    Then I should see "Invitation report for DSHS by registrations"
+    And I should see "Registrations complete: 60% (3)"
+    And I should see "Registrations incomplete: 40% (2)"
+    And I should see "Bill Smith" within "#invitee1"
+    And I should see "bill.smith@example.com" within "#invitee1"
+    And I should explictly see "Not Registered" within "tr#invitee1 td.status"
+    And I should see "Bob Smith" within "#invitee2"
+    And I should see "bob.smith@example.com" within "#invitee2"
+    And I should explictly see "Not Registered" within "#invitee2 td.status"
+    And I should see "John Smith" within "#invitee3"
+    And I should see "john.smith@example.com" within "#invitee3"
+    And I should explictly see "Not Email Confirmed" within "#invitee3 td.status"
+    And I should see "Jane Smith" within "#invitee4"
+    And I should see "jane.smith@example.com" within "#invitee4"
+    And I should explictly see "Registered" within "#invitee4 td.status"
+    And I should see "Jim Smith" within "#invitee5"
+    And I should see "jim.smith@example.com" within "#invitee5"
+    And I should explictly see "Registered" within "#invitee5 td.status"

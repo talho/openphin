@@ -32,7 +32,25 @@ class Admin::InvitationsController < ApplicationController
       redirect_to admin_invitation_path(@invitation)
     end
   end
-  
+
+  def reports
+    invitation = Invitation.find(params[:id])
+    case params[:report_type]
+    when "by_registrations"
+      results = inviteeStatusByRegistration
+      render :partial => "report_by_registration", :locals => {
+        :results => results, :report_type => params[:report_type],
+        :invitation => invitation
+      }, :layout => "application"
+    else # Also by_email
+      results = inviteeStatusByEmail
+      render :partial => "report_by_email", :locals => {
+        :results => results, :report_type => params[:report_type],
+        :invitation => invitation
+      }, :layout => "application"
+    end
+  end
+
   def destroy
   end
 
@@ -64,6 +82,21 @@ class Admin::InvitationsController < ApplicationController
       link = "\n\n" + new_user_url + "?organization=" + params[:invitation][:organization_id]
       params[:invitation][:body] = params[:invitation][:body] + link
     end
+  end
+
+  def inviteeStatusByEmail
+    Invitee.paginate :page => params[:page] || 1, :order => "email ASC", :conditions => ["invitation_id = ?", params[:id]]
+  end
+
+  def inviteeStatusByRegistration
+    db = ActiveRecord::Base.connection();
+    db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration TYPE=HEAP " +
+      "(SELECT DISTINCT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email NOT IN (SELECT users.email FROM users) ORDER BY invitees.email ASC)"
+    db.execute "INSERT INTO inviteeStatusByRegistration (SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
+    sql = " SELECT * FROM inviteeStatusByRegistration"
+    invitees = Invitee.paginate_by_sql [sql], :page => params[:page] || 1
+    db.execute "DROP TABLE inviteeStatusByRegistration"
+    invitees
   end
   
 end

@@ -15,7 +15,9 @@
 class Invitation < ActiveRecord::Base
   
   has_many :invitees
-  has_many :registered_users, :class_name => "User", :finder_sql => "SELECT users.* FROM users, invitees, invitations  WHERE (`users`.email = `invitees`.email AND `invitees`.invitation_id = `invitations`.id)"
+  has_many :registered_users, :class_name => "User", :finder_sql =>
+      'SELECT DISTINCT users.* FROM users, invitees WHERE users.email = invitees.email' +
+      ' AND invitees.invitation_id = #{id}'
   belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
 
@@ -34,4 +36,21 @@ class Invitation < ActiveRecord::Base
     Service::Email.deliver_invitation(self)
   end
 
+  def registrations_complete_percentage
+    pct = (self.registered_users.size.to_f / self.invitees.size.to_f) * 100
+    pct.to_i
+  end
+
+  def registrations_complete_total
+    registered_users.size
+  end
+
+  def registrations_incomplete_percentage
+    pct = (registered_users.size.to_f / invitees.size.to_f) * 100
+    100 - pct.to_i
+  end
+
+  def registrations_incomplete_total
+    invitees.size - registered_users.size
+  end
 end

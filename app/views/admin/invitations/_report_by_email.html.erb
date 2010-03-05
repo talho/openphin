@@ -1,0 +1,24 @@
+<%= render :partial => "reports", :locals => {:report_type => report_type} %>
+
+<h2>Invitation report for <%= invitation.name %> by email address</h2>
+
+<%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
+  <p>Registrations complete: <%= invitation.registrations_complete_percentage %>% (<%= invitation.registrations_complete_total %>)</p>
+  <p>Registrations incomplete: <%= invitation.registrations_incomplete_percentage %>% (<%= invitation.registrations_incomplete_total %>)</p>
+  <%= will_paginate results, :params => {:report_type => report_type} %>
+  <table border="1">
+    <tr>
+      <td>Name</td>
+      <td>Email Address</td>
+      <td>Completion Status</td>
+    </tr>
+    <%- results.each_with_index do |invitee, index| %>
+      <tr id="<%= "invitee#{index + 1}" %>">
+        <td><%= invitee.user.nil? ? invitee["name"] : link_to(invitee["name"], user_profile_path(invitee.user.id)) %></td>
+        <td><%= invitee["email"] %></td>
+        <td class="status"><%= invitee.completion_status %></td>
+      </tr>
+    <%- end -%>
+  </table>
+  <%= will_paginate results, :params => {:report_type => report_type} %>
+<%- end -%>

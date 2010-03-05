@@ -23,3 +23,10 @@ end
 Then /^I should be specifically on (.+) for "([^\"]*)"$/ do |page_name, arg|
   URI.parse(current_url).path.should == path_to(page_name, arg)
 end
+
+Then /^I should explictly see "([^\"]*)" within "([^\"]*)"$/ do |regexp, selector|
+  within(selector) do |content|
+    regexp = Regexp.new(/^#{regexp}$/)
+    content.should contain(regexp)
+  end
+end

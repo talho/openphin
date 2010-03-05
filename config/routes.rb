@@ -61,6 +61,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_pending_requests, :controller => "admin/pending_requests"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
   map.resources :admin_invitations, :controller => "admin/invitations"
+  map.reports_admin_invitation "admin_invitations/:id/reports", :controller => "admin/invitations", :action => "reports", :method => [:get,:put]
   map.resources :admin_organization_requests, :member => [:approve, :deny], :controller => "admin/organization_requests"
   map.resources :admin_organization_membership_requests, :member => [:approve, :deny], :controller => "admin/organization_membership_requests"
   map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete
