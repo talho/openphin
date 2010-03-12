@@ -70,7 +70,9 @@ Given "the following organization administrators exist:" do |table|
 end
 
 Given /^"([^\"]*)" is an unconfirmed user$/ do |email|
-  Factory(:user, :email => email, :email_confirmed => false)
+  user = User.find_by_email(email) || Factory(:user, :email => email, :email_confirmed => false)
+  user.email_confirmed = false
+  user.save
 end
 
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
