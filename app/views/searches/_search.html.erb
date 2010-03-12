@@ -31,9 +31,14 @@ Please fill in part of the name or email address of the person you would like to
       <%= text_field_tag :email, "", :size=>48 %>
     </p>
     <p>
-      <%= label_tag :title, "Job Title"%>
-      <%= text_field_tag :title, "", :size=>48 %>
-    </p>
+      <span>
+        <%= label_tag :phone, "Phone"%>
+        <%= text_field_tag :phone, "", :size=>12 %>
+      </span>
+      <span>
+        <%= label_tag :title, "Job Title"%>
+        <%= text_field_tag :title, "", :size=>36 %>
+      </span>
     </p>
     <%= label "","Ctrl-Click (MAC Users: Cmd-Click) for selecting more than one" %>
     <p>

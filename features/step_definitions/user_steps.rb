@@ -34,6 +34,11 @@ Given /^"([^\"]*)" has the title "([^\"]*)"$/ do |email, value|
   u.update_attribute(:title,value)
 end
 
+Given /^"([^\"]*)" has the phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:phone,value.gsub(/([^0-9])/,""))
+end
+
 Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user

@@ -21,6 +21,7 @@ Feature: Searching for users
       | Amy Body      | amy@example.com   | HAN Coordinator | Dallas County |
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
     And "sam@example.com" has the title "Chief Bottle Washer"
+    And "sam@example.com" has the phone "888-555-1212"
     And Health Officer is a non public role
     And HAN Coordinator is a non public role
     And delayed jobs are processed
@@ -181,6 +182,16 @@ Feature: Searching for users
     When I go to the dashboard page
     And I follow "Find People"
     And I fill in "Email" with "sam@example.com"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by phone
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Phone" with "888-555-1212"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |

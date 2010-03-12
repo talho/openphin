@@ -35,6 +35,7 @@ class SearchesController < ApplicationController
     build_fields params, conditions={}
     options[:conditions] = conditions unless conditions.empty?
     options[:match_mode] = (conditions.size>1) ? :extended : :any
+
     @results = User.search options
   
   respond_to do |format|
@@ -58,10 +59,11 @@ protected
   end
 
   def build_fields(params,fields={})
-    [:first_name,:last_name,:display_name,:email,:phone,:title].each do |f|
+    [:first_name,:last_name,:display_name,:email,:title].each do |f|
       field = params[f]
       fields[f] = field unless field.blank?
     end
+    fields[:phone] = params[:phone].gsub(/([^0-9*])/,"") unless params[:phone].blank?
     fields
   end
 
