@@ -7,7 +7,7 @@
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', :cache => 'all' %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', 'search', :cache => 'all' %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -33,7 +33,7 @@
   		<ul class="actions">
       <%- if signed_in? -%>
           <li<%= tab_me dashboard_path %>><%= link_to s('My Dashboard'), dashboard_path %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>
+          <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), show_advanced_search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'accounts' %>><%= link_to s('My Account'), edit_user_profile_path(current_user), :class => '.edit_profile' %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'admin' %>><%= link_to s('Admin'), admin_role_requests_path if current_user.is_admin? %></li><li>&nbsp;|&nbsp;</li>
           <li<%= tab_me about_path %>><%= link_to s('About TXPHIN'), about_path, :class => '.about' %></li><li>&nbsp;|&nbsp;</li>

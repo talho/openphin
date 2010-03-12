@@ -127,16 +127,18 @@ class User < ActiveRecord::Base
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
 
   # thinking sphinx stuff
+  # Should be able to search by first name, last name, display name, email address, phone device, jurisdiction, role, and job title.
   define_index do
-    indexes first_name,   :sortable => true
-    indexes last_name,    :sortable => true
-    indexes display_name
-    indexes title
-    indexes email
-    indexes phone
-    indexes roles.name,         :as => :role,         :facet => true
-    indexes jurisdictions.name, :as => :jurisdiction, :facet => true
-    set_property :delta => :delayed
+    indexes [first_name,last_name,display_name], :as=>:name, :sortable=>true
+    indexes first_name,     :sortable => true
+    indexes last_name,      :sortable => true
+    indexes display_name,   :sortable => true
+    indexes email,          :sortable => true
+    indexes phone,          :sortable => true
+    indexes title,          :sortable => true
+    has roles(:id),         :as => :role_ids
+    has jurisdictions(:id), :as => :jurisdiction_ids
+    set_property :delta =>  :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
   

@@ -20,6 +20,7 @@ Feature: Searching for users
       | Sam Body      | sam@example.com   | Health Officer | Dallas County |
       | Amy Body      | amy@example.com   | HAN Coordinator | Dallas County |
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
+    And "sam@example.com" has the title "Chief Bottle Washer"
     And Health Officer is a non public role
     And HAN Coordinator is a non public role
     And delayed jobs are processed
@@ -98,3 +99,121 @@ Feature: Searching for users
       | John Smith, Jane Smith |
     When I follow "Jane Smith"
     And I should not see "This user's profile is not public"
+    
+  Scenario: Search for a user from a specific jurisdiction
+    Given I am logged in as "amy@example.com"
+  
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "smith"
+    And I select "Tarrant County" from "_jurisdiction_ids"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Jane Smith |
+  
+  Scenario: Search for a user from a specific role
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "smith"
+    And I select "Public" from "_role_ids"
+    And I press "Search"
+    Then I see the following users in the search results
+      | John Smith |
+
+  Scenario: Search for a user from a specific role and a specific jurisdiction
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "body"
+    And I select "Health Officer" from "_role_ids"
+    And I select "Dallas County" from "_jurisdiction_ids"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+  
+  Scenario: Search for a non-existent user from a specific role and a specific jurisdiction
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "body"
+    And I select "Immunization Director" from "_role_ids"
+    And I select "Dallas County" from "_jurisdiction_ids"
+    And I press "Search"
+    Then I should see "No Results Found"
+
+  Scenario: Search for a user by first name
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "First Name" with "sam"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by last name
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Last Name" with "body"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by display name
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Display Name" with "sam body"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by email address
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Email" with "sam@example.com"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by job title
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Job Title" with "Chief Bottle Washer"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+
+  Scenario: Search for a user by job title
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "First Name" with "Amy"
+    And I fill in "Last Name" with "Body"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Amy Body |
+    And I should not see "Sam Body"
+  
+  Scenario: Search for a user by partial job title using wildcard
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "First Name" with "sa*"
+    And I press "Search"
+    Then I see the following users in the search results
+      | Sam Body |
+    And I should not see "Amy Body"

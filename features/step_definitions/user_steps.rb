@@ -29,6 +29,11 @@ Given 'the following users exist:' do |table|
   end
 end
 
+Given /^"([^\"]*)" has the title "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:title,value)
+end
+
 Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user
