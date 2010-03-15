@@ -29,5 +29,3 @@ Given /^invitation "([^\"]*)" has the following invitees:$/ do |invitation_name,
     invitation.invitees.create(:name=>name,:email=>email)
   end
 end
-
-

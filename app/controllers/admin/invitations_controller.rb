@@ -42,6 +42,12 @@ class Admin::InvitationsController < ApplicationController
         :results => results, :report_type => params[:report_type],
         :invitation => invitation
       }, :layout => "application"
+    when "by_organization"
+      results = inviteeStatusByOrganization
+      render :partial => "report_by_organization", :locals => {
+        :results => results, :report_type => params[:report_type],
+        :invitation => invitation
+      }, :layout => "application"
     else # Also by_email
       results = inviteeStatusByEmail
       render :partial => "report_by_email", :locals => {
@@ -98,5 +104,9 @@ class Admin::InvitationsController < ApplicationController
     db.execute "DROP TABLE inviteeStatusByRegistration"
     invitees
   end
-  
+
+  def inviteeStatusByOrganization
+    Invitee.paginate :page => params[:page] || 1, :order => "email ASC", :conditions => ["invitation_id = ?", params[:id]]
+  end
+
 end

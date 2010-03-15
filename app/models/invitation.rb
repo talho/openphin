@@ -18,6 +18,9 @@ class Invitation < ActiveRecord::Base
   has_many :registered_users, :class_name => "User", :finder_sql =>
       'SELECT DISTINCT users.* FROM users, invitees WHERE users.email = invitees.email' +
       ' AND invitees.invitation_id = #{id}'
+  has_many :registered_invitees, :class_name => "Invitee", :finder_sql =>
+      'SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email' +
+      ' AND invitees.invitation_id = #{id}'
   belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
 
@@ -33,7 +36,19 @@ class Invitation < ActiveRecord::Base
   end
 
   def deliver
-    Service::Email.deliver_invitation(self)
+    deliver_status = Service::Email.deliver_invitation(self) unless new_invitees.empty?
+    org_deliver_status = Service::Email.deliver_org_membership_notification(self) unless default_organization.nil? || registered_invitees.empty?
+    if deliver_status.nil?
+      org_deliver_status == "200 OK"
+    elsif org_deliver_status.nil?
+      deliver_status == "200 OK"
+    else
+      deliver_status == "200 OK" && org_deliver_status == "200 OK"
+    end
+  end
+
+  def new_invitees
+    invitees - registered_invitees
   end
 
   def registrations_complete_percentage

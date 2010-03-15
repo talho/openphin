@@ -17,6 +17,8 @@ class Invitee < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 20
 
+  after_create :create_org_membership
+
   def completion_status
     if user.nil?
       "Not Registered"
@@ -26,4 +28,14 @@ class Invitee < ActiveRecord::Base
       "Not Email Confirmed"
     end
   end
+
+  def is_member?
+    invitation.default_organization.members.include?(user) ? "Yes" : "No"
+  end
+
+  private
+  def create_org_membership
+    invitation.default_organization << user unless invitation.default_organization.nil? || user.nil?
+  end
+
 end
