@@ -48,6 +48,12 @@ class Admin::InvitationsController < ApplicationController
         :results => results, :report_type => params[:report_type],
         :invitation => invitation
       }, :layout => "application"
+    when "by_pending_requests"
+      results = inviteeStatusByPendingRequests
+      render :partial => "report_by_pending_requests", :locals => {
+        :results => results, :report_type => params[:report_type],
+        :invitation => invitation
+      }, :layout => "application"
     else # Also by_email
       results = inviteeStatusByEmail
       render :partial => "report_by_email", :locals => {
@@ -107,6 +113,11 @@ class Admin::InvitationsController < ApplicationController
 
   def inviteeStatusByOrganization
     Invitee.paginate :page => params[:page] || 1, :order => "email ASC", :conditions => ["invitation_id = ?", params[:id]]
+  end
+
+  def inviteeStatusByPendingRequests
+    Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :include => [:user => :role_requests],
+                     :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ?", params[:id], true, nil, nil]
   end
 
 end

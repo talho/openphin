@@ -186,7 +186,6 @@ Feature: Invitation System
     And I should see "jim.smith@example.com" within "#invitee5"
     And I should explictly see "Registered" within "#invitee5 td.status"
 
-
   Scenario: Viewing invitation completion status by organization membership
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |
@@ -217,3 +216,48 @@ Feature: Invitation System
     And I should see "Joe Smith" within "#invitee3"
     And I should see "joe.smith@example.com" within "#invitee3"
     And I should explictly see "Yes" within "#invitee3 td.status"
+
+  Scenario: Viewing invitation completion status by pending role requests
+    Given the following entities exist:
+      | Jurisdiction | Potter County   |
+      | Role         | Health Official |
+      | Role         | Health Officer  |
+    And Health Official is a non public role
+    And Health Officer is a non public role
+    And an Invitation "DSHS" exists with:
+      | Subject      | Please Join DSHS                         |
+      | Body         | Please click the link below to join DSHS |
+      | Organization | DSHS                                     |
+    And the user "Bob Smith" with the email "bob.smith@example.com" has the role "Public" in "Texas"
+    And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Official" in "Texas"
+    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Public" in "Potter County"
+    And the user "John Smith" with the email "john.smith@example.com" has the role "Public" in "Texas"
+    And "bob.smith@example.com" has requested to be a "Health Official" for "Texas"
+    And "joe.smith@example.com" has requested to be a "Health Officer" for "Potter County"
+    And invitation "DSHS" has the following invitees:
+      | Bob Smith  | bob.smith@example.com  |
+      | Jane Smith | jane.smith@example.com |
+      | Joe Smith  | joe.smith@example.com  |
+      | John Smith | john.smith@example.com |
+    And "john.smith@example.com" is an unconfirmed user
+    And "john.smith@example.com" has requested to be a "Health Official" for "Texas"
+
+    When I follow "Admin"
+    And I follow "View Invitations"
+    Then I should see "DSHS"
+
+    When I follow "View Reports"
+    And I select "By Pending Requests" from "Report Type"
+    And I press "Submit"
+
+    Then I should see "Invitation report for DSHS by pending role requests"
+    And I should see "Bob Smith" within "#invitee1"
+    And I should see "bob.smith@example.com" within "#invitee1"
+    And I should see "Health Official" within "#invitee1"
+    And I should see "Texas" within "#invitee1"
+    And I should see "Joe Smith" within "#invitee2"
+    And I should see "joe.smith@example.com" within "#invitee2"
+    And I should see "Health Officer" within "#invitee2"
+    And I should see "Potter County" within "#invitee2"
+    And I should not see "Jane Smith"
+    And I should not see "John Smith"

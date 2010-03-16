@@ -1,6 +1,6 @@
 <%- form_for :reports do |form| -%>
   <%= label_tag :report_type %>
-  <%= select_tag("report_type",options_for_select([["By Email","by_email"], ["By Registrations","by_registrations"],["By Organization","by_organization"]], report_type)) %>
+  <%= select_tag("report_type",options_for_select([["By Email","by_email"], ["By Registrations","by_registrations"],["By Organization","by_organization"],["By Pending Requests","by_pending_requests"]], report_type)) %>
   <%= form.submit "Submit" %>
 <%- end -%>
 
