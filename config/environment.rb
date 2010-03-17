@@ -7,6 +7,7 @@ RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 require File.join(File.dirname(__FILE__), 'initializers', 'utilities')
 
+
 HOST = "www.txphin.org"
 DOMAIN = "txphin.org"
 

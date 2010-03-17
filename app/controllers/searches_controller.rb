@@ -5,9 +5,10 @@ class SearchesController < ApplicationController
   
   def show 
     if !params[:tag].blank?
-      search_size = 300
+      search_size = 20
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')
-      @results = User.search("*" + tags, :match_mode => :any, :per_page => search_size, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
+      @results = User.search("*" + tags, :match_mode => :any, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
+      @paginated_results = @results;
       @results = sort_by_tag(@results, tags)
     end
     
@@ -15,7 +16,8 @@ class SearchesController < ApplicationController
       format.html
       format.json {
         @results = [] if @results.blank?
-        render :json => @results.map{|u| {:caption => u.name, :value => u.id}} 
+        render :json => @results.map{|u| {:caption => "#{u.name} #{u.email}", :value => u.id}}.concat([:paginate => render_to_string(:partial => 'paginate')])
+        
       }
     end
   end
@@ -26,7 +28,7 @@ class SearchesController < ApplicationController
       :match_mode => :any,                    # 
       :retry_stale => true,                   # avoid nil results
       :order => :name,                        # ascending order on name
-      :page=>params[:page]||1, :per_page=>8   # pagination, most entries have several roles
+      :page=>params[:page]||1, :per_page=>1   # pagination, most entries have several roles
     }
     
     filters = build_filters params
@@ -37,7 +39,7 @@ class SearchesController < ApplicationController
     options[:match_mode] = (conditions.size>1) ? :extended : :any
 
     @results = User.search options
-  
+    
   respond_to do |format|
     format.html 
     format.json {

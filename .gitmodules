@@ -4,9 +4,6 @@
 [submodule "vendor/plugins/auto_complete_jquery"]
 	path = vendor/plugins/auto_complete_jquery
 	url = git://github.com/chris/auto_complete_jquery.git
-[submodule "public/javascripts/FCBKcomplete"]
-	path = public/javascripts/FCBKcomplete
-	url = git://github.com/collectiveidea/FCBKcomplete.git
 [submodule "vendor/plugins/webrat"]
 	path = vendor/plugins/webrat
 	url = git://github.com/collectiveidea/webrat.git
@@ -34,9 +31,6 @@
 [submodule "vendor/plugins/backgroundrb"]
 	path = vendor/plugins/backgroundrb
 	url = git://github.com/gnufied/backgroundrb.git
-[submodule "vendor/plugins/thinking-sphinx"]
-	path = vendor/plugins/thinking-sphinx
-	url = git://github.com/brandon/thinking-sphinx.git
 [submodule "vendor/plugins/hoptoad_notifier"]
 	path = vendor/plugins/hoptoad_notifier
 	url = git://github.com/thoughtbot/hoptoad_notifier.git
@@ -58,3 +52,9 @@
 [submodule "vendor/plugins/csv_builder"]
 	path = vendor/plugins/csv_builder
 	url = git://github.com/econsultancy/csv_builder.git
+[submodule "vendor/plugins/thinking-sphinx"]
+	path = vendor/plugins/thinking-sphinx
+	url = git://github.com/talho/thinking-sphinx.git
+[submodule "public/javascripts/FCBKcomplete"]
+	path = public/javascripts/FCBKcomplete
+	url = git://github.com/Dishwasha/FCBKcomplete.git
