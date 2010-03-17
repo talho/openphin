@@ -28,7 +28,7 @@ class SearchesController < ApplicationController
       :match_mode => :any,                    # 
       :retry_stale => true,                   # avoid nil results
       :order => :name,                        # ascending order on name
-      :page=>params[:page]||1, :per_page=>1   # pagination, most entries have several roles
+      :page=>params[:page]||1, :per_page=>8   # pagination, most entries have several roles
     }
     
     filters = build_filters params
