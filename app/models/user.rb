@@ -90,7 +90,10 @@ class User < ActiveRecord::Base
   validates_associated :role_requests
   validates_associated :role_memberships
 
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
+    :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
+    :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
+    :home_phone, :mobile_phone, :phone, :fax
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
 	
