@@ -1,0 +1,23 @@
+<%= render :partial => "reports", :locals => {:report_type => report_type} %>
+
+<h2>Invitation report for <%= invitation.name %> by organization</h2>
+
+<%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
+  <%= will_paginate results, :params => {:report_type => report_type} %>
+  <h3>Organization: <%= invitation.default_organization.name %></h3>
+  <table border="1">
+    <tr>
+      <td>Name</td>
+      <td>Email Address</td>
+      <td>Is Member?</td>
+    </tr>
+    <%- results.each_with_index do |invitee, index| %>
+      <tr id="<%= "invitee#{index + 1}" %>">
+        <td><%= invitee.user.nil? ? invitee["name"] : link_to(invitee["name"], user_profile_path(invitee.user.id)) %></td>
+        <td><%= invitee["email"] %></td>
+        <td class="status"><%= invitee.is_member? %></td>
+      </tr>
+    <%- end -%>
+  </table>
+  <%= will_paginate results, :params => {:report_type => report_type} %>
+<%- end -%>
