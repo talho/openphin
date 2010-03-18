@@ -251,7 +251,6 @@ Feature: Invitation System
     And I press "Submit"
 
     Then I should see "Invitation report for DSHS by pending role requests"
-    And I see WTF is going on
     And I should see "Bob Smith" within "#invitee1"
     And I should see "bob.smith@example.com" within "#invitee1"
     And I should see "Health Official" within "#invitee1"
