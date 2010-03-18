@@ -1,4 +1,4 @@
-<%= render :partial => "reports", :locals => {:report_type => report_type} %>
+<%= render :partial => "reports", :locals => {:report_type => report_type, :report_options => report_options} %>
 
 <h2>Invitation report for <%= invitation.name %> by pending role requests</h2>
 
@@ -15,11 +15,11 @@
         <td><%= invitee.user.nil? ? invitee["name"] : link_to(invitee["name"], user_profile_path(invitee.user.id)) %></td>
         <td><%= invitee["email"] %></td>
         <td><%- invitee.user.role_requests.each do |rr| -%>
-          <%= "#{rr.role.name} - #{rr.jurisdiction.name} #{link_to 'Approve', approve_admin_role_request_path(rr)} | #{link_to 'Deny', deny_admin_role_request_path(rr)}<br/>" %>
+          <%= "#{rr.role.name} - #{rr.jurisdiction.name} #{link_to 'Approve', "#{approve_admin_role_request_path(rr)}?postback=#{reports_admin_invitation_path(invitation)}\?report_type=#{params["report_type"]}"} | #{link_to 'Deny', "#{deny_admin_role_request_path(rr)}?postback=#{reports_admin_invitation_path(invitation)}\?report_type=#{params["report_type"]}"}<br/>" if current_user.is_admin_for?(rr.jurisdiction) %>
         <%- end -%>
         </td>
       </tr>
     <%- end -%>
   </table>
-  <%= will_paginate results, :params => {:report_type => report_type} %>
+  <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
 <%- end -%>

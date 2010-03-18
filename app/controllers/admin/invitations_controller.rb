@@ -35,30 +35,34 @@ class Admin::InvitationsController < ApplicationController
 
   def reports
     invitation = Invitation.find(params[:id])
+    report_options = [["By Email","by_email"], ["By Registrations","by_registrations"]]
+    report_options << ["By Organization","by_organization"] unless invitation.default_organization.nil?
+    report_options << ["By Pending Requests","by_pending_requests"]
+    
     case params[:report_type]
     when "by_registrations"
       results = inviteeStatusByRegistration
       render :partial => "report_by_registration", :locals => {
         :results => results, :report_type => params[:report_type],
-        :invitation => invitation
+        :invitation => invitation, :report_options => report_options
       }, :layout => "application"
     when "by_organization"
       results = inviteeStatusByOrganization
       render :partial => "report_by_organization", :locals => {
         :results => results, :report_type => params[:report_type],
-        :invitation => invitation
+        :invitation => invitation, :report_options => report_options
       }, :layout => "application"
     when "by_pending_requests"
       results = inviteeStatusByPendingRequests
       render :partial => "report_by_pending_requests", :locals => {
         :results => results, :report_type => params[:report_type],
-        :invitation => invitation
+        :invitation => invitation, :report_options => report_options
       }, :layout => "application"
     else # Also by_email
       results = inviteeStatusByEmail
       render :partial => "report_by_email", :locals => {
         :results => results, :report_type => params[:report_type],
-        :invitation => invitation
+        :invitation => invitation, :report_options => report_options
       }, :layout => "application"
     end
   end
@@ -117,7 +121,6 @@ class Admin::InvitationsController < ApplicationController
 
   def inviteeStatusByPendingRequests
     Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :include => [:user => :role_requests],
-                     :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ?", params[:id], true, nil, nil]
+                     :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ? AND role_requests.jurisdiction_id IN (?)", params[:id], true, nil, nil, current_user.role_memberships.admin_roles.map{|rm| rm.jurisdiction.id}.join(",")]
   end
-
 end

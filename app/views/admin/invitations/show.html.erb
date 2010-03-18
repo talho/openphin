@@ -13,7 +13,7 @@ Subject
 
 <br />Default Organization
 <div id="default_organization">
-<%= @invitation.default_organization.name %>
+<%= @invitation.default_organization.name unless @invitation.default_organization.nil? %>
 </div><br />
 
 <br />Invitees
