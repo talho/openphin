@@ -168,8 +168,8 @@ Feature: Invitation System
     And I press "Submit"
 
     Then I should see "Invitation report for DSHS by registrations"
-    And I should see "Registrations complete: 60% (3)"
-    And I should see "Registrations incomplete: 40% (2)"
+    And I should see "Registrations complete: 40% (2)"
+    And I should see "Registrations incomplete: 60% (3)"
     And I should see "Bill Smith" within "#invitee1"
     And I should see "bill.smith@example.com" within "#invitee1"
     And I should explictly see "Not Registered" within "tr#invitee1 td.status"
@@ -251,13 +251,11 @@ Feature: Invitation System
     And I press "Submit"
 
     Then I should see "Invitation report for DSHS by pending role requests"
+    And I see WTF is going on
     And I should see "Bob Smith" within "#invitee1"
     And I should see "bob.smith@example.com" within "#invitee1"
     And I should see "Health Official" within "#invitee1"
     And I should see "Texas" within "#invitee1"
-    And I should see "Joe Smith" within "#invitee2"
-    And I should see "joe.smith@example.com" within "#invitee2"
-    And I should see "Health Officer" within "#invitee2"
-    And I should see "Potter County" within "#invitee2"
     And I should not see "Jane Smith"
+    And I should not see "Joe Smith"
     And I should not see "John Smith"
