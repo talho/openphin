@@ -16,8 +16,8 @@ class SearchesController < ApplicationController
       format.html
       format.json {
         @results = [] if @results.blank?
-        render :json => @results.map{|u| {:caption => "#{u.name} #{u.email}", :value => u.id}}.concat([:paginate => render_to_string(:partial => 'paginate')])
-        
+        render :json => @results.map{|u| {:caption => "#{u.name} #{u.email}", :value => u.id, :title => u.title,
+                                          :extra => {:content => render_to_string(:partial => 'extra', :locals => {:user => u})}}}.concat([:paginate => render_to_string(:partial => 'paginate')])
       }
     end
   end
