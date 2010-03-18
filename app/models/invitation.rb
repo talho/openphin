@@ -17,7 +17,7 @@ class Invitation < ActiveRecord::Base
   has_many :invitees
   has_many :registered_users, :class_name => "User", :finder_sql =>
       'SELECT DISTINCT users.* FROM users, invitees WHERE users.email = invitees.email' +
-      ' AND invitees.invitation_id = #{id}'
+      ' AND invitees.invitation_id = #{id} AND users.email_confirmed = true'
   has_many :registered_invitees, :class_name => "Invitee", :finder_sql =>
       'SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email' +
       ' AND invitees.invitation_id = #{id}'
@@ -52,7 +52,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def registrations_complete_percentage
-    pct = (self.registered_users.size.to_f / self.invitees.size.to_f) * 100
+    pct = registered_users.size == 0 ? 0 : (registered_users.size.to_f / invitees.size.to_f) * 100
     pct.to_i
   end
 
@@ -61,7 +61,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def registrations_incomplete_percentage
-    pct = (registered_users.size.to_f / invitees.size.to_f) * 100
+    pct = registered_users.size == 0 ? 0 : (registered_users.size.to_f / invitees.size.to_f) * 100
     100 - pct.to_i
   end
 
