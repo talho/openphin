@@ -1,4 +1,4 @@
-<%= render :partial => "reports", :locals => {:report_type => report_type} %>
+<%= render :partial => "reports", :locals => {:report_type => report_type, :report_options => report_options} %>
 
 <h2>Invitation report for <%= invitation.name %> by organization</h2>
 
@@ -19,5 +19,5 @@
       </tr>
     <%- end -%>
   </table>
-  <%= will_paginate results, :params => {:report_type => report_type} %>
+  <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
 <%- end -%>
