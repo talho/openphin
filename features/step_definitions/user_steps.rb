@@ -39,6 +39,21 @@ Given /^"([^\"]*)" has the phone "([^\"]*)"$/ do |email, value|
   u.update_attribute(:phone,value.gsub(/([^0-9])/,""))
 end
 
+Given /^"([^\"]*)" has the fax "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:fax,value.gsub(/([^0-9])/,""))
+end
+
+Given /^"([^\"]*)" has the mobile phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:mobile_phone,value.gsub(/([^0-9])/,""))
+end
+
+Given /^"([^\"]*)" has the home phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:home_phone,value.gsub(/([^0-9])/,""))
+end
+
 Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user

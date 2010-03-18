@@ -1,59 +1,80 @@
-<div class='user_profile'>
-    
-  <div class="details">
-    <h2><%=h @user.name %></h2>
-    <p>
-      <strong>Public:</strong>
-      <%=h @user.public ? 'Yes' : 'No' %>
-    </p>
-  
-    <p>
-      <strong>Credentials:</strong>
-      <%=h @user.credentials || 'None Given' %>
-    </p>
-    <p class="office_phone">
-      <strong>Office Phone:</strong>
-      <%=h @user.phone || 'None Given' %>
-    </p>
-    <p class="office_fax">
-      <strong>Office Fax:</strong>
-      <%=h @user.fax || 'None Given' %>
-    </p>
-    <p class="home_phone">
-      <strong>Home Phone:</strong>
-      <%=h @user.home_phone || 'None Given' %>
-    </p>
-    <p class="mobile_phone">
-      <strong>Mobile Phone:</strong>
-      <%=h @user.mobile_phone || 'None Given' %>
-    </p>
-  
-    <p>
-      <strong>Employer:</strong>
-      <%=h @user.employer || 'None Given' %>
-    </p>
-  
-    <h4>Experience</h4>
-    <p><%=h @user.experience || 'None Given' %></p>
-  
-    <h4>Bio</h4>
-    <%=simple_format @user.bio || 'None Given' %>
 
-    <h4>Organizations</h4>
-    <%= render 'users/organizations', :user => @user %>
+<div class='user_profile'>
   
-    <% if current_user == @user || current_user.has_non_public_role? %>
-    <h4>Roles</h4>
-    <%= render 'users/roles', :user => @user %>
+  <% i_am_fellow = fellow_member? @user %>
+  
+  <div class="details">
+    <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+      <h2><%=h @user.name %></h2>
+    <% else %>
+      <p>This user's profile is not public.</p>
     <% end %>
     
-    <div class="actions">
-      <%= link_to 'Edit this Person', edit_user_profile_path(@user), :class => 'button' %>
+    <% if @user.public? || current_user == @user || current_user.is_admin? %>
+      <p>
+        <strong>Public:</strong>
+        <%=h @user.public ? 'Yes' : 'No' %>
+      </p>
+      <p>
+        <strong>Credentials:</strong>
+        <%=h @user.credentials || 'None Given' %>
+      </p>
+    <% end %>
+  
+    <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+      <p class="office_phone">
+        <strong>Office Phone:</strong>
+        <%= number_to_phone @user.phone || 'None Given' %>
+      </p>
+      <p class="office_fax">
+        <strong>Office Fax:</strong>
+        <%= number_to_phone @user.fax || 'None Given' %>
+      </p>
+      <p class="home_phone">
+        <strong>Home Phone:</strong>
+        <%= number_to_phone @user.home_phone || 'None Given' %>
+      </p>
+      <p class="mobile_phone">
+        <strong>Mobile Phone:</strong>
+        <%= number_to_phone @user.mobile_phone || 'None Given' %>
+      </p>
+    <% end %>
+  
+    <% if @user.public? || current_user == @user || current_user.is_admin? %>
+      <p>
+        <strong>Employer:</strong>
+        <%=h @user.employer || 'None Given' %>
+      </p>
+
+      <h4>Experience</h4>
+      <p><%=h @user.experience || 'None Given' %></p>
+
+      <h4>Bio</h4>
+      <%=simple_format @user.bio || 'None Given' %>
+
+      <h4>Organizations</h4>
+      <%= render 'users/organizations', :user => @user %>
+
+      <% if current_user == @user || current_user.has_non_public_role? %>
+        <h4>Roles</h4>
+        <%= render 'users/roles', :user => @user %>
+      <% end %>
+
+      <div class="actions">
+        <%= link_to 'Edit this Person', edit_user_profile_path(@user), :class => 'button' %>
+      </div>
+    <% end %>
+   </div>
+
+  <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+    <div class="aside">
+      <%= image_tag @user.photo.url(:medium) %>
+      <h4>Devices</h4>
+      <%= render @user.devices %>
     </div>
-  </div>
-  <div class="aside">
-    <%= image_tag @user.photo.url(:medium) %>
-    <h4>Devices</h4>
-    <%= render @user.devices %>
-  </div>
+  <% end %>
+
 </div>
+
+<% if @user.public? || current_user == @user || current_user.is_admin? %>
+<% end %>

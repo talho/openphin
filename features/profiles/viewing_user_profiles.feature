@@ -21,6 +21,10 @@ Feature: Viewing user profiles
   	And the user "Sam Body" with the email "sam.body@example.com" has the role "Health Officer" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Potter County"
+    And  "john.smith@example.com" has the phone "888-123-1212"
+    And  "john.smith@example.com" has the fax "888-456-1212"
+    And  "john.smith@example.com" has the mobile phone "888-432-1212"
+    And  "john.smith@example.com" has the home phone "888-555-1212"
     And delayed jobs are processed
     And the sphinx daemon is running
     
@@ -34,7 +38,7 @@ Feature: Viewing user profiles
   Scenario: Viewing a private profile
     Given sam.body@example.com has a private profile
     When I view the profile page for "sam.body@example.com"
-    Then I can not see the profile
+    Then I should see "This user's profile is not public"
   
   Scenario: Viewing my private profile
     Given john.smith@example.com has a private profile
@@ -45,6 +49,11 @@ Feature: Viewing user profiles
       | Health Officer | Dallas County |
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
+    And I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-432-1212" within ".mobile_phone"
+    And I should see "888-555-1212" within ".home_phone"
+    
       
   Scenario: Viewing my own profile as an admin
     Given big.admin@example.com has a private profile
@@ -79,3 +88,42 @@ Feature: Viewing user profiles
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
     
+  Scenario: Viewing anothers profile as an superadmin
+    Given john.smith@example.com has a private profile
+    And an organization exist with the following info:
+      | name               | DSHS                                |
+      | distribution_email | disco@example.com                   |
+      | postal_code        | 787202                              |
+      | street             | 123 Elm Street                      |
+      | phone              | 888-555-1212                        |
+      | description        | Department of State Health Services |
+      | locality           | Austin                              |
+      | state              | TX                                  |
+    And the user with "john.smith@example.com" is a member of "DSHS"
+  	And the user "Big Admin" with the email "big.admin@example.com" has the role "Superadmin" in "Dallas County"
+    And I am logged in as "big.admin@example.com"
+    When I view the profile page for "john.smith@example.com"
+    And I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-432-1212" within ".mobile_phone"
+    And I should see "888-555-1212" within ".home_phone"
+
+  Scenario: Viewing anothers profile as an fellow member to an organization
+    Given john.smith@example.com has a private profile
+    And an organization exist with the following info:
+      | name               | DSHS                                |
+      | description        | Department of State Health Services |
+      | distribution_email | disco@example.com                   |
+      | street             | 123 Elm Street                      |
+      | phone              | 888-555-1212                        |
+      | locality           | Austin                              |
+      | state              | TX                                  |
+      | postal_code        | 78720                               |
+    And the user with "john.smith@example.com" is a member of "DSHS"
+    And the user with "sam.body@example.com" is a member of "DSHS"
+    And I am logged in as "sam.body@example.com"
+    When I view the profile page for "john.smith@example.com"
+    And I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-432-1212" within ".mobile_phone"
+    And I should see "888-555-1212" within ".home_phone"

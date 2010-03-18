@@ -24,12 +24,8 @@ class UserProfilesController < ApplicationController
     @user = User.find(params[:user_id])
     
     respond_to do |format|
-      if @user.public? || current_user == @user || current_user.is_admin?
-        format.html # show.html.erb
-        format.xml { render :xml => @user }
-      else
-        format.html { render :action => 'privacy'}
-      end
+      format.html # show.html.erb
+      format.xml { render :xml => @user }
     end
   end
 
@@ -149,7 +145,8 @@ class UserProfilesController < ApplicationController
     end
   end
 
-  private
+protected
+
   def device_class_for(device_type)
     ("#{Device.name}::" + params[:device_type]).constantize
   end
@@ -161,4 +158,5 @@ class UserProfilesController < ApplicationController
       redirect_to :back
     end
   end
+    
 end
