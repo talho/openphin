@@ -21,16 +21,16 @@
 
 	$( document ) . ready ( 
 	  function() {
-	    $( 'p.search_user_explanation' ).before( '<p><a class="search_user_explanation" href="#">Willcard Explanation</a></p>' );
+	    $( 'p.search_user_explanation' ).before( '<p><a class="search_user_explanation" href="#">Willcard (*) Explanation</a></p>' );
 	    $( 'p.search_user_explanation' ).hide();
 	    $('a.search_user_explanation').toggle ( 
 	      function() {
 	        $(this.parentNode.nextSibling).slideDown('slow');
-	        $(this).html('Willcard Explanation');
+	        $(this).html('Willcard (*) Explanation');
 	      },
 	      function() {
 	        $(this.parentNode.nextSibling).slideUp('slow');
-	        $(this).html('Willcard Explanation');
+	        $(this).html('Willcard (*) Explanation');
 	      }
 	    )
 	  }
