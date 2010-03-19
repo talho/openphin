@@ -25,26 +25,25 @@ class SearchesController < ApplicationController
   
   def show_advanced
     options = {
-      :match_mode => :any,                    # 
       :retry_stale => true,                   # avoid nil results
       :order => :name,                        # ascending order on name
       :page=>params[:page]||1, :per_page=>8   # pagination, most entries have several roles
     }
-    
-    filters = build_filters params
-    options[:with] = filters unless filters.empty?
-    
+
     build_fields params, conditions={}
+    filters = build_filters params
+    
     options[:conditions] = conditions unless conditions.empty?
     options[:match_mode] = (conditions.size>1) ? :extended : :any
-
-    @results = User.search options
+    options[:with] = filters unless filters.empty?
     
-  respond_to do |format|
-    format.html 
-    format.json {
-      render :json => @results 
-    }
+    @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
+    
+    respond_to do |format|
+      format.html 
+      format.json {
+        render :json => @results 
+      }
     end
   end
   
@@ -61,7 +60,7 @@ protected
   end
 
   def build_fields(params,fields={})
-    [:first_name,:last_name,:display_name,:email,:title].each do |f|
+    [:name,:first_name,:last_name,:display_name,:email,:title].each do |f|
       field = params[f]
       fields[f] = field unless field.blank?
     end
