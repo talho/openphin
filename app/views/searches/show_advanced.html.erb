@@ -1,9 +1,12 @@
 <div id="search-results">
+  <% query_string = params.map{|key,value| "#{key}=#{value}" unless %w(action,controller page per_page).include?(key)}.compact.join("&") %>
   <p>
     <%= render :partial => "search" %>
   </p>
   <% unless @results.nil? %>
     <% unless @results.empty? %>
+      <p><%= link_to "Printable Report (PDF)", "#{show_advanced_search_path}.pdf?#{query_string}" %></p>
+      <%= will_paginate @results %>
       <table>
         <tr>
           <td>Name</td><td>Email</td><td>Role Assignments</td>
@@ -18,10 +21,10 @@
           </tr>
         <%- end -%>
       </table>
-      <%= will_paginate @results %>
+      <%= will_paginate @results %><br/>
+      <p><%= link_to "Printable Report (PDF)", "#{show_advanced_search_path}.pdf?#{query_string}" %></p>
     <% else %>  
       <p><%= "No Results Found" %></p>
     <% end %>
   <% end %>
 </div>
-
