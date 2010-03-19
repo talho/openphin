@@ -32,6 +32,9 @@ class Admin::UsersController < ApplicationController
         role_request.approver = current_user
       end
     end
+    @user.organization_membership_requests.each do |omr|
+      omr.requester = current_user
+    end
     respond_to do |format|
       if @user.save
         @user.confirm_email!

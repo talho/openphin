@@ -90,6 +90,9 @@ module NavigationHelpers
         folder_inbox_path
       when /the users delete page/i
         new_users_delete_path
+      when /the invitation reports page for "(.*)"$/i
+        invitation = Invitation.find_by_name($1)
+        reports_admin_invitation_path(invitation)
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

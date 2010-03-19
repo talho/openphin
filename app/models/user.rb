@@ -32,6 +32,9 @@
 #  deleted_at         :datetime
 #  deleted_by         :string(255)
 #  deleted_from       :string(24)
+#  home_phone         :string(255)
+#  mobile_phone       :string(255)
+#  fax                :string(255)
 #
 
 class User < ActiveRecord::Base

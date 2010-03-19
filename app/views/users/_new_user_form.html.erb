@@ -27,9 +27,9 @@
     <%= r.label :role_id, "What is your primary role in public health or emergency response?" %><br/>
     <%= label_tag "(Your role will be 'Public' if you do not check that you are a public health professional)" %>
     <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, {:include_blank => false, :selected => @selected_role} %><br/>
-    <%= label_tag "user_organizations", "Are you with any of these organizations?" %>
-    <%= select_tag "user[organization_membership_requests][]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name, :selected => @selected_org), :id => "user_organizations" %>
-    
+    <%= label_tag "user_organization_membership_requests_attributes_0_organization_id", "Are you with any of these organizations?" %>
+    <%= select_tag "user[organization_membership_requests_attributes][0][organization_id]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name, :selected => @selected_org), :id => "user_organization_membership_requests_attributes_0_organization_id" %>
+
     <p>
       <%= f.label(:description, "Please describe your role within your organization") %><br/>
       <%= f.text_area(:description, :rows => "8") %><br/>

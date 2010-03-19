@@ -33,6 +33,29 @@ Feature: Invitation System
       | email                  | message                                   |
       | jane.smith@example.com | Please click the link below to join DSHS. |
 
+    When I signup for an account with the following info:
+      | Email                                   | jane.smith@example.com |
+      | Password                                | Apples1                |
+      | Password confirmation                   | Apples1                |
+      | First name                              | Jane                   |
+      | Last name                               | Smith                  |
+      | Preferred name                          | Jane Smith             |
+      | Home Jurisdiction                       | Texas                  |
+      | Preferred language                      | English                |
+      | Are you with any of these organizations | DSHS                   |
+      | Are you a public health professional?   | <checked>              |
+    And "jane.smith@example.com" clicks the confirmation link in the email
+    And I am logged in as "joe.smith@example.com"
+    And I am on the invitation reports page for "DSHS"
+    And I select "By Organization" from "Report Type"
+    And I press "Submit"
+
+    Then I should see "Invitation report for DSHS by organization"
+    And I should see "Organization: DSHS"
+    And I should see "Jane Smith" within "#invitee1"
+    And I should see "jane.smith@example.com" within "#invitee1"
+    And I should explictly see "Yes" within "#invitee1 td.status"
+
   Scenario: Create and Send an invite to an existing user
     When I follow "Admin"
     And I follow "Invite Users"

@@ -39,7 +39,9 @@ Feature: An admin managing users
       | Are you a public health professional? | <checked> |
     Then "john.smith@example.com" should have the "Public" role for "Dallas County"
     And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
-    
+    When delayed jobs are processed
+    Then "john.smith@example.com" should receive the email:
+      | body contains | You have been made a member of the organization Red Cross. |
     And "john.smith@example.com" should not receive an email with the subject "Request submitted for Health Officer in Dallas County"
 
     And the following users should not receive any emails

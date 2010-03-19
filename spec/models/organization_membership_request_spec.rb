@@ -1,4 +1,3 @@
-
 # == Schema Information
 #
 # Table name: organization_membership_requests
@@ -7,7 +6,9 @@
 #  organization_id :integer(4)      not null
 #  user_id         :integer(4)      not null
 #  approver_id     :integer(4)
+#  requester_id    :integer(4)
 #
+
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 

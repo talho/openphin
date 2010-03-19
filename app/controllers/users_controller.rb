@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
-    @selected_org = params[:user][organization_membership_requests_attributes][0][organization_id].to_i unless params[:user][:organization_membership_requests_attributes].blank?
+    @selected_org = params[:user][:organization_membership_requests_attributes]["0"][:organization_id].to_i unless params[:user][:organization_membership_requests_attributes].blank? || params[:user][:organization_membership_requests_attributes]["0"].blank?
 
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
@@ -143,6 +143,14 @@ class UsersController < ApplicationController
             SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
           end
         end
+
+        u.organization_membership_requests.each do |omr|
+          if omr.has_invitation?
+            invitation = Invitation.find_last_by_organization_id(omr.organization_id)
+            omr.approve!(invitation.author)
+          end
+        end
+        
         flash[:notice]="Your account has been confirmed."
       else
         flash[:error]="Your account has already been confirmed."

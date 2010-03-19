@@ -6,21 +6,26 @@
 #  organization_id :integer(4)      not null
 #  user_id         :integer(4)      not null
 #  approver_id     :integer(4)
+#  requester_id    :integer(4)
 #
 
 class OrganizationMembershipRequest < ActiveRecord::Base
   belongs_to :organization
   belongs_to :user
   belongs_to :approver, :class_name => "User", :foreign_key => "approver_id"
+  belongs_to :requester, :class_name => "User", :foreign_key => "requester_id"
 
   attr_protected :approver_id
+
+  before_create :set_requester_if_nil
+  after_create :auto_approve_if_admin
   
   def approved?
     true if approver
   end
 
   def approve!(approving_user)
-    unless approved? || !approving_user.is_super_admin?
+    unless approved? || !approving_user.is_admin?
       organization.group.users << user
       self.approver=approving_user
       self.save
@@ -30,6 +35,25 @@ class OrganizationMembershipRequest < ActiveRecord::Base
 
   def deny!
     self.destroy
+  end
+
+  def has_invitation?
+    Invitation.find_all_by_organization_id(organization.id).each do |invitation|
+      return true unless invitation.invitees.find_by_email(user.email).nil?
+    end
+    return false
+  end
+
+  private
+  def set_requester_if_nil
+    requester = user if requester.blank?
+  end
+
+  def auto_approve_if_admin
+    approver = User.find(requester_id)
+    if approver.is_admin?
+      approve!(approver)
+    end
   end
 
 end
