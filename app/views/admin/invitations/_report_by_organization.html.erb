@@ -3,8 +3,8 @@
 <h2>Invitation report for <%= invitation.name %> by organization</h2>
 
 <%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
-  <%= will_paginate results, :params => {:report_type => report_type} %>
   <h3>Organization: <%= invitation.default_organization.name %></h3>
+  <%= will_paginate results, :params => {:report_type => report_type} %>
   <table border="1">
     <tr>
       <td>Name</td>

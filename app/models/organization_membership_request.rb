@@ -50,9 +50,11 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   end
 
   def auto_approve_if_admin
-    approver = User.find(requester_id)
-    if approver.is_admin?
-      approve!(approver)
+    unless requester.nil?
+      approver = User.find(requester_id)
+      if approver.is_admin?
+        approve!(approver)
+      end
     end
   end
 
