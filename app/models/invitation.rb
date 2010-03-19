@@ -68,4 +68,6 @@ class Invitation < ActiveRecord::Base
   def registrations_incomplete_total
     invitees.size - registered_users.size
   end
+
+  handle_asynchronously :deliver
 end
