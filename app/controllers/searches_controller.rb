@@ -31,7 +31,7 @@ class SearchesController < ApplicationController
 
     unless %w(pdf csv).include?(params[:format])
       options[:page] = params[:page]||1
-      options[:per_page] = 2
+      options[:per_page] = 8
     end
 
     build_fields params, conditions={}

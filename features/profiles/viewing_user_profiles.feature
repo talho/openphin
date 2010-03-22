@@ -99,7 +99,7 @@ Feature: Viewing user profiles
       | description        | Department of State Health Services |
       | locality           | Austin                              |
       | state              | TX                                  |
-    And the user with "john.smith@example.com" is a member of "DSHS"
+    And "john.smith@example.com" is a member of the organization "DSHS"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Superadmin" in "Dallas County"
     And I am logged in as "big.admin@example.com"
     When I view the profile page for "john.smith@example.com"
