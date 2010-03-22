@@ -106,10 +106,9 @@ class Admin::InvitationsController < ApplicationController
   def inviteeStatus
     order_in = params[:reverse] != nil ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil ? params[:sort] : 'email'
-
     #Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
     db = ActiveRecord::Base.connection();
-    if params[:sort] == 'completion_status' && params[:reverse] == '1'
+    if params[:sort] != nil && (params[:sort] == 'completion_status' && params[:reverse] == '1')
       db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration TYPE=HEAP " +
         "(SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
       db.execute "INSERT INTO inviteeStatusByRegistration (SELECT DISTINCT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email NOT IN (SELECT users.email FROM users) ORDER BY invitees.email ASC)"
@@ -118,10 +117,11 @@ class Admin::InvitationsController < ApplicationController
         "(SELECT DISTINCT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email NOT IN (SELECT users.email FROM users) ORDER BY invitees.email ASC)"
       db.execute "INSERT INTO inviteeStatusByRegistration (SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
     end
-    if params[:sort] == 'completion_status'
-      sql = "SELECT * FROM inviteeStatusByRegistration"
+
+    if params[:sort] != nil && params[:sort] != 'completion_status'
+      sql = "SELECT * FROM inviteeStatusByRegistration ORDER BY #{order_by} #{order_in}"
     else
-      sql = "SELECT * FROM inviteeStatusByRegistration ORDER BY " + order_by + " " + order_in
+      sql = "SELECT * FROM inviteeStatusByRegistration"
     end
     invitees = Invitee.paginate_by_sql [sql], :page => params[:page] || 1
     db.execute "DROP TABLE inviteeStatusByRegistration"
@@ -131,7 +131,6 @@ class Admin::InvitationsController < ApplicationController
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil ? params[:sort] : 'email'
-
     Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
   end
 
