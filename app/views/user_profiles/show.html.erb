@@ -1,8 +1,7 @@
 
 <div class='user_profile'>
-  
   <% i_am_fellow = fellow_member? @user %>
-  
+
   <div class="details">
     <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
       <h2><%=h @user.name %></h2>

@@ -29,7 +29,7 @@ class SearchesController < ApplicationController
       :order => :name,                        # ascending order on name
     }
 
-    unless params[:format] == "pdf"
+    unless %w(pdf csv).include?(params[:format])
       options[:page] = params[:page]||1
       options[:per_page] = 2
     end

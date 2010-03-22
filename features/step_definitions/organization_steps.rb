@@ -26,13 +26,6 @@ Given /^an organization exist with the following info:$/ do |table|
   Organization.create! table.rows_hash
 end
 
-Given /^the user with "([^\"]*)" is a member of "([^\"]*)"$/ do |email,org_name|
-  membership = OrganizationMembershipRequest.new
-  membership.organization = Organization.find_by_name(org_name)
-  membership.user = User.find_by_email(email)
-  membership.save!
-end
-
 Given /^the organization "([^\"]*)" has been approved$/ do |org_name|
   org=Organization.find_by_name(org_name)
   org.approved = true
@@ -47,7 +40,6 @@ end
 # end
 
 Given /^I approve the "([^\"]*)" membership for "([^\"]*)"$/ do |org_name, email|
-  debugger
   user = User.find_by_email!(email)
   organization = Organization.find_by_name!(org_name)
   request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(organization.id, user.id)

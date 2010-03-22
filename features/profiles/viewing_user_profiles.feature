@@ -119,11 +119,13 @@ Feature: Viewing user profiles
       | locality           | Austin                              |
       | state              | TX                                  |
       | postal_code        | 78720                               |
-    And the user with "john.smith@example.com" is a member of "DSHS"
-    And the user with "sam.body@example.com" is a member of "DSHS"
+
+    And "john.smith@example.com" is a member of the organization "DSHS"
+    And "sam.body@example.com" is a member of the organization "DSHS"
     And I am logged in as "sam.body@example.com"
     When I view the profile page for "john.smith@example.com"
     And I should see "888-123-1212" within ".office_phone"
     And I should see "888-456-1212" within ".office_fax"
     And I should see "888-432-1212" within ".mobile_phone"
     And I should see "888-555-1212" within ".home_phone"
+    And I should not see "Public:"
