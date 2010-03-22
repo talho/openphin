@@ -37,6 +37,10 @@ class Service::SMS < Service::Base
       @alert, @config, @users = alert, config, users
     end
 
+    def perform_delivery(body)
+      Service::SWN::Base::Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
+    end
+
     class AlertNotificationResponse < ActiveRecord::Base
       set_table_name "swn_notification_response"
       belongs_to :alert

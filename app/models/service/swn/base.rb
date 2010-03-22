@@ -70,10 +70,4 @@ class Service::SWN::Base
 
   end
 
-  private
-
-  def perform_delivery(body)
-    Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
-  end
-
 end
