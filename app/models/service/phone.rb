@@ -31,13 +31,13 @@ class Service::Phone < Service::Base
     end
   end
   
-  class SWN
+  class SWN < Service::SWN::Base
     def initialize(alert, config, users)
       @alert, @config, @users = alert, config, users
     end
 
     def perform_delivery(body)
-      Service::SWN::Base::Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
+      Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
     end
 
     class AlertNotificationResponse < ActiveRecord::Base
