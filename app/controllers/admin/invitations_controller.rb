@@ -138,4 +138,9 @@ class Admin::InvitationsController < ApplicationController
     Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :include => [:user => :role_requests],
                      :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ? AND role_requests.jurisdiction_id IN (?)", params[:id], true, nil, nil, current_user.role_memberships.admin_roles.map{|rm| rm.jurisdiction.id}.join(",")]
   end
+  
+  def csv_download
+    send_file Rails.root.join("tmp","invitee.csv"), :type=>"application/xls" 
+  end
+  
 end

@@ -58,3 +58,6 @@
 [submodule "public/javascripts/FCBKcomplete"]
 	path = public/javascripts/FCBKcomplete
 	url = git://github.com/Dishwasha/FCBKcomplete.git
+[submodule "vendor/plugins/prawnto"]
+	path = vendor/plugins/prawnto
+	url = git://github.com/thorny-sun/prawnto.git

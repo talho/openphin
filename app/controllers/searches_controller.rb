@@ -27,8 +27,12 @@ class SearchesController < ApplicationController
     options = {
       :retry_stale => true,                   # avoid nil results
       :order => :name,                        # ascending order on name
-      :page=>params[:page]||1, :per_page=>8   # pagination, most entries have several roles
     }
+
+    unless params[:format] == "pdf"
+      options[:page] = params[:page]||1
+      options[:per_page] = 2
+    end
 
     build_fields params, conditions={}
     filters = build_filters params
@@ -41,9 +45,7 @@ class SearchesController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.json {
-        render :json => @results 
-      }
+      format.pdf 
     end
   end
   
