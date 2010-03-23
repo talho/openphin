@@ -22,7 +22,7 @@ class Target < ActiveRecord::Base
 private
   
   def save_snapshot_of_users
-    self.users = audience.recipients(:include_public => item.include_public_users?)
+    self.users = audience.recipients(:include_public => item.include_public_users?).uniq.compact
   end
 
 end

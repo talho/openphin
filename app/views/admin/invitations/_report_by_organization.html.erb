@@ -7,8 +7,8 @@
   <%= will_paginate results, :params => {:report_type => report_type} %>
   <table border="1">
     <tr>
-      <td>Name</td>
-      <td>Email Address</td>
+      <td><%= link_to 'Name', "#{reports_admin_invitation_path(invitation)}?&sort=name#{@reverse}&report_type=#{report_type}"%></td>
+      <td><%= link_to "Email Address", "#{reports_admin_invitation_path(invitation)}?&sort=email#{@reverse}&report_type=#{report_type}"%></td>
       <td>Is Member?</td>
     </tr>
     <%- results.each_with_index do |invitee, index| %>

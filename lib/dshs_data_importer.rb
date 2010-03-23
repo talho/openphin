@@ -113,7 +113,6 @@ class DshsDataImporter
           @bad = RoleMembership.create!(:user => user, :jurisdiction => jurisdiction, :role => Role.public) unless RoleMembership.alread_exists?(user,Role.public,jurisdiction)
         rescue
           puts user
-          debugger
         end
       else
         #puts row

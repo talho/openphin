@@ -32,7 +32,7 @@
   <h5>Methods</h5>
   <p class="communication_methods"><%= @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
 
-  <%- if !@alert.caller_id.blank? -%>
+  <%- unless @alert.caller_id.blank? || @alert.caller_id == "4114114111"-%>
   <h5>Caller ID</h5>
   <p class="caller_id"><%= @alert.caller_id %></p>
   <%- end -%>

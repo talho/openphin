@@ -125,6 +125,10 @@ jQuery(function($) {
    });
 	 $("#comingsoon a.close").bind("click", toggleComingSoon);
 	 $("a.rollcall").bind("click", toggleComingSoon);
+   $("#report_type").bind("change", function (){
+     this.form.submit();
+   })
+   
 
 });
 
