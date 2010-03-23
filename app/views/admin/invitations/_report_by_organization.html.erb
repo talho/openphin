@@ -4,6 +4,7 @@
 
 <%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
   <h3>Organization: <%= invitation.default_organization.name %></h3>
+  <p><%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%></p>
   <%= will_paginate results, :params => {:report_type => report_type} %>
   <table border="1">
     <tr>
@@ -20,4 +21,5 @@
     <%- end -%>
   </table>
   <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
+  <p><%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%></p>
 <%- end -%>
