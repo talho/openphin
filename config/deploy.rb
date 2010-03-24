@@ -21,9 +21,9 @@ task :production do
 end
 
 task :staging do
-	role :app, "openphin.texashan.org"
-	role :web, "openphin.texashan.org"
-	role :db,  "openphin.texashan.org", :primary => true
+	role :app, "staging.txphin.org"
+	role :web, "staging.txphin.org"
+	role :db,  "staging.txphin.org", :primary => true
 end
 
 set :scm, :git
