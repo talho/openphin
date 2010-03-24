@@ -31,6 +31,7 @@ class AlertsController < ApplicationController
   end
 
   def create
+    remove_blank_call_downs
     @alert = present current_user.alerts.build(params[:alert])
     if params[:send]
       if @alert.valid?
@@ -197,6 +198,14 @@ private
     unless current_user.alerter?
       flash[:error] = "You do not have permission to send an alert."
       redirect_to root_path
+    end
+  end
+
+  def remove_blank_call_downs
+    call_down = params[:alert][:call_down_messages].sort{|a,b| b[0]<=>a[0]}
+    call_down.each do |key, value|
+      params[:alert][:call_down_messages].delete(key) if value.blank?
+      break unless value.blank?
     end
   end
 

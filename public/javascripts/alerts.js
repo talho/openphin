@@ -117,7 +117,8 @@
       $('#details .details').append('<p><button class="audience">Select an Audience &gt;</button></p>');
 
     $('#details button.audience').click(function() {
-      $('ul.progress a[href=#audience]').click();
+      if(checkEmptyCallDowns())
+        $('ul.progress a[href=#audience]').click();
       return false;
     });
 
@@ -189,5 +190,31 @@
 
       return false;
     });
+
+    $('#use_call_down').bind('click', function(e){
+     $('#call_down_container').toggleClass('hidden');
+     $('.alert_call_down_messages').val('');
+     $('.alert_device').each(function(){
+       if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice' && $(this).attr('value') != 'Device:FaxDevice'){
+         $(this).attr('checked', false);
+         if($('#call_down_container').hasClass('hidden'))
+           $(this).removeAttr('disabled');
+         else
+           $(this).attr('disabled', true);
+       }
+     });
+   });
+    
   });
 })(jQuery);
+
+function checkEmptyCallDowns(){
+ inputElements = $(".alert_call_down_messages");
+ for(i=0;i<inputElements.length -1; i++){
+   if(jQuery.trim($(inputElements[i]).val()) == '' && jQuery.trim($(inputElements[i+1]).val()) != ''){
+    alert('Please make sure not to have empty call down options before non-empty call down options.');
+    return false;
+   }
+ }
+ return true;
+}
