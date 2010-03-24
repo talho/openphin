@@ -191,16 +191,27 @@
       return false;
     });
 
+    $('#alert_acknowledge').bind('click', function(e){
+      if($('#call_down_container').hasClass('hidden') == false){
+        alert("You must require acknowledgement if you are sending call down options as well. Otherwise, please de-select the 'Use Call Down' feautre.");
+        return false;
+      }
+    });
+
+    
     $('#use_call_down').bind('click', function(e){
      $('#call_down_container').toggleClass('hidden');
      $('.alert_call_down_messages').val('');
      $('.alert_device').each(function(){
        if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice' && $(this).attr('value') != 'Device:FaxDevice'){
          $(this).attr('checked', false);
-         if($('#call_down_container').hasClass('hidden'))
-           $(this).removeAttr('disabled');
-         else
+         if($('#call_down_container').hasClass('hidden')){
+          $(this).removeAttr('disabled');
+         }else{
            $(this).attr('disabled', true);
+           $('#alert_acknowledge').attr('checked', true);
+         }
+
        }
      });
    });
