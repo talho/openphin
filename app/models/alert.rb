@@ -39,6 +39,7 @@
 #  distribution_id                :string(255)
 #  reference                      :string(255)
 #  sender_id                      :string(255)
+#  call_down_messages             :text
 #
 
 require 'ftools'
@@ -77,7 +78,9 @@ class Alert < ActiveRecord::Base
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   DeliveryTimes = [15, 60, 1440, 4320, 4420]
-  
+
+  serialize :call_down_messages, Hash
+
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
@@ -86,6 +89,7 @@ class Alert < ActiveRecord::Base
   validates_length_of :caller_id, :is => 10, :allow_blank => true, :allow_nil => true
   validates_format_of :caller_id, :with => /^[0-9]*$/, :on => :create, :allow_blank => true, :allow_nil => true
   validates_attachment_content_type :message_recording, :content_type => ["audio/x-wav","application/x-wav"]
+  #validate :verify_audiences_not_empty
   
   before_create :set_message_type
   before_create :set_sent_at
@@ -366,5 +370,9 @@ private
 
   def create_console_alert_device_type
     AlertDeviceType.create!(:alert => self, :device => "Device::ConsoleDevice")
+  end
+
+  def verify_audiences_not_empty
+    errors.add_to_base("The audience must have a least one role, jurisdiction, or user specified.") unless audiences.length > 0
   end
 end

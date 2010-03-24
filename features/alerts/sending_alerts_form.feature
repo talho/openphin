@@ -88,5 +88,49 @@ Feature: Sending alerts form
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
 
+  Scenario: Sending alerts with call down
+    Given the following entities exists:
+      | Jurisdiction | Dallas County  |
+      | Jurisdiction | Potter County  |
+      | Jurisdiction | Tarrant County |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+
+    When I go to the HAN
+    And I follow "Send an Alert"
+
+    When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
+    And I check "Potter County"
+    And I fill in "Message" with "Some body text"
+    # And I press "Use Call Down"
+    And I fill in "Call Down 1" with "Please press 1 to respond within 15 minutes"
+    And I fill in "Call Down 2" with "Please press 2 to respond within 30 minutes"
+    And I fill in "Call Down 3" with "Please press 3 to respond within 1 hour"
+    And I fill in "Call Down 4" with "Please press 4 to respond within 4 hour"
+    And I fill in "Call Down 5" with "Please press 5 to not respond"
+    And I select "Potter County" from "Jurisdiction"
+    And I select "Test" from "Status"
+    And I select "Minor" from "Severity"
+    And I select "72 hours" from "Delivery Time"
+    And I check "Requires acknowledgement"
+    And I check "Phone"
+    And I press "Preview Message"
+    Then I should see a preview of the message
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+
+    Then an alert exists with:
+      | from_jurisdiction   | Potter County                                |
+      | title               | H1N1 SNS push packs to be delivered tomorrow |
+      | call_down_messages  | Please press 1 to respond within 15 minutes  |
+      | call_down_messages  | Please press 2 to respond within 30 minutes  |
+      | call_down_messages  | Please press 3 to respond within 1 hour      |
+      | call_down_messages  | Please press 4 to respond within 4 hours     |
+      | call_down_messages  | Please press 5 to not respond                |
+
 
 

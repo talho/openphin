@@ -75,7 +75,7 @@ EOF
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml
-          xml.swn(:gwbText, "Please press one to acknowledge this alert.") if alert.acknowledge?
+          add_call_down xml
           
           add_recipients xml
 	        #TODO: uncomment if and when SWN introduces ability to attach voice files.
@@ -99,6 +99,20 @@ EOF
       xml.swn(:subject, alert.title)
       xml.swn(:body, "The following is an alert from the Texas Public Health Information Network.  #{alert.short_message}")
     end
+  end
+
+  def add_call_down(xml)
+    if alert.acknowledge?
+      if alert.call_down_messages.nil? || alert.call_down_messages.empty?
+        xml.swn(:gwbText, "Please press one to acknowledge this alert.")
+      else
+          sorted_messages = alert.call_down_messages.sort {|a, b| a[0]<=>b[0]}
+          sorted_messages.each do |key, call_down|
+            xml.swn(:gwbText, call_down)
+          end
+      end
+    end
+
   end
 
   def add_recipients(xml)

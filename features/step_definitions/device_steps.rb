@@ -164,6 +164,7 @@ Then /^the following phone calls should be made:$/ do |table|
         message = xml.search( "//swn:notification/swn:body",
                               {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
         message.include?(row["message"]) && phone.include?(row["phone"])
+        
         #SWN doesn't support recorded attachments
 #      else
 #        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
@@ -173,6 +174,26 @@ Then /^the following phone calls should be made:$/ do |table|
       end
     end
     call.should_not be_nil
+
+    unless row["call_down"].blank?
+      call = Service::Phone.deliveries.detect do |phone_call|
+        xml = Nokogiri::XML(phone_call.body)
+        call_down = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                                {"swn" => "http://www.sendwordnow.com/notification"})).children.map(&:inner_text).flatten
+        call_down.include?(row["call_down"])
+      end
+      call.should_not be_nil
+    end
+  end
+end
+
+Then /^the phone call should have (\d+) calldowns$/ do |number|
+  Service::Phone.deliveries.detect do |phone_call|
+    xml = Nokogiri::XML(phone_call.body)
+    call_down_size = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                            {"swn" => "http://www.sendwordnow.com/notification"})).children.map{|child| child unless child.inner_text.strip.blank?}.compact.length
+    debugger
+    call_down_size.should == number.to_i
   end
 end
 

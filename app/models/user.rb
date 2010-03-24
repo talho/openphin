@@ -17,9 +17,9 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean(1)      not null
+#  email_confirmed    :boolean(1)      default(FALSE), not null
 #  phone              :string(255)
-#  delta              :boolean(1)
+#  delta              :boolean(1)      default(TRUE), not null
 #  credentials        :text
 #  bio                :text
 #  experience         :text
@@ -29,6 +29,12 @@
 #  public             :boolean(1)
 #  photo_file_size    :integer(4)
 #  photo_updated_at   :datetime
+#  deleted_at         :datetime
+#  deleted_by         :string(255)
+#  deleted_from       :string(24)
+#  home_phone         :string(255)
+#  mobile_phone       :string(255)
+#  fax                :string(255)
 #
 
 class User < ActiveRecord::Base

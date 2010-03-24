@@ -28,7 +28,19 @@
         <%= form.label :message %>
         <%= form.text_area :message, :rows => 5 %>
       </p>
-
+      <p><input type="button" name="use_call_down" id="use_call_down" value="Use Call Down" /></p>
+      <div id="call_down_container">
+        <%= label_tag "alert_call_down_messages_0", "Call Down 1" %>
+        <%= text_field_tag "alert[call_down_messages][0]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["0"], :id => "alert_call_down_messages_0" %>
+        <%= label_tag "alert_call_down_messages_1", "Call Down 2" %>
+        <%= text_field_tag "alert[call_down_messages][1]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["1"], :id => "alert_call_down_messages_1" %>
+        <%= label_tag "alert_call_down_messages_2", "Call Down 3" %>
+        <%= text_field_tag "alert[call_down_messages][2]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["2"], :id => "alert_call_down_messages_2" %>
+        <%= label_tag "alert_call_down_messages_3", "Call Down 4" %>
+        <%= text_field_tag "alert[call_down_messages][3]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["3"], :id => "alert_call_down_messages_3" %>
+        <%= label_tag "alert_call_down_messages_4", "Call Down 5" %>
+        <%= text_field_tag "alert[call_down_messages][4]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["4"], :id => "alert_call_down_messages_4" %>
+      </div>
       <p>
         <%= form.label :short_message %>
       This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is blank, the regular message body (above) will be used for short-message devices, possibly truncating the message. <strong class="maxlen">Maximum length: 160 characters</strong>.

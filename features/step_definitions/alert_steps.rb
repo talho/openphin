@@ -146,6 +146,8 @@ Then 'an alert exists with:' do |table|
         first_name, last_name = user.split(" ")
         alert.audiences.map(&:users).flatten.should include(User.find_by_first_name_and_last_name(first_name, last_name))
       end
+    when 'call_down_messages'
+      alert.call_down_messages.values.include?(value).should be_true
 
     else
       alert.send(attr).should == value
