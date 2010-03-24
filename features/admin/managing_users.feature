@@ -39,7 +39,9 @@ Feature: An admin managing users
       | Are you a public health professional? | <checked> |
     Then "john.smith@example.com" should have the "Public" role for "Dallas County"
     And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
-    
+    When delayed jobs are processed
+    Then "john.smith@example.com" should receive the email:
+      | body contains | You have been made a member of the organization Red Cross. |
     And "john.smith@example.com" should not receive an email with the subject "Request submitted for Health Officer in Dallas County"
 
     And the following users should not receive any emails
@@ -132,5 +134,26 @@ Feature: An admin managing users
 	  And "bob.jones@example.com" should not receive an email
     And I should see "Home Jurisdiction needs to be selected"
     
+  Scenario: Editing a user's profile by adding user and organizational contact info
+    Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
+    When I view the profile page for "jane.smith@example.com"
+    And I follow "Edit"
     
+    Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
+    And I should see the profile edit form
+    
+    When I fill in "Office Phone" with "888-123-1212"
+    And I fill in "Office Fax" with "888-456-1212"
+    And I fill in "Home Phone" with "888-555-1212"
+    And I fill in "Mobile Phone" with "888-432-1212"
+    And I press "Save"
+    
+    Then I should see "Profile information saved"
+    And I should see the profile page
+    And I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-555-1212" within ".home_phone"
+    And I should see "888-432-1212" within ".mobile_phone"
+        
+        
     

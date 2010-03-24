@@ -1,0 +1,26 @@
+<h2><%= @invitation.name %> Invitation</h2>
+
+Subject
+<div id="subject">
+<%= @invitation.subject %>
+</div>
+<br />
+
+<br />Body
+<div id="body">
+  <pre><%= @invitation.body %></pre>
+</div><br />
+
+<br />Default Organization
+<div id="default_organization">
+<%= @invitation.default_organization.name unless @invitation.default_organization.nil? %>
+</div><br />
+
+<br />Invitees
+<ul id="invitees">
+  <% @invitees = @invitation.invitees.paginate(:page=>params[:page]||1,:per_page=>10) %>
+  <% @invitees.each do |invitee| %>
+    <li><%= "#{invitee.name} &lt;#{invitee.email}&gt;" %></li>
+  <% end %>
+  <br /><%= will_paginate @invitees %>
+</ul>

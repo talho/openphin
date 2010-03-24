@@ -27,29 +27,23 @@
 #  group_id                  :integer(4)
 #
 
+
 class Organization < ActiveRecord::Base
 
-  has_and_belongs_to_many :users
+  belongs_to :group
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-  belongs_to :organization_type
-  has_one :contact, :class_name => "User", :primary_key => :contact_email, :foreign_key => 'email'
-  has_many :organization_memberships, :dependent => :destroy
+  belongs_to :contact, :class_name => "User"
   has_many :organization_requests, :dependent => :destroy
-  has_many :requested_jurisdictions, :source => :jurisdiction, :through => :organization_requests
-  has_many :jurisdictions, :through => :organization_memberships
 
   validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
   def validate
     errors.add_to_base("Organization name can't be blank") if self.name.blank?
     errors.add_to_base("Description of organization can't be blank") if self.description.blank?
     errors.add_to_base("City can't be blank") if self.locality.blank?
-    errors.add_to_base("Contact person's name can't be blank") if self.contact_display_name.blank?
-    errors.add_to_base("Contact person's email can't be blank") if self.contact_email.blank?
-    errors.add_to_base("Contact person's phone can't be blank") if self.contact_phone.blank?
   end
   
-  before_create :set_token
+  before_create :set_token, :create_group
 
   default_scope :order => :name
   
@@ -60,11 +54,22 @@ class Organization < ActiveRecord::Base
       :conditions => [ 'organization_requests.jurisdiction_id IN (?)', jurs.map(&:id) ]
     }
   }
-  named_scope :members_in_jurisdictions, lambda { |jurs|
-      { :include => 'organization_memberships',
-        :conditions => [ 'organization_memberships.jurisdiction_id IN (?)', jurs.map(&:id) ]
-      }
-    }
+  named_scope :with_user, lambda {|user|
+    { :conditions => ["`audiences`.id = `organizations`.group_id AND  (`audiences`.`type` = 'Group' ) AND `audiences`.id = `audiences_users`.audience_id AND `audiences_users`.user_id = `users`.id AND (`users`.id = ?)", user.id], :joins => ", audiences, audiences_users, users"}
+  }
+  named_scope :foreign, :conditions => ["organizations.foreign = true"]
+  named_scope :non_foreign, :conditions => ["organizations.foreign = false"]
+
+  validates_inclusion_of :foreign, :in => [true, false]
+
+  attr_accessor :members
+  def members
+    group.users
+  end
+  
+  def <<(user)
+    group.users << user
+  end
 
   def approved?
     organization_requests.any?(&:approved)
@@ -90,15 +95,15 @@ class Organization < ActiveRecord::Base
       entry.dsml(:attr, :name => :telephoneNumber) {|a| a.dsml :value, telephoneNumber}
       entry.dsml(:attr, :name => :primaryOrganizationType) {|pot| pot.dsml :value, primaryOrganizationType}
       entry.dsml(:attr, :name => :county) {|a| a.dsml :value, county}
-      if alertingJurisdictions.is_a?(Array)
-        entry.dsml(:attr, :name => :alertingJurisdictions) do |aj|
-          alertingJurisdictions.each do |jur|
-            aj.dsml(:value, jur)
-          end
-        end
-      else
-        entry.dsml(:attr, :name => :alertingJurisdictions) {|a| a.dsml :value, alertingJurisdictions}
-      end
+      # if alertingJurisdictions.is_a?(Array)
+      #   entry.dsml(:attr, :name => :alertingJurisdictions) do |aj|
+      #     alertingJurisdictions.each do |jur|
+      #       aj.dsml(:value, jur)
+      #     end
+      #   end
+      # else
+      #   entry.dsml(:attr, :name => :alertingJurisdictions) {|a| a.dsml :value, alertingJurisdictions}
+      # end
     end
 
   end
@@ -126,5 +131,8 @@ class Organization < ActiveRecord::Base
   def set_token
     self.token = ActiveSupport::SecureRandom.hex
   end
-
+  
+  def create_group
+    self.group = Group.create!(:scope => "Organization", :name => self.name)
+  end
 end

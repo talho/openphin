@@ -1,0 +1,45 @@
+<h2>Invite New People</h2>
+
+<% form_for @invitation, :url => admin_invitations_path, :html => {:multipart => true} do |form| %>
+  <p>
+    <%= form.label :name %><br />
+    <%= form.text_field :name %>
+  </p>
+  <p>
+    <%= form.label :subject %><br />
+    <%= form.text_field :subject, :size=>60 %>
+  </p>
+  <p>
+    <%= form.label :body %><br />
+    <%= form.text_area :body, :cols=>60, :rows=>5 %>
+  </p>
+
+  <p>
+    <%= label_tag "default_organization", "Default Organization" %>
+    <%= collection_select("invitation","organization_id", Organization.non_foreign, :id, :name, {:include_blank => true}, :id => "default_organization") %>
+  </p>
+
+  <%= label_tag "A list of invitees can be uploaded using this file" %>
+  <table>
+    <tr><td colspan=3>Format (pipe separated values with header row) example:</td></tr>
+    <tr><td>name</td><td>|</td><td>email</td></tr>
+    <tr><td>John User</td><td>|</td><td>john@example.com</td></tr>
+  </table>
+  <%= form.label :csvfile, "CSV File" %>
+  <%= form.file_field :csvfile %>
+
+  <p><%= label_tag "or/and" %></p>
+  <%= label_tag "individuals with the following:" %> <br />
+  <p>
+    <% fields_for "invitation[invitees_attributes][0]" do |invitee_form| %>
+      <%= invitee_form.label :name, "Invitee Name"%>
+      <%= invitee_form.text_field :name %><br /> 
+      <%= invitee_form.label :email, "Invitee Email" %>
+      <%= invitee_form.text_field :email %><br />
+      <%= link_to("Add Invitee","#", :id => "AddInvitee") %>
+    <% end %>
+  </p>
+  <ul id="invitees-list"></ul><br />
+  <p><%= form.submit "Submit" %></p>
+<% end %>
+

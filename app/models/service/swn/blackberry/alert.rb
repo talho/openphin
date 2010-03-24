@@ -87,7 +87,7 @@ class Service::SWN::Blackberry::Alert < Service::SWN::Blackberry::Base
             xml.swn(:contactPnts) do
               xml.swn(:contactPntInfo, :type => "Text") do
                 xml.swn(:id, user.id)
-                xml.swn(:label, "BlackBerry PIN Device")
+                xml.swn(:label, "BlackBerryPINDevice")
                 xml.swn(:address, "#{blackberry_device.blackberry}@blackberry.sendwordnow.com")
               end
             end

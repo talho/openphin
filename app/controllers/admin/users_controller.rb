@@ -15,7 +15,7 @@ class Admin::UsersController < ApplicationController
     I18n.locale = "#{I18n.locale}_signup_create"
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
-      params[:user].delete("organization_ids")
+      params[:user].delete("organization_membership_requests_attributes")
       params[:user].delete("description")
     end
 
@@ -24,13 +24,16 @@ class Admin::UsersController < ApplicationController
       params[:user][:role_requests_attributes]['0'] = {} if params[:user][:role_requests_attributes]['0'].nil?
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
     end
-    
+
     @user = User.new params[:user]
     @user.role_requests.each do |role_request|
       role_request.requester = current_user
       if current_user.is_admin_for?(role_request.jurisdiction)
         role_request.approver = current_user
       end
+    end
+    @user.organization_membership_requests.each do |omr|
+      omr.requester = current_user
     end
     respond_to do |format|
       if @user.save

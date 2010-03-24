@@ -1,0 +1,5 @@
+<ul class="organizations data-list">
+  <% user.organizations.each do |org| %>
+    <li class="organizations"><%=h org.name%> <%= link_to "Remove Organization Membership", admin_organization_membership_request_path(:id => org.id, :user_id => user.id), :method => :delete, :class => 'destroy' if user == current_user || current_user.is_super_admin? %></li>
+  <% end %>
+</ul>

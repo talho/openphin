@@ -23,6 +23,22 @@
   <%= form.text_field(:email, :class => "email_address") %>
 </p>
 <p class="text rel_2">
+  <%= form.label(:fax, "Office Fax") %>
+  <%= form.text_field(:fax, :class => "fax") %>
+</p>
+<p class="text rel_1">
+  <%= form.label(:phone, "Office Phone") %>
+  <%= form.text_field(:phone, :class => "phone") %>
+</p>
+<p class="text rel_2">
+  <%= form.label(:home_phone, "Home Phone") %>
+  <%= form.text_field(:home_phone, :class => "home_phone") %>
+</p>
+<p class="text rel_1">
+  <%= form.label(:mobile_phone, "Mobile Phone") %>
+  <%= form.text_field(:mobile_phone, :class => "mobile_phone") %>
+</p>
+<p class="text rel_2">
   <%= form.label(:password_confirmation,"Password Confirmation") %>
   <%= form.password_field(:password_confirmation, :"data-label" => "******") %>
 </p>

@@ -45,3 +45,4 @@ config/growl.yml
 config/bullet.yml
 config/rack-bug.yml
 public/tutorials
+config/initializers/smtp.rb

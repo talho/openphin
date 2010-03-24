@@ -24,12 +24,8 @@ class UserProfilesController < ApplicationController
     @user = User.find(params[:user_id])
     
     respond_to do |format|
-      if @user.public? || current_user == @user || current_user.is_admin?
-        format.html # show.html.erb
-        format.xml { render :xml => @user }
-      else
-        format.html { render :action => 'privacy'}
-      end
+      format.html # show.html.erb
+      format.xml { render :xml => @user }
     end
   end
 
@@ -104,6 +100,12 @@ class UserProfilesController < ApplicationController
       end
     end
 
+    omr = params[:user][:organization_membership_requests_attributes]
+    omr.each do |index, request|
+      params[:user][:organization_membership_requests_attributes].delete(index) if request[:organization_id].blank?
+      request[:approver_id] = current_user.id if current_user.is_super_admin?
+    end unless omr.nil?
+
     if !params[:user][:photo].blank?
       @user.photo=params[:user][:photo]
       params[:user].delete("photo")
@@ -122,7 +124,18 @@ class UserProfilesController < ApplicationController
             rr.approve!(current_user)
           end
         end
-        flash[:notice] = 'Profile information saved.'
+        
+        params[:user][:organization_membership_requests_attributes].each do |index, request|
+          omr = @user.organization_membership_requests.find_by_organization_id(request['organization_id'])
+          if !omr.approved? && current_user.is_super_admin?
+            omr.approve!(current_user)
+          else
+            flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
+          end
+        end unless params[:user][:organization_membership_requests_attributes].nil?
+
+        flash[:notice] = "" if flash[:notice].blank?
+        flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
         format.html { redirect_to user_profile_path(@user) }
         format.xml { head :ok }
       else
@@ -132,7 +145,8 @@ class UserProfilesController < ApplicationController
     end
   end
 
-  private
+protected
+
   def device_class_for(device_type)
     ("#{Device.name}::" + params[:device_type]).constantize
   end
@@ -144,4 +158,5 @@ class UserProfilesController < ApplicationController
       redirect_to :back
     end
   end
+    
 end
