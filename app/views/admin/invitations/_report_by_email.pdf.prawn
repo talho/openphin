@@ -11,7 +11,6 @@ invitees = results.map do |invitee|
     invitee.email,
     invitee.completion_status
   ]
-  
 end
 
 unless invitees.empty?

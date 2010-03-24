@@ -5,7 +5,10 @@
   </p>
   <% unless @results.nil? %>
     <% unless @results.empty? %>
-      <p><%= link_to "Printable Report (PDF)", "#{show_advanced_search_path}.pdf?#{query_string}" %></p>
+      <p>
+        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query_string}" %>
+        <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
+      </p>
       <%= will_paginate @results %>
       <table>
         <tr>
@@ -22,7 +25,10 @@
         <%- end -%>
       </table>
       <%= will_paginate @results %><br/>
-      <p><%= link_to "Printable Report (PDF)", "#{show_advanced_search_path}.pdf?#{query_string}" %></p>
+      <p>
+        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query_string}" %>
+        <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
+      </p>
     <% else %>  
       <p><%= "No Results Found" %></p>
     <% end %>

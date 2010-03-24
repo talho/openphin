@@ -41,31 +41,77 @@ class Admin::InvitationsController < ApplicationController
 
     @reverse = params[:reverse] == "1" ? nil : "&reverse=1"
 
-    case params[:report_type]
-    when "by_registrations"
-      results = inviteeStatus
-      render :partial => "report_by_registration", :locals => {
-        :results => results, :report_type => params[:report_type],
-        :invitation => invitation, :report_options => report_options
-      }, :layout => "application"
-    when "by_organization"
-      results = inviteeStatusByOrganization
-      render :partial => "report_by_organization", :locals => {
-        :results => results, :report_type => params[:report_type],
-        :invitation => invitation, :report_options => report_options
-      }, :layout => "application"
-    when "by_pending_requests"
-      results = inviteeStatusByPendingRequests
-      render :partial => "report_by_pending_requests", :locals => {
-        :results => results, :report_type => params[:report_type],
-        :invitation => invitation, :report_options => report_options
-      }, :layout => "application"
-    else # Also by_email
-      results = inviteeStatus
-      render :partial => "report_by_email", :locals => {
-        :results => results, :report_type => params[:report_type],
-        :invitation => invitation, :report_options => report_options
-      }, :layout => "application"
+
+    respond_to do |format|
+      case params[:report_type]
+        when "by_registrations"
+          results = inviteeStatus
+          format.html do
+            render :partial => "report_#{params[:report_type]}", :locals => {
+              :results => results, :report_type => params[:report_type],
+              :invitation => invitation, :report_options => report_options
+            }, :layout => "application"
+          end
+          format.pdf do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+          format.csv do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+        when "by_organization"
+          results = inviteeStatusByOrganization
+          format.html do
+            render :partial => "report_#{params[:report_type]}", :locals => {
+              :results => results, :report_type => params[:report_type],
+              :invitation => invitation, :report_options => report_options
+            }, :layout => "application"
+          end
+          format.pdf do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+          format.csv do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+        when "by_pending_requests"
+          results = inviteeStatusByPendingRequests
+          format.html do
+            render :partial => "report_#{params[:report_type]}", :locals => {
+              :results => results, :report_type => params[:report_type],
+              :invitation => invitation, :report_options => report_options
+            }, :layout => "application"
+          end
+          format.pdf do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+          format.csv do
+            render :partial => "report_#{params[:report_type]}", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+        else # Also by email
+          results = inviteeStatus
+          format.html do
+            render :partial => "report_by_email", :locals => {
+              :results => results, :report_type => params[:report_type],
+              :invitation => invitation, :report_options => report_options
+            }, :layout => "application"
+          end
+          format.pdf do
+            render :partial => "report_by_email", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+          format.csv do
+            @csv_options = { :col_sep => '|' }
+            @filename = "user_search_.csv"
+            @output_encoding = 'UTF-8'
+            render :partial => "report_by_email", 
+                   :locals => {:results => results, :invitation => invitation}
+          end
+        end
     end
 
   end

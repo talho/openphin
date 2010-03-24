@@ -5,7 +5,10 @@
 <%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
   <p>Registrations complete: <%= invitation.registrations_complete_percentage %>% (<%= invitation.registrations_complete_total %>)</p>
   <p>Registrations incomplete: <%= invitation.registrations_incomplete_percentage %>% (<%= invitation.registrations_incomplete_total %>)</p>
-  <p><%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation)}.pdf?report_type=#{report_type}"%></p>
+  <p>
+    <%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%>
+    <%#= link_to "Download Report (CSV)", "#{reports_admin_invitation_path(invitation,:format=>:csv)}?report_type=#{report_type}"%>
+  </p>
   <%= will_paginate results, :params => {:report_type => report_type} %>
   <table class="inviteTable">
     <thead>
@@ -26,5 +29,8 @@
     </tbody>
   </table>
   <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
-  <%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation)}.pdf?report_type=#{report_type}"%>
+  <p>
+    <%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%>
+    <%#= link_to "Download Report (CSV)", "#{reports_admin_invitation_path(invitation,:format=>:csv)}?report_type=#{report_type}"%>
+  </p>
 <%- end -%>

@@ -80,6 +80,7 @@ Rails::Initializer.run do |config|
   config.gem "sinatra", :source => "http://gemcutter.org"
   config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
   config.gem "prawn", :version => "=0.8.4", :source => "http://gemcutter.org"
+  config.gem "csv_builder", :version => "=1.1.7", :source => "http://gemcutter.org"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 
