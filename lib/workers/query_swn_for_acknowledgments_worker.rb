@@ -71,13 +71,13 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
     
     contactPntStatus.each do |contact|
       next if contact.nil?
-      if contact['gwbRespIndex'] == '1'
+      unless contact['gwbRespIndex'].blank?
         alert_attempt = @alert.alert_attempts.find_by_user_id(user.id)
         if alert_attempt.nil?
           PHONE_LOGGER.info "Rcpt id #{rcptStatus['id']} does not have a matching alert attempt for alert id #{@alert.id}"
           return false
         end
-        if alert_attempt.acknowledge! "Device::PhoneDevice"
+        if alert_attempt.acknowledge! "Device::PhoneDevice", contact['gwbRespIndex']
           PHONE_LOGGER.info "Rcpt id #{rcptStatus['id']} has been acknowledged"
         else
           PHONE_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"
