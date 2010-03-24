@@ -5,10 +5,10 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   end
 
   def query(args = nil)
-    Service::Phone::SWN::NotificationResponse.active.acknowledge.each do |nresult|
+    Service::Phone::SWN::AlertNotificationResponse.active.acknowledge.each do |nresult|
       @alert = nresult.alert
       next if @alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0
-      result = Service::Phone::SWN::NotificationResultsRequest.build(nresult, Service::Phone.configuration.options)
+      result = Service::Phone::SWN::NotificationResultsRequest.build(@alert.distribution_id, Service::Phone.configuration.options)
       envelope = result['soap:Envelope']
       if envelope.nil?
         PHONE_LOGGER.info "No SOAP Envelope for SWN Notification Response# #{nresult.id}"

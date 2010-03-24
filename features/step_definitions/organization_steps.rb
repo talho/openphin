@@ -1,3 +1,9 @@
+Given /^"([^\"]*)" is a member of the organization "([^\"]*)"$/ do |email, org_name|
+	user = User.find_by_email(email) || Factory(:user, :email => email)
+	org = Organization.find_by_name(org_name) || Factory(:organization, :name => org_name)
+  org.members << user
+end
+
 Given /^there is an unapproved "([^\"]*)" organization with "([^\"]*)" as the contact$/ do |name, email|
 	contact = User.find_by_email(email) || Factory(:user, :email => email)
 	Factory(:organization, :name => name, :approved => false, :contact_email => email)
@@ -16,10 +22,28 @@ Given 'the following unapproved organizations exist:' do |table|
   end
 end
 
+Given /^an organization exist with the following info:$/ do |table|
+  Organization.create! table.rows_hash
+end
+
 Given /^the organization "([^\"]*)" has been approved$/ do |org_name|
   org=Organization.find_by_name(org_name)
   org.approved = true
   org.save!
+end
+
+# When 'I approve the "([^\"]*)" membership for "$email"' do |org_name, email|
+#   user = User.find_by_email!(email)
+#   organization = Organization.find_by_name!(org_name)
+#   request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(organization.id, user.id)
+#   visit organization_membership_request_path(request.id, request.token)
+# end
+
+Given /^I approve the "([^\"]*)" membership for "([^\"]*)"$/ do |org_name, email|
+  user = User.find_by_email!(email)
+  organization = Organization.find_by_name!(org_name)
+  request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(organization.id, user.id)
+  visit organization_membership_request_path(request.id, request.token)
 end
 
 When 'I signup for an organization account with the following info:' do |table|
@@ -34,6 +58,15 @@ end
 
 When /^I deny the organization "([^\"]*)"$/ do |org_name|
   visit deny_admin_organization_path(Organization.find_by_name(org_name))
+end
+
+When /^I click the organization membership request approval link in the email for "([^\"]*)"$/ do |user_email|
+  email = ActionMailer::Base.deliveries.last
+  user = User.find_by_email!(user_email)
+  request = OrganizationMembershipRequest.find_by_user_id(user.id)
+  link = admin_organization_membership_request_path(request.id)
+  email.body.should contain(link)
+  visit link
 end
 
 When /^"([^\"]*)" clicks the organization confirmation link in the email$/ do |user_email|
@@ -51,6 +84,27 @@ When /^"([^\"]*)" receives a "([^\"]*)" organization approval email$/ do |user_e
   email.subject.should contain("User requesting organization signup")
   link = admin_pending_requests_url(:host => HOST)
   email.body.should contain(link)
+end
+
+When /^I maliciously post an approver id$/ do
+  within("body") do |body| "" end # hack to make response.dom populate
+  input = Nokogiri::XML::Node.new('input', response.dom)
+  input["name"] = "[user][organization_membership_requests_attributes][0][approver_id]"
+  input["value"] = "1"
+  input["type"] = "hidden"
+  response.dom.css('form').first.add_child(input)
+end
+
+When /^I maliciously attempt to remove "([^\"]*)" from "([^\"]*)"$/ do |email, org_name|
+  within("body") do |body| "" end # hack to make response.dom populate
+  user = User.find_by_email!(email)
+  org = Organization.find_by_name!(org_name)
+  input = Nokogiri::XML::Node.new('a', response.dom)
+  input["href"] = admin_organization_membership_request_path(:id => org.id, :user_id => user.id)
+  input.inner_html = "Remove Organization Membership"
+  input["class"] = "destroy"
+  response.dom.css('body').first.add_child(input)
+  click_link("Remove Organization Membership")
 end
 
 Then /^I should see the organization "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |org_name, email|
