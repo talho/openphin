@@ -81,9 +81,23 @@ When 'I click "$link" on "$title"' do |link, title|
   end
 end
 
-When 'I follow the acknowledge alert link' do
+When /^I follow the acknowledge alert link$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+end
+
+When 'I follow the acknowledge alert link "$title"' do |title|
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+  if title.blank?
+    visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  else
+    call_down_response = attempt.alert.call_down_messages.index(call_down_response).to_i
+    if current_user.nil?
+      raise "Step not yet supported if no user is logged in"
+    else
+      visit email_acknowledge_alert_url(attempt, call_down_response, :host => HOST)
+    end
+  end
 end
 
 When 'I send a message recording "$filename"' do |filename|

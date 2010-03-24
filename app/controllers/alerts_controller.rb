@@ -130,9 +130,9 @@ class AlertsController < ApplicationController
       If you believe this is in error, please contact support@#{DOMAIN}."
     else
       if params[:email].blank?
-        alert_attempt.acknowledge!
+        alert_attempt.acknowledge! nil, params[:call_down_response]
       else
-        alert_attempt.acknowledge! "Device::EmailDevice"
+        alert_attempt.acknowledge! "Device::EmailDevice", params[:call_down_response]
       end
       expire_log_entry(alert_attempt.alert)
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."

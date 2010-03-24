@@ -4,9 +4,16 @@ Given /^I have an? (.*) device$/ do |device_type|
 end
 
 
-When 'I acknowledge the phone message for "$title"' do |title|
+When /^I acknowledge the phone message for "([^\"]*)"$/ do |title|
   a = Alert.find_by_title(title).alert_attempts.first
   a.acknowledged_at = Time.zone.now
+  a.save!
+end
+
+When /^I acknowledge the phone message for "([^\"]*)" with "([^\"]*)"$/ do |title, call_down_response|
+  a = Alert.find_by_title(title).alert_attempts.first
+  a.acknowledged_at = Time.zone.now
+  a.call_down_response = a.alert.call_down_messages.index(call_down_response).to_i
   a.save!
 end
 
@@ -192,7 +199,6 @@ Then /^the phone call should have (\d+) calldowns$/ do |number|
     xml = Nokogiri::XML(phone_call.body)
     call_down_size = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                             {"swn" => "http://www.sendwordnow.com/notification"})).children.map{|child| child unless child.inner_text.strip.blank?}.compact.length
-    debugger
     call_down_size.should == number.to_i
   end
 end

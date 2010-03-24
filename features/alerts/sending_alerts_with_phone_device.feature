@@ -161,11 +161,11 @@ Feature: Sending alerts to phones
     And I check "Wise County"
     And I check "Phone"
     # And I press "Use Call Down"
-    And I fill in "Call Down 1" with "Please press 1 to respond within 15 minutes"
-    And I fill in "Call Down 2" with "Please press 2 to respond within 30 minutes"
-    And I fill in "Call Down 3" with "Please press 3 to respond within 1 hour"
-    And I fill in "Call Down 4" with "Please press 4 to respond within 4 hour"
-    And I fill in "Call Down 5" with "Please press 5 to not respond"
+    And I fill in "Call Down 1" with "if you can respond within 15 minutes"
+    And I fill in "Call Down 2" with "if you can respond within 30 minutes"
+    And I fill in "Call Down 3" with "if you can respond within 1 hour"
+    And I fill in "Call Down 4" with "if you can respond within 4 hours"
+    And I fill in "Call Down 5" with "if you cannot respond"
 
     And I press "Preview Message"
     Then I should see a preview of the message
@@ -175,6 +175,6 @@ Feature: Sending alerts to phones
 
     When delayed jobs are processed
     Then the following phone calls should be made:
-      | phone      | message                                                                                           | call_down                                   |
-      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak | Please press 1 to respond within 15 minutes |
+      | phone      | message                                                                                           | call_down                            |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak | if you can respond within 15 minutes |
     And the phone call should have 5 calldowns

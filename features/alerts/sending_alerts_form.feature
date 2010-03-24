@@ -106,11 +106,11 @@ Feature: Sending alerts form
     And I check "Potter County"
     And I fill in "Message" with "Some body text"
     # And I press "Use Call Down"
-    And I fill in "Call Down 1" with "Please press 1 to respond within 15 minutes"
-    And I fill in "Call Down 2" with "Please press 2 to respond within 30 minutes"
-    And I fill in "Call Down 3" with "Please press 3 to respond within 1 hour"
-    And I fill in "Call Down 4" with "Please press 4 to respond within 4 hour"
-    And I fill in "Call Down 5" with "Please press 5 to not respond"
+    And I fill in "Call Down 1" with "if you can respond within 15 minutes"
+    And I fill in "Call Down 2" with "if you can respond within 30 minutes"
+    And I fill in "Call Down 3" with "if you can respond within 1 hour"
+    And I fill in "Call Down 4" with "if you can respond within 4 hour"
+    And I fill in "Call Down 5" with "if you cannot respond"
     And I select "Potter County" from "Jurisdiction"
     And I select "Test" from "Status"
     And I select "Minor" from "Severity"
@@ -126,11 +126,11 @@ Feature: Sending alerts form
     Then an alert exists with:
       | from_jurisdiction   | Potter County                                |
       | title               | H1N1 SNS push packs to be delivered tomorrow |
-      | call_down_messages  | Please press 1 to respond within 15 minutes  |
-      | call_down_messages  | Please press 2 to respond within 30 minutes  |
-      | call_down_messages  | Please press 3 to respond within 1 hour      |
-      | call_down_messages  | Please press 4 to respond within 4 hours     |
-      | call_down_messages  | Please press 5 to not respond                |
+      | call_down_messages  | if you can respond within 15 minutes         |
+      | call_down_messages  | if you can respond within 30 minutes         |
+      | call_down_messages  | if you can respond within 1 hour             |
+      | call_down_messages  | if you can respond within 4 hours            |
+      | call_down_messages  | if you cannot respond                        |
 
 
 

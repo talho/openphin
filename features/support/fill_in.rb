@@ -126,6 +126,8 @@ module FeatureHelpers
         fill_in "alert_short_message", :with => value
       when "Message", "Title"
         fill_in label, :with => value
+      when "Call Down 1", "Call Down 2", "Call Down 3", "Call Down 4", "Call Down 5"
+        fill_in label, :with => value
       else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end
