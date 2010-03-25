@@ -32,6 +32,7 @@ class AlertsController < ApplicationController
 
   def create
     remove_blank_call_downs
+    set_cross_jurisdiction
     @alert = present current_user.alerts.build(params[:alert])
     if params[:send]
       if @alert.valid?
@@ -207,6 +208,10 @@ private
       params[:alert][:call_down_messages].delete(key) if value.blank?
       break unless value.blank?
     end
+  end
+
+  def set_cross_jurisdiction
+    params[:alert][:cross_jurisdiction] = false if params[:alert][:cross_jurisdiction] == 'true'
   end
 
 end

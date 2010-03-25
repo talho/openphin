@@ -29,6 +29,13 @@
         <%= form.text_area :message, :rows => 5 %>
       </p>
       <p><input type="button" name="use_call_down" id="use_call_down" value="Use Call Down" /></p>
+      <p>
+
+        <%= form.label "cross_jurisdiction", "Disable Cross-Jurisdictional alerting?" %>
+        <%= form.check_box 'cross_jurisdiction', {:checked => @alert.cross_jurisdiction == true ? false : true} %>
+
+
+      </p>
       <div id="call_down_container" class="hidden">
         <%= label_tag "alert_call_down_messages_1", "Call Down 1" %>
         <%= text_field_tag "alert[call_down_messages][1]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["1"], :id => "alert_call_down_messages_1", :class => 'alert_call_down_messages' %>

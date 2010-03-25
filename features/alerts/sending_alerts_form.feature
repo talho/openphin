@@ -132,6 +132,44 @@ Feature: Sending alerts form
       | call_down_messages  | if you can respond within 4 hours            |
       | call_down_messages  | if you cannot respond                        |
 
+
+  Scenario: Sending alerts with non cross jurisdiction
+     Given the following entities exists:
+       | Jurisdiction | Dallas County  |
+       | Jurisdiction | Potter County  |
+       | Jurisdiction | Tarrant County |
+     And the following users exist:
+       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+       | Jane Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
+     And the role "HAN Coordinator" is an alerter
+     And I am logged in as "john.smith@example.com"
+
+     When I go to the HAN
+     And I follow "Send an Alert"
+
+     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
+     And I check "Potter County"
+     And I fill in "Message" with "Some body text"
+     And I check "Disable Cross-Jurisdictional alerting"
+
+     And I select "Potter County" from "Jurisdiction"
+     And I select "Test" from "Status"
+     And I select "Minor" from "Severity"
+     And I select "72 hours" from "Delivery Time"
+     And I check "Requires acknowledgement"
+     And I check "Phone"
+     And I press "Preview Message"
+     Then I should see a preview of the message
+
+     When I press "Send"
+     Then I should see "Successfully sent the alert"
+
+     Then an alert exists with:
+      | from_jurisdiction   | Potter County                                |
+      | title               | H1N1 SNS push packs to be delivered tomorrow |
+      | cross_jurisdiction  | false                                        |
+
+
   Scenario: Sending alerts to Organizations
     Given the following entities exist:
       | Jurisdiction | Texas         |

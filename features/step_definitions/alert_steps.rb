@@ -162,7 +162,8 @@ Then 'an alert exists with:' do |table|
       end
     when 'call_down_messages'
       alert.call_down_messages.values.include?(value).should be_true
-
+    when 'cross_jurisdiction'
+      alert.cross_jurisdiction.to_s.should == value
     else
       alert.send(attr).should == value
     end

@@ -40,6 +40,7 @@
 #  reference                      :string(255)
 #  sender_id                      :string(255)
 #  call_down_messages             :text
+#  cross_jurisdiction             :boolean(1)     default(true)
 #
 
 require 'ftools'
@@ -122,7 +123,7 @@ class Alert < ActiveRecord::Base
   
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "cross_jurisdiction"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
@@ -137,7 +138,7 @@ class Alert < ActiveRecord::Base
 
   def build_update(attrs={})  
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "cross_jurisdiction"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
