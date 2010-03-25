@@ -22,3 +22,5 @@ else
   pdf.text "No Invitees Found"
 end
 
+pdf.move_down 20
+pdf.text "Prepared on: #{@timestamp}"
