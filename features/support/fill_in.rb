@@ -64,7 +64,7 @@ module FeatureHelpers
         "Message" => "For more details, keep on reading...",
         "Severity" =>"Moderate",
         #"Status" => "Actual",
-        "Acknowledge"  => "<unchecked>"
+        "Acknowledge"  => "Normal"
         #"Communication methods" => "E-mail",
         #"Delivery Time" => "15 minutes"
       }
@@ -109,9 +109,9 @@ module FeatureHelpers
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
-      when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time'
+      when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time', 'Acknowledge' 
         select value, :from => label unless label == 'Delivery Time'
-      when 'Acknowledge', 'Sensitive'
+      when 'Sensitive'
         id = "alert_#{label.parameterize('_')}"
         if value == '<unchecked>'
           uncheck id

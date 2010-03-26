@@ -32,8 +32,16 @@ class AlertsController < ApplicationController
 
   def create
     remove_blank_call_downs
-    set_cross_jurisdiction
+    set_acknowledge
     @alert = present current_user.alerts.build(params[:alert])
+    @acknowledge = if @alert.acknowledge && !(@alert.call_down_messages.blank? || @alert.call_down_messages.empty?)
+      'Advanced'
+    elsif @alert.acknowledge
+      'Normal'
+    else
+      'None'
+    end    
+    
     if params[:send]
       if @alert.valid?
         @alert.save
@@ -202,6 +210,14 @@ private
     end
   end
 
+  def set_acknowledge
+    if params[:alert][:acknowledge] == 'Advanced' || params[:alert][:acknowledge] == 'Normal'
+      params[:alert][:acknowledge] = true
+    else
+      params[:alert][:acknowledge] = false
+    end
+  end
+
   def remove_blank_call_downs
     call_down = params[:alert][:call_down_messages].sort{|a,b| b[0]<=>a[0]}
     call_down.each do |key, value|
@@ -209,9 +225,4 @@ private
       break unless value.blank?
     end
   end
-
-  def set_cross_jurisdiction
-    params[:alert][:cross_jurisdiction] = false if params[:alert][:cross_jurisdiction] == 'true'
-  end
-
 end

@@ -28,24 +28,19 @@
         <%= form.label :message %>
         <%= form.text_area :message, :rows => 5 %>
       </p>
+      <!--
       <p><input type="button" name="use_call_down" id="use_call_down" value="Use Call Down" /></p>
-      <p>
-
-        <%= form.label "cross_jurisdiction", "Disable Cross-Jurisdictional alerting?" %>
-        <%= form.check_box 'cross_jurisdiction', {:checked => @alert.cross_jurisdiction == true ? false : true} %>
-
-
-      </p>
+      -->
       <div id="call_down_container" class="hidden">
-        <%= label_tag "alert_call_down_messages_1", "Call Down 1" %>
+        <%= label_tag "alert_call_down_messages_1", "Alert Response 1" %>
         <%= text_field_tag "alert[call_down_messages][1]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["1"], :id => "alert_call_down_messages_1", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_2", "Call Down 2" %>
+        <%= label_tag "alert_call_down_messages_2", "Alert Response 2" %>
         <%= text_field_tag "alert[call_down_messages][2]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["2"], :id => "alert_call_down_messages_2", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_3", "Call Down 3" %>
+        <%= label_tag "alert_call_down_messages_3", "Alert Response 3" %>
         <%= text_field_tag "alert[call_down_messages][3]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["3"], :id => "alert_call_down_messages_3", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_4", "Call Down 4" %>
+        <%= label_tag "alert_call_down_messages_4", "Alert Response 4" %>
         <%= text_field_tag "alert[call_down_messages][4]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["4"], :id => "alert_call_down_messages_4", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_5", "Call Down 5" %>
+        <%= label_tag "alert_call_down_messages_5", "Alert Response 5" %>
         <%= text_field_tag "alert[call_down_messages][5]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["5"], :id => "alert_call_down_messages_5", :class => 'alert_call_down_messages' %>
       </div>
       <p>
@@ -81,10 +76,15 @@
       </p>
       
       <p>
-        <%= form.check_box :acknowledge %>
-        <%= form.label :acknowledge, "Requires acknowledgement" %>
+        <%= form.select :acknowledge, Alert::Acknowledgement.map, :selected => @acknowledge %>
+        <%= form.label :acknowledge, "Acknowledge" %>
       </p>
-      
+
+      <p>
+        <%= form.check_box 'not_cross_jurisdictional', {:checked => @alert.not_cross_jurisdictional} %>
+        <%= form.label "not_cross_jurisdictional", "Disable Cross-Jurisdictional alerting?" %>
+      </p>
+
       <p>
         <%= form.check_box :sensitive %>
         <%= form.label :sensitive, "Sensitive (Confidential)" %>

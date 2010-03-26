@@ -154,7 +154,7 @@ Then 'an alert exists with:' do |table|
     when 'sent_at'
       alert.sent_at.should be_close(Time.zone.parse(value), 1)
     when 'acknowledge'
-      alert.acknowledge.should == (value == 'Yes')
+      alert.acknowledge.should == (value == "true" ? true : false)
     when 'people'
       value.split(",").each do |user|
         first_name, last_name = user.split(" ")
@@ -162,8 +162,8 @@ Then 'an alert exists with:' do |table|
       end
     when 'call_down_messages'
       alert.call_down_messages.values.include?(value).should be_true
-    when 'cross_jurisdiction'
-      alert.cross_jurisdiction.to_s.should == value
+    when 'not_cross_jurisdictional'
+      alert.not_cross_jurisdictional.to_s.should == value
     else
       alert.send(attr).should == value
     end

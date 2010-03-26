@@ -40,7 +40,7 @@
 #  reference                      :string(255)
 #  sender_id                      :string(255)
 #  call_down_messages             :text
-#  cross_jurisdiction             :boolean(1)     default(true)
+#  not_cross_jurisdictional       :boolean(1)     default(true)
 #
 
 require 'ftools'
@@ -78,12 +78,14 @@ class Alert < ActiveRecord::Base
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
+  Acknowledgement = ['None', 'Normal', 'Advanced']
   DeliveryTimes = [15, 60, 1440, 4320, 4420]
 
   serialize :call_down_messages, Hash
 
   validates_inclusion_of :status, :in => Statuses
   validates_inclusion_of :severity, :in => Severities
+  
   validates_inclusion_of :delivery_time, :in => DeliveryTimes
   validates_presence_of :from_jurisdiction_id, :unless => Proc.new { |alert| alert.author_id.nil? }
   validates_length_of :short_message, :maximum => 160
@@ -123,7 +125,7 @@ class Alert < ActiveRecord::Base
   
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "cross_jurisdiction"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
@@ -138,7 +140,7 @@ class Alert < ActiveRecord::Base
 
   def build_update(attrs={})  
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "cross_jurisdiction"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil

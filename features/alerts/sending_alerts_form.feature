@@ -105,17 +105,17 @@ Feature: Sending alerts form
     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
     And I check "Potter County"
     And I fill in "Message" with "Some body text"
-    # And I press "Use Call Down"
-    And I fill in "Call Down 1" with "if you can respond within 15 minutes"
-    And I fill in "Call Down 2" with "if you can respond within 30 minutes"
-    And I fill in "Call Down 3" with "if you can respond within 1 hour"
-    And I fill in "Call Down 4" with "if you can respond within 4 hour"
-    And I fill in "Call Down 5" with "if you cannot respond"
+    And I select "Advanced" from "Acknowledge"
+    And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
+    And I fill in "Alert Response 2" with "if you can respond within 30 minutes"
+    And I fill in "Alert Response 3" with "if you can respond within 1 hour"
+    And I fill in "Alert Response 4" with "if you can respond within 4 hour"
+    And I fill in "Alert Response 5" with "if you cannot respond"
     And I select "Potter County" from "Jurisdiction"
     And I select "Test" from "Status"
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery Time"
-    And I check "Requires acknowledgement"
+
     And I check "Phone"
     And I press "Preview Message"
     Then I should see a preview of the message
@@ -131,6 +131,7 @@ Feature: Sending alerts form
       | call_down_messages  | if you can respond within 1 hour             |
       | call_down_messages  | if you can respond within 4 hours            |
       | call_down_messages  | if you cannot respond                        |
+      | acknowledge         | true                                         |
 
 
   Scenario: Sending alerts with non cross jurisdiction
@@ -156,7 +157,7 @@ Feature: Sending alerts form
      And I select "Test" from "Status"
      And I select "Minor" from "Severity"
      And I select "72 hours" from "Delivery Time"
-     And I check "Requires acknowledgement"
+     And I select "Normal" from "Acknowledge"
      And I check "Phone"
      And I press "Preview Message"
      Then I should see a preview of the message
@@ -165,9 +166,9 @@ Feature: Sending alerts form
      Then I should see "Successfully sent the alert"
 
      Then an alert exists with:
-      | from_jurisdiction   | Potter County                                |
-      | title               | H1N1 SNS push packs to be delivered tomorrow |
-      | cross_jurisdiction  | false                                        |
+      | from_jurisdiction         | Potter County                                |
+      | title                     | H1N1 SNS push packs to be delivered tomorrow |
+      | not_cross_jurisdictional  | true                                         |
 
 
   Scenario: Sending alerts to Organizations

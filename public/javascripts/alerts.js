@@ -191,10 +191,27 @@
       return false;
     });
 
-    $('#alert_acknowledge').bind('click', function(e){
-      if($('#call_down_container').hasClass('hidden') == false){
-        alert("You must require acknowledgement if you are sending call down options as well. Otherwise, please de-select the 'Use Call Down' feautre.");
-        return false;
+    $('#alert_acknowledge').bind('change', function(e){
+      if($('#alert_acknowledge :selected').text() == 'Advanced' || $('#alert_acknowledge :selected').text() == 'Normal'){
+        if($('#alert_acknowledge :selected').text() == 'Advanced') $('#call_down_container').removeClass('hidden');
+        else $('#call_down_container').addClass('hidden');
+        $('.alert_call_down_messages').val('');
+        $('.alert_device').each(function(){
+          if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice' && $(this).attr('value') != 'Device:FaxDevice'){
+          $(this).attr('checked', false);
+          if($('#call_down_container').hasClass('hidden')){
+            $(this).removeAttr('disabled');
+          }else{
+            $(this).attr('disabled', true);
+            $('#alert_acknowledge').attr('checked', true);
+          }
+         }
+        });
+      }else{
+        if(!$('#call_down_container').hasClass('hidden')) $('#call_down_container').addClass('hidden');
+        $('.alert_device').each(function(){
+          $(this).removeAttr('disabled');
+        });
       }
     });
 

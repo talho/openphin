@@ -10,7 +10,9 @@
     <p class="roles"><strong>Roles:</strong> <%=h audience.roles.blank? ? 'None' : audience.roles.map(&:name).to_sentence %></p>
 
     <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
+
   <% end %>
+   <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
 </div>
 
 <div class="aside">
