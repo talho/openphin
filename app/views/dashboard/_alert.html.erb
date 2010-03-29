@@ -22,8 +22,14 @@
         
       <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
           
-	  <p class="brief acknowledge"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
-        
+	    <p class="brief acknowledge"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
+
+      <% unless alert.call_down_messages.nil? %>
+        <% alert.call_down_messages.each do |index, value| %>
+          <p class="brief alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
+        <% end %>
+      <% end %>
+     
       <%- if !alert.original_alert_id.blank? -%>
         <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert.identifier %></p>
       <%- end -%>
