@@ -55,11 +55,6 @@ Spork.prefork do
   ThinkingSphinx.deltas_enabled = true
   ThinkingSphinx.updates_enabled = true
   ThinkingSphinx.suppress_delta_output = true
-
-# Re-generate the index before each Scenario
-  Before do
-    ts.controller.index
-  end
 end
 
 Spork.each_run do
@@ -74,9 +69,27 @@ Spork.each_run do
   DatabaseCleaner.strategy = :truncation
   Before do
     ActionMailer::Base.deliveries = []
+    Service::Blackberry::SWN.instance_eval do
+      Service::Blackberry.clearDeliveries
+    end
+
+    Service::Phone::SWN.instance_eval do
+      Service::Phone.clearDeliveries
+    end
+
+    Service::SMS::SWN.instance_eval do
+      Service::SMS.clearDeliveries
+    end
+
     DatabaseCleaner.clean
     # load application-wide fixtures
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
+  end
+
+  # Re-generate the index before each Scenario
+  Before do
+    ts = ThinkingSphinx::Configuration.instance
+    ts.controller.index
   end
 end
 
