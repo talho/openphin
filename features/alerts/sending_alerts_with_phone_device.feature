@@ -32,7 +32,7 @@ Feature: Sending alerts to phones
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | Phone |
       | Sensitive | <unchecked> |
       
@@ -69,7 +69,7 @@ Feature: Sending alerts to phones
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <checked> |
+      | Acknowledge | Normal |
       | Communication methods | Phone |
       | Sensitive | <unchecked> |
       
@@ -119,7 +119,7 @@ Feature: Sending alerts to phones
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | Phone |
       | Sensitive | <unchecked> |
 
@@ -157,15 +157,15 @@ Feature: Sending alerts to phones
     And I fill in "Short Message" with "Chicken pox outbreak"
     And I select "Actual" from "Status"
     And I select "Moderate" from "Severity"
-    And I check "Requires acknowledgement"
+    And I select "Advanced" from "Acknowledge"
     And I check "Wise County"
     And I check "Phone"
     # And I press "Use Call Down"
-    And I fill in "Call Down 1" with "if you can respond within 15 minutes"
-    And I fill in "Call Down 2" with "if you can respond within 30 minutes"
-    And I fill in "Call Down 3" with "if you can respond within 1 hour"
-    And I fill in "Call Down 4" with "if you can respond within 4 hours"
-    And I fill in "Call Down 5" with "if you cannot respond"
+    And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
+    And I fill in "Alert Response 2" with "if you can respond within 30 minutes"
+    And I fill in "Alert Response 3" with "if you can respond within 1 hour"
+    And I fill in "Alert Response 4" with "if you can respond within 4 hours"
+    And I fill in "Alert Response 5" with "if you cannot respond"
 
     And I press "Preview Message"
     Then I should see a preview of the message

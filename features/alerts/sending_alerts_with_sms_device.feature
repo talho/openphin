@@ -33,7 +33,7 @@ Feature: Sending alerts to SMS devices
       | Short Message | Chicken pox outbreak short message|
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | SMS |
       | Sensitive | <unchecked> |
       

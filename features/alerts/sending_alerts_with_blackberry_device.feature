@@ -34,7 +34,7 @@ Feature: Sending alerts to BlackBerry devices
       | Short Message | Chicken pox outbreak short message |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | Blackberry |
       | Sensitive | <unchecked> |
       

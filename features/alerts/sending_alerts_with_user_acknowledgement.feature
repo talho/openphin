@@ -14,7 +14,7 @@ Feature: Acknowledging an alert
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Acknowledge | <checked> |
+      | Acknowledge | Normal |
       | Communication methods | E-mail |
       
     And I press "Preview Message"
@@ -37,7 +37,7 @@ Feature: Acknowledging an alert
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Acknowledge | <checked> |
+      | Acknowledge | Normal |
       | Communication methods | E-mail |
 
     And I press "Preview Message"
@@ -59,7 +59,7 @@ Feature: Acknowledging an alert
      When I fill out the alert form with:
        | People | Keith Gaddis |
        | Title  | H1N1 SNS push packs to be delivered tomorrow |
-       | Acknowledge | <checked> |
+       | Acknowledge | Normal |
        | Sensitive | <checked> |
        | Communication methods | E-mail |
 
@@ -100,7 +100,7 @@ Feature: Acknowledging an alert
          | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
-         | Acknowledge | <checked> |
+         | Acknowledge | Normal |
          | Communication methods | Phone |
          | Sensitive | <unchecked> |
       
@@ -129,10 +129,10 @@ Feature: Acknowledging an alert
       When I fill out the alert form with:
         | People | Keith Gaddis |
         | Title  | H1N1 SNS push packs to be delivered tomorrow |
-        | Acknowledge | <checked> |
+        | Acknowledge | Normal |
         | Communication methods | E-mail |
-        | Call Down 1 | if you can respond within 15 minutes |
-        | Call Down 2 | if you can respond within 30 minutes |
+        | Alert Response 1 | if you can respond within 15 minutes |
+        | Alert Response 2 | if you can respond within 30 minutes |
   
       And I press "Preview Message"
       Then I should see a preview of the message
@@ -171,11 +171,11 @@ Feature: Acknowledging an alert
          | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
-         | Acknowledge | <checked> |
+         | Acknowledge | Normal |
          | Communication methods | Phone |
          | Sensitive | <unchecked> |
-         | Call Down 1 | if you can respond within 15 minutes |
-         | Call Down 2 | if you can respond within 30 minutes |
+         | Alert Response 1 | if you can respond within 15 minutes |
+         | Alert Response 2 | if you can respond within 30 minutes |
 
        And I press "Preview Message"
        Then I should see a preview of the message
