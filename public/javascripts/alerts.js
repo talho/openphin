@@ -5,6 +5,9 @@
         $('#details .caller_id').show();
       }
       $('#alert_device_fax_device').attr('disabled', true);
+      if($('#alert_acknowledge').find('option').filter(':selected').text() == 'Advanced'){
+        $('#call_down_container').toggleClass('hidden');
+      }
     });
     $('input[type=submit]').addClass('submit');
     $('.preview_alert').click(function(e) {
@@ -209,6 +212,7 @@
         });
       }else{
         if(!$('#call_down_container').hasClass('hidden')) $('#call_down_container').addClass('hidden');
+        $('.alert_call_down_messages').val('');
         $('.alert_device').each(function(){
           $(this).removeAttr('disabled');
         });

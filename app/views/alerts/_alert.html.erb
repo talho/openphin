@@ -13,6 +13,10 @@
 
   <% end %>
    <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
+  <% @alert.call_down_messages.each do |index, value| %>
+    <p class="alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
+
+  <% end %>
 </div>
 
 <div class="aside">
