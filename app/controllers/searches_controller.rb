@@ -38,9 +38,8 @@ class SearchesController < ApplicationController
     filters = build_filters params
     
     options[:conditions] = conditions unless conditions.empty?
-    options[:match_mode] = (conditions.size>1) ? :extended : :any
+    options[:match_mode] = :any if conditions[:name]
     options[:with] = filters unless filters.empty?
-    
     @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
     
     respond_to do |format|
