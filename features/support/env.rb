@@ -45,6 +45,9 @@ Spork.prefork do
   World ActionController::RecordIdentifier
 
   ts = ThinkingSphinx::Configuration.instance
+  ThinkingSphinx.deltas_enabled = true
+  ThinkingSphinx.updates_enabled = true
+  ThinkingSphinx.suppress_delta_output = true
   ts.build
   FileUtils.mkdir_p ts.searchd_file_path
   ts.controller.index
@@ -52,9 +55,7 @@ Spork.prefork do
   at_exit do
     ts.controller.stop
   end
-  ThinkingSphinx.deltas_enabled = true
-  ThinkingSphinx.updates_enabled = true
-  ThinkingSphinx.suppress_delta_output = true
+
 end
 
 Spork.each_run do
@@ -84,11 +85,13 @@ Spork.each_run do
     DatabaseCleaner.clean
     # load application-wide fixtures
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
-  end
 
-  # Re-generate the index before each Scenario
-  Before do
+    # Re-generate the index before each Scenario
     ts = ThinkingSphinx::Configuration.instance
+    ThinkingSphinx.deltas_enabled = true
+    ThinkingSphinx.updates_enabled = true
+    ThinkingSphinx.suppress_delta_output = true
+    ts.build
     ts.controller.index
   end
 end

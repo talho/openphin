@@ -18,6 +18,7 @@ I should be able to edit my profile
       | Jane Smith      | jane.smith@example.com   | Public | Potter County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
       | Bob Smith       | bob.smith@example.com    | Superadmin  | Texas    |
+    When delayed jobs are processed
 
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"
