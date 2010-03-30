@@ -146,4 +146,9 @@ class ApplicationController < ActionController::Base
     def set_locale
       I18n.locale = :en
     end
+
+  def sign_in(user)
+    user.update_attribute(:last_signed_in_at, Time.now)
+    super user
+  end
 end

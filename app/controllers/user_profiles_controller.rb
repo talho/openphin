@@ -1,6 +1,4 @@
 class UserProfilesController < ApplicationController
-	app_toolbar "accounts"
-	
   before_filter(:except => [:show]) do |controller|
     controller.admin_or_self_required(:user_id)
   end
@@ -8,7 +6,7 @@ class UserProfilesController < ApplicationController
   # GET /users
   # GET /users.xml
   def index
-    UserProfilesController.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     @users = User.all
 
     respond_to do |format|
@@ -20,7 +18,7 @@ class UserProfilesController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
-    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     @user = User.find(params[:user_id])
     
     respond_to do |format|
@@ -32,7 +30,7 @@ class UserProfilesController < ApplicationController
   # GET /users/new
   # GET /users/new.xml
   def new
-    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     User.new
 
     respond_to do |format|
@@ -43,14 +41,14 @@ class UserProfilesController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     find_user_and_profile
   end
 
   # POST /users
   # POST /users.xml
   def create
-    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     @user=User.find(params[:user_id])
 
     respond_to do |format|
@@ -68,7 +66,7 @@ class UserProfilesController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
-    self.class.app_toolbar "application" unless params[:user_id] == current_user.id.to_s
+    set_toolbar
     find_user_and_profile
 
     # Profile form will return blank devices due to hidden fields used to add devices via ajax
@@ -156,6 +154,14 @@ protected
     unless @user.editable_by?(current_user)
       flash[:notice] = "You are not authorized to edit this profile."
       redirect_to :back
+    end
+  end
+
+  def set_toolbar
+    if params[:user_id] == current_user.id.to_s
+      self.class.app_toolbar "accounts"
+    else
+      self.class.app_toolbar "application"
     end
   end
     

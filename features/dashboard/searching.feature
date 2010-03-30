@@ -24,9 +24,8 @@ Feature: Searching for users
     And "sam@example.com" has the phone "888-555-1212"
     And Health Officer is a non public role
     And HAN Coordinator is a non public role
-    And delayed jobs are processed
-    And the sphinx daemon is running
-  
+    When delayed jobs are processed
+
   Scenario: Searching for a user
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page

@@ -6,3 +6,7 @@ When "I want to debug" do
   debugger
   true # needed for the debugger
 end
+
+When "I want to break" do
+  $break = true
+end

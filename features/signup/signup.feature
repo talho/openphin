@@ -120,6 +120,7 @@ Feature: Signing up for an account
       | body contains | Dallas County |
 
     When I log in as "john@example.com"
+    And I want to break
     And I follow "My Account"
     And I follow "Request Roles"    
     Then I should see "Awaiting Approval"
