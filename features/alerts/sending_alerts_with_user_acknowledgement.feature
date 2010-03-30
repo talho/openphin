@@ -196,4 +196,4 @@ Feature: Acknowledging an alert
        When I am on the HAN
        Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
        And I should not see an "Acknowledge" button
-       But I should see "Acknowledge: Yes"
+       But I should see "Acknowledge: if you can respond within 15 minutes"
