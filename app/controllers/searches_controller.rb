@@ -68,7 +68,7 @@ protected
   def build_fields(params,fields={})
     [:name,:first_name,:last_name,:display_name,:email,:title].each do |f|
       field = params[f]
-      fields[f] = field unless field.blank?
+      fields[f] = field.gsub(/(:|@|-|!|~|&|"|\(|\)|\\|\|)/) { "\\#{$1}" } unless field.blank?
     end
     fields[:phone] = params[:phone].gsub(/([^0-9*])/,"") unless params[:phone].blank?
     fields
