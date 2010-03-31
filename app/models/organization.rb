@@ -68,7 +68,7 @@ class Organization < ActiveRecord::Base
   end
   
   def <<(user)
-    group.users << user
+    group.users << user unless group.users.include?(user)
   end
 
   def approved?
