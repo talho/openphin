@@ -17,6 +17,8 @@ class OrganizationMembershipRequest < ActiveRecord::Base
 
   attr_protected :approver_id
 
+  validates_uniqueness_of :user_id, :scope => [:organization_id]
+
   before_create :set_requester_if_nil
   after_create :auto_approve_if_admin
   
