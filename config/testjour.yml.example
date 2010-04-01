@@ -3,3 +3,6 @@ slaves: testslave1.texashan.org,testslave2.texashan.org,testslave3.texashan.org,
 repository: "ssh://root@testmaster.texashan.org/root/openphin.git"
 master_user: root
 root_path: /root
+dbusername: root
+dbpassword: password
+exclude: *.msi,docs,*.swf,externals,manual_features
