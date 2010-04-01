@@ -79,7 +79,7 @@ class Alert < ActiveRecord::Base
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   Acknowledgement = ['None', 'Normal', 'Advanced']
-  DeliveryTimes = [15, 60, 1440, 4320, 4420]
+  DeliveryTimes = [15, 30, 45, 60, 75, 90, 1440, 4320]
 
   serialize :call_down_messages, Hash
 
@@ -125,7 +125,7 @@ class Alert < ActiveRecord::Base
   
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
@@ -134,13 +134,13 @@ class Alert < ActiveRecord::Base
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
-      alert.audiences = self.audiences
+      alert.audiences = self.audiences.map(&:copy)
     end
   end
 
   def build_update(attrs={})  
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
@@ -149,8 +149,30 @@ class Alert < ActiveRecord::Base
       alert.title = "[Update] - #{title}"
       alert.message_type = MessageTypes[:update]
       alert.original_alert = self
-      alert.audiences = self.audiences
+
+      if alert.has_alert_response_messages?
+        self.audiences.each do |audience|
+          attrs = audience.attributes
+          ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
+          new_audience = Audience.new(attrs)
+          new_audience.users << (self.targets.find_all_by_audience_id(audience.id).map(&:users).flatten & alert_response_users(alert))
+          alert.audiences << new_audience
+        end
+      else
+        self.audiences.each{ |audience| alert.audiences << audience.copy}
+      end
     end
+  end
+  
+  def alert_response_users(alert)
+    cdm = alert.call_down_messages.keys
+    alert_attempts.compact.collect do |aa|
+      aa.user if cdm.include?(aa.call_down_response.to_s)
+    end.flatten.compact.uniq
+  end
+  
+  def has_alert_response_messages?
+    !(call_down_messages.nil? || call_down_messages.empty?)
   end
 
   def after_initialize
@@ -173,7 +195,7 @@ class Alert < ActiveRecord::Base
   end
   
   def self.human_delivery_time(minutes)
-    minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"    
+    minutes > 90 ? "#{minutes/60} hours" : "#{minutes} minutes"    
   end
   
   def batch_deliver
@@ -303,6 +325,11 @@ class Alert < ActiveRecord::Base
   def include_public_users?
     true
   end
+  
+  def responders(responder_categories=[1,2,3,4,5])
+    alert_attempts.find_all_by_call_down_response(responder_categories).map(&:user).uniq
+  end
+   
 
 private
   def set_message_type

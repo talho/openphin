@@ -15,7 +15,7 @@
               <%= link_to 'View', alert %>
               <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
               <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>
-              <%= link_to 'Export', formatted_alert_path(alert, :csv) if current_user.alerter? %>
+              <%= link_to 'Export', alert_path(alert, :format=>:csv) if current_user.alerter? %>
             </span>
             </p>
 

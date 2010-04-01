@@ -23,14 +23,14 @@
       <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
 
       <p class="brief acknowledge alertResponse"><strong>Acknowledge:</strong> <%=
-        if alert.call_down_messages.nil? || alert.call_down_messages.empty?
-          alert.acknowledge? ? 'Yes' : 'No'
-        else
+        if alert.has_alert_response_messages?
           unless alert.alert_attempts.find_by_user_id(@user.id).nil?
             if alert.alert_attempts.find_by_user_id(@user.id).call_down_response
               h(alert.call_down_messages[alert.alert_attempts.find_by_user_id(@user.id).call_down_response.to_s])
             end
           end
+        else
+          alert.acknowledge? ? 'Yes' : 'No'
         end
       %></p>
 

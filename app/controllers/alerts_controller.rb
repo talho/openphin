@@ -28,6 +28,7 @@ class AlertsController < ApplicationController
 
   def new
     @alert = present Alert.new_with_defaults
+    @acknowledge_options = Alert::Acknowledgement
   end
 
   def create
@@ -40,7 +41,8 @@ class AlertsController < ApplicationController
       'Normal'
     else
       'None'
-    end    
+    end
+    @acknowledge_options = Alert::Acknowledgement    
     
     if params[:send]
       if @alert.valid?
@@ -65,6 +67,7 @@ class AlertsController < ApplicationController
 
   def edit
     alert = Alert.find params[:id]
+    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
     # TODO : Remove when devices refactored
     @device_types = []
     alert.device_types.each do |device_type|
@@ -92,6 +95,7 @@ class AlertsController < ApplicationController
     original_alert.device_types.each do |device_type|
       @device_types << device_type
     end
+    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
 
     unless original_alert.is_updateable_by?(current_user)
       flash[:error] = "You do not have permission to update or cancel this alert."
@@ -103,7 +107,7 @@ class AlertsController < ApplicationController
       redirect_to alerts_path
       return
     end
-
+    reduce_call_down_messages_from_responses(original_alert)
     @alert = if params[:_action].downcase == 'cancel'
       @cancel = true
       original_alert.build_cancellation(params[:alert])
@@ -225,4 +229,18 @@ private
       break unless value.blank?
     end
   end
+  
+  def reduce_call_down_messages_from_responses(original_alert)
+    if params[:alert][:call_down_messages].nil? && original_alert.has_alert_response_messages?
+      params[:alert][:call_down_messages] = {}
+      
+      msgs = original_alert.call_down_messages.select{|key, value| params[:alert][:responders].include?(key)}
+      
+      msgs.each do |key, value|
+        params[:alert][:call_down_messages][key] = value
+      end
+    end
+    params[:alert].delete("responders")
+  end
+  
 end

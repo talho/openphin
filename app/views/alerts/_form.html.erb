@@ -28,27 +28,24 @@
         <%= form.label :message %>
         <%= form.text_area :message, :rows => 5 %>
       </p>
-      <!--
-      <p><input type="button" name="use_call_down" id="use_call_down" value="Use Call Down" /></p>
-      -->
-      <div id="call_down_container" class="hidden">
-        <%= label_tag "alert_call_down_messages_1", "Alert Response 1" %>
-        <%= text_field_tag "alert[call_down_messages][1]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["1"], :id => "alert_call_down_messages_1", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_2", "Alert Response 2" %>
-        <%= text_field_tag "alert[call_down_messages][2]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["2"], :id => "alert_call_down_messages_2", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_3", "Alert Response 3" %>
-        <%= text_field_tag "alert[call_down_messages][3]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["3"], :id => "alert_call_down_messages_3", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_4", "Alert Response 4" %>
-        <%= text_field_tag "alert[call_down_messages][4]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["4"], :id => "alert_call_down_messages_4", :class => 'alert_call_down_messages' %>
-        <%= label_tag "alert_call_down_messages_5", "Alert Response 5" %>
-        <%= text_field_tag "alert[call_down_messages][5]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["5"], :id => "alert_call_down_messages_5", :class => 'alert_call_down_messages' %>
-      </div>
-      <p>
-        <%= form.label :short_message %>
+      <% if @update.blank? && @cancel.blank? %>
+        <div id="call_down_container" class="hidden">
+          <%= label_tag "alert_call_down_messages_1", "Alert Response 1" %>
+          <%= text_field_tag "alert[call_down_messages][1]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["1"], :id => "alert_call_down_messages_1", :class => 'alert_call_down_messages' %>
+          <%= label_tag "alert_call_down_messages_2", "Alert Response 2" %>
+          <%= text_field_tag "alert[call_down_messages][2]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["2"], :id => "alert_call_down_messages_2", :class => 'alert_call_down_messages' %>
+          <%= label_tag "alert_call_down_messages_3", "Alert Response 3" %>
+          <%= text_field_tag "alert[call_down_messages][3]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["3"], :id => "alert_call_down_messages_3", :class => 'alert_call_down_messages' %>
+          <%= label_tag "alert_call_down_messages_4", "Alert Response 4" %>
+          <%= text_field_tag "alert[call_down_messages][4]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["4"], :id => "alert_call_down_messages_4", :class => 'alert_call_down_messages' %>
+          <%= label_tag "alert_call_down_messages_5", "Alert Response 5" %>
+          <%= text_field_tag "alert[call_down_messages][5]", @alert.call_down_messages.blank? ? "" : @alert.call_down_messages["5"], :id => "alert_call_down_messages_5", :class => 'alert_call_down_messages' %>
+        </div>
+      <% end %>
+      <%= form.label :short_message %>
       This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., SMS (text messaging).  If this field is blank, the regular message body (above) will be used for short-message devices, possibly truncating the message. <strong class="maxlen">Maximum length: 160 characters</strong>.
-        <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
-        <%= form.text_area :short_message, :rows => 2, :class => "short_message", :wrap => "soft" %>
-      </p>
+      <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
+      <%= form.text_area :short_message, :rows => 2, :class => "short_message", :wrap => "soft" %>
       
       <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message" %></p><% end %>
     </div>
@@ -76,9 +73,16 @@
       </p>
       
       <p>
-        <%= form.select :acknowledge, Alert::Acknowledgement.map, :selected => @acknowledge %>
+        <%= form.select :acknowledge, @acknowledge_options, :selected => @acknowledge %>
         <%= form.label :acknowledge, "Acknowledge" %>
       </p>
+      
+      <% if @alert.has_alert_response_messages? && !(@update.blank? && @cancel.blank?) %>
+        <p>
+          <%= form.label :responders, "Responders" %>
+          <%= form.select :responders, options_for_select(@alert.call_down_messages.collect{|key,value| [value,key]},@alert.call_down_messages.keys),{:prompt=>"Select one or more"},{:multiple=>true,:size=>6} %>
+        </p>
+      <% end %>
 
       <p>
         <%= form.check_box 'not_cross_jurisdictional', {:checked => @alert.not_cross_jurisdictional} %>

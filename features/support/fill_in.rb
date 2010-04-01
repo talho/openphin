@@ -64,9 +64,9 @@ module FeatureHelpers
         "Message" => "For more details, keep on reading...",
         "Severity" =>"Moderate",
         #"Status" => "Actual",
-        "Acknowledge"  => "Normal"
+        "Acknowledge"  => "Normal",
         #"Communication methods" => "E-mail",
-        #"Delivery Time" => "15 minutes"
+        "Delivery Time" => "15 minutes"
       }
 
       if table.is_a?(Hash)
@@ -76,7 +76,7 @@ module FeatureHelpers
       end
       
       fields.each do |label, value|
-        fill_in_alert_field(label, value) unless label == "Delivery Time"
+        fill_in_alert_field(label, value)
       end
     end
 
@@ -109,15 +109,32 @@ module FeatureHelpers
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
-      when 'Status', 'Severity', 'Jurisdiction', 'Delivery Time', 'Acknowledge' 
-        select value, :from => label unless label == 'Delivery Time'
-      when 'Sensitive'
-        id = "alert_#{label.parameterize('_')}"
-        if value == '<unchecked>'
-          uncheck id
-        else
-          check id
-        end
+        when 'Acknowledge', 'Status', 'Severity', 'Jurisdiction','Event Interval'
+          select value, :from => label
+        when 'Delivery Time'
+          case value
+            when /^(\d+) hours$/ then
+              if Alert::DeliveryTimes.include?($1.to_i.hours.to_i/1.minute.to_i)
+                select value, :from => label
+              else
+                raise "Not a valid Delivery Time"
+            end
+            when /^(\d+) minutes$/ then
+              if Alert::DeliveryTimes.include? $1.to_i
+                select value, :from => label
+              else
+                raise "Not a valid Delivery Time"
+            end
+            else
+              raise "Not a valid Delivery Time"
+          end
+        when 'Sensitive'
+          id = "alert_#{label.parameterize('_')}"
+          if value == '<unchecked>'
+            uncheck id
+          else
+            check id
+          end
       when 'Communication methods'
         check value
       when "Message Recording"
@@ -126,7 +143,7 @@ module FeatureHelpers
         fill_in "alert_short_message", :with => value
       when "Message", "Title"
         fill_in label, :with => value
-      when "Alert Response 1", "Alert Response 2", "Alert Response 3", "Alert Response 4", "Alert Response 5"
+        when "Alert Response 1", "Alert Response 2", "Alert Response 3", "Alert Response 4", "Alert Response 5"
         fill_in label, :with => value
       else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."

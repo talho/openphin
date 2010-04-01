@@ -36,6 +36,18 @@ Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_a
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
 end
 
+Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (minute|hour)s? later$/ do |email_address, title, message, num, units|
+  u = User.find_by_email(email_address)
+  alert = Alert.find_by_title(title)
+  delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
+  aa = alert.alert_attempts.find_by_user_id(u.id)
+  aa.created_at += (delta)
+  aa.acknowledged_alert_device_type_id = AlertDeviceType.find_by_device("Device::EmailDevice")
+  aa.call_down_response = alert.call_down_messages.index(message)
+  aa.save
+  #aa = Factory(:alert_attempt, :alert => alert, :user => u, :acknowledged_at => alert.created_at+(delta), :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
+  #del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+end
 
 Given /^(\d*) random alerts$/ do |count|
   srand count.to_i
@@ -137,8 +149,10 @@ end
 
 Then 'an alert exists with:' do |table|
   attrs = table.rows_hash
-  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
-      {:identifier => attrs['identifier'], :title => attrs['title']}])
+  conditions = attrs['identifier'].blank? ? "" : "identifier = :identifier OR "
+  conditions += attrs['message'].blank? ? "title = :title" : "(title = :title AND message = :message)"
+  alert = Alert.find(:first, :conditions => [conditions,
+      {:identifier => attrs['identifier'], :title => attrs['title'], :message => attrs['message']}])
   attrs.each do |attr, value|
     case attr
     when 'from_jurisdiction'
@@ -164,6 +178,10 @@ Then 'an alert exists with:' do |table|
       alert.call_down_messages.values.include?(value).should be_true
     when 'not_cross_jurisdictional'
       alert.not_cross_jurisdictional.to_s.should == value
+    when 'targets'
+      value.split(",").each do |email|
+        alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_true
+      end
     else
       alert.send(attr).should == value
     end
@@ -172,14 +190,20 @@ end
 
 Then 'an alert should not exist with:' do |table|
   attrs = table.rows_hash
-  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
-      {:identifier => attrs['identifier'], :title => attrs['title']}])
+  conditions = attrs['identifier'].blank? ? "" : "identifier = :identifier OR "
+  conditions += attrs['message'].blank? ? "title = :title" : "(title = :title AND message = :message)"
+  alert = Alert.find(:first, :conditions => [conditions,
+      {:identifier => attrs['identifier'], :title => attrs['title'], :message => attrs['message']}])
   attrs.each do |attr, value|
     case attr
     when 'people'
       value.split(",").each do |name|
         display_name = name.split(" ").join(" ")
         alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
+      end
+    when 'targets'
+      value.split(",").each do |email|
+        alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_false
       end
     else
       alert.send(attr).should == value

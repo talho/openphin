@@ -38,6 +38,8 @@ module FeatureHelpers
             attributes['delivery_time']=60
           when /15 minutes?/i
             attributes['delivery_time']=15
+          else
+            raise "You picked an invalid delivery time"
         end
       end
 

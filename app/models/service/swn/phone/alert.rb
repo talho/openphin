@@ -103,13 +103,13 @@ EOF
 
   def add_call_down(xml)
     if alert.acknowledge?
-      if alert.call_down_messages.nil? || alert.call_down_messages.empty?
-        xml.swn(:gwbText, "Please press one to acknowledge this alert.")
+      if alert.has_alert_response_messages?
+        sorted_messages = alert.call_down_messages.sort {|a, b| a[0]<=>b[0]}
+        sorted_messages.each do |key, call_down|
+          xml.swn(:gwbText, call_down)
+        end
       else
-          sorted_messages = alert.call_down_messages.sort {|a, b| a[0]<=>b[0]}
-          sorted_messages.each do |key, call_down|
-            xml.swn(:gwbText, call_down)
-          end
+        xml.swn(:gwbText, "Please press one to acknowledge this alert.")
       end
     end
 
