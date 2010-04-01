@@ -27,6 +27,13 @@ task :testing do
     `git push testjour #{get_branch} -f`
     run "mkdir #{release_path}"
     run "rm -rf #{release_path}/../*"
+    run ":> #{shared_path}/log/cucumber.log"
+    run ":> #{shared_path}/log/searchd.log"
+    run ":> #{shared_path}/log/searchd.query.log"
+    run ":> #{shared_path}/log/phone.log"
+    run ":> #{shared_path}/log/rollcall.log"
+    run ":> #{shared_path}/log/swn.log"
+    run ":> #{shared_path}/log/test.log"
   end
 
   after :deploy, :role => :app do
