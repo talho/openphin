@@ -41,7 +41,7 @@ class Admin::InvitationsController < ApplicationController
 
     @reverse = params[:reverse] == "1" ? nil : "&reverse=1"
 
-    @csv_options = { :col_sep => '|' }
+    @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
     @output_encoding = 'LATIN1'
     @timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
     respond_to do |format|
@@ -135,11 +135,11 @@ class Admin::InvitationsController < ApplicationController
     params[:invitation][:invitees_attributes].each do |key, value|
       next_index = key.to_i + 1 if key.to_i >= next_index
     end unless params[:invitation][:invitees_attributes].blank?
-    FasterCSV.open(newfile, :col_sep => "|", :headers => true) do |records|
+    FasterCSV.open(newfile, :col_sep => ",", :headers => true) do |records|
       records.each do |record|
         params[:invitation][:invitees_attributes] = [] if params[:invitation][:invitees_attributes].blank?
         params[:invitation][:invitees_attributes]["#{next_index}"] = {}
-        params[:invitation][:invitees_attributes]["#{next_index}"][:name] = record["name"]
+        params[:invitation][:invitees_attributes]["#{next_index}"][:name] = record["name"].delete(",")
         params[:invitation][:invitees_attributes]["#{next_index}"][:email] = record["email"]
         next_index += 1
       end
