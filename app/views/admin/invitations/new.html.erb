@@ -21,9 +21,10 @@
 
   <%= label_tag "A list of invitees can be uploaded using this file" %>
   <table>
-    <tr><td colspan=3>Format (comma separated values with header row) example:</td></tr>
-    <tr><td>name</td><td>|</td><td>email</td></tr>
-    <tr><td>John User</td><td>|</td><td>john@example.com</td></tr>
+    <tr><td>Format (comma separated values with header row) example:</td></tr>
+    <tr><td>name<b>,</b>email</td></tr>
+    <tr><td>John User<b>,</b>john@example.com</td></tr>
+    <tr><td>"John User, Jr."<b>,</b>john@example.com</td></tr>
   </table>
   <%= form.label :csvfile, "CSV File" %>
   <%= form.file_field :csvfile %>
