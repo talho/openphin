@@ -46,7 +46,7 @@ class SearchesController < ApplicationController
       format.html 
       format.pdf
       format.csv do
-        @csv_options = { :col_sep => '|' }
+        @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end
