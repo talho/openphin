@@ -134,7 +134,18 @@ class Alert < ActiveRecord::Base
       alert.title = "[Cancel] - #{title}"
       alert.message_type = MessageTypes[:cancel]
       alert.original_alert = self
-      alert.audiences = self.audiences.map(&:copy)
+
+      if alert.has_alert_response_messages?
+        self.audiences.each do |audience|
+          attrs = audience.attributes
+          ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
+          new_audience = Audience.new(attrs)
+          new_audience.users << (self.targets.find_all_by_audience_id(audience.id).map(&:users).flatten & alert_response_users(alert))
+          alert.audiences << new_audience
+        end
+      else
+        self.audiences.each{ |audience| alert.audiences << audience.copy}
+      end
     end
   end
 
