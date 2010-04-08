@@ -41,7 +41,6 @@ Then /^I should see the (\d+)-day chart for "([^\"]*)" with the data:$/ do |time
 end
 
 Then /^the data at (\S*) should contain$/ do |url, data|
-  debugger
   case data.class
     when String
       values=data.split(",").map{|val| val=="nil" ? nil : val.to_f}

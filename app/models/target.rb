@@ -21,12 +21,13 @@ class Target < ActiveRecord::Base
 
 
   def save_snapshot_of_users
-    ActiveRecord::Base.connection.execute(
-        "insert into targets_users (target_id, user_id)
-          select #{self.id}, users.id from users
-            inner join role_memberships on users.id=role_memberships.user_id
-          where #{conditions_for(audience)}"
-    )
+#    ActiveRecord::Base.connection.execute(
+#        "insert into targets_users (target_id, user_id)
+#          select #{self.id}, users.id from users
+#            inner join role_memberships on users.id=role_memberships.user_id
+#          where #{conditions_for(audience)}"
+#    )
+    self.users = audience.recipients(:include_public => item.include_public_users?).uniq.compact
   end
 
   handle_asynchronously :save_snapshot_of_users

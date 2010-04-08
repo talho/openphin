@@ -25,6 +25,8 @@ Feature: Assigning roles to users for roles
       | Jane Doe        | jane@example.com   | Public | Dallas County |
       | Bob  Doe        |  bob@example.com   | Public | Potter County |
       | Super  Doe      |  super@example.com | Superadmin | Texas     |
+    When the sphinx daemon is running
+    And delayed jobs are processed
 
   Scenario: Admin can assign roles to users in their jurisdictions
     Given I am logged in as "admin@dallas.gov"
@@ -73,10 +75,8 @@ Feature: Assigning roles to users for roles
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
-    And the sphinx daemon is running
     When I go to the dashboard page
     And I follow "Find People"
-    When delayed jobs are processed
     When I fill in "Search" with "John"
     And I press "Search"
     And I follow "John Smith"

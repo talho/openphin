@@ -17,9 +17,9 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean(1)      not null
+#  email_confirmed    :boolean(1)      default(FALSE), not null
 #  phone              :string(255)
-#  delta              :boolean(1)
+#  delta              :boolean(1)      default(TRUE), not null
 #  credentials        :text
 #  bio                :text
 #  experience         :text
@@ -29,6 +29,12 @@
 #  public             :boolean(1)
 #  photo_file_size    :integer(4)
 #  photo_updated_at   :datetime
+#  deleted_at         :datetime
+#  deleted_by         :string(255)
+#  deleted_from       :string(24)
+#  home_phone         :string(255)
+#  mobile_phone       :string(255)
+#  fax                :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -37,15 +43,18 @@ class User < ActiveRecord::Base
   include Clearance::User::AttrAccessible
   include Clearance::User::AttrAccessor
   include Clearance::User::Callbacks
+  
+  UNDELETED = {:deleted_at => nil}
+  default_scope :conditions => UNDELETED
 
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
   has_many :role_memberships, :include => :jurisdiction, :dependent => :delete_all
   has_many :role_requests, :dependent => :delete_all
-  accepts_nested_attributes_for :role_requests
+  has_many :organization_membership_requests, :dependent => :delete_all
+  accepts_nested_attributes_for :role_requests, :organization_membership_requests
 
-  has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
@@ -84,7 +93,10 @@ class User < ActiveRecord::Base
   validates_associated :role_requests
   validates_associated :role_memberships
 
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
+    :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
+    :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
+    :home_phone, :mobile_phone, :phone, :fax
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
 	
@@ -99,6 +111,8 @@ class User < ActiveRecord::Base
 
   after_create :assign_public_role
 
+  named_scope :live, :conditions => UNDELETED
+  
   named_scope :with_role, lambda {|role| 
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
@@ -118,16 +132,22 @@ class User < ActiveRecord::Base
   
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
 
+  # thinking sphinx stuff
+  # Should be able to search by first name, last name, display name, email address, phone device, jurisdiction, role, and job title.
   define_index do
-    indexes first_name, :sortable => true
-    indexes last_name, :sortable => true
-    indexes display_name
-    indexes title
-    indexes email
+    indexes [first_name,last_name,display_name], :as=>:name, :sortable=>true
+    indexes first_name,     :sortable => true
+    indexes last_name,      :sortable => true
+    indexes display_name,   :sortable => true
+    indexes email,          :sortable => true
+    indexes phone,          :sortable => true
+    indexes title,          :sortable => true
+    has roles(:id),         :as => :role_ids
+    has jurisdictions(:id), :as => :jurisdiction_ids
+    set_property :delta =>  :delayed
+  end  
+  sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
   
-    set_property :delta => :delayed
-  end
-
    #TODO Move this into plugin for rollcall later
   def school_districts
     jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
@@ -142,8 +162,13 @@ class User < ActiveRecord::Base
   def recent_absentee_reports
     schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
   end
-	def visible_groups
+
+  def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
+  end
+
+  def organizations
+    Organization.with_user(self)
   end
 
   def self.assign_role(role, jurisdiction, users)
@@ -302,6 +327,32 @@ class User < ActiveRecord::Base
     groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
   end
    
+  def delete_by(requester_email,requester_ip)
+    # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
+    begin
+      User.transaction do
+        self.deleted_by = requester_email   # email addr of the deleter
+        self.deleted_from = requester_ip    # ip addr of the deleter
+        self.deleted_at = Time.now.utc
+        self.save!
+      end
+    rescue
+      errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
+    end
+    unless User.find_by_id(self.id)
+      errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
+    end
+  end
+
+  def delayed_delete_by(requester_email,requester_ip)
+    begin
+      self.send_later(:delete_by,requester_email,requester_ip)
+      unless errors.empty?
+        AppMailer.deliver_user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.")
+      end 
+    end
+  end
+  
 private
 
   def assign_public_role

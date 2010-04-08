@@ -33,7 +33,8 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @selected_role = Role.public.id
-
+    @selected_org = params[:organization].to_i unless params[:organization].blank? || Organization.non_foreign.find(:first, :conditions => ["id=#{params[:organization]}"]).nil?
+    params[:health_professional] = "1" if @selected_org
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @user }
@@ -50,11 +51,11 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
-    @selected_org = params[:user][:organization_ids][0].to_i if params[:user][:organization_ids]
+    @selected_org = params[:user][:organization_membership_requests_attributes]["0"][:organization_id].to_i unless params[:user][:organization_membership_requests_attributes].blank? || params[:user][:organization_membership_requests_attributes]["0"].blank?
 
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
-      params[:user].delete("organization_ids")
+      params[:user].delete("organization_membership_requests_attributes")
       params[:user].delete("description")
     end
 
@@ -142,6 +143,14 @@ class UsersController < ApplicationController
             SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
           end
         end
+
+        u.organization_membership_requests.each do |omr|
+          if omr.has_invitation?
+            invitation = Invitation.find_last_by_organization_id(omr.organization_id)
+            omr.approve!(invitation.author)
+          end
+        end
+        
         flash[:notice]="Your account has been confirmed."
       else
         flash[:error]="Your account has already been confirmed."

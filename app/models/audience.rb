@@ -17,9 +17,11 @@ class Audience < ActiveRecord::Base
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true
-  has_and_belongs_to_many :users, :uniq => true
+  has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
 
-  validate :at_least_one_recipient?
+  named_scope :with_user, lambda {|user|
+    { :conditions => [ "users.id = ?", user.id ], :joins => :users}
+  }
 
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq
@@ -58,7 +60,7 @@ class Audience < ActiveRecord::Base
     @recips
   end
 
-  private
+  protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
       errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")

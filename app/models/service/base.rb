@@ -60,6 +60,10 @@ class Service::Base
       def self.deliveries 
         @deliveries ||= []
       end
+
+      def self.clearDeliveries
+        @deliveries = []
+      end
     end
   end
   

@@ -19,7 +19,7 @@ class Delivery < ActiveRecord::Base
   has_one :organization, :through => :alert_attempt
   has_one :jurisdiction, :through => :alert_attempt
 
-  default_scope :order => "delivered_at DESC"
+#  default_scope :order => "delivered_at DESC"
 
   named_scope :sys_acknowledged?, :conditions => "sys_acknowledged_at IS NOT NULL"
   named_scope :delivered, :conditions => "delivered_at IS NOT NULL"

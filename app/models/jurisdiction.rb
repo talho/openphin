@@ -20,7 +20,7 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  fips_code              :string(255)
-#  foreign                :boolean(1)      not null
+#  foreign                :boolean(1)      default(FALSE), not null
 #
 
 class Jurisdiction < ActiveRecord::Base

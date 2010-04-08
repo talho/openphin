@@ -77,14 +77,40 @@ Feature: Sending alerts form
     And I fill out the alert form with:
       | People   | Jane Smith                                   |
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
+
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | People            | Jane Smith |
+      
     And I press "Send"
     Then an alert exists with:
       | from_jurisdiction | Texas                                        |
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
 
+  Scenario: Sending alerts to Organizations
+    Given the following entities exist:
+      | Jurisdiction | Texas         |
+      | Organization | DSHS          |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
+      | Jane Smith      | jane.smith@example.com   | Health Officer   | Texas |
+    And "jane.smith@example.com" is a member of the organization "DSHS"
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    When I go to the HAN
+    And I follow "Send an Alert"
+    And I fill out the alert form with:
+      | Organization   | DSHS                                         |
+      | Title          | H1N1 SNS push packs to be delivered tomorrow |
 
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | Organization  | DSHS |
+      
+    And I press "Send"
+    Then an alert exists with:
+      | from_jurisdiction | Texas                                        |
+      | people            | Jane Smith                                   |
+      | title             | H1N1 SNS push packs to be delivered tomorrow |
 

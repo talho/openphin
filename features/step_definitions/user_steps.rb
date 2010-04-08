@@ -29,6 +29,31 @@ Given 'the following users exist:' do |table|
   end
 end
 
+Given /^"([^\"]*)" has the title "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:title,value)
+end
+
+Given /^"([^\"]*)" has the phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:phone,value.gsub(/([^0-9])/,""))
+end
+
+Given /^"([^\"]*)" has the fax "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:fax,value.gsub(/([^0-9])/,""))
+end
+
+Given /^"([^\"]*)" has the mobile phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:mobile_phone,value.gsub(/([^0-9])/,""))
+end
+
+Given /^"([^\"]*)" has the home phone "([^\"]*)"$/ do |email, value|
+  u=User.find_by_email(email)
+  u.update_attribute(:home_phone,value.gsub(/([^0-9])/,""))
+end
+
 Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user
@@ -65,7 +90,9 @@ Given "the following organization administrators exist:" do |table|
 end
 
 Given /^"([^\"]*)" is an unconfirmed user$/ do |email|
-  Factory(:user, :email => email, :email_confirmed => false)
+  user = User.find_by_email(email) || Factory(:user, :email => email, :email_confirmed => false)
+  user.email_confirmed = false
+  user.save
 end
 
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
@@ -152,6 +179,13 @@ When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename,
       )
 end
 
+When /^I fill out the delete user form with "([^\"]*)"$/ do |user_ids|
+  user_ids.split(',').each do |name|
+    user = Given "a user named #{name.strip}"
+    fill_in 'users_user_ids', :with => user.id.to_s
+  end
+end
+
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|
   p = User.find_by_email!(email)
   j = Jurisdiction.find_by_name!(jurisdiction)
@@ -193,4 +227,7 @@ When /^I attach the tmp file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
   attach_file(field, full_path)
 end
 
+When '"$email1" is deleted as a user by "$email2"' do |email1,email2|
+  User.find_by_email(email1).delayed_delete_by(email2,request.remote_ip)
+end
 

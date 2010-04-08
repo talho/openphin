@@ -65,16 +65,20 @@ class Admin::RoleRequestsController < ApplicationController
 
   def approve
     request=RoleRequest.find(params[:id])
-
     if request
       if current_user.is_admin_for?(request.jurisdiction)
         request.approve!(current_user)
         link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
         flash[:notice]="#{link} has been approved for the role #{request.role.name} in #{request.jurisdiction.name}"
-        redirect_to :action => :index
+
+        if params[:postback].blank?
+          redirect_to :back
+        else
+          redirect_to params[:postback]
+        end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to :dashboard
+        redirect_to dashboard_path
       end
     end
   end
@@ -87,10 +91,15 @@ class Admin::RoleRequestsController < ApplicationController
         ApprovalMailer.deliver_denial(request, current_user)
         link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
         flash[:notice]="#{link} has been denied for the role #{request.role.name} in #{request.jurisdiction.name}"
-        redirect_to :action => :index
+
+        if params[:postback].blank?
+          redirect_to :back
+        else
+          redirect_to params[:postback]
+        end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to :dashboard
+        redirect_to dashboard_path
       end
     end
   end
