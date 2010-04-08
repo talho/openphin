@@ -3,17 +3,18 @@
   <% alert.statistics[:jurisdictions].each do |jur| %>
     <h5 class="jurisdiction"><%= h jur[:name] %></h5>
 
-    <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(jur).round %>%</p>
-  <% end %>
+    <p class="percentage"><%= (alert.acknowledged_percent_for_jurisdiction(jur) * 100).round %>%</p>
+  <% end unless alert.statistics.blank? || alert.statistics[:jurisdictions].blank? %>
 </div>
 
 <h3>Acknowledgments (by device)</h3>
 <div class="dev_ackpct">
-  <% alert.alert_device_types.each do |d| %>
-    <div class="<%= h d.device_type.display_name %>">
-      <h5 class="device_type"><%= h d.device_type.display_name %></h5>
+  <% alert.statistics[:devices].each do |device| %>
+    <% name = AlertDeviceType.find_by_device(device[:device]).device_type.display_name %>
+    <div class="<%= h name %>">
+      <h5 class="device_type"><%= h name %></h5>
 
-      <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
+      <p class="percentage"><%= (alert.acknowledged_percent_for_device(device) * 100).round %>%</p>
     </div>
-  <% end %>
+  <% end unless alert.statistics.blank? || alert.statistics[:devices].blank? %>
 </div>

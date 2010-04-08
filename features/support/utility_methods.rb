@@ -19,7 +19,6 @@ module FeatureHelpers
         unless table.nil?
           table.rows.each do |row|
             field, value = row.first, row.last
-            debugger
             
             case field
             when /subject/

@@ -109,6 +109,7 @@ Feature: Viewing the alert log
     And "jane.smith@example.com" has acknowledged the alert "Hello World"
     And "john.smith@example.com" has not acknowledged the alert "Hello World"
     And "daniel@example.com" has not acknowledged the alert "Hello World"
+    And delayed jobs are processed
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
     And I can see the alert for "Hello World" is 33% acknowledged

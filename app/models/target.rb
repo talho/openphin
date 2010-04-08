@@ -30,7 +30,7 @@ class Target < ActiveRecord::Base
     self.users = audience.recipients(:include_public => item.include_public_users?).uniq.compact
   end
 
-  handle_asynchronously :save_snapshot_of_users
+  #handle_asynchronously :save_snapshot_of_users
 
   private
   def conditions_for(audience)

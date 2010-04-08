@@ -92,7 +92,6 @@ class Alert < ActiveRecord::Base
 
   before_create :set_message_type
   before_create :set_sent_at
-  before_create :initialize_statistics
   after_create :create_console_alert_device_type
   before_save :set_jurisdictional_level
   after_save :set_identifier
@@ -185,6 +184,7 @@ class Alert < ActiveRecord::Base
     alert_device_types.each do |device_type|
       device_type.device_type.batch_deliver(self)
     end
+    initialize_statistics
   end
 
   handle_asynchronously :batch_deliver
@@ -204,23 +204,13 @@ class Alert < ActiveRecord::Base
   end
 
   def acknowledged_percent_for_jurisdiction(jur)
-    if jur.is_a?(Jurisdiction)
-      jur=statistics[:jurisdictions].detect{|j| j[:name] == jur.name}
-    end
-    total = jur[:total].to_f
+    total = jur[:size].to_f
     total > 0 ? jur[:acks] / total : 0
-
   end
 
   def acknowledged_percent_for_device(device)
-    total = alert_attempts.with_device(device).size.to_f
-    total = alert_attempts.size.to_f if device.device == "Device::ConsoleDevice"
-    if total > 0
-      acks = alert_attempts.acknowledged_by_device(device).size.to_f
-      acks / total * 100
-    else
-      0
-    end
+    total = device[:size].to_f
+    total > 0 ? device[:acks] / total : 0
   end
 
   def is_updateable_by?(user)
@@ -269,17 +259,24 @@ class Alert < ActiveRecord::Base
   def initialize_statistics
     self.statistics = Hash.new
     self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
-    self.statistics[:devices] = alert_device_types.map{|d| {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}}
+    self.statistics[:devices] = alert_device_types.map{|d| {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}} << {:device => "Device::ConsoleDevice", :size => alert_attempts.size.to_f, :acks => 0}
+    self.save!
   end
 
   def update_statistics(options)
-    statistics[:device][options[:device]] += 1 if options[:device]
+    statistics[:devices].each do |device|
+      device[:acks] += 1 if device[:device] == options[:device]
+    end if options[:device]
+
     if options[:jurisdiction]
       if options[:jurisdiction].is_a?(Array)
-        options[:jurisdiction].each{|j| jur=statistics[:jurisdictions].detect{|jd| jd.name=j.name}; jur+=1}
+        options[:jurisdiction].map(&:name).each { |name|
+          statistics[:jurisdictions].each {|jd|
+            jd[:acks] += 1 if jd[:name] == name
+          }
+        }
       elsif options[:jurisdiction].is_a?(Jurisdiction)
-        jur=statistics[:jurisdictions].detect{|jd| jd.name=options[:jurisdiction].name}
-        jur+=1
+        statistics[:jurisdictions].each{|jd| jd[:acks] +=1 if jd[:name] == options[:jurisdiction].name}
       end
     end
     self.save
