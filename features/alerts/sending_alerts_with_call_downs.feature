@@ -204,3 +204,40 @@ Feature: Sending alerts with call downs
       | title   | [Cancel] - H1N1 SNS push packs to be delivered tomorrow |
       | message | H1N1 SNS push packs all deployed |
       | targets | john.smith@example,jackie.sue@example.com,frank.chung@example.com |
+  
+    Scenario: Reviewing Alert Log for Alert with Alert Responses
+      Given the following entities exists:
+        | Jurisdiction | Dallas County  |
+        | Jurisdiction | Potter County  |
+        | Jurisdiction | Tarrant County |
+      And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+      | Jane Smith      | jane.smith@example.com   | Health Officer  | Potter County |
+      | Jackie Sue      | jackie.sue@example.com   | Health Officer  | Potter County |
+      | Frank Chung     | frank.chung@example.com  | Health Officer  | Potter County |
+      | John Wayne      | john.wayne@example.com   | Health Officer  | Potter County |
+     And the role "HAN Coordinator" is an alerter
+      And I am logged in as "john.smith@example.com"
+      And I've sent an alert with:
+        | Jurisdictions   | Potter County       |
+        | Jurisdiction    | Dallas County                                |
+        | Title           | H1N1 SNS push packs to be delivered tomorrow |
+        | Message         | Some body text      |
+        | Severity        | Minor               |
+        | Status          | Actual              |
+        | Acknowledge     | Advanced            |
+        | Communication methods | E-mail        |
+        | Delivery Time    | 72 hours           |
+        | Alert Response 1 | if you can respond within 15 minutes |
+        | Alert Response 2 | if you can respond within 30 minutes |
+        | Alert Response 3 | if you can respond within 1 hour     |
+        | Alert Response 4 | if you can respond within 4 hours    |
+        | Alert Response 5 | if you cannot respond                |
+        And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
+        And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
+
+      When I go to the HAN
+      And I follow "Alert Log and Reporting"
+      And I should see "Acknowledge: Advanced"
+      
+      

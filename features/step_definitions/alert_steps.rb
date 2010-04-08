@@ -42,11 +42,8 @@ Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (
   delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
   aa = alert.alert_attempts.find_by_user_id(u.id)
   aa.created_at += (delta)
-  aa.acknowledged_alert_device_type_id = AlertDeviceType.find_by_device("Device::EmailDevice")
-  aa.call_down_response = alert.call_down_messages.index(message)
   aa.save
-  #aa = Factory(:alert_attempt, :alert => alert, :user => u, :acknowledged_at => alert.created_at+(delta), :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
-  #del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+  aa.acknowledge! nil, alert.call_down_messages.index(message)
 end
 
 Given /^(\d*) random alerts$/ do |count|

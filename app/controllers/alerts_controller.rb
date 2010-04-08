@@ -142,10 +142,11 @@ class AlertsController < ApplicationController
       flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
       If you believe this is in error, please contact support@#{DOMAIN}."
     else
-      if params[:email].blank?
-        alert_attempt.acknowledge! nil, params[:call_down_response]
+      device = "Device::EmailDevice" unless params[:email].blank?
+      if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
+        alert_attempt.acknowledge! device
       else
-        alert_attempt.acknowledge! "Device::EmailDevice", params[:call_down_response]
+        alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
       end
       expire_log_entry(alert_attempt.alert)
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."

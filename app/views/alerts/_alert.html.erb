@@ -28,7 +28,13 @@
   <p class="status"><%=h @alert.status %></p>
 
   <h5>Acknowledge</h5>
-  <p class="acknowledge"><%=h yn(@alert.acknowledge?) %></p>
+  <p class="acknowledge">
+    <%- if alert.acknowledge? -%>
+      <%= alert.has_alert_response_messages? ? "Advanced" : "Normal" -%>
+    <%- else -%>
+      None
+    <%- end -%>
+  </p>
 
   <h5>Sensitive</h5>
   <p class="sensitive"><%=h yn(@alert.sensitive?) %></p>

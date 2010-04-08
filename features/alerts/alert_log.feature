@@ -9,11 +9,14 @@ Feature: Viewing the alert log
       | from_jurisdiction | Dallas County |
       | title             | Hello World   |
       | jurisdictions     | Dallas County |
+      | acknowledge       | No            |
     When I am on the alert log
     Then I should see an alert titled "Hello World"
-
+    And I should see "Acknowledge: None"
+    
     When I click "View" on "Hello World"
     Then I can see the alert summary for "Hello World"
+    And I should see "None" within ".acknowledge"
 
   Scenario: Viewing list of alerts sent directly to you
     Given the following users exist:
@@ -24,11 +27,14 @@ Feature: Viewing the alert log
       | from_jurisdiction | Dallas County |
       | people            | John Smith    |
       | title             | Hello World   |
+      | acknowledge       | No            |
     When I am on the alert log
     Then I should see an alert titled "Hello World"
+    And I should see "Acknowledge: None"
 
     When I click "View" on "Hello World"
     Then I can see the alert summary for "Hello World"
+    And I should see "None" within ".acknowledge"
 
   Scenario: Viewing list of alerts in child jurisdictions
     Given the following entities exists:
@@ -123,6 +129,7 @@ Feature: Viewing the alert log
     When I press "Acknowledge"
     And I am on the alert log
     Then I can see the alert summary for "Hello World"
+    And I should see "Acknowledge: Normal"
     And I can see the alert for "Hello World" is 67% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 67%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
@@ -156,3 +163,72 @@ Feature: Viewing the alert log
     When I am on the alert log
     Then I should see 10 alerts
 
+    Scenario: Viewing acknowledged alerts with alert responses
+      Given the following entities exists:
+        | Jurisdiction | Texas         |
+        | Jurisdiction | Dallas County |
+      And Texas is the parent jurisdiction of:
+        | Dallas County |
+      And the following users exist:
+        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
+        | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
+      And the role "HAN Coordinator" is an alerter
+      And I am logged in as "john.smith@example.com"
+      And an alert with:
+        | from_jurisdiction | Texas                |
+        | jurisdictions     | Texas, Dallas County |
+        | roles             | HAN Coordinator      |
+        | title             | Hello World          |
+        | communication methods | Email, SMS       |
+        | alert_response_1  | if you can respond within 15 minutes |
+        | alert_response_2  | if you can respond within 30 minutes |
+        | alert_response_3  | if you can respond within 1 hour     |
+        | alert_response_4  | if you can respond within 4 hours    |
+        | alert_response_5  | if you cannot respond                |
+      And "jane.smith@example.com" has acknowledged the alert "Hello World"
+      And "john.smith@example.com" has not acknowledged the alert "Hello World"
+      And "daniel@example.com" has not acknowledged the alert "Hello World"
+      When I am on the alert log
+      Then I can see the alert summary for "Hello World"
+      Then I should see "Acknowledge: Advanced"
+      And I should see "Alert Response"
+      When I select "if you can respond within 15 minutes" from "Alert Response"
+      And I press "Acknowledge"
+      
+    Scenario: Viewing acknowledged alerts with alert responses from view
+      Given the following entities exists:
+        | Jurisdiction | Texas         |
+        | Jurisdiction | Dallas County |
+      And Texas is the parent jurisdiction of:
+        | Dallas County |
+      And the following users exist:
+        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
+        | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
+      And the role "HAN Coordinator" is an alerter
+      And I am logged in as "john.smith@example.com"
+      And an alert with:
+        | from_jurisdiction | Texas                |
+        | jurisdictions     | Texas, Dallas County |
+        | roles             | HAN Coordinator      |
+        | title             | Hello World          |
+        | communication methods | Email, SMS       |
+        | alert_response_1  | if you can respond within 15 minutes |
+        | alert_response_2  | if you can respond within 30 minutes |
+        | alert_response_3  | if you can respond within 1 hour     |
+        | alert_response_4  | if you can respond within 4 hours    |
+        | alert_response_5  | if you cannot respond                |
+      And "jane.smith@example.com" has acknowledged the alert "Hello World"
+      And "john.smith@example.com" has not acknowledged the alert "Hello World"
+      And "daniel@example.com" has not acknowledged the alert "Hello World"
+      When I am on the alert log
+      Then I can see the alert summary for "Hello World"
+      When I click "View" on "Hello World"
+      Then I should see "Alert Response"
+      When I select "if you can respond within 15 minutes" from "Alert Response"
+      And I press "Acknowledge"
+      When I am on the alert log
+      Then I should not see "Alert Response"
+      When I click "View" on "Hello World"
+      Then I should not see "Alert Response" within "#response_details"

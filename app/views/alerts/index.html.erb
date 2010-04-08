@@ -39,7 +39,15 @@
 
               <p class="brief"><strong>Sensitive:</strong> <%= h alert.sensitive? ? 'Yes' : 'No' %></p>
 
-              <p class="brief"><strong>Acknowledge:</strong> <%= h alert.acknowledge? ? 'Yes' : 'No' %></p>
+              <%- if alert.acknowledge? -%>
+                <%- if alert.has_alert_response_messages? -%>
+                  <p class="brief"><strong>Acknowledge:</strong> Advanced</p>
+                <%- else -%>
+                  <p class="brief"><strong>Acknowledge:</strong> Normal</p>
+                <%- end -%>
+              <%- else -%>
+                <p class="brief"><strong>Acknowledge:</strong> None</p>
+              <%- end -%>
 
               <%- if !alert.original_alert_id.blank? -%>
                 <p class="brief"><strong>Reference ID:</strong> <%= h alert.original_alert.identifier %></p>
@@ -48,8 +56,16 @@
                 <%= simple_format h(alert.message) %>
               </div>
 
-              <% unless alert.acknowledged_by_user? || !alert.recipients.include?(current_user) %>
-                <%= acknowledge_alert_button(alert) %>
+              <% unless alert.acknowledged_by_user? %>
+                <% if alert.has_alert_response_messages? %>
+                  <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %> 
+                    <%= form.label "call_down_response", "Alert Response" %>
+                    <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{:include_blank=>true}) %>
+                    <p><%= form.submit "Acknowledge" %></p>
+                  <% end %>
+                <% else %>
+                  <%= acknowledge_alert_button(alert) %>
+                <% end %>
               <% end %>
             </div>
             <div class="aside">
