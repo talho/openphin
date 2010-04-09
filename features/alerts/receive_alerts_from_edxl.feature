@@ -110,12 +110,12 @@ Feature: Alerts from EDXL
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
-  
   Scenario: Receiving an EDXL alert udpate
     When PhinMS delivers the message: PCAMessageAlert.xml
     Then an alert exists with:
       | identifier | CDC-2009-183 |
       | message_type | Alert |
+    And delayed jobs are processed
     When I log in as "keith@example.com"
     And I go to the HAN page
     Then I should see 1 alert
@@ -139,6 +139,7 @@ Feature: Alerts from EDXL
     Then an alert exists with:
       | identifier | CDC-2009-183 |
       | message_type | Alert |
+    And delayed jobs are processed
     When I log in as "keith@example.com"
     And I go to the HAN page
     Then I should see 1 alert
