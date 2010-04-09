@@ -266,7 +266,7 @@ class Alert < ActiveRecord::Base
   def update_statistics(options)
     statistics[:devices].each do |device|
       device[:acks] += 1 if device[:device] == options[:device]
-    end if options[:device]
+    end if options[:device] && statistics[:devices]
 
     if options[:jurisdiction]
       if options[:jurisdiction].is_a?(Array)
@@ -278,7 +278,7 @@ class Alert < ActiveRecord::Base
       elsif options[:jurisdiction].is_a?(Jurisdiction)
         statistics[:jurisdictions].each{|jd| jd[:acks] +=1 if jd[:name] == options[:jurisdiction].name}
       end
-    end
+    end if statistics[:jurisdictions]
     self.save
   end
 

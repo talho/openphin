@@ -106,6 +106,7 @@ Feature: Viewing the alert log
       | roles             | HAN Coordinator      |
       | title             | Hello World          |
       | communication methods | Email, SMS       |
+    And delayed jobs are processed
     And "jane.smith@example.com" has acknowledged the alert "Hello World"
     And "john.smith@example.com" has not acknowledged the alert "Hello World"
     And "daniel@example.com" has not acknowledged the alert "Hello World"

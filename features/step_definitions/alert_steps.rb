@@ -28,6 +28,7 @@ Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_addre
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+  aa.acknowledge!
 end
 
 Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_address, title|
