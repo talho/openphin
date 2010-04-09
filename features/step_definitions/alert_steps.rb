@@ -84,7 +84,7 @@ end
 
 When 'I follow the acknowledge alert link' do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
-  visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => HOST)
 end
 
 When 'I send a message recording "$filename"' do |filename|

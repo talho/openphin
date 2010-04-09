@@ -194,10 +194,10 @@ class Alert < ActiveRecord::Base
   end
 
   def acknowledged_percent
-    if (alert_attempts.size > 0)
-      total = alert_attempts.size.to_f
-      acked = alert_attempts.acknowledged.size.to_f
-      (acked/total*100)
+    if options && options[:statistics] && options[:statistics][:total_acks]
+      total_acks = options[:statistics][:total_acks]
+      total = total_acks[:size].to_f
+      total > 0 ? total_acks[:acks] / total : 0
     else
       0
     end
@@ -258,11 +258,13 @@ class Alert < ActiveRecord::Base
 
   def initialize_statistics
     self.reload
+    aa_size = alert_attempts.size.to_f
     self.statistics = Hash.new
     self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
-    self.statistics[:devices] = [{:device => "Device::ConsoleDevice", :size => alert_attempts.size.to_f, :acks => 0}]
+    self.statistics[:devices] = [{:device => "Device::ConsoleDevice", :size => aa_size, :acks => 0}]
     types = alert_device_types.reject{|d| d.device == "Device::ConsoleDevice"}
     types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}}
+    self.statistics[:total_acks] = {:size => aa_size, :acks => 0}
     self.save!
   end
 
@@ -279,6 +281,8 @@ class Alert < ActiveRecord::Base
         }
       }
     end
+
+    statistics[:total_acks][:acks] += 1 unless statistics[:total_acks].blank? || statistics[:total_acks].empty?
     self.save
   end
 

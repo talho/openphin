@@ -29,7 +29,7 @@
               <span class="from_jurisdiction"><strong>From:</strong> <%= h alert.sender %></span>
               <br/>
               <%- if alert.acknowledge? -%>
-                <span class="progress"><strong>Acknowledgments:</strong> <%= alert.acknowledged_percent.round %>%</span>
+                <span class="progress"><strong>Acknowledgments:</strong> <%= (alert.acknowledged_percent * 100).round %>%</span>
               <%- end -%>
             </p>
           </div>
