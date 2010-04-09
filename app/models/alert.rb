@@ -257,9 +257,12 @@ class Alert < ActiveRecord::Base
   end
 
   def initialize_statistics
+    self.reload
     self.statistics = Hash.new
     self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
-    self.statistics[:devices] = alert_device_types.map{|d| {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}} << {:device => "Device::ConsoleDevice", :size => alert_attempts.size.to_f, :acks => 0}
+    self.statistics[:devices] = [{:device => "Device::ConsoleDevice", :size => alert_attempts.size.to_f, :acks => 0}]
+    types = alert_device_types.reject{|d| d.device == "Device::ConsoleDevice"}
+    types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}}
     self.save!
   end
 
@@ -267,18 +270,15 @@ class Alert < ActiveRecord::Base
     statistics[:devices].each do |device|
       device[:acks] += 1 if device[:device] == options[:device]
     end if options[:device] && statistics[:devices]
-
-    if options[:jurisdiction]
-      if options[:jurisdiction].is_a?(Array)
-        options[:jurisdiction].map(&:name).each { |name|
-          statistics[:jurisdictions].each {|jd|
-            jd[:acks] += 1 if jd[:name] == name
-          }
+    
+    if options[:jurisdiction] && statistics[:jurisdictions]
+      options[:jurisdiction] = [options[:jurisdiction]].flatten
+      options[:jurisdiction].map(&:name).each { |name|
+        statistics[:jurisdictions].each {|jd|
+          jd[:acks] += 1 if jd[:name] == name
         }
-      elsif options[:jurisdiction].is_a?(Jurisdiction)
-        statistics[:jurisdictions].each{|jd| jd[:acks] +=1 if jd[:name] == options[:jurisdiction].name}
-      end
-    end if statistics[:jurisdictions]
+      }
+    end
     self.save
   end
 
