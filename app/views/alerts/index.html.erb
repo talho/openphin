@@ -29,7 +29,7 @@
               <span class="from_jurisdiction"><strong>From:</strong> <%= h alert.sender %></span>
               <br/>
               <%- if alert.acknowledge? -%>
-                <span class="progress"><strong>Acknowledgments:</strong> <%= alert.acknowledged_percent.round %>%</span>
+                <span class="progress"><strong>Acknowledgments:</strong> <%= (alert.acknowledged_percent * 100).round %>%</span>
               <%- end -%>
             </p>
           </div>
@@ -56,7 +56,7 @@
                 <%= simple_format h(alert.message) %>
               </div>
 
-              <% unless alert.acknowledged_by_user? %>
+              <% unless alert.acknowledged_by_user?  || alert.targets.map{|target| target.users.with_user?(current_user)}.flatten.uniq.size == 0 %>
                 <% if alert.has_alert_response_messages? %>
                   <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %> 
                     <%= form.label "call_down_response", "Alert Response" %>
@@ -70,27 +70,7 @@
             </div>
             <div class="aside">
               <%- if alert.acknowledge? -%>
-                <h3>Acknowledgments (by jurisdiction)</h3>
-
-                <div class="jur_ackpct">
-                  <% alert.total_jurisdictions.each do |d| %>
-                    <h5 class="jurisdiction"><%= h d.name %></h5>
-
-                    <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
-                  <% end %>
-                </div>
-
-                <h3>Acknowledgments (by device)</h3>
-
-                <div class="dev_ackpct">
-                  <% alert.alert_device_types.each do |d| %>
-                    <div class="<%= h d.device_type.display_name %>">
-                      <h5 class="device_type"><%= h d.device_type.display_name %></h5>
-
-                      <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
-                    </div>
-                  <% end %>
-                </div>
+                <%= render :partial => "alert_acknowledgements", :locals => {:alert => alert} %>
               <%- end -%>
             </div>
           </div>

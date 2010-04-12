@@ -38,7 +38,7 @@ Feature: Sending alerts form
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    
+    When delayed jobs are processed
     Then an alert exists with:
       | from_jurisdiction | Potter County |
       | title | H1N1 SNS push packs to be delivered tomorrow |

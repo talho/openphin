@@ -83,7 +83,8 @@ Feature: Sending alerts to phones
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
-    And I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
+    When I go to the alert log
+    Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
     
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed

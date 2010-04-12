@@ -106,15 +106,26 @@ Feature: Viewing the alert log
       | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    And an alert with:
-      | from_jurisdiction | Texas                |
-      | jurisdictions     | Texas, Dallas County |
-      | roles             | HAN Coordinator      |
-      | title             | Hello World          |
-      | communication methods | Email, SMS       |
-    And "jane.smith@example.com" has acknowledged the alert "Hello World"
-    And "john.smith@example.com" has not acknowledged the alert "Hello World"
-    And "daniel@example.com" has not acknowledged the alert "Hello World"
+    When I go to the HAN
+    And I follow "Send an Alert"
+    And I fill out the alert form with:
+      | Jurisdiction          | Texas                |
+      | Jurisdictions         | Texas, Dallas County |
+      | Roles                 | HAN Coordinator      |
+      | Title                 | Hello World          |
+      | Acknowledge           | <checked>            |
+      | Communication methods | E-mail, SMS          |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+        | Roles | HAN Coordinator |
+    And I press "Send"
+    And delayed jobs are processed
+
+    And I am logged in as "jane.smith@example.com"
+    And I follow the acknowledge alert link
+
+    And I am logged in as "john.smith@example.com"
+    And delayed jobs are processed
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
     And I can see the alert for "Hello World" is 33% acknowledged

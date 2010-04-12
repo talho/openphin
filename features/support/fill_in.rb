@@ -107,7 +107,7 @@ module FeatureHelpers
           user = Given "a user named #{name.strip}"
           fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
         end
-      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
+      when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/, /^Communication methods?/
         value.split(',').map(&:strip).each{ |r| check r }
         when 'Acknowledge', 'Status', 'Severity', 'Jurisdiction','Event Interval'
           select value, :from => label
@@ -128,7 +128,7 @@ module FeatureHelpers
             else
               raise "Not a valid Delivery Time"
           end
-        when 'Sensitive'
+        when 'Acknowledge', 'Sensitive'
           id = "alert_#{label.parameterize('_')}"
           if value == '<unchecked>'
             uncheck id
@@ -137,6 +137,7 @@ module FeatureHelpers
           end
       when 'Communication methods'
         check value
+
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
       when "Short Message"

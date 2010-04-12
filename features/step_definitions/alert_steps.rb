@@ -28,6 +28,7 @@ Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_addre
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+  aa.acknowledge!
 end
 
 Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_address, title|
@@ -92,7 +93,7 @@ end
 
 When /^I follow the acknowledge alert link$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
-  visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => HOST)
 end
 
 When 'I follow the acknowledge alert link "$title"' do |title|

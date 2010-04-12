@@ -19,9 +19,7 @@ end
 
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
-  a.acknowledged_at = Time.zone.now
-  a.acknowledged_alert_device_type = AlertDeviceType.find_by_device("Device::PhoneDevice")
-  a.save!
+  a.acknowledge! "Device::PhoneDevice"
 end
 
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|

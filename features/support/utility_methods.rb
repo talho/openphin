@@ -19,6 +19,7 @@ module FeatureHelpers
         unless table.nil?
           table.rows.each do |row|
             field, value = row.first, row.last
+            
             case field
             when /subject/
               status &&= email.subject =~ /#{Regexp.escape(value)}/
