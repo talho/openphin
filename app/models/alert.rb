@@ -263,7 +263,7 @@ class Alert < ActiveRecord::Base
     self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
     self.statistics[:devices] = [{:device => "Device::ConsoleDevice", :size => aa_size, :acks => 0}]
     types = alert_device_types.reject{|d| d.device == "Device::ConsoleDevice"}
-    types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => alert_attempts.with_device(d).size.to_f, :acks => 0}}
+    types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => aa_size, :acks => 0}}
     self.statistics[:total_acks] = {:size => aa_size, :acks => 0}
     self.save!
   end
@@ -310,13 +310,38 @@ class Alert < ActiveRecord::Base
   end
 
   def recipients
-    @recips ||= (targets.map(&:users).flatten + User.find(required_han_coordinators)).uniq
+    @recips ||= targets.map(&:users).flatten
+    @recips += User.find(required_han_coordinators).uniq if is_cross_jurisdictional?
+    @recips.flatten.uniq
   end
 
   def total_jurisdictions
-    @total_jurisdictions ||= (audiences.map(&:jurisdictions).flatten + recipients.map(&:jurisdictions).flatten).uniq
-  end
+    total_jurisdictions = audiences.map(&:jurisdictions).flatten
+    
+    total_jurisdictions += User.find(required_han_coordinators).map(&:jurisdictions) if is_cross_jurisdictional?
 
+    total_users = audiences.map(&:users).flatten.uniq.reject do |user|
+      if user.jurisdictions.include?(from_jurisdiction)
+        total_jurisdictions += [from_jurisdiction]
+        true
+      end
+    end.flatten
+    
+    total_jurisdictions += total_users.map(&:jurisdictions) unless total_users.empty?
+
+    total_jurisdictions.flatten.uniq
+  end
+  
+  def is_cross_jurisdictional?
+    jurs = audiences.map(&:jurisdictions).flatten.uniq
+    return true if jurs.size > 1 || (jurs.size == 1 && jurs.first != from_jurisdiction)
+    
+    #audiences.map(&:users).flatten.uniq.each do |user|
+    #  return true unless user.jurisdictions.empty? || user.jurisdictions.include?(from_jurisdiction)
+    #end
+    false 
+  end
+  
   # used by Target to determine if public users should be included in recipients
   def include_public_users?
     true

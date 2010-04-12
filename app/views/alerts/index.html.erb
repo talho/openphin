@@ -48,7 +48,7 @@
                 <%= simple_format h(alert.message) %>
               </div>
 
-              <% unless alert.acknowledged_by_user? || !alert.recipients.include?(current_user) %>
+              <% unless alert.acknowledged_by_user? || alert.targets.map{|target| target.users.with_user?(current_user)}.flatten.uniq.size == 0 %>
                 <%= acknowledge_alert_button(alert) %>
               <% end %>
             </div>
