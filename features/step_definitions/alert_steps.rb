@@ -271,6 +271,17 @@ Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]
   end
 end
 
+Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, response, percentage|
+  alert = Alert.find_by_title(alert_name)
+  num = alert.call_down_messages.index(response)
+  debugger
+  response.should have_selector(".response_ackpct") do |elm|
+    elm.should have_selector(".response#{num}") do |device|
+	  device.should have_selector(".percentage", :content => percentage)
+    end
+  end
+end
+
 Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)"$/ do |alert_name, device_type|
   response.should_not have_selector(".#{device_type}")
 end

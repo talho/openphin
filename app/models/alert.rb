@@ -251,6 +251,11 @@ class Alert < ActiveRecord::Base
     total = device[:size].to_f
     total > 0 ? device[:acks] / total : 0
   end
+  
+  def acknowledged_percent_for_alert_response(response)
+    total = response.last[:size].to_f
+    total > 0 ? response.last[:acks] / total : 0
+  end
 
   def is_updateable_by?(user)
     true if user.alerter_jurisdictions.include?(self.from_jurisdiction)
@@ -304,6 +309,13 @@ class Alert < ActiveRecord::Base
     types = alert_device_types.reject{|d| d.device == "Device::ConsoleDevice"}
     types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => aa_size, :acks => 0}}
     self.statistics[:total_acks] = {:size => aa_size, :acks => 0}
+    
+    if has_alert_response_messages?
+      self.statistics[:alert_responses] = Hash.new
+      call_down_messages.each do |key, value|
+        self.statistics[:alert_responses][key] = {:size => aa_size, :acks => 0}
+      end
+    end
     self.save!
   end
 
@@ -322,6 +334,10 @@ class Alert < ActiveRecord::Base
     end
 
     statistics[:total_acks][:acks] += 1 unless statistics[:total_acks].blank? || statistics[:total_acks].empty?
+    
+    if options[:response] && options[:response] != 0
+      statistics[:alert_responses][options[:response]][:acks] += 1
+    end
     self.save
   end
 

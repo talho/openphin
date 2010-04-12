@@ -99,7 +99,7 @@ class AlertAttempt < ActiveRecord::Base
         AlertDeviceType.find_by_alert_id_and_device(alert.id, alert_device_type.nil? ? "Device::ConsoleDevice" : alert_device_type ).id)
       update_attribute(:acknowledged_at, Time.zone.now)
       update_attribute(:call_down_response, response.to_i)
-      alert.update_statistics(:device => device, :jurisdiction => user.jurisdictions)
+      alert.update_statistics(:device => device, :jurisdiction => user.jurisdictions, :response => response)
     end
   end
   

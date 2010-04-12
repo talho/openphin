@@ -234,11 +234,12 @@ Feature: Sending alerts with call downs
         | Alert Response 4 | if you can respond within 4 hours    |
         | Alert Response 5 | if you cannot respond                |
       And delayed jobs are processed  
+
       And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
       And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
 
       When I go to the HAN
       And I follow "Alert Log and Reporting"
       And I should see "Acknowledge: Advanced"
-      
-      
+      And I see WTF is going on
+      And I can see the alert acknowledgement response rate for "H1N1 SNS push packs to be delivered tomorrow" in "if you can respond within 15 minutes" is 25%
