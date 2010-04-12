@@ -208,7 +208,7 @@ class Alert < ActiveRecord::Base
   end
 
   def self.human_delivery_time(minutes)
-    minutes > 60 ? "#{minutes/60} hours" : "#{minutes} minutes"
+    minutes > 90 ? "#{minutes/60} hours" : "#{minutes} minutes"
   end
 
   def batch_deliver

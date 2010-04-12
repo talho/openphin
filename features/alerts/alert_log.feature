@@ -113,7 +113,7 @@ Feature: Viewing the alert log
       | Jurisdictions         | Texas, Dallas County |
       | Roles                 | HAN Coordinator      |
       | Title                 | Hello World          |
-      | Acknowledge           | <checked>            |
+      | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
     And I press "Preview Message"
     Then I should see a preview of the message with:

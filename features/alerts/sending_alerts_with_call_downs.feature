@@ -85,7 +85,7 @@ Feature: Sending alerts with call downs
       | Alert Response 3 | if you can respond within 1 hour     |
       | Alert Response 4 | if you can respond within 4 hours    |
       | Alert Response 5 | if you cannot respond                |
-
+    And delayed jobs are processed
     And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
     And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
 
@@ -169,7 +169,7 @@ Feature: Sending alerts with call downs
       | Alert Response 3 | if you can respond within 1 hour     |
       | Alert Response 4 | if you can respond within 4 hours    |
       | Alert Response 5 | if you cannot respond                |
-
+    And delayed jobs are processed
     And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
     And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
 
@@ -233,8 +233,9 @@ Feature: Sending alerts with call downs
         | Alert Response 3 | if you can respond within 1 hour     |
         | Alert Response 4 | if you can respond within 4 hours    |
         | Alert Response 5 | if you cannot respond                |
-        And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
-        And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
+      And delayed jobs are processed  
+      And "john.wayne@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes" 30 minutes later
+      And "jane.smith@example.com" has acknowledged the alert "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 30 minutes" 30 minutes later
 
       When I go to the HAN
       And I follow "Alert Log and Reporting"
