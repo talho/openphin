@@ -1,32 +1,31 @@
 <h3>Acknowledgments (by jurisdiction)</h3>
 <div class="jur_ackpct">
-  <% alert.statistics[:jurisdictions].each do |jur| %>
-    <h5 class="jurisdiction"><%= h jur[:name] %></h5>
+  <% alert.ack_logs.find_all_by_item_type("jurisdiction", :order => :item).each do |jur| %>
+    <h5 class="jurisdiction"><%= h jur.item %></h5>
 
-    <p class="percentage"><%= (alert.acknowledged_percent_for_jurisdiction(jur) * 100).round %>%</p>
-  <% end unless alert.statistics.blank? || alert.statistics[:jurisdictions].blank? %>
+    <p class="percentage"><%= (jur.acknowledged_percent * 100).round %>%</p>
+  <% end %>
 </div>
 
 <h3>Acknowledgments (by device)</h3>
 <div class="dev_ackpct">
-  <% alert.statistics[:devices].each do |device| %>
-    <% name = AlertDeviceType.find_by_device(device[:device]).device_type.display_name %>
+  <% alert.ack_logs.find_all_by_item_type("device").each do |device| %>
+    <% name = AlertDeviceType.find_by_device(device.item).device_type.display_name %>
     <div class="<%= h name %>">
       <h5 class="device_type"><%= h name %></h5>
 
-      <p class="percentage"><%= (alert.acknowledged_percent_for_device(device) * 100).round %>%</p>
+      <p class="percentage"><%= (device.acknowledged_percent * 100).round %>%</p>
     </div>
-  <% end unless alert.statistics.blank? || alert.statistics[:devices].blank? %>
+  <% end  %>
 </div>
 
 <h3>Acknowledgments (by alert response)</h3>
 <div class="response_ackpct">
-  <% alert.statistics[:alert_responses].each do |response| %>
-    <% name = alert.call_down_messages[response.first] %>
-    <div id="response<%= h response.first %>">
-      <h5><%= h name %></h5>
+  <% alert.ack_logs.find_all_by_item_type("alert_response").each do |response| %>
+    <div id="response<%= h alert.call_down_messages.index(response.item) %>">
+      <h5><%= h response.item %></h5>
       
-      <p class="percentage"><%= (alert.acknowledged_percent_for_alert_response(response) * 100).round %>%
+      <p class="percentage"><%= (response.acknowledged_percent * 100).round %>%</p>
     </div>
-  <% end if alert.has_alert_response_messages? && !alert.statistics.blank? %>
+  <% end %>
 </div>

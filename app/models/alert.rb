@@ -72,6 +72,7 @@ class Alert < ActiveRecord::Base
 
   has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"]
   has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"]
+  has_many :ack_logs, :class_name => 'AlertAckLog'
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
@@ -233,28 +234,12 @@ class Alert < ActiveRecord::Base
   end
 
   def acknowledged_percent
-    if options && options[:statistics] && options[:statistics][:total_acks]
-      total_acks = options[:statistics][:total_acks]
-      total = total_acks[:size].to_f
-      total > 0 ? total_acks[:acks] / total : 0
+    total = ack_logs.find_by_item_type("total")
+    if total
+      total.acknowledged_percent
     else
       0
     end
-  end
-
-  def acknowledged_percent_for_jurisdiction(jur)
-    total = jur[:size].to_f
-    total > 0 ? jur[:acks] / total : 0
-  end
-
-  def acknowledged_percent_for_device(device)
-    total = device[:size].to_f
-    total > 0 ? device[:acks] / total : 0
-  end
-  
-  def acknowledged_percent_for_alert_response(response)
-    total = response.last[:size].to_f
-    total > 0 ? response.last[:acks] / total : 0
   end
 
   def is_updateable_by?(user)
@@ -303,42 +288,48 @@ class Alert < ActiveRecord::Base
   def initialize_statistics
     self.reload
     aa_size = alert_attempts.size.to_f
-    self.statistics = Hash.new
-    self.statistics[:jurisdictions] = total_jurisdictions.map{|j| {:name => j.name, :size => attempted_users.with_jurisdiction(j).size.to_f, :acks => 0}}
-    self.statistics[:devices] = [{:device => "Device::ConsoleDevice", :size => aa_size, :acks => 0}]
-    types = alert_device_types.reject{|d| d.device == "Device::ConsoleDevice"}
-    types.collect{|d| self.statistics[:devices] << {:device => d.device,:size => aa_size, :acks => 0}}
-    self.statistics[:total_acks] = {:size => aa_size, :acks => 0}
+
+    total_jurisdictions.each do |jur|
+      ack_logs.create(:item_type => "jurisdiction", :item => jur.name, :total => attempted_users.with_jurisdiction(jur).size.to_f, :acks => 0)
+    end
     
+    types = (alert_device_types.map(&:device) << "Device::ConsoleDevice").uniq
+    types.each do |type|
+      ack_logs.create(:item_type => "device", :item => type, :acks => 0, :total => aa_size)
+    end
+   
     if has_alert_response_messages?
-      self.statistics[:alert_responses] = Hash.new
       call_down_messages.each do |key, value|
-        self.statistics[:alert_responses][key] = {:size => aa_size, :acks => 0}
+        ack_logs.create(:item_type => "alert_response", :item => value, :acks => 0, :total => aa_size)
       end
     end
-    self.save!
+
+    ack_logs.create(:item_type => "total", :acks => 0, :total => aa_size)
   end
 
   def update_statistics(options)
-    statistics[:devices].each do |device|
-      device[:acks] += 1 if device[:device] == options[:device]
-    end if options[:device] && statistics[:devices]
+    aa_size = nil
+    if options[:device]
+      ack = ack_logs.find_by_item_type_and_item("device",options[:device])
+      ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
+    end
     
-    if options[:jurisdiction] && statistics[:jurisdictions]
+    if options[:jurisdiction]
       options[:jurisdiction] = [options[:jurisdiction]].flatten
       options[:jurisdiction].map(&:name).each { |name|
-        statistics[:jurisdictions].each {|jd|
-          jd[:acks] += 1 if jd[:name] == name
-        }
+        ack = ack_logs.find_by_item_type_and_item("jurisdiction", name)
+        ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
       }
     end
 
-    statistics[:total_acks][:acks] += 1 unless statistics[:total_acks].blank? || statistics[:total_acks].empty?
-    
-    if options[:response] && options[:response] != 0
-      statistics[:alert_responses][options[:response]][:acks] += 1
+    if options[:response] && options[:response].to_i > 0
+      response = options[:response]
+      ack = ack_logs.find_by_item_type_and_item("alert_response", call_down_messages[response])
+      ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
     end
-    self.save
+
+    ack = ack_logs.find_by_item_type("total")
+    ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
   end
 
   def sender

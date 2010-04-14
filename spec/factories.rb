@@ -71,9 +71,6 @@ Factory.define :alert do |m|
   m.delivery_time 60
   m.from_jurisdiction { Factory(:jurisdiction) }
   m.audiences {|a| [a.association(:audience)] }
-  test = Hash.new
-  test[:statistics] = {}
-  m.options test
 end
 
 Factory.define(:audience) do |a|
