@@ -20,7 +20,7 @@
       </p>
     <% end %>
   
-    <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+    <% if @user.public? || current_user == @user || current_user.is_jurisdiction_admin? || i_am_fellow %>
       <p class="office_phone">
         <strong>Office Phone:</strong>
         <%= number_to_phone @user.phone || 'None Given' %>
@@ -29,6 +29,8 @@
         <strong>Office Fax:</strong>
         <%= number_to_phone @user.fax || 'None Given' %>
       </p>
+      <% end %>
+      <% if current_user == @user || current_user.is_jurisdiction_admin? %>
       <p class="home_phone">
         <strong>Home Phone:</strong>
         <%= number_to_phone @user.home_phone || 'None Given' %>
