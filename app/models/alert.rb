@@ -128,7 +128,7 @@ class Alert < ActiveRecord::Base
 
   def build_cancellation(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages","short_message"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
@@ -154,7 +154,7 @@ class Alert < ActiveRecord::Base
 
   def build_update(attrs={})
     attrs = attrs.stringify_keys
-    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages"]
+    changeable_fields = ["message", "severity", "sensitive", "acknowledge", "delivery_time", "not_cross_jurisdictional","call_down_messages","short_message"]
     overwrite_attrs = attrs.slice(*changeable_fields)
     self.class.new attrs.merge(self.attributes).merge(overwrite_attrs) do |alert|
       alert.created_at = nil
