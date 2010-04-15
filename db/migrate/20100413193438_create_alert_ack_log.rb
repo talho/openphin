@@ -10,6 +10,10 @@ class CreateAlertAckLog < ActiveRecord::Migration
       t.integer :total, :defaults => 0, :null => false
       t.timestamps
     end
+
+    add_index :alert_ack_logs, :alert_id
+    add_index :alert_ack_logs, :item_type
+
     Alert.find_each(:batch_size=>100,:include=>[{:alert_attempts => {:user => :jurisdictions}}], :conditions => ["acknowledge = ?", true]) do |alert|
       aa_size = alert.alert_attempts.size.to_f
       total_jurisdictions = alert.total_jurisdictions
@@ -39,8 +43,6 @@ class CreateAlertAckLog < ActiveRecord::Migration
       aalj.each {|key,value| value.save!}
     end
     
-  add_index :alert_ack_logs, :alert_id
-  add_index :alert_ack_logs, :index_type
   end
   
   
@@ -48,7 +50,7 @@ class CreateAlertAckLog < ActiveRecord::Migration
   def self.down
     require 'app/models/alert'
     remove_index :alert_ack_logs, :alert_id
-    remove_index :alert_ack_logs, :index_type
+    remove_index :alert_ack_logs, :item_type
     drop_table :alert_ack_logs
     add_column :alerts, :options, :text
     

@@ -38,10 +38,6 @@
         <div class="message">
           <%=simple_format h(alert.message) %>
         </div>
-
-        <% unless alert.acknowledged_by_user? || !alert.recipients.include?(current_user) %>
-          <%= acknowledge_alert_button(alert) %>
-        <% end %>
       </div>
     <div class="aside">
   <%- if alert.acknowledge? -%>

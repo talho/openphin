@@ -82,6 +82,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
         else
           PHONE_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"
         end
+        ActionController::Base.new.expire_fragment(/alert_log_entry.*#{@alert.id}.cache$/)
       end
 
     end

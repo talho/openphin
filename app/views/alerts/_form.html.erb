@@ -47,7 +47,7 @@
       <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
       <%= form.text_area :short_message, :rows => 2, :class => "short_message", :wrap => "soft" %>
       
-      <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message" %></p><% end %>
+      <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message", :id => "alert_preview_submit" %></p><% end %>
     </div>
     <div class="aside">
       <% if @update.blank? && @cancel.blank? %>
@@ -126,7 +126,7 @@
         <% end %>
       <% end %>
       
-      <%= form.submit "Preview Message", :class => "preview_alert" %>
+      <%= form.submit "Preview Message", :class => "preview_alert", :id => "alert_preview_submit" %>
     <%- end -%>
   </div>
 </div>
@@ -144,7 +144,7 @@
     <%= render :partial => "player", :locals => {:sample_url => "#{UPLOAD_BASE_URI}/alerts/new/playback.wav?token=#{@token}" } if current_user.has_uploaded? %>
     <div class="details actions">
       <button class="edit">&lt; Edit this Alert</button>
-      <%= form.submit "Send this Alert", :name => 'send' %>
+      <%= form.submit "Send this Alert", :name => 'send', :id => "alert_submit" %>
     </div>
   </div> 
 <% end %>

@@ -8,7 +8,18 @@
       if($('#alert_acknowledge').find('option').filter(':selected').text() == 'Advanced'){
         $('#call_down_container').toggleClass('hidden');
       }
-    });
+		$('#alert_submit').click(function(e) {
+			$(this).fadeTo("fast", 0.5);
+			$(this).unbind("click");
+			$(this).click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			});
+			return true;
+		});
+	});
+
     $('input[type=submit]').addClass('submit');
     $('.preview_alert').click(function(e) {
       if ($(".audience_jurisdiction:checked").length == 0 &&

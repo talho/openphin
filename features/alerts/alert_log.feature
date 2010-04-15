@@ -118,10 +118,11 @@ Feature: Viewing the alert log
     And I press "Preview Message"
     Then I should see a preview of the message with:
         | Roles | HAN Coordinator |
-    And I press "Send"
+    When I press "Send"
     And delayed jobs are processed
 
     And I am logged in as "jane.smith@example.com"
+    And I go to the HAN
     And I follow the acknowledge alert link
 
     And I am logged in as "john.smith@example.com"
@@ -137,7 +138,8 @@ Feature: Viewing the alert log
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Phone"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
-    When I press "Acknowledge"
+    When I go to the HAN
+    And I press "Acknowledge"
     And I am on the alert log
     Then I can see the alert summary for "Hello World"
     And I should see "Acknowledge: Normal"
@@ -203,8 +205,9 @@ Feature: Viewing the alert log
       When I am on the alert log
       Then I can see the alert summary for "Hello World"
       Then I should see "Acknowledge: Advanced"
+      When I go to the HAN
       And I should see "Alert Response"
-      When I select "if you can respond within 15 minutes" from "Alert Response"
+      And I select "if you can respond within 15 minutes" from "Alert Response"
       And I press "Acknowledge"
       
     Scenario: Viewing acknowledged alerts with alert responses from view
@@ -233,13 +236,13 @@ Feature: Viewing the alert log
       And "jane.smith@example.com" has acknowledged the alert "Hello World"
       And "john.smith@example.com" has not acknowledged the alert "Hello World"
       And "daniel@example.com" has not acknowledged the alert "Hello World"
-      When I am on the alert log
-      Then I can see the alert summary for "Hello World"
-      When I click "View" on "Hello World"
+      When I go to the HAN
       Then I should see "Alert Response"
       When I select "if you can respond within 15 minutes" from "Alert Response"
       And I press "Acknowledge"
       When I am on the alert log
-      Then I should not see "Alert Response"
+      Then I can see the alert summary for "Hello World"
       When I click "View" on "Hello World"
-      Then I should not see "Alert Response" within "#response_details"
+      Then I should see "if you can respond within 15 minutes"
+      When I go to the HAN
+      Then I should not see "Alert Response"
