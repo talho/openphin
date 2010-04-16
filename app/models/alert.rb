@@ -76,9 +76,6 @@ class Alert < ActiveRecord::Base
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
-  serialize :options, Hash
-  option_accessor :statistics
-
   Statuses = ['Actual', 'Exercise', 'Test']
   Severities = ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown']
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }

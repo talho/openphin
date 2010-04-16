@@ -30,7 +30,7 @@
   <h5>Acknowledge</h5>
   <p class="acknowledge">
     <%- if alert.acknowledge? -%>
-      <%= alert.has_alert_response_messages? ? "Advanced" : "Normal" -%>
+      <%= alert.has_alert_response_messages? && alert.original_alert.nil? ? "Advanced" : "Normal" -%>
     <%- else -%>
       None
     <%- end -%>

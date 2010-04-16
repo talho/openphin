@@ -112,6 +112,7 @@ Feature: Sending alerts with call downs
     When I fill in "Message" with "H1N1 SNS push packs to be delivered in 30 minutes at point B"
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery Time"
+    And I select "Normal" from "Acknowledge"
     And I select "if you can respond within 30 minutes" from "Responders"
     And I press "Preview Message"
     Then I should see a preview of the message
@@ -125,6 +126,7 @@ Feature: Sending alerts with call downs
       | message             | H1N1 SNS push packs to be delivered in 15 minutes at point A |
       | targets             | john.wayne@example.com  |
       | call_down_messages  | if you can respond within 15 minutes         |
+      | acknowledge         | false                                         |
     Then an alert should not exist with:
       | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow |
       | message | H1N1 SNS push packs to be delivered in 15 minutes at point A |
@@ -136,6 +138,7 @@ Feature: Sending alerts with call downs
       | message             | H1N1 SNS push packs to be delivered in 30 minutes at point B |
       | targets             | jane.smith@example.com  |
       | call_down_messages  | if you can respond within 30 minutes         |
+      | acknowledge         | true                                         |
     Then an alert should not exist with:
       | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow |
       | message | H1N1 SNS push packs to be delivered in 30 minutes at point B |
@@ -181,6 +184,7 @@ Feature: Sending alerts with call downs
     When I fill in "Message" with "H1N1 SNS push packs all deployed"
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery Time"
+    And I select "Normal" from "Acknowledge"
     And I select "if you can respond within 15 minutes" from "Responders"
     And I select "if you can respond within 30 minutes" from "Responders"
     And I select "if you can respond within 1 hour" from "Responders"
@@ -200,6 +204,7 @@ Feature: Sending alerts with call downs
       | call_down_messages  | if you can respond within 30 minutes         |
       | call_down_messages  | if you can respond within 1 hour             |
       | call_down_messages  | if you can respond within 4 hours            |
+      | acknowledge         | true                                         |
     Then an alert should not exist with:
       | title   | [Cancel] - H1N1 SNS push packs to be delivered tomorrow |
       | message | H1N1 SNS push packs all deployed |

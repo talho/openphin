@@ -96,7 +96,6 @@ class AlertsController < ApplicationController
     original_alert.device_types.each do |device_type|
       @device_types << device_type
     end
-    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
 
     unless original_alert.is_updateable_by?(current_user)
       flash[:error] = "You do not have permission to update or cancel this alert."
@@ -109,6 +108,7 @@ class AlertsController < ApplicationController
       return
     end
     reduce_call_down_messages_from_responses(original_alert)
+    set_acknowledge
     @alert = if params[:_action].downcase == 'cancel'
       @cancel = true
       original_alert.build_cancellation(params[:alert])
@@ -116,6 +116,12 @@ class AlertsController < ApplicationController
       @update = true
       original_alert.build_update(params[:alert])
     end
+     @acknowledge = if @alert.acknowledge
+       'Normal'
+     else
+       'None'
+     end
+     @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
     if params[:send]
       @alert.save
       if @alert.valid?
