@@ -364,20 +364,16 @@ end
 
 Then 'I should see the csv report for the alert titled "$title"' do |title|
   alert = Alert.find_by_title(title)
-  response.body.should include(title)
-  response.body.should include(alert.from_jurisdiction.to_s)
-  response.body.should include(alert.author.display_name.to_s)
-  response.body.should include('Contacted Users')
-  alert.audiences.each do |audience|
-    audience.users.each do |user|
-      response.body.should include(user.display_name)
+
+  alert.alert_attempts.each do |attempt|
+    row = []
+    if attempt.user.blank?
+      row += ['','']
+    else
+      row += [attempt.user.display_name]
+      row += [attempt.user.email]
     end
-    audience.jurisdictions.each do |jurisdiction|
-      response.body.should include(jurisdiction.name)
-    end
-    audience.roles.each do |role|
-      response.body.should include(role.name)
-    end
+    row += [(attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name)]
+    response.body.should include(row.join(','))
   end
 end
-

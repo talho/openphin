@@ -16,7 +16,9 @@ class AlertsController < ApplicationController
     @alert = present Alert.find(params[:id])
     respond_to do |format|
       format.html
-      format.pdf
+      format.pdf do
+        alerter_required
+      end
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
       format.csv do
         alerter_required
