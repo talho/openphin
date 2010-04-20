@@ -28,6 +28,7 @@ Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_addre
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
+  aa.acknowledge!
 end
 
 Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_address, title|
@@ -36,6 +37,15 @@ Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_a
   del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.email.first)
 end
 
+Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (minute|hour)s? later$/ do |email_address, title, message, num, units|
+  u = User.find_by_email(email_address)
+  alert = Alert.find_by_title(title)
+  delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
+  aa = alert.alert_attempts.find_by_user_id(u.id)
+  aa.created_at += (delta)
+  aa.save
+  aa.acknowledge! nil, alert.call_down_messages.index(message)
+end
 
 Given /^(\d*) random alerts$/ do |count|
   srand count.to_i
@@ -81,9 +91,23 @@ When 'I click "$link" on "$title"' do |link, title|
   end
 end
 
-When 'I follow the acknowledge alert link' do
+When /^I follow the acknowledge alert link$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
-  visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => HOST)
+end
+
+When 'I follow the acknowledge alert link "$title"' do |title|
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+  if title.blank?
+    visit token_acknowledge_alert_url(attempt, attempt.token, :host => HOST)
+  else
+    call_down_response = attempt.alert.call_down_messages.index(call_down_response).to_i
+    if current_user.nil?
+      raise "Step not yet supported if no user is logged in"
+    else
+      visit email_acknowledge_alert_url(attempt, call_down_response, :host => HOST)
+    end
+  end
 end
 
 When 'I send a message recording "$filename"' do |filename|
@@ -123,8 +147,10 @@ end
 
 Then 'an alert exists with:' do |table|
   attrs = table.rows_hash
-  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
-      {:identifier => attrs['identifier'], :title => attrs['title']}])
+  conditions = attrs['identifier'].blank? ? "" : "identifier = :identifier OR "
+  conditions += attrs['message'].blank? ? "title = :title" : "(title = :title AND message = :message)"
+  alert = Alert.find(:first, :conditions => [conditions,
+      {:identifier => attrs['identifier'], :title => attrs['title'], :message => attrs['message']}])
   attrs.each do |attr, value|
     case attr
     when 'from_jurisdiction'
@@ -140,13 +166,20 @@ Then 'an alert exists with:' do |table|
     when 'sent_at'
       alert.sent_at.should be_close(Time.zone.parse(value), 1)
     when 'acknowledge'
-      alert.acknowledge.should == (value == 'Yes')
+      alert.acknowledge.should == (value == "true" ? true : false)
     when 'people'
       value.split(",").each do |user|
         first_name, last_name = user.split(" ")
         alert.audiences.map(&:users).flatten.should include(User.find_by_first_name_and_last_name(first_name, last_name))
       end
-
+    when 'call_down_messages'
+      alert.call_down_messages.values.include?(value).should be_true
+    when 'not_cross_jurisdictional'
+      alert.not_cross_jurisdictional.to_s.should == value
+    when 'targets'
+      value.split(",").each do |email|
+        alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_true
+      end
     else
       alert.send(attr).should == value
     end
@@ -155,14 +188,20 @@ end
 
 Then 'an alert should not exist with:' do |table|
   attrs = table.rows_hash
-  alert = Alert.find(:first, :conditions => ["identifier = :identifier OR title = :title",
-      {:identifier => attrs['identifier'], :title => attrs['title']}])
+  conditions = attrs['identifier'].blank? ? "" : "identifier = :identifier OR "
+  conditions += attrs['message'].blank? ? "title = :title" : "(title = :title AND message = :message)"
+  alert = Alert.find(:first, :conditions => [conditions,
+      {:identifier => attrs['identifier'], :title => attrs['title'], :message => attrs['message']}])
   attrs.each do |attr, value|
     case attr
     when 'people'
       value.split(",").each do |name|
         display_name = name.split(" ").join(" ")
         alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
+      end
+    when 'targets'
+      value.split(",").each do |email|
+        alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_false
       end
     else
       alert.send(attr).should == value
@@ -184,6 +223,29 @@ end
 
 Then /^I should see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
   response.should have_tag(".alert .title .#{severity.downcase}", title)
+end
+
+Then /^I should see a contacted user "([^\"]*)" with a "([^\"]*)" device$/ do |email, device_type|
+  response.should have_selector(".user") do |elm|
+    is_good = true
+    elm.css("tr").each do |tr|
+      is_good = true
+      begin
+        tr.should have_selector(".email", :content => email)
+      rescue
+        is_good = false
+      end
+
+      begin
+        tr.should have_selector(".device_type", :content => device_type)
+      rescue
+        is_good = false
+      end
+      
+      break if is_good
+    end
+    is_good.should be_true
+  end
 end
 
 Then /^I should not see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
@@ -228,6 +290,16 @@ Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]
   response.should have_selector(".dev_ackpct") do |elm|
     elm.should have_selector(".#{device_type}") do |device|
 	  device.should have_selector(".percentage", :content => percentage)
+    end
+  end
+end
+
+Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, alert_response, percentage|
+  alert = Alert.find_by_title(alert_name)
+  num = alert.call_down_messages.index(alert_response)
+  response.should have_selector(".response_ackpct") do |elm|
+    elm.should have_selector("#response#{num}") do |responses|
+	    responses.should have_selector(".percentage", :content => percentage)
     end
   end
 end
@@ -292,19 +364,16 @@ end
 
 Then 'I should see the csv report for the alert titled "$title"' do |title|
   alert = Alert.find_by_title(title)
-  response.body.should include(title)
-  response.body.should include(alert.from_jurisdiction.to_s)
-  response.body.should include(alert.author.display_name.to_s)
-  response.body.should include('Contacted Users')
-  alert.audiences.each do |audience|
-    audience.users.each do |user|
-      response.body.should include(user.display_name)
+
+  alert.alert_attempts.each do |attempt|
+    row = []
+    if attempt.user.blank?
+      row += ['','']
+    else
+      row += [attempt.user.display_name]
+      row += [attempt.user.email]
     end
-    audience.jurisdictions.each do |jurisdiction|
-      response.body.should include(jurisdiction.name)
-    end
-    audience.roles.each do |role|
-      response.body.should include(role.name)
-    end
+    row += [(attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name)]
+    response.body.should include(row.join(','))
   end
 end

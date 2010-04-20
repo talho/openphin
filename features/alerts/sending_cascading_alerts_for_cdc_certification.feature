@@ -50,7 +50,7 @@ Feature: Sending CDC test cases
        | Role                  | Bioterrorism Coordinator                     |
        | Title                 | H1N1 SNS push packs to be delivered tomorrow |
        | Message               | For more details, keep on reading...         |
-       | Acknowledge           | <unchecked>                                  |
+       | Acknowledge           | None                                         |
        | Communication methods | E-mail                                       |
 
      And I press "Preview Message"
@@ -66,7 +66,7 @@ Feature: Sending CDC test cases
       | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | Title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
       | Message               | The Texas Department of State Health Services is workign with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
-      | Acknowledge           | <unchecked>                  |
+      | Acknowledge           | None                         |
       | Sensitive             | <unchecked>                  |
       | Severity              | Moderate                     |
       | Delivery Time         | 72 hours                     |
@@ -85,7 +85,7 @@ Feature: Sending CDC test cases
       | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | Title                 | Multiple States Investigating a Large Outbreak of E. coli O157:H7 Infections      |     
       | Message               | Public health officials in multiple states, with the assistance of the CDC, are investigating a large outbreak of E. coli O157:H7 infections. Thus far, 50 cases have been reported in 17 states, including 3 adjacent states. The outbreak is likely ongoing. |
-      | Acknowledge           | <unchecked>           |
+      | Acknowledge           | None                  |
       | Sensitive             | <unchecked>           |
       | Severity              | Severe                |
       | Delivery Time         | 24 hours              |
@@ -104,7 +104,7 @@ Feature: Sending CDC test cases
       | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | Title                 | Possible Ricin exposures detected |
       | Message               | The Texas Department of State Health Services is working collaboratively with the CDC, the FBI, and other public health and law enforcement agencies to investigate a case of possible ricin exposure. Preliminary results of environmental testing have tested positive for ricin |
-      | Acknowledge           | <unchecked>           |
+      | Acknowledge           | None                  |
       | Sensitive             | <checked>             |
       | Severity              | Extreme               |
       | Delivery Time         | 24 hours              |
@@ -123,7 +123,7 @@ Feature: Sending CDC test cases
       | Role                  | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | Title                 | Test of the Alerting Network |
       | Message               | This is a test of the Texas Department of State Health Services alerting network. This test is performed quarterly to measure the effectiveness of alerts reaching the intended recipients. Follow the defined steps to acknowledge receipt of this test alert |
-      | Acknowledge           | <checked>             |
+      | Acknowledge           | Normal                |
       | Sensitive             | <unchecked>           |
       | Severity              | Moderate              |
       | Delivery Time         | 24 hours              |
@@ -142,7 +142,7 @@ Feature: Sending CDC test cases
       | roles                 | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
       | message               | The Centers for Disease Control and Prevention (CDC) and state health officials in 17 states based located and tested 42 of the 44 potentially exposed pssengers. All of the exposed passengers tested had negative TST results. |
-      | acknowledge           | <unchecked>                  |
+      | acknowledge           | None                         |
       | sensitive             | <unchecked>                  |
       | severity              | Moderate                     |
       | delivery time         | 72 hours                     |
@@ -153,7 +153,7 @@ Feature: Sending CDC test cases
     When I load the update alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Message               | The Centers for Disease Control and Prevention (CDC) and state health officials in 17 states based located and tested 42 of the 44 potentially exposed passengers. All of the exposed passengers tested had negative TST results. |
-      | Acknowledge           | <unchecked>           |
+      | Acknowledge           | None                  |
       | Sensitive             | <unchecked>           |
       | Severity              | Minor                 |
       | Delivery Time         | 24 hours              |
@@ -173,7 +173,7 @@ Feature: Sending CDC test cases
       | roles                 | Chief Epidemiologist, Bioterrorism Coordinator,Emergency Management Coordinator   |
       | title                 | Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB) |
       | message               | The Texas Department of State Health Services is working with the CDC and local health officials and other partners on an investigation involving an international traveler to the U.S. who had recently been diagnosed with multidrug-resistant tuberculosis (MDR TB).  A local health authority reported that a patient who had been diagnosed in India with MDR TB traveled in December from New Delhi, India to Chicago, Illinois and then on a shorter flight to Austin. |
-      | acknowledge           | <unchecked>                  |
+      | acknowledge           | None                         |
       | sensitive             | <unchecked>                  |
       | severity              | Moderate                     |
       | delivery time         | 72 hours                     |
@@ -183,7 +183,7 @@ Feature: Sending CDC test cases
     When I load the cancel alert page for "Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)"
     And I fill out the alert form with:
       | Message               | This alert has been cancelled.  |
-      | Acknowledge           | <unchecked>           |
+      | Acknowledge           | None                  |
       | Sensitive             | <unchecked>           |
       | Severity              | Minor                 |
       | Delivery Time         | 24 hours              |

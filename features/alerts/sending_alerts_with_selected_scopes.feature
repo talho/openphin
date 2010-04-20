@@ -49,7 +49,7 @@ Feature: Creating and sending alerts
       | Message  | For more details, keep on reading...         |
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
-      | Acknowledge | <unchecked>                               |
+      | Acknowledge | None                               |
       | Communication methods | E-mail                          |
       | Delivery Time | 15 minutes                              |
       
@@ -77,7 +77,7 @@ Feature: Creating and sending alerts
       | Message  | For more details, keep on reading...         |
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
-      | Acknowledge | <unchecked>                               |
+      | Acknowledge | None                               |
       | Communication methods | E-mail                          |
       | Delivery Time | 72 hours                                |
     
@@ -117,7 +117,7 @@ Feature: Creating and sending alerts
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | E-mail |
     
     And I press "Preview Message"
@@ -144,7 +144,7 @@ Feature: Creating and sending alerts
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | E-mail |
   
     And I press "Preview Message"
@@ -172,7 +172,7 @@ Feature: Creating and sending alerts
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | E-mail |
 
     And I press "Preview Message"
@@ -199,7 +199,7 @@ Feature: Creating and sending alerts
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | E-mail |
   
     And I press "Preview Message"

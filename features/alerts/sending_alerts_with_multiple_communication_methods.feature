@@ -22,7 +22,7 @@ Feature: Sending alerts to multiple communication devices
       | Message  | For more details, keep on reading...         |
       | Severity | Moderate                                     |
       | Status   | Actual                                       |
-      | Acknowledge | <unchecked>                               |
+      | Acknowledge | None                               |
       | Communication methods | E-mail                          |
       | Communication methods | IM                              |
 

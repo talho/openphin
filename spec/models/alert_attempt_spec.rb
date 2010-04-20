@@ -13,6 +13,7 @@
 #  token                             :string(255)
 #  jurisdiction_id                   :integer(4)
 #  acknowledged_alert_device_type_id :integer(4)
+#  call_down_response                :integer(4)
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

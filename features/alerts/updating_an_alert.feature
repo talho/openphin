@@ -27,7 +27,7 @@ Feature: Updating an alert
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
-      | Acknowledge   | <unchecked>         |
+      | Acknowledge   | None                |
       | Communication methods | E-mail      |
       | Delivery Time | 72 hours            |
 
@@ -80,7 +80,7 @@ Feature: Updating an alert
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
-      | Acknowledge   | <unchecked>         |
+      | Acknowledge   | None                |
       | Communication methods | E-mail      |
       | Delivery Time | 72 hours            |
 
@@ -137,7 +137,7 @@ Feature: Updating an alert
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
-      | Acknowledge   | <unchecked>         |
+      | Acknowledge   | None                |
       | Communication methods | E-mail      |
       | Delivery Time | 60 minutes          |
 

@@ -4,17 +4,22 @@ Given /^I have an? (.*) device$/ do |device_type|
 end
 
 
-When 'I acknowledge the phone message for "$title"' do |title|
+When /^I acknowledge the phone message for "([^\"]*)"$/ do |title|
   a = Alert.find_by_title(title).alert_attempts.first
   a.acknowledged_at = Time.zone.now
   a.save!
 end
 
+When /^I acknowledge the phone message for "([^\"]*)" with "([^\"]*)"$/ do |title, call_down_response|
+  a = Alert.find_by_title(title).alert_attempts.first
+  a.acknowledged_at = Time.zone.now
+  a.call_down_response = a.alert.call_down_messages.index(call_down_response).to_i
+  a.save!
+end
+
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
-  a.acknowledged_at = Time.zone.now
-  a.acknowledged_alert_device_type = AlertDeviceType.find_by_device("Device::PhoneDevice")
-  a.save!
+  a.acknowledge! "Device::PhoneDevice"
 end
 
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|
@@ -164,6 +169,7 @@ Then /^the following phone calls should be made:$/ do |table|
         message = xml.search( "//swn:notification/swn:body",
                               {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
         message.include?(row["message"]) && phone.include?(row["phone"])
+        
         #SWN doesn't support recorded attachments
 #      else
 #        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
@@ -173,6 +179,25 @@ Then /^the following phone calls should be made:$/ do |table|
       end
     end
     call.should_not be_nil
+
+    unless row["call_down"].blank?
+      call = Service::Phone.deliveries.detect do |phone_call|
+        xml = Nokogiri::XML(phone_call.body)
+        call_down = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                                {"swn" => "http://www.sendwordnow.com/notification"})).children.map(&:inner_text).flatten
+        call_down.include?(row["call_down"])
+      end
+      call.should_not be_nil
+    end
+  end
+end
+
+Then /^the phone call should have (\d+) calldowns$/ do |number|
+  Service::Phone.deliveries.detect do |phone_call|
+    xml = Nokogiri::XML(phone_call.body)
+    call_down_size = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                            {"swn" => "http://www.sendwordnow.com/notification"})).children.map{|child| child unless child.inner_text.strip.blank?}.compact.length
+    call_down_size.should == number.to_i
   end
 end
 

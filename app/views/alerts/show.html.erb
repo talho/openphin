@@ -2,8 +2,3 @@
 	<%= render :partial => "alert" %>
 	<%= button_to 'Back', :back, :method => :get %>
 <% end %>
-<div class="details">
-  <% unless @alert.acknowledged_by_user? %>
-    <%= acknowledge_alert_button(@alert) %>
-  <% end %>
-</div>
