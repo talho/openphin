@@ -464,7 +464,7 @@ class Alert < ActiveRecord::Base
   end
 
   def create_console_alert_device_type
-    AlertDeviceType.create!(:alert => self, :device => "Device::ConsoleDevice")
+    AlertDeviceType.create!(:alert => self, :device => "Device::ConsoleDevice") unless alert_device_types.map(&:device).include?("Device::ConsoleDevice")
   end
 
   def verify_audiences_not_empty

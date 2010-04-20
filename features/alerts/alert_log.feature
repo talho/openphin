@@ -246,3 +246,39 @@ Feature: Viewing the alert log
       Then I should see "if you can respond within 15 minutes"
       When I go to the HAN
       Then I should not see "Alert Response"
+      
+    Scenario: Viewing audience of Alert and acknowledgement log from view(show)
+      Given the following entities exists:
+        | Jurisdiction | Texas         |
+        | Role         | Health Officer |
+      And the following users exist:
+        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Officer  | Texas |
+        | Daniel Morrison | daniel@example.com       | Health Officer | Texas |
+      And the role "HAN Coordinator" is an alerter
+      And I am logged in as "john.smith@example.com"
+      And I've sent an alert with:
+        | Jurisdiction      | Texas                |
+        | Jurisdictions     | Texas                |
+        | Roles             | Health Officer       |
+        | People            | John Smith           |
+        | Title             | Hello World          |
+        | Communication methods | E-mail           |
+        | Acknowledge       | Normal               |
+      And delayed jobs are processed
+      And "jane.smith@example.com" has acknowledged the alert "Hello World" with "" 0 minutes later
+      And I follow the acknowledge alert link
+      And "daniel@example.com" has acknowledged the alert "Hello World" with "" 0 minutes later 
+      And delayed jobs are processed
+      When I am on the alert log
+      Then I can see the alert summary for "Hello World"
+      When I click "View" on "Hello World"
+      
+      Then I should see "Texas" within ".jurisdictions"
+      And I should see "Health Officer" within ".roles"
+      And I should see "John Smith" within ".people"
+      # And I should see a contacted user "jane.smith@example.com" with a "Console" device
+      # And I should see a contacted user "john.smith@example.com" with a "Email" device
+      # And I should see a contacted user "daniel@example.com" with a "Console" device
+      And I see WTF is going on
+      

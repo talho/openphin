@@ -16,10 +16,11 @@ class AlertsController < ApplicationController
     @alert = present Alert.find(params[:id])
     respond_to do |format|
       format.html
+      format.pdf
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
       format.csv do
         alerter_required
-        @filename = "alert-#{@alert.to_param}.csv"
+        @filename = "alert-#{@alert.identifier}.csv"
         @output_encoding = 'UTF-8'
       end
     end

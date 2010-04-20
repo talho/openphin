@@ -225,6 +225,29 @@ Then /^I should see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
   response.should have_tag(".alert .title .#{severity.downcase}", title)
 end
 
+Then /^I should see a contacted user "([^\"]*)" with a "([^\"]*)" device$/ do |email, device_type|
+  response.should have_selector(".user") do |elm|
+    is_good = true
+    elm.css("tr").each do |tr|
+      is_good = true
+      begin
+        tr.should have_selector(".email", :content => email)
+      rescue
+        is_good = false
+      end
+
+      begin
+        tr.should have_selector(".device_type", :content => device_type)
+      rescue
+        is_good = false
+      end
+      
+      break if is_good
+    end
+    is_good.should be_true
+  end
+end
+
 Then /^I should not see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
   response.should_not have_tag(".alert .title .#{severity.downcase}", title)
 end
@@ -357,3 +380,4 @@ Then 'I should see the csv report for the alert titled "$title"' do |title|
     end
   end
 end
+

@@ -3,16 +3,7 @@
   <%=simple_format h(@alert.message), :class => 'message' %>
 
   <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
-
-  <% @alert.audiences.each do |audience| %>
-    <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h audience.jurisdictions.blank? ? 'None' : audience.jurisdictions.map(&:name).to_sentence %></p>
-
-    <p class="roles"><strong>Roles:</strong> <%=h audience.roles.blank? ? 'None' : audience.roles.map(&:name).to_sentence %></p>
-
-    <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
-
-  <% end %>
-   <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
+  <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
   <% if @alert.has_alert_response_messages? %>
     <% @alert.call_down_messages.each do |index, value| %>
       <p class="alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
@@ -50,3 +41,41 @@
   <p class="caller_id"><%= @alert.caller_id %></p>
   <%- end -%>
 </div>
+
+<div class="audience">
+<% @alert.audiences.each do |audience| %>
+  <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h audience.jurisdictions.blank? ? 'None' : audience.jurisdictions.map(&:name).to_sentence %></p>
+
+  <p class="roles"><strong>Roles:</strong> <%=h audience.roles.blank? ? 'None' : audience.roles.map(&:name).to_sentence %></p>
+
+  <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
+  <% end %>
+</div>
+
+<br />Contacted Users
+<% unless @alert.new_record? %>
+  <%= link_to "Export Contacted Users (CSV)", alert_path(@alert,:format=>:csv) %>
+<% end %>
+
+<div class="contacted_users">
+  <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>2) %>
+  <br /><%= will_paginate attempts %>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Acknowledged with Device</th>
+    </tr>
+    <% attempts.each do |attempt| %>
+      <tr class="user">
+        <td class="name"><%= attempt.user.display_name %> </td>
+        <td class="email"><%= attempt.user.email %> </td>
+        <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
+      </tr>
+    <% end %>
+  </table>  
+  <br /><%= will_paginate attempts %>
+</div>
+<% unless @alert.new_record? %>
+  <p><%= link_to "Printable Report (PDF)", alert_path(@alert,:format=>:pdf) %></p>
+<% end %>
