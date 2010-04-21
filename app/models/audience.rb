@@ -59,6 +59,16 @@ class Audience < ActiveRecord::Base
     end
     @recips
   end
+  
+  def copy
+    attrs = self.attributes
+    ["id","updated_at","creatd_at"].each{|item| attrs.delete(item)}
+    a = Audience.new(attrs)
+    jurisdictions.each{|jur| a.jurisdictions << jur}
+    roles.each{|role| a.roles << role}
+    users.each{|user| a.users << user}
+    a
+  end
 
   protected
   def at_least_one_recipient?

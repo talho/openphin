@@ -125,6 +125,10 @@ class User < ActiveRecord::Base
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
   }
+  
+  named_scope :with_user?, lambda {|user|
+    { :conditions => ["users.id = ?", user.id]}
+  }
 
 #  named_scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }

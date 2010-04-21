@@ -21,9 +21,19 @@
       <p class="brief"><strong>Alert ID:</strong> <%=h alert.identifier %></p>
         
       <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
-          
-	  <p class="brief acknowledge"><strong>Acknowledge:</strong> <%=h alert.acknowledge? ? 'Yes' : 'No' %></p>
-        
+      <p class="brief acknowledge alertResponse"><strong>Acknowledge:</strong> <%=
+        if alert.has_alert_response_messages? && alert.original_alert.nil?
+          unless alert.alert_attempts.find_by_user_id(@user.id).nil?
+            if alert.alert_attempts.find_by_user_id(@user.id).call_down_response
+              h(alert.call_down_messages[alert.alert_attempts.find_by_user_id(@user.id).call_down_response.to_s])
+            end
+          end
+        else
+          alert.acknowledge? ? 'Yes' : 'No'
+        end
+      %></p>
+
+
       <%- if !alert.original_alert_id.blank? -%>
         <p class="brief"><strong>Reference ID:</strong> <%=h alert.original_alert.identifier %></p>
       <%- end -%>
@@ -31,9 +41,21 @@
         <%=simple_format h(alert.message) %>
       </div>
 
-      <% unless alert.acknowledged_by_user? %>
-        <%= acknowledge_alert_button(alert) %>
-      <% end %>
+      <p>
+        <% unless alert.acknowledged_by_user? %>
+          <% if alert.original_alert.nil? && alert.has_alert_response_messages? %>
+            <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %> 
+              <%= form.label "call_down_response", "Alert Response" %>
+              <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{:include_blank=>true}) %>
+              <p><%= form.submit "Acknowledge" %></p>
+            <% end %>
+          <% else %>
+            <%= acknowledge_alert_button(alert) %>
+          <% end %>
+        <% end %>
+      </p>
+      
     </div>
   </div>
 <%- end -%>
+

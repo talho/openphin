@@ -1,0 +1,31 @@
+<h3>Acknowledgments (by jurisdiction)</h3>
+<div class="jur_ackpct">
+  <% alert.ack_logs.find_all_by_item_type("jurisdiction", :order => :item).each do |jur| %>
+    <h5 class="jurisdiction"><%= h jur.item %></h5>
+
+    <p class="percentage"><%= (jur.acknowledged_percent * 100).round %>%</p>
+  <% end %>
+</div>
+
+<h3>Acknowledgments (by device)</h3>
+<div class="dev_ackpct">
+  <% alert.ack_logs.find_all_by_item_type("device").each do |device| %>
+    <% name = AlertDeviceType.find_by_device(device.item).device_type.display_name %>
+    <div class="<%= h name %>">
+      <h5 class="device_type"><%= h name %></h5>
+
+      <p class="percentage"><%= (device.acknowledged_percent * 100).round %>%</p>
+    </div>
+  <% end  %>
+</div>
+
+<h3>Acknowledgments (by alert response)</h3>
+<div class="response_ackpct">
+  <% alert.ack_logs.find_all_by_item_type("alert_response").each do |response| %>
+    <div id="response<%= h alert.call_down_messages.index(response.item) %>">
+      <h5><%= h response.item %></h5>
+      
+      <p class="percentage"><%= (response.acknowledged_percent * 100).round %>%</p>
+    </div>
+  <% end %>
+</div>
