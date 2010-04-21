@@ -240,6 +240,18 @@ class User < ActiveRecord::Base
     Jurisdiction.find(role_memberships.alerter.map(&:jurisdiction_id))
   end
   
+	def is_admin_in_my_jurisdiction?(user)
+	  user.jurisdictions.any?{|j| is_admin_for_this_jurisdiction?(j) }
+  end
+    
+  def is_admin_for_this_jurisdiction?(jur)
+    if jur.class == Jurisdiction
+      return true if role_memberships.detect{|r| r.role==Role.admin && jur.is_or_is_descendant_of?(r.jurisdiction)}
+    else
+      false
+    end
+  end
+
   def phin_oid=(val)
     raise "PHIN oids should never change"
   end

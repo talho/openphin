@@ -34,13 +34,11 @@ Feature: Viewing user profiles
     Then I can see the profile
     And I should not see the following roles:
       | Health Officer | Dallas County |
-    And I should see "Public:"
     
   Scenario: Viewing a private profile
     Given sam.body@example.com has a private profile
     When I view the profile page for "sam.body@example.com"
     Then I should see "This user's profile is not public"
-    And I should not see "Public:"
   
   Scenario: Viewing my private profile
     Given john.smith@example.com has a private profile
@@ -55,8 +53,7 @@ Feature: Viewing user profiles
     And I should see "888-456-1212" within ".office_fax"
     And I should see "888-432-1212" within ".mobile_phone"
     And I should see "888-555-1212" within ".home_phone"
-    And I should see "Public:"
-    
+   
       
   Scenario: Viewing my own profile as an admin
     Given big.admin@example.com has a private profile
@@ -68,7 +65,6 @@ Feature: Viewing user profiles
       | System:Admin   | Texas         |
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
-    And I should see "Public:"
 
   Scenario: Viewing my own profile as an superadmin
     Given big.admin@example.com has a private profile
@@ -80,7 +76,6 @@ Feature: Viewing user profiles
       | System:Superadmin | Texas         |
       | Epidemiologist    | Dallas County |
       | Epidemiologist    | Potter County |
-    And I should see "Public:"
   
   Scenario: Viewing anothers profile as an admin
     Given john.smith@example.com has a private profile
@@ -92,9 +87,12 @@ Feature: Viewing user profiles
       | Health Officer | Dallas County |
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
-    And I should see "Public:"
+    Then I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-432-1212" within ".mobile_phone"
+    And I should see "888-555-1212" within ".home_phone"
     
-  Scenario: Viewing anothers profile as an admin not in the same organization and then in the same organization
+  Scenario: Viewing anothers profile as an admin of the same jurisdiction
     Given john.smith@example.com has a private profile
     And an organization exist with the following info:
       | name               | DSHS                                |
@@ -105,25 +103,15 @@ Feature: Viewing user profiles
       | description        | Department of State Health Services |
       | locality           | Austin                              |
       | state              | TX                                  |
-    And "john.smith@example.com" is a member of the organization "DSHS"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Admin" in "Texas"
 
     When I am logged in as "big.admin@example.com"
     And I view the profile page for "john.smith@example.com"
-    Then I should not see "888-123-1212"
-    And I should not see "888-456-1212"
-    And I should not see "888-432-1212"
-    And I should not see "888-555-1212"
-    And I should see "Public:"
-
-    When "big.admin@example.com" is a member of the organization "DSHS"
-    And I am logged in as "big.admin@example.com"
-    When I view the profile page for "john.smith@example.com"
     Then I should see "888-123-1212" within ".office_phone"
     And I should see "888-456-1212" within ".office_fax"
     And I should see "888-432-1212" within ".mobile_phone"
     And I should see "888-555-1212" within ".home_phone"
-    And I should see "Public:"
+
 
   Scenario: Viewing anothers profile as an fellow member to an organization
     Given john.smith@example.com has a private profile
@@ -144,6 +132,5 @@ Feature: Viewing user profiles
     And I should see "888-456-1212" within ".office_fax"
     And I should not see "888-432-1212"
     And I should not see "888-555-1212"
-    And I should not see "Public:"
 
 
