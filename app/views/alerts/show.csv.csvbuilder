@@ -1,4 +1,4 @@
-csv << ['Name', 'Email', 'Acknowledged by']
+csv << ['Name', 'Email', 'Acknowledged by', 'Alert Response']
 
 @alert.alert_attempts.each do |attempt|
   row = []
@@ -9,5 +9,6 @@ csv << ['Name', 'Email', 'Acknowledged by']
     row << attempt.user.email
   end
   row << (attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name)
+  row << (attempt.call_down_response.nil? ? "" : @alert.call_down_messages[attempt.call_down_response.to_s])
   csv << row
 end
