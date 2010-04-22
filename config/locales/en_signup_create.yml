@@ -37,8 +37,11 @@ en_signup_create:
                             invalid: "^You must select a home jurisdiction.  You must also select a role if you are a health professional."
                 role_request:        
                     attributes:
-                        role_requests_role:   
+                        role_requests_role:
                             blank: "^Role needs to be selected."
                         role_requests_jurisdiction:
                             blank: "^Home Jurisdiction needs to be selected."   
-             
+                        role:
+                          blank: "^Role needs to be selected."
+                        jurisdiction:
+                          blank: "^Home Jurisdiction needs to be selected."
