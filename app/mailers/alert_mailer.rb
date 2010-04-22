@@ -5,7 +5,8 @@ class AlertMailer < ActionMailer::Base
     # TODO: should this show their job title instead of their role?
     # If role, which one?
     unless alert.author.nil? || alert.author.display_name.strip.blank?
-      from "#{alert.author.display_name} <#{alert.author.email}>"
+      from "\"#{alert.author.display_name}\" <#{alert.author.email}>"
+      headers "return-path" => alert.author.email
     else
       from DO_NOT_REPLY
     end
@@ -26,7 +27,8 @@ class AlertMailer < ActionMailer::Base
     # TODO: should this show their job title instead of their role?
     # If role, which one?
     unless alert.author.nil? || alert.author.display_name.strip.blank?
-      from "#{alert.author.display_name} <#{alert.author.email}>"
+      from "\"#{alert.author.display_name}\" <#{alert.author.email}>"
+      headers "return-path" => alert.author.email
     else
       from DO_NOT_REPLY
     end
