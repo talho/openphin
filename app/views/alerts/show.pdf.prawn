@@ -73,14 +73,15 @@ attempts = @alert.alert_attempts.map do |attempt|
   [
     attempt.user.display_name,
     attempt.user.email,
-    attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name
+    attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name,
+    attempt.call_down_response.nil? ? "" : @alert.call_down_messages[attempt.call_down_response.to_s] 
   ]
 end
 
 unless attempts.empty?
   pdf.table attempts, :border_style => :grid,
     :row_colors => ["FFFFFF","DDDDDD"],
-    :headers => ["Name", "Email Address", "Acknowledged with Device"]
+    :headers => ["Name", "Email Address", "Acknowledged with Device", "Alert Response"]
 else
   pdf.move_down 10
   pdf.text "No Acknowledgees Found"

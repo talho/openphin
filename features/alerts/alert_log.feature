@@ -264,11 +264,15 @@ Feature: Viewing the alert log
         | People            | John Smith           |
         | Title             | Hello World          |
         | Communication methods | E-mail           |
-        | Acknowledge       | Normal               |
+        | Alert Response 1  | if you can respond within 15 minutes |
+        | Alert Response 2  | if you can respond within 30 minutes |
+        | Alert Response 3  | if you can respond within 1 hour     |
+        | Alert Response 4  | if you can respond within 4 hours    |
+        | Alert Response 5  | if you cannot respond                |
       And delayed jobs are processed
       And "jane.smith@example.com" has acknowledged the alert "Hello World" with "" 0 minutes later
       And I follow the acknowledge alert link
-      And "daniel@example.com" has acknowledged the alert "Hello World" with "" 0 minutes later 
+      And "daniel@example.com" has acknowledged the alert "Hello World" with "if you cannot respond" 0 minutes later 
       And delayed jobs are processed
       When I am on the alert log
       Then I can see the alert summary for "Hello World"
@@ -277,8 +281,4 @@ Feature: Viewing the alert log
       Then I should see "Texas" within ".jurisdictions"
       And I should see "Health Officer" within ".roles"
       And I should see "John Smith" within ".people"
-      # And I should see a contacted user "jane.smith@example.com" with a "Console" device
-      # And I should see a contacted user "john.smith@example.com" with a "Email" device
-      # And I should see a contacted user "daniel@example.com" with a "Console" device
-      And I see WTF is going on
-      
+      And I should see "if you cannot respond" within ".alert_response"

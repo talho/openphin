@@ -58,19 +58,21 @@
 <% end %>
 
 <div class="contacted_users">
-  <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>2) %>
+  <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>8) %>
   <br /><%= will_paginate attempts %>
   <table>
     <tr>
       <th>Name</th>
       <th>Email</th>
       <th>Acknowledged with Device</th>
+      <th>Alert Response</th>
     </tr>
     <% attempts.each do |attempt| %>
       <tr class="user">
         <td class="name"><%= attempt.user.display_name %> </td>
         <td class="email"><%= attempt.user.email %> </td>
         <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
+        <td class="alert_response"><%= @alert.call_down_messages[attempt.call_down_response.to_s] unless attempt.call_down_response.nil? %></td>
       </tr>
     <% end %>
   </table>  
