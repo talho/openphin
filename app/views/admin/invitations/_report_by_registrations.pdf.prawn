@@ -25,4 +25,4 @@ end
 
 
 pdf.move_down 20
-pdf.text "Prepared on: #{@timestamp}"
+pdf.text "Prepared on: #{@timestamp} for: #{current_user.display_name}", :size => 9
