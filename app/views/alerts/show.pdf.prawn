@@ -5,6 +5,7 @@ pdf.define_grid(:columns=>2, :rows=>1, :gutter=>10)
 col1 = pdf.grid(0,0)
 col2 = pdf.grid(0,1)
 
+# Left Column
 pdf.bounding_box col1.top_left, :width=> col1.width, :height => col1.height do
   pdf.move_down 30
   pdf.text @alert.message
@@ -12,7 +13,13 @@ pdf.bounding_box col1.top_left, :width=> col1.width, :height => col1.height do
   pdf.text "Short Message", :style => :bold
   pdf.text @alert.short_message
   pdf.move_down 10
-  pdf.text "Disable Cross-Jurisdictional alerting?:", :style => :bold
+  pdf.text "Author", :style => :bold
+  pdf.text @alert.author.display_name
+  pdf.move_down 10
+  pdf.text "Created at", :style => :bold
+  pdf.text @alert.created_at.to_s
+  pdf.move_down 10
+  pdf.text "Disable Cross-Jurisdictional alerting?", :style => :bold
   pdf.text(@alert.not_cross_jurisdictional? ? "Yes" : "No")
   if @alert.has_alert_response_messages?
     @alert.call_down_messages.each do |index, value| 
@@ -23,6 +30,7 @@ pdf.bounding_box col1.top_left, :width=> col1.width, :height => col1.height do
   end
 end
 
+# Right Column
 pdf.bounding_box col2.top_left, :width=> col2.width, :height => col2.height do
   pdf.move_down 30
   pdf.text "Severity", :style => :bold
@@ -66,6 +74,9 @@ pdf.text "Alert Audience", :size => 14, :style => :bold, :align => :center
   pdf.text(audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence)
 end
 
+pdf.move_down 10
+pdf.text "# of Recipients", :style => :bold
+pdf.text @alert.alert_attempts.count.to_s
 pdf.move_down 20
 pdf.text "Contacted Users Acknowledgement Status", :size => 14, :style => :bold, :align => :center
 pdf.move_down 10
@@ -74,7 +85,7 @@ attempts = @alert.alert_attempts.map do |attempt|
     attempt.user.display_name,
     attempt.user.email,
     attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name,
-    attempt.call_down_response.nil? ? "" : @alert.call_down_messages[attempt.call_down_response.to_s] 
+    attempt.call_down_response.nil? ? "" : attempt.call_down_response 
   ]
 end
 
