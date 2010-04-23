@@ -6,6 +6,6 @@ results.each do |invitee|
     # note you can use the usual view-helper here  
     invitee.name,
     invitee.email,
-    invitee.user.updated_at.utc
+    invitee.user.updated_at
     ]
 end

@@ -23,7 +23,7 @@
         <tr id="<%= "invitee#{index + 1}" %>">
           <td><%= invitee.user.nil? ? invitee["name"] : link_to(invitee["name"], user_profile_path(invitee.user.id)) %></td>
           <td><%= invitee["email"] %></td>
-          <td class="status"><%= invitee.user.updated_at.utc %></td>
+          <td class="status"><%= invitee.user.updated_at %></td>
         </tr>
       <%- end -%>
     </tbody>

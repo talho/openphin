@@ -38,6 +38,7 @@ class Admin::InvitationsController < ApplicationController
     report_options = [["By Email","by_email"], ["By Registrations","by_registrations"]]
     report_options << ["By Organization","by_organization"] unless invitation.default_organization.nil?
     report_options << ["By Pending Requests","by_pending_requests"]
+    report_options << ["By Profile Update","by_profile_update"]
 
     @reverse = params[:reverse] == "1" ? nil : "&reverse=1"
 
@@ -47,6 +48,23 @@ class Admin::InvitationsController < ApplicationController
     respond_to do |format|
       
       case params[:report_type]
+      when "by_profile_update"
+        results = inviteeStatusByProfileUpdate
+        format.html do
+          render :partial => "report_#{params[:report_type]}", 
+                 :locals => {:results => results, :report_type => params[:report_type],
+                   :invitation => invitation, :report_options => report_options}, 
+                 :layout => "application"
+        end
+        format.pdf do
+          render :partial => "report_#{params[:report_type]}", 
+                 :locals => {:results => results, :invitation => invitation}
+        end
+        format.csv do
+          @filename = "org_rpt_by_profile_update_#{@timestamp}.csv"
+          render :partial => "report_#{params[:report_type]}", 
+                 :locals => {:results => results, :invitation => invitation}
+        end
         when "by_registrations"
           results = inviteeStatus
           format.html do
@@ -187,6 +205,13 @@ class Admin::InvitationsController < ApplicationController
   def inviteeStatusByPendingRequests
     Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :include => [:user => :role_requests],
                      :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ? AND role_requests.jurisdiction_id IN (?)", params[:id], true, nil, nil, current_user.role_memberships.admin_roles.map{|rm| rm.jurisdiction.id}.join(",")]
+  end
+
+  def inviteeStatusByProfileUpdate
+    invitation_time = Invitation.find(params[:id]).updated_at
+    Invitee.paginate_all_by_invitation_id params[:id], 
+      :page=>params[:page] || 1, :order=>"users.updated_at ASC", :include=>:user, 
+      :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
   end
   
   def csv_download
