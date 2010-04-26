@@ -31,8 +31,9 @@ Feature: Sending sensitive alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And "keith.gaddis@example.com" should receive the email:
-      | subject       | Moderate Health Alert H1N1 SNS push packs to be delivered tomorrow |
+    And the following users should receive the alert email:
+      | People        | keith.gaddis@example.com |
+      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Sensitive: use secure means of retrieval |
       | body does not contain | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body does not contain | For more details, keep on reading... |

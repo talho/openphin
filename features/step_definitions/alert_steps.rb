@@ -73,6 +73,8 @@ When /^PhinMS delivers the message: (.*)$/ do |filename|
   else
     EDXL::Message.parse(xml)
   end
+  
+  When "delayed jobs are processed"
 end
 
 When "I fill out the alert form with:" do |table|
