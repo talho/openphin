@@ -13,8 +13,8 @@
 #
 
 class Service::SWN::Alert < Service::SWN::Base
-  def initialize(alert, config, users)
-    @alert, @config, @users = alert, config, users
+  def initialize(alert, config, users, type)
+    @alert, @config, @users, @type = alert, config, users, type
   end
 
   def deliver
@@ -25,7 +25,7 @@ class Service::SWN::Alert < Service::SWN::Base
       |  config: #{@config.options.inspect}
     EOT
 
-    body = Service::SWN::Email::Alert.new(
+    body = @type.constantize.new(
       :alert => @alert,
       :users => @users,
       :username => @config['username'],
@@ -34,5 +34,24 @@ class Service::SWN::Alert < Service::SWN::Base
     ).build!
 
     perform_delivery body
+  end
+
+  class AlertNotificationResponse < ActiveRecord::Base
+    set_table_name "swn_notification_response"
+    belongs_to :alert
+
+    named_scope :acknowledge, :joins => :alert, :conditions => ['alerts.acknowledge = ?', true]
+    named_scope :active, :joins => :alert, :conditions => ['UNIX_TIMESTAMP(alerts.created_at) + (alerts.delivery_time * 60) > UNIX_TIMESTAMP(UTC_TIMESTAMP())']
+
+    def self.build(response, alert)
+      if !alert.blank?
+        if !response.blank? && !response['soap:Envelope'].blank? && !response['soap:Envelope']['soap:Header'].blank?
+          msg_id = response['soap:Envelope']['soap:Header']['wsa:MessageID']
+          self.create!(:alert => alert, :message_id => msg_id)
+        else
+          self.create!(:alert => alert)
+        end
+      end
+    end
   end
 end

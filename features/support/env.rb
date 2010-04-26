@@ -70,15 +70,15 @@ Spork.each_run do
   DatabaseCleaner.strategy = :truncation
   Before do
     ActionMailer::Base.deliveries = []
-    Service::Blackberry::SWN.instance_eval do
+    Service::Blackberry.instance_eval do
       Service::Blackberry.clearDeliveries
     end
 
-    Service::Phone::SWN.instance_eval do
+    Service::Phone.instance_eval do
       Service::Phone.clearDeliveries
     end
 
-    Service::SMS::SWN.instance_eval do
+    Service::SMS.instance_eval do
       Service::SMS.clearDeliveries
     end
 

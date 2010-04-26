@@ -7,17 +7,15 @@ class Service::Email < Service::Base
   def self.deliver_alert(alert, user, config=Service::Email.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     response = SWN.new(alert, config, [user]).deliver
-    SWN::AlertNotificationResponse.build(response,alert)
+    Service::SWN::Alert::AlertNotificationResponse.build(response,alert)
   end
-
 
   def self.batch_deliver_alert(alert, config=Service::Email.configuration)
     if Service::Email.configuration["alert"] == "SWN"
       initialize_fake_delivery(config) if config.fake_delivery?
       users = alert.alert_attempts.with_device("Device::EmailDevice").map{ |aa| aa.user }
-      response = Service::SWN::Alert.new(alert, config, users).deliver
-      response.nil? ? "" : "200 OK"
-      #SWN::AlertNotificationResponse.build(response,alert)
+      response = Service::SWN::Alert.new(alert, config, users, "Service::SWN::Email::Alert").deliver
+      Service::SWN::Alert::AlertNotificationResponse.build(response,alert)
     else
       users = alert.unacknowledged_users.map(&:formatted_email)
       users.batch_process(50) do |emails|
