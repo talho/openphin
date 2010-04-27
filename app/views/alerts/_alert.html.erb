@@ -4,7 +4,7 @@
 
   <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
   <p class="author"><strong>Author: </strong><%= @alert.author.display_name %></p>
-    <p class="created_at"><strong>Created at: </strong><%= @alert.created_at %></p>
+    <p class="created_at"><strong>Created at: </strong><%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %></p>
   <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
   <% if @alert.has_alert_response_messages? %>
     <% @alert.call_down_messages.each do |index, value| %>

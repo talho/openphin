@@ -17,7 +17,7 @@ pdf.bounding_box col1.top_left, :width=> col1.width, :height => col1.height do
   pdf.text @alert.author.display_name
   pdf.move_down 10
   pdf.text "Created at", :style => :bold
-  pdf.text @alert.created_at.to_s
+  pdf.text @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")
   pdf.move_down 10
   pdf.text "Disable Cross-Jurisdictional alerting?", :style => :bold
   pdf.text(@alert.not_cross_jurisdictional? ? "Yes" : "No")
