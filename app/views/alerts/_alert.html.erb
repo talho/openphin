@@ -3,14 +3,17 @@
 <div class="alert">
   <div class="details">
     <%=simple_format h(@alert.message), :class => 'message' %>
-
     <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
+    <p class="author"><strong>Author: </strong><%= @alert.author.display_name %></p>
+    <% unless @alert.created_at.nil? %>
+      <p class="created_at"><strong>Created at: </strong><%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %></p>
+    <% end %>
     <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
     <% if @alert.has_alert_response_messages? %>
       <% @alert.call_down_messages.each do |index, value| %>
         <p class="alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
       <% end %>
-    <% end %>
+     <% end %>
   </div>
 
   <div class="aside">
@@ -56,6 +59,7 @@
 
     <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
   <% end %>
+  <p class="num_of_recipients"><strong># of Recipients: </strong><%= @alert.alert_attempts.count %></p>
 </div>
 
 <div class="contacted_users">
@@ -79,7 +83,7 @@
         <td class="name"><%= attempt.user.display_name %> </td>
         <td class="email"><%= attempt.user.email %> </td>
         <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
-        <td class="alert_response"><%= @alert.call_down_messages[attempt.call_down_response.to_s] unless attempt.call_down_response.nil? %></td>
+        <td class="alert_response"><%= attempt.call_down_response unless attempt.call_down_response.nil? %></td>
       </tr>
     <% end %>
   </table>  

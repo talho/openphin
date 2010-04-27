@@ -44,7 +44,9 @@ class SearchesController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.pdf
+      format.pdf do
+        prawnto :inline => false        
+      end
       format.csv do
         @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
         @filename = "user_search_.csv"
