@@ -1,65 +1,72 @@
 <h2 class="title"><%=h @alert.title %></h2>
-<div class="details">
-  <%=simple_format h(@alert.message), :class => 'message' %>
 
-  <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
-  <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
-  <% if @alert.has_alert_response_messages? %>
-    <% @alert.call_down_messages.each do |index, value| %>
-      <p class="alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
+<div class="alert">
+  <div class="details">
+    <%=simple_format h(@alert.message), :class => 'message' %>
+
+    <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
+    <p class="not_cross_jurisdictional"><strong>Disable Cross-Jurisdictional alerting?:</strong> <%=h yn(@alert.not_cross_jurisdictional?) %></p>
+    <% if @alert.has_alert_response_messages? %>
+      <% @alert.call_down_messages.each do |index, value| %>
+        <p class="alertResponse"><strong>Alert Response <%=h index %>:</strong> <%=h value %></p>
+      <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<div class="aside">
-  <h5>Severity</h5>
-  <p class="severity"><%=h @alert.severity %></p>
+  <div class="aside">
+    <h5>Severity</h5>
+    <p class="severity"><%=h @alert.severity %></p>
 
-  <h5>Status</h5>
-  <p class="status"><%=h @alert.status %></p>
+    <h5>Status</h5>
+    <p class="status"><%=h @alert.status %></p>
 
-  <h5>Acknowledge</h5>
-  <p class="acknowledge">
-    <%- if alert.acknowledge? -%>
-      <%= alert.has_alert_response_messages? && alert.original_alert.nil? ? "Advanced" : "Normal" -%>
-    <%- else -%>
-      None
+    <h5>Acknowledge</h5>
+    <p class="acknowledge">
+      <%- if alert.acknowledge? -%>
+        <%= alert.has_alert_response_messages? && alert.original_alert.nil? ? "Advanced" : "Normal" -%>
+      <%- else -%>
+        None
+      <%- end -%>
+    </p>
+
+    <h5>Sensitive</h5>
+    <p class="sensitive"><%=h yn(@alert.sensitive?) %></p>
+
+    <h5>Delivery Time</h5>
+    <p class="delivery_time"><%=h @alert.human_delivery_time %></p>
+
+    <h5>Methods</h5>
+    <p class="communication_methods"><%= @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
+
+    <%- unless @alert.caller_id.blank? || @alert.caller_id == "4114114111"-%>
+    <h5>Caller ID</h5>
+    <p class="caller_id"><%= @alert.caller_id %></p>
     <%- end -%>
-  </p>
-
-  <h5>Sensitive</h5>
-  <p class="sensitive"><%=h yn(@alert.sensitive?) %></p>
-
-  <h5>Delivery Time</h5>
-  <p class="delivery_time"><%=h @alert.human_delivery_time %></p>
-
-  <h5>Methods</h5>
-  <p class="communication_methods"><%= @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
-
-  <%- unless @alert.caller_id.blank? || @alert.caller_id == "4114114111"-%>
-  <h5>Caller ID</h5>
-  <p class="caller_id"><%= @alert.caller_id %></p>
-  <%- end -%>
+  </div>
 </div>
+
 
 <div class="audience">
-<% @alert.audiences.each do |audience| %>
-  <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h audience.jurisdictions.blank? ? 'None' : audience.jurisdictions.map(&:name).to_sentence %></p>
+  <br/>
+  <h3>Audience</h3>
+  <% @alert.audiences.each do |audience| %>
+    <p class="jurisdictions"><strong>Jurisdictions:</strong> <%=h audience.jurisdictions.blank? ? 'None' : audience.jurisdictions.map(&:name).to_sentence %></p>
 
-  <p class="roles"><strong>Roles:</strong> <%=h audience.roles.blank? ? 'None' : audience.roles.map(&:name).to_sentence %></p>
+    <p class="roles"><strong>Roles:</strong> <%=h audience.roles.blank? ? 'None' : audience.roles.map(&:name).to_sentence %></p>
 
-  <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
+    <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
   <% end %>
 </div>
 
-<br />Contacted Users
-<% unless @alert.new_record? %>
-  <%= link_to "Export Contacted Users (CSV)", alert_path(@alert,:format=>:csv) %>
-<% end %>
-
 <div class="contacted_users">
+  <br/>
+  <h3>Contacted Users</h3>
+  <% unless @alert.new_record? %>
+    <%= link_to "Export Contacted Users (CSV)", alert_path(@alert,:format=>:csv) %>
+  <% end %>
+
   <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>8) %>
-  <br /><%= will_paginate attempts %>
+  <%= will_paginate attempts %>
   <table>
     <tr>
       <th>Name</th>

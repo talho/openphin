@@ -115,6 +115,7 @@ div.help a                                    {color:#fff}
 
 #feature 																			{width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
 #content p																		{margin:0 0 15px; line-height:1.6;}
+#content .alert                               {float: left;}
 #content div.details													{width:410px; float:left;}
 #content div.aside														{width:210px; float:right;}
 #content div.callout													{font-size:11px; background:#efefef url(images/feature_bottom.png) no-repeat bottom left; margin:0 0 15px;}

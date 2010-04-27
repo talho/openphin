@@ -106,7 +106,7 @@ EOF
   end
 
   def add_alert_responses(xml)
-    if alert.acknowledge?
+    if alert.acknowledge? && !alert.sensitive
       if alert.has_alert_response_messages? && alert.original_alert.nil?
         sorted_messages = alert.call_down_messages.sort {|a, b| a[0]<=>b[0]}
         sorted_messages.each do |key, call_down|
@@ -153,16 +153,6 @@ EOF
       output += "Sensitive: use secure means of retrieval\r\n\r\n"
       output += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
     else
-      if @alert.acknowledge?
-        if @alert.has_alert_response_messages?
-          @alert.call_down_messages.each do |key, value|
-            output += "#{value}, please click the following link #{email_acknowledge_alert_url(@alert, key)}\r\n"
-          end
-        else
-          output += "Please click #{email_acknowledge_alert_url(@alert)} and log in to acknowledge this alert\r\n"
-        end
-      end
-
       output += "Title: #{@alert.title}\r\n"
       output += "Alert ID: #{@alert.identifier}\r\n"
       output += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
