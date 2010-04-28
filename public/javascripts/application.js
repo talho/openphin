@@ -263,7 +263,7 @@ function setMediaNewFolderEvents() {
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
-      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
         return false;
       }
@@ -557,7 +557,7 @@ function setDocumentNewFolderEvents() {
   var myform = $("span.documents div#new_folder form");
   myform.ajaxForm({
     beforeSend: function(response) {
-      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
         return false;
       }
