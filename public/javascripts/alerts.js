@@ -247,6 +247,10 @@
        }
      });
    });
+
+  $('#alert_message').bind('keyup', function(e){
+    $('#msgcnt').text($(this).val().length);
+  });
     
   });
 })(jQuery);

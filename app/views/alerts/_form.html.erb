@@ -18,15 +18,17 @@
       <% if @update.blank? && @cancel.blank? %>
         <p>
           <%= form.label :title %>
-          <%= form.text_field :title %>
+          <%= form.text_field :title, :maxlength => 46 %>
+          The title must be 46 characters or less including whitespace
         </p>
 	  <% else %>
 		<h2><%=h @alert.title %></h2>
 	  <% end %>
       
       <p>
-        <%= form.label :message %>
+        <%= form.label :message %> (<span id="msgcnt">0</span> characters)
         <%= form.text_area :message, :rows => 5 %>
+        Any message larger than 580 characters including whitespace will cause the message to be truncated and recipients will need to visit the TXPhin website to view the entire message contents.
       </p>
       <% if @update.blank? && @cancel.blank? %>
         <div id="call_down_container" class="hidden">

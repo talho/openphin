@@ -100,8 +100,8 @@ EOF
     xml.swn(:notification) do
       severity = "#{alert.severity}"
       status = " #{alert.status}" if alert.status.downcase != "actual"
-      xml.swn(:subject, "#{severity} Health Alert#{status} \"#{alert.title}\"#{alert.acknowledge? ? " *Acknowledgment required*" : ""}")
-      xml.swn(:body, "The following is an alert from the Texas Public Health Information Network.\r\n\r\n#{construct_message}")
+      xml.swn(:subject, "Health Alert \"#{alert.title}\"")
+      xml.swn(:body, construct_message)
     end
   end
 
@@ -146,20 +146,29 @@ EOF
 
   def construct_message
     default_url_options[:host] = HOST
-    output = ""
+    header = "The following is an alert from the Texas Public Health Information Network.\r\n\r\n"
+    footer = ""
+    more = "... \r\n\r\nPlease visit the TXPhin website at #{url_for(:action => "hud", :controller => "dashboard")} to read the rest of this alert.\r\n\r\n"
+    if @alert.acknowledge?
+      header += "This alert requires acknowledgment.  Please follow the instructions below to acknowledge this alert.\r\n\r\n"
+    end
     if @alert.sensitive?
-      output += "Alert ID: #{@alert.identifier}\r\n"
-      output += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
-      output += "Sensitive: use secure means of retrieval\r\n\r\n"
-      output += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
+      footer += "Alert ID: #{@alert.identifier}\r\n"
+      footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
+      footer += "Sensitive: use secure means of retrieval\r\n\r\n"
+      footer += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
     else
-      output += "Title: #{@alert.title}\r\n"
-      output += "Alert ID: #{@alert.identifier}\r\n"
-      output += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
-      output += "Agency: #{@alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name}\r\n"
-      output += "Sender: #{@alert.author.display_name}\r\n" unless @alert.author.nil?
-      output += "Time Sent: #{@alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}\r\n\r\n"
-      output += @alert.message
+      footer += "Title: #{@alert.title}\r\n"
+      footer += "Alert ID: #{@alert.identifier}\r\n"
+      footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
+      footer += "Agency: #{@alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name}\r\n"
+      footer += "Sender: #{@alert.author.display_name}\r\n" unless @alert.author.nil?
+      footer += "Time Sent: #{@alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}\r\n\r\n"
+      if @alert.message.size + header.size + footer.size > 1000
+        output = header + @alert.message[0..(1000 - header.size - more.size - footer.size)] + more + footer
+      else
+        output = header + @alert.message + footer
+      end
     end
     output
   end
