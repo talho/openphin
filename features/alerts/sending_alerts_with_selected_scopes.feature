@@ -59,9 +59,9 @@ Feature: Creating and sending alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And the follow users should receive the alert email:
+    And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -127,9 +127,9 @@ Feature: Creating and sending alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And the follow users should receive the alert email:
+    And the following users should receive the alert email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -154,9 +154,9 @@ Feature: Creating and sending alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And the follow users should receive the alert email:
+    And the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -182,9 +182,9 @@ Feature: Creating and sending alerts
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And the follow users should receive the alert email:
+    And the following users should receive the alert email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -193,25 +193,25 @@ Feature: Creating and sending alerts
     And "fix the above step to include an alert id" should be implemented
 
             
-  Scenario: Sending an alert to an Jurisdictions/Organizations scopes who the alerts are sent to
+Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
     When I fill out the alert form with:
-      | Jurisdictions | Dallas County |
+      | Roles         | Health Officer |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
       | Message | For more details, keep on reading... |
       | Severity | Moderate |
       | Status | Actual |
       | Acknowledge | None |
       | Communication methods | E-mail |
-  
+
     And I press "Preview Message"
     Then I should see a preview of the message
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
-    And the follow users should receive the alert email:
-      | People        | john.smith@example.com, ed.mcguyver@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+    And the following users should receive the alert email:
+      | People        | john.smith@example.com, ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
       | body contains | Agency: Dallas County |
@@ -219,6 +219,4 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-      
-  
 

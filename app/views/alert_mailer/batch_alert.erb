@@ -8,7 +8,7 @@ Reference: <%= @alert.original_alert_id %>
 
 Sensitive: use secure means of retrieval
 
-Please visit <%= url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https") %> to securely view this alert.
+Please visit <%= url_for(:action => "hud", :controller => "dashboard", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https") %> to securely view this alert.
 
 <%- else -%>
 

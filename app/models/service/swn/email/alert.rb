@@ -156,7 +156,7 @@ EOF
       footer += "\r\n\r\nAlert ID: #{@alert.identifier}\r\n"
       footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
       footer += "Sensitive: use secure means of retrieval\r\n\r\n"
-      footer += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
+      footer += "Please visit #{url_for(:action => "hud", :controller => "dashboard", :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
       output = header + footer
     else
       footer += "\r\n\r\nTitle: #{@alert.title}\r\n"
