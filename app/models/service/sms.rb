@@ -6,15 +6,14 @@ class Service::SMS < Service::Base
   def self.deliver_alert(alert, user, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     response = SWN.new(alert, config, [user])
-    SWN::AlertNotificationResponse.build(response,alert)
+    Service::SWN::Alert::AlertNotificationResponse.build(response,alert)
   end
 
-    
   def self.batch_deliver_alert(alert, config=Service::SMS.configuration)
     initialize_fake_delivery(config) if config.fake_delivery?
     users = alert.alert_attempts.with_device("Device::SMSDevice").map{ |aa| aa.user }
-    response = SWN.new(alert, config, users).batch_deliver  
-    SWN::AlertNotificationResponse.build(response,alert)
+    response = Service::SWN::Alert.new(alert, config, users, "Service::SWN::SMS::Alert").deliver  
+    Service::SWN::Alert::AlertNotificationResponse.build(response,alert)
   end
 
   class << self
@@ -23,77 +22,12 @@ class Service::SMS < Service::Base
     # Overwrites SWN.deliver to push message onto
     # Service::Phone.deliveries.
     def initialize_fake_delivery(config) # :nodoc:
-      SWN.instance_eval do
+      Service::SWN::Alert.instance_eval do
         define_method(:perform_delivery) do |body|
           Service::SMS.deliveries << OpenStruct.new(:body => body)
           config.options[:default_response] ||= "200 OK"
         end
       end
     end
-  end
-  
-  class SWN < Service::SWN::Base
-    def initialize(alert, config, users)
-      @alert, @config, @users = alert, config, users
-    end
-
-    def perform_delivery(body)
-      Dialer.new(@config['url'], @config['username'], @config['password']).deliver(body)
-    end
-
-    class AlertNotificationResponse < ActiveRecord::Base
-      set_table_name "swn_notification_response"
-      belongs_to :alert
-
-      def self.build(response, alert)
-        if !alert.blank?
-          if !response.blank? && !response['soap:Envelope'].blank? && !response['soap:Envelope']['soap:Header'].blank?
-            msg_id = response['soap:Envelope']['soap:Header']['wsa:MessageID']
-            self.create!(:alert => alert, :message_id => msg_id)
-          else
-            self.create!(:alert => alert)
-          end
-        end
-      end
-    end
-
-    def deliver
-      PHONE_LOGGER.info <<-EOT.gsub(/^\s+/, '')
-        |Building alert message:
-        |  alert: #{@alert.id}
-        |  user_ids: #{@users.map(&:id).inspect}
-        |  config: #{@config.options.inspect}
-      EOT
-      
-      body = Service::SWN::SMS::Alert.new(
-        :alert => @alert, 
-        :users => @users,
-        :username => @config['username'],
-        :password => @config['password'],
-        :retry_duration => @config['retry_duration']
-      ).build!
-
-      perform_delivery body
-    end
-    
-    def batch_deliver
-     PHONE_LOGGER.info <<-EOT.gsub(/^\s+/, '')
-        |Building alert message:
-        |  alert: #{@alert.id}
-        |  config: #{@config.options.inspect}
-      EOT
-      
-      body = Service::SWN::SMS::Alert.new(
-        :alert => @alert, 
-        :users => @users,
-        :username => @config['username'],
-        :password => @config['password'],
-        :retry_duration => @config['retry_duration']
-      ).build!
-
-      perform_delivery body
-    end
-    
-  end
-  
+  end 
 end

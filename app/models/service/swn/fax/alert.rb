@@ -63,10 +63,10 @@ class Service::SWN::Fax::Alert < Service::SWN::Fax::Base
 
   def add_sender(xml)
     xml.swn(:sender) do
-      xml.swn(:introName, alert.author.display_name)
-      xml.swn(:introOrganization, alert.from_organization) if !alert.from_organization.blank?
-      xml.swn(:introOrganization, alert.from_jurisdiction) if !alert.from_jurisdiction.blank?
-      xml.swn(:phone, alert.caller_id) if !alert.caller_id.blank?
+      xml.swn(:introName, alert.author.display_name) unless alert.author.nil?
+      xml.swn(:introOrganization, alert.from_organization) unless alert.from_organization.blank?
+      xml.swn(:introOrganization, alert.from_jurisdiction) unless alert.from_jurisdiction.blank?
+      xml.swn(:phone, alert.caller_id) unless alert.caller_id.blank?
     end
   end
 

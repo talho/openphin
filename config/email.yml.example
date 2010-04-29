@@ -1,0 +1,12 @@
+#Use this YAML file to indicate if you want alerts to go out via SWN or ActionMailer
+production:
+  alert: SWN
+
+development: &DEVELOPMENT
+  alert: ActionMailer
+
+test: &TEST
+  <<: *DEVELOPMENT
+
+cucumber:
+  <<: *TEST  

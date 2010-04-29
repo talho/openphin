@@ -59,7 +59,7 @@ Feature: Updating an alert
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
     And I should see an alert titled "[Update] - Flying Monkey Disease"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert "[Update] - Flying Monkey Disease" |
       | body contains | Title: [Update] - Flying Monkey Disease |
@@ -117,7 +117,7 @@ Feature: Updating an alert
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
     And I should see an alert titled "[Update] - Flying Monkey Disease"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | [Update] - Flying Monkey Disease |
       | body contains | Title: [Update] - Flying Monkey Disease |

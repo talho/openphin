@@ -56,6 +56,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
+    run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"

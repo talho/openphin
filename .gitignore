@@ -46,3 +46,4 @@ config/bullet.yml
 config/rack-bug.yml
 public/tutorials
 config/initializers/smtp.rb
+config/email.yml

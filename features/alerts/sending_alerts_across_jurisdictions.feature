@@ -45,10 +45,10 @@ Feature: Sending alerts across jurisdictions
     When I press "Preview Message"
     And I press "Send"
     Then I should see "Successfully sent the alert"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, keith.gaddis@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-    And the following users should not receive any emails
+    And the following users should not receive any alert emails
       | roles         | Potter County / Health Alert and Communications Coordinator |
       | roles         | Ottawa County / Health Alert and Communications Coordinator |
       | roles         | Texas / Health Alert and Communications Coordinator |  
@@ -65,10 +65,10 @@ Feature: Sending alerts across jurisdictions
     When I press "Preview Message"
     And I press "Send"
     Then I should see "Successfully sent the alert"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | brandon.keepers@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-    And the following users should not receive any emails
+    And the following users should not receive any alert emails
       | roles         | Potter County / Health Alert and Communications Coordinator |
       | roles         | Ottawa County / Health Alert and Communications Coordinator |
       | roles         | Tarrant County / Health Alert and Communications Coordinator |
@@ -86,10 +86,10 @@ Feature: Sending alerts across jurisdictions
     When I press "Preview Message"
     And I press "Send"
     Then I should see "Successfully sent the alert"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | dan.morrison@example.com, brandon.keepers@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-    And the following users should not receive any emails
+    And the following users should not receive any alert emails
       | roles         | Potter County / Health Alert and Communications Coordinator |
       | roles         | Tarrant County / Health Alert and Communications Coordinator |
       | roles         | Potter County / Health Alert and Communications Coordinator |

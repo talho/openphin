@@ -1,4 +1,6 @@
-class Service::SWN::Phone::Alert < Service::SWN::Phone::Base
+class Service::SWN::Email::Alert < Service::SWN::Email::Base
+  include ActionController::UrlWriter
+
   property :alert
   property :users
   property :username
@@ -75,8 +77,8 @@ EOF
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml
-          add_call_down xml
-          
+          add_alert_responses xml
+
           add_recipients xml
 	        #TODO: uncomment if and when SWN introduces ability to attach voice files.
 #          add_program_content_with_audio xml unless alert.message_recording_file_name.blank?
@@ -90,19 +92,21 @@ EOF
       xml.swn(:introName, alert.author.display_name) unless alert.author.nil?
       xml.swn(:introOrganization, alert.from_organization) unless alert.from_organization.blank?
       xml.swn(:introOrganization, alert.from_jurisdiction) unless alert.from_jurisdiction.blank?
-      xml.swn(:phone, alert.caller_id) unless alert.caller_id.blank?
+      xml.swn(:email, alert.author.email) unless alert.author.nil?      
     end
   end
 
   def add_notification(xml)
     xml.swn(:notification) do
-      xml.swn(:subject, alert.title)
-      xml.swn(:body, "The following is an alert from the Texas Public Health Information Network.  #{alert.short_message}")
+      severity = "#{alert.severity}"
+      status = " #{alert.status}" if alert.status.downcase != "actual"
+      xml.swn(:subject, "Health Alert \"#{alert.title}\"")
+      xml.swn(:body, construct_message)
     end
   end
 
-  def add_call_down(xml)
-    if alert.acknowledge?
+  def add_alert_responses(xml)
+    if alert.acknowledge? && !alert.sensitive
       if alert.has_alert_response_messages? && alert.original_alert.nil?
         sorted_messages = alert.call_down_messages.sort {|a, b| a[0]<=>b[0]}
         sorted_messages.each do |key, call_down|
@@ -123,11 +127,11 @@ EOF
           xml.swn(:firstName, user.first_name)
           xml.swn(:lastName, user.last_name)
           xml.swn(:contactPnts) do
-            user.devices.phone.each do |phone_device|
-              xml.swn(:contactPntInfo, :type => "Voice") do
-                xml.swn(:id, phone_device.id)
-                xml.swn(:label, "Phone Device")
-                xml.swn(:address, phone_device.phone)
+            user.devices.email.each do |email_device|
+              xml.swn(:contactPntInfo, :type => "Email") do
+                xml.swn(:id, email_device.id)
+                xml.swn(:label, "Email Device")
+                xml.swn(:address, email_device.email_address)
               end
             end
           end
@@ -140,4 +144,32 @@ EOF
 #      xml.swn(:soundName, alert.message_recording_file_name )
 #  end
 
+  def construct_message
+    default_url_options[:host] = HOST
+    header = "The following is an alert from the Texas Public Health Information Network.\r\n\r\n"
+    footer = ""
+    more = "... \r\n\r\nPlease visit the TXPhin website at #{url_for(:action => "hud", :controller => "dashboard")} to read the rest of this alert.\r\n\r\n"
+    if @alert.acknowledge?
+      header += "This alert requires acknowledgment.  Please follow the instructions below to acknowledge this alert.\r\n\r\n"
+    end
+    if @alert.sensitive?
+      footer += "\r\n\r\nAlert ID: #{@alert.identifier}\r\n"
+      footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
+      footer += "Sensitive: use secure means of retrieval\r\n\r\n"
+      footer += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
+    else
+      footer += "\r\n\r\nTitle: #{@alert.title}\r\n"
+      footer += "Alert ID: #{@alert.identifier}\r\n"
+      footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
+      footer += "Agency: #{@alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name}\r\n"
+      footer += "Sender: #{@alert.author.display_name}\r\n" unless @alert.author.nil?
+      footer += "Time Sent: #{@alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}\r\n\r\n"
+      if @alert.message.size + header.size + footer.size > 1000
+        output = header + @alert.message[0..(1000 - header.size - more.size - footer.size)] + more + footer
+      else
+        output = header + @alert.message + footer
+      end
+    end
+    output
+  end
 end

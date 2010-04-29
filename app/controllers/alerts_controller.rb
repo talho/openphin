@@ -17,6 +17,7 @@ class AlertsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
+        prawnto :inline => false
         alerter_required
       end
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
