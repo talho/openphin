@@ -251,6 +251,12 @@
   $('#alert_message').bind('keyup', function(e){
     $('#msgcnt').text($(this).val().length);
   });
+
+  $('#alert_not_cross_jurisdictional').bind("click", function(e){
+    if($('#alert_not_cross_jurisdictional:checked').length != 0) {
+      return confirm("Disabling cross jurisdictional alerting will potentially create a non-HAN compliant alert.  Are you sure you wish to send a non-compliant alert?")
+    }
+  });
     
   });
 })(jQuery);
