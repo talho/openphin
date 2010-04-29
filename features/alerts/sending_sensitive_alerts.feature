@@ -33,7 +33,7 @@ Feature: Sending sensitive alerts
     And I should be on the alert log
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Sensitive: use secure means of retrieval |
       | body does not contain | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body does not contain | For more details, keep on reading... |

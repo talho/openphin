@@ -1,5 +1,14 @@
 <div id="search-results">
-  <% query_string = params.map{|key,value| "#{key}=#{value}" unless %w(action,controller page per_page).include?(key)}.compact.join("&") %>
+  <%- query_string = params.map{|key,value|
+    unless %w(action,controller page per_page).include?(key)
+      if key == "jurisdiction_ids" || key == "role_ids"
+        [value].flatten.collect do |val|
+          "[#{key}][]=#{val}"
+        end.join("&")
+      else
+        "#{key}=#{value}"
+      end
+    end}.compact.join("&") -%>
   <p>
     <%= render :partial => "search" %>
   </p>

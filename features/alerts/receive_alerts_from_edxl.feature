@@ -73,7 +73,7 @@ Feature: Alerts from EDXL
       | role | Communicable/Infectious Disease Coordinators |
     And the following users should receive the alert email:
       | People        | keith@example.com, bob@example.com, daniel@example.com, jphipps@example.com, zach@example.com |
-      | subject       | Severe Health Alert Test "Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
+      | subject       | Health Alert "Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     And the following users should not receive any alert emails
       | emails        | ethan@example.com, brandon@example.com, mjensen@cdc.gov |
@@ -130,7 +130,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-184" has an original alert "CDC-2009-183"
     And the following users should receive the alert email:
       | People        | keith@example.com |
-      | subject       | Severe Health Alert Test "[Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
+      | subject       | Health Alert "[Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the HAN page
@@ -154,7 +154,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-185" has an original alert "CDC-2009-183"
     And the following users should receive the alert email:
       | People        | keith@example.com |
-      | subject       | Severe Health Alert Test "[Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
+      | subject       | Health Alert "[Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the HAN page
