@@ -153,12 +153,12 @@ EOF
       header += "This alert requires acknowledgment.  Please follow the instructions below to acknowledge this alert.\r\n\r\n"
     end
     if @alert.sensitive?
-      footer += "Alert ID: #{@alert.identifier}\r\n"
+      footer += "\r\n\r\nAlert ID: #{@alert.identifier}\r\n"
       footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
       footer += "Sensitive: use secure means of retrieval\r\n\r\n"
       footer += "Please visit #{url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
     else
-      footer += "Title: #{@alert.title}\r\n"
+      footer += "\r\n\r\nTitle: #{@alert.title}\r\n"
       footer += "Alert ID: #{@alert.identifier}\r\n"
       footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
       footer += "Agency: #{@alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name}\r\n"
