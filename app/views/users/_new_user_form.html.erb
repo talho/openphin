@@ -15,6 +15,14 @@
 <%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
 <%= f.label(:title, "Job title") %><br/>
 <%= f.text_field(:title) %><br/>
+<%= f.label(:fax, "Office Fax") %><br/>
+<%= f.text_field(:fax, :class => "fax") %><br/>
+<%= f.label(:phone, "Office Phone") %><br/>
+<%= f.text_field(:phone, :class => "phone") %><br/>
+<%= f.label(:home_phone, "Home Phone") %><br/>
+<%= f.text_field(:home_phone, :class => "home_phone") %><br/>
+<%= f.label(:mobile_phone, "Mobile Phone") %><br/>
+<%= f.text_field(:mobile_phone, :class => "mobile_phone") %><br/>
 
 <% user.role_requests.build if user.role_requests.empty? %>
 <% f.fields_for :role_requests do |r| %>
