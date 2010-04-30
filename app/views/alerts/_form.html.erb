@@ -45,7 +45,7 @@
         </div>
       <% end %>
       <%= form.label :short_message %>
-      This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g., Phone, SMS (text messaging), Blackberry PIN.<br/>
+      This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN.<br/>
       <strong class="maxlen">Maximum length: 160 characters</strong>.
       <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
       <%= form.text_area :short_message, :rows => 2, :class => "short_message", :wrap => "soft" %>

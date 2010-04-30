@@ -57,10 +57,9 @@
               break;
             case "Device::PhoneDevice":
               //if(jQuery.trim($('.short_message').val()) == "" && $('.success:hidden').length != 0) {
-              if (jQuery.trim($('.short_message').val()) == "") {
+              if (jQuery.trim($('#alert_message').val()) == "") {
                 cont = false;
-                //alert("You must provide a short message or voice recording for a phone alert.");
-                alert("You must provide a short message for a phone alert.");
+                alert("You must provide a message for a phone alert.");
               }
               break;
             case "Device::SMSDevice":

@@ -29,6 +29,7 @@ Feature: Sending alerts to phones
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | There is a Chicken pox outbreak in the area |
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
@@ -45,7 +46,7 @@ Feature: Sending alerts to phones
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
-      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
     
   Scenario: Sending alerts to phone devices with acknowledgment
     Given I am logged in as "keith.gaddis@example.com"
@@ -66,6 +67,7 @@ Feature: Sending alerts to phones
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | There is a Chicken pox outbreak in the area |
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
@@ -82,7 +84,7 @@ Feature: Sending alerts to phones
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
-      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
     When I go to the alert log
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
     
@@ -117,6 +119,7 @@ Feature: Sending alerts to phones
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | There is a Chicken pox outbreak in the area |
       | Short Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
@@ -133,8 +136,8 @@ Feature: Sending alerts to phones
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
-      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
-      | 2105551213 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
+      | 2105551213 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
 
   Scenario: Sending alerts with call down
@@ -155,13 +158,13 @@ Feature: Sending alerts to phones
     And I follow "Send an Alert"
 
     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
+    And I fill in "Message" with "There is a Chicken pox outbreak in the area"
     And I fill in "Short Message" with "Chicken pox outbreak"
     And I select "Actual" from "Status"
     And I select "Moderate" from "Severity"
     And I select "Advanced" from "Acknowledge"
     And I check "Wise County"
     And I check "Phone"
-    # And I press "Use Call Down"
     And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
     And I fill in "Alert Response 2" with "if you can respond within 30 minutes"
     And I fill in "Alert Response 3" with "if you can respond within 1 hour"
@@ -176,6 +179,6 @@ Feature: Sending alerts to phones
 
     When delayed jobs are processed
     Then the following phone calls should be made:
-      | phone      | message                                                                                           | call_down                            |
-      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak | if you can respond within 15 minutes |
+      | phone      | message                                                                                                                  | call_down                            |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area | if you can respond within 15 minutes |
     And the phone call should have 5 calldowns

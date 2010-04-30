@@ -97,7 +97,7 @@ EOF
   def add_notification(xml)
     xml.swn(:notification) do
       xml.swn(:subject, alert.title)
-      xml.swn(:body, "The following is an alert from the Texas Public Health Information Network.  #{alert.short_message}")
+      xml.swn(:body, construct_message)
     end
   end
 
@@ -140,4 +140,14 @@ EOF
 #      xml.swn(:soundName, alert.message_recording_file_name )
 #  end
 
+  def construct_message
+    output = "The following is an alert from the Texas Public Health Information Network.  "
+    if output.size + alert.message.size > 1000
+      footer = ".  The rest of this message is unavailable.  Please visit the T X Fin website for the rest of this alert."
+      output += alert.message[0..(1000 - output.size - footer.size)] + footer
+    else
+      output += alert.message
+    end
+    output
+  end
 end

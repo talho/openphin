@@ -98,6 +98,7 @@ Feature: Acknowledging an alert
        When I fill out the alert form with:
          | People | Keith Gaddis |
          | Title  | H1N1 SNS push packs to be delivered tomorrow |
+         | Message | There is a Chicken pox outbreak in the area |
          | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
@@ -115,7 +116,7 @@ Feature: Acknowledging an alert
        When delayed jobs are processed
        Then the following phone calls should be made:
          | phone      | message                                                                                           |
-         | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
+         | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
        
        When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
        And delayed jobs are processed
@@ -169,6 +170,7 @@ Feature: Acknowledging an alert
        When I fill out the alert form with:
          | People | Keith Gaddis |
          | Title  | H1N1 SNS push packs to be delivered tomorrow |
+         | Message | There is a Chicken pox outbreak in the area |
          | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
@@ -188,7 +190,7 @@ Feature: Acknowledging an alert
        When delayed jobs are processed
        Then the following phone calls should be made:
          | phone      | message                                                                                           |
-         | 2105551212 | The following is an alert from the Texas Public Health Information Network.  Chicken pox outbreak |
+         | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
        When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes"
        And delayed jobs are processed
