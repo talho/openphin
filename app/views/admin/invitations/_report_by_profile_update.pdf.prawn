@@ -9,14 +9,14 @@ invitees = results.map do |invitee|
   [
     invitee.name,
     invitee.email,
-    invitee.user.updated_at
+    invitee.user.updated_at > invitation.created_at ? "Yes" : "No"
   ]
 end
 
 unless invitees.empty?
   pdf.table invitees, :border_style => :grid,
     :row_colors => ["FFFFFF","DDDDDD"],
-    :headers => ["Name", "Email Address", "Profile Updated At"]
+    :headers => ["Name", "Email Address", "Profile Updated"]
 else
   pdf.move_down 10
   pdf.text "No Invitees Found"

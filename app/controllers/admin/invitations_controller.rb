@@ -40,7 +40,7 @@ class Admin::InvitationsController < ApplicationController
     report_options << ["By Pending Requests","by_pending_requests"]
     report_options << ["By Profile Update","by_profile_update"]
 
-    @reverse = params[:reverse] == "1" ? nil : "&reverse=1"
+    @reverse = params[:reverse] == "1" ? nil : "1"
 
     @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
     @output_encoding = 'LATIN1'
@@ -208,9 +208,12 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def inviteeStatusByProfileUpdate
+    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
+    order_by = params[:sort] != nil ? params[:sort] : 'email'
+    order_by = "display_name" if order_by == "name"
     invitation_time = Invitation.find(params[:id]).updated_at
     Invitee.paginate_all_by_invitation_id params[:id], 
-      :page=>params[:page] || 1, :order=>"users.updated_at ASC", :include=>:user, 
+      :page=>params[:page] || 1, :order=> "users.#{order_by} " + order_in, :include=>:user, 
       :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
   end
   

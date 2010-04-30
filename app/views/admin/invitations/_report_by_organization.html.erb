@@ -5,15 +5,15 @@
 <%- cache(:key => [params[:page] || 1, report_type].join(":"), :expires_in => 1.hour) do -%>
   <h3>Organization: <%= invitation.default_organization.name %></h3>
   <p>
-    <%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%>
-    <%= link_to "Download Report (CSV)", "#{reports_admin_invitation_path(invitation,:format=>:csv)}?report_type=#{report_type}"%>
+    <%= link_to "Printable Report (PDF)", reports_admin_invitation_path(invitation, :format=>:pdf, :report_type => report_type) %>
+    <%= link_to "Download Report (CSV)", reports_admin_invitation_path(invitation,:format=>:csv, :report_type => report_type) %>
   </p>
-  <%= will_paginate results, :params => {:report_type => report_type} %>
+  <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
   <table class="inviteTable">
     <thead>
       <tr>
-        <th><%= link_to 'Name', "#{reports_admin_invitation_path(invitation)}?&sort=name#{@reverse}&report_type=#{report_type}", { :title => "Sort By Name" }%></th>
-        <th><%= link_to "Email Address", "#{reports_admin_invitation_path(invitation)}?&sort=email#{@reverse}&report_type=#{report_type}", { :title => "Sort By Email" }%></th>
+        <th><%= link_to 'Name', reports_admin_invitation_path(invitation, :sort => "name", :reverse => @reverse, :report_type => report_type), { :title => "Sort By Name" }%></th>
+        <th><%= link_to "Email Address", reports_admin_invitation_path(invitation, :sort => "email", :reverse => @reverse, :report_type => report_type), { :title => "Sort By Email" }%></th>
         <th>Is Member?</th>
       </tr>
     </thead>
@@ -29,7 +29,7 @@
   </table>
   <%= will_paginate results, :params => {:report_type => report_type, :report_options => report_options} %>
   <p>
-    <%= link_to "Printable Report (PDF)", "#{reports_admin_invitation_path(invitation,:format=>:pdf)}?report_type=#{report_type}"%>
-    <%= link_to "Download Report (CSV)", "#{reports_admin_invitation_path(invitation,:format=>:csv)}?report_type=#{report_type}"%>
+    <%= link_to "Printable Report (PDF)", reports_admin_invitation_path(invitation, :format=>:pdf, :report_type => report_type) %>
+    <%= link_to "Download Report (CSV)", reports_admin_invitation_path(invitation,:format=>:csv, :report_type => report_type) %>
   </p>
 <%- end -%>
