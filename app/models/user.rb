@@ -185,13 +185,32 @@ class User < ActiveRecord::Base
     return true if roles.include?(Role.superadmin)
     if other.class == Jurisdiction
       return true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
-    elsif other.class == Array
+    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
       other.each do |jurisdiction|
         return true if role_memberships.detect{|r| r.role==Role.admin && jurisdiction.is_or_is_descendant_of?(r.jurisdiction)}
       end
-      false
-    else
-      false
+    end
+    false
+  end
+
+  def is_org_member_of?(other)
+    if other.class == Organization
+      return true if other.members.include?(self)
+    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+      other.each do |org|
+        return true if org.members.include?(self)
+      end
+    end
+    false
+  end
+
+  def is_org_admin_for?(other)
+    if other.class == User
+      return true if !(organizations & other.organizations).empty? && is_admin_for?(other.jurisdictions)
+    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+      other.each do |user|
+        return true if !(organizations & user.organizations).empty? && is_admin_for?(user.jurisdictions)
+      end
     end
     false
   end
@@ -238,18 +257,6 @@ class User < ActiveRecord::Base
   
   def alerter_jurisdictions
     Jurisdiction.find(role_memberships.alerter.map(&:jurisdiction_id))
-  end
-  
-	def is_admin_in_my_jurisdiction?(user)
-	  user.jurisdictions.any?{|j| is_admin_for_this_jurisdiction?(j) }
-  end
-    
-  def is_admin_for_this_jurisdiction?(jur)
-    if jur.class == Jurisdiction
-      return true if role_memberships.detect{|r| r.role==Role.admin && jur.is_or_is_descendant_of?(r.jurisdiction)}
-    else
-      false
-    end
   end
 
   def phin_oid=(val)
