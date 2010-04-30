@@ -37,7 +37,7 @@
 
 <fieldset class="people">
   <legend>People</legend>
-  <%= label_tag 'Add'%>
+  <%= form.label :user_ids, 'Add'%>
   <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %><br/>
 
 </fieldset>

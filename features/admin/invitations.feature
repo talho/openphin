@@ -312,9 +312,9 @@ Feature: Invitation System
     
     And I should see "Jane Smith" within "#invitee1"
     And I should see "jane.smith@example.com" within "#invitee1"
-    And I should see /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/ within "tr#invitee1 td.status"
+    And I should see "No" within "tr#invitee1 td.status"
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
-    And I should see /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/ within "tr#invitee1 td.status"
+    And I should see "No" within "tr#invitee1 td.status"
     
     

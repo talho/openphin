@@ -65,8 +65,9 @@ Feature: Viewing groups
     And I follow "Edit"
     Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
     And I should see "John Smith"
-    When I follow "Remove"
-    Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
+    When I unselect "John Smith" from "Add"
+    And I press "Save"
+    Then I should be specifically on the group page for "Dallas County Health Officer Group"
     And I should not see "John Smith" 
     And the "Dallas County Health Officer Group" group should not have the following members:
       | User  | john.smith@example.com |
@@ -80,8 +81,6 @@ Feature: Viewing groups
     And I follow "Edit"
     Then I should be specifically on the edit group page for "Dallas County Health Officer Group"
     And I should see "John Smith"
-    When I follow "John Smith"
-    Then I should be specifically on the user profile page for "john.smith@example.com"
     
   Scenario: going to edit a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
