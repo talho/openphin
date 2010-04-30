@@ -72,14 +72,23 @@ module FeatureHelpers
             when /body contains alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
               if value.blank?
-                status &&= email.body.include?(email_acknowledge_alert_url(attempt, :call_down_response => 0, :host => HOST))
+                status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                  {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text).first =~ /#{Regexp.escape("Please press one to acknowledge this alert.")}/
               else
                 call_down_response = attempt.alert.call_down_messages.index(value).to_i
-                status &&= email.body.include?(email_acknowledge_alert_url(attempt, :call_down_response => call_down_response, :host => HOST))
+                status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                  {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)[call_down_response-1] =~ /#{Regexp.escape(value)}/
               end
             when /body does not contain alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
-              status &&= !email.body.include?(email_acknowledge_alert_url(attempt, :host => HOST))
+              if value.blank?
+                status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                  {"swn" => "http://www.sendwordnow.com/notification"})).empty?
+              else
+                call_down_response = attempt.alert.call_down_messages.index(value).to_i
+                status &&= !(xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                  {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)[call_down_response-1] =~ /#{Regexp.escape(value)}/
+              end
             when /attachments/
               filenames = email.attachments
               status &&= !filenames.nil? && value.split(',').all?{|m| filenames.map(&:original_filename).include?(m) }

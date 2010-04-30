@@ -51,9 +51,8 @@ class Alert < ActiveRecord::Base
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   belongs_to :original_alert, :class_name => 'Alert'
 
-  has_many :targets, :as => :item
+  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => {:item_type => 'Alert'}
   has_many :audiences, :through => :targets, :include => :jurisdictions
-  accepts_nested_attributes_for :audiences
 
   has_many :alert_device_types, :dependent => :delete_all
   has_many :alert_attempts, :dependent => :destroy
@@ -121,6 +120,12 @@ class Alert < ActiveRecord::Base
       return false
     end
     true
+  end
+
+  def audiences_attributes=(attrs={})
+    attrs.each do |key, value|
+      audiences << Audience.new(value)
+    end
   end
 
   def build_cancellation(attrs={})

@@ -22,9 +22,9 @@ Feature: Acknowledging an alert
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    Then the follow users should receive the alert email:
+    Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" *Acknowledgment required* |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
     When I sign out
@@ -45,9 +45,9 @@ Feature: Acknowledging an alert
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    And the follow users should receive the alert email:
+    And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
-      | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" *Acknowledgment required* |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
     When I sign out
@@ -69,9 +69,9 @@ Feature: Acknowledging an alert
      When I press "Send"
      Then I should see "Successfully sent the alert"
      When delayed jobs are processed
-     And the follow users should receive the alert email:
+     And the following users should receive the alert email:
        | People        | keith.gaddis@example.com |
-       | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" *Acknowledgment required* |
+       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
        | body does not contain alert acknowledgment link | |
 
      When I sign out
@@ -140,9 +140,9 @@ Feature: Acknowledging an alert
 
       When I press "Send"
       Then I should see "Successfully sent the alert"
-      And the follow users should receive the alert email:
+      And the following users should receive the alert email:
         | People        | keith.gaddis@example.com |
-        | subject       | Moderate Health Alert "H1N1 SNS push packs to be delivered tomorrow" *Acknowledgment required* |
+        | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
         | body contains alert acknowledgment link | if you can respond within 15 minutes |
         | body contains alert acknowledgment link | if you can respond within 30 minutes |
       And I am logged in as "keith.gaddis@example.com"
