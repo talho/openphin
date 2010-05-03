@@ -10,7 +10,11 @@ Contents of <%= @name %><br /><br />
 <div id="contents">
   <%- form_for :document do |f| -%>
     <ul class="documents">
-      <%= render :partial => "document", :collection => @documents, :as => :document, :locals => {:f => f} %>
+      <%- if @documents.empty? -%>
+        <li>This folder is empty.</li>
+      <%- else -%>
+        <%= render :partial => "document", :collection => @documents, :as => :document, :locals => {:f => f} %>
+      <%- end -%>
     </ul>
   <%- end -%>
   <%- if @folder -%>

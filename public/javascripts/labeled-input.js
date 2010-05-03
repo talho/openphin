@@ -14,11 +14,10 @@ $(document).ready(function() {
     }
   };
   
-  $("form").livequery("submit", function() {
+  $("form.edit_user").livequery("submit", function() {
     $(this).select('input[data-label], textarea[data-label]').each(hideLabel);
   });
   $('input[data-label], textarea[data-label]').livequery("focus", hideLabel);
   $('input[data-label], textarea[data-label]').livequery("blur", showLabel);
-
   $('input[data-label], textarea[data-label]').each(showLabel);
 });

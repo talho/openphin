@@ -258,13 +258,17 @@ function tieDocumentsFolderNavigation(){
 
 function setMediaNewFolderEvents() {
   var new_folder = $("ul.media_toolbar li#new_folder");
-
+  var folder_submit = $(".media_list div#new_folder form#new_folder input#folder_submit");
   var myform = $(".media_list div#new_folder form#new_folder");
+  
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
       if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
+        return false;
+      } else if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+        alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
       $("#documents_progress_panel").show();
@@ -272,13 +276,16 @@ function setMediaNewFolderEvents() {
     success: function(data, textStatus) {
       activateMediaPanelActions();
       reloadDocumentsDocumentPanel();
+      return true;
     },
     error: function(request,textStatus,errorThrown) {
       alert("Could not create new folder.  Please try again.");
       activateMediaPanelActions();
       reloadDocumentsDocumentPanel();
+      return false;
     }
   });
+
   new_folder.bind("click", function(e) {
     $(".media_list div#new_share:visible").slideToggle("fast");
     $("span.media_list").children("div#new_folder").slideToggle("slow");
@@ -294,6 +301,9 @@ function setMediaNewShareEvents() {
       beforeSend: function(response) {
         if(jQuery.trim($("form input#channel_name").val()) == "") {
           alert("You must specify a share name");
+          return false;
+        }else if(jQuery.trim($("form input#channel_name").val()).length > 32 ){
+          alert("Share name cannot exceed 32 characters in length.");
           return false;
         }
         $("#documents_progress_panel").show();
@@ -504,6 +514,7 @@ function activateDocumentsPanelActions() {
   });
 
   tieDocumentsDocumentNavigation();
+  $("ul.documents li a").tooltip({track: true, delay: 0, showURL: false, showBody: " - ", fade: 250})
 }
 
 function tieDocumentsDocumentNavigation(){
@@ -522,6 +533,13 @@ function detectAuthenticityToken(responseXML) {
   return $(responseXML.getElementsByTagName("meta")).filter("meta[name='authenticity-token']").length > 0 ? true : false
 }
 
+function detectFolderLoaded(responseXML) {
+  // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
+  // and can't detect the success of the iframe so always returns success
+  // Detects for the presence of the flash message
+  return $(responseXML.childNodes[0].childNodes[1].childNodes[0]).hasClass("flash")
+}
+
 function setDocumentUploadEvents() {
   var upload_document = $("ul.documents_toolbar li#upload_document");
   var upload_document_form = $("span.documents div.upload_document form");
@@ -537,7 +555,8 @@ function setDocumentUploadEvents() {
       $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
-      loaded = detectAuthenticityToken(response.responseXML);
+      //loaded = detectAuthenticityToken(response.responseXML);
+      loaded = detectFolderLoaded(response.responseXML);
       if(!loaded) alert("Error creating new folder, please try again.");
       activateDocumentsPanelActions();
     }
@@ -559,6 +578,9 @@ function setDocumentNewFolderEvents() {
     beforeSend: function(response) {
       if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
+        return false;
+      } else if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+        alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
       $("#documents_progress_panel").show();
@@ -767,8 +789,8 @@ function setDocumentDeleteItemEvents() {
 }
 
 function documentsAlert() {
-  var error = $("div.flash p.error");
-  if(error.length > 0) alert(error.text());
+  //var error = $("div.flash p.error");
+  //if(error.length > 0) alert(error.text());
 }
 
 jQuery(function($) {

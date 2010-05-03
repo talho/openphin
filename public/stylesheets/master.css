@@ -87,9 +87,11 @@ div.help a                                    {color:#fff}
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
 																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
-#documents_progress_panel                     {padding: 5px 5px 0 5px; filter: alpha(opacity=60); opacity:0.6; z-index: 10; display: none;
-																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
-#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}
+#documents_progress_panel                     {padding: 5px 5px 0 5px; z-index: 10; display: none;
+																							 position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
+#documents_progress_panel div                 {background: url('../images/Ajax-loader.gif') 0px 0px no-repeat #fff;padding-left:35px;margin-left: auto;
+                                               margin-right: auto; position: relative; top: 50%; width: 120px; height: 35px;border:1px solid;}
+
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -305,6 +307,7 @@ span.media_list fieldset.list                   {height:230px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
 ul.media_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
+ul.documents                                    {white-space:nowrap;}
 ul.documents li                                 {list-style-type: none;}
 ul.documents_toolbar                            {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
 ul.documents_toolbar li                         {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
@@ -397,3 +400,4 @@ ul#invitees-list li       {list-style:none outside none;}
 .pagination{margin-bottom: 10px;}
 
 /*#alert_not_cross_jurisdictional{width:20px !important; float:left; position:relative; top:2px;}   */
+#tooltip{position:absolute; padding:5px; background: #fff; border: 1px solid #666;}

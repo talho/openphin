@@ -1,7 +1,7 @@
 <% content_tag_for :li, document do %>
   <%- if f -%>
     <%= f.check_box :document %>
-    <%= f.label(:document, link_to(document.file_file_name, document_path(document))) %>
+    <%= f.label(:document, link_to(document.file_file_name, document_path(document), :title => tooltip(document))) %>
   <%- end -%>
     <%= link_to 'Send', new_document_copy_path(document), :class => "invis send" %>
     <%= link_to 'Add to Share', new_document_share_path(document), :class => "invis add_share" %>
@@ -13,4 +13,5 @@
   <%- else -%>
     <%= link_to 'Delete', folder_document_path(@parent_folder, document),:method => :delete, :class => "invis destroy" if @parent_folder && document.editable_by?(current_user) %>
   <%- end -%>
+  
 <% end %>

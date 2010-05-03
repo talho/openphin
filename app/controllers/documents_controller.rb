@@ -38,8 +38,9 @@ class DocumentsController < ApplicationController
   
   def create
     @parent_folder = current_user.folders.find(params[:document][:folder_id].to_i) || Folder.new
-    unless @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
+    if @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}.nil?
       @document = current_user.documents.build(params[:document])
+      @document.owner_id = current_user.id
       @document.save!
     else
       flash[:error] = 'File name is already in use. Try renaming the file.'
