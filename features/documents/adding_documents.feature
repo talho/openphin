@@ -69,7 +69,7 @@ Feature: Adding documents to document sharing
     And I should see "Everything"
 
     When I follow "Everything"
-    And I press "Create Folder"
+    #And I press "Create Folder"
     And I fill in "Folder Name" with "Some Things"
     And I press "Create Folder"
     Then I should be redirected to the document viewing panel

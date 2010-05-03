@@ -10,13 +10,13 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
   assert_nil User.find_by_email(email)
 end
 
-#Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
-#  user = Factory :user,
-#    :email                 => email,
-#    :password              => password,
-#    :password_confirmation => password,
-#    :email_confirmed       => false
-#end
+Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
+  user = Factory :user,
+    :email                 => email,
+    :password              => password,
+    :password_confirmation => password,
+    :email_confirmed       => false
+end
 
 Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
   user = Factory :user,
