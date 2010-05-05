@@ -109,7 +109,7 @@
       });
       return false;
     });
-    $('#edit fieldset input:checkbox').click(function() {
+    $('fieldset input:checkbox').click(function() {
       $(this).siblings('label').toggleClass('checked');
     });
 

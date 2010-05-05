@@ -6,8 +6,8 @@
   <%- end -%>
 </div>
 
-Contents of <%= @name %><br /><br />
-<div id="contents">
+<h4 class="panel_h">Contents of <%= @name %></h4>
+<div id="contents" class="withsubfolders">
   <%- form_for :document do |f| -%>
     <ul class="documents">
       <%- if @documents.empty? -%>
