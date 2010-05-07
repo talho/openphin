@@ -12,17 +12,19 @@
     <%= render 'topic_fields', :f => f %>
     </p>
     <p>
-    <% for_moderators_of @forum do -%>
-    <p>
-      <%= f.check_box :sticky %> Sticky
-    </p>
-    <p>
-      <%= f.check_box :locked? %> Closed 
-    </p>
-    <p>
+    <% for_super_admin do -%>
+      <p>
+        <%= f.check_box :sticky %> <%= f.label :sticky %>
+        <%= f.check_box :hide %> <%= f.label :hide %>
+        <%= f.check_box :locked? %> <%= f.label :closed %>
+      </p>
+      <p>
       <%= f.label :dest_forum_id, "Forum to be moved to" %>
-      <%= select(:topic, :dest_forum_id, 
-          Forum.all.map{|u| [u.name,u.id]}, :options =>{:prompt => "-Select a forum to move to"}) -%>
+      <% selectable_forums = Forum.find(:all,:conditions => ["id NOT IN (?)", [@forum.id]]) %>
+      <%  unless selectable_forums.blank? %>
+        <%= select(:topic, :dest_forum_id, 
+            selectable_forums.map{|u| [u.name,u.id]},{ :selected => nil, :include_blank => true }) -%>
+      <% end %>
       </p>     
     <% end -%>
     </p><br />
@@ -47,7 +49,10 @@
         <% for_moderators_of comment do -%>
           <% f.fields_for "comments[]",comment do |comment_form| %>
            <div class="edit_comment">
-            <%= check_box_tag "comment_ids[]", comment.id %>Update this
+             <%= check_box_tag "comment_ids[]", comment.id %> Update this
+             <% for_super_admin do %>
+               <%= check_box_tag "delete_comment_ids[]", comment.id %> Delete this
+             <% end %>
             <%= render 'edit_comment_fields', :f => comment_form %>
           </div>
           <% end %>
@@ -60,3 +65,5 @@
   <% end %>
   </ul>
 </fieldset>
+
+

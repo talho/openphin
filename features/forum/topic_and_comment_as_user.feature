@@ -73,4 +73,3 @@ I should be able to create topics to forums and place comments to these topics
     Then I should see "strong words and emphasized words" 
     
 
-

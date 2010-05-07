@@ -7,7 +7,7 @@
   <%= f.error_messages %>
    <p>
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :size=> 72 %>
   </p>
   <p>
     <% for_moderators_of @forum do -%>
@@ -15,7 +15,7 @@
     <% end -%>
   </p>
    <div id="edit">
-     <div id="audience">
+     <div id="audience" class="form_audience">
        <% f.object.build_audience if f.object.audience.nil? %>
        <% f.fields_for :audience do |audience| %>
          <% unless audience.object.is_a?(Group) %>

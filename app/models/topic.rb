@@ -14,6 +14,7 @@ class Topic < ActiveRecord::Base
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
   named_scope :distinct_poster, :group => :poster_id
   
+  named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 
   validates_presence_of :poster_id, :forum_id, :name
 
@@ -28,6 +29,14 @@ class Topic < ActiveRecord::Base
     !self.locked_at.nil?
   end
   
+  def hide=(hide_string)
+    self.hidden_at = hide_string == "1" ? Time.now : nil 
+ end
+  
+  def hide
+    !self.hidden_at.nil?
+  end
+
   def comment_attributes=(attributes)
     comments << comments.build(attributes)        
   end
@@ -42,11 +51,6 @@ class Topic < ActiveRecord::Base
     forum_id
   end
     
-  def self.per_page
-    # for paginate
-    3
-  end
-
 end
 
 

@@ -1,12 +1,18 @@
 class TopicsController < ApplicationController
 
+  before_filter :non_public_role_required
+  app_toolbar "forums"
+
   before_filter :find_forum
   before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
   
   # GET /topics
   # GET /topics.xml
   def index
-    @topics = Topic.paginate(@forum.topics.collect(&:id),:page => params[:page] || 1)
+    options = {:page => params[:page] || 1, :per_page => 8}
+    options[:order] = "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc"
+    options[:conditions] = {:hidden_at => nil} unless current_user.is_super_admin?
+    @topics = Topic.paginate_all_by_forum_id_and_comment_id(@forum.id,nil,options)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -59,6 +65,8 @@ class TopicsController < ApplicationController
   # PUT /topics/1
   # PUT /topics/1.xml
   def update
+    # no forum selected for the move, so lets set it to the original
+    params[:topic][:dest_forum_id] = params[:forum_id] if params[:topic][:dest_forum_id].blank?
     respond_to do |format|
       if @topic.update_attributes(params[:topic])
         flash[:notice] = 'Topic was successfully updated.'
@@ -83,12 +91,16 @@ class TopicsController < ApplicationController
   end
   
   def update_comments
-    # update only the comments that have been checked for update
+    # update only the comments that have been checked for update and delete only those checked for delete
+    topic = Topic.find(params[:id])
     comment_ids = params[:comment_ids] || []
+    delete_comment_ids = params[:delete_comment_ids] || []
+    comment_ids -= delete_comment_ids
     selected = params[:topic][:comments].reject{ |k,v| !comment_ids.include?(k) }
+    topic.comments.delete( Topic.find(delete_comment_ids))
     Topic.update(selected.keys,selected.values)
     flash[:notice] = "Comments were successfully updated."  
-    redirect_to forum_topic_url(@forum,Topic.find(params[:id]))
+    redirect_to forum_topic_url(@forum,topic)
   end
 
 protected

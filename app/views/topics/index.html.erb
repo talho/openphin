@@ -1,7 +1,7 @@
 <h1><%= @forum.name %></h1>
   
 <p class="forum breadcrumb">
-<%= link_to "Forums", forums_path %> > <%= @forum.name %><br />
+  <%= link_to "Forums", forums_path %> > <%= @forum.name %><br />
 </p>
 
 <div class="topic">
@@ -20,13 +20,14 @@
 
   <ul class="topics data-list">
     <% @topics.each_with_index do |topic,idx| %>
-      <li id="topic_name_<%= idx %>" class="topic_name">
+      <li id="topic_name_<%= idx+1 %>" class="topic_name">
+        <%= image_tag("yellow_thumbtack.png",:title=>"Sticky") if topic.sticky==1 %>
         <%= link_to h(topic.name), forum_topic_path(@forum,topic) %>
         <% for_moderators_of topic do -%>
-          <%= link_to image_tag("pencil.png", :alt => "Edit"), edit_forum_topic_path(@forum,topic) %>
+          <%= link_to image_tag("pencil.png", :title => "Edit", :alt => "edit_topic_#{idx+1}"), edit_forum_topic_path(@forum,topic) %>
         <% end -%>
         <% for_super_admin do -%>
-            <%= link_to image_tag("cross-circle.png", :alt => "Remove"), forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
+            <%= link_to image_tag("cross-circle.png", :title => "Remove"), forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %></td>
         <% end -%>
         <br />
         <%= "Started by #{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
@@ -42,4 +43,3 @@
   </ul>
 </div>
 <%= will_paginate @topics %>
-

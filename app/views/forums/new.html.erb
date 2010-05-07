@@ -8,7 +8,7 @@
   <div id="forum">
     <p>
       <%= f.label :name %><br />
-      <%= f.text_field :name, :size => 64 %>
+      <%= f.text_field :name, :size => 72 %>
       <% for_moderators_of @forum do -%>
         <%= f.check_box :hide %> <%= f.label :hide %>
       <% end -%>

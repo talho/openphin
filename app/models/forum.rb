@@ -1,10 +1,8 @@
 class Forum < ActiveRecord::Base
     
-  default_scope :conditions => {:hidden_at => nil}
-
   has_many  :topics, 
             :conditions => {:comment_id => nil}, 
-            :order => "#{Topic.table_name}.sticky desc, #{Topic.table_name}.updated_at desc", 
+            :order => "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc", 
             :dependent => :destroy
   accepts_nested_attributes_for :topics, 
             :reject_if => lambda { |a| a[:content].blank? }, 
@@ -21,9 +19,19 @@ class Forum < ActiveRecord::Base
   
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
   alias :_destroy :_delete unless respond_to? '_destroy'
-
+  
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
   named_scope :distinct_poster, :group => :poster_id
+
+
+  # would like to DRY this up
+  unhidden_lamb = lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
+  class << self
+    def hide_conditions(obj)
+      obj.present? ? {:conditions => {:hidden_at => nil}} : {}
+    end
+  end
+  named_scope :unhidden, unhidden_lamb
 
   validates_presence_of  :name
 
@@ -41,32 +49,33 @@ class Forum < ActiveRecord::Base
   end
       
   def self.find_for(id,user)
-    # can I see the hidden forums?
-    result = user.is_super_admin? ? self.with_exclusive_scope { self.find(id) } : self.find(id)
+    options = hide_conditions !user.is_super_admin?
+    result = self.find(id,options)
     return result unless result
     unless result.kind_of?(Array)
       forum = self.accessible_to(result,user)
       return forum unless forum
-      forum = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum.id) } : self.find(forum.id)
+      forum = self.find(id,options)
     else
       result.select{|f| self.accessible_to(f,user) }
       forum_ids = result.collect(&:id)
-      forums = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum_ids) } : self.find(forum_ids)
+      forums = self.find(forum_ids,options)
     end
   end
   
   def self.paginate_for(id,user,page)
-    # can I see the hidden forums?
-    result = user.is_super_admin? ? self.with_exclusive_scope { self.find(id) } : self.find(id)
+    options = hide_conditions !user.is_super_admin?
+    result = self.find(id,options)
     return result unless result
     unless result.kind_of?(Array)
       forum = self.accessible_to(result,user)
       return forum unless forum
-      forum = user.is_super_admin? ? self.with_exclusive_scope { self.find(forum.id) } : self.find(forum.id)
+      forum = self.find(id,options)
     else
       result.select{|f| self.accessible_to(f,user) }
       forum_ids = result.collect(&:id)
-      forums = user.is_super_admin? ? self.with_exclusive_scope { self.paginate(forum_ids,:page => page) } : self.paginate(forum_ids,:page => page)
+      options[:page] = page
+      forums = self.paginate(forum_ids,options)
     end
   end
   
