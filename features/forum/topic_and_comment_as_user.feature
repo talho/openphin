@@ -6,8 +6,7 @@ As a user with access
 I should be able to create topics to forums and place comments to these topics
 
   Background:
-    Given an organization named Red Cross
-    And the following entities exist:
+    Given the following entities exist:
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
     And Texas is the parent jurisdiction of:

@@ -6,8 +6,7 @@
   I should be able to create a forum that can hold user-created topics
 
   Background:
-    Given an organization named Red Cross
-    And the following entities exist:
+    Given the following entities exist:
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
       | Jurisdiction | Potter County |
