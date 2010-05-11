@@ -186,6 +186,7 @@
       }
     });
 
+
     $('ul.check_selector #alert_device_phone_device,#alert_device_sms_device,#alert_device_fax_device,#alert_device_blackberry_device').click(function() {
       if ($('ul.check_selector #alert_device_phone_device:checked').length ||
           $('ul.check_selector #alert_device_sms_device:checked').length ||

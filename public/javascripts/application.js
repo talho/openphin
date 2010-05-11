@@ -228,7 +228,8 @@ function activateMediaPanelActions() {
       });
     }
   });
-  $('#documents_panel .withsubfolders ul.check_selector>li>ul.folders').find('li.folder>ul').parent().find('input:first').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
+  $('#documents_panel .withsubfolders ul.check_selector>li>ul.folders').find('li.folder>ul').parent().find('a:first>label').addClass('with_sub_folder');
+  $('#documents_panel .withsubfolders ul.check_selector>li>ul.folders').find('li.folder>ul').parent().find('input:first').after('<a href="#" id="toggle_closed" class="toggle closed">Toggle</a>');
   
   //$('ul.check_selector>li>ul.folders').find('li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
   //$('ul.check_selector>li>ul.folders').find('li>a>label').css('margin-left','20px');
@@ -468,6 +469,16 @@ function setMediaInviteEvents() {
           $(this).parent().children(".select_all").toggle();
           return false;
         });
+        $("a.select_all").click(function() {
+          if ($(this).text() == "Select all children...") {
+            $(this).parent().find(":checkbox").attr("checked", true);
+            $(this).text("Unselect all...");
+          } else {
+            $(this).parent().find(":checkbox").attr("checked", false);
+            $(this).text("Select all children...");
+
+          }
+        });
       });
     } else {
       alert("You must select a share to invite users.");
@@ -667,7 +678,16 @@ function setDocumentSendEvents() {
         });
         $('.document_panel_action ul.check_selector>li>ul>li>ul>li').append('<a href="#" class="toggle closed">Toggle</a>');
         $('.document_panel_action ul.check_selector ul ul ul').hide();
+        $("a.select_all").click(function() {
+          if ($(this).text() == "Select all children...") {
+            $(this).parent().find(":checkbox").attr("checked", true);
+            $(this).text("Unselect all...");
+          } else {
+            $(this).parent().find(":checkbox").attr("checked", false);
+            $(this).text("Select all children...");
 
+          }
+        });
         $('.document_panel_action ul.check_selector a.toggle').click(function() {
           $(this).toggleClass('closed').siblings('ul').toggle();
           $(this).parent().children(".select_all").toggle();
@@ -917,4 +937,14 @@ function getNextInviteeId() {
   });
   
   return index;
+}
+
+function select_all_child_jurisdictions(){
+  if ($(this).text() == "Select all children...") {
+    $(this).parent().find(":checkbox").attr("checked", true);
+    $(this).text("Unselect all...");
+  } else {
+    $(this).parent().find(":checkbox").attr("checked", false);
+    $(this).text("Select all children...");
+  }
 }

@@ -20,7 +20,7 @@ module AlertsHelper
                                :class =>"audience_jurisdiction")
           html += label_tag(id, item.name) +"\n"
           if item.children.any?
-            html += link_to_function("Select all children...", "select_all_child_jurisdictions()", :class => "hidden select_all" )
+            html += link_to_function("Select all children...", "", :class => "hidden select_all" )
 
             html += jurisdiction_list(form, item.children)+"\n"
           end

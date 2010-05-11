@@ -312,6 +312,10 @@ span.media_list fieldset.list                   {height:245px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 span.media_list #folder_name                    {margin:5px 0px;}
 span.media_list #channel_name                   {margin:5px 0px;}
+span.media_list .withsubfolders .shares input                   {left:0px !important;}
+span.media_list .withsubfolders #toggle_closed                  {top:1px !important; left:18px !important;}
+span.media_list .withsubfolders .with_sub_folder                {margin-left: 15px !important;}
+span.media_list .withsubfolders ul.check_selector li li li label{padding-left:30px !important;}
 span.media_list .document_panel_action,
 span.documents .document_panel_action           {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
 .document_panel_action .load_panel_text         {position:relative;top:-10px;padding-left:2px;}
@@ -345,7 +349,7 @@ ul.documents_toolbar li#move_edit               {background-image: url('images/p
 ul.documents_toolbar li#delete                  {background-image: url('images/page_delete.png'); cursor:pointer;}
 div#deletion div#share                          {overflow: auto;}
 #edit.media_list fieldset ul.check_selector li ul {margin-left: 10px;}
-#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 20px;}
+#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 0px;}
 #edit.media_list fieldset ul.check_selector li ul.folders ul label {margin-left: 0px;}
 #edit.media_list fieldset ul.check_selector li ul.folders input {left: 0px;}
 .invis                                          {display: none;}
