@@ -55,10 +55,8 @@ Background:
     Then I should see a preview of the message
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    Then "bob.smith@example.com" should receive the email:
-      | subject | Moderate Health Alert Test "H1N1 SNS push packs to be delivered tomorrow" |
-    And "leroy@example.com" should receive the email:
-      | subject | Moderate Health Alert Test "H1N1 SNS push packs to be delivered tomorrow" |
+    And the following users should receive the alert email:
+      | People | bob.smith@example.com, leroy@example.com |
 
   Scenario: Sending an alert to only a group with no other audience specified
     Given I am logged in as "john.smith@example.com"
@@ -73,5 +71,5 @@ Background:
     Then I should see a preview of the message
     When I press "Send"
     Then I should see "Successfully sent the alert"
-    Then "bob.smith@example.com" should receive the email:
-      | subject | Moderate Health Alert Test "H1N1 SNS push packs to be delivered tomorrow" |
+    And the following users should receive the alert email:
+      | People | bob.smith@example.com |

@@ -23,7 +23,9 @@ class Audience < ActiveRecord::Base
   named_scope :with_forum, :conditions => "forum_id is not NULL"
   named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 
-  validate :at_least_one_recipient?
+  named_scope :with_user, lambda {|user|
+    { :conditions => [ "users.id = ?", user.id ], :joins => :users}
+  }
 
   def self.by_jurisdictions(jurisdictions)
     jur_ids = jurisdictions.map(&:id).compact.uniq
@@ -61,8 +63,18 @@ class Audience < ActiveRecord::Base
     end
     @recips
   end
+  
+  def copy
+    attrs = self.attributes
+    ["id","updated_at","creatd_at"].each{|item| attrs.delete(item)}
+    a = Audience.new(attrs)
+    jurisdictions.each{|jur| a.jurisdictions << jur}
+    roles.each{|role| a.roles << role}
+    users.each{|user| a.users << user}
+    a
+  end
 
-  private
+  protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
       errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")

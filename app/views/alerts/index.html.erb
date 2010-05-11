@@ -15,12 +15,11 @@
               <%= link_to 'View', alert %>
               <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
               <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>
-              <%= link_to 'Export', formatted_alert_path(alert, :csv) if current_user.alerter? %>
             </span>
             </p>
 
             <p class="meta">
-              <span class="created_at">Posted at <%= alert.created_at.to_s(:standard) %> <%= 'by '+link_to(alert.author.display_name, user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
+              <span class="created_at">Posted at <%= alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %> <%= 'by '+link_to(alert.author.display_name, user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
               <%- if alert.status.blank? || alert.status.downcase != "actual" -%>
                 <span class="status <%= alert.status.downcase %>"><strong>Status:</strong> [<%= alert.status.capitalize %>
                   ]</span>
@@ -29,7 +28,7 @@
               <span class="from_jurisdiction"><strong>From:</strong> <%= h alert.sender %></span>
               <br/>
               <%- if alert.acknowledge? -%>
-                <span class="progress"><strong>Acknowledgments:</strong> <%= alert.acknowledged_percent.round %>%</span>
+                <span class="progress"><strong>Acknowledgments:</strong> <%= (alert.acknowledged_percent * 100).round %>%</span>
               <%- end -%>
             </p>
           </div>
@@ -39,7 +38,15 @@
 
               <p class="brief"><strong>Sensitive:</strong> <%= h alert.sensitive? ? 'Yes' : 'No' %></p>
 
-              <p class="brief"><strong>Acknowledge:</strong> <%= h alert.acknowledge? ? 'Yes' : 'No' %></p>
+              <%- if alert.acknowledge? -%>
+                <%- if alert.has_alert_response_messages? -%>
+                  <p class="brief"><strong>Acknowledge:</strong> Advanced</p>
+                <%- else -%>
+                  <p class="brief"><strong>Acknowledge:</strong> Normal</p>
+                <%- end -%>
+              <%- else -%>
+                <p class="brief"><strong>Acknowledge:</strong> None</p>
+              <%- end -%>
 
               <%- if !alert.original_alert_id.blank? -%>
                 <p class="brief"><strong>Reference ID:</strong> <%= h alert.original_alert.identifier %></p>
@@ -47,34 +54,10 @@
               <div class="message">
                 <%= simple_format h(alert.message) %>
               </div>
-
-              <% unless alert.acknowledged_by_user? || !alert.recipients.include?(current_user) %>
-                <%= acknowledge_alert_button(alert) %>
-              <% end %>
             </div>
             <div class="aside">
               <%- if alert.acknowledge? -%>
-                <h3>Acknowledgments (by jurisdiction)</h3>
-
-                <div class="jur_ackpct">
-                  <% alert.total_jurisdictions.each do |d| %>
-                    <h5 class="jurisdiction"><%= h d.name %></h5>
-
-                    <p class="percentage"><%= alert.acknowledged_percent_for_jurisdiction(d).round %>%</p>
-                  <% end %>
-                </div>
-
-                <h3>Acknowledgments (by device)</h3>
-
-                <div class="dev_ackpct">
-                  <% alert.alert_device_types.each do |d| %>
-                    <div class="<%= h d.device_type.display_name %>">
-                      <h5 class="device_type"><%= h d.device_type.display_name %></h5>
-
-                      <p class="percentage"><%= alert.acknowledged_percent_for_device(d).round %>%</p>
-                    </div>
-                  <% end %>
-                </div>
+                <%= render :partial => "alert_acknowledgements", :locals => {:alert => alert} %>
               <%- end -%>
             </div>
           </div>

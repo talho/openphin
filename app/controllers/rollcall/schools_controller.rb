@@ -15,6 +15,7 @@ class Rollcall::SchoolsController < ApplicationController
 
   def show
     schools = current_user.schools(:order => "display_name")
+    
     @school = School.find(params[:id])
 
     if @school

@@ -41,7 +41,7 @@
             mjensen@cdc.gov</ns1:contact>
             <ns1:parameter>
               <ns1:valueName>Acknowledge</ns1:valueName>
-              <ns1:value>No</ns1:value>
+              <ns1:value>None</ns1:value>
             </ns1:parameter>
             <ns1:parameter>
               <ns1:valueName>DeliveryTime</ns1:valueName>

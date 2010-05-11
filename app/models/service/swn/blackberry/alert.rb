@@ -62,7 +62,7 @@ class Service::SWN::Blackberry::Alert < Service::SWN::Blackberry::Base
   
   def add_sender(xml)
     xml.swn(:sender) do
-      xml.swn(:introName, alert.author.display_name)
+      xml.swn(:introName, alert.author.display_name) unless alert.author.nil?
       xml.swn(:introOrganization, alert.from_organization) if !alert.from_organization.blank?
       xml.swn(:introOrganization, alert.from_jurisdiction) if !alert.from_jurisdiction.blank?
       xml.swn(:phone, alert.caller_id) if !alert.caller_id.blank?
@@ -87,7 +87,7 @@ class Service::SWN::Blackberry::Alert < Service::SWN::Blackberry::Base
             xml.swn(:contactPnts) do
               xml.swn(:contactPntInfo, :type => "Text") do
                 xml.swn(:id, user.id)
-                xml.swn(:label, "BlackBerry PIN Device")
+                xml.swn(:label, "BlackBerryPINDevice")
                 xml.swn(:address, "#{blackberry_device.blackberry}@blackberry.sendwordnow.com")
               end
             end

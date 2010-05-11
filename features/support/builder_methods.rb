@@ -38,6 +38,17 @@ module FeatureHelpers
             attributes['delivery_time']=60
           when /15 minutes?/i
             attributes['delivery_time']=15
+          else
+            raise "You picked an invalid delivery time"
+        end
+      end
+      
+      attributes.each do |key, value|
+        if key =~ /alert_response_/
+          response = key.split("_").last
+          attributes["call_down_messages"] = {} if attributes["call_down_messages"].nil?
+          attributes["call_down_messages"][response] = value
+          attributes.delete(key)
         end
       end
 

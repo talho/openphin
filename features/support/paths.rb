@@ -38,6 +38,8 @@ module NavigationHelpers
         edit_user_profile_path(current_user)
       when /the user profile page$/i
         user_profile_path(User.find_by_email!(arg))
+      when /the user edit profile page$/i
+        edit_user_profile_path(User.find_by_email!(arg))
       when /^the user account roles page$/i
         new_role_request_path
       when /cancel the alert/
@@ -94,6 +96,9 @@ module NavigationHelpers
         forum_topics_path(Forum.find_by_name!($1))
       when /the "(.*)" topic page for Forum "(.*)"$/i
         forum_topic_path(Forum.find_by_name!($2),Topic.find_by_name!($1))
+      when /the invitation reports page for "(.*)"$/i
+        invitation = Invitation.find_by_name($1)
+        reports_admin_invitation_path(invitation)
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end

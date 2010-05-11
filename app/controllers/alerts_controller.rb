@@ -16,10 +16,14 @@ class AlertsController < ApplicationController
     @alert = present Alert.find(params[:id])
     respond_to do |format|
       format.html
+      format.pdf do
+        prawnto :inline => false
+        alerter_required
+      end
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
       format.csv do
         alerter_required
-        @filename = "alert-#{@alert.to_param}.csv"
+        @filename = "alert-#{@alert.identifier}.csv"
         @output_encoding = 'UTF-8'
       end
     end
@@ -28,12 +32,25 @@ class AlertsController < ApplicationController
 
   def new
     @alert = present Alert.new_with_defaults
+    @acknowledge_options = Alert::Acknowledgement
   end
 
   def create
+    remove_blank_call_downs
+    set_acknowledge
     @alert = present current_user.alerts.build(params[:alert])
+    @acknowledge = if @alert.acknowledge && !(@alert.call_down_messages.blank? || @alert.call_down_messages.empty?)
+      'Advanced'
+    elsif @alert.acknowledge
+      'Normal'
+    else
+      'None'
+    end
+    @acknowledge_options = Alert::Acknowledgement    
+    
     if params[:send]
       if @alert.valid?
+        params[:alert][:author_id]=current_user.id
         @alert.save
         @alert.integrate_voice
         @alert.batch_deliver
@@ -55,6 +72,7 @@ class AlertsController < ApplicationController
 
   def edit
     alert = Alert.find params[:id]
+    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
     # TODO : Remove when devices refactored
     @device_types = []
     alert.device_types.each do |device_type|
@@ -93,7 +111,8 @@ class AlertsController < ApplicationController
       redirect_to alerts_path
       return
     end
-
+    reduce_call_down_messages_from_responses(original_alert)
+    set_acknowledge
     @alert = if params[:_action].downcase == 'cancel'
       @cancel = true
       original_alert.build_cancellation(params[:alert])
@@ -101,6 +120,12 @@ class AlertsController < ApplicationController
       @update = true
       original_alert.build_update(params[:alert])
     end
+     @acknowledge = if @alert.acknowledge
+       'Normal'
+     else
+       'None'
+     end
+     @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
     if params[:send]
       @alert.save
       if @alert.valid?
@@ -128,10 +153,11 @@ class AlertsController < ApplicationController
       flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
       If you believe this is in error, please contact support@#{DOMAIN}."
     else
-      if params[:email].blank?
-        alert_attempt.acknowledge!
+      device = "Device::EmailDevice" unless params[:email].blank?
+      if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
+        alert_attempt.acknowledge! device
       else
-        alert_attempt.acknowledge! "Device::EmailDevice"
+        alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
       end
       expire_log_entry(alert_attempt.alert)
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
@@ -200,4 +226,33 @@ private
     end
   end
 
+  def set_acknowledge
+    if params[:alert][:acknowledge] == 'Advanced' || params[:alert][:acknowledge] == 'Normal'
+      params[:alert][:acknowledge] = true
+    else
+      params[:alert][:acknowledge] = false
+    end
+  end
+
+  def remove_blank_call_downs
+    call_down = params[:alert][:call_down_messages].sort{|a,b| b[0]<=>a[0]}
+    call_down.each do |key, value|
+      params[:alert][:call_down_messages].delete(key) if value.blank?
+      break unless value.blank?
+    end
+  end
+  
+  def reduce_call_down_messages_from_responses(original_alert)
+    if params[:alert][:call_down_messages].nil? && original_alert.has_alert_response_messages?
+      params[:alert][:call_down_messages] = {}
+      
+      msgs = original_alert.call_down_messages.select{|key, value| params[:alert][:responders].include?(key)}
+      
+      msgs.each do |key, value|
+        params[:alert][:call_down_messages][key] = value
+      end
+    end
+    params[:alert].delete("responders")
+  end
+  
 end

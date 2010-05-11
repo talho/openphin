@@ -21,9 +21,9 @@ task :production do
 end
 
 task :staging do
-	role :app, "openphin.texashan.org"
-	role :web, "openphin.texashan.org"
-	role :db,  "openphin.texashan.org", :primary => true
+	role :app, "staging.txphin.org"
+	role :web, "staging.txphin.org"
+	role :db,  "staging.txphin.org", :primary => true
 end
 
 set :scm, :git
@@ -56,12 +56,14 @@ namespace :deploy do
     run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
+    run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
     run "ln -fs #{shared_path}/rollcall #{release_path}/tmp/rollcall"
     run "ln -fs #{shared_path}/sphinx.yml #{release_path}/config/sphinx.yml"
     run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
+    run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     if rails_env == 'test'|| rails_env == 'development' || rails_env = "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")

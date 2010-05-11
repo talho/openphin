@@ -24,7 +24,8 @@ Feature: Alert Reports
     And I am logged in as "john.smith@example.com"
     When I am on the alert log
     Then I should see an alert titled "Grant Sample"
-    When I follow "Export"
+    When I follow "View"
+    And I follow "Export Contacted Users (CSV)"
     Then I should see the csv report for the alert titled "Grant Sample"
 
   Scenario: A non-alerter cannot view a report of an alert

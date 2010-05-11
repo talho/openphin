@@ -60,7 +60,7 @@
 						<ns1:instruction>Please distribute to health providers and officials within your jurisdiction as deemed appropriate</ns1:instruction>
 						<ns1:parameter>
 							<ns1:valueName>Acknowledge</ns1:valueName>
-							<ns1:value>Yes</ns1:value>
+							<ns1:value>Normal</ns1:value>
 						</ns1:parameter>
 						<ns1:parameter>
 							<ns1:valueName>DeliveryTime</ns1:valueName>

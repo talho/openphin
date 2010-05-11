@@ -17,9 +17,9 @@
 #  salt               :string(128)
 #  token              :string(128)
 #  token_expires_at   :datetime
-#  email_confirmed    :boolean(1)      not null
+#  email_confirmed    :boolean(1)      default(FALSE), not null
 #  phone              :string(255)
-#  delta              :boolean(1)
+#  delta              :boolean(1)      default(TRUE), not null
 #  credentials        :text
 #  bio                :text
 #  experience         :text
@@ -29,6 +29,12 @@
 #  public             :boolean(1)
 #  photo_file_size    :integer(4)
 #  photo_updated_at   :datetime
+#  deleted_at         :datetime
+#  deleted_by         :string(255)
+#  deleted_from       :string(24)
+#  home_phone         :string(255)
+#  mobile_phone       :string(255)
+#  fax                :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -46,9 +52,9 @@ class User < ActiveRecord::Base
   
   has_many :role_memberships, :include => :jurisdiction, :dependent => :delete_all
   has_many :role_requests, :dependent => :delete_all
-  accepts_nested_attributes_for :role_requests
+  has_many :organization_membership_requests, :dependent => :delete_all
+  accepts_nested_attributes_for :role_requests, :organization_membership_requests
 
-  has_many :organizations, :primary_key => :email, :foreign_key => 'contact_email'
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
@@ -57,7 +63,6 @@ class User < ActiveRecord::Base
   has_many :deliveries,    :through => :alert_attempts
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
-  has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :documents do
     def inbox
@@ -87,7 +92,10 @@ class User < ActiveRecord::Base
   validates_associated :role_requests
   validates_associated :role_memberships
 
-  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, :organization_ids, :role_requests_attributes, :credentials, :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at
+  attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
+    :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
+    :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
+    :home_phone, :mobile_phone, :phone, :fax
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
 	
@@ -116,6 +124,10 @@ class User < ActiveRecord::Base
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
   }
+  
+  named_scope :with_user?, lambda {|user|
+    { :conditions => ["users.id = ?", user.id]}
+  }
 
 #  named_scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
@@ -124,14 +136,18 @@ class User < ActiveRecord::Base
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
 
   # thinking sphinx stuff
+  # Should be able to search by first name, last name, display name, email address, phone device, jurisdiction, role, and job title.
   define_index do
-    indexes first_name, :sortable => true
-    indexes last_name, :sortable => true
-    indexes display_name
-    indexes title
-    indexes email
-  
-    set_property :delta => :delayed
+    indexes [first_name,last_name,display_name], :as=>:name, :sortable=>true
+    indexes first_name,     :sortable => true
+    indexes last_name,      :sortable => true
+    indexes display_name,   :sortable => true
+    indexes email,          :sortable => true
+    indexes phone,          :sortable => true
+    indexes title,          :sortable => true
+    has roles(:id),         :as => :role_ids
+    has jurisdictions(:id), :as => :jurisdiction_ids
+    set_property :delta =>  :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
   
@@ -149,8 +165,13 @@ class User < ActiveRecord::Base
   def recent_absentee_reports
     schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
   end
-	def visible_groups
+
+  def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
+  end
+
+  def organizations
+    Organization.with_user(self)
   end
 
   def self.assign_role(role, jurisdiction, users)

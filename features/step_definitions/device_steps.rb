@@ -3,18 +3,22 @@ Given /^I have an? (.*) device$/ do |device_type|
 
 end
 
-
-When 'I acknowledge the phone message for "$title"' do |title|
+When /^I acknowledge the phone message for "([^\"]*)"$/ do |title|
   a = Alert.find_by_title(title).alert_attempts.first
   a.acknowledged_at = Time.zone.now
   a.save!
 end
 
+When /^I acknowledge the phone message for "([^\"]*)" with "([^\"]*)"$/ do |title, call_down_response|
+  a = Alert.find_by_title(title).alert_attempts.first
+  a.acknowledged_at = Time.zone.now
+  a.call_down_response = a.alert.call_down_messages.index(call_down_response).to_i
+  a.save!
+end
+
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
-  a.acknowledged_at = Time.zone.now
-  a.acknowledged_alert_device_type = AlertDeviceType.find_by_device("Device::PhoneDevice")
-  a.save!
+  a.acknowledge! "Device::PhoneDevice"
 end
 
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|
@@ -88,6 +92,10 @@ Then /^"([^\"]*)" should receive the email:$/ do |email_address, table|
   find_email(email_address, table).should_not be_nil
 end
 
+Then /^"([^\"]*)" should receive the email via SWN:$/ do |email_address, table|
+  find_email_via_SWN(email_address, table).should_not be_nil
+end
+
 Then /^"([^\"]*)" should receive the email with an alert attachment:$/ do |email_address, table|
   email = find_email(email_address, table)
   email.attachments.should_not be_nil
@@ -110,8 +118,34 @@ Then /^the following users should receive the email:$/ do |table|
   end
 end
 
+Then /^the following users should receive the alert email:$/ do |table|
+  When "delayed jobs are processed"
+
+  headers = table.headers
+  recipients = if headers.first == "roles"
+    jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
+    jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+    jurisdiction.users.with_role(role_name)
+  end
+
+  recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
+
+  email = YAML.load(IO.read(RAILS_ROOT+"/config/email.yml"))[RAILS_ENV]
+  recipients.each do |user|
+    if email["alert"] == "SWN"
+      Then %Q{"#{user.email}" should receive the email via SWN:}, table
+    else
+      Then %Q{"#{user.email}" should receive the email:}, table
+    end
+  end
+end
+
 Then '"$email" should not receive an email' do |email|
   find_email(email).should be_nil
+end
+
+Then '"$email" should not receive an email via SWN' do |email|
+  find_email_via_SWN(email).should be_nil
 end
 
 Then '"$email" should not receive an email with the subject "$subject"' do |email, subject|
@@ -120,6 +154,8 @@ Then '"$email" should not receive an email with the subject "$subject"' do |emai
 end
 
 Then "the following users should not receive any emails" do |table|
+  When "delayed jobs are processed"
+
   headers = table.headers
   recipients = if headers.first == "roles"
     jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
@@ -131,6 +167,23 @@ Then "the following users should not receive any emails" do |table|
 
   recipients.each do |user|
     Then %Q{"#{user.email}" should not receive an email}
+  end
+end
+
+Then "the following users should not receive any alert emails" do |table|
+  When "delayed jobs are processed"
+  
+  headers = table.headers
+  recipients = if headers.first == "roles"
+    jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
+    jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
+    jurisdiction.users.with_role(role_name)
+  elsif headers.first == "emails"
+    headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
+  end
+
+  recipients.each do |user|
+    Then %Q{"#{user.email}" should not receive an email via SWN}
   end
 end
 
@@ -164,6 +217,7 @@ Then /^the following phone calls should be made:$/ do |table|
         message = xml.search( "//swn:notification/swn:body",
                               {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
         message.include?(row["message"]) && phone.include?(row["phone"])
+        
         #SWN doesn't support recorded attachments
 #      else
 #        message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
@@ -171,6 +225,39 @@ Then /^the following phone calls should be made:$/ do |table|
 #        recording = Base64.encode64(IO.read(Alert.find_by_message_recording_file_name(row["recording"]).message_recording.path))
 #        message == recording && phone == row["phone"]
       end
+    end
+    call.should_not be_nil
+
+    unless row["call_down"].blank?
+      call = Service::Phone.deliveries.detect do |phone_call|
+        xml = Nokogiri::XML(phone_call.body)
+        call_down = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                                {"swn" => "http://www.sendwordnow.com/notification"})).children.map(&:inner_text).flatten
+        call_down.include?(row["call_down"])
+      end
+      call.should_not be_nil
+    end
+  end
+end
+
+Then /^the phone call should have (\d+) calldowns$/ do |number|
+  Service::Phone.deliveries.detect do |phone_call|
+    xml = Nokogiri::XML(phone_call.body)
+    call_down_size = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
+                            {"swn" => "http://www.sendwordnow.com/notification"})).children.map{|child| child unless child.inner_text.strip.blank?}.compact.length
+    call_down_size.should == number.to_i
+  end
+end
+
+Then /^the following Emails should be broadcasted:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::Email.deliveries.detect do |email_call|
+      xml = Nokogiri::XML(email_call.body)
+      email = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Email"]/swn:address',
+                          {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
+      message = xml.search( "//swn:notification/swn:body",
+                            {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
+      !message.map{|msg| msg.match(row["message"])}.compact.empty? && email.include?(row["email"])
     end
     call.should_not be_nil
   end

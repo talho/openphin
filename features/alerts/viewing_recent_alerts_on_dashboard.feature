@@ -40,7 +40,8 @@ Feature: Viewing recent alerts on dashboard
       | acknowledge | Yes      |
 
     Given 19 more alerts are sent to me
-    When I go to the han page
+    When delayed jobs are processed
+    And I go to the han page
     Then I should see 10 alerts
     When I follow "Next"
     Then I should see 10 alerts
@@ -52,7 +53,8 @@ Feature: Viewing recent alerts on dashboard
       | acknowledge | Yes      |
 
     Given 1 more alert is sent to me
-    When I go to the han page
+    When delayed jobs are processed
+    And I go to the han page
     Then I should see 10 alerts
     And I should not see an alert titled "rolling pig pox"
     When I follow "Next"

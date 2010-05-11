@@ -39,6 +39,7 @@
 #  distribution_id                :string(255)
 #  reference                      :string(255)
 #  sender_id                      :string(255)
+#  call_down_messages             :text
 #
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')

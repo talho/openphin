@@ -4,7 +4,12 @@ class AlertMailer < ActionMailer::Base
     recipients "#{user.name} <#{device.options[:email_address]}>"
     # TODO: should this show their job title instead of their role?
     # If role, which one?
-    from DO_NOT_REPLY
+    unless alert.author.nil? || alert.author.display_name.strip.blank?
+      from "\"#{alert.author.display_name}\" <#{alert.author.email}>"
+      headers "return-path" => alert.author.email
+    else
+      from DO_NOT_REPLY
+    end
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
     subject "#{severity} Health Alert#{status} \"#{alert.title}\"#{alert.acknowledge? ? " *Acknowledgment required*" : ""}"
@@ -21,7 +26,12 @@ class AlertMailer < ActionMailer::Base
     bcc users
     # TODO: should this show their job title instead of their role?
     # If role, which one?
-    from DO_NOT_REPLY
+    unless alert.author.nil? || alert.author.display_name.strip.blank?
+      from "\"#{alert.author.display_name}\" <#{alert.author.email}>"
+      headers "return-path" => alert.author.email
+    else
+      from DO_NOT_REPLY
+    end
     severity = "#{alert.severity}"
     status = " #{alert.status}" if alert.status.downcase != "actual"
     subject "#{severity} Health Alert#{status} \"#{alert.title}\"#{alert.acknowledge? ? " *Acknowledgment required*" : ""}"

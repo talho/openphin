@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :tutorials
+
   map.resources :channels, :has_many => :subscriptions,
     :member => {:unsubscribe => :delete}
 
@@ -60,7 +62,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organization_assignments, :controller => "admin/organization_assignments"
   map.resources :admin_pending_requests, :controller => "admin/pending_requests"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
+  map.resources :admin_invitations, :controller => "admin/invitations", :member => [:download]
+  map.reports_admin_invitation "admin_invitations/:id/reports.:format", :controller => "admin/invitations", :action => "reports", :method => [:get,:put]
   map.resources :admin_organization_requests, :member => [:approve, :deny], :controller => "admin/organization_requests"
+  map.resources :admin_organization_membership_requests, :member => [:approve, :deny], :controller => "admin/organization_membership_requests"
+  map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete
   #map.approve_admin_organization "/admin_organizations/:id/approve", :controller => "admin/organizations", :action => "approve"
   #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
   map.resources :admin_users, :controller => "admin/users"
@@ -71,7 +77,7 @@ ActionController::Routing::Routes.draw do |map|
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
-  map.email_acknowledge_alert "alerts/:id/emailack", :controller => "alerts", :action => "acknowledge", :email => "1"
+  map.email_acknowledge_alert "alerts/:id/emailack/:call_down_response", :controller => "alerts", :action => "acknowledge", :email => "1", :call_down_response => "0"
   map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "token_acknowledge"
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
@@ -82,7 +88,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_groups, :controller => "admin/groups"
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
-  map.resource :search
+  map.resource :search, :member => {:show_advanced => [:get, :put]}
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"

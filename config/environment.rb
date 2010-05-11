@@ -1,11 +1,12 @@
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 require File.join(File.dirname(__FILE__), 'initializers', 'utilities')
+
 
 HOST = "www.txphin.org"
 DOMAIN = "txphin.org"
@@ -21,7 +22,6 @@ Rails::Initializer.run do |config|
     #{Rails.root}/app/observers
     #{Rails.root}/app/presenters
     #{Rails.root}/app/xml
-    #{Rails.root}/app/presenters
   ) 
 
   # Specify gems that this application depends on and have them installed with rake gems:install
@@ -40,13 +40,13 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
-  config.active_record.observers = :role_request_observer
+  config.active_record.observers = :role_request_observer, :organization_membership_request_observer
 
   # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
   # Run "rake -D time" for a list of tasks for finding time zone names.
   config.time_zone = 'Central Time (US & Canada)'
   
-  config.action_mailer.default_url_options = { :host => HOST }  
+  config.action_mailer.default_url_options = { :host => HOST }
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
@@ -77,9 +77,11 @@ Rails::Initializer.run do |config|
   config.gem 'validatable', :version => '1.6.7'
   config.gem 'bullet', :source => 'http://gemcutter.org'
   config.gem 'ruby-growl', :source => 'http://gemcutter.org'
-  config.gem "sinatra"
+  config.gem "sinatra", :source => "http://gemcutter.org"
   config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
   config.gem "RedCloth"
+  config.gem "prawn", :version => "=0.8.4", :source => "http://gemcutter.org"
+  #config.gem "csv_builder", :version => "=1.1.7", :source => "http://gemcutter.org"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 

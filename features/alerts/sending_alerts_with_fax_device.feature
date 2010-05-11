@@ -32,7 +32,7 @@ Feature: Sending alerts to faxes
       | Message | Chicken pox outbreak |
       | Severity | Moderate |
       | Status | Actual |
-      | Acknowledge | <unchecked> |
+      | Acknowledge | None |
       | Communication methods | Fax |
       | Sensitive | <unchecked> |
       

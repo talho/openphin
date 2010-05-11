@@ -28,7 +28,7 @@ Feature: Canceling an alert
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
-      | Acknowledge   | <unchecked>         |
+      | Acknowledge   | None         |
       | Communication methods | E-mail      |
       | Delivery Time | 72 hours            |
 
@@ -52,7 +52,7 @@ Feature: Canceling an alert
     Then I should see "Successfully sent the alert"
     And I should be on the alert log
     And I should see an alert titled "[Cancel] - Flying Monkey Disease"
-    And the following users should receive the email:
+    And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Moderate Health Alert "[Cancel] - Flying Monkey Disease" |
       | body contains | Title: [Cancel] - Flying Monkey Disease |
@@ -72,7 +72,7 @@ Feature: Canceling an alert
         | Message       | For more details, keep on reading... |
         | Severity      | Moderate            |
         | Status        | Actual              |
-        | Acknowledge   | <unchecked>         |
+        | Acknowledge   | None         |
         | Communication methods | E-mail      |
         | Delivery Time | 72 hours            |
 
@@ -103,7 +103,7 @@ Feature: Canceling an alert
       Then I should see "Successfully sent the alert"
       And I should be on the alert log
       And I should see an alert titled "[Cancel] - Flying Monkey Disease"
-      And the following users should receive the email:
+      And the following users should receive the alert email:
         | People        | brian.simms@example.com, ed.mcguyver@example.com |
         | subject       | [Cancel] - Flying Monkey Disease |
         | body contains | Title: [Cancel] - Flying Monkey Disease |
@@ -123,7 +123,7 @@ Feature: Canceling an alert
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
-      | Acknowledge   | <unchecked>         |
+      | Acknowledge   | None         |
       | Communication methods | E-mail      |
       | Delivery Time | 60 minutes          |
 
