@@ -7,12 +7,14 @@
 	    $('a.advance_search_user').toggle ( 
 	      function() {
 	        $(this.parentNode.nextSibling).slideDown('slow');
+		    $( 'div.quick_search_user' ).hide();
 	        $(this).html('Quick Search');
 	      },
 	      function() {
 	        $(this.parentNode.nextSibling).slideUp('slow');
 			$('div.advance_search_user option').removeAttr('selected');
 			$('div.advance_search_user input').val('');
+		    $( 'div.quick_search_user' ).show();
 	        $(this).html('Advance Search');
 	      }
 	    )
