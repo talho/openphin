@@ -39,7 +39,9 @@
 	// expand jurisdiction parent of the audience form if a child is selected
 	$( document ) . ready ( 
 	  function() {
-		$('.form_audience ul.check_selector>li>ul').find('li>input:checked:first').parent().parent().toggle();
+		$('.form_audience ul.check_selector>li>ul>li>ul').find('li>ul>li>input:checked').parent().parent().toggle();
+	    $('.form_audience ul.check_selector>li>ul>li>ul').find('li>ul>li>input:checked').parent().parent().parent().find('a:first').css('display', 'inline');
+	    $('.form_audience ul.check_selector>li>ul>li>ul').find('li>ul>li>input:checked').parent().parent().parent().find('a.toggle.closed').removeClass('closed');
 	  }
 	)
 

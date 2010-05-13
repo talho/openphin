@@ -35,10 +35,10 @@ Feature: Updating an alert
     Then I should see an alert titled "Flying Monkey Disease"
     
     When I click "Update" on "Flying Monkey Disease"
-    Then I should not see "Jurisdictions"
-    And I should not see "Roles"
+    Then I should see "Create an Alert Update"
+    And I should not see "Jurisdictions"
+    And I should not see "Limit Roles"
     And I should not see "Organizations"
-    And I should not see "People"
     
     When I make changes to the alert form with:
       | Message    | Flying monkey disease contagion is more widespread |
@@ -93,10 +93,10 @@ Feature: Updating an alert
     Then I should see an alert titled "Flying Monkey Disease"
 
     When I click "Update" on "Flying Monkey Disease"
-    Then I should not see "Jurisdictions"
-    And I should not see "Roles"
+    Then I should see "Create an Alert Update"
+    And I should not see "Jurisdictions"
+    And I should not see "Limit Roles"
     And I should not see "Organizations"
-    And I should not see "People"
 
     When I make changes to the alert form with:
       | Message    | Flying monkey disease contagion is more widespread |

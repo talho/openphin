@@ -45,7 +45,12 @@ class Forum < ActiveRecord::Base
   end
 
   def audience_attributes=(attributes)
-    build_audience(attributes)
+    unless audience
+      build_audience(attributes)
+    else
+      attributes.delete(:id)
+      audience.update_attributes(attributes)
+    end
   end
       
   def self.find_for(id,user)
@@ -85,7 +90,7 @@ class Forum < ActiveRecord::Base
     unless (audience = result.audience)
       forum = result
     else
-      forum = ( audience.owner == user || audience.recipients(:include_public=>false).include?(user) ) ? result : nil
+      forum = ( user.is_super_admin? || audience.recipients(:include_public=>false).include?(user) ) ? result : nil
     end
   end
   

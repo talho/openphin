@@ -32,6 +32,7 @@ class ForumsController < ApplicationController
 
     def update
       @forum = Forum.find_for(params[:id],current_user)
+      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
       if @forum.update_attributes(params[:forum])
         if params[:forum][:topic_attributes]
         flash[:notice] = "Topic was successfully created."
