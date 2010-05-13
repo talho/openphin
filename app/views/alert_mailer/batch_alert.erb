@@ -2,36 +2,36 @@ This email has been generated from the automated alerting system.  Please do not
 
 <%- if @alert.sensitive? -%>
 Alert ID: <%= @alert.identifier %>
-  <%- if !@alert.original_alert_id.blank? -%>
+<%- if !@alert.original_alert_id.blank? -%>
 Reference: <%= @alert.original_alert_id %>
-  <%- end %>
+<%- end %>
 
 Sensitive: use secure means of retrieval
 
-Please visit <%= url_for(:action => "show", :controller => "alerts", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https") %> to securely view this alert.
+Please visit <%= url_for(:action => "hud", :controller => "dashboard", :id => @alert.id, :escape => false, :only_path => false, :protocol => "https") %> to securely view this alert.
 
 <%- else -%>
-  <%- if @alert.acknowledge? -%>
-    <%- if @alert.has_alert_response_messages? -%>
-      <%- @alert.call_down_messages.each do |key, value| -%>
-        <%= value %>, please click the following link <%= email_acknowledge_alert_url(@alert, key) %>
-      <%- end -%>
-    <%- else -%>
-    Please click <%= email_acknowledge_alert_url(@alert) %> and log in to acknowledge this alert
+
+<%= @alert.message %>
+
+<%- if @alert.acknowledge? -%>
+  <%- if @alert.has_alert_response_messages? -%>
+    <%- @alert.call_down_messages.each do |key, value| -%>
+      <%= value %>, please click the following link <%= email_acknowledge_alert_url(@alert, key) %>
     <%- end -%>
+  <%- else -%>
+  Please click <%= email_acknowledge_alert_url(@alert) %> and log in to acknowledge this alert
   <%- end -%>
+<%- end -%>
 
 Title: <%= @alert.title %>
-
 Alert ID: <%= @alert.identifier %>
-  <%- if !@alert.original_alert_id.blank? -%>
+<%- if !@alert.original_alert_id.blank? -%>
 Reference: <%= @alert.original_alert_id %>
-  <%- end %>
+<%- end -%>
 Agency: <%= @alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name %>
-  <%- if !@alert.author.nil? -%>
+<%- if !@alert.author.nil? -%>
 Sender: <%= @alert.author.display_name %>
-  <%- end -%>
+<%- end -%>
 Time Sent: <%= @alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>
-
-  <%= @alert.message %>
 <%- end -%>

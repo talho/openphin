@@ -86,10 +86,12 @@ div.help a                                    {color:#fff}
 #calendar_panel                               {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #documents_panel                              {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
-																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
-#documents_progress_panel                     {padding: 5px 5px 0 5px; filter: alpha(opacity=60); opacity:0.6; z-index: 10; display: none;
-																							 background: #ffffd6; position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
-#documents_progress_panel div                 {margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 10em;}
+																							 background: #eeeeee; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
+#documents_progress_panel                     {padding: 5px 5px 0 5px; z-index: 10; display: none;
+																							 position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
+#documents_progress_panel div                 {background: url('../images/Ajax-loader.gif') 5px 6px no-repeat #fff;padding-left:45px;margin-left: auto;
+                                               margin-right: auto; position: relative; top: 50%; width: 120px; height: 35px;border:1px solid;padding-top:8px;}
+
 #chat_panel                                   {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							 background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #links_panel                                  {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
@@ -294,20 +296,44 @@ span.files                                      {float: left; border-left: mediu
 #span.files li                                  {position: relative; list-style: none;}
 fieldset.folders ul.check_selector              {overflow: auto;}
 
-span.container span#edit                        {float: left;}
-span.container span.documents                   {float: left; width: 200px; display: block; height: 250px; position: relative;}
-span.media_list div#new_folder                  {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
-span.media_list div#new_share                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
-span.documents div.upload_document              {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
-span.documents div#new_folder                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #FFFFD6; border: 2px solid black; border-bottom: none;}
-span.documents div#contents                     {height: 204px; overflow: auto;}
-span.media_list fieldset.list                   {height:230px; float:left;}
+span.container span#edit                        {float: left;position:relative;left:15px;}
+span.container span.documents                   {float: left; width: 200px; display: block; height: 250px; position: relative; left:10px;}
+span.media_list div#new_folder                  {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.media_list div#new_share                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.documents div.upload_document              {display: none; position: absolute; bottom: 30px; z-index: 1; width: 230px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.documents div#new_folder                   {display: none; position: absolute; bottom: 30px; z-index: 1; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.documents div#contents                     {height: 171px; overflow: auto; border:1px solid #D9D9D9;margin-top:20px;padding:5px}
+span.documents #document_file                   {margin:5px 0px;}
+span.documents #folder_name                     {margin:5px 0px;}
+span.media_list h4.panel_h,
+span.documents h4.panel_h                       {position: relative; top: 8px;}
+span.media_list ul.check_selector               {top:36px !important; padding:5px !important;}
+span.media_list fieldset.list                   {height:245px; float:left;}
 span.media_list fieldset.list ul.check_selector {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
-ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 10px; left: 20px;}
-ul.media_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
-ul.documents li                                 {list-style-type: none;}
+span.media_list #folder_name                    {margin:5px 0px;}
+span.media_list #channel_name                   {margin:5px 0px;}
+span.media_list .withsubfolders .shares input                   {left:0px !important;}
+span.media_list .withsubfolders #toggle_closed                  {top:1px !important; left:18px !important;}
+span.media_list .withsubfolders .with_sub_folder                {margin-left: 15px !important;}
+span.media_list .withsubfolders ul.check_selector li li li label{padding-left:30px !important;}
+span.media_list .document_panel_action,
+span.documents .document_panel_action           {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
+.document_panel_action .load_panel_text         {position:relative;top:-10px;padding-left:2px;}
+.document_panel_action #channel_submit          {margin-top:20px;}
+.document_panel_action #share                   {font-size:11px;margin-top:15px;}
+.document_panel_action #share h2                {margin-bottom:10px;}
+.document_panel_action #share ul                {margin-left: 5px !important;}
+.document_panel_action #close                   {width:16px; height: 16px; background: url('images/closeButton-Hover.png') 2px 2px no-repeat;text-indent:-1000px;padding:2px;border:none !important;color:#eeeeee;}
+.document_panel_action #close:hover             {background: url('images/closeButton-Active.png') 2px 2px no-repeat;}
+span.media_list .maininput,
+span.documents .maininput                       {background-color:#eeeeee;}
+ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 15px; left: 12px;}
+ul.media_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px; margin:3px;}
+ul.documents                                    {white-space:nowrap;}
+ul.documents li                                 {list-style-type: none; margin:2px 0px;}
+ul.documents li.document label                  {font-weight:normal !important;font-size:11px;}
 ul.documents_toolbar                            {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
-ul.documents_toolbar li                         {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;}
+ul.documents_toolbar li                         {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;margin:3px;}
 ul.media_toolbar li#new_folder                  {background-image: url('images/folder_add.png'); cursor:pointer;}
 ul.media_toolbar li#new_share                   {background-image: url('images/group_add.png'); cursor:pointer;}
 ul.media_toolbar li#move_edit                   {background-color: blue; cursor:pointer;}
@@ -323,10 +349,9 @@ ul.documents_toolbar li#move_edit               {background-image: url('images/p
 ul.documents_toolbar li#delete                  {background-image: url('images/page_delete.png'); cursor:pointer;}
 div#deletion div#share                          {overflow: auto;}
 #edit.media_list fieldset ul.check_selector li ul {margin-left: 10px;}
-#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 20px;}
+#edit.media_list fieldset ul.check_selector li ul.folders label {margin-left: 0px;}
 #edit.media_list fieldset ul.check_selector li ul.folders ul label {margin-left: 0px;}
-#edit.media_list fieldset ul.check_selector li ul input {left: 0px;}
-#edit.media_list fieldset ul.check_selector li li li li label  {padding-left:42px;}
+#edit.media_list fieldset ul.check_selector li ul.folders input {left: 0px;}
 .invis                                          {display: none;}
 
 #admin_user_profile                             {position: relative; float: left; width: 300px;}
@@ -399,4 +424,6 @@ ul#invitees-list li       {list-style:none outside none;}
 .pagination{margin-bottom: 10px;}
 
 /*#alert_not_cross_jurisdictional{width:20px !important; float:left; position:relative; top:2px;}   */
->>>>>>> master
+#tooltip{position:absolute; padding:5px; background: #fff; border: 1px solid #666;}
+
+.media_list legend{position: relative; top: -5px;}

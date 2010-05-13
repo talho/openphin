@@ -5,7 +5,7 @@ class RollcallDataImporter
     Dir.ensure_exists(File.join(pickup_dir, "archive"))
 
     if File.exist?(pickup_dir)
-      Dir[File.join(pickup_dir, "Attendance_*")].each do |file|
+      Dir[File.join(pickup_dir, "H1N1_*")].each do |file|
         ROLLCALL_LOGGER.warn("Opening file #{file}")
         import=File.open(file, "r")
         data=import.read.split("\n")

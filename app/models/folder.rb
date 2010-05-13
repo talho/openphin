@@ -15,7 +15,8 @@
 class Folder < ActiveRecord::Base
   belongs_to :user
   has_many :documents, :dependent => :destroy
-  
+  validates_length_of :name, :in => 1..32, :allow_blank => false, :message => "Folder name cannot exceed 32 characters in length."
+
   acts_as_nested_set :scope => :user_id
   
   def to_s

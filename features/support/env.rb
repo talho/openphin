@@ -98,5 +98,21 @@ Spork.each_run do
     ts.build
     ts.controller.index
   end
+
+  # http://www.brynary.com/2009/2/3/cucumber-step-definition-tip-stubbing-time  
+  require "spec/mocks"
+
+  Before do
+    $rspec_mocks ||= Spec::Mocks::Space.new
+  end
+
+  After do
+    begin
+      $rspec_mocks.verify_all
+    ensure
+      $rspec_mocks.reset_all
+    end
+  end
+  
 end
 

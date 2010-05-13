@@ -55,10 +55,11 @@ class Audience < ActiveRecord::Base
         memberships.map(&:user_id)
       end.flatten.uniq
       user_ids_for_delivery &= roles.map(&:user_ids).flatten + Role.admin.users.map(&:id).flatten unless roles.empty?
+      user_ids_for_delivery += roles.map(&:user_ids).flatten if jurisdictions.empty? && !roles.empty?
 
       user_ids_for_delivery += user_ids
 
-      @recips = User.find(user_ids_for_delivery, :order => "last_name")
+      @recips = User.find(user_ids_for_delivery.uniq, :order => "last_name")
       @recips = options[:include_public] ? @recips : @recips.select(&:has_non_public_role?)
     end
     @recips

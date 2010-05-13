@@ -53,7 +53,7 @@ Feature: Viewing user profiles
     And I should see "888-456-1212" within ".office_fax"
     And I should see "888-432-1212" within ".mobile_phone"
     And I should see "888-555-1212" within ".home_phone"
-    
+   
       
   Scenario: Viewing my own profile as an admin
     Given big.admin@example.com has a private profile
@@ -87,8 +87,12 @@ Feature: Viewing user profiles
       | Health Officer | Dallas County |
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
+    Then I should see "888-123-1212" within ".office_phone"
+    And I should see "888-456-1212" within ".office_fax"
+    And I should see "888-432-1212" within ".mobile_phone"
+    And I should see "888-555-1212" within ".home_phone"
     
-  Scenario: Viewing anothers profile as an superadmin
+  Scenario: Viewing anothers profile as an admin of the same jurisdiction
     Given john.smith@example.com has a private profile
     And an organization exist with the following info:
       | name               | DSHS                                |
@@ -99,14 +103,15 @@ Feature: Viewing user profiles
       | description        | Department of State Health Services |
       | locality           | Austin                              |
       | state              | TX                                  |
-    And "john.smith@example.com" is a member of the organization "DSHS"
-  	And the user "Big Admin" with the email "big.admin@example.com" has the role "Superadmin" in "Dallas County"
-    And I am logged in as "big.admin@example.com"
-    When I view the profile page for "john.smith@example.com"
-    And I should see "888-123-1212" within ".office_phone"
+  	And the user "Big Admin" with the email "big.admin@example.com" has the role "Admin" in "Texas"
+
+    When I am logged in as "big.admin@example.com"
+    And I view the profile page for "john.smith@example.com"
+    Then I should see "888-123-1212" within ".office_phone"
     And I should see "888-456-1212" within ".office_fax"
     And I should see "888-432-1212" within ".mobile_phone"
     And I should see "888-555-1212" within ".home_phone"
+
 
   Scenario: Viewing anothers profile as an fellow member to an organization
     Given john.smith@example.com has a private profile
@@ -119,13 +124,13 @@ Feature: Viewing user profiles
       | locality           | Austin                              |
       | state              | TX                                  |
       | postal_code        | 78720                               |
-
     And "john.smith@example.com" is a member of the organization "DSHS"
     And "sam.body@example.com" is a member of the organization "DSHS"
     And I am logged in as "sam.body@example.com"
     When I view the profile page for "john.smith@example.com"
-    And I should see "888-123-1212" within ".office_phone"
+    Then I should see "888-123-1212" within ".office_phone"
     And I should see "888-456-1212" within ".office_fax"
-    And I should see "888-432-1212" within ".mobile_phone"
-    And I should see "888-555-1212" within ".home_phone"
-    And I should not see "Public:"
+    And I should not see "888-432-1212"
+    And I should not see "888-555-1212"
+
+

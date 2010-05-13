@@ -78,7 +78,7 @@ I should be able to edit my profile
     When I follow "Jane Smith"
     And I follow "Edit this Person"
     Then I should see "Organizations"
-    When I select "DSHS" from "organizations"
+    When I select "DSHS" from "Organization Membership Request"
     And I press "Save"
     Then I should be specifically on the user profile page for "jane.smith@example.com"
     And I should see "Organizations"
@@ -91,7 +91,7 @@ I should be able to edit my profile
     When I go to the dashboard page
     And I follow "My Account"
     Then I should see "Organizations"
-    When I select "DSHS" from "organizations"
+    When I select "DSHS" from "Organization Membership Request"
     And I press "Save"
     Then I should be specifically on the user profile page for "jane.smith@example.com"
     And I should see "Organizations"
@@ -123,7 +123,7 @@ I should be able to edit my profile
       When I go to the dashboard page
       And I follow "My Account"
       Then I should see "Organizations"
-      When I select "DSHS" from "organizations"
+      When I select "DSHS" from "Organization Membership Request"
       And I maliciously post an approver id
       And I press "Save"
       Then I should be specifically on the user profile page for "jane.smith@example.com"

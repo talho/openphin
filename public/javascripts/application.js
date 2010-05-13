@@ -226,12 +226,14 @@ function activateMediaPanelActions() {
       });
     }
   });
-
-  $('ul.check_selector>li>ul.folders').find('li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
+  $('#documents_panel .withsubfolders ul.check_selector>li>ul.folders').find('li.folder>ul').parent().find('a:first>label').addClass('with_sub_folder');
+  $('#documents_panel .withsubfolders ul.check_selector>li>ul.folders').find('li.folder>ul').parent().find('input:first').after('<a href="#" id="toggle_closed" class="toggle closed">Toggle</a>');
+  
+  //$('ul.check_selector>li>ul.folders').find('li>input').after('<a href="#" class="toggle closed" style="margin-left: 20px">Toggle</a>');
   //$('ul.check_selector>li>ul.folders').find('li>a>label').css('margin-left','20px');
-  $('ul.check_selector ul ul').hide();
+  $('#documents_panel .withsubfolders ul.check_selector ul ul').hide();
 
-  $('ul.check_selector a.toggle').click(function() {
+  $('#documents_panel .withsubfolders ul.check_selector a.toggle').click(function() {
     var p = $(this).parent();
     p.find('ul').each(function() {
       if($(this).parent().attr("id") == p.attr("id")) $(this).toggle();
@@ -256,13 +258,17 @@ function tieDocumentsFolderNavigation(){
 
 function setMediaNewFolderEvents() {
   var new_folder = $("ul.media_toolbar li#new_folder");
-
+  var folder_submit = $(".media_list div#new_folder form#new_folder input#folder_submit");
   var myform = $(".media_list div#new_folder form#new_folder");
+  
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
-      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
+        return false;
+      } else if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+        alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
       $("#documents_progress_panel").show();
@@ -270,13 +276,16 @@ function setMediaNewFolderEvents() {
     success: function(data, textStatus) {
       activateMediaPanelActions();
       reloadDocumentsDocumentPanel();
+      return true;
     },
     error: function(request,textStatus,errorThrown) {
       alert("Could not create new folder.  Please try again.");
       activateMediaPanelActions();
       reloadDocumentsDocumentPanel();
+      return false;
     }
   });
+
   new_folder.bind("click", function(e) {
     $(".media_list div#new_share:visible").slideToggle("fast");
     $("span.media_list").children("div#new_folder").slideToggle("slow");
@@ -292,6 +301,9 @@ function setMediaNewShareEvents() {
       beforeSend: function(response) {
         if(jQuery.trim($("form input#channel_name").val()) == "") {
           alert("You must specify a share name");
+          return false;
+        }else if(jQuery.trim($("form input#channel_name").val()).length > 32 ){
+          alert("Share name cannot exceed 32 characters in length.");
           return false;
         }
         $("#documents_progress_panel").show();
@@ -336,7 +348,12 @@ function setMediaDeleteItemEvents() {
       site = delete_share.attr("href");
       $(".media_list div#deletion").remove();
       if(delete_share.length > 0) {
-        $(".media_list").append("<div id='deletion' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; overflow: auto; height: 300px; width: 200px;'>Loading share deletion panel...</div>");
+        //$(".media_list").append("<div id='deletion' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; overflow: auto; height: 300px; width: 200px;'>Loading share deletion panel...</div>");
+
+        var div_to_append = "<div id='deletion' class='document_panel_action'>"
+        div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading share deletion panel...</span></div>";
+        $(".media_list").append(div_to_append);
+
         var dp = $("#deletion");
         dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
           if(textStatus != "success") {
@@ -395,7 +412,9 @@ function setMediaInviteEvents() {
   invite.bind("click", function(e) {
     if($("ul.shares input:checked").length > 0) {
       $(".media_list div#invitation").remove();
-      $(".media_list").append("<div id='invitation' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading invitation panel...</div>");
+      var div_to_append = "<div id='invitation' class='document_panel_action'>"
+      div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading invitation panel...</span></div>";
+      $(".media_list").append(div_to_append);
       var dp = $("#invitation");
       share = $("ul.shares input:checked:first")
       invite = share.closest("li").children("a.invite");
@@ -429,9 +448,9 @@ function setMediaInviteEvents() {
            dp.remove();
         });
 
-        $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
+        $('.document_panel_action select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
 
-        $(".search_user_ids").fcbkcomplete({
+        $(".document_panel_action .search_user_ids").fcbkcomplete({
           json_url: '/search',
           json_cache: true,
           filter_case: false,
@@ -439,6 +458,24 @@ function setMediaInviteEvents() {
           filter_selected: true,
           firstselected: true,
           newel: true
+        });
+        $('.document_panel_action ul.check_selector>li>ul>li>ul>li').append('<a href="#" class="toggle closed">Toggle</a>');
+        $('.document_panel_action ul.check_selector ul ul ul').hide();
+
+        $('.document_panel_action ul.check_selector a.toggle').click(function() {
+          $(this).toggleClass('closed').siblings('ul').toggle();
+          $(this).parent().children(".select_all").toggle();
+          return false;
+        });
+        $("a.select_all").click(function() {
+          if ($(this).text() == "Select all children...") {
+            $(this).parent().find(":checkbox").attr("checked", true);
+            $(this).text("Unselect all...");
+          } else {
+            $(this).parent().find(":checkbox").attr("checked", false);
+            $(this).text("Select all children...");
+
+          }
         });
       });
     } else {
@@ -502,6 +539,7 @@ function activateDocumentsPanelActions() {
   });
 
   tieDocumentsDocumentNavigation();
+  $("ul.documents li a").tooltip({track: true, delay: 0, showURL: false, showBody: " - ", fade: 250})
 }
 
 function tieDocumentsDocumentNavigation(){
@@ -520,6 +558,13 @@ function detectAuthenticityToken(responseXML) {
   return $(responseXML.getElementsByTagName("meta")).filter("meta[name='authenticity-token']").length > 0 ? true : false
 }
 
+function detectFolderLoaded(responseXML) {
+  // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
+  // and can't detect the success of the iframe so always returns success
+  // Detects for the presence of the flash message
+  return $(responseXML.childNodes[0].childNodes[1].childNodes[0]).hasClass("flash")
+}
+
 function setDocumentUploadEvents() {
   var upload_document = $("ul.documents_toolbar li#upload_document");
   var upload_document_form = $("span.documents div.upload_document form");
@@ -535,7 +580,8 @@ function setDocumentUploadEvents() {
       $("#documents_progress_panel").show();
     },
     complete: function(response, textStatus) {
-      loaded = detectAuthenticityToken(response.responseXML);
+      //loaded = detectAuthenticityToken(response.responseXML);
+      loaded = detectFolderLoaded(response.responseXML);
       if(!loaded) alert("Error creating new folder, please try again.");
       activateDocumentsPanelActions();
     }
@@ -555,8 +601,11 @@ function setDocumentNewFolderEvents() {
   var myform = $("span.documents div#new_folder form");
   myform.ajaxForm({
     beforeSend: function(response) {
-      if(jQuery.trim($("form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()) == "") {
         alert("You must specify a folder name");
+        return false;
+      } else if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+        alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
       $("#documents_progress_panel").show();
@@ -579,7 +628,12 @@ function setDocumentSendEvents() {
   send.bind("click", function(e) {
     if($("ul.documents input:checked").length > 0) {
       $("span.documents div#send").remove();
-      $("span.documents").append("<div id='send' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sending panel...</div>");
+      //$("span.documents").append("<div id='send' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sending panel...</div>");
+
+      var div_to_append = "<div id='send' class='document_panel_action'>"
+      div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading sending panel...</span></div>";
+      $("span.documents").append(div_to_append);
+
       var dp = $("span.documents div#send");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.send");
@@ -609,9 +663,9 @@ function setDocumentSendEvents() {
           dp.remove();
         });
 
-        $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
+        $('.document_panel_action select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
 
-        $(".search_user_ids").fcbkcomplete({
+        $(".document_panel_action .search_user_ids").fcbkcomplete({
           json_url: '/search',
           json_cache: true,
           filter_case: false,
@@ -619,6 +673,23 @@ function setDocumentSendEvents() {
           filter_selected: true,
           firstselected: true,
           newel: true
+        });
+        $('.document_panel_action ul.check_selector>li>ul>li>ul>li').append('<a href="#" class="toggle closed">Toggle</a>');
+        $('.document_panel_action ul.check_selector ul ul ul').hide();
+        $("a.select_all").click(function() {
+          if ($(this).text() == "Select all children...") {
+            $(this).parent().find(":checkbox").attr("checked", true);
+            $(this).text("Unselect all...");
+          } else {
+            $(this).parent().find(":checkbox").attr("checked", false);
+            $(this).text("Select all children...");
+
+          }
+        });
+        $('.document_panel_action ul.check_selector a.toggle').click(function() {
+          $(this).toggleClass('closed').siblings('ul').toggle();
+          $(this).parent().children(".select_all").toggle();
+          return false;
         });
       });
     } else {
@@ -633,7 +704,12 @@ function setDocumentAddToShareEvents() {
   add_to_share.bind("click", function(e) {
     if($("ul.documents input:checked").length > 0) {
       $("span.documents div#share").remove();
-      $("span.documents").append("<div id='share' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sharing panel...</div>");
+      //$("span.documents").append("<div id='share' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sharing panel...</div>");
+
+      var div_to_append = "<div id='share' class='document_panel_action'>"
+      div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading sharing panel...</span></div>";
+      $("span.documents").append(div_to_append);
+
       var dp = $("span.documents div#share");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.add_share");
@@ -663,9 +739,9 @@ function setDocumentAddToShareEvents() {
           dp.remove();
         });
 
-        $('select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
+        $('.document_panel_action select.crossSelect[multiple="multiple"]').crossSelect({clickSelects: true});
 
-        $(".search_user_ids").fcbkcomplete({
+        $(".document_panel_action .search_user_ids").fcbkcomplete({
           json_url: '/search',
           json_cache: true,
           filter_case: false,
@@ -673,6 +749,15 @@ function setDocumentAddToShareEvents() {
           filter_selected: true,
           firstselected: true,
           newel: true
+        });
+
+        $('.document_panel_action ul.check_selector>li>ul>li>ul>li').append('<a href="#" class="toggle closed">Toggle</a>');
+        $('.document_panel_action ul.check_selector ul ul ul').hide();
+
+        $('.document_panel_action ul.check_selector a.toggle').click(function() {
+          $(this).toggleClass('closed').siblings('ul').toggle();
+          $(this).parent().children(".select_all").toggle();
+          return false;
         });
       });
     } else {
@@ -686,7 +771,12 @@ function setDocumentMoveEditEvents() {
   move_edit.bind("click", function(e) {
     if($("ul.documents input:checked").length > 0) {
       $("span.documents div#move_edit").remove();
-      $("span.documents").append("<div id='move_edit' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; width: 250px;'>Loading move/edit panel...</div>");
+      //$("span.documents").append("<div id='move_edit' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; width: 250px;'>Loading move/edit panel...</div>");
+
+      var div_to_append = "<div id='move_edit' class='document_panel_action'>"
+      div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading move/edit panel...</span></div>";
+      $("span.documents").append(div_to_append);
+
       var dp = $("span.documents div#move_edit");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.move_edit");
@@ -765,8 +855,8 @@ function setDocumentDeleteItemEvents() {
 }
 
 function documentsAlert() {
-  var error = $("div.flash p.error");
-  if(error.length > 0) alert(error.text());
+  //var error = $("div.flash p.error");
+  //if(error.length > 0) alert(error.text());
 }
 
 jQuery(function($) {
@@ -845,4 +935,14 @@ function getNextInviteeId() {
   });
   
   return index;
+}
+
+function select_all_child_jurisdictions(){
+  if ($(this).text() == "Select all children...") {
+    $(this).parent().find(":checkbox").attr("checked", true);
+    $(this).text("Unselect all...");
+  } else {
+    $(this).parent().find(":checkbox").attr("checked", false);
+    $(this).text("Select all children...");
+  }
 }

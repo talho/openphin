@@ -25,7 +25,8 @@ class Document < ActiveRecord::Base
     
   belongs_to :user
   belongs_to :folder
-  
+  belongs_to :owner, :class_name => 'User'
+
   after_post_process :notify_channels_of_update
 
   named_scope :viewable_by, lambda{|user|

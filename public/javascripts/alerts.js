@@ -57,10 +57,9 @@
               break;
             case "Device::PhoneDevice":
               //if(jQuery.trim($('.short_message').val()) == "" && $('.success:hidden').length != 0) {
-              if (jQuery.trim($('.short_message').val()) == "") {
+              if (jQuery.trim($('#alert_message').val()) == "") {
                 cont = false;
-                //alert("You must provide a short message or voice recording for a phone alert.");
-                alert("You must provide a short message for a phone alert.");
+                alert("You must provide a message for a phone alert.");
               }
               break;
             case "Device::SMSDevice":
@@ -110,7 +109,7 @@
       });
       return false;
     });
-    $('#edit fieldset input:checkbox').click(function() {
+    $('fieldset input:checkbox').click(function() {
       $(this).siblings('label').toggleClass('checked');
     });
 
@@ -187,6 +186,7 @@
       }
     });
 
+
     $('ul.check_selector #alert_device_phone_device,#alert_device_sms_device,#alert_device_fax_device,#alert_device_blackberry_device').click(function() {
       if ($('ul.check_selector #alert_device_phone_device:checked').length ||
           $('ul.check_selector #alert_device_sms_device:checked').length ||
@@ -247,6 +247,16 @@
        }
      });
    });
+
+  $('#alert_message').bind('keyup', function(e){
+    $('#msgcnt').text($(this).val().length);
+  });
+
+  $('#alert_not_cross_jurisdictional').bind("click", function(e){
+    if($('#alert_not_cross_jurisdictional:checked').length != 0) {
+      return confirm("Disabling cross jurisdictional alerting will potentially create a non-HAN compliant alert.  Are you sure you wish to send a non-compliant alert?")
+    }
+  });
     
   });
 })(jQuery);

@@ -37,15 +37,7 @@
 
 <fieldset class="people">
   <legend>People</legend>
-  <%= label_tag 'Add'%>
+  <%= form.label :user_ids, 'Add'%>
   <%= form.select :user_ids, form.object.users.map{|u| [u.name, u.id]}, {}, :multiple => :multiple, :class => "search_user_ids" %><br/>
-  <p><%= label_tag 'Existing'%></p>
-  <%- form.object.users.each do |user| -%>
-    <%= hidden_field_tag "#{form.object_name}[user_ids][]", user.id %>
-    <span class='member'>
-      <%= label_tag user.name, link_to(user.name,user_profile_path(user)) %>
-      <%= link_to image_tag("/stylesheets/images/cross-circle.png", :alt => "Remove"), dismember_admin_groups_path(form.object,user),:action => :dismember, :class => "destroy" %>
-    </span>
-  <%- end -%>
 
 </fieldset>

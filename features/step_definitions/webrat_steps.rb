@@ -57,6 +57,11 @@ When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, field|
   select(value, :from => field)
 end
 
+When /^I unselect "([^\"]*)" from "([^\"]*)"$/ do |value, field|
+  element = select_option(value, field).element.attributes["value"].value
+  select_option(value, field).send("select").value.delete(element)
+end
+
 # Use this step in conjunction with Rail's datetime_select helper. For example:
 # When I select "December 25, 2008 10:00" as the date and time
 When /^I select "([^\"]*)" as the date and time$/ do |time|

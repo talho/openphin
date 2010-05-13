@@ -1,0 +1,11 @@
+# header-row for the data
+csv << ["Name", "Email", "Profile Updated"]
+
+results.each do |invitee|
+  csv << [
+    # note you can use the usual view-helper here  
+    invitee.name,
+    invitee.email,
+    invitee.user.updated_at > invitation.created_at ? "Yes" : "No"
+    ]
+end

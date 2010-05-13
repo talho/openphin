@@ -19,6 +19,7 @@ class Channel < ActiveRecord::Base
   has_many :targets, :as => :item, :after_add => :subscribe
   has_many :audiences, :through => :targets
   accepts_nested_attributes_for :audiences
+  validates_length_of :name, :in => 1..32, :allow_blank => false, :message => "Share name cannot exceed 32 characters in length."
 
   def owners
     users.owners

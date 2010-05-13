@@ -281,3 +281,40 @@ Feature: Invitation System
     And I should not see "Jane Smith"
     And I should not see "Joe Smith"
     And I should not see "John Smith"
+    
+  Scenario: Viewing invitation completion status by profile update
+    Given an Invitation "DSHS" exists with:
+      | Subject      | Please Join DSHS                         |
+      | Body         | Please click the link below to join DSHS |
+      | Organization | DSHS                                     |
+    And invitation "DSHS" has the following invitees:
+      | Jane Smith | jane.smith@example.com |
+      | Bob Smith  | bob.smith@example.com  |
+      | John Smith | john.smith@example.com |
+      | Bill Smith | bill.smith@example.com |
+      | Jim Smith  | jim.smith@example.com  |
+    And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
+    And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
+    And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
+    And "john.smith@example.com" is an unconfirmed user
+
+    When I follow "Admin"
+    And I follow "View Invitations"
+    Then I should see "DSHS"
+
+    When I follow "View Reports"
+    And I select "By Profile Update" from "Report Type"
+    And I press "Submit"
+
+    Then I should see "Invitation report for DSHS by Profile Update"
+    And I should see "Registrations complete: 40% (2)"
+    And I should see "Registrations incomplete: 60% (3)"
+    
+    And I should see "Jane Smith" within "#invitee1"
+    And I should see "jane.smith@example.com" within "#invitee1"
+    And I should see "No" within "tr#invitee1 td.status"
+    And I should see "Jim Smith" within "#invitee2"
+    And I should see "jim.smith@example.com" within "#invitee2"
+    And I should see "No" within "tr#invitee1 td.status"
+    
+    

@@ -1,15 +1,8 @@
-
 <div class='user_profile'>
-  <% i_am_fellow = fellow_member? @user %>
-
-  <div class="details">
-    <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+  <%- if @user.public? || current_user == @user || current_user.is_admin_for?(@user.jurisdictions) || current_user.is_org_member_of?(@user.organizations) -%>
+    <div class="details">
       <h2><%=h @user.name %></h2>
-    <% else %>
-      <p>This user's profile is not public.</p>
-    <% end %>
-    
-    <% if @user.public? || current_user == @user || current_user.is_admin? %>
+
       <p>
         <strong>Public:</strong>
         <%=h @user.public ? 'Yes' : 'No' %>
@@ -18,9 +11,7 @@
         <strong>Credentials:</strong>
         <%=h @user.credentials || 'None Given' %>
       </p>
-    <% end %>
-  
-    <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
+
       <p class="office_phone">
         <strong>Office Phone:</strong>
         <%= number_to_phone @user.phone || 'None Given' %>
@@ -29,17 +20,18 @@
         <strong>Office Fax:</strong>
         <%= number_to_phone @user.fax || 'None Given' %>
       </p>
-      <p class="home_phone">
-        <strong>Home Phone:</strong>
-        <%= number_to_phone @user.home_phone || 'None Given' %>
-      </p>
-      <p class="mobile_phone">
-        <strong>Mobile Phone:</strong>
-        <%= number_to_phone @user.mobile_phone || 'None Given' %>
-      </p>
-    <% end %>
-  
-    <% if @user.public? || current_user == @user || current_user.is_admin? %>
+
+      <%- if current_user == @user || current_user.is_admin_for?(@user.jurisdictions) || current_user.is_org_admin_for?(@user) -%>
+        <p class="home_phone">
+          <strong>Home Phone:</strong>
+          <%= number_to_phone @user.home_phone || 'None Given' %>
+        </p>
+        <p class="mobile_phone">
+          <strong>Mobile Phone:</strong>
+          <%= number_to_phone @user.mobile_phone || 'None Given' %>
+        </p>
+      <%- end -%>
+
       <p>
         <strong>Employer:</strong>
         <%=h @user.employer || 'None Given' %>
@@ -54,26 +46,28 @@
       <h4>Organizations</h4>
       <%= render 'users/organizations', :user => @user %>
 
-      <% if current_user == @user || current_user.has_non_public_role? %>
+      <%- if current_user == @user || current_user.has_non_public_role? -%>
         <h4>Roles</h4>
         <%= render 'users/roles', :user => @user %>
-      <% end %>
-
-      <div class="actions">
-        <%= link_to 'Edit this Person', edit_user_profile_path(@user), :class => 'button' %>
-      </div>
-    <% end %>
+      <%- end -%>
+      
+      <%- if current_user == @user || current_user.is_admin_for?(@user.jurisdictions) -%>
+        <div class="actions">
+          <%= link_to 'Edit this Person', edit_user_profile_path(@user), :class => 'button' %>
+        </div>
+      <%- end -%>
    </div>
 
-  <% if @user.public? || current_user == @user || current_user.is_admin? || i_am_fellow %>
-    <div class="aside">
-      <%= image_tag @user.photo.url(:medium) %>
-      <h4>Devices</h4>
-      <%= render @user.devices %>
-    </div>
-  <% end %>
+    <% if current_user == @user || current_user.is_admin_for?(@user.jurisdictions) %>
+      <div class="aside">
+        <%= image_tag @user.photo.url(:medium) %>
+        <h4>Devices</h4>
+        <%= render @user.devices %>
+      </div>
+    <% end %>
 
+    <% else %>
+      <p>This user's profile is not public.</p>
+    <% end %>
 </div>
 
-<% if @user.public? || current_user == @user || current_user.is_admin? %>
-<% end %>
