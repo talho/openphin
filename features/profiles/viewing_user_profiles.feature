@@ -32,7 +32,7 @@ Feature: Viewing user profiles
     Given sam.body@example.com has a public profile
     When I view the profile page for "sam.body@example.com"
     Then I can see the profile
-    And I should not see the following roles:
+    And I should see the following roles:
       | Health Officer | Dallas County |
     
   Scenario: Viewing a private profile
