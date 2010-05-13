@@ -21,6 +21,8 @@ Feature: Viewing user profiles
   	And the user "Sam Body" with the email "sam.body@example.com" has the role "Health Officer" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Dallas County"
   	And the user "Big Admin" with the email "big.admin@example.com" has the role "Epidemiologist" in "Potter County"
+    And Health Officer is a non public role
+    And Epidemiologist is a non public role
     And  "john.smith@example.com" has the phone "888-123-1212"
     And  "john.smith@example.com" has the fax "888-456-1212"
     And  "john.smith@example.com" has the mobile phone "888-432-1212"
