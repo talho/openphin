@@ -553,12 +553,10 @@ function tieDocumentsDocumentNavigation(){
   setDocumentDeleteItemEvents();
 }
 
-var superVar;
 function detectAuthenticityToken(responseXML) {
   // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
   // and can't detect the success of the iframe so always returns success
   // Detects for the presence of the authenticity token meta tag in the fetched page
-  superVar = responseXML;
   if($(responseXML.getElementsByTagName("meta")).filter("meta[name='authenticity-token']").length > 0){
     return true;
   }else if($(responseXML.getElementsByTagName("input")).filter("[name]='authenticity-token'").length > 0){
