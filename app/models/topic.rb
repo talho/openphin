@@ -17,6 +17,8 @@ class Topic < ActiveRecord::Base
   named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 
   validates_presence_of :poster_id, :forum_id, :name
+  before_save :sanitize_content
+
 
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
   alias :_destroy :_delete unless respond_to? '_destroy'
@@ -49,6 +51,12 @@ class Topic < ActiveRecord::Base
   
   def dest_forum_id
     forum_id
+  end
+
+  private
+
+  def sanitize_content
+    self.content = self.content.gsub(/<\/?[^>]*>/, "")
   end
     
 end

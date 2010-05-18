@@ -4,7 +4,37 @@
   <%= link_to "Forums", forums_path %> ><%= link_to "Topics", forum_topics_path %> > <%= @topic.name %>
 </p>
 
+
+<table class="topics data-list">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2"><%= @topic.updated_at.strftime("%B %d, %Y %I:%M %p") %></th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th scope="row" colspan="2"></th>
+    </tr>
+  </tfoot>
+  <tbody>
+      <tr >
+        <td scope="row" class="topic_author">
+          <div>
+            <%= image_tag User.find_by_id(@topic.poster_id).photo.url(:medium)%><br/>
+            <%= "Author: #{User.find_by_id(@topic.poster_id).display_name}" %><br/>
+            <%= "Updated: #{@topic.updated_at.strftime("%B %d, %Y %I:%M %p")}" %>
+          </div>
+        </td>
+        <td class="topic_content">
+          <%= @topic.content %>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+<!--
 <p><%= @topic.content %></p>
+-->
 
 <p>
   <%= link_to image_tag("add.png"), :anchor => "add_comment" %>
@@ -14,8 +44,14 @@
 <ul class="comments data-list">
   <% @topic.comments.each do |comment| %>
     <li>
-      <%= "#{link_if_public comment.poster} - #{time_ago_in_words(comment.updated_at)} ago" -%><br />
-      <%=textilize_without_paragraph comment.content %>
+      <div class="comment_author">
+        <%= image_tag User.find_by_id(comment[:poster_id]).photo.url(:medium), :width => "20%" -%><br/>
+        <%= "#{link_if_public comment.poster}" -%><br/>
+        <%= "#{time_ago_in_words(comment.updated_at)} ago" -%>
+      </div>
+      <div class="comment_content">
+        <%= textilize_without_paragraph comment.content %>
+      </div>
     </li>
   <% end %>
 </ul>
@@ -23,10 +59,10 @@
 <% form_for @topic, :url => forum_topic_path(@forum,@topic), :html => {:method => :put } do |f| %>
   <%= f.error_messages %>
   <% f.fields_for :comment_attributes do |comment_form| %>
-  <%= render 'edit_comment_fields', :f => comment_form %>
-  <%= comment_form.hidden_field :name, :value => Time.now %>  
-  <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
-  <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
+    <%= render 'edit_comment_fields', :f => comment_form %>
+    <%= comment_form.hidden_field :name, :value => Time.now %>
+    <%= comment_form.hidden_field :forum_id, :value => @forum.id -%>
+    <%= comment_form.hidden_field :poster_id, :value => current_user.id -%>
   <% end %> 
   <p><%= f.submit "Add Comment" %></p>
 <% end %>

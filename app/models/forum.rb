@@ -100,7 +100,7 @@ class Forum < ActiveRecord::Base
   
   def self.per_page
     # for paginate
-    5
+    10
   end
   
 end

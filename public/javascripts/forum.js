@@ -3,7 +3,7 @@
 	// build the new topic div
 	$( document ) . ready ( 
 	  function() {
-	    $( 'div.new_topic' ).before( '<p><a class="new_topic" href="#"><img id="new_topic_image" src="/images/arrow_right.png" />New Topic</a></p>' );
+	    $( 'div.new_topic' ).before( '<p><a class="new_topic toggle closed" href="#">New Topic</a></p>' );
 	    $( 'div.new_topic' ).hide();
 	    $('a.new_topic').toggle ( 
 	      function() {
@@ -45,6 +45,31 @@
 	  }
 	)
 
+  // form controller
+  $(document).ready(
+    function(){
+      $('#forum_submit').click(function(e){
+        if($('#forum_topic_attributes_name').val().length <= 1){
+          alert("You must enter a valid name for the forum.");
+          return false;
+        }
+        if($('#forum_topic_attributes_content').val().length < 1){
+          alert('You must enter a topic description.');
+          return false;
+        }
+      })
+      $('#topic_submit').click(function(e){
+        if($('#topic_name').val().length <= 1){
+          alert("You must enter a valid name for the forum.");
+          return false;
+        }
+        if($('#topic_content').val().length < 1){
+          alert('You must enter a topic description.');
+          return false;
+        }
+      })
+    }
+  )
 })(jQuery);
 
 
