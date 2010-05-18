@@ -14,6 +14,8 @@
       | Dallas County |
       | Potter County |
     And a role named Public
+    And there is an system administrator role
+#    And  "Health Officer" is a non public role
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
       | Jeff Brown | jeff.brown@example.com | Public | Dallas County |

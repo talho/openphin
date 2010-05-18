@@ -56,7 +56,7 @@ class Topic < ActiveRecord::Base
   private
 
   def sanitize_content
-    self.content = self.content.gsub(/<\/?[^>]*>/, "")
+    self.content = self.content.gsub(/<\/?[^>]*>/, "") if self.content
   end
     
 end
