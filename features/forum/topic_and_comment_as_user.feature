@@ -31,7 +31,7 @@ I should be able to create topics to forums and place comments to these topics
 
     Then I should be redirected to the Topics page for Forum "Funding methodology"
     And I should see "Topic was successfully created"
-    And I should see "Locating Grants in todays economy"
+    And I should see " Locating Grants in todays e..."
     And I should see "Jane Smith"
 
     When I follow "Edit"
@@ -40,9 +40,9 @@ I should be able to create topics to forums and place comments to these topics
 
     Then I should be redirected to the Topics page for Forum "Funding methodology"
     And I should see "Topic was successfully updated"
-    And I should see "todays economic impact on grants"
+    And I should see "todays economic impact on g..."
      
-    When I follow "todays economic impact on grants"
+    When I follow "todays economic impact on g..."
     And I follow "Add Comment"
     And I fill in "topic_comment_attributes_content" with "Grants in the East have become rare"
     And I press "Add Comment"

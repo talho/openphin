@@ -10,12 +10,13 @@
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
       | Jurisdiction | Potter County |
+      | Role         | Health Officer |
     And Texas is the parent jurisdiction of:
       | Dallas County |
       | Potter County |
     And a role named Public
     And there is an system administrator role
-#    And  "Health Officer" is a non public role
+    And  Health Officer is a non public role
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
       | Jeff Brown | jeff.brown@example.com | Public | Dallas County |
@@ -134,24 +135,27 @@
     And I have the forum named "Forum to verify sticky topics"
     And I go to the Forums page
     And I follow "Forum to verify sticky topics"
-    And I fill in "Name" with "First created but not sticky topic"
+    And I fill in "Name" with "Sticky topic that was created earlier"
     And I press "Add Topic"
 
     Then I should see "Topic was successfully created"
-    And I should see "First created but not sticky topic"
+    And I should see "Sticky topic that was creat..."
 
-    When I fill in "Name" with "Sticky topic that was created later"
+    When 1 minute passes
+    And I fill in "Name" with "Second created but not sticky topic"
     And I press "Add Topic"
     Then I should be redirected to the Topics page for Forum "Forum to verify sticky topics"
     And I should see "Topic was successfully created"
-    And I should see "First created but not sticky topic" within "#topic_name_1"
-    And I should see "Sticky topic that was created later" within "#topic_name_2"
+
+    
+    And I should see "Second created but not stic..." within "#topic_name_1"
+    And I should see "Sticky topic that was creat..." within "#topic_name_2"
     
     When I follow "edit_topic_2"
     And I check "topic_sticky"
     And I press "Update"
-    Then I should see "Sticky topic that was created later" within "#topic_name_1"
-    And I should see "First created but not sticky topic" within "#topic_name_2"
+    Then I should see "Sticky topic that was creat..." within "#topic_name_1"
+    And I should see "Second created but not stic..." within "#topic_name_2"
 
   Scenario: Move an existing forum topic to an alternate forum as a super-admin
     Given I am logged in as "joe.smith@example.com"
