@@ -18,6 +18,10 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
+  
+  belongs_to :forum
+  named_scope :with_forum, :conditions => "forum_id is not NULL"
+  named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 
   named_scope :with_user, lambda {|user|
     { :conditions => [ "users.id = ?", user.id ], :joins => :users}

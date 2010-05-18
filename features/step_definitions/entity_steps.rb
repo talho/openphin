@@ -57,7 +57,7 @@ Given 'a child jurisdiction named $name' do |name|
 end
 
 Given 'a role named $name' do |name|
-  Role.find_by_name(name) || Factory(:role, :name => name)
+  Role.find_by_name(name) || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true))
 end
 
 Given /^a[n]? organization type named (.*)$/ do |name|

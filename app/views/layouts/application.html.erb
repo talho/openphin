@@ -6,8 +6,8 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', '/javascripts/jquery-tooltip/jquery.tooltip', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', :cache => 'all' %>
+  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css', :cache => true %>
+  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum', :cache => 'all' %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -29,6 +29,9 @@
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
         <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
   			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
+  			<% if current_user.has_non_public_role? %>
+          <li<%= ' class="current"' if toolbar == 'forums' %>><%= link_to s("Forums"), forums_path %></li>
+        <% end -%>
         <li<%= ' class="current"' if toolbar == 'tutorials' %>><%= link_to s("Tutorials"), tutorials_path %></li>
   		</ul>
   		<ul class="actions">

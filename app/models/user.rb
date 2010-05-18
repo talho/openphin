@@ -79,7 +79,6 @@ class User < ActiveRecord::Base
   has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
 
 
-
   validates_presence_of     :email
   validates_presence_of     :first_name
   validates_presence_of     :last_name
@@ -113,7 +112,7 @@ class User < ActiveRecord::Base
 
   named_scope :live, :conditions => UNDELETED
   
-  named_scope :with_role, lambda {|role| 
+  named_scope :with_role, lambda {|role|
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
   }
@@ -376,6 +375,13 @@ class User < ActiveRecord::Base
     end
   end
   
+  def moderator_of?(object)
+    return is_super_admin? if object == Forum
+    return false unless [Forum,Topic].include? object.class
+    is_super_admin? || ( object.respond_to?('poster_id') && (self.id == object.poster_id) )
+  end
+
+
 private
 
   def assign_public_role

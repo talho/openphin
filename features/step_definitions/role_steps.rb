@@ -44,3 +44,7 @@ end
 Then /^I should see "(.*)" in the role select$/ do |role|
   response.should have_selector("select.role_select option", :content => role)
 end
+
+Given /^there is an system administrator role$/ do
+  Role.superadmin
+end

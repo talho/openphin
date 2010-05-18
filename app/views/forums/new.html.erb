@@ -1,0 +1,34 @@
+<h2>New forum</h2>
+<p>
+  <%= link_to 'Forums', forums_path %>
+</p>
+
+<% form_for @forum do |f| %>
+  <%= f.error_messages %>
+  <div id="forum">
+    <p>
+      <%= f.label :name %><br />
+      <%= f.text_field :name, :size => 72 %>
+      <% for_moderators_of @forum do -%>
+        <%= f.check_box :hide %> <%= f.label :hide %>
+      <% end -%>
+    </p>
+  </div>
+  <div id="edit">
+    <div id="audience">
+      <% f.object.build_audience if f.object.audience.nil? %>
+      <% f.fields_for :audience do |audience| %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => f %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <p>
+      <%= f.submit 'Create Forum' %>
+    </p>
+  </div>
+
+<% end %>
+

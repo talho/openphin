@@ -1,0 +1,51 @@
+<style type="text/css"> a.forum_hidden {color:#ccc} </style>
+<% for_moderators_of Forum  do -%>
+  <p>
+    <%= link_to image_tag("add.png"), new_forum_path, :class => "forums_add_link_ico" %>
+    <%= link_to "Add Forum", new_forum_path %>
+  </p>
+<% end %>
+
+<table class="forums data-list">
+  <caption>Forums</caption>
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Forum Name</th>
+      <th scope="col">Latest Topic</th>
+      <th scope="col">Created</th>
+      <th scope="col">Updated</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th scope="row" colspan="6"><%= will_paginate @forums %></th>
+    </tr>
+  </tfoot>
+  <tbody>
+    <% for forum in @forums %>
+      <tr>
+        <td scope="row">
+          <% for_moderators_of forum  do -%>
+            <%= link_to image_tag("pencil.png", :title => "Edit"), edit_forum_path(forum) %>
+          <% end %>
+        </td>
+        <td scope="row">
+          <%= link_to( h(truncate(forum.name, :length => 30)), forum_topics_path(forum), (forum.hidden_at ? {:class=>"forum_hidden"} : {})) %>
+        </td>
+        <td>
+          <% if (topic_last = forum.topics.unhidden(current_user.is_super_admin?).recent(1).first) %>
+            <%= "#{link_to h(truncate(topic_last.name, :length => 30)),forum_topic_path(forum,topic_last)} by #{link_if_public topic_last.poster}"-%>
+            
+          <% else %>
+             No posts
+          <% end %>
+        </td>
+        <td><%= forum.created_at.strftime("%B %d, %Y %I:%M %p") %></td>
+        <td><%= forum.updated_at.strftime("%B %d, %Y %I:%M %p") %></td>
+        <td><%= "Threads: #{forum.topics.length}" %><br/></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

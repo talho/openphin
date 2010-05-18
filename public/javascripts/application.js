@@ -123,13 +123,11 @@ jQuery(function($) {
      e.preventDefault();
      return false;
    });
-	 $("#comingsoon a.close").bind("click", toggleComingSoon);
-	 $("a.rollcall").bind("click", toggleComingSoon);
+   $("#comingsoon a.close").bind("click", toggleComingSoon);
+   $("a.rollcall").bind("click", toggleComingSoon);
    $("#report_type").bind("change", function (){
      this.form.submit();
-   })
-   
-
+   });
 });
 
 function toggleComingSoon(e){
@@ -554,7 +552,7 @@ function tieDocumentsDocumentNavigation(){
 }
 
 function detectAuthenticityToken(responseXML) {
-  // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
+    // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
   // and can't detect the success of the iframe so always returns success
   // Detects for the presence of the authenticity token meta tag in the fetched page
   if($(responseXML.getElementsByTagName("meta")).filter("meta[name='authenticity-token']").length > 0){

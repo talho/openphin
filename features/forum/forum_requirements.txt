@@ -1,0 +1,80 @@
+Forum:
+  The Forum application should allow for discussion of various and possibly arbitrary topics.
+  A room or category of related forum topics open for discussion, e.g. "HAN", "Rollcall", "Funding methodology", etc.
+
+Topic
+  An individual thread of discussion within a given forum.
+  Topics may be open for discussion (anyone who can view topic can post a comment) or closed (no more comments can be made).
+  Sticky
+    They may also be "sticky".
+    Sticky topics should be listed at the top of the forum.
+    2.) Unless Jason has some other plans for sticky topics, the only additional property they have is that they're listed at the top of the interface
+  ¥ use something like redcloth (http://redcloth.org/) to offer markup abiliies to forum posters (be sure to include some simple instructions somewhere on the edit page)
+  ¥ superadmins and the poster of a topic/comment may edit the topic/comment
+  ¥ only superadmins should be able to move the topic to a new forum
+  ¥ only superadmins should be able to delete a topic (deletes all comments on topic as well)
+
+Comment
+  Comments can be made on any open topic by anyone who can see the topic.
+  (implementation note: my preference is that comments and topics are either handled by the same class with a reference to a parent for comments, or that comments is a     child class of the topic class)
+  1.) Comments can be closed by a superadmin
+
+Navigation
+  Application functionality:
+  ¥ should be accessible via tab in portal toolbar
+  ¥ Forum application controller should list current forums, drill down to forum topics
+  from there
+
+Accessibility
+  Forum functions:
+  ¥ Only superadmins can create new forums
+  ¥ Superadmins should be able to lock a forum so that only people in a given audience specification can post new topics or comment on existing topics
+  Forums may be open (anyone can post a new topic) or closed (user must be part of an attached audience spec to gain access.)
+  ¥ superadmins can hide a forum temporarily or permanently (no deleting forums)
+  ¥ should be accessible to users with approved roles (i.e., inaccessible to users with only public roles.)
+  ¥ "Sticky" toggle as described above available only to superadmins.
+  Only users with approval roles can access the forums (not for general public).
+
+Useability
+  ¥ Each topic/comment should display the display name of the user posting it and the time it was posted
+  3.) Edits replace the original entry
+  4.) Ask Jason for some direction on the interface for supers.
+  my inclination is that most of the additional options for admins should go in the normal edit interface.
+  For example, it doesn't make sense to create a whole admin interface to close a topic for discussion if they have to go through all of the same searching/editing steps.
+  However, it might make sense to lump all of the additional options under a separate partial and keep them grouped together in the interface.
+
+
+        |  Add   |  Edit  |  Delete  |  Close  | Position | Move |  Hide |  Restrict |
+======================================================================================
+Forum   |   S    |        |          |         |          |      |   S   |     S     |
+        |        |        |          |         |          |      |       |           |
+Topic   |   A    |   S,P  |    S     |    S    |     S    |  S   |       |           |
+        |        |        |          |         |          |      |       |           |
+Comment |   A    |   S,P  |          |         |          |      |       |           |
+
+
+A
+Any member of the forum audience spec.
+
+P
+Poster of the topic or comment.
+
+S
+SuperAdmin
+
+
+Close
+Close is the blocking of further comments to be added to a topic.
+
+
+Position
+When more than one topic is present in a forum, topics can be moved to the top so that they remain at the top.  This is sometimes referred to as sticky.
+
+Move
+A topic and this associated comments can be moved from a particular forum to another forum.  The destination forum audience spec needs to be a superset of the source forum audience spec. 
+
+Hide
+A making of the forum hidden to all members of that specific forum.  Does not destroy the forum contain.  This maybe for temporary or permanent use.
+
+Restrict
+Limit the access of the forum to member of a audience spec.

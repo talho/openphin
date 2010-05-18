@@ -62,4 +62,17 @@ module ApplicationHelper
     end
     ""
   end
+  
+  def for_moderators_of(record, &block)
+    current_user.moderator_of?(record) && concat(capture(&block))
+  end
+
+  def for_super_admin(&block)
+    current_user.is_super_admin? && concat(capture(&block))
+  end
+
+  def link_if_public(user)
+    ( user.respond_to?("public") && user.public ) ? link_to( h(user.name), user_profile_path(user) ) : h(user.name)
+  end  
+
 end
