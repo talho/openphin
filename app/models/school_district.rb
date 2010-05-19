@@ -19,12 +19,18 @@ class SchoolDistrict < ActiveRecord::Base
     date=Date.today if date.nil?
 
     di=daily_infos.for_date(date).first
-    di = update_daily_info(date) if di.nil?
+    di = update_daily_info(date) if di.nil? || di.absentee_rate.nil?
     di.absentee_rate 
   end
 
   def update_daily_info(date)
-    daily_infos.create(:report_date => date)
+    di = daily_infos.find_by_report_date(date)
+    if di.nil?
+      di = daily_infos.create(:report_date => date)
+    else
+      di.update_stats
+    end
+    di
   end
 
   def recent_absentee_rates(days)
