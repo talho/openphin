@@ -51,7 +51,12 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
-    @selected_org = params[:user][:organization_membership_requests_attributes]["0"][:organization_id].to_i unless params[:user][:organization_membership_requests_attributes].blank? || params[:user][:organization_membership_requests_attributes]["0"].blank?
+
+    if params[:user][:organization_membership_requests_attributes].blank? || params[:user][:organization_membership_requests_attributes]["0"].blank? || params[:user][:organization_membership_requests_attributes]["0"]["organization_id"].blank?
+      params[:user].delete("organization_membership_requests_attributes")
+    else
+      @selected_org = params[:user][:organization_membership_requests_attributes]["0"][:organization_id].to_i
+    end
 
     unless params[:health_professional]
       params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
