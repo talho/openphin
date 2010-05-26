@@ -9,8 +9,8 @@ class SharesController < ApplicationController
   
   def create
     @document = current_user.documents.find(params[:document_id])
-    @audience = Audience.new(params[:audience])
-    @document.targets.create! :audience => @audience, :creator => current_user
+    @audience = Audience.new(params[:audience]) unless params[:audience].blank?
+    @document.targets.create! :audience => @audience, :creator => current_user if @audience
     if params[:document]
       @document.channel_ids += params[:document][:channel_ids] if params[:document][:channel_ids]
       @document.save!
