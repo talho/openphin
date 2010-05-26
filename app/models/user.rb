@@ -50,18 +50,18 @@ class User < ActiveRecord::Base
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
-  has_many :role_memberships, :include => :jurisdiction, :dependent => :delete_all
-  has_many :role_requests, :dependent => :delete_all
+  has_many :role_memberships, :include => [:jurisdiction, :role], :dependent => :delete_all
+  has_many :role_requests, :dependent => :delete_all, :include => [:jurisdiction, :role]
   has_many :organization_membership_requests, :dependent => :delete_all
   accepts_nested_attributes_for :role_requests, :organization_membership_requests
 
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
-  has_many :alerts, :foreign_key => 'author_id'
-  has_many :alert_attempts
+  has_many :alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
+  has_many :alert_attempts, :include => [:jurisdiction, :organization, :alert, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
-  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :order => "alerts.created_at DESC"
+  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
   has_many :documents do
@@ -320,6 +320,7 @@ class User < ActiveRecord::Base
 
     Alert.paginate(:conditions => ors,
                    :joins => "inner join jurisdictions on alerts.from_jurisdiction_id=jurisdictions.id",
+                   :include => [:original_alert, :cancellation, :author, :from_jurisdiction],
                    :order => "alerts.created_at DESC, alerts.id DESC",
                    :page => page,
                    :per_page => 10)

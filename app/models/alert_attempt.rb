@@ -18,7 +18,7 @@
 
 class AlertAttempt < ActiveRecord::Base
   belongs_to :alert
-  belongs_to :user
+  belongs_to :user, :include => [:devices, :role_memberships]
   belongs_to :organization
   belongs_to :jurisdiction
   belongs_to :acknowledged_alert_device_type, :foreign_key => :acknowledged_alert_device_type_id, :class_name => "AlertDeviceType"
@@ -36,7 +36,7 @@ class AlertAttempt < ActiveRecord::Base
       d=device_type
     end
 
-    {:include => :devices,
+    {:include => [:jurisdiction, :organization, :alert, :user, :acknowledged_alert_device_type, :devices],
      :conditions => ["devices.type = ?", d]}}
   named_scope :acknowledged_by_device, lambda {|device_type|
     if device_type.is_a?(AlertDeviceType)

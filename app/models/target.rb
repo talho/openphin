@@ -13,9 +13,9 @@
 
 class Target < ActiveRecord::Base
   belongs_to :item, :polymorphic => true
-  belongs_to :audience
+  belongs_to :audience, :include => [:roles, :jurisdictions, :users]
   belongs_to :creator, :class_name => 'User'
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :users, :include => [:devices, :role_memberships]
 
   after_create :save_snapshot_of_users
 

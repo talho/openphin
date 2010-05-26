@@ -15,8 +15,8 @@
 class Audience < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
-  has_and_belongs_to_many :jurisdictions, :uniq => true
-  has_and_belongs_to_many :roles, :uniq => true
+  has_and_belongs_to_many :jurisdictions, :uniq => true, :include => [:role_memberships]
+  has_and_belongs_to_many :roles, :uniq => true, :include => [:role_memberships]
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
   
   belongs_to :forum

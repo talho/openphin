@@ -1,3 +1,4 @@
+
 <ul class="roles data-list">
   <% roles = current_user.is_admin? ? user.role_memberships.all_roles : user.role_memberships.user_roles %>
   <% roles.each do |r| %>
