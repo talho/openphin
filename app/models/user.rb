@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
 
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
-  has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role]}, :conditions => ['roles.alerter = ?', true]
+  has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role, :jurisdiction]}, :conditions => ['roles.alerter = ?', true]
   has_many :alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :alert, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
