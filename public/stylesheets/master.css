@@ -8,7 +8,7 @@
 html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;font-variant:normal;}sup {vertical-align:text-top;}sub {vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
 body {font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}table {font-size:inherit;font:100%;}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%;}
 h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}abbr,acronym{border-bottom:1px dotted #000;cursor:help;} em{font-style:italic;}blockquote,ul,ol,dl{margin:0 0 20px;}ol,ul,dl{margin-left:35px;}ol li{list-style:decimal outside;}ul li{list-style:disc outside;}dl dd{margin-left:20px;}th,td{padding:5px;}th{font-weight:bold;}caption{margin-bottom:5px;text-align:center;}
-	
+
 /**
  * REDECLARATIONS
  */
@@ -110,10 +110,10 @@ div.help a                                          {color:#fff}
 #news_articles div.main p.date                {margin-top:-15px; color:#999; font-size:12px; margin-bottom:15px;}
 #news_articles div.extras p.date              {color:#999; margin:0;}
 #news_articles div.extras h3                  {color:#333; margin:0;}
-#news_articles .more                          {width: 720px; height: 20px;}
-#news_articles .less                          {width: 720px; height: 20px;}
-#news_articles .more a                        {float: right;}
-#news_articles .less a                        {float: right;}
+#news_articles p.more                          {width: 720px; height: 20px;}
+#news_articles p.less                          {width: 720px; height: 20px;}
+#news_articles p.more a                        {float: right;}
+#news_articles p.less a                        {float: right;}
 
 #feature 																			{width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
 #content p																		{margin:0 0 15px; line-height:1.6;}
@@ -198,9 +198,9 @@ form legend																		{padding:0 0 5px; display:block;}
 .preview .aside h5														{line-height:1.2; font-weight:bold; font-size:11px; color:#CCC; clear:left; float:left; width:80px; text-align:right; margin:0 10px 0 0;}
 .preview .aside p															{line-height:1.2; font-size:11px; width:120px; float:left;}
 
-#content .extended .aside h5,
-#content .extended .aside p                   {margin-bottom:0px;}
-#content .extended .aside h3                  {clear:both; margin:10px 0 10px; padding:10px 0 0;}
+#content div.extended div.aside h5,
+#content div.extended div.aside p                   {margin-bottom:0px;}
+#content div.extended div.aside h3                  {clear:both; margin:10px 0 10px; padding:10px 0 0;}
 
 span.title                                    {font-size:15px; font-weight:bold; color:#333; display:block; float:left; padding-left:26px; background:url(images/status_unknown.png) no-repeat 0 2px;}
 span.extreme                                  {background-image:url(images/status_extreme.png);}
@@ -261,8 +261,6 @@ table.data-list                               {border-collapse:collapse;backgrou
 table.data-list td, table.data-list th        {padding:5px;}
 table.data-list caption                       {padding: 0 0 .5em 0;text-align: left;font-size: 1.4em;font-weight: bold;text-transform: uppercase;color: #333;background: transparent;}
 table.data-list a                             {text-decoration:none;}
-table.data-list a:link                        {}
-table.data-list a:visited                     {}
 table.data-list a:hover                       {text-decoration: underline;}
 table.data-list thead th,
 table.data-list tfoot th,
@@ -272,7 +270,6 @@ table.data-list tbody th,
 table.data-list tbody td                      {border-top: dotted 1px #333;font-size:12px;}
 table.data-list tbody th                      {white-space: nowrap;}
 table.data-list tbody th a                    {color:#333;}
-table.data-list .odd                          {}
 table.data-list tbody tr:hover                {background:#fafafa}
 table.data-list div.pagination                {margin-bottom:0px !important;}
 table.data-list .topic_author                 {border-right:1px solid #686868;color:#666;font-size:10px;width:20%;padding:0px;vertical-align:top;}
@@ -281,6 +278,13 @@ table.data-list .topic_content                {vertical-align:top;}
 ul.comments div.comment_author                {float:left;font-size:10px;color:#666;}
 ul.comments div.comment_author img            {width:30px;}
 ul.comments div.comment_content               {margin-left:175px;}
+ul.comments div.comment_content ol            {margin-left:5px !important;}
+ul.comments div.comment_content ol li         {padding:0px !important; border:none !important;min-height:0px;list-style:decimal outside none;}
+ul.comments div.comment_content h1,
+ul.comments div.comment_content h2,
+ul.comments div.comment_content h3,
+ul.comments div.comment_content h4            {margin:0px !important;}
+ul.comments div.comment_content p             {border:none !important;}
 ul.comments li                                {padding-bottom:15px !important;height:auto;min-height:55px;}
 .data-list                                    {margin:0 0 15px; padding:0; border-top:1px solid #d9d9d9;}
 .data-list li,
@@ -310,7 +314,7 @@ form button,
 form input.submit,
 a.button   															      {clear:both; padding:0; margin:0 10px 0 0; width:149px; height:26px; border:none; background:url(images/button.png) no-repeat; line-height:26px; text-align:center; color:#333; font-weight:bold; font-size:11px;}
 a.button                                      {display:block;}
-.new_user input, .new_user select, new_user textarea {margin-bottom:10px;}
+.new_user input, .new_user select, .new_user textarea {margin-bottom:10px;}
 .new_organization input, .new_organization select, .new_organization textarea {margin-bottom:10px;}
 .new_organization legend {font-size:1.4em; color:#369;}
 
@@ -341,15 +345,15 @@ span.media_list .withsubfolders .shares input                   {left:0px !impor
 span.media_list .withsubfolders #toggle_closed                  {top:1px !important; left:18px !important;}
 span.media_list .withsubfolders .with_sub_folder                {margin-left: 15px !important;}
 span.media_list .withsubfolders ul.check_selector li li li label{padding-left:30px !important;}
-span.media_list .document_panel_action,
-span.documents .document_panel_action           {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
-.document_panel_action .load_panel_text         {position:relative;top:-10px;padding-left:2px;}
-.document_panel_action #channel_submit          {margin-top:20px;}
-.document_panel_action #share                   {font-size:11px;margin-top:15px;}
-.document_panel_action #share h2                {margin-bottom:10px;}
-.document_panel_action #share ul                {margin-left: 5px !important;}
-.document_panel_action #close                   {width:16px; height: 16px; background: url('images/closeButton-Hover.png') 2px 2px no-repeat;text-indent:-1000px;padding:2px;border:none !important;color:#eeeeee;}
-.document_panel_action #close:hover             {background: url('images/closeButton-Active.png') 2px 2px no-repeat;}
+span.media_list div.document_panel_action,
+span.documents div.document_panel_action           {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
+div.document_panel_action .load_panel_text         {position:relative;top:-10px;padding-left:2px;}
+div.document_panel_action #channel_submit          {margin-top:20px;}
+div.document_panel_action #share                   {font-size:11px;margin-top:15px;}
+div.document_panel_action #share h2                {margin-bottom:10px;}
+div.document_panel_action #share ul                {margin-left: 5px !important;}
+div.document_panel_action #close                   {width:16px; height: 16px; background: url('images/closeButton-Hover.png') 2px 2px no-repeat;text-indent:-1000px;padding:2px;border:none !important;color:#eeeeee;}
+div.document_panel_action #close:hover             {background: url('images/closeButton-Active.png') 2px 2px no-repeat;}
 span.media_list .maininput,
 span.documents .maininput                       {background-color:#eeeeee;}
 ul.media_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 15px; left: 12px;}
@@ -392,7 +396,7 @@ table#groups td.editdestroy                     {border: none;}
 }
 .completed, .error, .notice, .instructions {
   font-size: 12px;
-  padding: .8em; 
+  padding: .8em;
   margin-top: 0px;
   border: 2px solid #ddd;
 }

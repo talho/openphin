@@ -6,6 +6,7 @@
   </p>
 <% end %>
 
+<% unless @forums.blank? %>
 <table class="forums data-list">
   <caption>Forums</caption>
   <thead>
@@ -49,3 +50,6 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <p>There are no forums to display.  Click on "Add Forum" to add a forum.</p>
+<% end %>
