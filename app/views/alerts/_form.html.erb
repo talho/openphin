@@ -24,7 +24,7 @@
 	  <% else %>
 		<h2><%=h @alert.title %></h2>
 	  <% end %>
-      
+
       <p>
         <%= form.label :message %> (<span id="msgcnt">0</span> characters)
         <%= form.text_area :message, :rows => 5 %>
@@ -49,7 +49,7 @@
       <strong class="maxlen">Maximum length: 160 characters</strong>.
       <%= render :partial => "recorder", :locals => {:upload_url => "#{UPLOAD_BASE_URI}/alerts/index/upload", :filename => current_user.generate_upload_token } unless @preview %>
       <%= form.text_area :short_message, :rows => 2, :class => "short_message", :wrap => "soft" %>
-      
+
       <%- unless @update.blank? && @cancel.blank? %><p><%= form.submit "Preview Message", :id => "alert_preview_submit" %></p><% end %>
     </div>
     <div class="aside">
@@ -58,28 +58,28 @@
         <%= form.select :from_jurisdiction_id, current_user.alerter_jurisdictions.map {|j| [j.name, j.id] } %>
         <%= form.label :from_jurisdiction_id, 'Jurisdiction' %>
       </p>
-      
+
       <p>
         <%= form.select :status, Alert::Statuses %>
         <%= form.label :status %>
       </p>
-      <% end %>      
+      <% end %>
 
       <p>
         <%= form.select :severity, Alert::Severities %>
         <%= form.label :severity %>
       </p>
-      
+
       <p>
         <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]}, { :selected => 4320} %>
         <%= form.label :delivery_time %>
       </p>
-      
+
       <p>
         <%= form.select :acknowledge, @acknowledge_options, :selected => @acknowledge %>
         <%= form.label :acknowledge, "Acknowledge" %>
       </p>
-      
+
       <% if @alert.has_alert_response_messages? && !(@update.blank? && @cancel.blank?) %>
         <p>
           <%= form.label :responders, "Responders" %>
@@ -128,7 +128,7 @@
           <%= render 'audiences/fields', :form => audience, :group_form => form %>
         <% end %>
       <% end %>
-      
+
       <%= form.submit "Preview Message", :class => "preview_alert", :id => "alert_preview_submit" %>
     <%- end -%>
   </div>
@@ -149,5 +149,5 @@
       <button class="edit">&lt; Edit this Alert</button>
       <%= form.submit "Send this Alert", :name => 'send', :id => "alert_submit" %>
     </div>
-  </div> 
+  </div>
 <% end %>

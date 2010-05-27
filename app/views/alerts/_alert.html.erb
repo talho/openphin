@@ -69,7 +69,7 @@
     <%= link_to "Export Contacted Users (CSV)", alert_path(@alert,:format=>:csv) %>
   <% end %>
 
-  <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>8) %>
+  <% attempts = @alert.alert_attempts.paginate(:page=>params[:page]||1,:per_page=>8, :include => :user, :order => "users.display_name") %>
   <%= will_paginate attempts %>
   <table>
     <tr>

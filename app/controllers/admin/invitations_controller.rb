@@ -176,6 +176,7 @@ class Admin::InvitationsController < ApplicationController
     order_by = params[:sort] != nil ? params[:sort] : 'email'
     #Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
     db = ActiveRecord::Base.connection();
+    table = ""
     if params[:sort] != nil && (params[:sort] == 'completion_status' && params[:reverse] == '1')
       db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration TYPE=HEAP " +
         "(SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
@@ -191,7 +192,7 @@ class Admin::InvitationsController < ApplicationController
     else
       sql = "SELECT * FROM inviteeStatusByRegistration"
     end
-    invitees = Invitee.paginate_by_sql [sql], :page => params[:page] || 1
+    invitees = Invitee.find_by_sql([sql]).paginate(:page => params[:page] || 1)
     db.execute "DROP TABLE inviteeStatusByRegistration"
     invitees
   end

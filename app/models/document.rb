@@ -58,7 +58,7 @@ class Document < ActiveRecord::Base
   
   def share(target)
     target.users.each do |user|
-      self.copy(user) if user.has_public_role?
+      self.copy(user)
     end
     DocumentMailer.deliver_document(self, target)
   end
@@ -77,7 +77,7 @@ class Document < ActiveRecord::Base
   end
   
   def copy(user)
-    user.documents.create! :file => self.file
+    user.documents.create! :file => self.file, :owner => user
   end
 
 private

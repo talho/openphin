@@ -217,45 +217,41 @@ class User < ActiveRecord::Base
   def is_alerter_for?(jurisdiction)
     jurisdiction.alerting_users.include?(self)
   end
-  
+
   def is_super_admin?
-    j = Jurisdiction.find_by_name('Texas')
-    j.super_admins.include?(self) unless j.nil?
+    j = Jurisdiction.root.children.first # Should be Texas
+    return role_memberships.count(:conditions => ["role_id = ? AND jurisdiction_id = ?", Role.superadmin.id, j.id]) > 0
   end
 
   def is_admin?
-    self.roles.include?(Role.admin) || self.roles.include?(Role.superadmin) ? true : false
-  end
-
-  def is_jurisdiction_admin?
-    self.roles.include?(Role.admin)
+    return role_memberships.count(:conditions => ["role_id = ? OR role_id = ?", Role.admin.id, Role.superadmin.id]) > 0
   end
 
   def is_org_approver?
-    self.roles.detect{|role| role == Role.org_admin }
+    return role_memberships.count(:conditions => ["role_id = ?", Role.org_admin]) > 0
   end
   
   def has_non_public_role?
-    self.roles.any?{|role| role.approval_required? || role == Role.admin || role == Role.superadmin }
+    self.roles.non_public.size > 0
   end
 
   def has_public_role?
-    self.roles.any?{|role| role == Role.public}
+    self.roles.public.size > 0
   end
 
   def has_public_role_in?(jurisdiction)
-    self.role_memberships.any?{|rm| rm.role == Role.public && rm.jurisdiction == jurisdiction}
+    return role_memberships.count(:conditions => ["role_id = ? AND jurisdiction_id = ?", Role.public.id, j.id]) > 0
   end
 
 
   def has_public_role_request?
-    self.role_requests.any?{|request| request.role == Role.public}
+    return role_requests.count(:conditions => ["role_id = ?", Role.public.id]) > 0
   end
 
   alias_attribute :name, :display_name
   
   def alerter_jurisdictions
-    Jurisdiction.find(role_memberships.alerter.map(&:jurisdiction_id))
+    role_memberships.alerter.map(&:jurisdiction)
   end
 
   def phin_oid=(val)
@@ -336,14 +332,14 @@ class User < ActiveRecord::Base
   end
 
   def generate_upload_token
-    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"
-    if File.exists?(filename)
-      File.delete(filename)
-    end
-    self.token = ActiveSupport::SecureRandom.hex
-    self.token_expires_at = Time.zone.now+10.minutes
-    self.save
-    return self.token
+#    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"
+#    if File.exists?(filename)
+#      File.delete(filename)
+#    end
+#    self.token = ActiveSupport::SecureRandom.hex
+#    self.token_expires_at = Time.zone.now+10.minutes
+#    self.save
+#    return self.token
   end
 
   def viewable_groups

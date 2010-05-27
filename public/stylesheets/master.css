@@ -436,3 +436,4 @@ table.inviteTable td                                {border-bottom:1px solid #D9
 div#tooltip                                         {position:absolute; padding:5px; background: #fff; border: 1px solid #666;}
 
 span.media_list legend                              {position: relative; top: -5px;}
+div#sql.panel_content {overflow: auto; height: 500px;}
