@@ -61,3 +61,6 @@
 [submodule "vendor/plugins/csv_builder"]
 	path = vendor/plugins/csv_builder
 	url = git://github.com/Dishwasha/csv_builder.git
+[submodule "vendor/plugins/smurf"]
+	path = vendor/plugins/smurf
+	url = git://github.com/Dishwasha/smurf.git
