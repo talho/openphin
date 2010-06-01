@@ -20,6 +20,8 @@ class Role < ActiveRecord::Base
 
   named_scope :alerters, :conditions => {:alerter => true}
   named_scope :alphabetical, :order => 'name'
+  named_scope :public, :conditions => {:approval_required => false}
+  named_scope :non_public, :conditions => {:approval_required => true}
   default_scope :order => "user_role, name ASC"
   Defaults = {
     :admin => 'Admin',

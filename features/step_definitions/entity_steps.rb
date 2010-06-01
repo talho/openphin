@@ -1,4 +1,5 @@
 Given /^the following entities exist[s]?:$/ do |table|
+
   table.raw.each do |row|
     key, value = row
     Given "a #{key.downcase} named #{value}"
@@ -66,10 +67,10 @@ end
 
 
 Given /^a[n]? approval role named (.*)$/ do |name|
-  r = Factory(:role, :name => name, :approval_required => true)
+  r = Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true)
 end
 Given /^a[n]? system role named (.*)$/ do |name|
-  r = Factory(:role, :name => name, :approval_required => true, :user_role => false)
+  r = Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true, :user_role => false)
 end
 Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   jurisdictions = table.raw.first

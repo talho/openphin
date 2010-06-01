@@ -176,6 +176,7 @@ class Admin::InvitationsController < ApplicationController
     order_by = params[:sort] != nil ? params[:sort] : 'email'
     #Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
     db = ActiveRecord::Base.connection();
+    table = ""
     if params[:sort] != nil && (params[:sort] == 'completion_status' && params[:reverse] == '1')
       db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration TYPE=HEAP " +
         "(SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
@@ -191,7 +192,7 @@ class Admin::InvitationsController < ApplicationController
     else
       sql = "SELECT * FROM inviteeStatusByRegistration"
     end
-    invitees = Invitee.paginate_by_sql [sql], :page => params[:page] || 1
+    invitees = Invitee.find_by_sql([sql]).paginate(:page => params[:page] || 1)
     db.execute "DROP TABLE inviteeStatusByRegistration"
     invitees
   end
@@ -199,11 +200,11 @@ class Admin::InvitationsController < ApplicationController
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil ? params[:sort] : 'email'
-    Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
+    Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]], :include => [:user, :invitation]
   end
 
   def inviteeStatusByPendingRequests
-    Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :include => [:user => :role_requests],
+    Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :joins => [:user => :role_requests], :include => :user,
                      :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ? AND role_requests.jurisdiction_id IN (?)", params[:id], true, nil, nil, current_user.role_memberships.admin_roles.map{|rm| rm.jurisdiction.id}.join(",")]
   end
 
@@ -213,8 +214,7 @@ class Admin::InvitationsController < ApplicationController
     order_by = "display_name" if order_by == "name"
     invitation_time = Invitation.find(params[:id]).updated_at
     Invitee.paginate_all_by_invitation_id params[:id], 
-      :page=>params[:page] || 1, :order=> "users.#{order_by} " + order_in, :include=>:user, 
-      :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
+      :page=>params[:page] || 1, :order=> "users.#{order_by} " + order_in, :include=> [:user, :invitation], :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
   end
   
   def csv_download

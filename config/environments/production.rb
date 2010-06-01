@@ -33,4 +33,4 @@ PHIN_APP_OID="1"
 PHIN_ENV_OID="1"
 PHIN_OID_ROOT="#{PHIN_PARTNER_OID}.#{PHIN_ENV_OID}.#{PHIN_APP_OID}"
 
-config.gem "smurf", :version => "=1.0.3"
+#config.gem "smurf", :version => "=1.0.3"

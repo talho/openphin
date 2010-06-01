@@ -39,7 +39,7 @@
 #  distribution_id                :string(255)
 #  reference                      :string(255)
 #  sender_id                      :string(255)
-#  call_down_messages             :text
+#  call_down_messages      n       :text
 #  not_cross_jurisdictional       :boolean(1)     default(true)
 #
 
@@ -51,11 +51,11 @@ class Alert < ActiveRecord::Base
   belongs_to :from_jurisdiction, :class_name => 'Jurisdiction'
   belongs_to :original_alert, :class_name => 'Alert'
 
-  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => {:item_type => 'Alert'}
-  has_many :audiences, :through => :targets, :include => :jurisdictions
+  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => "targets.item_type = 'Alert'", :include => :users
+  has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
 
   has_many :alert_device_types, :dependent => :delete_all
-  has_many :alert_attempts, :dependent => :destroy
+  has_many :alert_attempts, :dependent => :destroy, :include => [:user, :acknowledged_alert_device_type, :jurisdiction, :organization, :alert, :devices]
   has_many :deliveries, :through => :alert_attempts
   has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
   has_many :acknowledged_users,
@@ -69,8 +69,8 @@ class Alert < ActiveRecord::Base
            :uniq => true,
            :conditions => ["alert_attempts.acknowledged_at IS NULL"]
 
-  has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"]
-  has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"]
+  has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"], :include => [:original_alert, :cancellation, :updates, :author, :from_jurisdiction]
+  has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"], :include => [:original_alert, :cancellation, :updates, :author, :from_jurisdiction]
   has_many :ack_logs, :class_name => 'AlertAckLog'
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"

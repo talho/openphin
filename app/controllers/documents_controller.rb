@@ -38,7 +38,7 @@ class DocumentsController < ApplicationController
   
   def create
     @parent_folder = current_user.folders.find(params[:document][:folder_id].to_i) || Folder.new
-    if @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}.nil?
+    unless @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
       @document = current_user.documents.build(params[:document])
       @document.owner_id = current_user.id
       @document.save!

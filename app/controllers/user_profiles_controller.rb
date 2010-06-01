@@ -150,7 +150,7 @@ protected
   end
 
   def find_user_and_profile
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:user_id], :include => [:role_memberships])
     unless @user.editable_by?(current_user)
       flash[:notice] = "You are not authorized to edit this profile."
       redirect_to :back

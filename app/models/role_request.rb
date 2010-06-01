@@ -34,7 +34,8 @@ class RoleRequest < ActiveRecord::Base
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|
-    {:conditions => ["jurisdiction_id in (?)", jurisdictions]}
+    {:conditions => ["jurisdiction_id in (?)", jurisdictions],
+     :include => [:user, :role, :jurisdiction]}
   }
 
   before_create :set_requester_if_nil

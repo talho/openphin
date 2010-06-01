@@ -55,7 +55,7 @@ class Organization < ActiveRecord::Base
     }
   }
   named_scope :with_user, lambda {|user|
-    { :conditions => ["`audiences`.id = `organizations`.group_id AND  (`audiences`.`type` = 'Group' ) AND `audiences`.id = `audiences_users`.audience_id AND `audiences_users`.user_id = `users`.id AND (`users`.id = ?)", user.id], :joins => ", audiences, audiences_users, users"}
+    { :conditions => ["`audiences`.id = `organizations`.group_id AND  (`audiences`.`type` = 'Group' ) AND `audiences`.id = `audiences_users`.audience_id AND `audiences_users`.user_id = `users`.id AND (`users`.id = ?)", user.id], :joins => ", audiences, audiences_users, users", :order => '`organizations`.name'}
   }
   named_scope :foreign, :conditions => ["organizations.foreign = true"]
   named_scope :non_foreign, :conditions => ["organizations.foreign = false"]

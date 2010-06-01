@@ -1,0 +1,10 @@
+<%- roles = Role.user_roles -%>
+<%- role_ids = form.object.role_ids -%>
+<%- roles.each do |r| -%>
+  <li>
+    <%- id = [form.object_name.parameterize('_'), dom_id(r)].join('_') -%>
+    <%= check_box_tag "#{form.object_name}[role_ids][]", r.id,
+        role_ids.include?(r.id), :id => id, :class => 'audience_role' %>
+    <%= label_tag id, r.name %>
+  </li>
+<%- end -%>
