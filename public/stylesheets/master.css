@@ -147,12 +147,12 @@ ul#associations li.texas_dshs a								      {background:url(images/texas_dshs.p
 div.details p.texas_dshs a             				      {display:block; width:200px; height:47px; text-indent:-9999px; overflow:hidden;}
 div.details p.texas_dshs a                          {background:url(images/texas_dshs-larger.png) no-repeat; width:410px; height:51px;}
 
-#edit > .details label													    {display:block;}
-#edit > .details input,
-#edit > .details textarea												    {width:405px;}
-#edit > .details input.submit										    {width:149px;}
-#edit > .aside																	    {padding-top:1.6em;}
-#edit > .aside p																    {margin-bottom:8px;}
+#edit > div#details .details label									{display:block;}
+#edit > div#details .details input,
+#edit > div#details .details textarea							  {width:405px;}
+#edit > div#details .details input.submit						{width:149px;}
+#edit > div#details .aside												  {padding-top:1.6em;}
+#edit > div#details .aside p												{margin-bottom:8px;}
 #alert_title																	      {font-size:22px; font-weight:bold;}
 #alert_message																      {height:200px;}
 #alert_short_message													      {height:50px;}
