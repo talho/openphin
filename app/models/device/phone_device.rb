@@ -37,6 +37,7 @@ class Device::PhoneDevice < Device
 
   private
   def strip_extra_characters
+    return if self.phone.blank?
     self.phone = self.phone.tr('()-. ','')
     self.phone = self.phone[1..-1] if self.phone.first == '1'
   end
