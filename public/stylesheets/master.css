@@ -272,9 +272,9 @@ table.data-list tbody th                            {white-space: nowrap;}
 table.data-list tbody th a                          {color:#333;}
 table.data-list tbody tr:hover                      {background:#fafafa}
 table.data-list div.pagination                      {margin-bottom:0px !important;}
-table.data-list > .topic_author                     {border-right:1px solid #686868;color:#666;font-size:10px;width:20%;padding:0px;vertical-align:top;}
-table.data-list > .topic_author div                 {padding-bottom:1px;padding:5px}
-table.data-list > .topic_content                    {vertical-align:top;}
+table.data-list td.topic_author                     {border-right:1px solid #686868;color:#666;font-size:10px;width:20%;padding:0px;vertical-align:top;}
+table.data-list td.topic_author div                 {padding-bottom:1px;padding:5px}
+table.data-list td.topic_content                    {vertical-align:top;}
 ul.comments div.comment_author                      {float:left;font-size:10px;color:#666;}
 ul.comments div.comment_author img                  {width:30px;}
 ul.comments div.comment_content                     {margin-left:175px;}
@@ -349,6 +349,12 @@ span.media_list div.withsubfolders ul.shares input  {left:0px !important;}
 span.media_list div.withsubfolders a#toggle_closed  {top:1px !important; left:18px !important;}
 span.media_list div.withsubfolders label.with_sub_folder {margin-left: 15px !important;}
 span.media_list div.withsubfolders ul.check_selector li li li label {padding-left:30px !important;}
+
+span.media_list fieldset.withsubfolders ul.shares input  {left:0px !important;}
+span.media_list fieldset.withsubfolders a#toggle_closed  {top:1px !important; left:18px !important;}
+span.media_list fieldset.withsubfolders label.with_sub_folder {margin-left: 15px !important;}
+span.media_list fieldset.withsubfolders ul.check_selector li li li label {padding-left:30px !important;}
+
 span.media_list div.document_panel_action,
 span.documents div.document_panel_action            {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
 div.document_panel_action span.load_panel_text      {position:relative;top:-10px;padding-left:2px;}
