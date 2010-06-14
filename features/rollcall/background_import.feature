@@ -35,8 +35,8 @@ Feature: Importing automated data
     Given I am logged in as "nurse.betty@example.com"
     When I drop the following file in the rollcall directory:
     """
-    <%= Date.today.strftime("%Y-%m-%d 00:00:00")%>|LEWIS ES|500|50
-    <%= Date.today.strftime("%Y-%m-%d 00:00:00")%>|BERRY ES|200|30
+    <%= Date.today.strftime("%Y-%m-%d 00:00:00")%>,LEWIS ES,500,50
+    <%= Date.today.strftime("%Y-%m-%d 00:00:00")%>,BERRY ES,200,30
     """
     And the rollcall background worker processes
     And I load the rollcall school page for "LEWIS ES"

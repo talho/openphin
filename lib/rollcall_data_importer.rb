@@ -23,7 +23,7 @@ class RollcallDataImporter
             end
 
           rescue
-            ROLLCALL_LOGGER.error("Import failed for record: #{data.join("|")}; file:#{file}")
+            ROLLCALL_LOGGER.error("Import failed for record: #{data.join(",")}; file:#{file}")
             next
           end
         end
@@ -42,7 +42,7 @@ class RollcallDataImporter
   end
 
   def self.import_schools(filename, errstream=STDERR)
-    data = read_data(filename, "|")
+    data = read_data(filename, ",")
     data[1..-1].each do |school|
       school_number, name, display_name, level, region = school
       school = School.find_by_display_name(display_name)

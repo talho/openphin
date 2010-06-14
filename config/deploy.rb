@@ -121,3 +121,10 @@ after "deploy:restart", :role => :app do
   rails_env = fetch(:rails_env, RAILS_ENV)
   find_and_execute_task("thinking_sphinx:running_start") unless rails_env="test"
 end
+
+
+Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
+  $: << File.join(vendored_notifier, 'lib')
+end
+
+require 'hoptoad_notifier/capistrano'

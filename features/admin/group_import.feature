@@ -29,11 +29,11 @@ Feature: Importing users from a CSV
   Scenario: Importing a well-formatted file
     Given the following file "groups.csv":
     """
-    email|jurisdiction|group_name
-    jane@example.com| Region 6/5 South| School Nurses
-    jay@example.com | Tarrant | School Nurses
-    john@example.com| Ector | EctorCoHAN
-    bob@example.com | Ector | EctorCoHAN
+    email,jurisdiction,group_name
+    jane@example.com, Region 6/5 South, School Nurses
+    jay@example.com , Tarrant , School Nurses
+    john@example.com, Ector , EctorCoHAN
+    bob@example.com , Ector , EctorCoHAN
     """
     When I import the group file "groups.csv"
     Then the group "School Nurses" in "Region 6/5 South" should exist
@@ -58,9 +58,9 @@ Feature: Importing users from a CSV
       | Health Officer Group || Health Officer | jane@example.com | Jurisdiction | Region 6/5 South |
     And the following file "groups.csv":
     """
-    email|jurisdiction|group_name
-    jay@example.com | Region 6/5 South| Health Officer Group
-    john@example.com | Ector | Health Officer Group
+    email,jurisdiction,group_name
+    jay@example.com , Region 6/5 South, Health Officer Group
+    john@example.com , Ector , Health Officer Group
     """
     When I import the group file "groups.csv"
     Then the "Health Officer Group" group in "Region 6/5 South" should have the following members:
@@ -80,9 +80,9 @@ Feature: Importing users from a CSV
       | Health Officer Group || Health Officer | jane@example.com | Jurisdiction | Region 6/5 South |
     And the following file "groups.csv":
     """
-    email|jurisdiction|group_name
-    jay@example.com | Region 6/5 South| Health Officer Group
-    john@example.com | Ector | Health Officer Group
+    email,jurisdiction,group_name
+    jay@example.com , Region 6/5 South, Health Officer Group
+    john@example.com , Ector , Health Officer Group
     """
     When I import the group file "groups.csv" with no update
     Then the "Health Officer Group" group in "Region 6/5 South" should have the following members:

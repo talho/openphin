@@ -157,7 +157,7 @@ FasterCSV.open(filename, :headers => true) do |records|
       when 'user'
         normal=ci.normalize_record(rec)
     end
-    puts normal.join("|") if normal
+    puts normal.join(",") if normal
   end
 end
 

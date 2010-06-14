@@ -22,7 +22,7 @@ require 'fastercsv'
 
 class GroupImporter
   def self.import_groups(filename, options = {})
-    options = {:col_sep => "|", :row_sep => "\n"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto}.merge(options)
     file = File.open('log/group.log', "w")
     log = Logger.new(file)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
@@ -31,7 +31,7 @@ class GroupImporter
         jurisdiction = rec['jurisdiction'].strip unless rec['email'].blank?
         group_name = rec['group_name'].strip unless rec['group_name'].blank?
         if group_name.blank? || jurisdiction.blank? || group_name.blank?
-          STDERR.puts rec.values_at.join("|")
+          STDERR.puts rec.values_at.join(",")
           next
         end
         user=User.find_by_email(email)

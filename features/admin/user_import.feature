@@ -18,9 +18,9 @@ Feature: Online importing users from a uploaded CSV file
   Scenario: Importing a well-formatted file
     Given the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    john@example.com|John|User|John User|Ector|5552347000|5552347001|
-    bob@example.com|Bob|User|Bob User|Ector|5552348000||5552348001
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    john@example.com,John,User,John User,Ector,5552347000,5552347001,
+    bob@example.com,Bob,User,Bob User,Ector,5552348000,,5552348001
     """
     When I import the user file "users.csv" with options "create/update"
     

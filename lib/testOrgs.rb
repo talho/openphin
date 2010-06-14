@@ -1,4 +1,4 @@
-    newOrgs=File.open(File.dirname(__FILE__) +  '/../db/fixtures/orglist.csv').read.split("\n").map{|row| row.split("|")}
+    newOrgs=File.open(File.dirname(__FILE__) +  '/../db/fixtures/orglist.csv').read.split("\n").map{|row| row.strip.split(",")}
     newOrgs.each{|o| print o
     x = Array.new
                  }

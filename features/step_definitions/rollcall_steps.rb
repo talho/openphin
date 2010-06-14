@@ -1,7 +1,7 @@
 When /^I drop the following file in the rollcall directory\:$/ do |erb_file_template|
   rollcall_drop_dir=File.join(File.dirname(__FILE__), '..', '..', 'tmp', 'rollcall')
   Dir.ensure_exists(rollcall_drop_dir)
-  file=ERB.new(erb_file_template.gsub("|", "\t")).result
+  file=ERB.new(erb_file_template.gsub(",", "\t")).result
   f=File.open(File.join(rollcall_drop_dir, 'Attendance_test.txt'), 'w')
   f.write(file)
   f.close

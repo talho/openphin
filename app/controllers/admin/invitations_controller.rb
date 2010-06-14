@@ -42,7 +42,7 @@ class Admin::InvitationsController < ApplicationController
 
     @reverse = params[:reverse] == "1" ? nil : "1"
 
-    @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
+    @csv_options = { :col_sep => ',', :row_sep => :auto }
     @output_encoding = 'LATIN1'
     @timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
     respond_to do |format|

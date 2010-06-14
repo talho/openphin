@@ -22,12 +22,12 @@ require 'fastercsv'
 
 class UserImporter
   def self.import_users(filename, options={})
-    options = {:col_sep => "|", :row_sep => "\n", :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
         if email.blank?
-          $stderr.puts rec.values_at.join("|")         
+          $stderr.puts rec.values_at.join(",")         
           next
         end
         if options[:update] && options[:create]
@@ -48,7 +48,7 @@ class UserImporter
         if user.valid?
           user.save
         else
-          $stderr.puts rec.values_at.join("|")
+          $stderr.puts rec.values_at.join(",")
           next
         end
 
@@ -71,12 +71,12 @@ class UserImporter
   end
 
   def self.jurisdiction_transform(filename, options = {})
-    options = {:col_sep => "|", :row_sep => "\n", :default_jurisdiction => "Texas"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto, :default_jurisdiction => "Texas"}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
-      puts records.first.headers.join("|")
+      puts records.first.headers.join(",")
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
-        puts rec.values_at.join("|") if jurisdiction == options[:default_jurisdiction]
+        puts rec.values_at.join(",") if jurisdiction == options[:default_jurisdiction]
       end
     end
   end

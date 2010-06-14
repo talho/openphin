@@ -15,11 +15,11 @@ Feature: Importing users from a CSV
   Scenario: Importing a well-formatted file
     Given the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    andy@example.com|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
-    jay@example.com|Jay|Example|John H. (Jay) Example III|Tarrant||5552346001|5552346002
-    john@example.com|John|User|John User|Ector|5552347000|5552347001|
-    bob@example.com|Bob|User|Bob User|Ector|5552348000||5552348001
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    andy@example.com,Andy,Contact,Andy Contact,Region 6/5 South,5552345000,5552345001,5552345002
+    jay@example.com,Jay,Example,John H. (Jay) Example III,Tarrant,,5552346001,5552346002
+    john@example.com,John,User,John User,Ector,5552347000,5552347001,
+    bob@example.com,Bob,User,Bob User,Ector,5552348000,,5552348001
     """
     When I import the user file "users.csv" with options "create/update"
     Then "andy@example.com" should have the "Public" role for "Region 6/5 South"
@@ -49,8 +49,8 @@ Feature: Importing users from a CSV
   Scenario: Importing users with invalid email addresses
     Given the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    0|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    0,Andy,Contact,Andy Contact,Region 6/5 South,5552345000,5552345001,5552345002
     """
     When I import the user file "users.csv" with options "create/update"
     Then no user exists with an email of "0"
@@ -63,9 +63,9 @@ Feature: Importing users from a CSV
       | Phone | 5552345000 |
     And the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    andy@example.com|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
-    john@example.com|John|Contact|John Contact|Region 6/5 South|5552346000|5552346001|5552346002
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    andy@example.com,Andy,Contact,Andy Contact,Region 6/5 South,5552345000,5552345001,5552345002
+    john@example.com,John,Contact,John Contact,Region 6/5 South,5552346000,5552346001,5552346002
     """
     When I import the user file "users.csv" with options "update"
     Then "andy@example.com" should have the communication device
@@ -82,9 +82,9 @@ Feature: Importing users from a CSV
       | Phone | 5552345000 |
     And the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    andy@example.com|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
-    john@example.com|John|Contact|John Contact|Region 6/5 South|5552346000|5552346001|5552346002
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    andy@example.com,Andy,Contact,Andy Contact,Region 6/5 South,5552345000,5552345001,5552345002
+    john@example.com,John,Contact,John Contact,Region 6/5 South,5552346000,5552346001,5552346002
     """
     When I import the user file "users.csv" with options "create"
     Then "andy@example.com" should have the communication device
@@ -108,8 +108,8 @@ Feature: Importing users from a CSV
       | Phone | 5552345000 |
     And the following file "users.csv":
     """
-    email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone
-    andy@example.com|Andy|Contact|Andy Contact|Region 6/5 South|5552345000|5552345001|5552345002
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    andy@example.com,Andy,Contact,Andy Contact,Region 6/5 South,5552345000,5552345001,5552345002
     """
     When I import the user file "users.csv" with options "create/update"
     And I go to the sign in page
@@ -118,9 +118,3 @@ Feature: Importing users from a CSV
     When I load the user profile page for "andy@example.com"
     Then I should see "Andy User"
     And I should not see "Andy Contact"
-
-
-
-
-
-

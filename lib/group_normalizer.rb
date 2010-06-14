@@ -97,7 +97,7 @@ class GroupNormalizer
   }
 
   def self.normalize_groups(filename, options = {})
-    options = {:col_sep => ",", :row_sep => "\r\n"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto}.merge(options)
     file = File.open("new#{filename}", "w")
     file.write("email|jurisdiction|group_name\n")
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
@@ -105,12 +105,12 @@ class GroupNormalizer
         email = rec['mail'].strip unless rec['mail'].blank?
         memberof = rec['memberOf'].strip unless rec['memberOf'].blank?
         if email.blank? || memberof.blank?
-          STDERR.puts rec.values_at.join("|")
+          STDERR.puts rec.values_at.join(",")
           next
         end
         groups = self.groupsFromMemberOf(memberof)
         groups.each do |group|
-          file.write("#{email}|#{group['jurisdiction']}|#{group['group']}\n")
+          file.write("#{email}|#{group['jurisdiction']},#{group['group']}\n")
         end unless groups.nil?
       end
     end

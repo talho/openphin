@@ -1,4 +1,4 @@
-schools=File.open(File.dirname(__FILE__) + '/schools.csv').read.split("\n").map{|row| row.split("|")}
+schools=File.open(File.dirname(__FILE__) + '/schools.csv').read.split("\n").map{|row| row.strip.split(",")}
 @district = SchoolDistrict.find_or_create_by_name(:name => "Houston ISD") { |district|
   district.jurisdiction=Jurisdiction.find_or_create_by_name("Harris")
 }

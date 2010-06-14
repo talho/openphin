@@ -61,9 +61,9 @@ Enrolled: #{report.enrolled}"
     timespan = 7 if timespan.nil?
     timespan = timespan.to_i if timespan.is_a?(String)
     if timespan > 7
-      xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
+      xlabels = ((1-timespan-Date.today.wday)..0).step(7).map{|d| (Date.today+d.days).strftime("%m-%d")}.join(",")
     else
-      xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join("|")
+      xlabels = ((1-timespan)..0).map{|d| (Date.today+d.days).strftime("%m-%d")}.join(",")
     end
     chart=Gchart.line( :size => "500x350",
                        :title => "Average % Absenteeism (Last #{params[:timespan]} Days)",

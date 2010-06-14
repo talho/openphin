@@ -51,7 +51,7 @@ class SearchesController < ApplicationController
         prawnto :inline => false        
       end
       format.csv do
-        @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
+        @csv_options = { :col_sep => ',', :row_sep => :auto }
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end

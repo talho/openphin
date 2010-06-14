@@ -83,6 +83,7 @@ Rails::Initializer.run do |config|
   config.gem "prawn", :version => "=0.8.4", :source => "http://gemcutter.org"
   #config.gem "csv_builder", :version => "=1.1.7", :source => "http://gemcutter.org"
   config.gem "slim_scrooge", :version => "=1.0.10", :source => "http://gemcutter.org"
+  config.gem "hoptoad_notifier"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 
