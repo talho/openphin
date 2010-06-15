@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   before_filter :non_public_role_required
   #app_toolbar "han"
   
-  def show 
+  def show
     if !params[:tag].blank?
       search_size = 20
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')
@@ -39,6 +39,7 @@ class SearchesController < ApplicationController
 
     build_fields params, conditions={}
     filters = build_filters params
+    assure_name_not_in_advanced_search(conditions,filters)
     
     options[:conditions] = conditions unless conditions.empty?
     options[:match_mode] = :any if conditions[:name]
@@ -91,6 +92,11 @@ protected
         0
       end
     }
+  end
+  
+  def assure_name_not_in_advanced_search(conditions,filters)
+    is_advanced = !conditions.reject{|k,v|k==:name}.empty? && !filters.empty?
+    conditions.reject!{|k,v|k==:name} if is_advanced
   end
   
 end
