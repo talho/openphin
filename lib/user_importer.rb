@@ -25,7 +25,7 @@ class UserImporter
     options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
-        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at 
         if email.blank?
           $stderr.puts rec.values_at.join(",")         
           next
@@ -37,6 +37,8 @@ class UserImporter
           user=User.find_by_email(email)
           next if user.nil?
         elsif options[:create]
+          user=User.find_by_email(email)
+          next unless user.nil?
           user=User.new(:email => email)
           user.update_password(options[:default_password],options[:default_password])
         else
