@@ -25,5 +25,4 @@ class RoleRequestsController < ApplicationController
       end
     end
   end
-
 end

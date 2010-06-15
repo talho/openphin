@@ -1,5 +1,11 @@
 <% form_for :user_batch, :url => {:action => 'create'}, :html => {:multipart => true} do |f| %>
 <p>
+  <%= f.label "To make it easy to add users in bulk, this batch import feature takes a comma-separated (csv) file." %><br />
+  <%= f.label "It is recommended that the file be prepared in a spreadsheet application like Microsoft Excel and exported as a comma-separated file." %><br />
+  <%= f.label "Please see the field format below to assist you in correctly using the fields of the csv file:" %>
+</p>
+<h3>email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone</h3>
+<p>
   <%= f.label "Batch file entries have a jurisdiction field.  If empty, the default is used." %><br/>
   <%= f.label "As an Jurisdiction Admin you can only add users to these jurisdictions." %>
 </p>

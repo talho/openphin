@@ -143,3 +143,37 @@ Feature: Role Requests
     Then I should see "That resource does not exist or you do not have access to it"
 
   Scenario: Viewing pending role requests
+
+  Scenario: User requests role
+    Given the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com"
+
+    When I go to the request a role page
+    And I fill out the role request form with:
+      | Jurisdiction | Dallas County  |
+      | Role         | Health Officer |
+
+    Then I should see "Your request to be a Health Officer in Dallas County has been submitted"
+    Then I should see I am awaiting approval for Health Officer in Dallas County
+
+    And I should see that I have a pending role request
+
+    When I log in as "admin1@dallascounty.com"
+    And I am on the dashboard page
+    And I follow "Admin"
+    And I follow "Manage Roles"
+    And I follow "Approve"
+
+    When I log in as "john.smith@example.com"
+    And I follow "My Account"
+    And I follow "Remove Role"
+    And I follow "My Account"
+    Then I should not see "Health Officer in Dallas County"
+    When I go to the request a role page
+    And I fill out the role request form with:
+      | Jurisdiction | Dallas County  |
+      | Role         | Health Officer |
+
+    Then I should see "Your request to be a Health Officer in Dallas County has been submitted"
+    Then I should see I am awaiting approval for Health Officer in Dallas County

@@ -44,3 +44,25 @@ Feature: Online importing users from a uploaded CSV file
     And I attach the tmp file at "users.csv" to "Upload User CSV file"
     And I press "Upload"
     Then I should see "The user batch has been successfully submitted"
+
+  Scenario: Importing a well-formatted file for users that already exist
+    Given the user "John User" with the email "john@example.com" has the role "Public" in "Ector"
+    And the user "Bob User" with the email "bob@examplel.com" has the role "Public" in "Ector"
+    And the following file "users.csv":
+    """
+    email,first_name,last_name,display_name,jurisdiction,mobile,fax,phone
+    john@example.com,John,User,John User,Ector,5552347000,5552347001,
+    bob@example.com,Bob,User,Bob User,Ector,5552348000,,5552348001
+    """
+    When I import the user file "users.csv" with options "create/update"
+    Then I should be on the homepage
+
+  Scenario: Admin can upload a user import batch file with users that already exist
+    Given the user "John User" with the email "john@example.com" has the role "Public" in "Ector"
+    And I am logged in as "admin@ector.gov"
+    And I go to the user batch page for an admin
+    And I follow "Batch Users"
+    And a jurisdiction named "Ector"
+    And I attach the tmp file at "users.csv" to "Upload User CSV file"
+    And I press "Upload"
+    Then I should not see "The user batch was not created"
