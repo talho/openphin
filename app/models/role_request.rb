@@ -21,7 +21,7 @@ class RoleRequest < ActiveRecord::Base
       req.errors.add("User is already a member of this role and jurisdiction")
     end
   end
-  validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction."
+  validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.", :unless => Proc.new { |rr| !RoleRequest.find_all_by_jurisdiction_id_and_user_id(rr.jurisdiction_id, rr.user_id).map(&:approver_id).include?(nil)}
   
   attr_protected :approver_id
 

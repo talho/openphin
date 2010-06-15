@@ -1,5 +1,5 @@
 class Admin::RoleAssignmentsController < ApplicationController
-  before_filter :admin_required
+  before_filter :admin_required, :except => :destroy
   app_toolbar "admin"
   
   
@@ -37,7 +37,7 @@ class Admin::RoleAssignmentsController < ApplicationController
       redirect_to new_role_assignment_path
     end
   end
-  
+
   def destroy
     role_assignment = RoleMembership.find(params[:id])
     if role_assignment.blank?
@@ -47,7 +47,7 @@ class Admin::RoleAssignmentsController < ApplicationController
       else
         redirect_to session[:return_to]
       end
-    elsif current_user.is_admin_for?(role_assignment.jurisdiction)
+    elsif current_user.is_admin_for?(role_assignment.jurisdiction) || current_user.id == role_assignment.user_id
       name = role_assignment.role.name
       jurisdiction = role_assignment.jurisdiction.name
       user = role_assignment.user.display_name
