@@ -155,5 +155,27 @@ Feature: An admin managing users
     And I should see "888-555-1212" within ".home_phone"
     And I should see "888-432-1212" within ".mobile_phone"
         
-        
-    
+    Scenario: Not permitting a second user to be created with the same case-folded e-mail
+      When I create a user account with the following info:
+        | Email          | john.smith@example.com |
+        | Password       | Password1        |
+        | Password confirmation | Password1 |
+        | First name     | John             |
+        | Last name      | Smith            |
+        | Preferred name | Jonathan Smith   |
+        | Are you with any of these organizations | Red Cross        |
+        | Home Jurisdiction  | Dallas County    |
+        | What is your primary role | Health Alert and Communications Coordinator |
+        | Preferred language | English      |
+        | Are you a public health professional? | <checked> |
+      And delayed jobs are processed
+      Then "john.smith@example.com" should have the "Public" role for "Dallas County"
+      
+      When I go to the the admin add user page
+      And I fill in "user_first_name" with "John"
+      And I fill in "user_last_name" with "Smith"
+      And I fill in "user_email" with "john.SMITH@example.com"
+      And I fill in "user_password" with "Password1"
+      And I fill in "user_password_confirmation" with "Password1"
+      And I press "Save"
+      Then I should see "Email address is already being used on another user account"
