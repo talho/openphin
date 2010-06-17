@@ -55,9 +55,21 @@ class UserImporter
         end
 
         userdevices = user.devices
-        user.devices << create_device(Device::PhoneDevice, :phone, mobile) unless mobile.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == mobile}
-        user.devices << create_device(Device::PhoneDevice, :phone, phone) unless phone.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == phone}
-        user.devices << create_device(Device::FaxDevice, :fax, fax) unless fax.blank?  || userdevices.detect{|u| u.type == "Device::FaxDevice" && u.fax == fax}
+        unless mobile.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == mobile}
+          mobile_device = create_device(Device::PhoneDevice, :phone, mobile)
+          user.devices << mobile_device if mobile_device.valid?
+        end
+
+        unless phone.blank? || userdevices.detect{|u| u.type == "Device::PhoneDevice" && u.phone == phone}
+          phone_device = create_device(Device::PhoneDevice, :phone, phone)
+          user.devices << phone_device if phone_device.valid?
+        end
+
+        unless fax.blank?  || userdevices.detect{|u| u.type == "Device::FaxDevice" && u.fax == fax}
+          fax_device = create_device(Device::FaxDevice, :fax, fax)
+          user.devices << fax_device if fax_device.valid?
+        end
+
         j=Jurisdiction.find_by_name(jurisdiction)
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)

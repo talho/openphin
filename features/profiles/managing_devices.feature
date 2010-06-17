@@ -38,7 +38,6 @@ Feature: Managing devices when editing user profiles
     Then "john.smith@example.com" should not have the communication device
       | Phone | 5552345678 |
 
-      
   Scenario: Adding an invalid device
   	When I go to the edit profile page
     And I follow "Add Device"
@@ -48,6 +47,16 @@ Feature: Managing devices when editing user profiles
     Then I should see error messages
     And "john.smith@example.com" should not have the communication device
       | Email |  |
+
+  Scenario: Adding a phone device with an extension is invalid
+  	When I go to the edit profile page
+    And I follow "Add Device"
+    And I select "Phone" from "Device Type"
+    And I fill in "Phone" with "5121231234x1234"
+    And I press "Save"
+    Then I should see error messages
+    And "john.smith@example.com" should not have the communication device
+      | Phone |  |
 
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"
