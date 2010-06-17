@@ -59,7 +59,7 @@ class Audience < ActiveRecord::Base
 
       user_ids_for_delivery += user_ids
 
-      @recips = User.find(user_ids_for_delivery.uniq, :order => "last_name")
+      @recips = User.find_all_by_id(user_ids_for_delivery.uniq, :order => "last_name")
       @recips = options[:include_public] ? @recips : @recips.select(&:has_non_public_role?)
     end
     @recips
