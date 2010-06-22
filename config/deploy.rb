@@ -64,6 +64,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/sphinx.yml #{release_path}/config/sphinx.yml"
     run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
+    run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     if rails_env == 'test'|| rails_env == 'development' || rails_env = "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")

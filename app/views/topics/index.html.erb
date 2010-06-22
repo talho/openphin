@@ -51,7 +51,7 @@
             <%= image_tag("yellow_thumbtack.png",:title=>"Sticky") if topic.sticky==1 %>
             <%= link_to h(truncate(topic.name, :length => 30)), forum_topic_path(@forum,topic) %>
           </td>
-          <td>
+          <td class="posted_by">
             <%= "#{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
           </td>
           <td>
