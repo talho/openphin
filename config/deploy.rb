@@ -40,7 +40,7 @@ desc "mod_rails restart"
     run "touch #{current_path}/tmp/restart.txt"
   end
 end
- 
+
 after 'deploy:update_code', 'deploy:symlink_configs'
 after 'deploy:update_code', 'deploy:install_gems'
 after 'deploy:install_gems', 'deploy:restart_backgroundrb'
@@ -65,7 +65,7 @@ namespace :deploy do
     run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
-    if rails_env == 'test'|| rails_env == 'development' || rails_env = "cucumber"
+    if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
@@ -110,7 +110,7 @@ set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
 after :deploy, :role => :app do
   rails_env = fetch(:rails_env, RAILS_ENV)
-  find_and_execute_task('pivotal_tracker:deliver_stories') unless rails_env="test"
+  #find_and_execute_task('pivotal_tracker:deliver_stories') unless rails_env == "test"
 end
 
 after "deploy:stop",    "delayed_job:stop"
@@ -120,7 +120,9 @@ after "deploy:start",   "thinking_sphinx:start"
 after "deploy:restart", "deploy:restart_delayed_job"
 after "deploy:restart", :role => :app do
   rails_env = fetch(:rails_env, RAILS_ENV)
-  find_and_execute_task("thinking_sphinx:running_start") unless rails_env="test"
+  run "cd #{previous_release}; RAILS_ENV=#{rails_env} rake ts:stop" unless rails_env == "test"
+  run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:index" unless rails_env == "test"
+  run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:start" unless rails_env == "test"
 end
 
 
