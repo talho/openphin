@@ -823,7 +823,7 @@ function setDocumentMoveEditEvents() {
           }
         });
 
-        child = $("form input#document_file");
+        child = $("form input#document_file_update");
         child.closest("form").ajaxForm({
           target: "span.documents",
           complete: function(response, textStatus) {

@@ -1,6 +1,6 @@
 <% form_for @document || Document.new, :html => {:multipart => true} do |form| %>
   <%= form.label :file, form.object.new_record? ? 'Upload Document' : 'Upload a new version' %>
-  <%= form.file_field :file, :size => "18" %>
+  <%= form.file_field :file, :size => "18", :id => form.object.new_record? ? 'document_file' : 'document_file_update' %>
 
   <%= form.submit form.object.new_record? ? 'Upload' : 'Update'  %>
 <% end %>
