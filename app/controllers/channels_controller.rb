@@ -47,6 +47,6 @@ class ChannelsController < ApplicationController
   end
 
   def popup_channel
-    @channel = current_user.owned_channels.find(params[:id])
+    @channel = current_user.channels.find(params[:id])
   end
 end
