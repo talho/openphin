@@ -257,17 +257,17 @@ function tieDocumentsFolderNavigation(){
 }
 
 function setMediaNewFolderEvents() {
-  var new_folder = $("ul.media_toolbar li#new_folder");
-  var folder_submit = $(".media_list div#new_folder form#new_folder input#folder_submit");
-  var myform = $(".media_list div#new_folder form#new_folder");
+  var new_folder = $("ul.media_toolbar li#new_media_folder");
+  var folder_submit = $(".media_list div#new_media_folder_container form#new_folder input#folder_submit");
+  var myform = $(".media_list div#new_media_folder_container form#new_folder");
   
   myform.ajaxForm({
     target: "#documents_panel",
     beforeSend: function(response) {
-      if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($(".media_list div#new_media_folder_container form#new_folder input#folder_media_name").val()) == "") {
         alert("You must specify a folder name");
         return false;
-      } else if(jQuery.trim($(".media_list div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+      } else if(jQuery.trim($(".media_list div#new_media_folder_container form#new_folder input#folder_media_name").val()).length > 32 ) {
         alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
@@ -287,15 +287,18 @@ function setMediaNewFolderEvents() {
   });
 
   new_folder.bind("click", function(e) {
-    $(".media_list div#new_share:visible").slideToggle("fast");
-    $("span.media_list").children("div#new_folder").slideToggle("slow");
+    $("div#new_share_folder:visible").slideToggle("fast");
+    $("div#new_document_folder_container:visible").slideToggle("fast");
+    $("div#new_share_container:visible").slideToggle("fast");
+    $("div.upload_document:visible").slideToggle("fast");
+    $("span.media_list").children("div#new_media_folder_container").slideToggle("slow");
   });
 }
 
 function setMediaNewShareEvents() {
-  var new_share = $("ul.media_toolbar li#new_share");
+  var new_share = $("ul.media_toolbar li#new_share_folder");
 
-  var myform = $(".media_list div#new_share form");
+  var myform = $(".media_list div#new_share_container form");
   myform.ajaxForm({
       target: "#documents_panel",
       beforeSend: function(response) {
@@ -319,8 +322,10 @@ function setMediaNewShareEvents() {
       }
     });
   new_share.bind("click", function(e) {
-    $("span.media_list").children("div#new_folder:visible").slideToggle("fast");
-    $(".media_list div#new_share").slideToggle("slow");
+    $("span.media_list").children("div#new_media_folder_container:visible").slideToggle("fast");
+    $("div#new_document_folder_container:visible").slideToggle("fast");
+    $("div.upload_document:visible").slideToggle("fast");
+    $(".media_list div#new_share_container").slideToggle("slow");
   });
 }
 
@@ -352,7 +357,7 @@ function setMediaDeleteItemEvents() {
 
         var div_to_append = "<div id='deletion' class='document_panel_action'>"
         div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading share deletion panel...</span></div>";
-        $(".media_list").append(div_to_append);
+        $("span.container").append(div_to_append);
 
         var dp = $("#deletion");
         dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
@@ -390,11 +395,15 @@ function setMediaDeleteItemEvents() {
 
     if($("ul.folders input:checked").length > 0) {
       share = $("ul.folders input:checked:first")
-      delete_share = share.closest("li").children("a.destroy");
+      delete_share = $(share.closest("li").children("a.destroy"));
       confirmed = share.closest("li").children("a.confirm").length;
       site = delete_share.attr("href");
-      if((confirmed > 0 && confirm("'This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?")) || confirmed == 0) {
-        $("#documents_progress_panel").show();      
+      if(document.all){
+
+      }
+      confirm_result = confirm("'This folder contains files which will be deleted if you choose to delete this folder.  Are you sure you want to delete this folders?");
+      if((confirmed > 0 && confirm_result) || (confirmed == 0 && confirm_result)) {
+        $("#documents_progress_panel").show();
         $("#documents_panel").load(site,{_method: "delete"},function(data, textStatus) {
           if(textStatus.toLowerCase() != "success") {
             alert("Failed to delete folder, please try again.");
@@ -414,7 +423,7 @@ function setMediaInviteEvents() {
       $(".media_list div#invitation").remove();
       var div_to_append = "<div id='invitation' class='document_panel_action'>"
       div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading invitation panel...</span></div>";
-      $(".media_list").append(div_to_append);
+      $("span.container").append(div_to_append);
       var dp = $("#invitation");
       share = $("ul.shares input:checked:first")
       invite = share.closest("li").children("a.invite");
@@ -593,23 +602,25 @@ function setDocumentUploadEvents() {
   });
 
   upload_document.bind("click", function(e) {
-    var new_folder_div = $("span.documents").children("div#new_folder:visible");
+    var new_folder_div = $("span.documents").children("div#new_document_folder_container:visible");
     var upload_document_div = $("span.documents div.upload_document");
     new_folder_div.slideToggle("fast");
+    $("div#new_media_folder_container:visible").slideToggle("fast");
+    $("div#new_share_container:visible").slideToggle("fast");
     upload_document_div.slideToggle("slow");
   });
 }
 
 function setDocumentNewFolderEvents() {
-  var new_folder = $("ul.documents_toolbar li#new_folder");
+  var new_folder = $("ul.documents_toolbar li#new_document_folder");
 
-  var myform = $("span.documents div#new_folder form");
+  var myform = $("span.documents div#new_document_folder_container form");
   myform.ajaxForm({
     beforeSend: function(response) {
-      if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()) == "") {
+      if(jQuery.trim($("span.documents div#new_document_folder_container input#folder_document_name").val()) == "") {
         alert("You must specify a folder name");
         return false;
-      } else if(jQuery.trim($("span.documents div#new_folder form#new_folder input#folder_name").val()).length > 32 ) {
+      } else if(jQuery.trim($("span.documents div#new_document_folder_container input#folder_document_name").val()).length > 32 ) {
         alert("Folder name cannot exceed 32 characters in length.");
         return false;
       }
@@ -622,7 +633,11 @@ function setDocumentNewFolderEvents() {
 
   new_folder.bind("click", function(e) {
     var upload_document_div = $("div.upload_document:visible");
-    var new_folder_div = $("span.documents").children("div#new_folder");
+    var new_folder_div = $("span.documents").children("div#new_document_folder_container");
+
+    $("div#new_media_folder_container:visible").slideToggle("fast");
+    $("div#new_share_container:visible").slideToggle("fast");
+
     upload_document_div.slideToggle("fast");
     new_folder_div.slideToggle("slow");
   });
@@ -632,14 +647,14 @@ function setDocumentSendEvents() {
   var send = $("ul.documents_toolbar li#send");
   send.bind("click", function(e) {
     if($("ul.documents input:checked").length > 0) {
-      $("span.documents div#send").remove();
+      $("span.documents div#send_document_panel").remove();
       //$("span.documents").append("<div id='send' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6'>Loading sending panel...</div>");
 
-      var div_to_append = "<div id='send' class='document_panel_action'>"
+      var div_to_append = "<div id='send_document_panel' class='document_panel_action'>"
       div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading sending panel...</span></div>";
-      $("span.documents").append(div_to_append);
-
-      var dp = $("span.documents div#send");
+      $("span.container").append(div_to_append);
+      
+      var dp = $("span.container div#send_document_panel");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.send");
       site = link.attr("href");
@@ -648,6 +663,7 @@ function setDocumentSendEvents() {
           alert("Error loading, please try again.");
           return false;
         }
+
         $("form.edit_document").ajaxForm({
           target: "span.documents",
           beforeSend: function(response) {
@@ -664,7 +680,7 @@ function setDocumentSendEvents() {
           }
         });
         dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
-        $("#send #close").bind('click', function(e) {
+        $("#send_document_panel #close").bind('click', function(e) {
           dp.remove();
         });
 
@@ -713,9 +729,9 @@ function setDocumentAddToShareEvents() {
 
       var div_to_append = "<div id='share' class='document_panel_action'>"
       div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading sharing panel...</span></div>";
-      $("span.documents").append(div_to_append);
+      $("span.container").append(div_to_append);
 
-      var dp = $("span.documents div#share");
+      var dp = $("span.container div#share");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.add_share");
       site = link.attr("href");
@@ -775,14 +791,14 @@ function setDocumentMoveEditEvents() {
   var move_edit = $("ul.documents_toolbar li#move_edit");
   move_edit.bind("click", function(e) {
     if($("ul.documents input:checked").length > 0) {
-      $("span.documents div#move_edit").remove();
+      $("span.documents div#move_edit_panel").remove();
       //$("span.documents").append("<div id='move_edit' style='position: fixed; left: 75px; bottom: 75px; border: medium solid black; z-index: 2; background-color: #FFFFD6; width: 250px;'>Loading move/edit panel...</div>");
 
-      var div_to_append = "<div id='move_edit' class='document_panel_action'>"
+      var div_to_append = "<div id='move_edit_panel' class='document_panel_action'>"
       div_to_append    += "<img src='/images/Ajax-loader.gif'/><span class='load_panel_text'>Loading move/edit panel...</span></div>";
-      $("span.documents").append(div_to_append);
+      $("span.container").append(div_to_append);
 
-      var dp = $("span.documents div#move_edit");
+      var dp = $("span.container div#move_edit_panel");
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.move_edit");
       site = link.attr("href");
@@ -822,7 +838,7 @@ function setDocumentMoveEditEvents() {
           }
         });
         dp.append("<div id='close' style='position: absolute; right: 0px; top: 0px; border: medium solid black; border-top: none; border-right: none; cursor: pointer;'>close</div>");
-        $("#move_edit #close").bind('click', function(e) {
+        $("#move_edit_panel #close").bind('click', function(e) {
           dp.remove();
         });
       });
@@ -833,7 +849,7 @@ function setDocumentMoveEditEvents() {
 }
 
 function setDocumentDeleteItemEvents() {
-  var delete_item = $("ul.documents_toolbar li#delete");
+  var delete_item = $("ul.documents_toolbar li#delete_file");
   
   delete_item.bind("click", function(e) {
     e.stopPropagation();

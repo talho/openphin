@@ -1,7 +1,7 @@
 <% content_tag_for :li, folder do %>
   <%- if folder -%>
     <%= check_box_tag("folder[id][#{folder.id}]", folder.id) %>
-    <%= link_to(label_tag("folder[id][#{folder.id}]", link_to(folder.name, folder_documents_path(folder))), folder_documents_path(folder)) %>
+    <%= label_tag("folder[id][#{folder.id}]", link_to(folder.name, folder_documents_path(folder))) %>
 
     <%- if folder.documents.empty? -%>
       <%= link_to 'Delete', folder, :class => "invis destroy", :method => :delete %>

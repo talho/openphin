@@ -71,7 +71,7 @@ table td 																			      {padding:5px 20px 5px 0;}
 #app_toolbar li ul li a span                        {background:transparent url(images/app_sub_header.png) repeat scroll 100% 0;}
 #app_alert                                          {position:relative}
 #comingsoon                                         {display:none;border:1px solid black; -moz-border-radius:0 0 30px 30px; padding: 0 30px 30px 30px; margin: 0 auto;
-																							       background: #333; position:absolute; height:200px; left:450px; top:-50px;z-index:3; width:600px; color:#ddd;font-size:24px;}
+																							       background: #333; position:absolute; height:200px; left:450px; top:-50px;z-index:98; width:600px; color:#ddd;font-size:24px;}
 #comingsoon h1                                      {text-align:center; margin: 20px 0; font-size:36px }
 #comingsoon a.close                                 {display:block; text-align:right; font-size:18px;cursor:pointer}
 
@@ -92,7 +92,7 @@ div.help a                                          {color:#fff}
                                                      background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}
 #documents_panel                                    {border:4px solid black; -moz-border-radius:30px 30px 0 0; padding: 5px 5px 0 5px;
 																							       background: #eeeeee; position:absolute; height:260px; left:50px; bottom: 20px; width:450px;}
-#documents_progress_panel                           {padding: 5px 5px 0 5px; z-index: 10; display: none;
+#documents_progress_panel                           {padding: 5px 5px 0 5px; z-index: 150; display: none;
 																							       position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
 #documents_progress_panel div                       {background: url('../images/Ajax-loader.gif') 5px 6px no-repeat #fff;padding-left:45px;margin-left: auto;
                                                      margin-right: auto; position: relative; top: 50%; width: 120px; height: 35px;border:1px solid;padding-top:8px;}
@@ -187,14 +187,14 @@ form legend																		      {padding:0 0 5px; display:block;}
 #edit fieldset ul.check_selector li ul				      {margin:0; padding:0; border-top:1px solid #efefef;}
 
 #edit fieldset ul.check_selector li li li label     {margin:0; padding-left:44px;}
-.ie7 div#edit div#audience fieldset ul.check_selector li li li label {padding-left:50px; position:relative;top:0px;z-index:-100;}
+.ie7 div#edit div#audience fieldset ul.check_selector li li li label {padding-left:50px; position:relative;top:0px;/*z-index:-100;*/}
 #edit fieldset ul.check_selector li li li li label  {margin:0; padding-left:64px;}
 .ie7 div#edit div#audience fieldset ul.check_selector li li li li label {padding-left:70px;}
 #edit fieldset ul.check_selector li + li			      {border-top:1px solid #efefef;}
 .ie7 div#edit div#audience fieldset ul.check_selector li +li {padding:5px 0px;}
 #edit fieldset ul.check_selector li label			      {font-size:11px; font-weight:normal; display:block; padding:6px 5px 6px 24px;}
-.ie7 div#edit div#details fieldset ul.check_selector li label      {padding:0px 0px 0px 30px; position:relative;top:-6px;z-index:-100;}
-.ie7 div#edit div#audience fieldset ul.check_selector li label {padding:0px 0px 0px 30px; position:relative;top:-6px;z-index:-100;}
+.ie7 div#edit div#details fieldset ul.check_selector li label      {padding:0px 0px 0px 30px; position:relative;top:-6px;/*z-index:-101;*/}
+.ie7 div#edit div#audience fieldset ul.check_selector li label {padding:0px 0px 0px 30px; position:relative;top:-6px;/*z-index:-102;*/}
 #edit fieldset ul.check_selector input				      {position:absolute; left:6px; top:6px;}
 #edit fieldset ul.check_selector li li li input     {left:24px;}
 #edit fieldset ul.check_selector li li li li input  {left:44px;}
@@ -343,12 +343,13 @@ fieldset.folders ul.check_selector                  {overflow: auto;}
 
 span.container span#edit                            {float: left;position:relative;left:15px;}
 span.container span.documents                       {float: left; width: 200px; display: block; height: 250px; position: relative; left:10px;}
-.ie7 span.container span.documents                  {z-index:-1;}
-span.media_list div#new_folder                      {display: none; position: absolute; bottom: 30px; z-index: 100; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
 
-span.media_list div#new_share                       {display: none; position: absolute; bottom: 30px; z-index: 10; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
-span.documents div.upload_document                  {display: none; position: absolute; bottom: 30px; z-index: 10; width: 230px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
-span.documents div#new_folder                       {display: none; position: absolute; bottom: 30px; z-index: 10; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.media_list div#new_media_folder_container      {display: none; position: absolute; bottom: 30px; z-index: 101; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+.ie7 span.media_list div#new_media_folder_container {left:0px;margin-bottom:-5px;}
+.ie7 span.media_list div#new_share_container        {left:0px;margin-bottom:-5px;}
+span.media_list div#new_share_container             {display: none; position: absolute; bottom: 30px; z-index: 10; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.documents div.upload_document                  {display: none; position: absolute; bottom: 30px; z-index: 11; width: 230px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
+span.documents div#new_document_folder_container    {display: none; position: absolute; bottom: 30px; z-index: 12; width: 200px; background-color: #eeeeee; border: 2px solid black; border-bottom: none;padding:5px;}
 span.documents div#contents                         {height: 171px; overflow: auto; border:1px solid #D9D9D9;margin-top:20px;padding:5px}
 span.documents #document_file                       {margin:5px 0px;}
 span.documents #folder_name                         {margin:5px 0px;}
@@ -365,24 +366,26 @@ span.media_list div.withsubfolders label.with_sub_folder {margin-left: 15px !imp
 span.media_list div.withsubfolders ul.check_selector li li li label {padding-left:30px !important;}
 
 span.media_list fieldset.withsubfolders ul.shares input  {left:0px !important;}
-.ie7 span.media_list fieldset.withsubfolders a#toggle_closed  {top:5px !important; left:18px !important;}
-span.media_list fieldset.withsubfolders a#toggle_closed  {top:1px !important; left:18px !important;z-index:1;}
+.ie7 span.media_list fieldset.withsubfolders a#toggle_closed  {top:5px !important; left:12px !important;}
+span.media_list fieldset.withsubfolders a#toggle_closed  {top:1px !important; left:10px !important;z-index:1;}
 span.media_list fieldset.withsubfolders label.with_sub_folder {margin-left: 15px !important;}
 .ie7 span.media_list fieldset.withsubfolders label {margin-top:-10px;}
-.ie8 span.media_list fieldset.withsubfolders label {position:relative;top:-10px;z-index:0;}
+.ie8 span.media_list fieldset.withsubfolders ul.shares label {position:relative;top:-10px;z-index:0;}
 span.media_list fieldset.withsubfolders ul.check_selector li li li label {padding-left:30px !important;}
-.ie7 span.media_list fieldset.withsubfolders ul.check_selector li li li label {margin-top:-12px !important;}
+.ie7 span.media_list fieldset.withsubfolders ul.check_selector li li li label {padding-left:24px !important; margin-top:-11px !important;}
 
-span.media_list div.document_panel_action,
-span.documents div.document_panel_action            {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 2; background-color: #eeeeee}
+span.container div.document_panel_action,
+span.container div.document_panel_action            {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 200; background-color: #eeeeee}
+
 div.document_panel_action span.load_panel_text      {position:relative;top:-10px;padding-left:2px;}
 div.document_panel_action > #channel_submit         {margin-top:20px;}
 div.document_panel_action > #share                  {font-size:11px;margin-top:15px;}
 div.document_panel_action > #share h2               {margin-bottom:10px;}
 div.document_panel_action > #share ul               {margin-left: 5px !important;}
-div.document_panel_action div#close                 {width:16px; height: 16px; background: url('images/closeButton-Hover.png') 2px 2px no-repeat;text-indent:-1000px;padding:2px;border:none !important;color:#eeeeee;}
-.ie8 div.document_panel_action div#close            {margin-right:20px;}
+div.document_panel_action div#close                 {width:16px; height: 16px; background: url('images/closeButton-Hover.png') 2px 2px no-repeat;text-indent:-1000px;padding:2px;border:none !important;color:#eeeeee;margin:-2px -2px 0px 0px;}
+
 div.document_panel_action div#close:hover           {background: url('images/closeButton-Active.png') 2px 2px no-repeat;}
+div.document_panel_action input.maininput           {background:#eeeeee;}
 span.media_list input.maininput,
 span.documents input.maininput                      {background-color:#eeeeee;}
 ul.media_toolbar                                    {margin: 0px; padding: 0px; position: absolute; bottom: 15px; left: 12px;}
@@ -394,25 +397,27 @@ ul.documents li.document label                      {font-weight:normal !importa
 ul.documents_toolbar                                {margin: 0px; padding: 0px; position: absolute; bottom: 0px; left: 10px;}
 .ie7 ul.documents_toolbar                           {bottom:5px;}
 ul.documents_toolbar li                             {float: left; list-style-type: none; width: 16px; height: 16px; text-indent: -9999px;margin:3px;}
-ul.media_toolbar li#new_folder                      {background-image: url('images/folder_add.png'); cursor:pointer;}
-ul.media_toolbar li#new_share                       {background-image: url('images/group_add.png'); cursor:pointer;}
+ul.media_toolbar li#new_media_folder                {background-image: url('images/folder_add.png'); cursor:pointer;}
+ul.media_toolbar li#new_share_folder                {background-image: url('images/group_add.png'); cursor:pointer;}
 ul.media_toolbar li#move_edit                       {background-color: blue; cursor:pointer;}
 ul.media_toolbar li#rename_folder                   {background-color: green; cursor:pointer;}
 ul.media_toolbar li#delete                          {background-image: url('images/folder_delete.png'); cursor:pointer;}
 ul.media_toolbar li#invite                          {background-image: url('images/group_go.png'); cursor:pointer;}
 ul.media_toolbar li#unsubscribe                     {background-image: url('images/group_delete.png'); cursor:pointer;}
 ul.documents_toolbar li#upload_document             {background-image: url('images/folder_page.png'); cursor:pointer;}
-ul.documents_toolbar li#new_folder                  {background-image: url('images/folder_add.png'); cursor:pointer;}
+ul.documents_toolbar li#new_document_folder         {background-image: url('images/folder_add.png'); cursor:pointer;}
 ul.documents_toolbar li#send                        {background-image: url('images/page_copy.png'); cursor:pointer;}
 ul.documents_toolbar li#add_to_share                {background-image: url('images/group_go.png'); cursor:pointer;}
 ul.documents_toolbar li#move_edit                   {background-image: url('images/page_edit.png'); cursor:pointer;}
-ul.documents_toolbar li#delete                      {background-image: url('images/page_delete.png'); cursor:pointer;}
+ul.documents_toolbar li#delete_file                  {background-image: url('images/page_delete.png'); cursor:pointer;}
 div#deletion div#share                              {overflow: auto;}
 #edit.media_list fieldset ul.check_selector li ul   {margin-left: 10px;}
-#edit.media_list fieldset ul.check_selector li ul.folders label    {margin-left: 0px;}
+#edit.media_list fieldset ul.check_selector li ul.folders label    {margin-left: 5px;}
+.ie7 #edit.media_list fieldset ul.check_selector li ul.folders label    {margin-left: 7px;}
 #edit.media_list fieldset ul.check_selector li ul.folders ul label {margin-left: 0px;}
 #edit.media_list fieldset ul.check_selector li ul.folders input    {left: 0px;}
 a.invis                                             {display: none;}
+.ie7 #share.document_panel_action #document_submit  {position:relative;top:10px;}
 
 div#admin_user_profile                              {position: relative; float: left; width: 300px;}
 div#admin_user_role_requests                        {position: relative; float: left; width: 300px;}

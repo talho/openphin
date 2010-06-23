@@ -22,7 +22,7 @@
       <%- form_for :document, documents_path, :html => {:multipart => true} do |f| -%>
         <%= f.label :file, "Upload Document" %>
         <%= f.file_field :file, :size => "16" %>
-        <%= f.hidden_field :folder_id, :value => @parent_folder.id %>
+        <%= f.hidden_field :folder_id, :value => @parent_folder.id, :id => 'current_folder_id' %>
         <%= f.submit :upload %>
       <%- end -%>
     </div>
