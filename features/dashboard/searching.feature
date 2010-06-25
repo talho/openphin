@@ -39,7 +39,7 @@ Feature: Searching for users
     And I should see "jane.smith@example.com"
     And I should see "Health Officer in Tarrant Count"
   
-  Scenario: Searching for a user by email address
+  Scenario: Searching for a user by a partial email address
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page
     And I follow "Find People"
@@ -48,6 +48,17 @@ Feature: Searching for users
     Then I see the following users in the search results
       | John Smith, Jane Smith, Amy Body, Sam Body |
       
+  Scenario: Searching for a user by email address
+    Given I am logged in as "amy@example.com"
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I fill in "Search" with "john.smith@example.com"
+    And I press "Search"
+    Then I see the following users in the search results
+      | John Smith |
+    And I do not see the following users in the search results
+      | Jane Smith, Amy Body, Sam Body |
+
   Scenario: Searching for a user as a user with only a public role
     Given I am logged in as "john.smith@example.com"
     When I go to the dashboard page
