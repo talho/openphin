@@ -23,7 +23,7 @@ table 																				      {border-collapse:collapse; font-size:13px; margi
 table th,
 table td 																			      {padding:5px 20px 5px 0;}
 
-#wrapper																			      {width:700px; margin:0 auto 20px; /*background:url(images/content.png) repeat-y;*/ clear:both;position:relative;}
+#wrapper																			      {/*width:700px;*/ margin:0 auto 20px; /*background:url(images/content.png) repeat-y;*/ clear:both;position:relative;}
 #header																				      {width:100%;}
 #header h1																		      {width:83px; height:31px; float:left; background:url(images/app_header_logo.png) no-repeat 15px 0;}
 #header h1 a																	      {height:31px; text-indent:-9999px; overflow:hidden; display:block;}
@@ -36,7 +36,7 @@ table td 																			      {padding:5px 20px 5px 0;}
 #current_user																	      {height:24px; text-align:right; color:#fff; line-height:24px; font-size:11px; padding:0 10px;}
 #current_user a																      {color:#fff;}
 #current_user > .info														      {float:left;}
-#content																			      {padding:15px 25px 1px; width:650px; float:left;}
+#content																			      {/*padding:15px 25px 1px;*/padding:15px 0px 1px; width:650px; float:left;}
 
 #application                                        {position:absolute; top:0; bottom:31px; left:0; right:0; overflow:auto;}
 .ie7 div#application                                {overflow-y:auto;overflow-x:hidden;}
@@ -107,8 +107,8 @@ div.help a                                          {color:#fff}
 #links_panel a:visited                              {color:#fff}
 #links_panel a:hover                                {color:#fff}
 
-#news_articles                                      {margin:0 -55px; width:760px;}
-#news_articles div.main                             {width:720px; float:left;}
+#news_articles                                      {margin:0 -55px; /*width:760px;*/ width:100%;}
+#news_articles div.main                             {width:720px; float:left;margin:0px 0px 0px 75px;}
 #news_articles div.main p                           {font-size:15px;}
 #news_articles div.body                             {display: none;}
 #news_articles div.extras                           {width:225px; float:right;}
@@ -469,3 +469,57 @@ div#tooltip                                         {position:absolute; padding:
 
 span.media_list legend                              {position: relative; top: -5px;}
 div#sql.panel_content {overflow: auto; height: 500px;}
+
+/*TEMP HURRICANECLOCK START */
+
+.topheader{
+background-color:red;
+color:white;
+font: bold 60px tahoma,arial,verdana,sans-serif;
+padding: 4px;
+border:solid 5px;
+border-top-color:#283f5a;
+border-right-color:#304257;
+border-left-color:#385d8a;
+border-bottom-color:#6299dd;
+}
+
+.jeffstyle{
+background-color:white;
+color:red;
+font: bold 14px tahoma,arial,verdana,sans-serif;
+padding: 5px;
+border:solid 5px;
+border-top-color:#283f5a;
+border-right-color:#304257;
+border-left-color:#385d8a;
+border-bottom-color:#6299dd;
+}
+
+
+.jeffstyle2{
+color:black;
+font: bold 14px arial,verdana,sans-serif;
+padding: 0px;
+}
+
+.jeffstyle3{
+color:red;
+font: bold 30px arial,verdana,sans-serif;
+padding: 0px;
+}
+/* TEMP HURRICANECLOCK END */
+
+/*Three Column Layout Declaration */
+
+.middle_column{
+  float:right;
+}
+.right_column{
+float:right;
+clear:right;
+margin:0px 20px 0px 0px;
+width: 500px;
+}
+
+/* Three Column Layout End */

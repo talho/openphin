@@ -69,6 +69,14 @@ jQuery(function($) {
 });
 
  $(document).ready(function() {
+  // This code is used to layout three columns on the dashboard page 
+  if(document.getElementById('right_column')){
+    $("#wrapper").css({"width":"100%"})
+    $("div#content").css({"width":"100%"})
+  }else{
+    $("#wrapper").css({"width":"850px"})
+  }
+
  	var name_synched = false;
 
 	if(typeof $('#user_display_name').val() != "undefined" && (jQuery.trim($('#user_display_name').val()) == "" || jQuery.trim($('#user_display_name').val()) == jQuery.trim(jQuery.trim($('#user_first_name').val()) + " " + jQuery.trim($('#user_last_name').val())))) name_synched = true;
