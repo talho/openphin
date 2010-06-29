@@ -76,6 +76,11 @@ protected
       field = params[f]
       fields[f] = field.gsub(/(:|@|-|!|~|&|"|\(|\)|\\|\|)/) { "\\#{$1}" } unless field.blank?
     end
+    
+    unless fields[:name].blank? || fields[:name].index('@').nil?
+      fields[:email] = fields[:name]
+      fields.delete(:name)
+    end
     fields[:phone] = params[:phone].gsub(/([^0-9*])/,"") unless params[:phone].blank?
     fields
   end
