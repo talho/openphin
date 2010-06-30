@@ -14,7 +14,7 @@ class DashboardController < ApplicationController
     feed_urls.each do |url|
       entries += Feedzirra::Feed.fetch_and_parse(url).entries
     end
-    @entries = entries.sort_by(&:published)[0..9]
+    @entries = entries.sort{|a,b| b.published <=> a.published}[0..9]
   end
 
   def about

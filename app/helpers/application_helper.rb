@@ -75,4 +75,9 @@ module ApplicationHelper
     ( user.respond_to?("public") && user.public ) ? link_to( h(user.name), user_profile_path(user) ) : h(user.name)
   end  
 
+  def clean_up_rss(rss_item)
+    result = ""
+    result = strip_tags(rss_item) while result.length != strip_tags(rss_item).length
+    result
+  end
 end

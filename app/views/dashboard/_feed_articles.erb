@@ -6,14 +6,14 @@
       <p class="date"><%= r.published %></p>
       <div>
         <p>
-         <%= r.summary[0..300].gsub("<br />", "</p><p>") %>
+         <%= clean_up_rss(r.summary)[0..300] %>
         </p>
       </div>
-      <% if r.summary.length > 300 %>
+      <% if clean_up_rss(r.summary).length > 300 %>
         <p class='more'><a href=''>Read more</a></p>
         <div class='body'>
           <p>
-            <%= r.summary[300..r.summary.length].gsub("<br />", "</p><p>") %>
+            <%= clean_up_rss(r.summary)[0..300] %>
           </p>
           <p class='less'><a href=''>Collapse this article</a></p>
         </div>
