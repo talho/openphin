@@ -108,7 +108,7 @@ div.help a                                          {color:#fff}
 #links_panel a:hover                                {color:#fff}
 
 #news_articles                                      {margin:0 -55px; /*width:760px;*/ width:100%;}
-#news_articles div.main                             {width:50%; float:left;margin:0px 0px 0px 75px;}
+#news_articles div.main                             {width:30%; float:left;margin:0px 0px 0px 75px;}
 #news_articles div.main p                           {font-size:15px;}
 #news_articles div.body                             {display: none;}
 #news_articles div.extras                           {width:225px; float:right;}
@@ -512,7 +512,7 @@ padding: 0px;
 
 /*Three Column Layout Declaration */
 
-.middle_column {float:left;width:15%;margin-left:20px;}
+.middle_column {float:left;width:35%;margin-left:20px;}
 .middle_column img {width:100%;}
 .rss_item{padding-left:20px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #c6c6c6;}
 .rss_item p {margin:0px !important;}
