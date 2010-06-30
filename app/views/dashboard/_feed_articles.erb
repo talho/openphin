@@ -1,4 +1,15 @@
 <div id="feed_articles" class="middle_column">
-  <div class="main">
-  </div>
+  <% entries.each do |r| %>
+    <div class="rss_item">
+      <h2><%= r.title %></h2>
+      <h3><%= r.author %></h3>
+      <p class="date"><%= r.published %></p>
+      <div>
+        <p>
+         <%= r.summary.gsub("<br />", "</p><p>") %>
+        </p>
+      </div>
+     <p><a href="<%= r.url %>" target="_blank" title="Click here to view.">View</a></p>
+   </div>
+  <% end %>
 </div>
