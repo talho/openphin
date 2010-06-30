@@ -127,40 +127,16 @@
              <td style="font-weight: bold; font-size: 12px; color: black; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="" align="center"><i>Landfall: 0500 hrs, Thurs, 7/1/2010</i></td>
             </tr>
           </table>
-            <br><br>
-            <table cellpadding="9" align="center" style="margin:0px auto">
-            <tr>
-            <td style="font-weight: bold; font-size: 12px; color: white; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#4f81bd" align="center">H-Hour</td>
-            <td style="font-weight: bold; font-size: 12px; color: white; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#4f81bd" align="center">Time/Date</td>
 
-            <td style="font-weight: bold; font-size: 12px; color: white; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#4f81bd" align="center">Time Until</td>
-            </tr>
-
-            <tr>
-            <td style="font-weight: bold; font-size: 12px; color: black; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#e9edf4" align="center">H-12&nbsp;&nbsp;</td>
-            <td style="font-weight: bold; font-size: 12px; color: black; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#e9edf4" align="center">0100 hrs, June 30th, 2010</td>
-            <td style="font-weight: bold; font-size: 12px; color: black; font-style: normal; font-family:arial,verdana,sans-serif" bgcolor="#e9edf4" align="right"><div id="countdowncontainer12"></div></td>
-            </tr>
-
-          </table>
 
 
           <script type="text/javascript">
-
             var futuredate=new cdtime("countdowncontainer", "June 30, 2010 13:00:00")
             futuredate.displaycountdown("hours", formatresults)
-
-
-            var futuredate=new cdtime("countdowncontainer12", "June 30, 2010 01:00:00")
-            futuredate.displaycountdown("hours", formatresults1)
-
-
-
             var currentyear=new Date().getFullYear()
-            //dynamically get this Christmas' year value. If Christmas already passed, then year=current year+1
+
             var thischristmasyear=(new Date().getMonth()>=11 && new Date().getDate()>25)? currentyear+1 : currentyear
             var christmas=new cdtime("countdowncontainer2", "December 25, "+thischristmasyear+" 0:0:00")
-            //christmas.displaycountdown("hours", formatresults2)
 
           </script>
         <br/>
