@@ -6,19 +6,19 @@
       <p class="date"><%= r.published %></p>
       <div>
         <p>
-         <%= r.summary[0..200].gsub("<br />", "</p><p>") %>
+         <%= r.summary[0..300].gsub("<br />", "</p><p>") %>
         </p>
       </div>
-      <% if r.summary.length > 200 %>
+      <% if r.summary.length > 300 %>
         <p class='more'><a href=''>Read more</a></p>
         <div class='body'>
           <p>
-            <%= r.summary[200..r.summary.length].gsub("<br />", "</p><p>") %>
+            <%= r.summary[300..r.summary.length].gsub("<br />", "</p><p>") %>
           </p>
           <p class='less'><a href=''>Collapse this article</a></p>
         </div>
       <% end %>
-     <p><a href="<%= r.url %>" target="_blank" title="Click here to view.">View</a></p>
+     <p class="view"><a href="<%= r.url %>" target="_blank" title="Click here to view.">View</a></p>
    </div>
   <% end %>
 </div>

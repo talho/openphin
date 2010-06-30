@@ -513,10 +513,10 @@ padding: 0px;
 /*Three Column Layout Declaration */
 
 .middle_column {float:left;width:30%;margin-left:20px;}
-.middle_column p.more a {float:none !important;}
 .middle_column img {width:100%;}
 .rss_item{padding-left:20px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #c6c6c6;}
 .rss_item p {margin:0px !important;}
+.rss_item p.view a{float:right;clear:right}
 .right_column{
 float:right;
 clear:right;
