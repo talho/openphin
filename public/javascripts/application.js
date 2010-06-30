@@ -124,13 +124,30 @@ jQuery(function($) {
      return false;
    });
    $("#news_articles .article .lede p.more a").bind("click", function (e){
-     parent = $(this).parent().parent().parent();
+     var parent = $(this).parent().parent().parent();
      parent.find(".body").slideToggle(1000);
      $(this).parent().toggle();;
      e.stopPropagation();
      e.preventDefault();
      return false;
    });
+
+   $("#news_articles .middle_column .body p.less a").bind("click", function (e){
+     $(this).parent().parent().slideToggle(1000);
+     $(this).parent().parent().parent().find(".more").toggle();
+     e.stopPropagation();
+     e.preventDefault();
+     return false;
+   });
+   $("#news_articles .middle_column p.more a").bind("click", function (e){
+     var parent = $(this).parent().parent();
+     parent.find(".body").slideToggle(1000);
+     $(this).parent().toggle();;
+     e.stopPropagation();
+     e.preventDefault();
+     return false;
+   });
+
    $("#comingsoon a.close").bind("click", toggleComingSoon);
    $("a.rollcall").bind("click", toggleComingSoon);
    $("#report_type").bind("change", function (){

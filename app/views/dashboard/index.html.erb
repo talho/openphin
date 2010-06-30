@@ -160,7 +160,7 @@
             //dynamically get this Christmas' year value. If Christmas already passed, then year=current year+1
             var thischristmasyear=(new Date().getMonth()>=11 && new Date().getDate()>25)? currentyear+1 : currentyear
             var christmas=new cdtime("countdowncontainer2", "December 25, "+thischristmasyear+" 0:0:00")
-
+            //christmas.displaycountdown("hours", formatresults2)
 
           </script>
         <br/>
@@ -174,9 +174,16 @@
       <p class="date">June 29, 2009</p>
       <div class='lede'>
         <p>
-
-          <object width="100%" height="590" type="application/x-shockwave-flash" id="stormpulse" data="https://secure.www.stormpulse.com/swf/stormpulse.swf?v=222"><param name="allowScriptAccess" value="always"><param name="bgcolor" value="#000000"><param name="flashvars" value="env=PROD&amp;rels=1.3&amp;swf_version=222&amp;lcId=&amp;current_year=2010&amp;layoutCd=4&amp;storm_season=2010&amp;focal_storm_id=201001&amp;lat=23.900000&amp;lng=-95.100000&amp;zl=3&amp;clouds=2010062910&amp;coll_cnt=1&amp;active_cnt=1&amp;storm_name=None&amp;region=10&amp;custom_view=0&amp;url_prefs=0&amp;location_id=&amp;focal_hazard_id=&amp;small_town=&amp;location_name=&amp;focal_hazard_typ=&amp;focal_storm_trk=&amp;focal_storm_idx=&amp;focal_storm_trk_desc="></object>
-
+        <% if Rails.env == "development" || Rails.env == "test" || Rails.env == "cucumber" %>
+          <object width="100%" height="590" type="application/x-shockwave-flash" id="stormpulse" data="https://secure.www.stormpulse.com/swf/stormpulse.swf?v=222">
+            <param name="allowScriptAccess" value="always">
+            <param name="bgcolor" value="#000000">
+            <param name="flashvars" value="env=PROD&rels=1.3&swf_version=222&lcId=&current_year=2010&layoutCd=4&storm_season=2010&focal_storm_id=201001&lat=23.900000&lng=-95.100000&zl=3&clouds=2010062910&coll_cnt=1&active_cnt=1&storm_name=None&region=10&custom_view=0&url_prefs=0&location_id=&focal_hazard_id=&small_town=&location_name=&focal_hazard_typ=&focal_storm_trk=&focal_storm_idx=&focal_storm_trk_desc=">
+            <embed href="https://secure.www.stormpulse.com/swf/stormpulse.swf?v=222&env=PROD&rels=1.3&swf_version=222&lcId=&current_year=2010&layoutCd=4&storm_season=2010&focal_storm_id=201001&lat=23.900000&lng=-95.100000&zl=3&clouds=2010062910&coll_cnt=1&active_cnt=1&storm_name=None&region=10&custom_view=0&url_prefs=0&location_id=&focal_hazard_id=&small_town=&location_name=&focal_hazard_typ=&focal_storm_trk=&focal_storm_idx=&focal_storm_trk_desc=" quality="high" bgcolor="#000000" WIDTH="100%" HEIGHT="590" NAME="stormpulse" ALIGN="" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></embed>
+          </object>
+        <% else %>
+          <script src="http://www.stormpulse.com/api/maps/alex/?key=2h9xhxuiksqthv5kaql5p84qmhz3gjygi6n70002" type="text/javascript"></script>
+        <% end %>
         </p>
         <br/>
         <p><a href='http://www.stormpulse.com' target="_blank" title="Via: www.stormpulse.com.  Click here for original." style="font-size:15px;">Via: www.stormpulse.com. Click here for original.</a></p>
