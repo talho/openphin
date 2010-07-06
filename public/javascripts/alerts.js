@@ -209,23 +209,26 @@
       if($('#alert_acknowledge :selected').text() == 'Advanced' || $('#alert_acknowledge :selected').text() == 'Normal'){
         if($('#alert_acknowledge :selected').text() == 'Advanced') $('#call_down_container').removeClass('hidden');
         else $('#call_down_container').addClass('hidden');
+
         $('.alert_call_down_messages').val('');
         $('.alert_device').each(function(){
-          if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice' && $(this).attr('value') != 'Device:FaxDevice'){
-          $(this).attr('checked', false);
-          if($('#call_down_container').hasClass('hidden')){
-            $(this).removeAttr('disabled');
-          }else{
-            $(this).attr('disabled', true);
-            $('#alert_acknowledge').attr('checked', true);
+          if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice'){
+            $(this).attr('checked', false);
+            if($('#call_down_container').hasClass('hidden')){
+                if($(this).attr('value') != 'Device::FaxDevice')
+                  $(this).removeAttr('disabled');
+            }else{
+                $(this).attr('disabled', true);
+                $('#alert_acknowledge').attr('checked', true);
+            }
           }
-         }
         });
       }else{
         if(!$('#call_down_container').hasClass('hidden')) $('#call_down_container').addClass('hidden');
         $('.alert_call_down_messages').val('');
         $('.alert_device').each(function(){
-          $(this).removeAttr('disabled');
+          if($(this).attr('value') != 'Device::FaxDevice')
+            $(this).removeAttr('disabled');
         });
       }
     });
@@ -235,7 +238,7 @@
      $('#call_down_container').toggleClass('hidden');
      $('.alert_call_down_messages').val('');
      $('.alert_device').each(function(){
-       if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice' && $(this).attr('value') != 'Device:FaxDevice'){
+       if($(this).attr('value') != 'Device::PhoneDevice' && $(this).attr('value') != 'Device::EmailDevice'){
          $(this).attr('checked', false);
          if($('#call_down_container').hasClass('hidden')){
           $(this).removeAttr('disabled');
