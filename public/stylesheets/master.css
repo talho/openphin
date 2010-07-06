@@ -470,6 +470,10 @@ div#tooltip                                         {position:absolute; padding:
 span.media_list legend                              {position: relative; top: -5px;}
 div#sql.panel_content {overflow: auto; height: 500px;}
 
+table.search                                        {border: 1px solid;}
+table.search tr                                     {border: 1px solid;}
+table.search td                                     {border: 1px solid; padding-left: 5px;}
+
 /*TEMP HURRICANECLOCK START */
 
 .topheader{

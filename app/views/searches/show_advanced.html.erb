@@ -19,7 +19,7 @@
         <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
       </p>
       <%= will_paginate @results %>
-      <table>
+      <table class="search">
         <tr>
           <td>Name</td><td>Email</td><td>Role Assignments</td>
         </tr>
