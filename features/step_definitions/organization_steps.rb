@@ -101,9 +101,9 @@ When /^I maliciously attempt to remove "([^\"]*)" from "([^\"]*)"$/ do |email, o
   org = Organization.find_by_name!(org_name)
   input = Nokogiri::XML::Node.new('a', response.dom)
   input["href"] = admin_organization_membership_request_path(:id => org.id, :user_id => user.id)
-  input.inner_html = "Remove Organization Membership"
   input["class"] = "destroy"
   response.dom.css('body').first.add_child(input)
+  input.inner_html = "Remove Organization Membership"
   click_link("Remove Organization Membership")
 end
 

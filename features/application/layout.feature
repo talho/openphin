@@ -33,7 +33,7 @@ Feature: Application layout should have communications, portal & application too
       | item | Chat                 |
       | item | Documents            |
       | item | Links                |
-    And I should see 5 "article" sections
+    And I should see 4 "article" sections
 
   Scenario: Seeing the Administrator menu as an admin
     Given I am logged in as "joe.smith@example.com"
