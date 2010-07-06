@@ -601,7 +601,7 @@ function detectFolderLoaded(responseXML) {
   // A little bit of voodoo because jQuery.form uses an iframe when submitting form data with file uploads
   // and can't detect the success of the iframe so always returns success
   // Detects for the presence of the flash message
-  return $(responseXML.childNodes[0].childNodes[1].childNodes[0]).hasClass("flash")
+  return $(responseXML.activeElement.children[0]).hasClass("flash")
 }
 
 function setDocumentUploadEvents() {
