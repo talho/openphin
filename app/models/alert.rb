@@ -199,7 +199,7 @@ class Alert < ActiveRecord::Base
     alert_device_types.clear
     types.each do |type|
       alert_device_types.build :device => type
-    end
+    end unless types.nil?
   end
 
   def device_types

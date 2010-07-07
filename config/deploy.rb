@@ -120,9 +120,9 @@ after "deploy:start",   "thinking_sphinx:start"
 after "deploy:restart", "deploy:restart_delayed_job"
 after "deploy:restart", :role => :app do
   rails_env = fetch(:rails_env, RAILS_ENV)
-  run "cd #{previous_release}; RAILS_ENV=#{rails_env} rake ts:stop" unless rails_env == "test"
-  run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:index" unless rails_env == "test"
-  run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:start" unless rails_env == "test"
+  #run "cd #{previous_release}; RAILS_ENV=#{rails_env} rake ts:stop" unless rails_env == "test"
+  #run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:index" unless rails_env == "test"
+  #run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:start" unless rails_env == "test"
 end
 
 

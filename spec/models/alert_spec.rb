@@ -236,10 +236,10 @@ describe Alert do
       lambda { @alert.save }.should change { @alert.alert_device_types.count }
     end
     
-    it "should create an association for the given device types" do
+    it "should override existing associations for the given device types" do
       @alert.alert_device_types.create! :device => 'Device::EmailDevice'
       @alert.device_types = []
-      @alert.alert_device_types.count.should == 0
+      @alert.alert_device_types.size.should == 0
     end
   end
   
@@ -250,6 +250,7 @@ describe Alert do
 
     it "should return the names of the device types" do
       @alert.alert_device_types.create! :device => 'Device::EmailDevice'
+      @alert.initialize_statistics
       @alert.device_types.should == ['Device::ConsoleDevice', 'Device::EmailDevice']
     end
   end
