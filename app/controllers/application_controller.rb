@@ -9,7 +9,8 @@ class ApplicationController < ActionController::Base
   helper_method :toolbar
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter :login_required, :set_locale
+  before_filter :login_required, :set_locale, :except => :options
+  before_filter :add_cors_header, :only => :options
 
   layout :choose_layout
   
@@ -33,8 +34,13 @@ class ApplicationController < ActionController::Base
       false
     end
   end
+  
   def toolbar
 	  self.class.app_toolbar
+  end
+
+  def options
+    render :nothing => true, :status => 200
   end
 
   protected
@@ -113,7 +119,12 @@ class ApplicationController < ActionController::Base
       end
     end
 
-
+    def add_cors_header
+      headers["Access-Control-Allow-Origin"] = "*"
+      headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+      headers["Access-Control-Allow-Headers"] = "X-Requested-With"
+      headers["Access-Control-Max-Age"] = "1728000"
+    end
 
   private
 
