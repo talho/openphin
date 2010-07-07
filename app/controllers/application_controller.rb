@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
       # Allows for Cross-Origin Resource Sharing (http://www.w3.org/TR/cors/) to access json data from an external source
       # Add an appropriate route on the methods you expect to POST data to using ajax but be sure to test out authenticity tokens to prevent XSS attacks:
       # map.connect "/url.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
+      # Also add headers["Access-Control-Allow-Origin"] = "*" to your json response
       headers["Access-Control-Allow-Origin"] = "*"
       headers["Access-Control-Allow-Methods"] = "OPTIONS"
       headers["Access-Control-Allow-Headers"] = "X-Requested-With"
