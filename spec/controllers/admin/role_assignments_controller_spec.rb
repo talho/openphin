@@ -8,6 +8,6 @@ describe Admin::RoleAssignmentsController do
       @current_user = login_as_user
     end
     
-    should_require_admin_on_all_actions "@current_user"
+    should_require_admin_on_all_actions "@current_user", :except => "destroy"
   end
 end

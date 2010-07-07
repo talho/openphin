@@ -34,10 +34,11 @@ describe OrganizationMembershipRequest do
     orm.approve!(approver).should be_true
   end
 
-  it "should not be approved when approver_id is set and approver is not superadmin" do
+  it "should not be approved when approver_id is set and approver is not superadmin or admin" do
     orm = OrganizationMembershipRequest.create!(@valid_attributes)
     approver = Factory(:user)
-    role_membership = Factory(:role_membership, :role => Role.admin, :jurisdiction => @texas, :user => approver)
+    role = Factory(:role)
+    role_membership = Factory(:role_membership, :role => role, :jurisdiction => @texas, :user => approver)
     orm.approve!(approver).should be_nil
   end
 

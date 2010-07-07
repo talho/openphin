@@ -22,12 +22,12 @@ module SpecHelpers
     def should_require_admin_on_all_actions(user_str, params={}, options={})
       ActionController::Routing::Routes.add_route ":controller/:action"
       described_type.action_methods.each do |action|
-        %w( get post put delete ).each do |verb|
+        %w( get post put delete).each do |verb|
           should_require_admin_role user_str, verb, action, params, options
-        end
+        end unless [params[:except]].flatten.include?(action)
       end
     end
-    
+
     def should_require_admin_role(user_str, http_method, action, params={}, options={})
       describe "#{http_method} ##{action} requires the admin role" do
         before do
@@ -54,7 +54,7 @@ module SpecHelpers
         end
       end
     end
-    
+
     def should_require_login_on_all_actions(params={}, options={})
       ActionController::Routing::Routes.add_route ":controller/:action"
       described_type.action_methods.each do |action|

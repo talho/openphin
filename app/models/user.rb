@@ -177,7 +177,7 @@ class User < ActiveRecord::Base
 
   def self.assign_role(role, jurisdiction, users)
     users.each do |u|
-      u.role_memberships.create(:role => role, :jurisdiction => jurisdiction)
+      u.role_memberships.create(:role => role, :jurisdiction => jurisdiction) unless u.role_memberships.map(&:role_id).include?(role.id) && u.role_memberships.map(&:jurisdiction_id).include?(jurisdiction.id)
     end
   end
 
