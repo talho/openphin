@@ -315,6 +315,7 @@ fieldset div.list_filter 											      {position:absolute; bottom:0; height:1
 fieldset div.list_filter input							      	{width:187px;}
 fieldset div.list_filter input.empty					      {color:#999;}
 fieldset.people																      {clear:both; margin:0 0 15px;}
+.scoping                                            {margin-bottom:20px;}
 
 fieldset.people span.member                         {position:relative;padding: 0 5px;}
 fieldset.people span.member a.destroy               {position:relative; top:1px;visibility:hidden;}
