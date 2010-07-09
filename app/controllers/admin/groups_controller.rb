@@ -26,11 +26,11 @@ class Admin::GroupsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        prawnto :inline => false, :filename => "#{@group.name}.pdf"
+        prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
       end
       format.csv do
         @csv_options = { :col_sep => ',', :row_sep => :auto }
-        @filename = "#{@group.name}.csv"
+        @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
         @output_encoding = 'UTF-8'
       end
     end

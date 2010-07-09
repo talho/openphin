@@ -30,6 +30,7 @@ message_recordings/*.wav
 message_recordings/tmp/*.wav
 public/javascripts/all.js
 public/stylesheets/all.css
+public/stylesheets/none.js
 config/swn.yml
 config/phone.yml
 config/system.yml
