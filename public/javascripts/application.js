@@ -153,6 +153,12 @@ jQuery(function($) {
    $("#report_type").bind("change", function (){
      this.form.submit();
    });
+  
+    //Fix for IE7, having issues with children of absolutely positioned parents disappearing on JQuery calls to hide, class, etc
+    if(document.all){
+      setTimeout("$('#content').hide();$('#content').show();", 100)
+    }
+
 });
 
 function toggleComingSoon(e){
