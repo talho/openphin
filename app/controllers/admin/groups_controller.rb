@@ -21,7 +21,19 @@ class Admin::GroupsController < ApplicationController
 
   def show
     group = Group.find_by_id(params[:id])
-    @group = group if current_user.viewable_groups.include?(group) 
+    @group = group if current_user.viewable_groups.include?(group)
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        prawnto :inline => false, :filename => "#{@group.name}.pdf"
+      end
+      format.csv do
+        @csv_options = { :col_sep => ',', :row_sep => :auto }
+        @filename = "#{@group.name}.csv"
+        @output_encoding = 'UTF-8'
+      end
+    end
   end
 
   def new
