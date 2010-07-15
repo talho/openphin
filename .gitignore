@@ -29,8 +29,9 @@ config/backgroundrb.yml
 message_recordings/*.wav
 message_recordings/tmp/*.wav
 public/javascripts/all.js
+public/javascripts/none.js
 public/stylesheets/all.css
-public/stylesheets/none.js
+public/stylesheets/none.css
 config/swn.yml
 config/phone.yml
 config/system.yml
