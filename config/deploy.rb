@@ -15,9 +15,9 @@ set :rails_env, 'production'
 # set :scm, :subversion
 RAILS_ENV="production"
 task :production do
-	role :app, "newtxphin.texashan.org"
-	role :web, "newtxphin.texashan.org"
-	role :db,  "newtxphin.texashan.org", :primary => true
+	role :app, "txphin.texashan.org"
+	role :web, "txphin.texashan.org"
+	role :db,  "txphin.texashan.org", :primary => true
 end
 
 task :staging do
