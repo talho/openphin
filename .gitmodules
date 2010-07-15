@@ -33,7 +33,7 @@
 	url = git://github.com/gnufied/backgroundrb.git
 [submodule "vendor/plugins/googlecharts"]
 	path = vendor/plugins/googlecharts
-	url = git@github.com:talho/googlecharts.git
+	url = git://github.com/talho/googlecharts.git
 [submodule "vendor/plugins/rails_indexes"]
 	path = vendor/plugins/rails_indexes
 	url = git://github.com/eladmeidar/rails_indexes.git
