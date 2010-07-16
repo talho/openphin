@@ -375,7 +375,6 @@ span.media_list fieldset.withsubfolders label.with_sub_folder {margin-left: 15px
 span.media_list fieldset.withsubfolders ul.check_selector li li li label {padding-left:30px !important;}
 .ie7 span.media_list fieldset.withsubfolders ul.check_selector li li li label {padding-left:24px !important; margin-top:-11px !important;}
 
-span.container div.document_panel_action,
 span.container div.document_panel_action            {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 200; background-color: #eeeeee}
 
 div.document_panel_action span.load_panel_text      {position:relative;top:-10px;padding-left:2px;}
@@ -517,9 +516,9 @@ padding: 0px;
 
 /*Three Column Layout Declaration */
 
-.middle_column {float:left;width:30%;margin-left:20px;}
+.middle_column {float:left;width:30%;margin-left:30px;}
 .middle_column img {width:100%;}
-.rss_item{padding-left:20px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #c6c6c6;}
+.rss_item{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #c6c6c6;}
 .rss_item p {margin:0px !important;}
 .rss_item p.view a{float:right;clear:right}
 .right_column{

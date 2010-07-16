@@ -153,12 +153,39 @@ jQuery(function($) {
    $("#report_type").bind("change", function (){
      this.form.submit();
    });
-  
+
     //Fix for IE7, having issues with children of absolutely positioned parents disappearing on JQuery calls to hide, class, etc
     if(document.all){
-      setTimeout("$('#content').hide();$('#content').show();", 100)
+      setTimeout("$('#content').hide();$('#content').show();", 100);
     }
-
+    set800 = false;
+    if ((screen.width<1024) && (screen.height<768)) {
+      $('head').append("<link href='/stylesheets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
+      if(document.getElementById('sign_in_form'))
+        $('#wrapper').prepend("<div class='flash'><p class='notice'>For optimal experience, please set your resolution to 1024x768 or higher.</p></div>");
+      set800 = true;
+    }
+    $(window).resize(function(){
+      if ((screen.width<1024) && (screen.height<768) && !set800) {
+        $('head').append("<link href='/stylesheets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
+        if(document.getElementById('sign_in_form'))
+          $('#wrapper').prepend("<div class='flash'><p class='notice'>For optimal experience, please set your resolution to 1024x768 or higher.</p></div>");
+        set800 = true;
+      }else if((screen.width>=1024) && (screen.height>=768) && set800){
+          //link_elements = document.getElementsByTagName('link');
+          //document.getElementsByTagName('head')[0].removeChild(link_elements[link_elements.length-1]);
+          //$(link_elements[link_elements.length-1]).remove();
+          $("link:last").attr('href', '');
+          set800 = false;
+      }
+    });
+    if(document.getElementById('stormpulse')){
+      var obj = document.getElementById('stormpulse');
+      obj.setAttribute("wmode", "transparent");
+      obj.style.display = 'none';
+      obj.style.display = 'block';
+      if(document.all && (screen.width<1024) && (screen.height<768)) obj.style.display = 'none';
+    }
 });
 
 function toggleComingSoon(e){

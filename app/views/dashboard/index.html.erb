@@ -7,16 +7,13 @@
         <div class='lede'>
           <p>
           <% if Rails.env == "development" || Rails.env == "test" || Rails.env == "cucumber" %>
-            <div style="width:200px;height:200px;border:1px solid;">
-              This is a place holder for the storm map, which is generated using an API key registered to the domain txphin.org.  For development and testing this
-              place holder will be used.
-            </div>
+            <embed width="100%" height="590" flashvars="host=www.txphin.org&amp;key=2h9xhxuiksqthv5kaql5p84qmhz3gjygi6n70002" allowscriptaccess="always" quality="high" bgcolor="#000000" name="stormpulse" id="stormpulse" src="http://www.stormpulse.com/swf/stormpulse.swf?v=223&amp;env=API&amp;region=10" type="application/x-shockwave-flash">
           <% else %>
             <script src="http://www.stormpulse.com/api/maps/current/?key=2h9xhxuiksqthv5kaql5p84qmhz3gjygi6n70002" type="text/javascript"></script>
           <% end %>
           </p>
           <br/>
-          <p><a href='http://www.stormpulse.com' target="_blank" title="Via: www.stormpulse.com.  Click here for original." style="font-size:15px;">Via: www.stormpulse.com. Click here for original.</a></p>
+          <p><a href='http://www.stormpulse.com' target="_blank" title="Via: www.stormpulse.com.  Click here for original.">Via: www.stormpulse.com. Click here for original.</a></p>
         </div>
       </div>
   </div>

@@ -1,0 +1,9 @@
+body{font-size:10px;}
+#wrapper{width:100% !important;}
+#content h2{font-size:15px;}
+#news_articles div.main p{font-size:11px;}
+.middle_column{margin-left:10px;}
+#header li a{padding-left:0px;}
+#stormpulse{display:none;}
+#documents_panel #audience fieldset.list {height:150px;margin:0px;margin-bottom:-7px;}
+#documents_panel #audience fieldset.people {margin:0px;margin-bottom:-17px;};
