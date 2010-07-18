@@ -98,6 +98,10 @@ Feature: Sending alerts with call downs
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery Time"
     And I select "if you can respond within 15 minutes" from "Responders"
+		And I unselect "if you can respond within 30 minutes" from "Responders"
+		And I unselect "if you can respond within 1 hour" from "Responders"
+		And I unselect "if you can respond within 4 hours" from "Responders"
+		And I unselect "if you cannot respond" from "Responders"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -113,7 +117,11 @@ Feature: Sending alerts with call downs
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery Time"
     And I select "Normal" from "Acknowledge"
-    And I select "if you can respond within 30 minutes" from "Responders"
+		And I unselect "if you can respond within 15 minutes" from "Responders"
+		And I select "if you can respond within 30 minutes" from "Responders"
+		And I unselect "if you can respond within 1 hour" from "Responders"
+		And I unselect "if you can respond within 4 hours" from "Responders"
+		And I unselect "if you cannot respond" from "Responders"
     And I press "Preview Message"
     Then I should see a preview of the message
 

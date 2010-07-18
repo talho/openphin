@@ -201,7 +201,7 @@ Then 'an alert should not exist with:' do |table|
         display_name = name.split(" ").join(" ")
         alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
       end
-    when 'targets'
+		when 'targets'
       value.split(",").each do |email|
         alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_false
       end

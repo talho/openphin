@@ -87,6 +87,7 @@ Rails::Initializer.run do |config|
   config.gem "pauldix-feedzirra", :lib => "feedzirra", :version => "=0.0.18", :source => "http://gems.github.com"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
+ActiveRecord::Base.lock_optimistically = true
 
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')

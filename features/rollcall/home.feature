@@ -66,7 +66,7 @@ Scenario: Accessing the Rollcall application as a non-rollcall user
 Scenario: Accessing Rollcall as a user with no school districts in jurisdiction
   Given I am logged in as "noschools@example.com"
   When I go to the rollcall page
-  Then I should see "You do not currently have any school districts in your jurisdiction enrolled in Rollcall.  Email your OpenPHIN administrator for more information."
+	Then I should see "You do not currently have any school districts in your jurisdiction enrolled in Rollcall. Email your OpenPHIN administrator for more information."
   
 Scenario: Viewing the Home screen
   Given I am logged in as "nurse.betty@example.com"
