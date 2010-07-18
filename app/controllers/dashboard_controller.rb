@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
     entries = []
     feed_urls.each do |url|
       entries += Feedzirra::Feed.fetch_and_parse(url).entries
-    end
+		end
     @entries = entries.sort{|a,b| b.published <=> a.published}[0..9]
   end
 

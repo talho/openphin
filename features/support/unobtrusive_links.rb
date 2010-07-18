@@ -4,7 +4,7 @@ module Webrat
   protected
 
     def css_class
-      Webrat::XML.attribute(@element, "class")
+      @element["class"]
     end
 
     def http_method_from_css_class

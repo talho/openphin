@@ -1,6 +1,10 @@
-
 module NavigationHelpers
-
+  # Maps a name to a path. Used by the
+  #
+  #   When /^I go to (.+)$/ do |page_name|
+  #
+  # step definition in web_steps.rb
+  #
   def path_to(page_name, arg=nil)
     case page_name
 
@@ -28,8 +32,8 @@ module NavigationHelpers
         alerts_acknowledge_path
       when /the roles requests page for an admin/
         admin_role_requests_path
-	    when /the HAN/i
-	      hud_path
+            when /the HAN/i
+              hud_path
       when /the alert log/i
         alerts_path
       when /the user edit page/i
@@ -68,7 +72,6 @@ module NavigationHelpers
         new_admin_role_request_path
       when /the Documents page/i
         documents_path
-      #add plugin paths here
       when /the rollcall page/i
         rollcall_path
       when /the rollcall schools page/i
@@ -99,10 +102,25 @@ module NavigationHelpers
       when /the invitation reports page for "(.*)"$/i
         invitation = Invitation.find_by_name($1)
         reports_admin_invitation_path(invitation)
+
+
+    # Add more mappings here.
+    # Here is an example that pulls values out of the Regexp:
+    #
+    #   when /^(.*)'s profile page$/i
+    #     user_profile_path(User.find_by_login($1))
+
     else
-      raise "Can't find mapping from \"#{page_name}\" to a path."
+      begin
+        page_name =~ /the (.*) page/
+        path_components = $1.split(/\s+/)
+        self.send(path_components.push('path').join('_').to_sym)
+      rescue Object => e
+        raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
+          "Now, go and add a mapping in #{__FILE__}"
+      end
     end
   end
 end
- 
+
 World(NavigationHelpers)
