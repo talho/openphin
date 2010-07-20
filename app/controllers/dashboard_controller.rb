@@ -10,11 +10,15 @@ class DashboardController < ApplicationController
       "http://www.nhc.noaa.gov/gtwo.xml",
       "http://www.nhc.noaa.gov/nhc_at2.xml"
      ]
-    entries = []
-    feed_urls.each do |url|
-      entries += Feedzirra::Feed.fetch_and_parse(url).entries
+    @entries = []
+    begin   
+      feed_urls.each do |url|
+        @entries += Feedzirra::Feed.fetch_and_parse(url).entries
+      end
+      @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
+    rescue
+      @entries = nil  
     end
-    @entries = entries.sort{|a,b| b.published <=> a.published}[0..9]
   end
 
   def about
