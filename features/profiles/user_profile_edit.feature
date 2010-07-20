@@ -179,3 +179,50 @@ I should be able to edit my profile
     And I should see "DSHS"
     And "jane.smith@example.com" should not receive an email
     And "bob.smith@example.com" should not receive an email
+
+  Scenario: Editing profile concurrently to an admin editing the user's profile
+    Given I am logged in as "john.smith@example.com"
+    When I go to the edit profile page
+    Then I should see the profile edit form
+
+    When I fill in the form with the following info:
+      | Job description                   | A developer |
+      | Preferred name to be displayed    | Keith G. |
+      | Preferred language                | English |
+      | Job title                         | Developer |
+      | Bio                               | Maybe the austin powers reference was too much |
+      | Credentials                       | Rock star, Certified |
+      | Experience                        | Summer camp director  |
+      | Employer                          | State of Texas |
+
+    Given session name is "admin session"
+    And I am logged in as "bob.smith@example.com"
+    When I view the profile page for "john.smith@example.com"
+    And I follow "Edit"
+    Then I should see the profile edit form
+
+    When I fill in the form with the following info:
+      | Preferred name to be displayed    | John Smith |
+    And I press "Save"
+    Then I should see the profile page
+    Then I should not see any errors
+    And I should see "Profile information saved."
+
+    Given session name is "default"
+    And I press "Save"
+    Then I should see the profile edit form
+    And I should see "Another user has recently updated this profile, please try again."
+    And the "Preferred name to be displayed" field should contain "John Smith"
+    When I fill in the form with the following info:
+      | Job description                   | A developer |
+      | Preferred name to be displayed    | Keith G. |
+      | Preferred language                | English |
+      | Job title                         | Developer |
+      | Bio                               | Maybe the austin powers reference was too much |
+      | Credentials                       | Rock star, Certified |
+      | Experience                        | Summer camp director  |
+      | Employer                          | State of Texas |
+    And I press "Save"
+    Then I should see the profile page
+    And I should not see any errors
+    And I should see "Profile information saved."

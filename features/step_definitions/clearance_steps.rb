@@ -116,3 +116,48 @@ When /^I return next time$/ do
   When %{session is cleared}
   And %{I go to the homepage}
 end
+
+module ActionController
+  module Integration
+    module Runner
+      def switch_session_by_name(name)
+        if @sessions_by_name.nil?
+          # Stash the original session for later
+          @sessions_by_name = {
+            :default => {
+              :session => @integration_session,
+              :webrat_session => @integration_session.delegate.webrat_session,
+              :webrat_adapter => @integration_session.delegate.webrat_session.adapter
+            }
+          }
+        end
+
+        if @sessions_by_name[name.to_sym].nil?
+          # if the session doesn't exist, create a new session environment
+          @sessions_by_name[name.to_sym] = {
+            :session => open_session,
+            :webrat_session => Webrat::Session.new,
+            :webrat_adapter => Webrat.adapter_class.new(@integration_session.delegate)
+          }
+        end
+
+        # Restore existing session environment
+        @integration_session = @sessions_by_name[name.to_sym][:session]
+        @integration_session.delegate.webrat_session = @sessions_by_name[name.to_sym][:webrat_session]
+        @integration_session.delegate.webrat_session.adapter = @sessions_by_name[name.to_sym][:webrat_adapter]
+
+        # Fix Cucumber::Rails::World object when in step "I want to debug" to report the correct current_user
+        @integration_session.delegate.instance_eval do
+          def current_user
+            return nil  unless user = ::User.find_by_id(self.webrat_session.adapter.integration_session.session[:user_id])
+            return user if user.email_confirmed?
+          end
+        end        
+      end
+    end
+  end
+end
+
+Given /^session name is "([^\"]*)"$/ do |name|
+  switch_session_by_name(name)
+end

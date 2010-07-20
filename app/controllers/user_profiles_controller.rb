@@ -115,28 +115,40 @@ class UserProfilesController < ApplicationController
     end
 
     respond_to do |format|
-      if (@device.nil? || @device.save) && (@user.update_attributes(params[:user]) && @user.save)
-        params[:user][:role_requests_attributes].each do |index, role_requests|
-          rr = @user.role_requests.find_by_role_id_and_jurisdiction_id(role_requests['role_id'], role_requests['jurisdiction_id'])
-          if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
-            rr.approve!(current_user)
+      begin
+        if @user.update_attributes(params[:user]) && (@device.nil? || @device.save)
+          params[:user][:role_requests_attributes].each do |index, role_requests|
+            rr = @user.role_requests.find_by_role_id_and_jurisdiction_id(role_requests['role_id'], role_requests['jurisdiction_id'])
+            if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
+              rr.approve!(current_user)
+            end
           end
-        end
-        
-        params[:user][:organization_membership_requests_attributes].each do |index, request|
-          omr = @user.organization_membership_requests.find_by_organization_id(request['organization_id'])
-          if !omr.approved? && current_user.is_super_admin?
-            omr.approve!(current_user)
-          else
-            flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
-          end
-        end unless params[:user][:organization_membership_requests_attributes].nil?
 
-        flash[:notice] = "" if flash[:notice].blank?
-        flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
-        format.html { redirect_to user_profile_path(@user) }
-        format.xml { head :ok }
-      else
+          params[:user][:organization_membership_requests_attributes].each do |index, request|
+            omr = @user.organization_membership_requests.find_by_organization_id(request['organization_id'])
+            if !omr.approved? && current_user.is_super_admin?
+              omr.approve!(current_user)
+            else
+              flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
+            end
+          end unless params[:user][:organization_membership_requests_attributes].nil?
+
+          flash[:notice] = "" if flash[:notice].blank?
+          flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
+          format.html { redirect_to user_profile_path(@user) }
+          format.xml { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
+      rescue ActiveRecord::StaleObjectError
+        flash[:error] = "Another user has recently updated this profile, please try again."
+        find_user_and_profile
+        format.html { render :action => "edit"}
+        format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
+      rescue StandardError
+        flash[:error] = "An error has occurred saving your profile, please try again."
+        find_user_and_profile
         format.html { render :action => "edit" }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
