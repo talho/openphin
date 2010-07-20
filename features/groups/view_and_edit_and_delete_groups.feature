@@ -212,3 +212,36 @@ Feature: Viewing groups
     Given I am logged in as "will.smith@example.com"
     When I go to the groups page
     Then I should not see "Dallas County Health Officer Jurisdiction Group"
+
+  Scenario: updating a user group currently to another admin updating the same group
+    When I load the edit group page for "Dallas County Health Officer Jurisdiction Group"
+    Then I should see the following jurisdictions:
+      | Dallas County |
+      | Potter County |
+    When I fill out the group form with:
+      | Name          | Dallas and Potter County Jurisdiction Group |
+      | Jurisdictions | Potter County                               |
+
+    Given session name is "admin session"
+    And I am logged in as "will.smith@example.com"
+    When I load the edit group page for "Dallas County Health Officer Jurisdiction Group"
+    And I fill out the group form with:
+      | Users          | Jane Smith |
+    And I press "Save"
+    Then I should see the following group summary:
+      | name         | Dallas County Health Officer Jurisdiction Group |
+      | group_jurisdictions | Dallas County |
+      | group_users  | John Smith,Jane Smith                                      |
+
+    Given session name is "default"
+    And I press "Save"
+    Then I should see "The group Dallas County Health Officer Jurisdiction Group has been recently modified by another user. Please try again."
+    And I have loaded the edit group page for "Dallas County Health Officer Jurisdiction Group"
+    When I fill out the group form with:
+      | Name          | Dallas and Potter County Jurisdiction Group |
+      | Jurisdictions | Potter County                               |
+    And I press "Save"
+    Then I should see the following group summary:
+      | name                | Dallas and Potter County Jurisdiction Group |
+      | group_jurisdictions | Dallas County,Potter County                 |
+      | group_users         | John Smith,Jane Smith                       |

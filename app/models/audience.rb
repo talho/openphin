@@ -67,7 +67,7 @@ class Audience < ActiveRecord::Base
   
   def copy
     attrs = self.attributes
-    ["id","updated_at","creatd_at"].each{|item| attrs.delete(item)}
+    ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
     a = Audience.new(attrs)
     jurisdictions.each{|jur| a.jurisdictions << jur}
     roles.each{|role| a.roles << role}
