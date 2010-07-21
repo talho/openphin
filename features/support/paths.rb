@@ -101,6 +101,8 @@ module NavigationHelpers
         forum_topics_path(Forum.find_by_name!($1))
       when /the "(.*)" topic page for Forum "(.*)"$/i
         forum_topic_path(Forum.find_by_name!($2),Topic.find_by_name!($1))
+      when /the "(.*)" edit topic page for Forum "(.*)"$/i
+        edit_forum_topic_path(Forum.find_by_name!($2),Topic.find_by_name!($1))
       when /the invitation reports page for "(.*)"$/i
         invitation = Invitation.find_by_name($1)
         reports_admin_invitation_path(invitation)
