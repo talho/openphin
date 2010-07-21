@@ -21,10 +21,12 @@
          <% unless audience.object.is_a?(Group) %>
            <%= render 'audiences/fields', :form => audience, :group_form => f %>
          <% end %>
+         <%= audience.hidden_field :lock_version %>
        <% end %>
      </div>
     </div>
   <p>
+    <%= f.hidden_field :lock_version %>
     <%= f.submit 'Update' %>
   </p>
 <% end %>

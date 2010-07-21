@@ -95,6 +95,8 @@ module NavigationHelpers
         new_users_delete_path
       when /the Forums page/i
         forums_path
+      when /the edit Forum page/i
+        edit_forum_path(Forum.find_by_name!(arg))
       when /the Topics page for Forum "(.*)"$/i
         forum_topics_path(Forum.find_by_name!($1))
       when /the "(.*)" topic page for Forum "(.*)"$/i

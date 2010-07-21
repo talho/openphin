@@ -23,7 +23,8 @@ I should be able to create topics to forums and place comments to these topics
   Scenario: Create a topic and edit the topic as the poster
     Given I am logged in as "jane.smith@example.com"
     And I have the forum named "Funding methodology"
-    
+    And the forum "Funding methodology" has the following audience:
+      | Users | jane.smith@example.com  |
     When I go to the Forums page
     And I follow "Funding methodology"
     And I fill in "Name" with "Locating Grants in todays economy"
@@ -54,7 +55,7 @@ I should be able to create topics to forums and place comments to these topics
   Scenario: Create a topic and verify that others can not edit the topic and its comments
     Given I am logged in as "jane.smith@example.com"
     And I have the topic "Locating Grants" to forum "Funding methodology"
-    
+
     When I am logged in as "harry.simon@example.com"
     And I go to the Forums page
     Then I should not see "Edit"
@@ -63,6 +64,8 @@ I should be able to create topics to forums and place comments to these topics
   Scenario: Place textile text into a comment and verify that it is being html encoded
     Given I am logged in as "jane.smith@example.com"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
+    And the forum "Grant Capturing" has the following audience:
+      | Users | jane.smith@example.com  |
     
     When I go to the Forums page
     And I follow "Measuring Fulfillment"
