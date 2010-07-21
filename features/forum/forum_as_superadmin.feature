@@ -243,4 +243,4 @@
 
     Given session name is "default"
     When I press "Update"
-    Then I should see "This group was recently changed by another user. Please try again." within ".error"
+    Then I should see "This forum was recently changed by another user. Please try again." within ".error"

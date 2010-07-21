@@ -43,12 +43,6 @@ class Topic < ActiveRecord::Base
     comments << comments.build(attributes)        
   end
   
-  def dest_forum_id=(destination_forum_id)
-    if (dest_forum = Forum.find(destination_forum_id.to_i))
-      dest_forum.topics << self
-    end
-  end
-  
   def dest_forum_id
     forum_id
   end

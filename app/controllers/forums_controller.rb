@@ -63,7 +63,7 @@ class ForumsController < ApplicationController
         redirect_to :back
       end
     rescue ActiveRecord::StaleObjectError
-      flash[:error] = "This group was recently changed by another user.  Please try again."
+      flash[:error] = "This forum was recently changed by another user.  Please try again."
       redirect_to edit_forum_path(@forum)
     rescue StandardError
       flash[:error] = "There was a problem updating the forum."
