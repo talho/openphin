@@ -30,3 +30,7 @@ Then /^I should explictly see "([^\"]*)" within "([^\"]*)"$/ do |regexp, selecto
     content.should contain(regexp)
   end
 end
+
+Then /^I should see "([^\"]*)" in the response header flash error$/ do |text|
+  response.request.env["rack.session"]["flash"][:error].should == text
+end

@@ -60,9 +60,17 @@ class DocumentsController < ApplicationController
   
   def update
     @document = Document.editable_by(current_user).find(params[:id])
-    if @document.update_attributes(params[:document])
+    begin
+      if @document.update_attributes(params[:document])
+        redirect_to folder_or_inbox_path(@document)
+      else
+        render :edit
+      end
+    rescue ActiveRecord::StaleObjectError
+      @document.reload
+      flash[:error] = "<script>alert('Another user recently updated the document you are attempting to update to #{@document.file_file_name}.  Please try again.');</script>"
       redirect_to folder_or_inbox_path(@document)
-    else 
+    rescue StandardError
       render :edit
     end
   end
