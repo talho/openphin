@@ -18,7 +18,7 @@ Given 'I have been added as owner to the share "$name"' do |name|
   channel.subscriptions.create!( :owner => true, :user => current_user )
 end
 
-Given '"$email" have been added as owner to the share "$channel_name"' do |email,channel_name|
+Given '"$email" has been added as owner to the share "$channel_name"' do |email,channel_name|
   user = Given(%Q|a user with the email "#{email}"|)
   channel = Given(%Q|a share named "#{channel_name}"|)
   channel.subscriptions.create!( :owner => true, :user => user )
