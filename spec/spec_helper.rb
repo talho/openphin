@@ -4,6 +4,7 @@ ENV["RAILS_ENV"] = 'test'
 require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
 require 'spec/autorun'
 require 'spec/rails'
+require "webrat"
 
 Dir[File.dirname(__FILE__) + '/spec_helpers/**/*.rb'].each{ |f| require f }
 

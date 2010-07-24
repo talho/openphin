@@ -247,7 +247,7 @@ ul.group_roles li                                   {list-style:none; float:left
 ul.group_users                                      {list-style-type:none;margin:5px;padding:0; display:block;}
 ul.group_users li                                   {list-style:none; float:left; margin-left:3px;}
 ul.group_rcpts                                      {list-style-type:none;margin:5px;padding:0; display:block;}
-ul.group_rcpts li                                   {list-style:none; float:left; margin-left:3px;}
+ul.group_rcpts li                                   {list-style:none; margin-left:3px;}
 h5.group_header                                     {display:block;clear:both;}
 
 

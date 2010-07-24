@@ -29,12 +29,14 @@
 
 <div><h5 class='group_header'>Who's in this group?</h5>
   <div style="text-align: center">
-    <%= link_to "Printable Report (PDF)", admin_group_path(@group, :format=>:pdf) %>
+    <!-- <%= link_to "Printable Report (PDF)", admin_group_path(@group, :format=>:pdf) %> -->
     <%= link_to "Download Report (CSV)", admin_group_path(@group, :format=>:csv) %>
   </div>
+  <%= will_paginate @recipients %>
   <ul class='group_rcpts'>
-  <% @group.recipients.each do |user| %>
-    <li class='group_rcpt'><%= link_to(user.display_name, user_profile_path(user))%><%= "," unless user==@group.recipients.last %></li>
-  <% end %>
+    <% @recipients.each do |user| %>
+      <li class='group_rcpt'><%= link_to(user.display_name, user_profile_path(user)) %></li>
+    <% end %>
   </ul>
+  <%= will_paginate @recipients %>
 </div>

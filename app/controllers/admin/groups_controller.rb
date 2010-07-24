@@ -21,10 +21,15 @@ class Admin::GroupsController < ApplicationController
 
   def show
     group = Group.find_by_id(params[:id])
-    @group = group if current_user.viewable_groups.include?(group)
+    if current_user.viewable_groups.include?(group)
+      @group = group
+      @group.prepare_recipients(:include_public => true, :recreate => (params[:page].blank? || params[:page] == "1"))
+    end
 
     respond_to do |format|
-      format.html
+      format.html do
+        @recipients = TempUser.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") if @group
+      end
       format.pdf do
         prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
       end

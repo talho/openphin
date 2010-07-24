@@ -82,7 +82,7 @@ Rails::Initializer.run do |config|
   config.gem "RedCloth"
   config.gem "prawn", :version => "=0.8.4", :source => "http://gemcutter.org"
   #config.gem "csv_builder", :version => "=1.1.7", :source => "http://gemcutter.org"
-  config.gem "slim_scrooge", :version => "=1.0.10", :source => "http://gemcutter.org"
+  #config.gem "slim_scrooge", :version => "=1.0.10", :source => "http://gemcutter.org"
   config.gem "hoptoad_notifier"
   config.gem "pauldix-feedzirra", :lib => "feedzirra", :version => "=0.0.18", :source => "http://gems.github.com"
 end

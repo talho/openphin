@@ -27,7 +27,8 @@ class Target < ActiveRecord::Base
 #            inner join role_memberships on users.id=role_memberships.user_id
 #          where #{conditions_for(audience)}"
 #    )
-    self.users = audience.recipients(:include_public => item.include_public_users?).uniq.compact
+    user_ids = audience.recipients(:include_public => item.include_public_users?, :recreate => true).find(:all, :select => "id").map(&:id)
+    self.user_ids = user_ids.uniq unless user_ids.empty?
   end
 
   #handle_asynchronously :save_snapshot_of_users
