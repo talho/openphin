@@ -36,9 +36,6 @@ class Jurisdiction < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_many :alerts, :foreign_key => 'from_jurisdiction_id'
 
-  #TODO move to rollcall plugin
-  has_many :school_districts, :include => :schools
-
   named_scope :admin, lambda{{:include => :role_memberships, :conditions => { :role_memberships => { :role_id => Role.admin.id } }}}
   named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}
   named_scope :state, lambda {{:conditions => root ? "parent_id = #{root.id}" : "0=1"}}

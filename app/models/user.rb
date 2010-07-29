@@ -152,21 +152,6 @@ class User < ActiveRecord::Base
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
   
-   #TODO Move this into plugin for rollcall later
-  def school_districts
-    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
-  end
-
-  def schools(options={})
-    options={ :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name"}.merge(options)
-    School.find(:all, options)
-#    school_districts.map{|district| district.schools}.flatten.uniq
-  end
-
-  def recent_absentee_reports
-    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
-  end
-
   def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
   end

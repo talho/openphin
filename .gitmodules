@@ -61,3 +61,6 @@
 [submodule "vendor/plugins/smurf"]
 	path = vendor/plugins/smurf
 	url = git://github.com/Dishwasha/smurf.git
+[submodule "vendor/plugins/rollcall"]
+	path = vendor/plugins/rollcall
+	url = git://github.com/talho/rollcall.git
