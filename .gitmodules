@@ -40,9 +40,6 @@
 [submodule "vendor/plugins/rack-bug"]
 	path = vendor/plugins/rack-bug
 	url = git://github.com/brynary/rack-bug.git
-[submodule "vendor/plugins/open_flash_chart"]
-	path = vendor/plugins/open_flash_chart
-	url = git://github.com/pullmonkey/open_flash_chart.git
 [submodule "vendor/plugins/serial"]
 	path = vendor/plugins/serial
 	url = git://github.com/karmajunkie/serial.git
