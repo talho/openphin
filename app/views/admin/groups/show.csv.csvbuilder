@@ -1,13 +1,11 @@
 # header-row for the data
 csv << ["Name", "Email", "Role Assignments"]
 
-if @sql
-  TempUser.paginated_each(:per_page => 1000, :order => "last_name") { |user|
-    csv << [
-      # note you can use the usual view-helper here
-      user.display_name,
-      user.email,
-      user.memberships
-      ]
-  }
-end
+TempUser.paginated_each(:per_page => 1000, :order => "last_name") { |user|
+  csv << [
+    # note you can use the usual view-helper here
+    user.display_name,
+    user.email,
+    user.memberships
+    ]
+}
