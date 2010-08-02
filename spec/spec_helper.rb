@@ -16,7 +16,7 @@ require "webrat"
 
 Dir[File.dirname(__FILE__) + '/spec_helpers/**/*.rb'].each{ |f| require f }
 if is_plugin
-  Dir[Rails.root + '/spec/spec_helpers/**/*.rb'].each{ |f| require f }
+  Dir[RAILS_ROOT + '/spec/spec_helpers/**/*.rb'].each{ |f| require f }
 end
 
 Spec::Runner.configure do |config|
