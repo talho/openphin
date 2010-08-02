@@ -48,7 +48,13 @@ class Jurisdiction < ActiveRecord::Base
   named_scope :nonforeign, :conditions => { :foreign => false }, :order => :name
   named_scope :alphabetical, :order => 'name'
 
+  named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
+  
   validates_uniqueness_of :fips_code, :allow_nil => true, :allow_blank => true
+
+  def self.latest_in_secs
+    recent(1).first.updated_at.utc.to_i
+  end
 
   def admins
     users.with_role(Role.admin)

@@ -1,6 +1,18 @@
 class JurisdictionsController < ApplicationController
-  before_filter :admin_required
+  before_filter :admin_required, :except => [:mapping]
   app_toolbar "han"
+
+
+  def mapping
+    jurisdictions = fetch_jurisdictions(params[:request])
+    respond_to do |format|
+      # this header is a must for CORS
+      headers["Access-Control-Allow-Origin"] = "*"
+      ActiveRecord::Base.include_root_in_json = false
+      json = "{\"jurisdictions\": #{jurisdictions.to_json(params[:request])},\"latest_in_secs\": #{Jurisdiction.latest_in_secs} }"
+      format.json {render :json => json }
+    end
+  end
 
   # GET /jurisdictions
   # GET /jurisdictions.xml
@@ -97,4 +109,17 @@ class JurisdictionsController < ApplicationController
     #  format.xml  { head :ok }
     #end
   end
+
+protected
+
+    def fetch_jurisdictions(options={})
+      return [] if options.empty?
+      if ( options[:age] && (Jurisdiction.recent(1).first.updated_at.utc.to_i == options[:age]) )
+        return []
+      end
+      method = options[:method]
+      return [] unless (Jurisdiction.public_methods-Jurisdiction.instance_methods).include? method.to_s
+      Jurisdiction.send(method ? method : :all)
+    end
+    
 end

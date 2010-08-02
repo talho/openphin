@@ -30,6 +30,11 @@ class Role < ActiveRecord::Base
     :public => 'Public',
     :han_coordinator => 'Health Alert and Communications Coordinator'
   }
+  named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
+  
+  def self.latest_in_secs
+    recent(1).first.updated_at.utc.to_i
+  end
 
   def self.admin
     find_or_create_by_name_and_approval_required_and_user_role Defaults[:admin],true,false
@@ -78,4 +83,5 @@ class Role < ActiveRecord::Base
   def to_s
     display_name
   end
+      
 end

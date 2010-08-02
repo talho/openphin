@@ -25,6 +25,15 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "han"
     @user = current_user
     @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts.paginate(:page => params[:page], :per_page => 10) : [Alert.default_alert].paginate(:page => 1))
+    respond_to do |format|
+      format.html
+      format.json do
+        headers["Access-Control-Allow-Origin"] = "*"
+        jsonObject = render_to_string(:partial => "dashboard/alert.json.erb", 
+          :collection => @alerts, :as => :alert, :layout => false, :spacer_template => "comma")
+        render :json => "[#{jsonObject}]"
+      end
+    end
   end
   
 	def faqs

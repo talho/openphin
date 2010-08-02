@@ -121,8 +121,8 @@ class ApplicationController < ActionController::Base
 
     def add_cors_header
       headers["Access-Control-Allow-Origin"] = "*"
-      headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-      headers["Access-Control-Allow-Headers"] = "X-Requested-With"
+      headers["Access-Control-Allow-Methods"] = "OPTIONS"
+      headers["Access-Control-Allow-Headers"] = "X-Requested-With, Cookie"
       headers["Access-Control-Max-Age"] = "1728000"
     end
 

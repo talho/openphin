@@ -28,6 +28,8 @@ module NavigationHelpers
         alerts_acknowledge_path
       when /the roles requests page for an admin/
         admin_role_requests_path
+      when /the roles show attribute page/
+         roles_show_attribute_path(arg)
 	    when /the HAN/i
 	      hud_path
       when /the alert log/i

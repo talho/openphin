@@ -6,6 +6,8 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
 
+  map.connect "/jurisdictions/mapping.:format",:controller=>'application',:action=>'options',:conditions =>{:method =>[:options]}
+  map.jurisdictions_mapping "/jurisdictions/mapping.:format", :controller => "jurisdictions", :action => "mapping"
   map.resources :jurisdictions, :devices, :folders
 
   map.resources :documents, :has_many => :shares do |documents|
@@ -78,22 +80,31 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
   map.email_acknowledge_alert "alerts/:id/emailack/:call_down_response", :controller => "alerts", :action => "acknowledge", :email => "1", :call_down_response => "0"
-  map.token_acknowledge_alert "alerts/:id/acknowledge/:token", :controller => "alerts", :action => "token_acknowledge"
+  map.connect "alerts/:id/acknowledge.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
+  map.token_acknowledge_alert "alerts/:id/acknowledge/:token.:format", :controller => "alerts", :action => "token_acknowledge"
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
+  
+  map.connect "/roles/mapping.:format",:controller=>'application',:action=>'options',:conditions =>{:method =>[:options]}
+  map.roles_mapping "/roles/mapping.:format", :controller => "roles", :action => "mapping"
   map.resources :roles
+  
   map.resources :organizations do |organization|
     organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
   end
   map.resources :admin_groups, :controller => "admin/groups"
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
-  map.resource :search, :member => {:show_advanced => [:get, :put]}
+  map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
+  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced"
+  
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
-  map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
-  map.hud "/han", :controller => "dashboard", :action => "hud"
+  map.faqs "/faqs", :controller => "dashboard", :action => "faqs
+  "
+  map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
+  map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resources :users_delete, :controller => "admin/users_delete"

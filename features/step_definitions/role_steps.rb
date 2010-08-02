@@ -48,3 +48,31 @@ end
 Given /^there is an system administrator role$/ do
   Role.superadmin
 end
+
+When /^I go the roles show attributes page with "([^\"]*)"$/ do |request|
+  raise "Request is malformed (uuid property missing)" unless request =~ /\{"uuid\"\:\"([^\"]*)\"/x
+  raise "Request is malformed (class_method property missing)" unless request =~ /\{"class_method\"\:\"([^\"]*)\"/x
+  raise "Request is malformed (key property missing)" unless request =~ /\{"key\"\:\"([^\"]*)\"/x
+  raise "Request is malformed (value property missing)" unless request =~ /\{"value\"\:\"([^\"]*)\"/x
+  raise "Request is malformed (updated_at_secs property missing)" unless request =~ /\{"updated_at_secs\"\:\"([^\"]*)\"/x
+  visit path_to("the roles show attribute page", request) # merge in :format
+end
+
+
+Then /^I should see user role attributes with the following\:$/ do |table|
+debugger
+  json = ActiveSupport::JSON.decode(response.body)
+  values = table.is_a?(Array) ? table : table.raw
+  values.each do |row|
+    property, value = row
+    case property
+    when /^updated_at_secs$/
+      json['updated_at_secs']['text'].should_not be_nil
+    else
+      json[property].should == Role.find_by_id(property.to_i)
+    end
+  end
+end
+
+
+ 

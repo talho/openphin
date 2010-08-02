@@ -1,7 +1,18 @@
 class RolesController < ApplicationController
 	app_toolbar "han"
 	
-  before_filter :admin_required
+  before_filter :admin_required, :except => [:mapping]
+  
+  def mapping
+    roles = fetch_roles(params[:request])
+    respond_to do |format|
+      # this header is a must for CORS
+      headers["Access-Control-Allow-Origin"] = "*"
+      ActiveRecord::Base.include_root_in_json = false
+      json = "{\"roles\": #{roles.to_json(params[:request])},\"latest_in_secs\": #{Role.latest_in_secs} }"
+      format.json {render :json => json }
+    end
+  end
 
   # GET /roles
   # GET /roles.xml
@@ -86,4 +97,18 @@ class RolesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+protected
+
+  def fetch_roles(options={})
+    return [] if options.empty?
+    if ( options[:age] && (Role.recent(1).first.updated_at.utc.to_i == options[:age]) )
+      return []
+    end
+    method = options[:method]
+    return [] unless (Role.public_methods-Role.instance_methods).include? method.to_s
+    method = :all if method == :user_roles && current_user.is_admin?
+    Role.send(method ? method : :all)
+  end
+
 end

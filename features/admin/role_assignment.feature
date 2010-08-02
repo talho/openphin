@@ -227,4 +227,13 @@ Feature: Assigning roles to users for roles
     And I press "Save"
     Then I should see "System:Admin"
 
+  Scenario: An user can export user role data via json
+    Given I am logged in as "john@example.com"
+    When I go to the roles show attribute page wth '{"class_method": "user_roles","key": "id","value": "name", "uuid": "empty for now"}'
+    Then I should see user role attributes with the following:
+      | uuid          | empty for now  |
+      | class_method  | user_roles     |
+      | key           | id             |
+      | value         | name           |
+      | 1             | Health Officer |
     

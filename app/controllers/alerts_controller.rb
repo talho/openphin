@@ -162,7 +162,14 @@ class AlertsController < ApplicationController
       expire_log_entry(alert_attempt.alert)
       flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
     end
-    redirect_to hud_path
+    # respond_to will look for templates, so I avoid that
+    unless params[:format] == "json"
+      redirect_to hud_path
+    else
+      # this header is a must for CORS
+      headers["Access-Control-Allow-Origin"] = "*"
+      render :json => "{}"
+    end
   end
 
   def token_acknowledge

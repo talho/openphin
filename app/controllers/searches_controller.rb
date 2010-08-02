@@ -56,8 +56,16 @@ class SearchesController < ApplicationController
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end
+      # for iPhone
+      format.json do
+        @results ||= []
+          # this header is a must for CORS
+          headers["Access-Control-Allow-Origin"] = "*"
+          render :json => @results.map(&:to_people_results)
+      end
     end
   end
+
   
 protected
 
@@ -103,5 +111,5 @@ protected
     is_advanced = !conditions.reject{|k,v|k==:name}.empty? && !filters.empty?
     conditions.reject!{|k,v|k==:name} if is_advanced
   end
-  
+    
 end

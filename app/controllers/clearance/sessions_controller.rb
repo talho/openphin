@@ -12,21 +12,42 @@ class Clearance::SessionsController < ApplicationController
   end
 
   def create
-    @user = ::User.authenticate(params[:session][:email],
+    @user = User.authenticate(params[:session][:email],
                                 params[:session][:password])
-    if @user.nil?
-      flash_failure_after_create
-      flash[:email_address] = params[:session][:email]
-      render :template => 'sessions/new', :status => :unauthorized
-    else
-      if @user.email_confirmed?
-        sign_in(@user)
-        remember(@user) if remember?
-        redirect_back_or(url_after_create)
+    respond_to do |format|
+      if @user.nil?
+        format.html {
+          flash_failure_after_create
+          flash[:email_address] = params[:session][:email]
+          render :template => 'sessions/new', :status => :unauthorized
+        }
+        # iPhone app
+        format.json {render :nothing=>true, :status => :unauthorized}
       else
-        SignupMailer.deliver_confirmation(@user)
-        flash_notice_after_create
-        redirect_to(new_session_url)
+        if @user.email_confirmed?
+          format.html {
+            sign_in(@user)
+            remember(@user) if remember?
+            redirect_back_or(url_after_create)
+          }
+          # iPhone app
+          format.json {
+            sign_in(@user)
+            remember(@user) if remember?
+            headers["Access-Control-Allow-Origin"] = "*"
+            render :json => {:token => form_authenticity_token,
+              :cookie => "#{ActionController::Base.session_options[:key]}=#{ActiveSupport::MessageVerifier.new(ActionController::Base.session_options[:secret], 'SHA1').generate(session.to_hash)}"
+               }
+          }
+        else
+          SignupMailer.deliver_confirmation(@user)
+          format.html {
+            flash_notice_after_create
+            redirect_to(new_session_url)
+          }
+          #iPhone app
+          format.json {render :nothing=>true, :status => :unprocessable_entity}
+        end
       end
     end
   end
