@@ -1,23 +1,23 @@
 {
-'header': <%= h(alert.title).to_json %>,
-'preview': {
-  'pair': [
-    {'key': 'Person from','value': '<%= alert.author.try(:display_name) %>'}, 
-    {'key': 'Jurisdiction from','value': '<%= alert.try(:sender) %>'}, 
-    {'key': 'Severity','value': '<%= alert.severity %>'}]
+"header": <%= h(alert.title).to_json %>,
+"preview": {
+  "pair": [
+    {"key": "Person from","value": "<%= alert.author.try(:display_name) %>"},
+    {"key": "Jurisdiction from","value": "<%= alert.try(:sender) %>"},
+    {"key": "Severity","value": "<%= alert.severity %>"}]
   },
-'detail': {
-  'pair': [
-    {'key': 'Posted on','value': '<%= alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>'}, 
-    {'key': 'By','value': '<%= alert.author.try(:display_name) %>'}, 
-    {'key': 'Status','value': '<%= alert.status.capitalize %>'}, 
-    {'key': 'Severity','value': '<%= alert.severity %>'},
-    {'key': 'From','value': '<%= alert.try(:sender) %>'}, 
-    {'key': 'ID','value': '<%= alert.try(:identifier) %>'}],
-  'content': '<%= h(alert.message) %>',
-  'path': '<%= acknowledge_alert_path(alert) if (alert.id && alert.acknowledge && !alert.acknowledged_by_user?) %>'
+"detail": {
+  "pair": [
+    {"key": "Posted on","value": "<%= alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %>"},
+    {"key": "By","value": "<%= alert.author.try(:display_name) %>"},
+    {"key": "Status","value": "<%= alert.status.capitalize %>"},
+    {"key": "Severity","value": "<%= alert.severity %>"},
+    {"key": "From","value": "<%= alert.try(:sender) %>"},
+    {"key": "ID","value": "<%= alert.try(:identifier) %>"}],
+  "content": "<%= h(alert.message) %>",
+  "path": "<%= acknowledge_alert_path(alert) if (alert.id && alert.acknowledge && !alert.acknowledged_by_user?) %>"
   <%- unless alert.call_down_messages && alert.call_down_messages.empty? -%>
-    ,'response': <%= alert.call_down_messages.to_json %>
+    ,"response": "<%= alert.call_down_messages.to_json %>"
   <%- end -%>}
 }
 
