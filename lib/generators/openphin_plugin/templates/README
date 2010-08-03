@@ -1,0 +1,32 @@
+PLUGIN_NAME
+===========
+
+This is a plugin for OpenPHIN.
+1) plugins are registerd in the global array $expansion_list
+2) javascript and stylesheet files
+  - any javascript and stylesheet files for the plugin are registered with
+    rails register_javascript_expansion() and register_stylesheet_expansion()
+  - the paths must be relative to Rails.root/public
+  - the plugin install.rb must make links to the plugin js/css dirs in
+    Rails.root/public
+3) run cucumber tests for this plugin with 'rake cucumber:PLUGIN_NAME'
+4) run spec tests for this plugin with 'rake spec:PLUGIN_NAME'
+
+The following was done initially to setup the plugin:
+1) Copy Rails.root/spec/spec_helper.rb -> PLUGIN/spec/
+  - sets fixture path to PLUGIN/spec/fixtures/
+  - loads PLUGIN/spec/factories.rb
+2) Necessary factories were defined in PLUGIN/spec/factories.rb
+3) Edited PLUGIN/install.rb to create links in Rails.root/public to
+   vendor/plugins/PLUGIN_NAME/public/javascripts
+4) Defined tasks in PLUGIN/tasks/cucumber.rake & PLUGIN/tasks/rspec.rake
+5) Defined migrations in PLUGIN/tasks/PLUGIN_NAME_tasks.rake
+
+
+Example
+=======
+
+Example goes here.
+
+
+Copyright (c) 2010 [name of plugin creator], released under the MIT license
