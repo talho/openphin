@@ -65,6 +65,13 @@ namespace :deploy do
     run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
+
+    # for the rollcall plugin
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/lib/workers #{release_path}/lib/workers/rollcall"
+    run "ln -fs #{release_path}/spec/spec_helper.rb #{release_path}/vendor/plugins/rollcall/spec/spec_helper.rb"
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/public/javascript #{release_path}/public/javascripts/rollcall"
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/public/stylesheets #{release_path}/public/stylesheets/rollcall"
+
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
