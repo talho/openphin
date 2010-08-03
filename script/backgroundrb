@@ -7,6 +7,9 @@ WORKER_LOAD_ENV = File.join(RAILS_HOME,"script","load_worker_env")
 
 ["server","server/lib","lib","lib/backgroundrb"].each { |x| $LOAD_PATH.unshift(BDRB_HOME + "/#{x}")}
 $LOAD_PATH.unshift(WORKER_ROOT)
+libdirs = Dir["#{WORKER_ROOT}/**/"]
+libdirs.each { |dir| $LOAD_PATH.unshift(dir) }
+ENV["RUBYLIB"] = libdirs.join(":")
 
 require 'rubygems'
 require RAILS_HOME + "/config/boot"
