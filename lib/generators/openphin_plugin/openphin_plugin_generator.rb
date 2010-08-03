@@ -7,8 +7,8 @@ class OpenphinPluginGenerator < Rails::Generator::Base
 
     record do |m|
       m.instance_variable_set(:@pname, args[0]) 
-      def m.install_with_expand(relative_source, relative_destination, file_options = {})
-        file(relative_source, relative_destination, file_options) {|f|
+      def m.install_with_expand(rel_src, rel_dest = rel_src, file_options = {})
+        file(rel_src, rel_dest, file_options) {|f|
           contents = f.read
           contents.gsub!("PLUGIN_NAME", @pname)
           contents.gsub!(/class\s+#{@pname}/, @pname.camelize)
@@ -38,14 +38,16 @@ class OpenphinPluginGenerator < Rails::Generator::Base
       m.directory "vendor/plugins"
 
       m.readme "README"
-      m.install_with_expand("README", "README")
-      m.install_with_expand("init.rb", "init.rb")
-      m.install_with_expand("install.rb", "install.rb")
-      m.install_with_expand("uninstall.rb", "uninstall.rb")
+      m.install_with_expand("README")
+      m.install_with_expand("MIT-LICENSE")
+      m.install_with_expand("Rakefile")
+      m.install_with_expand("init.rb")
+      m.install_with_expand("install.rb")
+      m.install_with_expand("uninstall.rb")
       m.install_with_expand("lib/PLUGIN.rb", "lib/#{args[0]}.rb")
       m.install_with_expand("tasks/PLUGIN_tasks.rake", "tasks/#{args[0]}_tasks.rake")
-      m.install_with_expand("tasks/cucumber.rake", "tasks/cucumber.rake")
-      m.install_with_expand("tasks/rspec.rake", "tasks/rspec.rake")
+      m.install_with_expand("tasks/cucumber.rake")
+      m.install_with_expand("tasks/rspec.rake")
     end
   end
 
