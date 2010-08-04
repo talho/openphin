@@ -1,3 +1,4 @@
+# For bundler
 source "http://rubygems.org"
 source "http://gems.github.com" # for thoughtbot-clearance
 gem "rails", "2.3.5"
@@ -9,14 +10,14 @@ gem "rails", "2.3.5"
   gem "rack", "1.0.1"
 gem "sinatra", "1.0"
 gem "packet", "0.1.15"
-gem "thoughtbot-clearance", "0.6.9"
+gem "thoughtbot-clearance", "0.6.9", :require => "clearance"
 gem "fastercsv", "1.5.0"
 gem "prawn", "0.8.4"
   gem "prawn-core", "0.8.4"
   gem "prawn-layout", "0.8.4"
   gem "prawn-security", "0.8.4"
 gem "hpricot", "0.6"
-gem "thoughtbot-paperclip", "2.3.0"
+gem "thoughtbot-paperclip", "2.3.0", :require => "paperclip"
 gem "httparty", "0.4.4"
 gem "crack", "0.1.8"
 gem "chronic", "0.2.3"
@@ -24,3 +25,23 @@ gem "chronic", "0.2.3"
   gem "rubyforge", "2.0.4"
   gem "hoe", "2.6.1"
 gem "validatable", "1.6.7"
+gem "bullet", "1.7.6"
+gem "ruby-growl", "2.0"
+gem "will_paginate", "2.3.14"
+gem "RedCloth", "4.2.3"
+gem "hoptoad_notifier", "2.3.0"
+gem "pauldix-feedzirra", "0.0.18"
+  gem "builder", "2.1.2"
+  gem "nokogiri", "1.4.3.1"
+  gem "mdalessio-dryopteris", "0.1.2"
+  gem "pauldix-sax-machine", "0.0.14"
+  gem "taf2-curb", "0.5.4.0"
+gem "mysql", "2.8.1"
+gem "libxml-ruby", "1.1.3"
+gem "slim_scrooge", "1.0.10"
+
+group :test do
+end
+
+group :cucumber do
+end
