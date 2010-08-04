@@ -29,13 +29,6 @@ config.plugins = config.plugin_locators.map do |locator|
 end.flatten.map{|p| p.name.to_sym}
 config.plugins -= [:backgroundrb]
 
-config.gem 'rspec',       :lib => false,        :version => '>=1.2.9'
-config.gem 'rspec-rails', :lib => false,        :version => '>=1.2.9'
-config.gem 'webrat',      :lib => false,        :version => '>=0.5.3'
-config.gem "thoughtbot-factory_girl",
-  :lib    => "factory_girl",
-  :source => "http://gems.github.com"
-
 
 # Use SQL instead of Active Record's schema dumper when creating the test database.
 # This is necessary if your schema can't be completely dumped by the schema dumper,
