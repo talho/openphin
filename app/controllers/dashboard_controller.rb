@@ -29,9 +29,8 @@ class DashboardController < ApplicationController
       format.html
       format.json do
         headers["Access-Control-Allow-Origin"] = "*"
-        jsonObject = render_to_string(:partial => "dashboard/alert.json.erb", 
-          :collection => @alerts, :as => :alert, :layout => false, :spacer_template => "comma")
-        render :json => "[#{jsonObject}]"
+        jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_alert_path(alert),alert.acknowledged_by_user?) }
+        render :json => jsonObject
       end
     end
   end
@@ -39,4 +38,6 @@ class DashboardController < ApplicationController
 	def faqs
     DashboardController.app_toolbar "faqs"
 	end
+
 end
+

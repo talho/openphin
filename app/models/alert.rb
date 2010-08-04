@@ -180,6 +180,38 @@ class Alert < ActiveRecord::Base
     end
   end
   
+  def iphone_format(path="",acknowledged_by_user=false)
+    format = 
+      Hash[
+      "header",h(title),
+      "preview",
+        Hash["pair",
+          [
+            Hash["key","Person from","value",author.try(:display_name)],
+            Hash["key","Jurisdiction from","value",try(:sender)],
+            Hash["key","Severity","value",severity]
+          ]
+        ],
+      "detail",
+        Hash["pair",
+          [
+            Hash["key","Posted on","value",created_at.strftime("%B %d, %Y %I:%M %p %Z")],
+            Hash["key","By","value",author.try(:display_name)],
+            Hash["key","Status","value",status.capitalize],
+            Hash["key","Severity","value",severity],
+            Hash["key","From","value",try(:sender)],
+            Hash["key","ID","value",try(:identifier)]
+          ]
+        ],
+      "content",h(message),
+      "path",   (id && acknowledge && !acknowledged_by_user) ? path : ""
+      ]
+      if has_alert_response_messages?
+        format["response"] = call_down_messages
+      end
+      return format
+  end
+
   def alert_response_users(alert)
     cdm = alert.call_down_messages.keys
     alert_attempts.compact.collect do |aa|
@@ -190,7 +222,7 @@ class Alert < ActiveRecord::Base
   def has_alert_response_messages?
     !(call_down_messages.nil? || call_down_messages.empty?)
   end
-
+  
   def after_initialize
     self.acknowledge = true if acknowledge.nil?
   end
