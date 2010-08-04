@@ -16,7 +16,7 @@ require 'spec/rails'
 require "webrat"
 
 if is_plugin
-  Dir[File.dirname(__FILE__) + '../../../../spec/spec_helpers/**/*.rb'].each{ |f| require f }
+  Dir[File.dirname(__FILE__) + '/../../../../spec/spec_helpers/**/*.rb'].each{ |f| require f }
 else
   Dir[File.dirname(__FILE__) + '/spec_helpers/**/*.rb'].each{ |f| require f }
 end
