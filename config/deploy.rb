@@ -27,7 +27,7 @@ task :staging do
 end
 
 set :scm, :git
-set :branch, 'rollcall_plugin'
+set :branch, 'master'
 set :use_sudo, false
 set :user, 'apache'
 set :git_enable_submodules, true
