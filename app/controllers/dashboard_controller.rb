@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController  
   skip_before_filter :login_required, :only => [:about]
   require 'feedzirra'
-  
+  layout 'application', :except => [:ext]
 
   def index
     DashboardController.app_toolbar "application"
@@ -47,5 +47,9 @@ class DashboardController < ApplicationController
   
 	def faqs
     DashboardController.app_toolbar "faqs"
-	end
+    end
+
+  def ext
+    
+  end
 end

@@ -98,10 +98,10 @@ ActionController::Routing::Routes.draw do |map|
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
-  map.faqs "/faqs", :controller => "dashboard", :action => "faqs
-  "
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.hud "/han.:format", :controller => "dashboard", :action => "hud"
+  map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
+  map.ext "/ext", :controller => "dashboard", :action => "ext"
   
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resources :users_delete, :controller => "admin/users_delete"
