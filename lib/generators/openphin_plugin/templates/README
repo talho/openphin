@@ -17,12 +17,12 @@ The following was done initially to setup the plugin:
   - set fixture path to PLUGIN/spec/fixtures/
   - load PLUGIN/spec/factories.rb
 2) Edited PLUGIN/install.rb to create
-  - link in Rails.root/public to vendor/plugins/rollcall/public/javascripts
-  - link in Rails.root/public to vendor/plugins/rollcall/public/stylesheets
+  - link in Rails.root/public to vendor/plugins/PLUGIN_NAME/public/javascripts
+  - link in Rails.root/public to vendor/plugins/PLUGIN_NAME/public/stylesheets
   - link in PLUGIN/spec/spec_helper.rb -> Rails.root/spec/spec_helper.rb
 3) Necessary factories were defined in PLUGIN/spec/factories.rb
 4) Defined tasks in PLUGIN/tasks/cucumber.rake & PLUGIN/tasks/rspec.rake
-5) Defined migrations in PLUGIN/tasks/rollcall_tasks.rake
+5) Defined migrations in PLUGIN/tasks/PLUGIN_NAME_tasks.rake
 
 
 Example
