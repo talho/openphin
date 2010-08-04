@@ -201,13 +201,13 @@ class Alert < ActiveRecord::Base
             Hash["key","Severity","value",severity],
             Hash["key","From","value",try(:sender)],
             Hash["key","ID","value",try(:identifier)]
-          ]
+          ],
+          "content",h(message),
+          "path",   (id && acknowledge && !acknowledged_by_user) ? path : ""
         ],
-      "content",h(message),
-      "path",   (id && acknowledge && !acknowledged_by_user) ? path : ""
       ]
       if has_alert_response_messages?
-        format["response"] = call_down_messages
+        format["detail"]["response"] = call_down_messages
       end
       return format
   end
