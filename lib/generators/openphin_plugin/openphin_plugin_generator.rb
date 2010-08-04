@@ -45,6 +45,7 @@ class OpenphinPluginGenerator < Rails::Generator::Base
       m.install_with_expand("install.rb")
       m.install_with_expand("uninstall.rb")
       m.install_with_expand("config/routes.rb")
+      m.install_with_expand("gitignore", ".gitignore")
       m.install_with_expand("lib/PLUGIN.rb", "lib/#{args[0]}.rb")
       m.install_with_expand("spec/factories.rb")
       m.install_with_expand("tasks/PLUGIN_tasks.rake", "tasks/#{args[0]}_tasks.rake")
