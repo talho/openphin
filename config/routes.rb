@@ -94,6 +94,7 @@ ActionController::Routing::Routes.draw do |map|
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
+  map.ext "/ext", :controller => "dashboard", :action => "ext"
   
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resources :users_delete, :controller => "admin/users_delete"
