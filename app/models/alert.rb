@@ -202,7 +202,7 @@ class Alert < ActiveRecord::Base
             Hash["key","From","value",try(:sender)],
             Hash["key","ID","value",try(:identifier)]
           ],
-          "content",h(message),
+          "content",URI.escape(message),
           "path",   (id && acknowledge && !acknowledged_by_user) ? path : ""
         ],
       ]
