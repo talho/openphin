@@ -27,7 +27,7 @@ task :staging do
 end
 
 set :scm, :git
-set :branch, 'master'
+set :branch, 'rollcall_plugin'
 set :use_sudo, false
 set :user, 'apache'
 set :git_enable_submodules, true
@@ -42,7 +42,7 @@ desc "mod_rails restart"
 end
 
 after 'deploy:update_code', 'deploy:symlink_configs'
-after 'deploy:update_code', 'deploy:install_gems'
+after 'deploy:symlink_configs', 'deploy:install_gems'
 after 'deploy:install_gems', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
@@ -77,7 +77,9 @@ namespace :deploy do
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
 #      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+
     end
+    run "cd #{release_path}/vendor/plugins/rollcall; git submodule update -i"
   end
 
   desc "install any gem dependencies"
