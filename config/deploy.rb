@@ -8,16 +8,21 @@ set :rails_env, 'production'
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
- set :deploy_to, "/var/www/#{application}"
+set :deploy_to, "/var/www/#{application}"
+
+# Unicorn configuration
+set :unicorn_binary, "~/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn"
+set :unicorn_config, "#{current_path}/config/unicorn.rb"
+set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
 # set :scm, :subversion
 RAILS_ENV="production"
 task :production do
-	role :app, "txphin.texashan.org"
-	role :web, "txphin.texashan.org"
-	role :db,  "txphin.texashan.org", :primary => true
+	role :app, "newtxphin.texashan.org"
+	role :web, "newtxphin.texashan.org"
+	role :db,  "newtxphin.texashan.org", :primary => true
 end
 
 task :staging do
@@ -34,16 +39,17 @@ set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
  
-desc "mod_rails restart"
+desc "unicorn restart"
   namespace :deploy do
   task :restart do
-    run "touch #{current_path}/tmp/restart.txt"
+    #run "touch #{current_path}/tmp/restart.txt"
+		run "kill -s USR2 `cat #{unicorn_pid}`"
   end
 end
 
 after 'deploy:update_code', 'deploy:symlink_configs'
-after 'deploy:symlink_configs', 'deploy:install_gems'
-after 'deploy:install_gems', 'deploy:restart_backgroundrb'
+after 'deploy:update_code', 'deploy:install_gems'
+#after 'deploy:install_gems', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
   desc "we need a database. this helps with that."
@@ -65,21 +71,22 @@ namespace :deploy do
     run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
-
     # for the rollcall plugin
     run "ln -fs #{release_path}/vendor/plugins/rollcall/lib/workers #{release_path}/lib/workers/rollcall"
     run "ln -fs #{release_path}/spec/spec_helper.rb #{release_path}/vendor/plugins/rollcall/spec/spec_helper.rb"
     run "ln -fs #{release_path}/vendor/plugins/rollcall/public/javascript #{release_path}/public/javascripts/rollcall"
     run "ln -fs #{release_path}/vendor/plugins/rollcall/public/stylesheets #{release_path}/public/stylesheets/rollcall"
 
+    run "cd #{release_path}/vendor/plugins/rollcall; git submodule update -i"
+
+    run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
+    run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
 #      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
 #      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
-
     end
-    run "cd #{release_path}/vendor/plugins/rollcall; git submodule update -i"
   end
 
   desc "install any gem dependencies"
