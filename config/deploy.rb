@@ -20,15 +20,14 @@ set :deploy_via, :remote_cache
 set :deploy_to, "/var/www/#{application}"
 
 # Unicorn configuration
-set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
+set :unicorn_binary, "~/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
 task :production do
-	role :app, "txphin.texashan.org"
-	role :web, "txphin.texashan.org"
-	role :jobs, "jobs.texashan.org"
-	role :db,  "jobs.texashan.org", :primary => true
+	role :app, "newtxphin.texashan.org"
+	role :web, "newtxphin.texashan.org"
+	role :db,  "newtxphin.texashan.org", :primary => true
 end
 
 task :staging do
@@ -38,16 +37,61 @@ task :staging do
 	role :db,  "staging.txphin.org", :primary => true
 end
  
-# Setup dependencies
-before 'deploy', 'backgroundrb:stop'
-before 'deploy', 'delayed_job:stop'
-before 'deploy', 'sphinx:start_if_not'
-after 'deploy:update_code', 'app:symlinks'
-after 'app:symlinks', 'app:bundle_install'
+desc "unicorn restart"
+  namespace :deploy do
+  task :restart do
+    #run "touch #{current_path}/tmp/restart.txt"
+		run "kill -s USR2 `cat #{unicorn_pid}`"
+  end
+end
+
+after 'deploy:update_code', 'deploy:symlink_configs'
+after 'deploy:update_code', 'deploy:install_gems'
+#after 'deploy:install_gems', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
-after 'deploy', "sphinx:rebuild"
-after 'sphinx:rebuild', 'backgroundrb:restart'
-after 'sphinx:rebuild', 'delayed_job:restart'
+namespace :deploy do
+  desc "we need a database. this helps with that."
+  task :symlink_configs do
+    rails_env = fetch(:rails_env, RAILS_ENV)
+    #run "mv #{release_path}/config/database.yml.example #{release_path}/config/database.yml"
+    run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
+    run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
+    run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
+    run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
+    run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
+    run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
+    run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"
+    run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
+    run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
+    run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
+    run "ln -fs #{shared_path}/rollcall #{release_path}/tmp/rollcall"
+    run "ln -fs #{shared_path}/sphinx.yml #{release_path}/config/sphinx.yml"
+    run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
+    run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
+    run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
+    # for the rollcall plugin
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/lib/workers #{release_path}/lib/workers/rollcall"
+    run "ln -fs #{release_path}/spec/spec_helper.rb #{release_path}/vendor/plugins/rollcall/spec/spec_helper.rb"
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/public/javascript #{release_path}/public/javascripts/rollcall"
+    run "ln -fs #{release_path}/vendor/plugins/rollcall/public/stylesheets #{release_path}/public/stylesheets/rollcall"
+
+    run "cd #{release_path}/vendor/plugins/rollcall; git submodule update -i"
+
+    run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
+    run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
+    if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
+      FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
+      FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
+#      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
+#      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+    end
+  end
+
+  desc "install any gem dependencies"
+  task :install_gems, :role => :app do 
+    rails_env = fetch(:rails_env, RAILS_ENV)
+    run "cd #{release_path}; rake gems:install RAILS_ENV=#{rails_env}"
+  end
 
 namespace :deploy do
   # Overriding the built-in task to add our rollback actions
