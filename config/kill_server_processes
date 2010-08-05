@@ -12,3 +12,5 @@ sleep 2
 # try not politely
 PIDS=$(ps -ef | grep unicorn | grep -v grep | awk '{print $2}')
 [[ -n "$PIDS" ]] && kill -9 $PIDS
+
+exit 0
