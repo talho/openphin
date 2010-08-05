@@ -20,7 +20,7 @@ set :deploy_via, :remote_cache
 set :deploy_to, "/var/www/#{application}"
 
 # Unicorn configuration
-set :unicorn_binary, "~/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn"
+set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
@@ -41,7 +41,14 @@ desc "unicorn restart"
   namespace :deploy do
   task :restart do
     #run "touch #{current_path}/tmp/restart.txt"
-		run "kill -s USR2 `cat #{unicorn_pid}`"
+    begin
+      run "kill -s USR2 `cat #{unicorn_pid}`"
+    rescue Capistrano::CommandError => e
+      puts "Rescue: #{e.class} #{e.message}"
+      puts "Rescue: It appears that unicorn is not running, attempting to start ..."
+      run "sh #{release_path}/config/kill_server_processes"
+      run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
+    end
   end
 end
 
