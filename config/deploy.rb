@@ -55,8 +55,8 @@ desc "unicorn restart"
 end
 
 after 'deploy:update_code', 'deploy:symlink_configs'
-after 'deploy:update_code', 'deploy:install_gems'
-#after 'deploy:install_gems', 'deploy:restart_backgroundrb'
+after 'deploy:symlink_configs', 'deploy:bundle_install'
+#after 'deploy:bundle_install', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
   desc "we need a database. this helps with that."
@@ -87,7 +87,6 @@ namespace :deploy do
     run "cd #{release_path}/vendor/plugins/rollcall; git submodule update -i"
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
-    run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
@@ -96,10 +95,9 @@ namespace :deploy do
     end
   end
 
-  desc "install any gem dependencies"
-  task :install_gems, :role => :app do 
-    rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; rake gems:install RAILS_ENV=#{rails_env}"
+  desc "run bundle install for gem dependencies"
+  task :bundle_install, :role => :app do 
+    run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
   end
 
   desc "restart backgroundrb"
