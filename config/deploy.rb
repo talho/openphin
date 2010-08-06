@@ -22,13 +22,15 @@ RAILS_ENV="production"
 task :production do
 	role :app, "newtxphin.texashan.org"
 	role :web, "newtxphin.texashan.org"
+	role :jobs, "newtxphin.texashan.org"
 	role :db,  "newtxphin.texashan.org", :primary => true
 end
 
 task :staging do
-	role :app, "staging.txphin.org"
-	role :web, "staging.txphin.org"
-	role :db,  "staging.txphin.org", :primary => true
+	role :app, "192.168.30.96"
+	role :web, "192.168.30.96"
+	role :jobs, "192.168.30.97"
+	role :db,  "192.168.30.97", :primary => true
 end
 
 set :scm, :git
@@ -39,30 +41,29 @@ set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
  
-desc "unicorn restart"
-  namespace :deploy do
-  task :restart do
-    #run "touch #{current_path}/tmp/restart.txt"
-    begin
-      run "kill -s USR2 `cat #{unicorn_pid}`"
-    rescue Capistrano::CommandError => e
-      puts "Rescue: #{e.class} #{e.message}"
-      puts "Rescue: It appears that unicorn is not running, attempting to start ..."
-      run "sh #{release_path}/config/kill_server_processes"
-      run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
-    end
-  end
-end
 
 after 'deploy:update_code', 'deploy:symlink_configs'
 after 'deploy:symlink_configs', 'deploy:bundle_install'
-#after 'deploy:bundle_install', 'deploy:restart_backgroundrb'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
+  # Overriding the built-in task to add our rollback actions
+  task :default, :roles => [:app, :jobs] do
+  #  transaction {
+  #    on_rollback do
+  #      # this rollback will fire if this are any tasks after it fail
+  #      puts "  PERFORMING ROLLBACK"
+  #      find_and_execute_task("backgroundrb:restart")
+  #      find_and_execute_task("delayed_job:restart")
+  #      puts "  END ROLLBACK"
+  #    end
+  #  }
+    update
+    restart
+  end
+
   desc "we need a database. this helps with that."
-  task :symlink_configs do
+  task :symlink_configs, :roles => [:app, :jobs] do 
     rails_env = fetch(:rails_env, RAILS_ENV)
-    #run "mv #{release_path}/config/database.yml.example #{release_path}/config/database.yml"
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
@@ -90,26 +91,26 @@ namespace :deploy do
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
       FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
       FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
-#      FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
-#      FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+      #FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
+      #FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
     end
   end
 
   desc "run bundle install for gem dependencies"
-  task :bundle_install, :role => :app do 
+  task :bundle_install, :roles => [:app, :jobs] do 
     run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
   end
 
-  desc "restart backgroundrb"
-  task :restart_backgroundrb, :role => :app do
-    rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; STR=`script/backgroundrb status` && if [ \"$STR\" = \"BackgrounDRb Not Running\" ] ; then script/backgroundrb start -e #{rails_env} ; fi" unless rails_env == "test"
-  end
-
-  desc "restart delayed_job"
-  task :restart_delayed_job, :role => :app do
-    rails_env = fetch(:rails_env, RAILS_ENV)
-    run "cd #{release_path}; STR=`script/delayed_job status` && if [ \"$STR\" = \"delayed_job: no instances running\" ] ; then script/delayed_job start -e #{rails_env} ; fi" unless rails_env == "test"
+  desc "unicorn restart"
+  task :restart, :roles => [:app, :jobs] do 
+    begin
+      run "kill -s USR2 `cat #{unicorn_pid}`"
+    rescue Capistrano::CommandError => e
+      puts "Rescue: #{e.class} #{e.message}"
+      puts "Rescue: It appears that unicorn is not running, attempting to start ..."
+      run "sh #{release_path}/config/kill_server_processes"
+      run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
+    end
   end
 end
 
@@ -120,31 +121,67 @@ task :seed, :roles => :db, :only => {:primary => true} do
   run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
 end
 
-desc "index users for search"
-task :index, :roles => :db, :only => {:primary => true} do
-	rails_env = fetch(:rails_env, RAILS_ENV)
-  run "cd #{current_path}; rake ts:index RAILS_ENV=#{rails_env}"
+namespace :sphinx do
+  desc "start sphinx"
+  task :start, :roles => :jobs do
+    run "cd #{current_path}; rake ts:start RAILS_ENV=#{rails_env}"
+  end
+
+  desc "stop, index and then start sphinx"
+  task :rebuild, :roles => :jobs do
+    begin
+      run "cd #{previous_release}; rake ts:stop RAILS_ENV=#{rails_env}"
+    rescue Capistrano::CommandError => e
+      puts "Rescue: #{e.class} #{e.message}"
+      puts "Rescue: sphinx stop failed, ignoring ..."
+      run "cd #{current_path}; rake ts:rebuild RAILS_ENV=#{rails_env}"
+    end
+  end
+end
+
+namespace :delayed_job do
+  desc "Stop the delayed_job process"
+  task :stop, :roles => :jobs do
+    run "cd #{current_path}; script/delayed_job -e #{rails_env} stop"
+  end
+
+  desc "Start the delayed_job process"
+  task :start, :roles => :jobs do
+    run "cd #{current_path}; script/delayed_job -e #{rails_env} start"
+  end
+
+  desc "Restart the delayed_job process"
+  task :restart, :roles => :jobs do
+    run "cd #{current_path}; script/delayed_job -e #{rails_env} restart"
+  end
+end
+
+namespace :backgroundrb do
+  desc "stop backgroundrb"
+  task :stop, :roles => :jobs do
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb stop" unless rails_env == "test"
+  end
+
+  desc "start backgroundrb"
+  task :start, :roles => :jobs do
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb start" unless rails_env == "test"
+  end
+
+  desc "restart backgroundrb"
+  task :restart, :roles => :jobs do
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb restart" unless rails_env == "test"
+  end
 end
 
 set :pivotal_tracker_project_id, 19881
 set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
-after :deploy, :role => :app do
-  rails_env = fetch(:rails_env, RAILS_ENV)
-  #find_and_execute_task('pivotal_tracker:deliver_stories') unless rails_env == "test"
-end
-
-after "deploy:stop",    "delayed_job:stop"
-after "deploy:stop",    "thinking_sphinx:stop"
-after "deploy:start",   "delayed_job:start"
-after "deploy:start",   "thinking_sphinx:start"
-after "deploy:restart", "deploy:restart_delayed_job"
-after "deploy:restart", :role => :app do
-  rails_env = fetch(:rails_env, RAILS_ENV)
-  #run "cd #{previous_release}; RAILS_ENV=#{rails_env} rake ts:stop" unless rails_env == "test"
-  #run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:index" unless rails_env == "test"
-  #run "cd #{current_path}; RAILS_ENV=#{rails_env} rake ts:start" unless rails_env == "test"
-end
+#before 'deploy', 'sphinx:start'
+before 'deploy', 'backgroundrb:stop'
+before 'deploy', 'delayed_job:stop'
+after 'deploy', "sphinx:rebuild"
+after 'sphinx:rebuild', 'backgroundrb:restart'
+after 'sphinx:rebuild', 'delayed_job:restart'
 
 
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
