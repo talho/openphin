@@ -1,0 +1,28 @@
+
+.content {background:#fff; font-size:13px; ; color:#666; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; padding:20px;}
+
+
+.content p                  {margin:0 0 15px; line-height:1.6;}
+.content > .alert           {float: left;}
+.content div.details		{width:410px; float:left;}
+.content div.aside			{width:210px; float:right;}
+.content div.callout		{font-size:11px; background:#efefef url(../images/feature_bottom.png) no-repeat bottom left; margin:0 0 15px;}
+.content div.callout p		{margin:0; color:#999; padding:10px 15px 10px; background:url(../images/feature_top.png) no-repeat top left;}
+.content h2					{font-size:27px; color:#333; margin:0 0 15px;}
+.content div.aside h2       {font-size:100%;}
+.content h3					{color:#999; margin:-15px 0 15px;}
+.content h4                 {color:#333; margin:0 0 5px;}
+.content form               {margin:0px 0px 5px;}
+
+.content div.extended div.aside h5,
+.content div.extended div.aside p     {margin-bottom:0px;}
+.content div.extended div.aside h3    {clear:both; margin:10px 0 10px; padding:10px 0 0;}
+
+.content div.summary p                 {margin-bottom:0;}
+.content div.summary p.title           {text-align:left;}
+.content div.summary span.actions      {float:right;}
+.content div.summary span.actions a    {color:#333; width:60px; float:left; height:17px; line-height:17px; text-align:center; background:url(../images/button_small.png) no-repeat; margin-left:8px; font-size:11px;}
+.content p.brief                       {margin-right:20px; float:left;}
+.content p.meta                        {font-size:11px; clear:left; padding-left:26px;}
+.content p.meta span                   {margin-right:20px;}
+.content div.message                   {clear:both;}
