@@ -44,7 +44,7 @@ after 'deploy:symlink_configs', 'deploy:bundle_install'
 after "deploy", "deploy:cleanup"
 namespace :deploy do
   # Overriding the built-in task to add our rollback actions
-  task :default, :roles => [:app, :jobs] do
+  task :default, :roles => [:app, :web, :jobs] do
   #  transaction {
   #    on_rollback do
   #      # this rollback will fire if this are any tasks after it fail
@@ -59,7 +59,7 @@ namespace :deploy do
   end
 
   desc "we need a database. this helps with that."
-  task :symlink_configs, :roles => [:app, :jobs] do 
+  task :symlink_configs, :roles => [:app, :web, :jobs] do 
     rails_env = fetch(:rails_env, RAILS_ENV)
     run "ln -fs #{shared_path}/#{RAILS_ENV}.sqlite3 #{release_path}/db/#{RAILS_ENV}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
@@ -94,11 +94,10 @@ namespace :deploy do
   end
 
   desc "run bundle install for gem dependencies"
-  task :bundle_install, :roles => [:app, :jobs] do 
+  task :bundle_install, :roles => [:app, :web, :jobs] do 
     run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
   end
 
-<<<<<<< HEAD
 namespace :deploy do
   # Overriding the built-in task to add our rollback actions
   task :default, :roles => [:app, :web, :jobs] do
@@ -116,21 +115,12 @@ namespace :deploy do
 
   desc "unicorn restart"
   task :restart, :roles => [:app, :web] do 
-=======
-  desc "unicorn restart"
-  task :restart, :roles => [:app, :jobs] do 
->>>>>>> 5b9c0b6... First pass at more robust deployment.
     begin
       run "kill -s USR2 `cat #{unicorn_pid}`"
     rescue Capistrano::CommandError => e
       puts "Rescue: #{e.class} #{e.message}"
-<<<<<<< HEAD
       puts "Rescue: It appears that unicorn is not running, starting ..."
       run "sh #{release_path}/config/kill_server_processes unicorn"
-=======
-      puts "Rescue: It appears that unicorn is not running, attempting to start ..."
-      run "sh #{release_path}/config/kill_server_processes"
->>>>>>> 5b9c0b6... First pass at more robust deployment.
       run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
     end
   end
@@ -142,78 +132,14 @@ task :seed, :roles => :db, :only => {:primary => true} do
   run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
 end
 
-<<<<<<< HEAD
 # useful for testing on_rollback actions
 task :raise_exc do
   raise "STOP STOP STOP"
-=======
-namespace :sphinx do
-  desc "start sphinx"
-  task :start, :roles => :jobs do
-    run "cd #{current_path}; rake ts:start RAILS_ENV=#{rails_env}"
-  end
-
-  desc "stop, index and then start sphinx"
-  task :rebuild, :roles => :jobs do
-    begin
-      run "cd #{previous_release}; rake ts:stop RAILS_ENV=#{rails_env}"
-    rescue Capistrano::CommandError => e
-      puts "Rescue: #{e.class} #{e.message}"
-      puts "Rescue: sphinx stop failed, ignoring ..."
-      run "cd #{current_path}; rake ts:rebuild RAILS_ENV=#{rails_env}"
-    end
-  end
->>>>>>> 5b9c0b6... First pass at more robust deployment.
-end
-
-namespace :delayed_job do
-  desc "Stop the delayed_job process"
-  task :stop, :roles => :jobs do
-    run "cd #{current_path}; script/delayed_job -e #{rails_env} stop"
-  end
-
-<<<<<<< HEAD
-=======
-  desc "Start the delayed_job process"
-  task :start, :roles => :jobs do
-    run "cd #{current_path}; script/delayed_job -e #{rails_env} start"
-  end
-
-  desc "Restart the delayed_job process"
-  task :restart, :roles => :jobs do
-    run "cd #{current_path}; script/delayed_job -e #{rails_env} restart"
-  end
-end
-
-namespace :backgroundrb do
-  desc "stop backgroundrb"
-  task :stop, :roles => :jobs do
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb stop" unless rails_env == "test"
-  end
-
-  desc "start backgroundrb"
-  task :start, :roles => :jobs do
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb start" unless rails_env == "test"
-  end
-
-  desc "restart backgroundrb"
-  task :restart, :roles => :jobs do
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/backgroundrb restart" unless rails_env == "test"
-  end
 end
 
 set :pivotal_tracker_project_id, 19881
 set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
-#before 'deploy', 'sphinx:start'
-before 'deploy', 'backgroundrb:stop'
-before 'deploy', 'delayed_job:stop'
-after 'deploy', "sphinx:rebuild"
-after 'sphinx:rebuild', 'backgroundrb:restart'
-after 'sphinx:rebuild', 'delayed_job:restart'
-
-
->>>>>>> 5b9c0b6... First pass at more robust deployment.
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
 end
