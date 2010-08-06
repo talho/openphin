@@ -101,7 +101,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
-  map.ext "/ext", :controller => "dashboard", :action => "ext"
+  map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
   
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resources :users_delete, :controller => "admin/users_delete"

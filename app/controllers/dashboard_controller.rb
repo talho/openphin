@@ -1,7 +1,8 @@
 class DashboardController < ApplicationController  
   skip_before_filter :login_required, :only => [:about]
   require 'feedzirra'
-  layout 'application', :except => [:ext]
+  layout if_not_xhr 'application' #disable the default layout for xhr requests
+  #  layout 'application'
 
   def index
     DashboardController.app_toolbar "application"
@@ -18,6 +19,11 @@ class DashboardController < ApplicationController
       @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
     rescue
       @entries = nil  
+    end
+
+    respond_to do |format|
+      format.html
+      format.ext {render :layout => 'ext.html'}
     end
   end
 
@@ -49,7 +55,4 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "faqs"
     end
 
-  def ext
-    
-  end
 end

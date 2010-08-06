@@ -12,7 +12,8 @@ class ApplicationController < ActionController::Base
   before_filter :login_required, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
-  layout :choose_layout
+  layout proc { |controller| controller.request.xhr? ? nil : controller.choose_layout } #disable the default layout for xhr requests
+  #layout :choose_layout
 
   cattr_accessor :applications
   @@applications=HashWithIndifferentAccess.new
@@ -41,6 +42,14 @@ class ApplicationController < ActionController::Base
 
   def options
     render :nothing => true, :status => 200
+  end
+
+  def choose_layout
+    if signed_in?
+      return "application"
+    else
+      return "non_application"
+    end
   end
 
   protected
@@ -120,14 +129,6 @@ class ApplicationController < ActionController::Base
 	    @toolbar
     end
 
-    def choose_layout
-      if signed_in?
-        return "application"
-      else
-        return "non_application"
-      end
-    end
-
     def add_cors_header
       # Allows for Cross-Origin Resource Sharing (http://www.w3.org/TR/cors/) to access json data from an external source
       # Add an appropriate route on the methods you expect to POST data to using ajax but be sure to test out authenticity tokens to prevent XSS attacks:
@@ -139,6 +140,9 @@ class ApplicationController < ActionController::Base
       headers["Access-Control-Max-Age"] = "1728000"
     end
 
+    def self.if_not_xhr(specified_layout)
+      proc { |controller| controller.request.xhr? ? nil : specified_layout }
+    end
   private
 
     # This makes #present always pass set the current_user on the presenter
