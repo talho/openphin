@@ -149,27 +149,38 @@ class AlertsController < ApplicationController
 
   def acknowledge
     alert_attempt = current_user.alert_attempts.find_by_alert_id(params[:id])
-    if alert_attempt.nil? || alert_attempt.acknowledged?
-      flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
-      If you believe this is in error, please contact support@#{DOMAIN}."
-    else
-      device = "Device::EmailDevice" unless params[:email].blank?
-      if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
-        alert_attempt.acknowledge! device
+    respond_to do |format|
+      if alert_attempt.nil? || alert_attempt.acknowledged?
+        flash[:error] = "Unable to acknowledge alert.  You may have already acknowledged the alert.
+        If you believe this is in error, please contact support@#{DOMAIN}."
+        format.json {
+          headers["Access-Control-Allow-Origin"] = "*"
+          headers["Access-Control-Allow-Headers"] = "Cookie"
+          render :json => {}, :status => :unprocessable_entity
+        }
       else
-        alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
+        device = "Device::EmailDevice" unless params[:email].blank?
+        if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
+          alert_attempt.acknowledge! device
+        else
+          alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
+        end
+        expire_log_entry(alert_attempt.alert)
+        flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
+        format.json {
+          headers["Access-Control-Allow-Origin"] = "*"
+          headers["Access-Control-Allow-Headers"] = "Cookie"
+          render :json => {}, :status => :ok
+        }
       end
-      expire_log_entry(alert_attempt.alert)
-      flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
+      format.html { redirect_to hud_path }
     end
     # respond_to will look for templates, so I avoid that
-    unless params[:format] == "json"
-      redirect_to hud_path
-    else
-      # this header is a must for CORS
-      headers["Access-Control-Allow-Origin"] = "*"
-      render :json => "{}"
-    end
+#    unless params[:format] == "json"
+#      redirect_to hud_path
+#    else
+#      # this header is a must for CORS
+#    end
   end
 
   def token_acknowledge
