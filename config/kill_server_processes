@@ -1,16 +1,16 @@
 #!/bin/sh
 #
-# used in capistrano to be sure that no unicorn process are running
+# used in capistrano to be sure that no processes matching "$@" are running
 
 # try politely
-PIDS=$(ps -ef | grep unicorn | grep -v grep | awk '{print $2}')
+PIDS=$(ps -ef | grep "$@" | grep -v grep | awk '{print $2}')
 [[ -n "$PIDS" ]] && kill $PIDS
 
 # sleep for awhile
 sleep 2
 
 # try not politely
-PIDS=$(ps -ef | grep unicorn | grep -v grep | awk '{print $2}')
+PIDS=$(ps -ef | grep "$@" | grep -v grep | awk '{print $2}')
 [[ -n "$PIDS" ]] && kill -9 $PIDS
 
 exit 0
