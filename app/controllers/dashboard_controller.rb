@@ -28,6 +28,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
+        @alerts = [@alerts] unless @alerts.kind_of? Array
         headers["Access-Control-Allow-Origin"] = "*"
         jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_alert_path(alert),alert.acknowledged_by_user?) }
         render :json => jsonObject

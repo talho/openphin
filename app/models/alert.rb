@@ -181,6 +181,7 @@ class Alert < ActiveRecord::Base
   end
   
   def iphone_format(path="",acknowledged_by_user=false)
+    acknowledged_by_user = (acknowledged_by_user==false) ? false : true
     format = 
       Hash[
       "header",h(title),
