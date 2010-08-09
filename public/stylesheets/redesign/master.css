@@ -26,3 +26,7 @@
 .content p.meta                        {font-size:11px; clear:left; padding-left:26px;}
 .content p.meta span                   {margin-right:20px;}
 .content div.message                   {clear:both;}
+
+a.inlineLink {text-decoration:underline;cursor:pointer;color:blue;}
+
+.inlineBtn{cursor:pointer;}

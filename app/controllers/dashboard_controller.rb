@@ -55,4 +55,24 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "faqs"
     end
 
+  def feed_articles
+    feed_urls = [
+      "http://www.nhc.noaa.gov/gtwo.xml",
+      "http://www.nhc.noaa.gov/nhc_at2.xml"
+     ]
+    @entries = []
+    begin
+      feed_urls.each do |url|
+        @entries += Feedzirra::Feed.fetch_and_parse(url).entries
+      end
+      @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
+    rescue
+      @entries = nil
+    end
+
+    respond_to do |format|
+      format.html {render :partial => 'feed_articles'}
+      format.json {render :json => @entries}
+    end
+  end
 end

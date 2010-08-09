@@ -35,13 +35,13 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'HANMenu',
             items: [{
                 text: 'HAN Home',
-                handler: this.open_tab.createDelegate(this, ['HAN Home', '/han'])
+                handler: this.open_tab.createDelegate(this, ['HAN Home', {href:'/han', initializer: Talho.Alerts.initialize}])
             },{
                 text: 'Send An Alert',
-                handler: this.open_tab.createDelegate(this, ['Send An Alert', '/alerts/new'])
+                handler: this.open_tab.createDelegate(this, ['Send An Alert', {href:'/alerts/new'}])
             },{
                 text: 'Alert Log and Reporting',
-                handler: this.open_tab.createDelegate(this, ['Alert Log and Reporting', '/alerts'])
+                handler: this.open_tab.createDelegate(this, ['Alert Log and Reporting', {href:'/alerts'}])
             }]
         });
 
@@ -49,13 +49,13 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'editMenu',
             items: [{
                 text: 'Main',
-                handler:this.open_tab.createDelegate(this, ['Rollcall Main', '/rollcall'])
+                handler:this.open_tab.createDelegate(this, ['Rollcall Main', {href:'/rollcall'}])
             },{
                 text: 'Schools',
-                handler: this.open_tab.createDelegate(this, ['Rollcall Schools', '/schools'])
+                handler: this.open_tab.createDelegate(this, ['Rollcall Schools', {href:'/schools'}])
             },{
                 text: 'About Rollcall',
-                handler: this.open_tab.createDelegate(this, ['About Rollcall', '/rollcall/about'])
+                handler: this.open_tab.createDelegate(this, ['About Rollcall', {href:'/rollcall/about'}])
             }]
         });
 
@@ -63,7 +63,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'faqMenu',
             items: [{
                 text: 'H1N1 Frequently Asked Questions',
-                handler: this.open_tab.createDelegate(this, ['H1N1 FAQ', '/faqs'])
+                handler: this.open_tab.createDelegate(this, ['H1N1 FAQ', {href:'/faqs'}])
             }]
         });
 
@@ -71,19 +71,19 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'tutorialsMenu',
             items: [{
                 text: 'PHIN',
-                handler: this.open_tab.createDelegate(this, ['PHIN Tutorials', '/tutorials#PHIN'])
+                handler: this.open_tab.createDelegate(this, ['PHIN Tutorials', {href:'/tutorials#PHIN'}])
             },{
                 text: 'HAN',
-                handler:this.open_tab.createDelegate(this, ['HAN Tutorials', '/tutorials#HAN'])
+                handler:this.open_tab.createDelegate(this, ['HAN Tutorials', {href:'/tutorials#HAN'}])
             },{
                 text: 'Documents Panel',
-                handler: this.open_tab.createDelegate(this, ['Documents Tutorial', '/tutorials#Documents'])
+                handler: this.open_tab.createDelegate(this, ['Documents Tutorial', {href:'/tutorials#Documents'}])
             },{
                 text: 'Forums',
-                handler: this.open_tab.createDelegate(this, ['Forums tutorial', '/tutorials#Forums'])
+                handler: this.open_tab.createDelegate(this, ['Forums tutorial', {href:'/tutorials#Forums'}])
             },{
                 text: 'Rollcall',
-                handler: this.open_tab.createDelegate(this, ['Rollcall Tutorial', '/tutorials#RollCall'])
+                handler: this.open_tab.createDelegate(this, ['Rollcall Tutorial', {href:'/tutorials#RollCall'}])
             }]
         });
 
@@ -91,10 +91,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'profileMenu',
             items: [{
                 text: 'Profile',
-                handler: this.open_tab.createDelegate(this, ['My Profile'])
+                handler: this.open_tab.createDelegate(this, ['My Profile']) // Needs to use pathing to get the current user
             },{
                 text: 'Request Roles',
-                handler: this.open_tab.createDelegate(this, ['Request Roles'])
+                handler: this.open_tab.createDelegate(this, ['Request Roles', {href:'/roll_requests/new'}])
             }]
         });
 
@@ -105,27 +105,27 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 menu: {
                     items: [{
                         text: 'Pending Role Requests',
-                        handler: this.open_tab.createDelegate(this, ['Pending Role Requests'])
+                        handler: this.open_tab.createDelegate(this, ['Pending Role Requests', {href:'/admin_role_requests'}])
                     },{
                         text: 'Assign Roles',
-                        handler: this.open_tab.createDelegate(this, ['Assign Roles'])
+                        handler: this.open_tab.createDelegate(this, ['Assign Roles', {href:'/role_assignments/new'}])
                     }]
                 }
             },{
                 text: 'Manage Groups',
-                handler: this.open_tab.createDelegate(this, ['Manage Groups'])
+                handler: this.open_tab.createDelegate(this, ['Manage Groups', {href:'/admin_groups'}])
             },{
                 text: 'Manage Users',
                 menu: {
                     items: [{
                         text: 'Add A User',
-                        handler: this.open_tab.createDelegate(this, ['Add A User'])
+                        handler: this.open_tab.createDelegate(this, ['Add A User', {href:'/admin_users/new'}])
                     },{
                         text: 'Batch Users',
-                        handler: this.open_tab.createDelegate(this, ['Batch Users'])
+                        handler: this.open_tab.createDelegate(this, ['Batch Users', {href:'/user_batch/new'}])
                     },{
                         text: 'Delete A User',
-                        handler: this.open_tab.createDelegate(this, ['Delete A User'])
+                        handler: this.open_tab.createDelegate(this, ['Delete A User', {href:'/users_delete/new'}])
                     }]
                 }
             },{
@@ -133,10 +133,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                     menu: {
                     items: [{
                         text: 'Invite Users',
-                        handler: this.open_tab.createDelegate(this, ['Invite Users'])
+                        handler: this.open_tab.createDelegate(this, ['Invite Users', {href:'/admin_invitations/new'}])
                     },{
                         text: 'View Invitations',
-                        handler: this.open_tab.createDelegate(this, ['View Invitations'])
+                        handler: this.open_tab.createDelegate(this, ['View Invitations', {href:'/admin_invitations'}])
                     }]
                 }
             }]
@@ -161,7 +161,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 				menu: faqMenu
 			},{
 				text: 'Forums',
-				handler: this.open_tab.createDelegate(this, ['Forums', '/forums'])
+				handler: this.open_tab.createDelegate(this, ['Forums', {href:'/forums'}])
 			},{
 				enableTogle: undefined,
 				text: 'Tutorials',
@@ -176,7 +176,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 scope: this
 			},{
 				text: 'Find People',
-			    handler:this.open_tab.createDelegate(this, ['Find People'])
+			    handler:this.open_tab.createDelegate(this, ['Find People', {href:'/search/show_advanced'}])
 			}, {
 				text: 'My Account',
 				menu: profileMenu
@@ -185,10 +185,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 				menu: adminMenu
 			}, {
 				text: 'About TXPHIN',
-			    handler: this.open_tab.createDelegate(this, ['About TXPHIN'])
+			    handler: this.open_tab.createDelegate(this, ['About TXPHIN', {href:'/about'}])
 			}, {
-
-				text: 'Sign Out'
+				text: 'Sign Out',
+                handler: function(){window.location = "/sign_out"}
 			}]
         })
     },
@@ -200,7 +200,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
             enableTabScroll: true,
-            items: [{title: 'Dashboard', contentEl:'dashboard_feed_articles', autoScroll:true}]
+            items: [Talho.Article3Panel.initialize()]
         });
 
         this.tablist['Dashboard'] = 0;
@@ -226,38 +226,44 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
     },
 
-    open_tab: function(title, href) {
+    open_tab: function(title, config) {
         if(this.tablist[title] === undefined)
         {
-            var xtype = href === undefined || href === '' ? 'panel' : 'ajaxpanel';
+            var panel;
 
-            var panel = this.tabPanel.add({
-                title: title,
-                iconCls: 'tabs',
-                closable: true,
-                layout:'hbox',
-                hideBorders:true,
-                autoScroll:true,
-                listeners:{
-                    scope: this,
-                    close: function(p)
-                    {
-                        delete this.tablist[p.title];
-                    }
-                },
-                items:[
-                    {
-                        flex:1
-                    },
-                    {
-                        xtype: xtype,
-                        bodyCssClass: 'content',
-                        url: href
-                    },
-                    {
-                        flex:1
-                    }]
-            }).show();
+            if(Ext.isFunction(config.initializer))
+            {
+                panel = this.tabPanel.add(config.initializer(config)).show();
+            }
+            else
+            {
+                var xtype = config.href === undefined || config.href === '' ? 'panel' : 'ajaxpanel';
+
+                if(xtype == 'panel')
+                {
+                    panel = this.tabPanel.add({
+                    title: title,
+                        closable: true,
+                        hideBorders:true,
+                        autoScroll:true
+                    }).show();
+                }
+                else if(xtype == 'ajaxpanel')
+                {
+                    panel = this.tabPanel.add({
+                        title: title,
+                        xtype:'ajaxpanel',
+                        closable: true,
+                        hideBorders:true,
+                        autoScroll:true,
+                        url: config.href
+                    }).show();
+                }
+            }
+
+            panel.addListener('close', function(p){
+                delete this.tablist[p.title];
+            }, this);
 
             this.tablist[title] = panel
         }
