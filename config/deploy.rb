@@ -54,7 +54,6 @@ namespace :deploy do
   task :default, :roles => [:app, :web, :jobs] do
     transaction {
       on_rollback do
-        # this rollback will fire if this are any tasks after it fail
         puts "  PERFORMING ROLLBACK, restarting jobs daemons"
         find_and_execute_task("backgroundrb:restart")
         find_and_execute_task("delayed_job:restart")
