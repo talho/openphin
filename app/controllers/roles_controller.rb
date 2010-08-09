@@ -17,11 +17,17 @@ class RolesController < ApplicationController
   # GET /roles
   # GET /roles.xml
   def index
-    @roles = Role.all
-
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @roles }
+      format.html { render :html => (@alerts = Role.all)}
+      format.xml  { render :xml =>  (@alerts = Role.all)}
+      format.json do
+        # this header is a must for CORS
+        headers["Access-Control-Allow-Origin"] = "*"
+        is_admin = current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
+        @alerts = is_admin ? Role.find(:all,:select=>'id,name') : Role.user_roles.find(:all,:select=>'id,name')
+        ActiveRecord::Base.include_root_in_json = false
+        render :json => {"roles"=>@alerts,"expires_on"=>1.day.since.to_i*1000}
+      end
     end
   end
 

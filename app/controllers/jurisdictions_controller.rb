@@ -17,11 +17,16 @@ class JurisdictionsController < ApplicationController
   # GET /jurisdictions
   # GET /jurisdictions.xml
   def index
-    @jurisdictions = Jurisdiction.all
-
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @jurisdictions }
+      format.html { render :html => (@jurisdictions = Jurisdiction.all)}
+      format.xml  { render :xml =>  (@jurisdictions = Jurisdiction.all)}
+      format.json do
+        # this header is a must for CORS
+        headers["Access-Control-Allow-Origin"] = "*"
+        @jurisdictions = Jurisdiction.find(:all,:select=>'id,name')
+        ActiveRecord::Base.include_root_in_json = false
+        render :json => {"jurisdictions"=>@jurisdictions,"expires_on"=>1.day.since.to_i*1000}
+      end
     end
   end
 
