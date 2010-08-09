@@ -25,17 +25,17 @@ set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
 task :production do
-	role :app, "newtxphin.texashan.org"
-	role :web, "newtxphin.texashan.org"
-	role :jobs, "newtxphin.texashan.org"
-	role :db,  "newtxphin.texashan.org", :primary => true
+	role :app, "txphin.texashan.org"
+	role :web, "txphin.texashan.org"
+	role :jobs, "jobs.texashan.org"
+	role :db,  "jobs.texashan.org", :primary => true
 end
 
 task :staging do
-	role :app, "192.168.30.96"
-	role :web, "192.168.30.96"
-	role :jobs, "192.168.30.97"
-	role :db,  "192.168.30.97", :primary => true
+	role :app, "staging.txphin.org"
+	role :web, "staging.txphin.org"
+	role :jobs, "staging.txphin.org"
+	role :db,  "staging.txphin.org", :primary => true
 end
  
 # Setup dependencies
