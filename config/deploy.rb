@@ -61,8 +61,8 @@ namespace :deploy do
         puts "  END ROLLBACK"
       end
       update
+      restart
     }
-    restart
   end
 
   desc "unicorn restart"
