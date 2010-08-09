@@ -1,4 +1,0 @@
-
-<div id="dashboard_feed_articles">
-  <%= render :partial => "feed_articles", :locals => {:entries => @entries} %>
-</div>
