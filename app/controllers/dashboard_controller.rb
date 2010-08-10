@@ -29,7 +29,7 @@ class DashboardController < ApplicationController
       format.html
       format.json do
         headers["Access-Control-Allow-Origin"] = "*"
-        unless @alerts.nil? || @alerts.empty? 
+        unless @alerts.nil? || @alerts.empty? || ( @alerts.map(&:id) == [nil] ) # for dummy default alert
           jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_alert_path(alert),alert.acknowledged_by_user?) }
           render :json => jsonObject
         else
