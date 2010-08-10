@@ -61,11 +61,15 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 
         var panel = new Ext.Panel({
             title: 'Home',
+            itemId: this.id,
             layout:'hbox',
             layoutConfig: {defaultMargins:'15'},
             items: [this.stormPulsePanel, this.newsFeedPanel, this.staticNewsPanel],
             autoScroll: true,
-            hideBorders: true
+            hideBorders: true,
+            listeners:{
+                'show':function(panel){panel.doLayout();}
+            }
         });
 
         this.getPanel = function(){
@@ -112,7 +116,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
     }
 });
 
-Talho.Article3Panel.initialize = function()
+Talho.Article3Panel.initialize = function(config)
 {
-    return (new Talho.Article3Panel).getPanel();
+    return (new Talho.Article3Panel(config)).getPanel();
 }

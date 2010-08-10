@@ -40,6 +40,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                 'ajaxloadcomplete'
                 );
 
+        this.addListener('show', function(){this.doLayout();});
         // do any special initialization events here
         this.url = this.url || '';
     },
