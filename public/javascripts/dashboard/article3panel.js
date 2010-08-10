@@ -1,5 +1,21 @@
 Ext.namespace('Talho');
 
+String.prototype.stripTags = function(){
+    if(arguments.length<2) strMod=this.replace(/<\/?(?!\!)[^>]*>/gi, '');
+    else{
+        var IsAllowed=arguments[1];
+        var Specified=eval("["+arguments[1]+"]");
+        if(IsAllowed){
+            var strRegExp='</?(?!(' + Specified.join('|') + '))[^>]*>';
+            strMod=this.replace(new RegExp(strRegExp, 'gi'), '');
+        }else{
+            var strRegExp='</?(' + Specified.join('|') + ')[^>]*>';
+            strMod=this.replace(new RegExp(strRegExp, 'gi'), '');
+        }
+    }
+    return strMod;
+}
+
 Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
     constructor: function()
     {
@@ -21,18 +37,43 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 
         this.stormPulsePanel = new Ext.Panel({
             flex: 1,
+            autoHeight:true,
             html: stormPulseHTML
         });
 
         this.newsFeedPanel = new Ext.Panel({
             flex: 1,
-            html: 'News Feed'
+            autoHeight:true,
+            items: new Ext.DataView({
+                store: this.create_feed_store(),
+                singleSelect: false,
+                autoHeight: true,
+                tpl: this.create_feed_template(),
+                listeners: {
+                    scope:this,
+                    'click': function(view, index, node, evt){
+                        var elem = Ext.get(node);
+                        if(elem.hasClass('more_btn') || elem.hasClass('less_btn'))
+                        {
+                            elem.up('.feed_article').toggleClass('more');
+                            this.getPanel().doLayout();
+                        }
+                    }
+                }
+            })
         });
 
         this.staticNewsPanel = new Ext.Panel({
             flex: 1,
-            html: 'Articles'
+            autoHeight:true,
+            bodyCssClass:'news_articles',
+            listeners:{
+                'render':function(cpt){
+                     cpt.getUpdater().update({url:'dashboard/news_articles'});
+                }
+            }
         });
+
 
         var panel = new Ext.Panel({
             title: 'Home',
@@ -46,8 +87,45 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
         this.getPanel = function(){
             return panel;
         }
-    }
+    },
 
+    create_feed_store: function(){
+        return new Ext.data.JsonStore({
+            url:"/dashboard/feed_articles.json",
+            idProperty: "id",
+            fields:["author", "title", {name:"published", type:"date"}, "url", "id", "summary"],
+            autoLoad:true,
+            listeners:{
+                'load': function(ct){this.getPanel().doLayout();},
+                scope:this
+            }
+        });
+    },
+
+    create_feed_template: function(){
+        return new Ext.XTemplate(
+                '<tpl for=".">',
+                    '<div class="feed_article">',
+                        '<h2><a href="{url}" target="_blank">{title}</a></h2>',
+                        '<h4>{author}</h4>',
+                        '<p class="date">{[values.published.toLocaleString()]}</p>',
+                        '<p class="partArticle">{[this.shortSummary(values.summary)]} <tpl if="this.shortSummary(summary).length &gt;= 300"> <a class="more_btn inlineLink">(more)</a></tpl></p>',
+                        '<p class="fullArticle">{summary} <a class="less_btn inlineLink">(less)</a></p>',
+                    '</div>',
+                '</tpl>',
+        {
+            compiled:true,
+            shortSummary: function(summary){
+                var cleanSummary = summary.stripTags(true, "'br'");
+                if(cleanSummary.length > 300)
+                {
+                    cleanSummary = cleanSummary.substr(0, 300) + '...';
+                }
+
+                return cleanSummary;
+            }
+        });
+    }
 });
 
 Talho.Article3Panel.initialize = function()
