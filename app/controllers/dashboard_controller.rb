@@ -57,8 +57,12 @@ class DashboardController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {render :partial => 'feed_articles'}
+      format.html {render :partial => 'feed_articles', :locals => {:entries => @entries}}
       format.json {render :json => @entries}
     end
+  end
+
+  def news_articles
+    render :partial => 'news_articles.html'
   end
 end

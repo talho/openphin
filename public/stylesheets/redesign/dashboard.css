@@ -1,0 +1,17 @@
+
+.article h2, .feed_article h2, .news_articles h2 {font-size:27px; color:#333;}
+.feed_article h4 {font-size: 100%; color: #999;}
+
+.feed_article h2 a {color:#333; text-decoration:none;}
+.feed_article h2 a:hover{color:#444; text-decoration:underline;}
+
+.feed_article {margin-bottom:20px; border-bottom:1px solid gray; padding-bottom:10px}
+.feed_article h4, .feed_article p {margin:5px 0px;}
+.feed_article .fullArticle {display:none;}
+.feed_article.more .partArticle {display:none;}
+.feed_article.more .fullArticle {display:block;}
+
+.news_articles > div {margin-bottom:20px; border-bottom:1px solid gray; padding-bottom:10px}
+
+.article .date, .feed_article .date, .news_articles .date {color:#666; font-size:12px;}
+.article p, .feed_article p, .news_articles p {color:#666; font-size:13px;}
