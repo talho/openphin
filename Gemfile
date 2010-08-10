@@ -60,6 +60,16 @@ group :cucumber do
   gem "cucumber-rails", "0.3.2"
   gem "database_cleaner", "0.5.0"
   gem "spork", "0.8.4"
+
+  gem "culerity", "0.2.4"
+  gem "launchy", "0.3.5"
+  gem "mime-types", "1.16"
+  gem "nokogiri", "1.4.3.1"
+  gem "rack-test", "0.5.4"
+  gem "rspec", "1.3.0"
+  gem "selenium-webdriver", "0.0.3"
+  gem "sinatra", "1.0"
+  gem "capybara", "0.3.9"
 end
 
 group :tools do
