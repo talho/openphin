@@ -35,6 +35,5 @@ Feature: Sign in
       When I go to the sign in page
       And I sign in with "remember me" as "email@person.com/Password1"
       And I should be signed in
-      When I return next time
-      Then I should be signed in
+      Then my session should stay active
 

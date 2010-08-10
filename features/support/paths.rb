@@ -109,7 +109,6 @@ module NavigationHelpers
       when /the delayed job check page/i
         delayed_job_checks_path
 
-
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
