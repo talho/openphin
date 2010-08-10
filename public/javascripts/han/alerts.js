@@ -6,6 +6,7 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
         var panel = new Ext.AjaxPanel({
             url: '/han',
             title: 'HAN',
+            itemId: this.id,
             xtype:'ajaxpanel',
             closable: true,
             hideBorders:true,
@@ -32,7 +33,7 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
     }
 });
 
-Talho.Alerts.initialize = function(){
-    var alerts = new Talho.Alerts();
+Talho.Alerts.initialize = function(config){
+    var alerts = new Talho.Alerts(config);
     return alerts.getPanel();
 }

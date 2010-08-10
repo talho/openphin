@@ -1,0 +1,15 @@
+.dd-tabpanel-proxy .x-dd-drop-icon {
+	/* Adjust based on the height of tabs in your theme */
+	top: 8px;
+}
+
+.dd-tabpanel-proxy li {
+	display: inline;
+}
+
+.dd-tabpanel-proxy span.x-tab-strip-text {
+	padding: 4px 0;
+}
+.dd-tabpanel-proxy a, .dd-tabpanel-proxy span, .dd-tabpanel-proxy em {
+	display: block;
+}

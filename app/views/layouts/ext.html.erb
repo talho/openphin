@@ -1,10 +1,50 @@
 <head>
   <Title>Ext Dashboard</Title>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter', 'ext/ext-all-debug', 'ext_extensions/MaxWidthHBox', 'ext_extensions/AjaxPanel', 'utility' %>
+  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter', 'ext/ext-all-debug', 'ext_extensions/MaxWidthHBox', 'ext_extensions/AjaxPanel', 'ext_extensions/DragDropTabs', 'utility' %>
   <%= javascript_include_tag 'han/alerts', 'dashboard/article3panel', 'dashboard/index' %>
-  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/master', 'redesign/dashboard', 'redesign/han'  %>
+  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han'  %>
   <script type="text/javascript">
     window.rails_environment = '<%= Rails.env %>';
+
+          // do this a cleaner way later
+          menuConfig = [{name: 'HAN', items:[
+                {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'/han', initializer: 'Talho.Alerts'}},
+                {name: 'Send An Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'/alerts/new'}},
+                {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'/alerts'}}]},
+              {name: 'Rollcall', items:[
+                {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'/rollcall'}},
+                {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'/schools'}},
+                {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'/rollcall/about'}}]},
+              {name: 'FAQs', items:[
+                {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'/faqs'}}]},
+              {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'/forums'}},
+              {name: 'Tutorials', items:[
+                {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'/tutorials#PHIN'}},
+                {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'/tutorials#HAN'}},
+                {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'/tutorials#Documents'}},
+                {name: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'/tutorials#Forums'}},
+                {name: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'/tutorials#RollCall'}}]},
+              {value: '->'},
+              {name: 'My Dashboard', handler: 'goToDashboard'},
+              {name: 'Find People', tab: {id: 'advanced_search', title:'Find People', url:'/search/show_advanced'}},
+              {name: 'My Account', items:[
+                {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'/users/1/profile/edit'}}, // Needs to use pathing to get the current user
+                {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'/roll_requests/new'}}]},
+              {name: 'Admin', items:[
+                  {name: 'Manage Roles', items: [
+                      {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'/admin_role_requests'}},
+                      {name: 'Assign Roles', tab: {id: 'assign_roles', title:'Assign Roles', url:'/role_assignments/new'}}]},
+                  {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'/admin_groups'}},
+                  {name: 'Manage Users', items: [
+                      {name: 'Add A User', tab: {id: 'add_new_user', title:'Add A User', url:'/admin_users/new'}},
+                      {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'/user_batch/new'}},
+                      {name: 'Delete A User', tab: {id: 'delete_user', title:'Delete A User', url:'/users_delete/new'}}]},
+                  {name: 'Manage Invitations', items:[
+                      {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'/admin_invitations/new'}},
+                      {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'/admin_invitations'}}]}]},
+              {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'/about'}},
+              {name: 'Sign Out', handler: 'sign_out'}]
+
   </script>
 </head>
 <body>
