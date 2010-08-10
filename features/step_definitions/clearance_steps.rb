@@ -1,7 +1,12 @@
 # General
 
 Then /^I should see error messages$/ do
-  assert_match /error(s)? prohibited/m, response.body
+  # use Capybara then Webrat
+  if respond_to?(:page)
+    assert_match /error(s)? prohibited/m, page.body
+  else
+    assert_match /error(s)? prohibited/m, response.body
+  end
 end
 
 # Database
