@@ -1,6 +1,5 @@
 class AddLockVersionToTables < ActiveRecord::Migration
   def self.up
-		add_column :absentee_reports, :lock_version, :integer, :default => 0, :null => false
 		add_column :alert_ack_logs, :lock_version, :integer, :default => 0, :null => false
 		add_column :alert_attempts, :lock_version, :integer, :default => 0, :null => false
 		add_column :alert_device_types, :lock_version, :integer, :default => 0, :null => false
@@ -27,10 +26,6 @@ class AddLockVersionToTables < ActiveRecord::Migration
 		add_column :role_memberships, :lock_version, :integer, :default => 0, :null => false
 		add_column :role_requests, :lock_version, :integer, :default => 0, :null => false
 		add_column :roles, :lock_version, :integer, :default => 0, :null => false
-		add_column :rollcall_alerts, :lock_version, :integer, :default => 0, :null => false
-		add_column :school_district_daily_infos, :lock_version, :integer, :default => 0, :null => false
-		add_column :school_districts, :lock_version, :integer, :default => 0, :null => false
-		add_column :schools, :lock_version, :integer, :default => 0, :null => false
 		add_column :subscriptions, :lock_version, :integer, :default => 0, :null => false
 		add_column :swn_notification_response, :lock_version, :integer, :default => 0, :null => false
 		add_column :targets, :lock_version, :integer, :default => 0, :null => false
@@ -41,7 +36,6 @@ class AddLockVersionToTables < ActiveRecord::Migration
   end
 
   def self.down
-		remove_column :absentee_reports, :lock_version
 		remove_column :alert_ack_logs, :lock_version
 		remove_column :alert_attempts, :lock_version
 		remove_column :alert_device_types, :lock_version
@@ -68,10 +62,6 @@ class AddLockVersionToTables < ActiveRecord::Migration
 		remove_column :role_memberships, :lock_version
 		remove_column :role_requests, :lock_version
 		remove_column :roles, :lock_version
-		remove_column :rollcall_alerts, :lock_version
-		remove_column :school_district_daily_infos, :lock_version
-		remove_column :school_districts, :lock_version
-		remove_column :schools, :lock_version
 		remove_column :subscriptions, :lock_version
 		remove_column :swn_notification_response, :lock_version
 		remove_column :targets, :lock_version

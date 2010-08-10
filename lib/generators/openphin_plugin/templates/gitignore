@@ -49,5 +49,4 @@ config/rack-bug.yml
 public/tutorials
 config/initializers/smtp.rb
 config/email.yml
-.bundle
-vendor/cache
+spec/spec_helper.rb

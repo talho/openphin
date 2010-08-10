@@ -51,40 +51,6 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
-  #TODO: add these back in later
-#  config.gem "libxslt-ruby"
-#  config.gem "libxml-ruby"
-  config.gem "hpricot", :version => "=0.6"
-  
-  config.gem 'thoughtbot-clearance',
-    :lib     => 'clearance', 
-    :source  => 'http://gems.github.com', 
-    :version => '0.6.9'
-  config.gem 'thoughtbot-paperclip',
-    :lib     => 'paperclip', 
-    :source  => 'http://gems.github.com', 
-    :version => '2.3.0'
-  config.gem 'fastercsv', :version => '1.5.0'
-  config.gem 'httparty',
-    :lib => 'httparty',
-    :version => '0.4.4'
-  config.gem 'chronic',
-    :source => 'http://gems.github.com',
-    :version => '0.2.3'
-  config.gem 'packet',
-    :source => 'http://gems.github.com',
-    :version => '0.1.15'
-  config.gem 'validatable', :version => '1.6.7'
-  config.gem 'bullet', :source => 'http://gemcutter.org'
-  config.gem 'ruby-growl', :source => 'http://gemcutter.org'
-  config.gem "sinatra", :source => "http://gemcutter.org"
-  config.gem "will_paginate", :version => "~> 2.3.11", :source => "http://gemcutter.org"
-  config.gem "RedCloth"
-  config.gem "prawn", :version => "=0.8.4", :source => "http://gemcutter.org"
-  #config.gem "csv_builder", :version => "=1.1.7", :source => "http://gemcutter.org"
-  #config.gem "slim_scrooge", :version => "=1.0.10", :source => "http://gemcutter.org"
-  config.gem "hoptoad_notifier"
-  config.gem "pauldix-feedzirra", :lib => "feedzirra", :version => "=0.0.18", :source => "http://gems.github.com"
 end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 ActiveRecord::Base.lock_optimistically = true

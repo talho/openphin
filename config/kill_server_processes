@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# used in capistrano to be sure that no processes matching "$@" are running
+
+# try politely
+PIDS=$(ps -ef | grep "$@" | grep -v -E "$$|grep" | awk '{print $2}')
+[[ -n "$PIDS" ]] && kill $PIDS
+
+# sleep for awhile
+sleep 2
+
+# try not politely for anything still running
+PIDS=$(ps -ef | grep "$@" | grep -v -E "$$|grep" | awk '{print $2}')
+[[ -n "$PIDS" ]] && kill -9 $PIDS
+
+exit 0

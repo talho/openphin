@@ -113,7 +113,10 @@ class ApplicationController < ActionController::Base
     def self.app_toolbar(toolbar=nil, options = {}  )
 	    if toolbar.blank?
 		    toolbar_partial = @toolbar.blank? ? self.controller_name : @toolbar
-		    @toolbar = "application" unless File.exist?(File.join(Rails.root, 'app', 'views', 'toolbars', "_#{toolbar_partial}.html.erb"))
+		    @toolbar = "application"
+        view_paths.each do |path|
+          @toolbar = toolbar_partial if File.exist?(File.join(path, 'toolbars', "_#{toolbar_partial}.html.erb"))
+        end
 	    else
 		    @toolbar = toolbar
 	    end

@@ -6,8 +6,17 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'rollcall', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum', :cache => 'all' %>
+  <% css_list = (defined?($expansion_list)) ? $expansion_list : [] %>
+  <% css_list.concat [ 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css' ] %>
+  <% css_list.push({:cache => true}) %>
+  <%= stylesheet_link_tag(*css_list) %>
+  <% css_list.clear %>
+
+  <% js_list = (defined?($expansion_list)) ? $expansion_list : [] %>
+  <% js_list.concat [ 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum' ] %>
+  <% js_list.push({:cache => 'all'}) %>
+  <%= javascript_include_tag(*js_list) %>
+  <% js_list.clear %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -27,7 +36,9 @@
       <h1><%= link_to 'TXPhin', root_path %></h1>
       <ul class="apps">
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
-        <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
+        <% if File.exists?(File.join(Rails.root,"vendor","plugins","rollcall")) %>
+          <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
+        <% end %>
   			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
   			<% if current_user.has_non_public_role? %>
           <li<%= ' class="current"' if toolbar == 'forums' %>><%= link_to s("Forums"), forums_path %></li>
