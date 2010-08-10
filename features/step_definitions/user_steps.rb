@@ -163,7 +163,8 @@ When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   user = User.find_by_email!(user_email)
   link = user_confirmation_url(user, user.token, :host => HOST)
-  email.body.should contain(link)
+  email.body.include?(link).should be_true
+  link = user_confirmation_url(user, user.token, :host => "localhost:9887")
   visit link
 end
 

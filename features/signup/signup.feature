@@ -20,14 +20,14 @@ Feature: Signing up for an account
 
   Scenario: Signing up as a public role
     When I signup for an account with the following info:
-      | Email          | john@example.com |
-      | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | John             |
-      | Last name      | Smith            |
-      | Preferred name | Jonathan Smith   |
-      | Home Jurisdiction  | Dallas County    |
-      | Preferred language | English      |
+      | Email                 | john@example.com |
+      | Password              | Apples1          |
+      | Password Confirmation | Apples1          |
+      | First Name            | John             |
+      | Last Name             | Smith            |
+      | Preferred name        | Jonathan Smith   |
+      | Home Jurisdiction     | Dallas County    |
+      | Preferred language    | English          |
     Then I should see "Thanks for signing up"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the communication device
@@ -40,9 +40,9 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Apples1   |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction | Texas        |
       | Preferred language | English      |
@@ -59,16 +59,15 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Apples1   |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction  | Dallas County    |
       | Preferred language | English      |
-      | Are you with any of these organizations | Red Cross        |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Are you a public health professional? | <unchecked> |
-      
+
     Then I should see "Thanks for signing up!"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should not have the "Health Alert and Communications Coordinator" role request for "Dallas County"
@@ -78,9 +77,9 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email         | <blank> |
       | Password       | <blank> |
-      | Password confirmation | <blank> |
-      | First name     | <blank>        |
-      | Last name      | <blank>        |
+      | Password Confirmation | <blank> |
+      | First Name     | <blank>        |
+      | Last Name      | <blank>        |
       | Preferred name | <blank>        |
       | Home Jurisdiction| <blank>      |
     Then I should see:
@@ -94,15 +93,15 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | Password1        |
-      | Password confirmation | Password1 |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Password1 |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
-      | Are you with any of these organizations | Red Cross        |
       | Home Jurisdiction | Dallas County    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
       | Are you a public health professional? | <checked> |
+      | Are you with any of these organizations | Red Cross        |
     Then I should see "Thanks for signing up"
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
@@ -132,9 +131,9 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | Password1        |
-      | Password confirmation | Password1 |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Password1 |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction | Texas    |
       | What is your primary role | Health Alert and Communications Coordinator |
@@ -168,6 +167,7 @@ Feature: Signing up for an account
   Scenario: Signing up should not display system-roles
     Given there is an system only Admin role
     When I go to the sign up page
+    And I check "Are you a public health professional?"
     Then I should not see "Admin" in the "What is your primary role in public health or emergency response?" dropdown
 
   Scenario: Confirming a new account 
@@ -182,7 +182,7 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | invalidemail    |
       | Password       | Password1       |
-      | Password confirmation | <blank>  |
+      | Password Confirmation | <blank>  |
     Then I should see error messages
 
   Scenario: User tries to log in without confirming email address
@@ -197,9 +197,9 @@ Feature: Signing up for an account
     When I signup for an account with the following info:
       | Email          | john@example.com |
       | Password       | Password1        |
-      | Password confirmation | Password1 |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Password1 |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction |               |
       | Are you with any of these organizations | Red Cross        |
