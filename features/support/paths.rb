@@ -109,7 +109,6 @@ module NavigationHelpers
         invitation = Invitation.find_by_name($1)
         reports_admin_invitation_path(invitation)
 
-
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

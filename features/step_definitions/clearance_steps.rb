@@ -28,16 +28,18 @@ end
 # Session
 
 Then /^I should be signed in$/ do
-  assert controller.signed_in?
+  Given %{I am on the homepage}
+  Then %{I should see "Sign Out"}
 end
 
 Then /^I should be signed out$/ do
-  assert ! controller.signed_in?
+  Given %{I am on the homepage}
+  Then %{I should see "Sign In to Your Account"}
 end
 
 When /^session is cleared$/ do
-  request.reset_session
-  controller.instance_variable_set(:@_current_user, nil)
+  Given %{I am on the homepage}
+  Then %{I should see "Sign In to Your Account"}
 end
 
 # Emails
@@ -92,11 +94,11 @@ When /^I sign in( with "remember me")? as "(.*)\/(.*)"$/ do |remember, email, pa
   And %{I fill in "Email" with "#{email}"}
   And %{I fill in "Password" with "#{password}"}
   And %{I check "Remember me"} if remember
-  And %{I press "Sign In"}
+  And %{I press "Sign in"}
 end
 
 When /^I sign out$/ do
-  visit '/session', :delete
+  visit '/sign_out'
   unset_current_user
 end
 
@@ -113,8 +115,13 @@ When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
 end
 
 When /^I return next time$/ do
-  When %{session is cleared}
-  And %{I go to the homepage}
+  When %{I go to the homepage}
+end
+
+Then /^my session should stay active$/ do
+  session = Capybara::Session.new(:selenium)
+  session.visit("http://localhost:9887")
+  session.should have_content("Sign Out")  
 end
 
 module ActionController
