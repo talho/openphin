@@ -243,7 +243,7 @@ end
 
 Then /^I should see:$/ do |table|
   table.raw.each do |row|
-    response.should contain(row.join)
+    page.should have_content(row.join)
   end
 end
 
