@@ -14,23 +14,21 @@ Then /^"([^\"]*)" should have (\d*) emails?$/ do |email,count|
 end  
 
 Then /^I should not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.inner_html.should_not contain(text)
+  find_field(label).all(:xpath, ".//option").map(&:text).select{|item| item =~ Regexp.new(text)}.flatten.blank?.should be_true
 end
 
 Then /^I should explicitly not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.children.each do |node|
-    node.inner_html.should_not == text
-  end
+  find_field(label).find(:xpath, ".//option[.='#{text}']").should be_nil
 end
 
 Then /^I should see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.inner_html.should contain(text)
+  find_field(label).all(:xpath, ".//option").map(&:text).select{|item| item =~ Regexp.new(text)}.flatten.blank?.should be_false
 end
 
 Then /^I should explicitly see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.children.each do |node|
-    node.inner_html.should == text
-  end
+  field = find_field(label).find(:xpath, ".//option[.='#{text}']")
+  field.should_not be_nil
+  field.text.should == text
 end
 
 When /^I fill in the form with the following info:$/ do |table|
