@@ -167,6 +167,7 @@ Feature: Role Requests
 
     When I log in as "john.smith@example.com"
     And I follow "My Account"
+    And I will confirm on next step
     And I follow "Remove Role"
     And I follow "My Account"
     Then I should not see "Health Officer in Dallas County"
