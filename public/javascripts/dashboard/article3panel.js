@@ -5,6 +5,8 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
     {
         Ext.apply(this, config);
 
+        Talho.Article3Panel.superclass.constructor.call(this, config);
+
         var stormPulseHTML = '<div class="article">\
         <h2>2010 Hurricane Season Tracking Map</h2>\
         <p class="date">July 08, 2010</p>\

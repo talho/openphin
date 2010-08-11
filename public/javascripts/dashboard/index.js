@@ -8,6 +8,15 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     {
         PhinApplication.superclass.constructor.call(this, config);
         this.initialConfig = config || {};
+
+        this.favorites = new Favorites({
+            parent: this,
+            listeners:{
+                scope:this,
+                'favoriteclick': this.open_tab
+            }
+        });
+        
         this.render_layout();
     },
 
@@ -35,17 +44,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             plugins: [Ext.plugin.DragDropTabs]
         });
 
-        this.favoritesToolbar = new Ext.Panel({
-            region:'north',
-            height: 55,
-            id: 'favoritestoolbar',
-            layout: 'hbox',
-            layoutConfig: {margin:'10'},
-            listeners:{
-                scope:this,
-                'render': this.setupDropZone
-            }
-        });
+        this.favoritesToolbar = this.favorites.getPanel();
 
         return new Ext.Panel({
             id: 'centerpanel',
@@ -70,9 +69,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab});
 
-        $(menuConfig).each(function(index, item){
+        Ext.each(menuConfig, function(item, index){
             tb.add(builder.buildMenu(item));
-        }.createDelegate(this));
+        }, this);
 
         return tb;
     },
@@ -128,6 +127,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 }
             }
 
+            panel.tabConfig = config;
             panel.addListener('show', function(panel){panel.doLayout();}); // This is necessary for when a panel is loading without
                                                                            // being shown. Layout is never being refired, but it is now.
         }
@@ -135,60 +135,6 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         {
            this.tabPanel.getComponent(config.id).show();
         }
-    },
-
-    setupDropZone: function(ct){
-        var parent = this; // save this off in a local variable so we can keep it alive and refer to it down the way for scoping sake.
-        ct.dropZone = new Ext.dd.DropTarget(ct.getEl().dom, {
-            ddGroup: 'TabPanelDD',
-            buttonPanel: ct,
-            canDrop: function(tabConfig)
-            {
-                if (this.buttonPanel.find('targetId', tabConfig.id).length > 0)
-                {
-                    return false;
-                }
-                else return true;
-            },
-            getTabConfig: function(item){
-                return {
-                    id: item.getItemId(),
-                    title: item.title,
-                    url: item.url,
-                    initializer: item.initializer
-                }
-            },
-            notifyOver: function(source, evt, data)
-            {
-                var tabConfig = this.getTabConfig(data.item);
-                if(this.canDrop(tabConfig))
-                    return 'x-dd-drop-ok';
-                else
-                    return 'x-dd-drop-nodrop';
-            },
-            notifyDrop: function(dd, e, data){
-                // Build launchable item
-                var tabConfig = this.getTabConfig(data.item);
-
-                if(this.canDrop(tabConfig))
-                {
-                    // add the button
-                    this.buttonPanel.add(new Ext.Button({
-                        text: tabConfig.title,
-                        tabConfig: tabConfig,
-                        targetId: tabConfig.id,
-                        handler: function(b, e){
-                            this.open_tab(b.tabConfig);
-                        },
-                        scope: parent
-                    }));
-
-                    this.buttonPanel.doLayout();
-                    return true;
-                }
-                else return false;
-            }
-        });
     }
 
 });

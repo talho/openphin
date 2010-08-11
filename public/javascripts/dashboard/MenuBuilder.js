@@ -46,9 +46,9 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
         if(!Ext.isEmpty(menuConfig.items))
         {
             submenu = new Ext.menu.Menu({});
-            $(menuConfig.items).each(function(index, item){
+            Ext.each(menuConfig.items, function(item, index){
                 submenu.add(this.buildMenu(item));
-            }.createDelegate(this));
+            }, this);
         }
 
 
