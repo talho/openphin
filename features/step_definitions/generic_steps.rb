@@ -65,21 +65,22 @@ end
 
 Then /^I should see the following menu\:$/ do |table|
 	name = table.raw[0][1]
-	response.should have_selector("##{name}") do |menu|
-		table.rows.each do |row|
-			key, value = row[0], row[1]
-			case key
-				when "item"
-					menu.should have_selector("li a", :content => value)
+  within(:css, "##{name}") do
+	 	table.rows.each do |row|
+	 		key, value = row[0], row[1]
+	 		case key
+	 			when "item"
+          within(:css, "li a") { page.should have_content(value) }
         when "current item"
-          menu.should have_selector("li.current a", :content => value)
+          within(:css, "li.current a") { page.should have_content(value) }
         else
           raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
- 			end
-		end
-	end
-
+ 	 		end
+	 	end
+    false
+  end
 end
+
 Then /^I should see (\d*) "([^\"]+)" sections$/ do |count, section|
 	response.should have_selector(".#{section}", :count => count.to_i)
 end
