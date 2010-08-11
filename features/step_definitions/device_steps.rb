@@ -216,7 +216,10 @@ Then /^the following phone calls should be made:$/ do |table|
                             {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
         message = xml.search( "//swn:notification/swn:body",
                               {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
-        message.include?(row["message"]) && phone.include?(row["phone"])
+        id =  (xml.search('//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo/swn:id',
+                          {'swn' => 'http://www.sendwordnow.com/notification'})).map(&:inner_text) 
+        #('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo/swn:id', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+        message.include?(row["message"]) && phone.include?(row["phone"]) && id.first =~ /-PHONE$/
         
         #SWN doesn't support recorded attachments
 #      else
@@ -226,6 +229,7 @@ Then /^the following phone calls should be made:$/ do |table|
 #        message == recording && phone == row["phone"]
       end
     end
+  
     call.should_not be_nil
 
     unless row["call_down"].blank?
@@ -271,7 +275,9 @@ Then /^the following SMS calls should be made:$/ do |table|
       note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})
       message = note.xpath('.//swn:notification/swn:body', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
       sms = note.xpath(".//swn:rcpts/*/swn:contactPnts/swn:contactPntInfo/swn:address", {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
-      message == row["message"] && sms == "#{row['sms']}@sms.sendwordnow.com"
+      id =  body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo/swn:id', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      smsAddress = row['sms'] + "@sms.sendwordnow.com"
+      message == row["message"] && smsAddress =~ /sms/ && id =~/-SMS$/
     end
     call.should_not be_nil
   end
@@ -297,7 +303,9 @@ Then /^the following Blackberry calls should be made:$/ do |table|
       note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})
       message = note.xpath('.//swn:notification/swn:body', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
       blackberry = note.xpath(".//swn:rcpts/*/swn:contactPnts/swn:contactPntInfo/swn:address", {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
-      message == row["message"] && blackberry == "#{row['blackberry']}@blackberry.sendwordnow.com"
+      id =  body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo/swn:id', {'swn' => 'http://www.sendwordnow.com/notification'}).inner_text
+      blackberryAddress = row['blackberry'] + "@blackberry.sendwordnow.com"
+      message == row["message"] && blackberryAddress =~ /blackberry/ && id =~ /-BLACKBERRY$/
     end
     call.should_not be_nil
   end
@@ -313,6 +321,10 @@ Given /^(.*) has the following devices:$/ do |useremail, table|
         Factory(:fax_device, :fax => value, :user => user)
       when /phone/i
         Factory(:phone_device, :phone => value, :user => user)
+      when /sms/i
+        Factory(:sms_device, :sms => value, :user => user)
+      when /blackberry/i
+        Factory(:blackberry_device, :blackberry => value, :user => user)
     end
   end
 

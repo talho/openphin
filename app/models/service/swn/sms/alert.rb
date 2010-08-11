@@ -50,7 +50,7 @@ class Service::SWN::SMS::Alert < Service::SWN::SMS::Base
     xml.swn(:sendNotification, xmlns => "http://www.sendwordnow.com/notification") do
       xml.swn(:pSendNotificationInfo) do
         xml.swn(:SendNotificationInfo) do
-          xml.swn(:id, alert.distribution_id)
+          xml.swn(:id, alert.distribution_id + "-SMS")
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml
