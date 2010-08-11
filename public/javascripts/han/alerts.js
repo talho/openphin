@@ -5,6 +5,8 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
     {
         Ext.apply(this, config);
 
+        Talho.Alerts.superclass.constructor.call(this, config);
+
         var panel = new Ext.AjaxPanel({
             url: this.url,
             title: this.title,
