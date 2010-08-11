@@ -64,19 +64,19 @@ Then /^I should not see an "([^\"]+)" button$/ do |button_text|
 end
 
 Then /^I should see the following menu\:$/ do |table|
-	name = table.raw[0][1]
-  within("##{name}") do
-	 	table.rows.each do |row|
-	 		key, value = row[0], row[1]
-	 		case key
-	 			when "item"
+  name = table.raw[0][1]
+  within(:css, "##{name}") do
+    table.rows.each do |row|
+      key, value = row[0], row[1]
+      case key
+        when "item"
           within(:css, "li a") { page.should have_content(value) }
         when "current item"
           within(:css, "li.current a") { page.should have_content(value) }
         else
           raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
- 	 		end
-	 	end
+        end
+    end
     false
   end
 end
