@@ -1,11 +1,13 @@
 Ext.namespace('Talho');
 
 Talho.Alerts = Ext.extend(Ext.util.Observable, {
-    constructor: function()
+    constructor: function(config)
     {
+        Ext.apply(this, config);
+
         var panel = new Ext.AjaxPanel({
-            url: '/han',
-            title: 'HAN',
+            url: this.url,
+            title: this.title,
             itemId: this.id,
             xtype:'ajaxpanel',
             closable: true,
