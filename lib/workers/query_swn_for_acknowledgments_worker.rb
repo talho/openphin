@@ -8,42 +8,46 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
     Service::SWN::Alert::AlertNotificationResponse.active.acknowledge.each do |nresult|
       @alert = nresult.alert
       next if @alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0 && @alert.alert_attempts.with_device('Device::EmailDevice').not_acknowledged.size == 0
-      result = Service::SWN::Alert::NotificationResultsRequest.build(@alert.distribution_id, Service::Phone.configuration.options)
-      envelope = result['soap:Envelope']
-      if envelope.nil?
-        SWN_LOGGER.info "No SOAP Envelope for SWN Notification Response# #{nresult.id}"
-        return false
+      devices = {"Device::PhoneDevice" => "PHONE", "Device::EmailDevice" => "EMAIL"}
+      @alert.alert_device_types.map(&:device).reject{|type| devices[type].blank?}.each do |type|
+        result = Service::SWN::Alert::NotificationResultsRequest.build("#{@alert.distribution_id}-#{devices[type]}", Service::Phone.configuration.options)
+        envelope = result['soap:Envelope']
+
+        if envelope.nil?
+          SWN_LOGGER.info "No SOAP Envelope for SWN Notification Response# #{nresult.id}"
+          return false
+        end
+        body = envelope['soap:Body']
+        if body.nil?
+          SWN_LOGGER.info "No SOAP Body for SWN Notification Response# #{nresult.id}"
+          return false
+        end
+        response = body['getNotificationResultsResponse']
+        if response.nil?
+          SWN_LOGGER.info "Body does not contain a getNotificationResultsResponse element for SWN Notification Response# #{nresult.id}"
+          return false
+        end
+        request = response['getNotificationResultsResult']
+        if request.nil?
+          SWN_LOGGER.info "Body does not contain a getNotificationResultsResult element for SWN Notification Response# #{nresult.id}"
+          return false
+        end
+        rcptsStatus = request['rcptsStatus']
+        if rcptsStatus.nil?
+          SWN_LOGGER.info "Body does not contain a rcptsStatus element for SWN Notification Response# #{nresult.id}"
+          return false
+        end
+        rcptStatus = rcptsStatus['rcptStatus']
+        if rcptStatus.nil?
+          SWN_LOGGER.info "Body does not contain a rcptStatus element for SWN Notification Response# #{nresult.id}"
+        end
+        rcptStatus = [rcptStatus] if rcptStatus.class == Hash
+        SWN_LOGGER.info "Processing recipient status for SWN Notification Response# #{nresult.id}"
+        rcptStatus.each do |status|
+          processAcknowledgmentStatus status
+        end
+        SWN_LOGGER.info "Processing recipient status for SWN Notification Response# #{nresult.id} completed"
       end
-      body = envelope['soap:Body']
-      if body.nil?
-        SWN_LOGGER.info "No SOAP Body for SWN Notification Response# #{nresult.id}"
-        return false
-      end
-      response = body['getNotificationResultsResponse']
-      if response.nil?
-        SWN_LOGGER.info "Body does not contain a getNotificationResultsResponse element for SWN Notification Response# #{nresult.id}"
-        return false
-      end
-      request = response['getNotificationResultsResult']
-      if request.nil?
-        SWN_LOGGER.info "Body does not contain a getNotificationResultsResult element for SWN Notification Response# #{nresult.id}"
-        return false
-      end
-      rcptsStatus = request['rcptsStatus']
-      if rcptsStatus.nil?
-        SWN_LOGGER.info "Body does not contain a rcptsStatus element for SWN Notification Response# #{nresult.id}"
-        return false
-      end
-      rcptStatus = rcptsStatus['rcptStatus']
-      if rcptStatus.nil?
-        SWN_LOGGER.info "Body does not contain a rcptStatus element for SWN Notification Response# #{nresult.id}"
-      end
-      rcptStatus = [rcptStatus] if rcptStatus.class == Hash
-      SWN_LOGGER.info "Processing recipient status for SWN Notification Response# #{nresult.id}"
-      rcptStatus.each do |status|
-        processAcknowledgmentStatus status
-      end
-      SWN_LOGGER.info "Processing recipient status for SWN Notification Response# #{nresult.id} completed"
     end
   end
 
