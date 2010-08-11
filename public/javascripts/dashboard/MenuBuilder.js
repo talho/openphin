@@ -1,0 +1,63 @@
+/**
+ * Builds up a menu by recursively calling buildMenu to get each Ext.MenuItem that's been specified
+ * @constructor
+ * @params  {Object}    config  configuration object
+ * @config     {Object}   parent  the calling object, used to look for custom handlers as specified in the menu config
+ * @config     {Function} tab      the function used to open new tabs
+ */
+var MenuBuilder = Ext.extend(Ext.util.Observable, {
+    constructor: function(config)
+    {
+        Ext.apply(this, config);
+
+        if(!Ext.isFunction(this.tab))
+        {
+            if(Ext.isFunction(this.parent.open_tab))
+                this.tab = this.parent.open_tab;
+            else
+                this.tab = Ext.emptyFn;
+        }
+    },
+
+    buildMenu: function(menuConfig, isButton)
+    {
+        // check and see if a string was sent in. These will be things like '->', ' ' and '-' for the fill, spacer, and separator shortcuts
+        if(Ext.isString(menuConfig))
+            return menuConfig;
+
+        var item;
+
+        var handler;
+        if(!Ext.isEmpty(menuConfig.tab))
+        {
+            handler = this.tab.createDelegate(this.parent, [menuConfig.tab])
+        }
+        else if(!Ext.isEmpty(menuConfig.handler) && Ext.isFunction(this.parent[menuConfig.handler]))
+        {
+            handler = this.parent[menuConfig.handler].createDelegate(this.parent, [menuConfig]);
+        }
+        else
+        {
+            handler = undefined;
+        }
+
+        // if it's a menu, we're going to create the new menu, and then call buildMenu on the menu's children
+        var submenu = undefined
+        if(!Ext.isEmpty(menuConfig.items))
+        {
+            submenu = new Ext.menu.Menu({});
+            $(menuConfig.items).each(function(index, item){
+                submenu.add(this.buildMenu(item));
+            }.createDelegate(this));
+        }
+
+
+        item = {
+            text: menuConfig.name,
+            menu: submenu,
+            handler: handler
+        };
+
+        return item;
+    }
+});
