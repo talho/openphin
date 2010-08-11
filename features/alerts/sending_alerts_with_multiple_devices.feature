@@ -6,12 +6,12 @@ Feature: Sending alerts to multiple devices
   
   Background: 
     Given the following users exist: 
-      | John Smith      | john.smith@example.com    | Health Alert and Communications Coordinator | Dallas County |
-      | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist                              | Wise County   |
-      | Joe Black       | joe.black@example.com     | Epidemiologist                              | Potter County |
-      | Henry Frank     | henry.frank@example.com   | Public Relations                            | Bell County   |
-      | Martin Gons     | martin.gons@example.com   | Chiropractor                                | Travis County | 
-      | George Strait   | george.strait@example.com | Registered Nurse                            | Bell County   |
+    | John Smith      | john.smith@example.com    | Health Officer   | Dallas County  | 
+    | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist   | Wise County    | 
+    | Joe Black       | joe.black@example.com     | Epidemiologist   | Potter County  | 
+    | Henry Frank     | henry.frank@example.com   | Public Relations | Bell County    | 
+    | Martin Gons     | martin.gons@example.com   | Chairopractor    | Travis County  | 
+    | George Strait   | george.strait@example.com | Registered Nurse | Bell County    | 
     And keith.gaddis@example.com has the following devices:
       | SMS   | 5125551245 |
       | Phone | 5125551235 |
@@ -25,8 +25,7 @@ Feature: Sending alerts to multiple devices
     And george.strait@example.com  has the following devices:
       | Phone | 5125551239 |
       | Blackberry | 246D6BA7 |      
-    And the role "Health Alert and Communications Coordinator" is an alerter
-    And delayed jobs are processed
+      And the role "Health Officer" is an alerter
 
   Scenario: Sending alerts to users with multiple devices
     Given I am logged in as "keith.gaddis@example.com"
@@ -99,6 +98,12 @@ Feature: Sending alerts to multiple devices
        | 246D6BA6      | Chicken pox outbreak |
        | 246D6BA7      | Chicken pox outbreak |
 
+<<<<<<< HEAD
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com, joe.black@example.com, henry.frank@example.com, martin.gons@example.com, george.strait@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow | 
+=======
+       And the following users should receive the alert email:
+         | People        |  keith.gaddis@example.com, joe.black@example.com, henry.frank@example.com, martin.gons@example.com, george.strait@example.com |
+         | body contains | Title: H1N1 SNS push packs to be delivered tomorrow | 
+>>>>>>> 879908e... modified alert message id to include device type appended to end, created multiple device send test
