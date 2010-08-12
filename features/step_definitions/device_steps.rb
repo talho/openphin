@@ -207,6 +207,11 @@ Then 'I should have a Blackberry device with the Blackberry number "$text"' do |
   device.blackberry.should_not be_nil
 end
 
+Then 'I should have an Email device with the Email address "$text"' do |text|
+  device = current_user.devices.email.detect{ |device| device.email_address == text }
+  device.email_address.should_not be_nil
+end
+
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::Phone.deliveries.detect do |phone_call|
