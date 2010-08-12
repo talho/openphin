@@ -24,7 +24,6 @@ class AddMissingIndexes < ActiveRecord::Migration
     add_index :role_memberships, :role_id
     add_index :role_memberships, :role_request_id
     add_index :role_memberships, :jurisdiction_id
-    add_index :schools, :district_id
     add_index :invitees, :invitation_id
     add_index :alerts, :from_organization_id
     add_index :alerts, :author_id
@@ -36,7 +35,6 @@ class AddMissingIndexes < ActiveRecord::Migration
     add_index :targets, :audience_id
     add_index :topics, :poster_id
     add_index :topics, :forum_id
-    add_index :school_district_daily_infos, :school_district_id
     add_index :organization_membership_requests, :organization_id
     add_index :organization_membership_requests, :approver_id
     add_index :organization_membership_requests, :user_id
@@ -48,14 +46,11 @@ class AddMissingIndexes < ActiveRecord::Migration
     add_index :audiences, :owner_id
     add_index :audiences, :owner_jurisdiction_id
     add_index :audiences, [:id, :type]
-    add_index :rollcall_alerts, [:id, :type]
-    add_index :rollcall_alerts, :absentee_report_id
     add_index :organization_requests, :approver_id
     add_index :organization_requests, :organization_id
     add_index :organization_requests, :jurisdiction_id
     add_index :deliveries, :device_id
     add_index :deliveries, :alert_attempt_id
-    add_index :school_districts, :jurisdiction_id
     add_index :invitations, :author_id
     add_index :invitations, :organization_id
     add_index :folders, :user_id
@@ -76,7 +71,6 @@ class AddMissingIndexes < ActiveRecord::Migration
     remove_index :role_memberships, :role_id
     remove_index :role_memberships, :role_request_id
     remove_index :role_memberships, :jurisdiction_id
-    remove_index :schools, :district_id
     remove_index :invitees, :invitation_id
     remove_index :alerts, :from_organization_id
     remove_index :alerts, :author_id
@@ -88,7 +82,6 @@ class AddMissingIndexes < ActiveRecord::Migration
     remove_index :targets, :audience_id
     remove_index :topics, :poster_id
     remove_index :topics, :forum_id
-    remove_index :school_district_daily_infos, :school_district_id
     remove_index :organization_membership_requests, :organization_id
     remove_index :organization_membership_requests, :approver_id
     remove_index :organization_membership_requests, :user_id
@@ -100,14 +93,11 @@ class AddMissingIndexes < ActiveRecord::Migration
     remove_index :audiences, :owner_id
     remove_index :audiences, :owner_jurisdiction_id
     remove_index :audiences, :column => [:id, :type]
-    remove_index :rollcall_alerts, :column => [:id, :type]
-    remove_index :rollcall_alerts, :absentee_report_id
     remove_index :organization_requests, :approver_id
     remove_index :organization_requests, :organization_id
     remove_index :organization_requests, :jurisdiction_id
     remove_index :deliveries, :device_id
     remove_index :deliveries, :alert_attempt_id
-    remove_index :school_districts, :jurisdiction_id
     remove_index :invitations, :author_id
     remove_index :invitations, :organization_id
     remove_index :folders, :user_id

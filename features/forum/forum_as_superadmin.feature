@@ -211,11 +211,12 @@
     And I should be redirected to the "Measuring Fulfillment" topic page for Forum "Grant Capturing"
     And I should not see "Walmart claims 100% fulfillment"
 
-
   Scenario: Hide a topic as an super-admin and verify that an user can not see it
     Given I am logged in as "joe.smith@example.com"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
-    
+    And the forum "Grant Capturing" has the following audience:
+      | Users | jane.smith@example.com  |
+
     When I go to the Topics page for Forum "Grant Capturing"
     And I follow "edit_topic_1"
     And I check "Hide"
@@ -225,4 +226,21 @@
     When I am logged in as "jane.smith@example.com"
     And I go to the Topics page for Forum "Grant Capturing"
     Then I should not see "Measuring Fulfillment"
-  
+
+  Scenario: Editing a forum concurrently to another admin editing the same forum
+    Given I am logged in as "joe.smith@example.com"
+    And I have the forum named "Forum to verify concurrency"
+    When I load the edit Forum page for "Forum to verify concurrency"
+    And I fill out the audience form with:
+      | Jurisdictions | Dallas County  |
+
+    Given session name is "admin session"
+    And I am logged in as "joe.smith@example.com"
+    When I load the edit Forum page for "Forum to verify concurrency"
+    And I fill out the audience form with:
+      | Jurisdictions | Potter County |
+    And I press "Update"
+
+    Given session name is "default"
+    When I press "Update"
+    Then I should see "This forum was recently changed by another user. Please try again." within ".error"

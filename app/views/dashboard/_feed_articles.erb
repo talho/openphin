@@ -1,24 +1,26 @@
 <div id="feed_articles" class="middle_column">
-  <% entries.each do |r| %>
-    <div class="rss_item">
-      <h2><%= r.title %></h2>
-      <h3><%= r.author %></h3>
-      <p class="date"><%= r.published %></p>
-      <div>
-        <p>
-         <%= clean_up_rss(r.summary)[0..300] %>
-        </p>
-      </div>
-      <% if clean_up_rss(r.summary).length > 300 %>
-        <p class='more'><a href=''>Read more</a></p>
-        <div class='body'>
+  <%- unless entries.nil? %>
+    <% entries.each do |r| %>
+      <div class="rss_item">
+        <h2><%= r.title %></h2>
+        <h3><%= r.author %></h3>
+        <p class="date"><%= r.published %></p>
+        <div>
           <p>
-            <%= clean_up_rss(r.summary)[0..300] %>
+           <%= clean_up_rss(r.summary)[0..300] %>
           </p>
-          <p class='less'><a href=''>Collapse this article</a></p>
         </div>
-      <% end %>
-     <p class="view"><a href="<%= r.url %>" target="_blank" title="Click here to view.">View</a></p>
-   </div>
+        <% if clean_up_rss(r.summary).length > 300 %>
+          <p class='more'><a href=''>Read more</a></p>
+          <div class='body'>
+            <p>
+              <%= clean_up_rss(r.summary)[0..300] %>
+            </p>
+            <p class='less'><a href=''>Collapse this article</a></p>
+          </div>
+        <% end %>
+       <p class="view"><a href="<%= r.url %>" target="_blank" title="Click here to view.">View</a></p>
+      </div>
+    <% end %>
   <% end %>
 </div>

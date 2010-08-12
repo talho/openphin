@@ -77,9 +77,8 @@ end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
   visit admin_role_requests_path
-  response.should_not have_selector( ".pending_role_requests") do |req|
-    req.should have_selector(".requester_email", :content => user_email)
-  end
+	response.should_not have_selector( ".pending_role_requests")
+  response.should_not have_selector(".requester_email", :content => user_email)
 end
 
 Then /^I should see that I have a pending role request$/ do

@@ -13,10 +13,10 @@ class ApplicationController < ActionController::Base
   before_filter :add_cors_header, :only => :options
 
   layout :choose_layout
-  
+
   cattr_accessor :applications
   @@applications=HashWithIndifferentAccess.new
-  
+
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password
 
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
       false
     end
   end
-  
+
   def toolbar
 	  self.class.app_toolbar
   end
@@ -53,15 +53,15 @@ class ApplicationController < ActionController::Base
         false
       end
     end
-  
+
     def folder_or_inbox_path(document)
       document.folder ? folder_documents_path(document.folder) : folder_inbox_path
     end
-    
+
     def login_required
       store_location
       unless signed_in?
-        redirect_to sign_in_path 
+        redirect_to sign_in_path
         false
       end
     end
@@ -78,10 +78,10 @@ class ApplicationController < ActionController::Base
       unless current_user.has_non_public_role?
         flash[:error] = "You are not authorized to view this page."
         redirect_to dashboard_path
-        false 
+        false
       end
     end
-    
+
     def can_view_alert
       alert = Alert.find(params[:id])
       unless !alert.nil? &&
@@ -104,11 +104,14 @@ class ApplicationController < ActionController::Base
     def self.app_toolbar(toolbar=nil, options = {}  )
 	    if toolbar.blank?
 		    toolbar_partial = @toolbar.blank? ? self.controller_name : @toolbar
-		    @toolbar = "application" unless File.exist?(File.join(Rails.root, 'app', 'views', 'toolbars', "_#{toolbar_partial}.html.erb"))
+		    @toolbar = "application"
+        view_paths.each do |path|
+          @toolbar = toolbar_partial if File.exist?(File.join(path, 'toolbars', "_#{toolbar_partial}.html.erb"))
+        end
 	    else
 		    @toolbar = toolbar
 	    end
-	    @toolbar	    
+	    @toolbar
     end
 
     def choose_layout
@@ -120,6 +123,10 @@ class ApplicationController < ActionController::Base
     end
 
     def add_cors_header
+      # Allows for Cross-Origin Resource Sharing (http://www.w3.org/TR/cors/) to access json data from an external source
+      # Add an appropriate route on the methods you expect to POST data to using ajax but be sure to test out authenticity tokens to prevent XSS attacks:
+      # map.connect "/url.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
+      # Also add headers["Access-Control-Allow-Origin"] = "*" to your json response
       headers["Access-Control-Allow-Origin"] = "*"
       headers["Access-Control-Allow-Methods"] = "OPTIONS"
       headers["Access-Control-Allow-Headers"] = "X-Requested-With, Cookie"

@@ -30,19 +30,44 @@ class ForumsController < ApplicationController
       @forum = Forum.find_for(params[:id],current_user)
     end
 
-    def update
-      @forum = Forum.find_for(params[:id],current_user)
-      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
+  def update
+    @forum = Forum.find_for(params[:id],current_user)
+    merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
+
+    # The nested attribute audience has habtm associations that don't play nicely with optimistic locking
+    if(params[:forum][:audience_attributes])
+      non_ids = params[:forum][:audience_attributes].reject{|key,value| key =~ /_ids$/}
+      ids = params[:forum][:audience_attributes].reject{|key,value| !(key =~ /_ids$/)}
+      params[:forum][:audience_attributes] = non_ids
+    end
+
+    begin
       if @forum.update_attributes(params[:forum])
+        if params[:forum][:audience_attributes]
+          # Once we're sure that forums and the audience itself isn't stale, we update the audience
+          @audience = Audience.find_by_id(non_ids[:id])
+          @audience.update_attributes(ids)
+
+          # Force a lock_version increment for stale object detection on the audience itself
+          Audience.update_counters params[:forum][:audience_attributes][:id], :lock_version => 1
+        end
+
         if params[:forum][:topic_attributes]
-        flash[:notice] = "Topic was successfully created."
-        redirect_to( forum_topics_path(@forum) )
+          flash[:notice] = "Topic was successfully created."
+          redirect_to forum_topics_path(@forum)
+        else
+          flash[:notice] = "Forum was successfully updated."
+          redirect_to forums_path
+        end
       else
-        flash[:notice] = "Forum was successfully updated."
-        redirect_to forums_path
+        redirect_to :back
       end
-    else
-      redirect_to :back
+    rescue ActiveRecord::StaleObjectError
+      flash[:error] = "This forum was recently changed by another user.  Please try again."
+      redirect_to edit_forum_path(@forum)
+    rescue StandardError
+      flash[:error] = "There was a problem updating the forum."
+      redirect_to forums_path
     end
   end
   

@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
   validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
   validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
   validates_format_of       :email, :with => %r{[^\.]$}
-  validates_uniqueness_of   :email, :case_sensitive => false, 
+  validates_uniqueness_of   :email, :case_sensitive => false, :scope => [:deleted_at],
     :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
   validates_presence_of     :password, :if => :password_required?
   validates_confirmation_of :password, :if => :password_required?
@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
     :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
-    :home_phone, :mobile_phone, :phone, :fax
+    :home_phone, :mobile_phone, :phone, :fax, :lock_version
     
   has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
 	
@@ -152,21 +152,6 @@ class User < ActiveRecord::Base
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
   
-   #TODO Move this into plugin for rollcall later
-  def school_districts
-    jurisdictions.map{|jur| jur.school_districts}.flatten.uniq
-  end
-
-  def schools(options={})
-    options={ :conditions => ["district_id in (?)", school_districts.map(&:id)], :order => "name"}.merge(options)
-    School.find(:all, options)
-#    school_districts.map{|district| district.schools}.flatten.uniq
-  end
-
-  def recent_absentee_reports
-    schools.map{|school| school.absentee_reports.absenses.recent(20).sort_by{|report| report.report_date}}.flatten.uniq[0..19].sort_by{|report| report.school_id}
-  end
-
   def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
   end

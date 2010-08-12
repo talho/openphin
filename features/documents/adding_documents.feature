@@ -6,6 +6,7 @@ Feature: Adding documents to document sharing
   Background:
     Given the following administrators exist:
       | admin@dallas.gov | Dallas County |
+      | admin@potter.gov | Potter County |
     And I am logged in as "admin@dallas.gov"
 
   Scenario: Adding a document to private storage
@@ -161,3 +162,68 @@ Feature: Adding documents to document sharing
 
     And I should not see "keith.jpg"
     And the file "keith.jpg" and folder "Rockstars" do not exist
+  Scenario: Deleting a document from the inbox
+    Given no documents exist
+    And I have the document "keith.jpg" in my inbox
+
+    When I go to the document viewing panel
+    When I follow "Inbox"
+    Then I should see "keith.jpg"
+
+    When I follow "Delete"
+    Then I should not see "keith.jpg"
+    When I go to the document viewing panel
+    When I follow "Inbox"
+
+    Then I should not see "keith.jpg"
+    And the file "keith.jpg" in the inbox does not exist
+
+  Scenario: Updating a document concurrently to another user updating the same document
+    Given I have the document "keith.jpg" in my inbox
+    And I created the share "Docs"
+    And "admin@potter.gov" has been added as owner to the share "Docs"
+    When I go to the document viewing panel
+    And I follow "Inbox"
+    And I check "keith.jpg"
+    And I follow "Add to Share"
+    And I check "Docs"
+    And I press "Share"
+
+    When I go to the document viewing panel
+    And I follow "Docs"
+    And I check "keith.jpg"
+    And I follow "Move/Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/sample.wav" to "Upload a new version"
+
+    Given session name is "admin session"
+    And I am logged in as "admin@potter.gov"
+    When I go to the document viewing panel
+    And I follow "Docs"
+    And I check "keith.jpg"
+    And I follow "Move/Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/invitees.csv" to "Upload a new version"
+    And I press "Update"
+
+    Given session name is "default"
+    And I press "Update"
+
+    Then I should see "<script>alert('Another user recently updated the document you are attempting to update to invitees.csv.  Please try again.');</script>" in the response header flash error
+    And I should not see "keith.jpg"
+    And I should not see "sample.wav"
+    And I should see "invitees.csv"
+
+    When I go to the document viewing panel
+    And I follow "Docs"
+    Then I should not see "keith.jpg"
+    And I should not see "sample.wav"
+    And I should see "invitees.csv"
+
+    When I go to the document viewing panel
+    And I follow "Docs"
+    And I check "invitees.csv"
+    And I follow "Move/Edit"
+    And I attach the "image/jpeg" file at "spec/fixtures/sample.wav" to "Upload a new version"
+    And I press "Update"
+    Then I should not see "keith.jpg"
+    And I should not see "invitees.csv"
+    And I should see "sample.wav"

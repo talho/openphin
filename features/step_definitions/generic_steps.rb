@@ -38,9 +38,9 @@ When /^I fill in the form with the following info:$/ do |table|
 		if ["Preferred language"
 # Add in more select form elements here
 		].include?(row[0])
-			select  row[1], row[0]
-		else
-			fill_in row[0], row[1]
+			When "I select \"#{row[1]}\" from \"#{row[0]}\""
+    else
+      When "I fill in \"#{row[0]}\" with \"#{row[1]}\""
 		end
 	end
 end

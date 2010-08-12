@@ -86,5 +86,40 @@ Feature: An admin deleting users
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
       
+      
+  Scenario: Not permit multiple case insensitive email users unless the first user has been deleted
+    Given I signup for an account with the following info:
+      | Email          | greg.brown@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
+      | First name     | Greg             |
+      | Last name      | Brown            |
+      | Home Jurisdiction  | Dallas County    |
+    Then I should see "Thanks for signing up"
+    And "greg.brown@example.com" should have the "Public" role for "Dallas County"
+
+    When I signup for an account with the following info:
+      | Email          | Greg.Brown@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
+      | First name     | Greg             |
+      | Last name      | Brown            |
+      | Home Jurisdiction  | Dallas County    |
+    Then I should not see "Thanks for signing up"
     
+    When I go to the users delete page for an admin
+    And the sphinx daemon is running
+    And I fill out the delete user form with "Greg Brown"
+    And I press "Delete Users"
+    And delayed jobs are processed
+    Then I should see "Users have been successfully deleted"
+
+    When I signup for an account with the following info:
+      | Email          | greg.brown@example.com |
+      | Password       | Apples1          |
+      | Password confirmation | Apples1   |
+      | First name     | Greg             |
+      | Last name      | Brown            |
+      | Home Jurisdiction  | Dallas County    |
+    Then I should see "Thanks for signing up"
  

@@ -75,7 +75,7 @@ Feature: An admin managing users
       # | First name                        | Keith  |
       # | Last name                         | Gaddis |
       # | Email                             | kbg@example.com |
-    And I attach the file at "spec/fixtures/keith.jpg" to "user_photo"
+    And I attach the file "spec/fixtures/keith.jpg" to "user_photo"
     And I press "Save"
     Then I should see the profile page
     And I should not see any errors
@@ -96,7 +96,7 @@ Feature: An admin managing users
         | Credentials                       | Rock star, Certified |
         | Experience                        | Summer camp director  |
         | Employer                          | State of Texas |
-      And I attach the file at "spec/fixtures/keith.jpg" to "user_photo"
+      And I attach the file "spec/fixtures/keith.jpg" to "user_photo"
       And I press "Save"
       Then I should see the profile page
       And I should not see any errors

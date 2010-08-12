@@ -20,23 +20,19 @@ class AddFindMissingIndexes < ActiveRecord::Migration
     add_index :alert_attempts, [:alert_id, :token]
     add_index :alert_attempts, [:token, :alert_id]
     add_index :subscriptions, :id
-    add_index :schools, :id
     add_index :alerts, :id
     add_index :invitees, :id
     add_index :topics, :id
     add_index :targets, :id
     add_index :documents, :id
     add_index :organization_membership_requests, :id
-    add_index :school_district_daily_infos, :id
     add_index :audiences, :scope
     add_index :role_requests, :id
     add_index :deliveries, :id
     add_index :forums, :id
     add_index :organization_requests, :id
-    add_index :absentee_reports, :id
     add_index :jurisdictions, :id
     add_index :invitations, :id
-    add_index :school_districts, :id
     add_index :alert_ack_logs, :id
     add_index :articles, :id
     add_index :folders, :id
@@ -56,23 +52,19 @@ class AddFindMissingIndexes < ActiveRecord::Migration
     remove_index :alert_attempts, :column => [:alert_id, :token]
     remove_index :alert_attempts, :column => [:token, :alert_id]
     remove_index :subscriptions, :id
-    remove_index :schools, :id
     remove_index :alerts, :id
     remove_index :invitees, :id
     remove_index :topics, :id
     remove_index :targets, :id
     remove_index :documents, :id
     remove_index :organization_membership_requests, :id
-    remove_index :school_district_daily_infos, :id
     remove_index :audiences, :scope
     remove_index :role_requests, :id
     remove_index :deliveries, :id
     remove_index :forums, :id
     remove_index :organization_requests, :id
-    remove_index :absentee_reports, :id
     remove_index :jurisdictions, :id
     remove_index :invitations, :id
-    remove_index :school_districts, :id
     remove_index :alert_ack_logs, :id
     remove_index :articles, :id
     remove_index :folders, :id

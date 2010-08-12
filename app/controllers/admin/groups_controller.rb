@@ -21,7 +21,24 @@ class Admin::GroupsController < ApplicationController
 
   def show
     group = Group.find_by_id(params[:id])
-    @group = group if current_user.viewable_groups.include?(group) 
+    if current_user.viewable_groups.include?(group)
+      @group = group
+      @group.prepare_recipients(:include_public => true, :recreate => (params[:page].blank? || params[:page] == "1"))
+    end
+
+    respond_to do |format|
+      format.html do
+        @recipients = TempUser.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") if @group
+      end
+      format.pdf do
+        prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
+      end
+      format.csv do
+        @csv_options = { :col_sep => ',', :row_sep => :auto }
+        @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
+        @output_encoding = 'UTF-8'
+      end
+    end
   end
 
   def new
@@ -56,15 +73,47 @@ class Admin::GroupsController < ApplicationController
       params[:group]["jurisdiction_ids"] = [] if params[:group]["jurisdiction_ids"].blank?
       params[:group]["role_ids"] = [] if params[:group]["role_ids"].blank?
       params[:group]["user_ids"] = [] if params[:group]["user_ids"].blank?
-      @group.update_attributes(params[:group])
 
       respond_to do |format|
-        if @group.save
+        begin
+          # Because non-nested attributes for associations on habtm don't play well with optimistic locking
+          # We must first update_attributes without associations to test for stale object, otherwise the object
+          # will throw ActiveRecord::StaleObjectError, but the associations won't revert to their original state
+          non_ids = params[:group].reject{|key,value| key =~ /_ids$/}
+          ids = params[:group].reject{|key,value| !(key =~ /_ids$/)}
+          @group.update_attributes! non_ids
+
+          # If any associations have changed, manually update the locking on groups to prevent overlapping changes
+          unless @group.jurisdiction_ids.map{|j| j.to_s} == params[:group][:jurisdiction_ids].sort &&
+            @group.role_ids.map{|r| r.to_s} == params[:group][:role_ids].sort &&
+            @group.user_ids.map{|u| u.to_s} == params[:group][:user_ids].sort
+
+            Group.update_counters @group.id, :lock_version => 1
+          end
+
+          @group.update_attributes! ids
+
+          flash[:notice] = "Successfully updated the group <b>#{group.name}</b>."
           format.html { redirect_to admin_group_path(@group)}
           format.xml  { render :xml => @group, :status => :created, :location => @group }
-          flash[:notice] = "Successfully updated the group #{params[:group][:name]}."
-        else
-          format.html { render :action => "edit" }
+        rescue ActiveRecord::StaleObjectError
+          group = Group.find_by_id(params[:id])
+          @group = current_user.viewable_groups.include?(group) ? group : nil
+          format.html {
+            flash[:error] = "The group <b>#{group.name}</b> has been recently modified by another user.  Please try again."
+            if @group.nil?
+              flash[:error] = "This resource does not exist or is not available."
+              redirect_to admin_groups_path
+            else
+              redirect_to edit_admin_group_path(@group)
+            end
+          }
+          format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+        rescue StandardError
+          format.html {
+            flash[:error] = "Could not save group <b>#{group.name}</b>.  Please try again."
+            redirect_to edit_admin_group_path(@group)
+          }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
         end
       end

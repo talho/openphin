@@ -41,8 +41,10 @@ class Channel < ActiveRecord::Base
   end
   
   def promote_to_owner(audience)
-    audience.recipients(:include_public => false).each do |user|
-      subscriptions.find_by_user_id(user.id).update_attribute :owner, true
+    audience.recipients(:include_public => false, :recreate => true).find_in_batches do |users|
+      users.each do |user|
+        subscriptions.find_by_user_id(user.id).update_attribute :owner, true
+      end
     end
   end
 end

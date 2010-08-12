@@ -24,3 +24,7 @@
 1. rake gems:install RAILS_ENV=cucumber
 2. rake  # Run the RSpec specs
 3. rake features  # run the cucumber features
+4. tests for talho developed plugins are run by adding :<plugin-name>,
+   for example:
+  - rake cucumber:rollcall
+  - rake spec:rollcall

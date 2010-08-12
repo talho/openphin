@@ -157,27 +157,30 @@ Factory.define :document do |m|
   m.file {|f| File.open(__FILE__)}
 end
 
-Factory.define :school_district do |m|
-  m.sequence(:name){|t| "Name ##{t}"}
-  m.association :jurisdiction
-end
-
-Factory.define :school do |m|
-  m.sequence(:name){|t| "Name ##{t}"}
-  m.sequence(:display_name) {|t| "Display Name ##{t}"}
-  m.level "ES"
-  m.sequence(:school_number) {|num| num}
-  m.association :district, :factory => :school_district
-end
-
-
 Factory.define :target do |m|
   m.association :audience, :factory => :group
   m.association :item, :factory => :alert
 end
 
-
 Factory.define :document do |m|
   m.association :user
   m.file {|f| File.open(__FILE__)}
+end
+
+Factory.define :forum do |m|
+  m.sequence(:name) {|t| "Forum ##{t}"}
+  m.association :audience
+end
+
+Factory.define :topic do |m|
+  m.sequence(:name) {|t| "Topic ##{t}"}
+  m.association :poster, :factory => :user
+  m.association :forum
+end
+
+Factory.define :comment, :class => Topic do |m|
+  m.sequence(:name) {|t| "Comment ##{t}"}
+  m.sequence(:content) {|t| "Comment Contents ##{t}"}
+  m.association :poster, :factory => :user
+  m.association :forum
 end

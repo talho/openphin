@@ -82,7 +82,7 @@ Feature: Invitation System
     And I fill in "Subject" with "Please Join DSHS"
     And I fill in "Body" with "Please click the link below to join DSHS."
     And I select "DSHS" from "Default Organization"
-    When I attach the file at "spec/fixtures/invitees.csv" to "CSV File"
+    When I attach the file "spec/fixtures/invitees.csv" to "CSV File"
     When I press "Submit"
     Then I should see "Invitation was successfully sent."
     And "bob@example.com" is an invitee of "DSHS"

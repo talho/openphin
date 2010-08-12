@@ -66,15 +66,25 @@ class TopicsController < ApplicationController
   # PUT /topics/1.xml
   def update
     # no forum selected for the move, so lets set it to the original
-    params[:topic][:dest_forum_id] = params[:forum_id] if params[:topic][:dest_forum_id].blank?
+    params[:topic][:forum_id] = params[:topic][:dest_forum_id] unless params[:topic][:dest_forum_id].blank?
+    params[:topic].delete("dest_forum_id")
+
     respond_to do |format|
-      if @topic.update_attributes(params[:topic])
-        flash[:notice] = 'Topic was successfully updated.'
-        format.html { redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url ) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
+      begin
+        if @topic.update_attributes(params[:topic])
+          flash[:notice] = 'Topic was successfully updated.'
+          format.html { redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url ) }
+          format.xml  { head :ok }
+        else
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
+        end
+      rescue ActiveRecord::StaleObjectError
+        flash[:error] = "Another user recently updated the same topic.  Please try again."
+        format.html { redirect_to edit_forum_topic_path(@topic)}
+      rescue StandardError
+        flash[:error] = "There was an unexpected error while saving this topic."
+        format.html { redirect_to forum_topic_path(@topic)}
       end
     end
   end
@@ -97,10 +107,19 @@ class TopicsController < ApplicationController
     delete_comment_ids = params[:delete_comment_ids] || []
     comment_ids -= delete_comment_ids
     selected = params[:topic][:comments].reject{ |k,v| !comment_ids.include?(k) }
-    topic.comments.delete( Topic.find(delete_comment_ids))
-    Topic.update(selected.keys,selected.values)
-    flash[:notice] = "Comments were successfully updated."  
-    redirect_to forum_topic_url(@forum,topic)
+
+    begin
+      topic.comments.delete( Topic.find(delete_comment_ids))
+      Topic.update(selected.keys,selected.values)
+      flash[:notice] = "Comments were successfully updated."
+      redirect_to forum_topic_url(@forum,topic)
+    rescue ActiveRecord::StaleObjectError
+      flash[:error] = "This topic was recently changed by another user.  Please try again."
+      redirect_to edit_forum_topic_path(topic)
+    rescue StandardEror
+      flash[:error] = "Unexpected error while attempting to save this topic."
+      redirect_to forum_topic_path(topic)
+    end
   end
 
 protected
