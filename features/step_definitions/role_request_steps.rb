@@ -50,9 +50,9 @@ end
 
 Then /^I should see (\d*) pending role requests?$/ do |num|
   if(num.to_i == 0)
-    response.should_not have_selector(".pending_role_requests .request")
+    page.should_not have_css(".pending_role_requests .request")
   else
-    response.should have_selector(".pending_role_requests .request")
+    page.should have_css(".pending_role_requests .request")
   end
   current_user.role_requests.unapproved.flatten.size.should == num.to_i
 end
@@ -92,9 +92,9 @@ Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jur
   request.should_not be_nil
   
   visit new_role_request_path
-  response.should have_selector( ".pending_role_requests") do |req|
-    req.should contain(role_name)
-    req.should contain(jurisdiction_name)
+  within(:css, ".pending_role_requests") do
+    page.should have_content(role_name)
+    page.should have_content(jurisdiction_name)
   end
 end
 

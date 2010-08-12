@@ -14,23 +14,21 @@ Then /^"([^\"]*)" should have (\d*) emails?$/ do |email,count|
 end  
 
 Then /^I should not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.inner_html.should_not contain(text)
+  find_field(label).all(:xpath, ".//option").map(&:text).select{|item| item =~ Regexp.new(text)}.flatten.blank?.should be_true
 end
 
 Then /^I should explicitly not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.children.each do |node|
-    node.inner_html.should_not == text
-  end
+  find_field(label).find(:xpath, ".//option[.='#{text}']").should be_nil
 end
 
 Then /^I should see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.inner_html.should contain(text)
+  find_field(label).all(:xpath, ".//option").map(&:text).select{|item| item =~ Regexp.new(text)}.flatten.blank?.should be_false
 end
 
 Then /^I should explicitly see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  field_labeled(label).element.children.each do |node|
-    node.inner_html.should == text
-  end
+  field = find_field(label).find(:xpath, ".//option[.='#{text}']")
+  field.should_not be_nil
+  field.text.should == text
 end
 
 When /^I fill in the form with the following info:$/ do |table|
@@ -67,21 +65,22 @@ end
 
 Then /^I should see the following menu\:$/ do |table|
 	name = table.raw[0][1]
-	response.should have_selector("##{name}") do |menu|
-		table.rows.each do |row|
-			key, value = row[0], row[1]
-			case key
-				when "item"
-					menu.should have_selector("li a", :content => value)
+  within(:css, "##{name}") do
+	 	table.rows.each do |row|
+	 		key, value = row[0], row[1]
+	 		case key
+	 			when "item"
+          within(:css, "li a") { page.should have_content(value) }
         when "current item"
-          menu.should have_selector("li.current a", :content => value)
+          within(:css, "li.current a") { page.should have_content(value) }
         else
           raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
- 			end
-		end
-	end
-
+ 	 		end
+	 	end
+    false
+  end
 end
+
 Then /^I should see (\d*) "([^\"]+)" sections$/ do |count, section|
 	response.should have_selector(".#{section}", :count => count.to_i)
 end

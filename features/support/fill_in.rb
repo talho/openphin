@@ -4,11 +4,10 @@ module FeatureHelpers
     def fill_in_user_signup_form(table=nil)
       fields={"Email"=> "john@example.com",
        "Password"=> "Password1",
-       "Password confirmation"=> "Password1",
-       "First name"=> "John",
-       "Last name"=> "Smith",
+       "Password Confirmation"=> "Password1",
+       "First Name"=> "John",
+       "Last Name"=> "Smith",
        "Preferred name"=> "Jonathan Smith",
-       "Are you with any of these organizations"=> "Red Cross",
        "Are you a public health professional?" => '<unchecked>',
        "Preferred language"=> "English"
       }
@@ -29,29 +28,35 @@ module FeatureHelpers
       elsif !table.nil?
         fields.merge!(table.rows_hash)
       end
+
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field
-        when 'Email', 'Password', 'Password confirmation', 'First name', 'Last name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
+        when 'Email', 'Password', 'Password Confirmation', 'First Name', 'Last Name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
           fill_in field, :with => value
-        when 'Preferred language',
-          'What is your primary role', 
+        when 'Preferred language'
+          find_field(field).select(value.strip)
+        when 'What is your primary role',
           'Are you with any of these organizations', 'Organization Type'
-            select Regexp.new(value), :from => field
+          page.check("health_professional")
+          find_field(field).select(value.strip)
         when /Jurisdiction of Operation/
-          select_multiple value.split(',').map(&:strip), :from => 'organization_jurisdiction_ids'
+          field = find_field("organization_jurisdiction_ids")
+          value.split(',').each do |id|
+            field.select(id.strip)
+          end
         when "Are you a public health professional?"
           id = "health_professional"
-          if value == '<unchecked>'
-            uncheck id
+          if value == "<unchecked>"
+            page.uncheck(id)
           else
-            check id
+            page.check(id)
           end
         when "Home Jurisdiction"
-          value = "" if value.nil?  
-          select Regexp.new(value), :from => "user_role_requests_attributes_0_jurisdiction_id"
+          value = "" if value.nil?
+          find_field("user_role_requests_attributes_0_jurisdiction_id").select(value)
         when "State Jurisdiction"
-          check Jurisdiction.find_by_name(value).name
+          find_field(Jurisdiction.find_by_name(value).name).click
         else
           raise "Unknown field: #{field}: Please update this step if you intended to use this field."
         end
