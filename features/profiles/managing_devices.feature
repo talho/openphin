@@ -60,9 +60,11 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"
-    When I maliciously post a destroy for a device for "john.smith@example.com"
+    And I am on the dashboard page
+    When I will confirm on next step
+    And I maliciously post a destroy for a device for "john.smith@example.com"
     Then I should see "This resource does not exist or is not available."
-    And I can't test 'should redirect_to' because of webrat bug
+    #And I can't test 'should redirect_to' because of webrat bug
     And I should be on the homepage
 
   Scenario: Adding a device as an admin

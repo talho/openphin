@@ -54,10 +54,16 @@ I should be able to edit my profile
     Then I should see "That resource does not exist or you do not have access to it."
     
   Scenario: editing user account information for another user as another jurisdictional admin
-      Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
-      And I am logged in as "jane.smith@example.com"
-      When I edit the profile for "john.smith@example.com"
-      Then I should see "You are not authorized to edit this profile."
+    Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
+    And I am logged in as "jane.smith@example.com"
+    And I am on the dashboard page
+    And I follow "People"
+    And I fill in "Search" with "John"
+    And I press "Search"
+    Then I see the following users in the search results
+      | John Smith |
+    When I follow "John Smith"
+    Then I should see "This user's profile is not public"
 
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"
