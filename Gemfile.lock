@@ -122,9 +122,11 @@ GEM
     ruby-growl (2.0)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
-    selenium-webdriver (0.0.3)
-      ffi
+    rubyzip (0.9.4)
+    selenium-webdriver (0.0.27)
+      ffi (>= 0.6.1)
       json_pure
+      rubyzip
     sinatra (1.0)
       rack (>= 1.0)
     spork (0.8.4)
@@ -192,7 +194,7 @@ DEPENDENCIES
   ruby-debug
   ruby-growl (= 2.0)
   rubyforge (= 2.0.4)
-  selenium-webdriver (= 0.0.3)
+  selenium-webdriver (= 0.0.27)
   sinatra (= 1.0)
   spork (= 0.8.4)
   taf2-curb (= 0.5.4.0)
