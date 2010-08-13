@@ -16,7 +16,7 @@ end
 Then /^I do not see the following users in the search results$/ do |table|
   table.raw.each do |row|
     row[0].split(',').map(&:strip).each do |name|
-      page.should_not have_content(name)
+      page.should_not have_css('#search-results .name', :content => name)
     end
   end
 end
