@@ -24,7 +24,14 @@ end
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   device = user.devices.first
-  delete_via_redirect device_path(device)
+  script = "elem = document.createElement('a'); " +
+    "elem.setAttribute('href','#{device_path(device)}'); " +
+    "elem.setAttribute('class','destroy'); " +
+    "elem.innerHTML = 'Remove Device'; " +
+    "$('body').append(elem);"
+  page.execute_script(script)
+  page.click_link("Remove Device")
+  #delete_via_redirect device_path(device)
 end
 
 Then /^"([^"]+). should have the communication devices?$/ do |email, table|
@@ -81,7 +88,9 @@ Then /^I should see in my list of devices$/ do |table|
   table.rows_hash.each do |type, value|
     case type
       when /Email/
-        response.should have_selector('#devices .device_email_device', :content => value)
+        within("#devices .device_email_device") do
+          page.should have_content(value)
+        end
       else
         raise "The type '#{type}' is not supported, please update this step if you intended to use it"
     end
