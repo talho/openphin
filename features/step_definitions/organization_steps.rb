@@ -65,7 +65,8 @@ When /^I click the organization membership request approval link in the email fo
   user = User.find_by_email!(user_email)
   request = OrganizationMembershipRequest.find_by_user_id(user.id)
   link = admin_organization_membership_request_path(request.id)
-  email.body.should contain(link)
+  email.body.include?(link).should be_true
+  link = admin_organization_membership_request_path(request.id, :host => "http://localhost:9887")
   visit link
 end
 
@@ -73,7 +74,8 @@ When /^"([^\"]*)" clicks the organization confirmation link in the email$/ do |u
   email = ActionMailer::Base.deliveries.last
   organization = Organization.find_by_contact_email!(user_email)
   link = organization_confirmation_path(organization, organization.token)
-  email.body.should contain(link)
+  email.body.include?(link).should be_true
+  link = organization_confirmation_path(organization, organization.token, :host => "http://localhost:9887")
   visit link
 end
 
@@ -83,28 +85,28 @@ When /^"([^\"]*)" receives a "([^\"]*)" organization approval email$/ do |user_e
   organization = Organization.find_by_name!(name)
   email.subject.should contain("User requesting organization signup")
   link = admin_pending_requests_url(:host => HOST)
-  email.body.should contain(link)
+  email.body.include?(link).should be_true
 end
 
 When /^I maliciously post an approver id$/ do
-  within("body") do |body| "" end # hack to make response.dom populate
-  input = Nokogiri::XML::Node.new('input', response.dom)
-  input["name"] = "[user][organization_membership_requests_attributes][0][approver_id]"
-  input["value"] = "1"
-  input["type"] = "hidden"
-  response.dom.css('form').first.add_child(input)
+  script = "elem = document.createElement('input'); " +
+    "elem.setAttribute('name','[user][organization_membership_requests_attributes][0][approver_id]'); " +
+    "elem.setAttribute('value','1'); " +
+    "elem.setAttribute('type','hidden'); " +
+    "$('form').append(elem);"
+  page.execute_script(script)
 end
 
 When /^I maliciously attempt to remove "([^\"]*)" from "([^\"]*)"$/ do |email, org_name|
-  within("body") do |body| "" end # hack to make response.dom populate
   user = User.find_by_email!(email)
   org = Organization.find_by_name!(org_name)
-  input = Nokogiri::XML::Node.new('a', response.dom)
-  input["href"] = admin_organization_membership_request_path(:id => org.id, :user_id => user.id)
-  input["class"] = "destroy"
-  response.dom.css('body').first.add_child(input)
-  input.inner_html = "Remove Organization Membership"
-  click_link("Remove Organization Membership")
+  script = "elem = document.createElement('a'); " +
+    "elem.setAttribute('href','#{admin_organization_membership_request_path(:id => org.id, :user_id => user.id)}'); " +
+    "elem.setAttribute('class','destroy'); " +
+    "elem.innerHTML = 'Remove Organization Membership'; " +
+    "$('body').append(elem);"
+  page.execute_script(script)
+  page.click_link("Remove Organization Membership")
 end
 
 Then /^I should see the organization "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |org_name, email|

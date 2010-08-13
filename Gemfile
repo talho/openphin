@@ -67,7 +67,7 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.0"
-  gem "selenium-webdriver", "0.0.3"
+  gem "selenium-webdriver", "0.0.27"
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
 end

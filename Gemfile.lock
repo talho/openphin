@@ -69,7 +69,7 @@ dependencies:
   selenium-webdriver: 
     group: 
     - :cucumber
-    version: = 0.0.3
+    version: = 0.0.27
   prawn-security: 
     group: 
     - :default
@@ -303,8 +303,10 @@ specs:
     version: 0.5.4
 - ffi: 
     version: 0.6.3
+- rubyzip: 
+    version: 0.9.4
 - selenium-webdriver: 
-    version: 0.0.3
+    version: 0.0.27
 - capybara: 
     version: 0.3.9
 - rubyforge: 
@@ -391,7 +393,7 @@ specs:
     version: 0.7.1
 - will_paginate: 
     version: 2.3.14
-hash: 2e2ec8980300226e4595001a4dc859b92469816b
+hash: a48421138ff00f3b066805cacd22c8452b6d6d2c
 sources: 
 - Rubygems: 
     uri: http://rubygems.org
