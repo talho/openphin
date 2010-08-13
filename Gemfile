@@ -40,7 +40,7 @@ group :default do
     gem "taf2-curb", "0.5.4.0"
   gem "mysql", "2.8.1"
   gem "libxml-ruby", "1.1.3"
-#  gem "slim_scrooge", "1.0.10"
+  #gem "slim_scrooge", "1.0.10"
 end
 
 group :test do
@@ -66,7 +66,7 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.0"
-  gem "selenium-webdriver", "0.0.3"
+  gem "selenium-webdriver", "0.0.27"
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
 end

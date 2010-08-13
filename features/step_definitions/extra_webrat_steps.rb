@@ -5,19 +5,28 @@ When /^I specifically go to ([^\"]*) for "([^\"]*)"$/ do |page_name, arg|
 end
 
 Then /^the "([^\"]*)" class selector should contain "([^\"]*)"$/ do |field, value|
-  response.should have_selector("*", :class => field, :content => value)
+  within(".#{field}") do
+    page.should have_content(value)
+  end
 end
 
 Then /^the "([^\"]*)" class selector should not contain "([^\"]*)"$/ do |field, value|
-  response.should_not have_selector("*", :class => field, :content => value)
+  within(".#{field}") do
+    page.should_not have_content(value)
+  end
+  #page.should_not have_css(".#{field}", :content => value)
 end
 
 Then /^I should see the link "([^\"]*)" that goes to "([^\"]*)"$/ do |value, link|
-  response.should have_selector("a", :content => value, :href => link)
+  within("a[href='#{link}'") do
+    page.should have_content(value)
+  end
 end
 
 Then /^I should not see the link "([^\"]*)"$/ do |value|
-  response.should_not have_selector("a", :content => value)
+  within("a") do
+    page.should_not have_content(value)
+  end
 end
 
 Then /^I should be specifically on (.+) for "([^\"]*)"$/ do |page_name, arg|
@@ -25,12 +34,14 @@ Then /^I should be specifically on (.+) for "([^\"]*)"$/ do |page_name, arg|
 end
 
 Then /^I should explictly see "([^\"]*)" within "([^\"]*)"$/ do |regexp, selector|
-  within(selector) do |content|
+  within(selector) do
     regexp = Regexp.new(/^#{regexp}$/)
-    content.should contain(regexp)
+    page.should contain(regexp)
   end
 end
 
 Then /^I should see "([^\"]*)" in the response header flash error$/ do |text|
-  response.request.env["rack.session"]["flash"][:error].should == text
+  within(".flash .error") do
+    page.should have_content(text)
+  end
 end
