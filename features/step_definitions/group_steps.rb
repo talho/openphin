@@ -22,7 +22,9 @@ end
 
 Then /^I should see the following roles:$/ do |table|
   table.raw.each do |row|
-    response.should have_selector(".roles li", :content => row[0])
+    within(".roles li") do
+      page.should have_content(row[0])
+    end
   end
 end
 
