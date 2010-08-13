@@ -146,6 +146,11 @@ Capybara::Driver::Selenium.class_eval do
       end
     end
 
+    def quit_session_by_name(name)
+      @sessions_by_name[name.to_sym].quit
+      @sessions_by_name.delete(name.to_sym)
+    end
+
     def driver
       unless @driver
         @driver = Selenium::WebDriver.for :firefox
@@ -179,4 +184,8 @@ end
 
 Given /^session name is "([^\"]*)"$/ do |name|
   Capybara::Driver::Selenium.switch_session_by_name(name)
+end
+
+Given /^quit session name "([^\"]*)"$/ do |name|
+  Capybara::Driver::Selenium.quit_session_by_name(name)
 end
