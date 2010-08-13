@@ -65,4 +65,7 @@ class DashboardController < ApplicationController
   def news_articles
     render :partial => 'news_articles.html'
   end
+
+  def menu
+  end
 end

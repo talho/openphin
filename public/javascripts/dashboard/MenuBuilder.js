@@ -17,6 +17,15 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
             else
                 this.tab = Ext.emptyFn;
         }
+
+        if(!Ext.isFunction(this.redirect))
+        {
+            if(Ext.isFunction(this.parent.redirect_to))
+                this.redirect = this.parent.redirect_to;
+            else
+                this.redirect = Ext.emptyFn;
+        }
+
     },
 
     buildMenu: function(menuConfig, isButton)
@@ -36,13 +45,17 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
         {
             handler = this.parent[menuConfig.handler].createDelegate(this.parent, [menuConfig]);
         }
+        else if(!Ext.isEmpty(menuConfig.redirect))
+        {
+            handler = this.redirect.createDelegate(this.parent, [menuConfig.redirect]);
+        }
         else
         {
             handler = undefined;
         }
 
         // if it's a menu, we're going to create the new menu, and then call buildMenu on the menu's children
-        var submenu = undefined
+        var submenu = undefined;
         if(!Ext.isEmpty(menuConfig.items))
         {
             submenu = new Ext.menu.Menu({});

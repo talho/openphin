@@ -27,8 +27,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             renderTo: Ext.getBody(),
             items:[{
                 layout: 'border',
+                border: false,
                 items: [this.body()],
-                tbar: this.topbar()
+                tbar: this.topbar(),
+                bbar: this.bottombar()
             }]
 	    });
     },
@@ -37,6 +39,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     {
         this.tabPanel = new Ext.TabPanel({
             id: 'tabpanel',
+            border:false,
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
             enableTabScroll: true,
@@ -50,10 +53,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             id: 'centerpanel',
             region: 'center', // a center region is ALWAYS required for border layout
             layout: 'border',
+            border:false,
             items:[this.tabPanel, this.favoritesToolbar]
-        })
-
-        return this.tabPanel;
+        });
     },
 
     topbar: function()
@@ -67,9 +69,22 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 			}]
         });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab});
+        var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
 
-        Ext.each(menuConfig, function(item, index){
+        Ext.each(Application.menuConfig, function(item, index){
+            tb.add(builder.buildMenu(item));
+        }, this);
+
+        return tb;
+    },
+
+    bottombar: function()
+    {
+        var tb = new Ext.Toolbar({});
+
+        var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
+
+        Ext.each(Application.bbarConfig, function(item, index){
             tb.add(builder.buildMenu(item));
         }, this);
 
@@ -80,10 +95,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         this.tabPanel.getComponent('dashboard_home').show();
     },
 
-    sign_out: function(){
-        window.location = "/sign_out";
+    redirect_to: function(path){
+       window.location = path;
     },
-
+    
     open_tab: function(config) {
         if(this.tabPanel.getComponent(config.id) === undefined)
         {
@@ -127,7 +142,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 }
             }
 
-            panel.tabConfig = config;
+            panel.tab_config = config;
             panel.addListener('show', function(panel){panel.doLayout();}); // This is necessary for when a panel is loading without
                                                                            // being shown. Layout is never being refired, but it is now.
         }

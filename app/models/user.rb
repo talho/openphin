@@ -78,6 +78,8 @@ class User < ActiveRecord::Base
   has_many :channels, :through => :subscriptions
   has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
 
+  has_many :favorites
+
 
   validates_presence_of     :email
   validates_presence_of     :first_name
