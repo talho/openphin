@@ -1,51 +1,10 @@
 <head>
   <Title>Ext Dashboard</Title>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter', 'ext/ext-all-debug', 'ext_extensions/MaxWidthHBox', 'ext_extensions/AjaxPanel', 'ext_extensions/DragDropTabs', 'utility' %>
-  <%= javascript_include_tag 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'dashboard/article3panel', 'dashboard/index' %>
-  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han'  %>
-  <script type="text/javascript">
-    window.rails_environment = '<%= Rails.env %>';
-
-          // do this a cleaner way later
-          menuConfig = [{name: 'HAN', items:[
-                {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'<%= hud_path %>', initializer: 'Talho.Alerts'}},
-                {name: 'Send An Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'<%= new_alert_path %>'}},
-                {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'<%= alerts_path %>'}}]},
-              {name: 'Rollcall', items:[
-                {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'<%= rollcall_path %>'}},
-                {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'<%= schools_path %>'}},
-                {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'<%= about_rollcall_path %>'}}]},
-              {name: 'FAQs', items:[
-                {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'<%= faqs_path %>'}}]},
-              {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'<%= forums_path %>'}},
-              {name: 'Tutorials', items:[
-                {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'<%= tutorials_path %>#PHIN'}},
-                {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'<%= tutorials_path %>#HAN'}},
-                {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'<%= tutorials_path %>#Documents'}},
-                {name: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'<%= tutorials_path %>#Forums'}},
-                {name: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'<%= tutorials_path %>#RollCall'}}]},
-              '->',
-              {name: 'My Dashboard', handler: 'go_to_dashboard'},
-              {name: 'Find People', tab: {id: 'advanced_search', title:'Find People', url:'<%= show_advanced_search_path %>'}},
-              {name: 'My Account', items:[
-                {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'<%= edit_user_profile_path(current_user) %>'}}, // Needs to use pathing to get the current user
-                {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'<%= new_role_request_path %>'}}]},
-              {name: 'Admin', items:[
-                  {name: 'Manage Roles', items: [
-                      {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'<%= admin_role_requests_path %>'}},
-                      {name: 'Assign Roles', tab: {id: 'assign_roles', title:'Assign Roles', url:'<%= new_role_assignment_path %>'}}]},
-                  {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'<%= admin_groups_path %>'}},
-                  {name: 'Manage Users', items: [
-                      {name: 'Add A User', tab: {id: 'add_new_user', title:'Add A User', url:'<%= new_admin_user_path %>'}},
-                      {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'<%= new_user_batch_path %>'}},
-                      {name: 'Delete A User', tab: {id: 'delete_user', title:'Delete A User', url:'<%= new_users_delete_path %>'}}]},
-                  {name: 'Manage Invitations', items:[
-                      {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'<%= new_admin_invitation_path %>'}},
-                      {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'<%= admin_invitations_path %>'}}]}]},
-              {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_path %>'}},
-              {name: 'Sign Out', handler: 'sign_out'}]
-
-  </script>
+  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug' %>
+  <%= javascript_include_tag 'ext_extensions/MaxWidthHBox', 'ext_extensions/AjaxPanel', 'ext_extensions/DragDropTabs', 'ext_extensions/RailsJsonReader'%>
+  <%= javascript_include_tag '/dashboard/menu' %>
+  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'dashboard/article3panel', 'dashboard/index' %>
+  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han'  %>      
 </head>
 <body>
   <%= yield %>

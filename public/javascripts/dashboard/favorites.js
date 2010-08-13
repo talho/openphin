@@ -15,28 +15,57 @@ var Favorites = Ext.extend(Ext.util.Observable, {
 
         Favorites.superclass.constructor.call(this, config);
 
+        this.contextMenu = new Ext.menu.Menu({
+            defaultAlign: 'tl-b?',
+            defaultOffsets: [0, 2],
+            items:[{id:'removeFavoriteItem', text:'Remove'}]
+        });
+
         this.favoritesPanel = new Ext.Panel({
             region:'north',
-            height: 55,
+            height: 44,
             id: 'favoritestoolbar',
             layout: 'hbox',
-            layoutConfig: {margin:'10'},
+            successProperty: 'success',
+            layoutConfig: {defaultMargins:'5 0 5 5'},
             listeners:{
                 scope:this,
                 'render': this.setupDropZone
             }
         });
 
-        this.store = new Ext.data.JsonStore({
-            fields: ['id', 'title', 'url', 'initializer'],
-            listeners:{
-                scope:this,
-                add: this.addFavorites,
-                load: this.addFavorites
+        var writer = new Ext.data.JsonWriter({
+            encode: false,
+            createRecord: function(record){
+                return {
+                   tab_config: record.get('tab_config') 
+                };
+            },
+            render: function(params, baseParams, data) {
+                var jdata = Ext.apply({}, baseParams);
+                jdata['favorite'] = data;
+                params.jsonData = jdata;
             }
         });
-        this.store.loadData([{id: 'han_home', title:'HAN Home', url:'/han', initializer: 'Talho.Alerts'},
-                              {id: 'h1n1_faq', title:'H1N1 FAQ', url:'/faqs'}]);
+
+        var reader = new Ext.data.ux.RailsJsonReader({
+            idProperty: 'favorite.id',
+            fields: [{name: 'id', mapping:'favorite.id'}, {name:'tab_config', mapping:'favorite.tab_config'}]
+        });
+
+        this.store = new Ext.data.Store({
+            url: '/favorites.json',
+            restful: true,
+            writer: writer,
+            reader: reader,
+            listeners:{
+                scope:this,
+                save: this.renderFavorites,
+                datachanged: this.renderFavorites
+            }
+        });
+
+        this.store.load();
     },
 
     getPanel: function(){
@@ -48,32 +77,35 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             ddGroup: 'TabPanelDD',
             parent: this,
             buttonPanel: ct,
-            canDrop: function(tabConfig)
+            canDrop: function(tab_config)
             {
-                if (this.parent.favoritesPanel.find('targetId', tabConfig.id).length > 0)
+                if (this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
                 {
                     return false;
                 }
                 else return true;
             },
-            getTabConfig: function(item){
-                return item.tabConfig;
+            gettab_config: function(item){
+                return item.tab_config;
             },
             notifyOver: function(source, evt, data)
             {
-                var tabConfig = this.getTabConfig(data.item);
-                if(this.canDrop(tabConfig))
+                var tab_config = this.gettab_config(data.item);
+                if(this.canDrop(tab_config))
                     return 'x-dd-drop-ok';
                 else
                     return 'x-dd-drop-nodrop';
             },
             notifyDrop: function(dd, e, data){
                 // Build launchable item
-                var tabConfig = this.getTabConfig(data.item);
+                var tab_config = this.gettab_config(data.item);
 
-                if(this.canDrop(tabConfig))
+                if(this.canDrop(tab_config))
                 {
-                    this.parent.store.loadData(tabConfig, true);
+                    this.lock();
+                    this.parent.favoritesPanel.getEl().mask('Saving...');
+                    this.parent.store.add(new this.parent.store.recordType({tab_config:tab_config}), true);
+                    //this.parent.store.save();
                     return true;
                 }
                 else return false;
@@ -81,28 +113,54 @@ var Favorites = Ext.extend(Ext.util.Observable, {
         });
     },
 
-    addFavorites: function(store, records, index){
-        Ext.each(records, function(record){
-            this.addButton(record.json);
+    renderFavorites: function(store){
+        this.favoritesPanel.removeAll(true);
+
+        store.each(function(record){
+            this.addButton(record);
         }, this);
-        
+
+        this.favoritesPanel.dropZone.unlock();
+        this.favoritesPanel.getEl().unmask();
         this.favoritesPanel.doLayout();
     },
 
-    addButton: function(tabConfig){
+    addButton: function(record){
         // add the button
+        var tab_config = record.get('tab_config');
+
         this.favoritesPanel.add({
             xtype:'button',
-            text: tabConfig.title,
-            tabConfig: tabConfig,
-            targetId: tabConfig.id,
-            handler: function(b, e){
-                this.fireEvent('favoriteclick', b.tabConfig);
-            },
-            scope: this
+            text: tab_config.title,
+            tab_config: tab_config,
+            targetId: tab_config.id,
+            recordId: record.id,
+            template: new Ext.Template('<span id="{4}" class="favorite_button {3}" ><span></span></span>'),
+            buttonSelector: 'span',
+            listeners:{
+                'click': function(b, e){
+                   this.fireEvent('favoriteclick', b.tab_config);
+                },
+                'render': function(b){
+                    b.getEl().on('contextmenu', function(evt, elem, options){
+                        elem = evt.getTarget('.favorite_button', 10, true);
+
+                        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [options.recordId]))
+                        
+                        this.contextMenu.show(elem);
+                    }, this, {recordId: b.recordId, preventDefault:true});                    
+                },
+               scope: this
+            }
         });
 
         this.favoritesPanel.doLayout();
-    }
+    },
 
+    removeItem: function(recordId){
+        this.favoritesPanel.dropZone.lock();
+        this.favoritesPanel.getEl().mask('Saving...');
+
+        this.store.remove(this.store.getById(recordId));
+    }
 });
