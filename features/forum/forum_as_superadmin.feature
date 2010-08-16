@@ -169,6 +169,7 @@
     Then I should see "Measuring Fulfillment"
     
     When I follow "Edit"
+    And I fill in "Description" with "Desc for my topic"
     And I select "Saving Money" from "Forum to be moved to"
     And I press "Update"
     Then I should see "Topic was successfully updated"
@@ -225,6 +226,7 @@
 
     When I go to the Topics page for Forum "Grant Capturing"
     And I follow "edit_topic_1"
+    And I fill in "Description" with "Desc for my topic"
     And I check "Hide"
     And I press "Update"
     Then I should see "Measuring Fulfillment"
