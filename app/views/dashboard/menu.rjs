@@ -4,7 +4,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
 
   menuConfig = "Application.menuConfig = [{name: 'HAN', items:[
                 {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'#{ hud_path }', initializer: 'Talho.Alerts'}},
-                {name: 'Send An Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'#{ new_alert_path }'}},
+                {name: 'Send an Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'#{ new_alert_path }'}},
                 {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'#{ alerts_path }'}}]},"
 
   if File.exists?(File.join(Rails.root,"vendor","plugins","rollcall"))
@@ -43,9 +43,9 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                           {name: 'Assign Roles', tab: {id: 'assign_roles', title:'Assign Roles', url:'#{ new_role_assignment_path }'}}]},
                       {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }'}},
                       {name: 'Manage Users', items: [
-                          {name: 'Add A User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }'}},
+                          {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }'}},
                           {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'#{ new_user_batch_path }'}},
-                          {name: 'Delete A User', tab: {id: 'delete_user', title:'Delete A User', url:'#{ new_users_delete_path }'}}]},
+                          {name: 'Delete a User', tab: {id: 'delete_user', title:'Delete A User', url:'#{ new_users_delete_path }'}}]},
                       {name: 'Manage Invitations', items:[
                           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ new_admin_invitation_path }'}},
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"

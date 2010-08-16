@@ -61,6 +61,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     topbar: function()
     {
         var tb = new Ext.Toolbar({
+            id: 'top_toolbar',
             items: [{
 				id: 'txphinlogo',
 				html: '<img src="/stylesheets/images/app_header_logo.png"/>',
@@ -80,7 +81,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
     bottombar: function()
     {
-        var tb = new Ext.Toolbar({});
+        var tb = new Ext.Toolbar({id: 'bottom_toolbar'});
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
 

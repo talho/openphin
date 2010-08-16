@@ -28,7 +28,7 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
 
     },
 
-    buildMenu: function(menuConfig, isButton)
+    buildMenu: function(menuConfig)
     {
         // check and see if a string was sent in. These will be things like '->', ' ' and '-' for the fill, spacer, and separator shortcuts
         if(Ext.isString(menuConfig))
@@ -58,7 +58,7 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
         var submenu = undefined;
         if(!Ext.isEmpty(menuConfig.items))
         {
-            submenu = new Ext.menu.Menu({});
+            submenu = new Ext.menu.Menu({ ignoreParentClicks:true });
             Ext.each(menuConfig.items, function(item, index){
                 submenu.add(this.buildMenu(item));
             }, this);
