@@ -88,12 +88,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_groups, :controller => "admin/groups"
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
-  map.resource :search, :member => {:show_advanced => [:get, :post]}
-  map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
+  map.resource :search, :member => {:show_advanced => [:get, :put]}
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han", :controller => "dashboard", :action => "hud"
+  map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
+  map.dashboard "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
+  map.dashboard "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
+  map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resources :users_delete, :controller => "admin/users_delete"
