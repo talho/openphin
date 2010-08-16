@@ -41,7 +41,7 @@
         <tr id="topic_name_<%= idx+1 %>" >
           <td scope="row">
             <% for_moderators_of topic do -%>
-              <%= link_to image_tag("pencil.png", :title => "Edit", :alt => "edit_topic_#{idx+1}"), edit_forum_topic_path(@forum,topic) %>
+              <%= link_to image_tag("pencil.png", :alt => "edit_topic_#{idx+1}"), edit_forum_topic_path(@forum,topic), { :title => "Edit" } %>
             <% end -%>
             <% for_super_admin do -%>
                 <%= link_to image_tag("cross-circle.png", :title => "Remove"), forum_topic_path(@forum,topic), :confirm => 'Are you sure?', :method => :delete %>
