@@ -23,7 +23,7 @@ Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
   u.update_password(password,password)
   u.save
 end
-Given 'the following users exist:' do |table|
+Given /^the following users exist:$/ do |table|
   table.raw.each do |row|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
   end
