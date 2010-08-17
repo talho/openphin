@@ -12,19 +12,15 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
 end
 
 Then /^I should see the add group form$/ do
-  response.should have_selector("#audience") do |form|
-	  form.should have_selector("#group_name")
-	  form.should have_selector(".jurisdictions")
-    form.should have_selector(".roles")
-    form.should have_selector(".people")
-  end
+  page.should have_css("#audience #group_name")
+  page.should have_css("#audience .jurisdictions")
+  page.should have_css("#audience .roles")
+  page.should have_css("#audience .people")
 end
 
 Then /^I should see the following roles:$/ do |table|
   table.raw.each do |row|
-    within(".roles li") do
-      page.should have_content(row[0])
-    end
+    page.should have_css(".roles li", :content => row[0])
   end
 end
 
@@ -32,9 +28,9 @@ Then /^I should see the following group summary:$/ do |table|
   table.rows_hash.each do |key, value|
     value.split(',').each do |item|
       if key =~ /(name|group_scope|owner_jurisdiction)/i
-        response.should have_selector(".#{key}", :content => item)
+        page.should have_css(".#{key}", :content => item)
       else
-        response.should have_selector(".#{key} *", :content => item)
+        page.should have_css(".#{key} *", :content => item)
       end
     end  
   end
@@ -67,14 +63,14 @@ end
 Then /^I should see that the group includes\:$/ do |table|
   table.raw.each do |row|
     row[0].split(",").each do |name|
-      response.should have_selector(".group_rcpt", :content => name.strip)
+      page.should have_css(".group_rcpt", :content => name.strip)
     end
   end
 end
 
 Then /^I should see the user "(.*)" immediately before "(.*)"$/ do |user1, user2|
-   response.should have_selector("li.group_rcpt:nth-child(1)", :content => user1)
-   response.should have_selector("li.group_rcpt:nth-child(2)", :content => user2)
+   page.should have_css("li.group_rcpt:nth-child(1)", :content => user1)
+   page.should have_css("li.group_rcpt:nth-child(2)", :content => user2)
 end
 
 Then /^the "([^\"]*)" group should have the following members:$/ do |name, table|
