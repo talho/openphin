@@ -146,17 +146,18 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name  | User list Group       |
-      | group_users | Jane Smith            |
+      | group_users | Jane Smith      |
     And I follow "Jane Smith"
     Then I should see the profile page for "jane.smith@example.com"
 
   Scenario: deleting a user group
     When I go to the groups page
     Then I should see "Dallas County Health Officer Group"
+    And  I will confirm on next step
     When I follow "Destroy"
     Then I should see "Successfully deleted the group Dallas County Health Officer Group."
     When I go to the groups page
-    Then I should not see "Dallas County Health Officer Group"
+    Then I should not see "Dallas County Health Officer Group" within "#groups"
 
   Scenario: updating changed scope
     When I load the edit group page for "Dallas County Health Officer Group"
