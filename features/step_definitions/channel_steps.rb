@@ -3,9 +3,12 @@ Given 'a share named "$name"' do |name|
 end
 
 Given 'I created the share "$name"' do |name|
-  When 'I go to the document viewing panel'
+  When 'I follow "Documents"'
+  And 'I wait for the "#new_share_folder" element to load'
+  And 'I select "#new_share_folder" from the documents toolbar'
   And %Q|I fill in "Share Name" with "#{name}"|
   And 'I press "Create Share"'
+  sleep 0.5
 end
 
 Given 'I have been added to the share "$name"' do |name|
