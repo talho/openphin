@@ -61,7 +61,17 @@ class ApplicationController < ActionController::Base
     def login_required
       store_location
       unless signed_in?
-        redirect_to sign_in_path
+        respond_to do |format|
+          format.html{
+            redirect_to sign_in_path
+            false
+          }
+          format.json{
+            headers["Access-Control-Allow-Origin"] = "*"
+            render :json => ['SESSION' => 'EXPIRED']
+            false
+          }
+        end
         false
       end
     end
