@@ -62,15 +62,11 @@ class ApplicationController < ActionController::Base
       store_location
       unless signed_in?
         respond_to do |format|
-          format.html{
-            redirect_to sign_in_path
-            false
-          }
-          format.json{
+          format.html{ redirect_to sign_in_path }
+          format.json do
             headers["Access-Control-Allow-Origin"] = "*"
             render :json => ['SESSION' => 'EXPIRED']
-            false
-          }
+          end
         end
         false
       end
