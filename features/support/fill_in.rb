@@ -180,18 +180,26 @@ module FeatureHelpers
 
     def fill_in_group_field(label, value)
       case label
-        when "Users"
-        value.split(',').each do |name|
+      when "Users"
+        #value.split(',').each do |name|
+        #  user = Given "a user named #{name.strip}"
+        #  select user.id.to_s, :from => 'group_user_ids'
+        #end
+        value.split(',').each { |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'group_user_ids', :with => user.id.to_s
-        end
-      when 'Name', 'Scope'
+          find(:css, ".maininput").node.click
+          find(:css, ".maininput").node.send_keys(user.email)
+          find(:css, ".maininput").node.send_keys(:return)
+        }
+      when 'Name'
         fill_in "group_#{label.downcase}", :with => value
+      when'Scope'
+        select value, :from => "group_#{label.downcase}"
       when /^Jurisdiction[s]$/, /Role[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
       when 'Owner Jurisdiction'
         select value, :from => label
-       else
+      else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end
     end
