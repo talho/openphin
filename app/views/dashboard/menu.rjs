@@ -2,19 +2,24 @@
 page << "Application = {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
 
-  menuConfig = "Application.menuConfig = [{name: 'HAN', items:[
-                {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'#{ hud_path }', initializer: 'Talho.Alerts'}},
+  menu_config = "Application.menuConfig = [{name: 'HAN', items:[
+                {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'#{ hud_path }', initializer: 'Talho.Alerts'}}"
+  if current_user.alerter?
+    menu_config +=",
                 {name: 'Send an Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'#{ new_alert_path }'}},
-                {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'#{ alerts_path }'}}]},"
+                {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'#{ alerts_path }'}}"
+  end
+
+  menu_config += "]},"
 
   if File.exists?(File.join(Rails.root,"vendor","plugins","rollcall"))
-    menuConfig += "{name: 'Rollcall', items:[
+    menu_config += "{name: 'Rollcall', items:[
                     {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'#{ rollcall_path }'}},
                     {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{ schools_path }'}},
                     {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'#{ about_rollcall_path }'}}]},"
   end
                                                             
-  menuConfig += "{name: 'FAQs', items:[
+  menu_config += "{name: 'FAQs', items:[
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},
                   {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }'}},
                   {name: 'Tutorials', items:[
@@ -26,18 +31,18 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                   '->',"
 
   if signed_in?
-    menuConfig +="{name: 'My Dashboard', handler: 'go_to_dashboard'},"
+    menu_config +="{name: 'My Dashboard', handler: 'go_to_dashboard'},"
 
     if current_user.has_non_public_role?
-      menuConfig += "{name: 'Find People', tab: {id: 'advanced_search', title:'Find People', url:'#{ show_advanced_search_path }'}},"
+      menu_config += "{name: 'Find People', tab: {id: 'advanced_search', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.AdvancedSearch'}},"
     end
 
-    menuConfig += "{name: 'My Account', items:[
+    menu_config += "{name: 'My Account', items:[
                     {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'#{ edit_user_profile_path(current_user) }'}},
                     {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'#{ new_role_request_path }'}}]},"
 
     if current_user.is_admin?
-      menuConfig += "{name: 'Admin', items:[
+      menu_config += "{name: 'Admin', items:[
                       {name: 'Manage Roles', items: [
                           {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'#{ admin_role_requests_path }'}},
                           {name: 'Assign Roles', tab: {id: 'assign_roles', title:'Assign Roles', url:'#{ new_role_assignment_path }'}}]},
@@ -51,23 +56,23 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"
     end
 
-    menuConfig += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
+    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
                    {name: 'Sign Out', redirect: '#{sign_out_path}'}"
   else
-    menuConfig += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
+    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
                    {name  'Sign Up', redirect: '#{new_user_path}'},
                    {name: 'Sign In', redirect: '#{sign_in_path}'}"
   end
 
-  menuConfig += "];"
+  menu_config += "];"
 
-  page << menuConfig
+  page << menu_config
 
-  bbarConfig = "Application.bbarConfig = [{name: 'Calendar'},
+  bbar_config = "Application.bbarConfig = [{name: 'Calendar'},
                                          {name: 'Documents'},
                                          {name: 'Chat'},
                                          {name: 'Links'},
                                          '->',
                                          'Need help? Email <a href=\"mailto:phinadmin@dshs.state.tx.us\">phinadmin@dshs.state.tx.us</a>'];"
 
-  page << bbarConfig
+  page << bbar_config

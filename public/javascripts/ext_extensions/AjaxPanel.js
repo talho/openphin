@@ -10,25 +10,6 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 {
     initComponent: function()
     {
-        // We don't really care what they sent in, we're going to redefine the items and layout and a bunch of other config options
-        this.ajaxPanel = new Ext.Panel({
-            maxWidth: 1024,
-            bodyCssClass: 'content',
-            listeners:{
-                'afterrender': this.loadAJAX,
-                scope: this}
-        });
-
-        Ext.apply(this, {
-            layout: 'mwhbox',
-            layoutConfig:{
-            },
-            items: [
-                {flex:1},
-                this.ajaxPanel,
-                {flex:1}
-            ]});
-
         Ext.AjaxPanel.superclass.initComponent.call(this);
 
         this.addEvents(
@@ -40,23 +21,14 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                 'ajaxloadcomplete'
                 );
 
-        this.addListener('show', function(){this.doLayout();});
+        this.addListener('afterrender', this.loadAJAX, this);
         // do any special initialization events here
         this.url = this.url || '';
     },
 
-    onRender: function(ct, position)
-    {
-        Ext.AjaxPanel.superclass.onRender.call(this, ct, position);
-        if (this.getWidth() > 1024)
-        {
-            this.setWidth(1024);
-        }
-    },
-
     loadAJAX: function()
     {
-        var updater = this.ajaxPanel.getUpdater();
+        var updater = this.getUpdater();
 
         if (this.renderer != null)
         {
@@ -80,8 +52,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
      */
     handleAJAXLoad: function(el, success, response, options)
     {
-        this.doLayout();
-        // this.findParentByType('panel').doLayout();
+        //this.doLayout();
 
         var currentDomain = window.location.host;
         var domainRegex = new RegExp(currentDomain);
@@ -113,9 +84,32 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         var forms = el.select('form');
         forms.each(function(form)
         {
+            var formPanel = new Ext.ux.HtmlFormPanel({
+                htmlForm: form,
+                border: false,
+                keys:{
+                    key: Ext.EventObject.ENTER,
+                    fn: function(){ formPanel.getForm().submit();}
+                }
+            });
 
+            formPanel.getForm().on({
+                'actioncomplete': function(form, action){
+                    this.update(action.result, false, function(){this.handleAJAXLoad(this.getEl());}.createDelegate(this));
+                },
+                'actionfailed': function(form, action){
+                    (new Ext.Window({title: 'Error', html: action.response.responseText})).show();
+                    this.loadAJAX();
+                },
+                scope:this
+            });
+
+            var formHolder = form.replaceWith({tag: 'div', cls: 'extFormHolder'});
+
+            formPanel.render(formHolder);
         }, this);
 
+        this.findParentByType('panel').doLayout();
         this.fireEvent('ajaxloadcomplete', this);
     }
 });
