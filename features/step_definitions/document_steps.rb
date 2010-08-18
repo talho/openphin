@@ -89,3 +89,24 @@ Then 'I should see "$count" folders named "$folder"' do |count, name|
     Then(%Q|I should see "#{name}#{num.to_s}"|)
   end
 end
+
+When /^I select "([^\"]*)" from the documents toolbar$/ do |value|
+  elem = page.find("#{value}")
+  elem.click
+end
+
+When /^I wait and fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
+  
+end
+
+When /^I wait for the "([^\"]*)" element to load$/ do |value|
+  wait_until{page.find("#{value}").nil? == false}
+end
+
+When /^I wait for the "([^\"]*)" element to finish$/ do |value|
+  wait_until{page.find("#{value}", :visible => true).nil? == true}
+end
+
+When /^I am not ignoring hidden elements$/ do
+  Capybara.ignore_hidden_elements = true
+end

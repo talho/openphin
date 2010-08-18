@@ -96,8 +96,12 @@ module FeatureHelpers
       case label
       when "People"
         value.split(',').each do |name|
-          user = Given "a user named #{name.strip}"
-          fill_in 'audience_user_ids', :with => user.id.to_s
+          div_elem = page.find(".maininput")
+          div_elem.set(name)
+          div_elem.click
+          wait_until{page.find("li.outer").nil? == false}
+          sleep 1 #even with wait_until, tests sometime fail because element is not yet attached to the DOM
+          page.find("li.outer").click
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
