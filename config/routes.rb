@@ -89,7 +89,6 @@ ActionController::Routing::Routes.draw do |map|
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
   map.resource :search, :member => {:show_advanced => [:get, :post]}
-  map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"

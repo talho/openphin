@@ -48,7 +48,7 @@ Feature: Application layout should have communications, portal & application too
   Scenario: Non-admins should not see the Admin link
     Given I am logged in as "martin@example.com"
     When I go to the dashboard page
-    Then I should not see a Admin link
+    Then I should not see a "Admin" link
 
   Scenario: Add a User should show the admin toolbar
     Given I am logged in as "joe.smith@example.com"

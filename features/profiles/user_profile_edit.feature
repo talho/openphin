@@ -54,10 +54,16 @@ I should be able to edit my profile
     Then I should see "That resource does not exist or you do not have access to it."
     
   Scenario: editing user account information for another user as another jurisdictional admin
-      Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
-      And I am logged in as "jane.smith@example.com"
-      When I edit the profile for "john.smith@example.com"
-      Then I should see "You are not authorized to edit this profile."
+    Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
+    And I am logged in as "jane.smith@example.com"
+    And I am on the dashboard page
+    And I follow "People"
+    And I fill in "Search" with "John"
+    And I press "Search"
+    Then I see the following users in the search results
+      | John Smith |
+    When I follow "John Smith"
+    Then I should see "This user's profile is not public"
 
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"
@@ -142,10 +148,11 @@ I should be able to edit my profile
       When I specifically go to the user edit profile page for "jane.smith@example.com"
       Then I should see "Organizations"
       And I should see "DSHS"
-      When I follow "Remove Organization Membership" within ".organizations"
-      Then I should be specifically on the user profile page for "jane.smith@example.com"
+      When I will confirm on next step
+      And I follow "Remove Organization Membership" within ".organizations"
+      Then I should be specifically on the user edit profile page for "jane.smith@example.com"
       And I should see "Organizations"
-      And I should not see "DSHS"
+      And I should not see "DSHS" within ".organizations"
       And "jane.smith@example.com" should receive the email:
         | subject       | You have been removed from the organization DSHS |
         | body contains | You have been removed from the organization DSHS |
@@ -158,10 +165,11 @@ I should be able to edit my profile
     When I specifically go to the user edit profile page for "jane.smith@example.com"
     Then I should see "Organizations"
     And I should see "DSHS"
-    When I follow "Remove Organization Membership" within ".organizations"
-    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    When I will confirm on next step
+    And I follow "Remove Organization Membership" within ".organizations"
+    Then I should be specifically on the user edit profile page for "jane.smith@example.com"
     And I should see "Organizations"
-    And I should not see "DSHS"
+    And I should not see "DSHS" within ".organizations"
     And "jane.smith@example.com" should not receive an email
 
   Scenario: Removing a user from an organization as another user
@@ -172,11 +180,11 @@ I should be able to edit my profile
     When I specifically go to the user edit profile page for "jane.smith@example.com"
     Then I should see "Organizations"
     And I should see "DSHS"
-    When I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
-    Then I should see "You do not have permission to carry out this action."
-    And I should be specifically on the user profile page for "jane.smith@example.com"
+    When I will confirm on next step
+    And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
+    Then I should be specifically on the user edit profile page for "jane.smith@example.com"
     And I should see "Organizations"
-    And I should see "DSHS"
+    And I should see "DSHS" within ".organizations"
     And "jane.smith@example.com" should not receive an email
     And "bob.smith@example.com" should not receive an email
 
@@ -208,7 +216,8 @@ I should be able to edit my profile
     Then I should not see any errors
     And I should see "Profile information saved."
 
-    Given session name is "default"
+    Given I am logged in as "john.smith@example.com"
+    And session name is "default"
     And I press "Save"
     Then I should see the profile edit form
     And I should see "Another user has recently updated this profile, please try again."
@@ -226,3 +235,4 @@ I should be able to edit my profile
     Then I should see the profile page
     And I should not see any errors
     And I should see "Profile information saved."
+    And quit session name "admin session"

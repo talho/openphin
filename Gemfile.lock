@@ -69,7 +69,11 @@ dependencies:
   selenium-webdriver: 
     group: 
     - :cucumber
+<<<<<<< HEAD
     version: = 0.0.3
+=======
+    version: = 0.0.27
+>>>>>>> capybara
   prawn-security: 
     group: 
     - :default
@@ -303,8 +307,10 @@ specs:
     version: 0.5.4
 - ffi: 
     version: 0.6.3
+- rubyzip: 
+    version: 0.9.4
 - selenium-webdriver: 
-    version: 0.0.3
+    version: 0.0.27
 - capybara: 
     version: 0.3.9
 - rubyforge: 
