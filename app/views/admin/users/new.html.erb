@@ -4,7 +4,7 @@
 <%= error_messages_for :admin, :header_message => "Please Try Again!", :message => "We had some problems starting the game:" %>
   <%= render 'new_user_form', :user => @user, :f => f %>
   <p>
-    <%= f.submit "Save" %> or <%= link_to 'Cancel', dashboard_path %>
+    <%= f.submit "Save" %> or <%= link_to 'Cancel', root_path %>
   </p>
 <% end %>
 

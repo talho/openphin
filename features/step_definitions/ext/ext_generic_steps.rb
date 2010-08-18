@@ -2,7 +2,6 @@
 When /^I click ([a-zA-Z0-9\-]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
   with_scope(selector) do 
     #wait_until {!page.find('.' + class_type, :text => button).nil?}
-    debugger
     page.find('.' + class_type, :text => button).click
   end
 end
@@ -79,5 +78,5 @@ Then /^the "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_na
 end
 
 When /^I force open the tab "([^\"]*)" for "([^\"]*)"$/ do |tab_name, tab_url|
-  eval_script("window.Application.phin.open_tab({title:'#{tab_name}', url:'#{tab_url}'})")
+  page.execute_script("window.Application.phin.open_tab({title:'#{tab_name}', url:'#{tab_url}'})")
 end

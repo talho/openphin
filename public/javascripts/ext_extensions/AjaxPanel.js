@@ -53,6 +53,12 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
      */
     handleAJAXLoad: function(el, success, response, options)
     {
+        if(!success)
+        {
+            (new Ext.Window({title: 'Error', html: response.responseText})).show();
+            return;
+        }
+
         //this.doLayout();
         if(this.history[this.history.length-1] != options.url)
             this.history.push(options.url);
@@ -98,7 +104,8 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
             formPanel.getForm().on({
                 'actioncomplete': function(form, action){
-                    this.update(action.result, false, function(){this.handleAJAXLoad(this.getEl());}.createDelegate(this));
+                    this.update(action.result, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
+                    this.findParentByType('panel').doLayout();
                 },
                 'actionfailed': function(form, action){
                     (new Ext.Window({title: 'Error', html: action.response.responseText})).show();

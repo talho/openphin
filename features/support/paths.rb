@@ -11,7 +11,7 @@ module NavigationHelpers
       when /the homepage/i
         root_path
       when /the dashboard page/i
-        dashboard_path
+        root_path
       when /the ext dashboard page/i
         ext_path
       when /the sign up page/i

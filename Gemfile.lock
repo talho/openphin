@@ -69,11 +69,7 @@ dependencies:
   selenium-webdriver: 
     group: 
     - :cucumber
-<<<<<<< HEAD
-    version: = 0.0.3
-=======
     version: = 0.0.27
->>>>>>> capybara
   prawn-security: 
     group: 
     - :default
@@ -276,7 +272,7 @@ specs:
 - net-ssh: 
     version: 2.0.23
 - net-scp: 
-    version: 1.0.2
+    version: 1.0.3
 - net-sftp: 
     version: 2.0.4
 - net-ssh-gateway: 
@@ -397,7 +393,7 @@ specs:
     version: 0.7.1
 - will_paginate: 
     version: 2.3.14
-hash: 2e2ec8980300226e4595001a4dc859b92469816b
+hash: a48421138ff00f3b066805cacd22c8452b6d6d2c
 sources: 
 - Rubygems: 
     uri: http://rubygems.org

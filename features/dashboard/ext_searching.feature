@@ -65,7 +65,7 @@ Feature: Searching for users
 
   Scenario: Searching for a user as a user with only a public role
     Given I am logged in as "john.smith@example.com"
-    When I go to the dashboard page
+    When I go to the ext dashboard page
     Then I should not see "Find People"
     When I force open the tab "Search" for "/search/show_advanced?name=Smith"
     Then I should be on the ext dashboard page

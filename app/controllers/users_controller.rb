@@ -163,7 +163,7 @@ class UsersController < ApplicationController
     else
       flash[:error]="Invalid URL."
     end
-    redirect_back_or dashboard_path
+    redirect_back_or root_path
   end
   
 end

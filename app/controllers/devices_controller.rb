@@ -10,14 +10,14 @@ class DevicesController < ApplicationController
       begin
         redirect_to :back
       rescue
-        redirect_to dashboard_path
+        redirect_to root_path
       end
     else
       flash[:error] = "This resource does not exist or is not available."
       begin
         redirect_to :back
       rescue
-        redirect_to dashboard_path
+        redirect_to root_path
       end
 
     end

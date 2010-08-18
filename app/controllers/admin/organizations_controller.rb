@@ -12,7 +12,7 @@ class Admin::OrganizationsController < ApplicationController
       else
         flash[:error] = "The organization does not exist. Has it been previously denied?"
       end
-      redirect_to dashboard_path
+      redirect_to root_path
     end
   end
   
@@ -26,7 +26,7 @@ class Admin::OrganizationsController < ApplicationController
       else
         flash[:error] = "The organization does not exist. Has it been previously denied?"
       end
-      redirect_to dashboard_path
+      redirect_to root_path
     end
   end
 

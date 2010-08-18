@@ -20,9 +20,13 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   end
                                                             
   menu_config += "{name: 'FAQs', items:[
-                    {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},
-                  {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }'}},
-                  {name: 'Tutorials', items:[
+                    {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
+
+if current_user.has_non_public_role?
+    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }'}},"
+  end
+
+  menu_config += "{name: 'Tutorials', items:[
                     {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'#{ tutorials_path }#PHIN'}},
                     {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'#{ tutorials_path }#HAN'}},
                     {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'#{ tutorials_path }#Documents'}},

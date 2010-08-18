@@ -78,7 +78,7 @@ class Admin::RoleRequestsController < ApplicationController
         end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to dashboard_path
+        redirect_to root_path
       end
     end
   end
@@ -99,7 +99,7 @@ class Admin::RoleRequestsController < ApplicationController
         end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to dashboard_path
+        redirect_to root_path
       end
     end
   end
