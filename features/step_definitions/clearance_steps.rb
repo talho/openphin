@@ -1,3 +1,5 @@
+require 'dispatcher'
+
 # General
 
 Then /^I should see error messages$/ do
@@ -129,47 +131,61 @@ Then /^my session should stay active$/ do
   session.should have_content("Sign Out")  
 end
 
-module ActionController
-  module Integration
-    module Runner
-      def switch_session_by_name(name)
-        if @sessions_by_name.nil?
-          # Stash the original session for later
-          @sessions_by_name = {
-            :default => {
-              :session => @integration_session,
-              :webrat_session => @integration_session.delegate.webrat_session,
-              :webrat_adapter => @integration_session.delegate.webrat_session.adapter
-            }
-          }
-        end
-
-        if @sessions_by_name[name.to_sym].nil?
-          # if the session doesn't exist, create a new session environment
-          @sessions_by_name[name.to_sym] = {
-            :session => open_session,
-            :webrat_session => Webrat::Session.new,
-            :webrat_adapter => Webrat.adapter_class.new(@integration_session.delegate)
-          }
-        end
-
-        # Restore existing session environment
-        @integration_session = @sessions_by_name[name.to_sym][:session]
-        @integration_session.delegate.webrat_session = @sessions_by_name[name.to_sym][:webrat_session]
-        @integration_session.delegate.webrat_session.adapter = @sessions_by_name[name.to_sym][:webrat_adapter]
-
-        # Fix Cucumber::Rails::World object when in step "I want to debug" to report the correct current_user
-        @integration_session.delegate.instance_eval do
-          def current_user
-            return nil  unless user = ::User.find_by_id(self.webrat_session.adapter.integration_session.session[:user_id])
-            return user if user.email_confirmed?
-          end
-        end        
+Capybara::Driver::Selenium.class_eval do
+  class << self
+    def switch_session_by_name(name)
+      if @sessions_by_name.nil?
+        @sessions_by_name = {:default => @driver}
       end
+
+      if @sessions_by_name[name.to_sym].nil?
+        @driver = nil
+        @sessions_by_name[name.to_sym] = driver
+      else
+        @driver = @sessions_by_name[name.to_sym]
+      end
+    end
+
+    def quit_session_by_name(name)
+      @sessions_by_name[name.to_sym].quit
+      @sessions_by_name.delete(name.to_sym)
+    end
+
+    def driver
+      unless @driver
+        @driver = Selenium::WebDriver.for :firefox
+        at_exit do
+          # Will receive an error if the default session closes before the other sessions
+          if @sessions_by_name
+            if @driver == @sessions_by_name[:default]
+              @sessions_by_name.each do |key, thedriver|
+                sleep 1
+                unless key == :default
+                  thedriver.quit
+                end
+              end
+              @sessions_by_name[:default].quit
+              @sessions_by_name = {}
+            else
+              if index = @sessions_by_name.index(@driver)
+                @sessions_by_name.delete(index)
+                @driver.quit
+              end
+            end
+          else
+            @driver.quit
+          end
+        end
+      end
+      @driver
     end
   end
 end
 
 Given /^session name is "([^\"]*)"$/ do |name|
-  switch_session_by_name(name)
+  Capybara::Driver::Selenium.switch_session_by_name(name)
+end
+
+Given /^quit session name "([^\"]*)"$/ do |name|
+  Capybara::Driver::Selenium.quit_session_by_name(name)
 end

@@ -174,6 +174,7 @@ end
 
 Factory.define :topic do |m|
   m.sequence(:name) {|t| "Topic ##{t}"}
+  m.sequence(:content) {|t| "Topic desc ##{t}"}
   m.association :poster, :factory => :user
   m.association :forum
 end

@@ -29,7 +29,9 @@ I should be able to create topics to forums and place comments to these topics
       | Users | jane.smith@example.com  |
     When I go to the Forums page
     And I follow "Funding methodology"
+    And I follow "New Topic"
     And I fill in "Name" with "Locating Grants in todays economy"
+    And I fill in "Description" with "Desc for my topic"
     And I press "Add Topic"
 
     Then I should be redirected to the Topics page for Forum "Funding methodology"
@@ -112,6 +114,7 @@ I should be able to create topics to forums and place comments to these topics
     When I go to the Forums page
     And I follow "Grant Capturing"
     And I follow "Edit"
+    And I follow "Edit Comment"
     And I fill in "Comment" with "Sometimes."
     And I check "Update this"
 
@@ -120,6 +123,7 @@ I should be able to create topics to forums and place comments to these topics
     When I go to the Forums page
     And I follow "Grant Capturing"
     And I follow "Edit"
+    And I follow "Edit Comment"
     And I fill in "Comment" with "Not really."
     And I check "Update this"
     And I press "Update Comment"
@@ -129,7 +133,8 @@ I should be able to create topics to forums and place comments to these topics
     And I press "Update Comment"
     Then I should see "This topic was recently changed by another user. Please try again." within ".error"
     And I should be redirected to the "Measuring Fulfillment" edit topic page for Forum "Grant Capturing"
-    When I fill in "Comment" with "Sometimes."
+    When I follow "Edit Comment"
+    And I fill in "Comment" with "Sometimes."
     And I check "Update this"
     And I press "Update Comment"
     Then I should see "Comments were successfully updated."

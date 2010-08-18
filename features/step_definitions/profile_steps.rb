@@ -15,22 +15,22 @@ When /^I edit the profile for "([^\"]*)"/ do |email|
 end
 
 Then 'I can see the profile' do
-  response.should have_selector('.user_profile')
+  page.should have_css('.user_profile')
 end
 
 Then /^I can not see the profile$/ do
-  response.should_not have_selector('.user_profile')
+  page.should_not have_css('.user_profile')
 end
 
 Then /^I should see the profile edit form$/ do
-  response.should have_selector(".profile_edit") do |form|
-	  form.should have_selector(".email_address")
-	  form.should have_selector(".bio")
+  within(".profile_edit") do
+	  page.should have_css(".email_address")
+	  page.should have_css(".bio")
   end
 end
 
 Then /^I should see the profile page$/ do
-	response.should have_selector(".user_profile")
+	page.should have_css(".user_profile")
 end
 
 Then /^I should see the profile page for "([^\"]*)"$/ do |email|
@@ -39,17 +39,21 @@ Then /^I should see the profile page for "([^\"]*)"$/ do |email|
 end
 
 Then /^I should not see any errors$/ do
-  response.template.assigns['user'].errors.should be_empty
+  page.should_not have_css(".flash .error")
 end
 
 Then /^I can see the following roles:$/ do |table|
   table.rows_hash.each do |role, jurisdiction|
-    response.should have_selector(".roles *", :content => "#{role} in #{jurisdiction}")
+    within(".roles *") do
+      page.should have_content("#{role} in #{jurisdiction}")
+    end
   end
 end
 
 Then /^I should not see the following roles:$/ do |table|
   table.rows_hash.each do |role, jurisdiction|
-    response.should_not have_selector(".roles *", :content => "#{role} in #{jurisdiction}")
+    within(".roles *") do
+      page.should have_content("#{role} in #{jurisdiction}")
+    end
   end
 end

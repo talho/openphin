@@ -67,6 +67,7 @@ When /^(?:|I )fill in the following(?: within "([^"]*)")?:$/ do |selector, field
   end
 end
 
+<<<<<<< HEAD
 When /^(?:|I )select "([^"]*)" from "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
   with_scope(selector) do
     select(value, :from => field)
@@ -259,6 +260,6 @@ When /^I load (.*) for "([^\"]*)"$/ do |page, title|
   visit path_to(page, title)
 end
 
-When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
-  attach_file(field, path, mime)
+When /^I attach the file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
+  attach_file(field, path)
 end

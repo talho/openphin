@@ -48,9 +48,9 @@ module FeatureHelpers
         when "Are you a public health professional?"
           id = "health_professional"
           if value == "<unchecked>"
-            page.uncheck(id)
+            page.uncheck(id) if find(:css, "##{id}").node.selected?
           else
-            page.check(id)
+            page.check(id) if !find(:css, "##{id}").node.selected?
           end
         when "Home Jurisdiction"
           value = "" if value.nil?
@@ -95,8 +95,12 @@ module FeatureHelpers
       case label
       when "People"
         value.split(',').each do |name|
-          user = Given "a user named #{name.strip}"
-          fill_in 'audience_user_ids', :with => user.id.to_s
+          div_elem = page.find(".maininput")
+          div_elem.set(name)
+          div_elem.click
+          wait_until{page.find("li.outer").nil? == false}
+          sleep 1 #even with wait_until, tests sometime fail because element is not yet attached to the DOM
+          page.find("li.outer").click
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
@@ -180,18 +184,27 @@ module FeatureHelpers
 
     def fill_in_group_field(label, value)
       case label
-        when "Users"
-        value.split(',').each do |name|
+      when "Users"
+        #value.split(',').each do |name|
+        #  user = Given "a user named #{name.strip}"
+        #  select user.id.to_s, :from => 'group_user_ids'
+        #end
+        value.split(',').each { |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'group_user_ids', :with => user.id.to_s
-        end
-      when 'Name', 'Scope'
+          find(:css, ".maininput").node.click
+          sleep 1
+          find(:css, ".maininput").node.send_keys(user.email, :enter)
+          sleep 1
+        }
+      when 'Name'
         fill_in "group_#{label.downcase}", :with => value
+      when'Scope'
+        select value, :from => "group_#{label.downcase}"
       when /^Jurisdiction[s]$/, /Role[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
       when 'Owner Jurisdiction'
         select value, :from => label
-       else
+      else
         raise "Unexpected: #{label} with value #{value}. You may need to update this step."
       end
     end

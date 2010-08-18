@@ -51,12 +51,12 @@ Then /^I should not see a link to (.*)$/ do |page_name|
   response.should_not have_selector('a', :content => page_name)
 end
 
-Then /^I should see a (.*) link$/ do |class_name|
-  response.should have_selector('a', :class => ".#{class_name}")
+Then /^I should see a "([^\"]*)" link$/ do |class_name|
+  page.should have_link(class_name)
 end
 
-Then /^I should not see a (.*) link$/ do |class_name|
-  response.should_not have_selector('a', :class => ".#{class_name}")
+Then /^I should not see a "([^\"]*)" link$/ do |class_name|
+  page.should_not have_link(class_name)
 end
 
 Then /^I should not see an "([^\"]+)" button$/ do |button_text|

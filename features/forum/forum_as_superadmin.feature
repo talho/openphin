@@ -31,7 +31,7 @@
   Scenario: Create and edit a forum
     Given I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "Add forum"
+    And I follow "Add Forum"
     And I fill in "Name" with "Funding methodology"
     And I press "Create"
 
@@ -60,7 +60,7 @@
   Scenario: Restrict the particular forum audience with jurisdiction & role
     Given I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "Add forum"
+    And I follow "Add Forum"
     And I fill in "Name" with "Funding methodology"
     And I fill out the audience form with:
       | Jurisdictions | Dallas County  |
@@ -83,7 +83,7 @@
   Scenario: Edit the jurisdiction of an existing forum audience
     Given I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "Add forum"
+    And I follow "Add Forum"
     And I fill in "Name" with "Funding methodology"
     And I fill out the audience form with:
       | Jurisdictions | Dallas County  |
@@ -111,7 +111,7 @@
   Scenario: Restrict the particular forum audience with jurisdiction only
     Given I am logged in as "joe.smith@example.com"
     And I go to the Forums page
-    And I follow "Add forum"
+    And I follow "Add Forum"
     And I fill in "Name" with "Funding methodology"
     And I fill out the audience form with:
       | Jurisdictions | Dallas County  |
@@ -135,14 +135,18 @@
     And I have the forum named "Forum to verify sticky topics"
     And I go to the Forums page
     And I follow "Forum to verify sticky topics"
+    And I follow "New Topic"
     And I fill in "Name" with "Sticky topic that was created earlier"
+    And I fill in "Description" with "Desc for my topic"
     And I press "Add Topic"
 
     Then I should see "Topic was successfully created"
     And I should see "Sticky topic that was creat..."
 
     When 1 minute passes
+    And I follow "New Topic"
     And I fill in "Name" with "Second created but not sticky topic"
+    And I fill in "Description" with "Desc for my topic"
     And I press "Add Topic"
     Then I should be redirected to the Topics page for Forum "Forum to verify sticky topics"
     And I should see "Topic was successfully created"
@@ -187,6 +191,7 @@
     Then I should see "Measuring Fulfillment"
 
     When I follow "Edit"
+    And I follow "Edit Comment"
     And I check "comment_ids_"
     And I fill in "Comment" with "Look at who is counting"
     And I press "Update Comment"
@@ -205,6 +210,7 @@
     Then I should see "Measuring Fulfillment"
 
     When I follow "Edit"
+    And I follow "Edit Comment"
     And I check "delete_comment_ids_"
     And I press "Update Comment"
     Then I should see "Comments were successfully updated"
