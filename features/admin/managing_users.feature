@@ -28,9 +28,9 @@ Feature: An admin managing users
     When I create a user account with the following info:
       | Email          | john.smith@example.com |
       | Password       | Password1        |
-      | Password confirmation | Password1 |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Password1 |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Are you with any of these organizations | Red Cross        |
       | Home Jurisdiction  | Dallas County    |
@@ -54,7 +54,7 @@ Feature: An admin managing users
     When I create a user account with the following info:
       | Email          | invalidemail    |
       | Password       | Password1       |
-      | Password confirmation | <blank>  |
+      | Password Confirmation | <blank>  |
       | Home Jurisdiction | Dallas County |
     Then I should see error messages
     
@@ -110,18 +110,19 @@ Feature: An admin managing users
       Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
       And I should see the profile edit form
       And I should see "Health Officer in Dallas County"
-      When I follow "Remove Role"
+      When I will confirm on next step
+      And I follow "Remove Role"
 
       Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
-      And I should see "Role Health Officer removed from Jane Smith in Dallas County"
+      And I should not see "Health Officer in Dallas County"
 
     Scenario: Add user as admin should not occur if no home jurisdictation is specified
     When I create a user account with the following info:
       | Email          | john@example.com |
       | Password       | Password1        |
-      | Password confirmation | Password1 |
-      | First name     | John             |
-      | Last name      | Smith            |
+      | Password Confirmation | Password1 |
+      | First Name     | John             |
+      | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction |               |
       | Are you with any of these organizations | Red Cross        |
@@ -159,9 +160,9 @@ Feature: An admin managing users
       When I create a user account with the following info:
         | Email          | john.smith@example.com |
         | Password       | Password1        |
-        | Password confirmation | Password1 |
-        | First name     | John             |
-        | Last name      | Smith            |
+        | Password Confirmation | Password1 |
+        | First Name     | John             |
+        | Last Name      | Smith            |
         | Preferred name | Jonathan Smith   |
         | Are you with any of these organizations | Red Cross        |
         | Home Jurisdiction  | Dallas County    |
