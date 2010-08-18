@@ -461,7 +461,6 @@ ul#invitees-list li                                 {list-style:none outside non
 table.inviteTable                                   {width: 650px;border:0px solid;}
 table.inviteTable td, table.inviteTable th          {padding: 5px;border:0px;}
 table.inviteTable td                                {border-bottom:1px solid #D9D9D9;border-spacing:25px;}
-#reports_submit                                     {display: none;}
 /* Invitation Table Design: END */
 
 .pagination                                         {margin-bottom: 10px;}

@@ -16,6 +16,7 @@ Feature: Invitation System
     
   Scenario: Create and Send an invite
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "Invite Users"
     And I should see "Invite New People"
     And I fill in "Name" with "DSHS"
@@ -36,9 +37,9 @@ Feature: Invitation System
     When I signup for an account with the following info:
       | Email                                   | jane.smith@example.com |
       | Password                                | Apples1                |
-      | Password confirmation                   | Apples1                |
-      | First name                              | Jane                   |
-      | Last name                               | Smith                  |
+      | Password Confirmation                   | Apples1                |
+      | First Name                              | Jane                   |
+      | Last Name                               | Smith                  |
       | Preferred name                          | Jane Smith             |
       | Home Jurisdiction                       | Texas                  |
       | Preferred language                      | English                |
@@ -47,8 +48,7 @@ Feature: Invitation System
     And "jane.smith@example.com" clicks the confirmation link in the email
     And I am logged in as "joe.smith@example.com"
     And I am on the invitation reports page for "DSHS"
-    And I select "By Organization" from "Report Type"
-    And I press "Submit"
+    And I select "By Organization" from "Report type"
 
     Then I should see "Invitation report for DSHS by organization"
     And I should see "Organization: DSHS"
