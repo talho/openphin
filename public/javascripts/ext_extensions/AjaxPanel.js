@@ -25,6 +25,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         // do any special initialization events here
         this.url = this.initialUrl = this.url || '';
         this.history = [];
+        this.forward_stack = [];
     },
 
     loadAJAX: function()
@@ -60,7 +61,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         }
 
         //this.doLayout();
-        if(this.history[this.history.length-1] != options.url)
+        if(options && this.history[this.history.length-1] != options.url)
             this.history.push(options.url);
 
         var currentDomain = window.location.host;
@@ -123,19 +124,40 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         this.fireEvent('ajaxloadcomplete', this);
     },
 
-    reset: function(){
-        this.url = this.initialUrl;
-        this.history = [];
-        this.forward = [];
-        this.loadAJAX();
+    reset: function(force){
+        if(force || this.url != this.initialUrl)
+        {
+            this.url = this.initialUrl;
+            this.history = [];
+            this.forward_stack = [];
+            this.loadAJAX();
+        }
     },
     
     back: function(){
-
+        if(this.history.length > 1)
+        {
+            this.forward_stack.push(this.history.pop());
+            this.url = this.history[this.history.length - 1];
+            this.loadAJAX();
+        }
     },
 
     forward: function(){
+        if(this.forward_stack.length > 0)
+        {
+            this.url = this.forward_stack.pop();
+            this.history.push(this.url); // Just in case it fails, we still want the forward record to be in the history stack
+            this.loadAJAX();
+        }
+    },
 
+    canGoBack: function(){
+        return this.history.length > 1
+    },
+
+    canGoForward: function(){
+        return this.forward_stack.length > 0
     }
 });
 

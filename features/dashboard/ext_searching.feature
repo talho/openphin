@@ -82,16 +82,16 @@ Feature: Searching for users
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
-    When I follow "John Smith"
+    When I click inlineLink "John Smith"
     And I should see "This user's profile is not public"
 
-    When press "back" within "#tab_toolbar"
+    When press "Back" within "#tab_toolbar"
     Then the "Find People" tab should be open
     When I fill in "Search" with "smith"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
-    When I follow "Jane Smith"
+    When I click inlineLink "Jane Smith"
     And I should not see "This user's profile is not public"
 
   Scenario: Searching for a user as an admin
@@ -105,16 +105,16 @@ Feature: Searching for users
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
-    When I follow "John Smith"
+    When I click inlineLink "John Smith"
     And I should not see "This user's profile is not public"
 
-    When I press "back" within "#tab_toolbar"
+    When I press "Back" within "#tab_toolbar"
     Then the "Find People" tab should be open
     When I fill in "Search" with "smith"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
-    When I follow "Jane Smith"
+    When I click inlineLink "Jane Smith"
     Then I should not see "This user's profile is not public"
 
   Scenario: Search for a user from a specific jurisdiction
