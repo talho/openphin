@@ -1,6 +1,6 @@
 
 When /^I click ([a-zA-Z0-9\-]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
-  with_scope(selector) do 
+  with_scope(selector) do
     #wait_until {!page.find('.' + class_type, :text => button).nil?}
     page.find('.' + class_type, :text => button).click
   end
