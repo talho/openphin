@@ -38,8 +38,9 @@ module FeatureHelpers
           find_field(field).select(value.strip)
         when 'What is your primary role',
           'Are you with any of these organizations', 'Organization Type'
-          page.check("health_professional")
-          find_field(field).select(value.strip)
+          # must have the if below since check really behaves like toggle
+          page.check("health_professional") if !find(:css, "#health_professional").node.selected?
+          select value.strip, :from => field
         when /Jurisdiction of Operation/
           field = find_field("organization_jurisdiction_ids")
           value.split(',').each do |id|
@@ -48,9 +49,9 @@ module FeatureHelpers
         when "Are you a public health professional?"
           id = "health_professional"
           if value == "<unchecked>"
-            page.uncheck(id)
+            page.uncheck(id) if find(:css, "##{id}").node.selected?
           else
-            page.check(id)
+            page.check(id) if !find(:css, "##{id}").node.selected?
           end
         when "Home Jurisdiction"
           value = "" if value.nil?
@@ -188,8 +189,9 @@ module FeatureHelpers
         value.split(',').each { |name|
           user = Given "a user named #{name.strip}"
           find(:css, ".maininput").node.click
-          find(:css, ".maininput").node.send_keys(user.email)
-          find(:css, ".maininput").node.send_keys(:return)
+          sleep 1
+          find(:css, ".maininput").node.send_keys(user.email, :enter)
+          sleep 1
         }
       when 'Name'
         fill_in "group_#{label.downcase}", :with => value
