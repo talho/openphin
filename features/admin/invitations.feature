@@ -58,6 +58,7 @@ Feature: Invitation System
 
   Scenario: Create and Send an invite to an existing user
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "Invite Users"
     And I should see "Invite New People"
     And I fill in "Name" with "DSHS"
@@ -76,6 +77,7 @@ Feature: Invitation System
 
   Scenario: Create and Send an invite via a CSV file with invitees
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "Invite Users"
     And I should see "Invite New People"
     And I fill in "Name" with "DSHS"
@@ -111,6 +113,7 @@ Feature: Invitation System
       | Joe | joe.smith@example.com |
       
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "Existing Invitations"
     And I should see "DSHS"
@@ -140,12 +143,12 @@ Feature: Invitation System
     And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
 
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "DSHS"
 
     When I follow "View Reports"
-    And I select "By Email" from "Report Type"
-    And I press "Submit"
+    And I select "By Email" from "Report type"
 
     Then I should see "Invitation report for DSHS by email address"
     And I should see "Registrations complete: 60% (3)"
@@ -183,12 +186,12 @@ Feature: Invitation System
     And "john.smith@example.com" is an unconfirmed user
     
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "DSHS"
 
     When I follow "View Reports"
-    And I select "By Registrations" from "Report Type"
-    And I press "Submit"
+    And I select "By Registrations" from "Report type"
 
     Then I should see "Invitation report for DSHS by registrations"
     And I should see "Registrations complete: 40% (2)"
@@ -221,12 +224,12 @@ Feature: Invitation System
       | Joe Smith  | joe.smith@example.com  |
 
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "DSHS"
 
     When I follow "View Reports"
-    And I select "By Organization" from "Report Type"
-    And I press "Submit"
+    And I select "By Organization" from "Report type"
 
     Then I should see "Invitation report for DSHS by organization"
     And I should see "Organization: DSHS"
@@ -266,12 +269,12 @@ Feature: Invitation System
     And "john.smith@example.com" has requested to be a "Health Official" for "Texas"
 
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "DSHS"
 
     When I follow "View Reports"
-    And I select "By Pending Requests" from "Report Type"
-    And I press "Submit"
+    And I select "By Pending Requests" from "Report type"
 
     Then I should see "Invitation report for DSHS by pending role requests"
     And I should see "Bob Smith" within "#invitee1"
@@ -299,12 +302,12 @@ Feature: Invitation System
     And "john.smith@example.com" is an unconfirmed user
 
     When I follow "Admin"
+    And I show dropdown menus
     And I follow "View Invitations"
     Then I should see "DSHS"
 
     When I follow "View Reports"
-    And I select "By Profile Update" from "Report Type"
-    And I press "Submit"
+    And I select "By Profile Update" from "Report type"
 
     Then I should see "Invitation report for DSHS by Profile Update"
     And I should see "Registrations complete: 40% (2)"
@@ -316,5 +319,3 @@ Feature: Invitation System
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
     And I should see "No" within "tr#invitee1 td.status"
-    
-    
