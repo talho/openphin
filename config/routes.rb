@@ -96,8 +96,7 @@ ActionController::Routing::Routes.draw do |map|
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
   
   map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced"
-  
+  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:get, :post]}
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"

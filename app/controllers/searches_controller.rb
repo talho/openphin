@@ -24,27 +24,31 @@ class SearchesController < ApplicationController
 
   
   def show_advanced
-    options = {
-      :retry_stale => true,                   # avoid nil results
-      :order => :name,                        # ascending order on name
-    }
+    if request.post?
+      options = {
+        :retry_stale => true,                   # avoid nil results
+        :order => :name,                        # ascending order on name
+      }
 
-    unless %w(pdf csv).include?(params[:format])
-      options[:page] = params[:page]||1
-      options[:per_page] = 8
+      unless %w(pdf csv).include?(params[:format])
+        options[:page] = params[:page]||1
+        options[:per_page] = 8
+      else
+        options[:per_page] = 30000
+        options[:max_matches] = 30000
+      end
+
+      build_fields params, conditions={}
+      filters = build_filters params
+      assure_name_not_in_advanced_search(conditions,filters)
+
+      options[:conditions] = conditions unless conditions.empty?
+      options[:match_mode] = :any if conditions[:name]
+      options[:with] = filters unless filters.empty?
+      @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
     else
-      options[:per_page] = 30000
-      options[:max_matches] = 30000
+      @results = []
     end
-
-    build_fields params, conditions={}
-    filters = build_filters params
-    assure_name_not_in_advanced_search(conditions,filters)
-    
-    options[:conditions] = conditions unless conditions.empty?
-    options[:match_mode] = :any if conditions[:name]
-    options[:with] = filters unless filters.empty?
-    @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
     
     respond_to do |format|
       format.html 
