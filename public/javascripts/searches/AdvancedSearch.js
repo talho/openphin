@@ -33,7 +33,16 @@ Talho.AdvancedSearch = Ext.extend(Ext.util.Observable, {
             var newBtn = Ext.get(Ext.DomHelper.insertHtml('beforeBegin', wildcard_explanation.dom, '<div><a class="inlineLink">Wildcard (*) Explanation</a></div>'));
             newBtn.setStyle(link_elem_style);
 
-            var wildcard_panel = new Ext.Panel({contentEl:wildcard_explanation.dom, collapsed: true, border: false});
+            var wildcard_panel = new Ext.Panel({
+                contentEl:wildcard_explanation.dom,
+                collapsed: true,
+                border: false,
+                listeners: {
+                    'expand': function(){this.getPanel().doLayout();},
+                    'collapse': function(){this.getPanel().doLayout();},
+                    scope: this
+                }
+            });
             wildcard_panel.render(newBtn.parent(), newBtn.next());
 
             newBtn.on('click', wildcard_panel.toggleCollapse, wildcard_panel);
@@ -53,8 +62,18 @@ Talho.AdvancedSearch = Ext.extend(Ext.util.Observable, {
 
             quick_search_btn.hide();
 
-            var quick_search_panel = new Ext.Panel({contentEl: quick_search.dom, border: false});
-            var advanced_search_panel = new Ext.Panel({contentEl: advanced_search.dom, collapsed: true, border: false});
+            var quick_search_panel = new Ext.Panel({contentEl: quick_search.dom, border: false,
+                listeners: {
+                    'expand': function(){this.getPanel().doLayout();},
+                    'collapse': function(){this.getPanel().doLayout();},
+                    scope: this
+                }});
+            var advanced_search_panel = new Ext.Panel({contentEl: advanced_search.dom, collapsed: true, border: false,
+                listeners: {
+                    'expand': function(){this.getPanel().doLayout();},
+                    'collapse': function(){this.getPanel().doLayout();},
+                    scope: this
+                }});
 
             quick_search_panel.render(advanced_search_btn.parent(), advanced_search_btn);
             advanced_search_panel.render(quick_search_btn.parent(), quick_search_btn.next());

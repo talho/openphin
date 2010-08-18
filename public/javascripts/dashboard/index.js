@@ -44,7 +44,51 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             activeTab: 0,     // first tab initially active
             enableTabScroll: true,
             items: [Talho.Article3Panel.initialize({id:'dashboard_home'})],
-            plugins: [Ext.plugin.DragDropTabs]
+            plugins: [Ext.plugin.DragDropTabs],
+            bbar:{
+                id: 'tab_toolbar',
+                items:[
+                    {
+                        text: 'Back',
+                        id: 'tab_back',
+                        handler: function(){
+                            var comp = this.tabPanel.getActiveTab();
+                            if(comp.back)
+                                comp.back();
+                        },
+                        scope:this
+                    },
+                    {
+                        text: 'Forward',
+                        id: 'tab_forward',
+                        handler: function(){
+                            var comp = this.tabPanel.getActiveTab();
+                            if(comp.forward)
+                                comp.forward();
+                        },
+                        scope:this
+                    },
+                    {
+                        text: 'Refresh',
+                        handler: function(){
+                            var comp = this.tabPanel.getActiveTab();
+                            if(comp.reset)
+                                comp.reset(true);
+                        },
+                        scope:this
+                    }
+                ]
+            },
+            listeners:{
+                'beforetabchange': function(tab_panel, new_tab, old_tab){
+                    if(old_tab)
+                        old_tab.un('ajaxloadcomplete', this.setTabControls, this);
+                    new_tab.on('ajaxloadcomplete', this.setTabControls, this);
+                    this.setTabControls(new_tab);
+                    return true;
+                },
+                scope: this
+            }
         });
 
         this.favoritesToolbar = this.favorites.getPanel();
@@ -149,8 +193,17 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         }
         else
         {
-           this.tabPanel.getComponent(config.id).show();
+            var existing_panel = this.tabPanel.getComponent(config.id).show();
+            if(existing_panel.reset)
+            {
+                existing_panel.reset();
+            }
         }
+    },
+
+    setTabControls: function(panel){
+        this.tabPanel.getBottomToolbar().getComponent('tab_back').setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
+        this.tabPanel.getBottomToolbar().getComponent('tab_forward').setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
     }
 
 });
