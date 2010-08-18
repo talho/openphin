@@ -23,7 +23,8 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
         this.addListener('afterrender', this.loadAJAX, this);
         // do any special initialization events here
-        this.url = this.url || '';
+        this.url = this.initialUrl = this.url || '';
+        this.history = [];
     },
 
     loadAJAX: function()
@@ -46,13 +47,15 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         }
     },
 
-    /**
+   /**
      * This is called after the updater completes. It should parse and hookup links
      * and forms and should call the specific callback
      */
     handleAJAXLoad: function(el, success, response, options)
     {
         //this.doLayout();
+        if(this.history[this.history.length-1] != options.url)
+            this.history.push(options.url);
 
         var currentDomain = window.location.host;
         var domainRegex = new RegExp(currentDomain);
@@ -60,7 +63,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         var els = el.select('a');
         els.each(function(a) {
             var href = a.dom.href;
-            if (!href.match(domainRegex) || href.match(/(\.doc|\.pdf)$/))
+            if (!href.match(domainRegex) || href.match(/(\.doc|\.pdf|\.csv)(?:\?.*)?$/))
             {
                 a.set({target:'_blank'});
             }
@@ -111,6 +114,21 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
         this.findParentByType('panel').doLayout();
         this.fireEvent('ajaxloadcomplete', this);
+    },
+
+    reset: function(){
+        this.url = this.initialUrl;
+        this.history = [];
+        this.forward = [];
+        this.loadAJAX();
+    },
+    
+    back: function(){
+
+    },
+
+    forward: function(){
+
     }
 });
 

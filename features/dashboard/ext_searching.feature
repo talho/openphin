@@ -85,8 +85,7 @@ Feature: Searching for users
     When I follow "John Smith"
     And I should see "This user's profile is not public"
 
-    When I go to the ext dashboard page
-    And I press "Find People" within "#top_toolbar"
+    When press "back" within "#tab_toolbar"
     Then the "Find People" tab should be open
     When I fill in "Search" with "smith"
     And I press "Search"
@@ -109,15 +108,14 @@ Feature: Searching for users
     When I follow "John Smith"
     And I should not see "This user's profile is not public"
 
-    When I go to the ext dashboard page
-    And I press "Find People" within "#top_toolbar"
+    When I press "back" within "#tab_toolbar"
     Then the "Find People" tab should be open
     When I fill in "Search" with "smith"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith |
     When I follow "Jane Smith"
-    And I should not see "This user's profile is not public"
+    Then I should not see "This user's profile is not public"
 
   Scenario: Search for a user from a specific jurisdiction
     Given I am logged in as "amy@example.com"
@@ -125,7 +123,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Search" with "smith"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Last name" with "smith"
     And I select "Tarrant County" from "_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
@@ -137,7 +136,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Search" with "smith"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Last name" with "smith"
     And I select "Public" from "_role_ids"
     And I press "Search"
     Then I see the following users in the search results
@@ -149,7 +149,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Search" with "body"
+    When I click inlineLink "Advanced Search" within ".content"
+    When I fill in "Last name" with "body"
     And I select "Health Officer" from "_role_ids"
     And I select "Dallas County" from "_jurisdiction_ids"
     And I press "Search"
@@ -162,7 +163,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Search" with "body"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Last name" with "body"
     And I select "Immunization Director" from "_role_ids"
     And I select "Dallas County" from "_jurisdiction_ids"
     And I press "Search"
@@ -174,7 +176,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "First Name" with "sam"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "First name" with "sam"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -185,7 +188,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Last Name" with "body"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Last name" with "body"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -196,7 +200,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Display Name" with "sam body"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Display name" with "sam body"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -207,7 +212,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Email" with "sam@example.com"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Email" with "sam@example.com"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -218,7 +224,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Phone" with "888-555-1212"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Phone" with "888-555-1212"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -229,19 +236,21 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "Job Title" with "Chief Bottle Washer"
+    When I click inlineLink "Advanced Search" within ".content"
+    And I fill in "Job Title" with "Chief Bottle Washer"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
 
-  Scenario: Search for a user by job title
+  Scenario: Search for a user by first name and last name
     Given I am logged in as "amy@example.com"
 
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "First Name" with "Amy"
-    And I fill in "Last Name" with "Body"
+    When I click inlineLink "Advanced Search" within ".content"
+    When I fill in "First name" with "Amy"
+    And I fill in "Last name" with "Body"
     And I press "Search"
     Then I see the following users in the search results
       | Amy Body |
@@ -253,7 +262,8 @@ Feature: Searching for users
     When I go to the ext dashboard page
     And I press "Find People" within "#top_toolbar"
     Then the "Find People" tab should be open
-    When I fill in "First Name" with "sa*"
+    When I click inlineLink "Advanced Search" within ".content"
+    When I fill in "First name" with "sa*"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |

@@ -30,7 +30,7 @@ Talho.AdvancedSearch = Ext.extend(Ext.util.Observable, {
         if(wildcard_explanation)
         {
             // insert an inline link/button to show/hide the wildcard section. hide it now
-            var newBtn = Ext.get(Ext.DomHelper.insertHtml('beforeBegin', wildcard_explanation.dom, '<div><a class="inlineLink">Willcard (*) Explanation</a></div>'));
+            var newBtn = Ext.get(Ext.DomHelper.insertHtml('beforeBegin', wildcard_explanation.dom, '<div><a class="inlineLink">Wildcard (*) Explanation</a></div>'));
             newBtn.setStyle(link_elem_style);
 
             var wildcard_panel = new Ext.Panel({contentEl:wildcard_explanation.dom, collapsed: true, border: false});
