@@ -48,8 +48,6 @@ Feature: Application layout should have communications, portal & application too
     Then I should see the following ext menu items:
       | name                    |
       | HAN Home                |
-      | Send an Alert           |
-      | Alert Log and Reporting |
     When I press "FAQs" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                            |
