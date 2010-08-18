@@ -33,7 +33,7 @@ class OrganizationsController < ApplicationController
 
       SignupMailer.send_later(:deliver_org_confirmation, @organization)
       flash[:notice] = "Thank you for registering your organization with TXPhin. You will receive an email notification at the organization's email address upon administrator approval of the organization's registration.  Once approval is granted, individuals will be able to enroll themselves and associate their account with this organization."
-      redirect_to dashboard_path
+      redirect_to root_path
     else
       render 'new'
     end

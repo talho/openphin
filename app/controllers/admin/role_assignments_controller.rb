@@ -43,7 +43,7 @@ class Admin::RoleAssignmentsController < ApplicationController
     if role_assignment.blank?
       flash[:error] = "Invalid role membership specified"
       if session[:return_to].blank?
-        redirect_to dashboard_path
+        redirect_to root_path
       else
         redirect_to session[:return_to]
       end
@@ -54,14 +54,14 @@ class Admin::RoleAssignmentsController < ApplicationController
       role_assignment.destroy
       flash[:notice] = "Role #{name} removed from #{user} in #{jurisdiction}"
       if session[:return_to].blank?
-        redirect_to dashboard_path
+        redirect_to root_path
       else
         redirect_to session[:return_to]
       end
     else
       flash[:notice] = "This resource does not exist or is not available."
       if session[:return_to].blank?
-        redirect_to dashboard_path
+        redirect_to root_path
       else
         redirect_to session[:return_to]
       end

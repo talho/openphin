@@ -33,7 +33,7 @@ class Admin::OrganizationMembershipRequestsController < ApplicationController
       request.approve!(current_user)
       link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
       flash[:notice]="#{link} is now a member of #{request.organization.name}"
-      redirect_to dashboard_path
+      redirect_to root_path
       #redirect_to :action => :index
     end
 

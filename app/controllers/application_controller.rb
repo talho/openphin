@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def ensure_admin_or_self(user_id)
     unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
       flash[:error] = "That resource does not exist or you do not have access to it."
-      redirect_to dashboard_path
+      redirect_to root_path
       false
     end
   end
@@ -84,15 +84,22 @@ class ApplicationController < ActionController::Base
     def admin_required
       unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
         flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to dashboard_path
+        redirect_to root_path
         false
       end
     end
 
     def non_public_role_required
       unless current_user.has_non_public_role?
-        flash[:error] = "You are not authorized to view this page."
-        redirect_to dashboard_path
+        if request.xhr?
+          respond_to do |format|
+             format.html {render :text => "You are not authorized to view this page", :status => 401}
+             format.json {render :json => {:message => "You are not authorized to view this page"}, :status => 401}
+          end
+        else
+          flash[:error] = "You are not authorized to view this page."
+          redirect_to root_path
+        end
         false
       end
     end
@@ -103,7 +110,7 @@ class ApplicationController < ActionController::Base
           (alert.recipients.include?(current_user) ||
            alert.from_jurisdiction.self_and_ancestors.detect{|j| j.han_coordinators.include?(current_user)})
         flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to dashboard_path
+        redirect_to root_path
       end
     end
 
