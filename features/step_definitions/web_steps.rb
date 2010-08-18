@@ -24,6 +24,13 @@ When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
+When /^(?:|I )show dropdown menus$/ do
+  begin
+    page.execute_script('jQuery("#app_toolbar > ul > li > ul").css("display", "block")')
+  rescue Capybara::NotSupportedByDriverError
+  end
+end
+
 When /^(?:|I )press "([^"]*)"(?: within "([^"]*)")?$/ do |button, selector|
   with_scope(selector) do
     click_button(button)

@@ -34,10 +34,8 @@ Then /^I should be specifically on (.+) for "([^\"]*)"$/ do |page_name, arg|
 end
 
 Then /^I should explictly see "([^\"]*)" within "([^\"]*)"$/ do |regexp, selector|
-  within(selector) do
-    regexp = Regexp.new(/^#{regexp}$/)
-    page.should contain(regexp)
-  end
+  regexp = Regexp.new(/^#{regexp}$/)
+  page.should have_css(selector, :text => regexp)
 end
 
 Then /^I should see "([^\"]*)" in the response header flash error$/ do |text|
