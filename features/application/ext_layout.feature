@@ -24,7 +24,7 @@ Feature: Application layout should have communications, portal & application too
     When I go to the ext dashboard page
     Then I should have "#tabpanel" within "#centerpanel"
     And I should have "#favoritestoolbar" within "#centerpanel"
-    And The "Home" tab should be open
+    And the "Home" tab should be open
 
   Scenario: Viewing the portal and comm toolbar as a user
     Given I am logged in as "martin@example.com"
@@ -35,6 +35,10 @@ Feature: Application layout should have communications, portal & application too
       | FAQs                 |
       | Forums               |
       | Tutorials            |
+      | My Dashboard         |
+      | My Account           |
+      | About TXPHIN         |
+      | Sign Out             |
     And I should see the following toolbar items in "bottom_toolbar":
       | Calendar             |
       | Chat                 |

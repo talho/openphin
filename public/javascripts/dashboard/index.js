@@ -1,6 +1,6 @@
 
 Ext.onReady(function(evt){
-    window.Application = new PhinApplication();
+    window.Application.phin = new PhinApplication();
 });
 
 var PhinApplication = Ext.extend(Ext.util.Observable, {
@@ -117,7 +117,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             }
             else
             {
-                var xtype = config.url === undefined || config.url === '' ? 'panel' : 'ajaxpanel';
+                var xtype = config.url === undefined || config.url === '' ? 'panel' : 'centeredajaxpanel';
 
                 if(xtype == 'panel')
                 {
@@ -129,12 +129,12 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                         autoScroll:true
                     }).show();
                 }
-                else if(xtype == 'ajaxpanel')
+                else if(xtype == 'centeredajaxpanel')
                 {
                     panel = this.tabPanel.add({
                         title: config.title,
                         itemId: config.id,
-                        xtype:'ajaxpanel',
+                        xtype:'centeredajaxpanel',
                         closable: true,
                         hideBorders:true,
                         autoScroll:true,

@@ -1,4 +1,27 @@
 
+When /^I click ([a-zA-Z0-9\-]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
+  with_scope(selector) do
+    #wait_until {!page.find('.' + class_type, :text => button).nil?}
+    page.find('.' + class_type, :text => button).click
+  end
+end
+
+When /^I wait until I have (\d*) ext menus$/ do |number|
+  wait_until { page.all('.x-menu').length == number.to_i }
+end
+
+When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
+  menu_array = menu_navigation_list.split('>').map{|x| x.strip}
+
+  tb_button = menu_array.delete_at(0)
+
+  When %Q{I press "#{tb_button}"}
+
+  menu_array.each do |menu|
+    When %Q{I click x-menu-item "#{menu}"}
+  end
+end
+
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|
   within(:css, "##{name}") do
 	 	table.rows.each do |row|
@@ -29,14 +52,12 @@ Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |se
  end
 end
 
-When /^I click ([a-zA-Z0-9\-]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
+Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
   with_scope(selector) do
-    page.find('.' + class_type, :text => button).click
+    table.hashes.each do |hash|
+      page.should_not have_xpath(".//*[contains(concat(' ', @class, ' '), ' x-menu-item ')]", :text => hash[:name])
+    end
   end
-end
-
-When /^I wait until I have (\d*) ext menus$/ do |number|
-  wait_until { page.all('.x-menu').length == number.to_i }
 end
 
 Then /^I should have "([^\"]*)" within "([^\"]*)"$/ do |elem, selector|
@@ -45,7 +66,7 @@ Then /^I should have "([^\"]*)" within "([^\"]*)"$/ do |elem, selector|
   end
 end
 
-Then /^The "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_name, activity|
+Then /^the "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_name, activity|
   active = activity.nil? ? true : activity == 'active'
 
   if active
@@ -54,4 +75,8 @@ Then /^The "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_na
     page.should have_css(".x-tab-strip li", :text => tab_name)
     page.should_not have_css(".x-tab-strip li.x-tab-strip-active", :text => tab_name)
   end
+end
+
+When /^I force open the tab "([^\"]*)" for "([^\"]*)"$/ do |tab_name, tab_url|
+  eval_script("window.Application.phin.open_tab({title:'#{tab_name}', url:'#{tab_url}'})")
 end
