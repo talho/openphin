@@ -66,13 +66,32 @@ class DocumentsController < ApplicationController
     @document = Document.editable_by(current_user).find(params[:id])
     begin
       if @document.update_attributes(params[:document])
-        redirect_to folder_or_inbox_path(@document)
+        #if user is not the original owner of the file, then find channel where user has access to the file
+        if @document.user_id != current_user.id
+          current_user.channels.each do |ch|
+            ch.documents.each do |doc|
+              if doc.id == @document.id
+                redirect_to channel_documents_path(ch)
+              end
+            end
+          end
+        else
+          redirect_to folder_or_inbox_path(@document)
+        end
       else
         render :edit
       end
     rescue ActiveRecord::StaleObjectError
       @document.reload
-      flash[:error] = "<script>alert('Another user recently updated the document you are attempting to update to #{@document.file_file_name}.  Please try again.');</script>"
+      #At this point we were originally returning embedded JavaScript in the flash[:error] variable, which is included in the response.
+      #This was interfering with our capybara tests being able to properly identify the alert box as part of the current DOM since this alert
+      #was being sent back with a whole new DOM. Remedied the situation by identifying the environment as test or cucumber and including the
+      #JavaScript that Capybara needs to confirm and override the alert message
+      if Rails.env == "test" || Rails.env == "cucumber"
+        flash[:error] = "<script>self.alert = function(msg) { self.alert_message = msg; return msg; }alert('Another user recently updated the document you are attempting to update to #{@document.file_file_name}.  Please try again.');</script>"            
+      else
+        flash[:error] = "<script>alert('Another user recently updated the document you are attempting to update to #{@document.file_file_name}.  Please try again.');</script>"
+      end
       redirect_to folder_or_inbox_path(@document)
     rescue StandardError
       render :edit

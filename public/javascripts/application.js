@@ -494,6 +494,7 @@ function setMediaInviteEvents() {
 
         var myform = $("#invitation form");
         myform.ajaxForm({
+          data: { owner: true },
           beforeSend: function(response) {
             dp.remove();
             $("#documents_progress_panel").show();
@@ -897,9 +898,16 @@ function setDocumentMoveEditEvents() {
         child = $("form input#document_file_update");
         child.closest("form").ajaxForm({
           target: "span.documents",
-          complete: function(response, textStatus) {
-            loaded = detectAuthenticityToken(response.responseXML);
+          beforeSend: function(response) {
+            $("#documents_progress_panel").show();
+          },
+          success: function(data, textStatus) {
             dp.remove();
+          },
+          complete: function(response, textStatus) {
+            $("#documents_progress_panel").hide();
+            loaded = detectAuthenticityToken(response.responseXML);
+            //dp.remove();
             if(loaded) {
               activateDocumentsPanelActions();
             } else {
