@@ -101,12 +101,27 @@ end
 
 When /^I wait for the "([^\"]*)" element to load$/ do |value|
   wait_until{page.find("#{value}").nil? == false}
+  sleep 0.5
 end
 
 When /^I wait for the "([^\"]*)" element to finish$/ do |value|
   wait_until{page.find("#{value}", :visible => true).nil? == true}
+  sleep 0.5
 end
 
-When /^I am not ignoring hidden elements$/ do
-  Capybara.ignore_hidden_elements = true
+When /^I toggle the folder "([^\"]*)"$/ do |value|
+  wait_until{page.find("a#toggle_closed").nil? == false}
+  elem = page.find("a", :text => value)
+  link = URI.parse(elem[:href]).path.split("/")
+  toggle_link = page.find("li##{link[1].gsub(/s/, '')}_#{link[2]} a#toggle_closed")
+  toggle_link.click
+end
+
+When /^I download the file "([^\"]*)"$/ do |value|
+  elem = page.find("a", :text => value)
+  begin
+    evaluate_script("setTimeout(function(){$.get('#{elem[:href]}',function(data){alert('Success')})},1000)")
+    sleep 1
+  rescue Capybara::NotSupportedByDriverError
+  end 
 end
