@@ -112,8 +112,11 @@ protected
   
   def sanitize(conditions,exclude=[:phone])
     return unless conditions
-    conditions.reject{ |k,v| exclude.include? k }.each do |k,v| 
-      conditions[k] = v.gsub(/(:|@|-|!|~|&|"|\(|\)|\\|\|)/) { "\\#{$1}" } unless conditions[k].blank?
+    email = /[:"\*\!&]/
+    other = /[:"@\-\*\!\~\&]/
+    conditions.reject{ |k,v| exclude.include? k }.each do |k,v|
+      regexp = (k == :email) ? email : other
+      conditions[k] = v.gsub(regexp,'') unless conditions[k].blank?
     end
   end
   
