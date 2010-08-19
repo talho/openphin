@@ -155,6 +155,7 @@ EOF
     if @alert.sensitive?
       footer += "\r\n\r\nAlert ID: #{@alert.identifier}\r\n"
       footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
+      footer += "Status: #{@alert.status}\r\n" unless @alert.status == "Actual"
       footer += "Sensitive: use secure means of retrieval\r\n\r\n"
       footer += "Please visit #{url_for(:action => "hud", :controller => "dashboard", :escape => false, :only_path => false, :protocol => "https")} to securely view this alert.\r\n"
       output = header + footer
@@ -164,6 +165,7 @@ EOF
       footer += "Reference: #{@alert.original_alert_id}\r\n" unless @alert.original_alert_id.blank?
       footer += "Agency: #{@alert.from_jurisdiction.nil? ? @alert.from_organization_name : @alert.from_jurisdiction.name}\r\n"
       footer += "Sender: #{@alert.author.display_name}\r\n" unless @alert.author.nil?
+      footer += "Status: #{@alert.status}\r\n" unless @alert.status == "Actual"
       footer += "Time Sent: #{@alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}\r\n\r\n"
       if @alert.message.size + header.size + footer.size > 1000
         output = header + @alert.message[0..(1000 - header.size - more.size - footer.size)] + more + footer
