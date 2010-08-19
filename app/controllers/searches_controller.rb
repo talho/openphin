@@ -32,7 +32,7 @@ class SearchesController < ApplicationController
 
       unless %w(pdf csv).include?(params[:format])
         options[:page] = params[:page]||1
-        options[:per_page] = 8
+        options[:per_page] = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 8 )
       else
         options[:per_page] = 30000
         options[:max_matches] = 30000
@@ -41,11 +41,13 @@ class SearchesController < ApplicationController
       build_fields params, conditions={}
       filters = build_filters params
       assure_name_not_in_advanced_search(conditions,filters)
-
+      @results = User.search(conditions,options)
+      
       options[:conditions] = conditions unless conditions.empty?
       options[:match_mode] = :any if conditions[:name]
       options[:with] = filters unless filters.empty?
       @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
+      
     else
       @results = []
     end
@@ -60,16 +62,14 @@ class SearchesController < ApplicationController
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end
-      # for iPhone
       format.json do
-        @results ||= []
-          # this header is a must for CORS
-          headers["Access-Control-Allow-Origin"] = "*"
-          render :json => @results.map(&:to_people_results)
-      end
+         @results ||= []
+           # this header is a must for CORS
+           headers["Access-Control-Allow-Origin"] = "*"
+           render :json => @results.map(&:to_people_results)
+       end
     end
   end
-
   
 protected
 
@@ -115,5 +115,5 @@ protected
     is_advanced = !conditions.reject{|k,v|k==:name}.empty? && !filters.empty?
     conditions.reject!{|k,v|k==:name} if is_advanced
   end
-    
+  
 end
