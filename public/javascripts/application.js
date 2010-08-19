@@ -494,6 +494,7 @@ function setMediaInviteEvents() {
 
         var myform = $("#invitation form");
         myform.ajaxForm({
+          data: { owner: true },
           beforeSend: function(response) {
             dp.remove();
             $("#documents_progress_panel").show();
