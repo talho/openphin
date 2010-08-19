@@ -366,7 +366,7 @@ class User < ActiveRecord::Base
 
   def to_people_results
     rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort[0..1]
-    {'header'=> display_name,
+    {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
       'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}] 
     }

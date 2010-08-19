@@ -23,7 +23,8 @@ class SearchesController < ApplicationController
   end
 
   
-  def show_advanced
+  def show_advanced_was
+    debugger
     if request.post?
       options = {
         :retry_stale => true,                   # avoid nil results
@@ -32,7 +33,7 @@ class SearchesController < ApplicationController
 
       unless %w(pdf csv).include?(params[:format])
         options[:page] = params[:page]||1
-        options[:per_page] = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 8 )
+        options[:per_page] = 8
       else
         options[:per_page] = 30000
         options[:max_matches] = 30000
@@ -41,13 +42,11 @@ class SearchesController < ApplicationController
       build_fields params, conditions={}
       filters = build_filters params
       assure_name_not_in_advanced_search(conditions,filters)
-      @results = User.search(conditions,options)
-      
+
       options[:conditions] = conditions unless conditions.empty?
       options[:match_mode] = :any if conditions[:name]
       options[:with] = filters unless filters.empty?
       @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
-      
     else
       @results = []
     end
@@ -62,16 +61,87 @@ class SearchesController < ApplicationController
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end
-      format.json do
-         @results ||= []
-           # this header is a must for CORS
-           headers["Access-Control-Allow-Origin"] = "*"
-           render :json => @results.map(&:to_people_results)
-       end
     end
   end
   
+  def show_advanced
+    unless request.post?
+      @results = []
+    else
+      strip_blank_elements(params[:conditions])
+      strip_blank_arrays(params[:with])
+      prevent_email_in_name(params)
+      unless params[:name].blank?
+        @results = User.search( params[:name], build_options(params).merge({:match_mode=>:any}) )
+      else
+        sanitize(params[:conditions])
+        params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions][:phone].blank?
+        params.delete(:name)
+        @results = User.search(params.merge(build_options(params)))
+      end
+    end
+    
+    
+    respond_to do |format|
+      format.html
+      format.pdf { prawnto :inline => false }
+      format.csv do
+        @csv_options = { :col_sep => ',', :row_sep => :auto }
+        @filename = "user_search_.csv"
+        @output_encoding = 'UTF-8'
+      end
+      # for iPhone
+     format.json do
+       @results ||= []
+         # this header is a must for CORS
+         headers["Access-Control-Allow-Origin"] = "*"
+         render :json => @results.map(&:to_people_results)
+     end
+   end
+  end
+  
 protected
+
+  # this method is to prevent an inadverent denial-of-service
+  def prevent_email_in_name(params)
+    unless params[:name].blank? || params[:name].index('@').nil?
+      params[:email] = params[:name]
+      params.delete(:name)
+    end
+  end
+  
+  def sanitize(conditions,exclude=[:phone])
+    return unless conditions
+    conditions.reject{ |k,v| exclude.include? k }.each do |k,v| 
+      conditions[k] = v.gsub(/(:|@|-|!|~|&|"|\(|\)|\\|\|)/) { "\\#{$1}" } unless conditions[k].blank?
+    end
+  end
+  
+  def strip_blank_elements(hsh)
+    return unless hsh
+    hsh.delete_if{|k,v| v.blank?} if hsh
+  end
+  
+  def strip_blank_arrays(hsh)
+    return unless hsh
+    hsh.delete_if{|k,v| v.to_s.blank?} if hsh
+  end
+  
+  
+  def build_options(params)
+    options = {
+      :retry_stale => true,                    # avoid nil results
+      :order => :name,                         # ascending order on name
+      :page => params[:page].to_i||1,          # paginate pages
+      :per_page => params[:per_page].to_i||8, # paginate entries per page
+      :star => true                            # auto wildcard
+    }
+    if %w(pdf csv).include?(params[:format])
+      options[:per_page] = 30000
+      options[:max_matches] = 30000
+    end
+    return options
+  end
 
   def build_filters(params,filters={})
     [:role_ids,:jurisdiction_ids].each do |f|

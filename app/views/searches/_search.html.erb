@@ -7,7 +7,7 @@ Please fill in part of the name or email address of the person you would like to
     (*il*) could match will, millie, etc ...<br />  
     (*il**) is not a valid pattern
 </p>
-<% form_tag(show_advanced_search_path, :method => "post") do %>
+<% form_for :conditions, :url => {:controller => "searches", :action => "show_advanced"},:method => "post" do |f| %>
   <div class="quick_search_user">
     <p>
       <%= label_tag(:name, "Search for:") %>
@@ -17,41 +17,41 @@ Please fill in part of the name or email address of the person you would like to
   <div class="advance_search_user">
     <p>
       <span>
-        <%= label_tag :first_name, "First name"%>
-        <%= text_field_tag :first_name %>
+        <%= f.label :first_name, "First name"%>
+        <%= f.text_field :first_name %>
       </span>
       <span>
-        <%= label_tag :last_name, "Last name"%>
-        <%= text_field_tag :last_name %>
+        <%= f.label :last_name, "Last name"%>
+        <%= f.text_field :last_name %>
       </span>
     <p>
-      <%= label_tag :display_name, "Display name"%>
-      <%= text_field_tag :display_name, "", :size=>48 %>
+      <%= f.label :display_name, "Display name"%>
+      <%= f.text_field :display_name, :size=>48 %>
     </p>
     <p>
-      <%= label_tag :email, "Email"%>
-      <%= text_field_tag :email, "", :size=>48 %>
+      <%= f.label :email, "Email"%>
+      <%= f.text_field :email, :size=>48 %>
     </p>
     <p>
       <span>
-        <%= label_tag :phone, "Phone"%>
-        <%= text_field_tag :phone, "", :size=>12 %>
+        <%= f.label :phone, "Phone"%>
+        <%= f.text_field :phone, :size=>12 %>
       </span>
       <span>
-        <%= label_tag :title, "Job Title"%>
-        <%= text_field_tag :title, "", :size=>36 %>
+        <%= f.label :title, "Job Title"%>
+        <%= f.text_field :title, :size=>36 %>
       </span>
     </p>
     <%= label "","Ctrl-Click (MAC Users: Cmd-Click) for selecting more than one" %>
     <p>
       <span class="jurisdiction_select">
         <%= label :jurisdiction_id,  "Jurisdiction" %>
-        <%= collection_select "","jurisdiction_ids", Jurisdiction.nonroot, :id, :name, 
+        <%= collection_select "with","jurisdiction_ids", Jurisdiction.nonroot, :id, :name, 
             {:include_blank => true}, {:multiple=>true,:size=>10} -%>
       </span>
       <span class="role_select">
         <%= label :role_id, "Role" %>
-        <%= collection_select "", "role_ids", current_user.is_admin? ? Role.all : Role.user_roles, :id, :display_name, 
+        <%= collection_select "with", "role_ids", current_user.is_admin? ? Role.all : Role.user_roles, :id, :display_name, 
             {:include_blank => true}, {:multiple=>true,:size=>10} -%>
       </span>
     </p>

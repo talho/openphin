@@ -5,9 +5,7 @@ ActionController::Routing::Routes.draw do |map|
     :member => {:unsubscribe => :delete}
 
 #  map.resources :user_profiles, :as => "profile"
-
-  map.connect "/jurisdictions/mapping.:format",:controller=>'application',:action=>'options',:conditions =>{:method =>[:options]}
-  map.jurisdictions_mapping "/jurisdictions/mapping.:format", :controller => "jurisdictions", :action => "mapping"
+  map.connect "/jurisdictions.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :jurisdictions, :devices, :folders
 
   map.resources :documents, :has_many => :shares do |documents|
@@ -84,9 +82,8 @@ ActionController::Routing::Routes.draw do |map|
   map.token_acknowledge_alert "alerts/:id/acknowledge/:token.:format", :controller => "alerts", :action => "token_acknowledge"
   map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
   map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
-  
-  map.connect "/roles/mapping.:format",:controller=>'application',:action=>'options',:conditions =>{:method =>[:options]}
-  map.roles_mapping "/roles/mapping.:format", :controller => "roles", :action => "mapping"
+
+  map.connect "/roles.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :roles
   
   map.resources :organizations do |organization|
