@@ -20,48 +20,65 @@ Background:
 	  | G2 | Texas          | Epidemiologist |  | Global       |                |
 	  | G3 | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |
 
-	Scenario: Owner should see all his groups
-		Given I am logged in as "john.smith@example.com"
+  Scenario: Owner should see all his groups
+    Given I am logged in as "john.smith@example.com"
     And I have the document "sample.wav" in my inbox
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     And I check "sample.wav"
-    And I follow "Send"
-		Then I should see "G1" as a groups option
-		And I should see "G2" as a groups option
-		And I should see "G3" as a groups option
+    And I select "#send" from the documents toolbar
+    Then I wait for the "div#send_document_panel div#edit" element to load
+    Then I should see "G1" as a groups option
+    And I should see "G2" as a groups option
+    And I should see "G3" as a groups option
 
   Scenario: Users in same jurisdiction should see jurisdiction-scoped groups
     Given I am logged in as "jane.smith@example.com"
     And I have the document "sample.wav" in my inbox
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     And I check "sample.wav"
-    And I follow "Send"
+    And I select "#send" from the documents toolbar
+    Then I wait for the "div#send_document_panel div#edit" element to load
     Then I should see "G2" as a groups option
     And I should see "G3" as a groups option
 
   Scenario: Users in another jurisdiction should see only globally-scoped groups
     Given I am logged in as "bob.smith@example.com"
     And I have the document "sample.wav" in my inbox
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     And I check "sample.wav"
-    And I follow "Send"
-    Then I should see "G2" as a groups option
+    And I select "#send" from the documents toolbar
+    Then I wait for the "div#send_document_panel div#edit" element to load
+    And I should see "G2" as a groups option
 
   Scenario: Sending a document with a group selected should include group users as recipients
     Given I am logged in as "john.smith@example.com"
     And I have the document "sample.wav" in my inbox
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     And I check "sample.wav"
-    And I follow "Send"
+    And I select "#send" from the documents toolbar
+    Then I wait for the "div#send_document_panel div#edit" element to load
     And I fill out the document sharing form with:
-      | Groups        | G2            |
+      | Groups | G2 |
     And I press "Send"
-
-    Then I should be on the folder inbox page
+    Then I wait for the "#document_progress_panel" element to finish
+    And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     And "bob.smith@example.com" should receive the email:
       | subject       | John Smith shared a document with you |
       | body contains | To view this document                 |
@@ -69,11 +86,17 @@ Background:
     And "jane.smith@example.com" should not receive an email
 
     Given I am logged in as "bob.smith@example.com"
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     Then I should see "sample.wav"
 
     Given I am logged in as "jane.smith@example.com"
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
+    Then I wait for the "#document_progress_panel" element to finish
     Then I should not see "sample.wav"
