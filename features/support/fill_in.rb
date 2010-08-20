@@ -96,12 +96,23 @@ module FeatureHelpers
       case label
       when "People"
         value.split(',').each do |name|
+          name_array = name.split("")
+          wait_until{page.find(".maininput").nil? == false}
           div_elem = page.find(".maininput")
-          div_elem.set(name)
+          div_elem.set('')
           div_elem.click
-          wait_until{page.find("li.outer").nil? == false}
-          sleep 1 #even with wait_until, tests sometime fail because element is not yet attached to the DOM
-          page.find("li.outer").click
+          name_array.each do |c|
+            is_click = false
+            div_elem.set(div_elem.value + c)
+            begin
+              wait_until{page.find("li.outer").nil? == false}
+              sleep 0.5
+              page.find("li.outer").click
+              is_click = true
+            rescue
+            end
+            break if is_click
+          end
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
