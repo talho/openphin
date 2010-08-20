@@ -9,14 +9,18 @@
         "#{key}=#{value}"
       end
     end}.compact.join("&") -%>
-    <% debugger %>
+    <%- 
+    query = params[:conditions] ? params[:conditions].map{|k,v| "conditions[#{k}]=#{v}"} : []
+    query << params[:with].map{|k,v| "with[#{k}][]=#{v}"} if params[:with] 
+    query = query.join("&")
+    -%>
   <p>
     <%= render :partial => "search" %>
   </p>
   <% unless @results.nil? %>
     <% unless @results.empty? %>
       <p>
-        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query_string}" %>
+        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query}" %>
         <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
       </p>
       <%= will_paginate @results %>
@@ -44,3 +48,4 @@
     <% end %>
   <% end %>
 </div>
+

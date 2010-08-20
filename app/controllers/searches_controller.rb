@@ -22,50 +22,9 @@ class SearchesController < ApplicationController
     end
   end
 
-  
-  def show_advanced_was
-    debugger
-    if request.post?
-      options = {
-        :retry_stale => true,                   # avoid nil results
-        :order => :name,                        # ascending order on name
-      }
-
-      unless %w(pdf csv).include?(params[:format])
-        options[:page] = params[:page]||1
-        options[:per_page] = 8
-      else
-        options[:per_page] = 30000
-        options[:max_matches] = 30000
-      end
-
-      build_fields params, conditions={}
-      filters = build_filters params
-      assure_name_not_in_advanced_search(conditions,filters)
-
-      options[:conditions] = conditions unless conditions.empty?
-      options[:match_mode] = :any if conditions[:name]
-      options[:with] = filters unless filters.empty?
-      @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
-    else
-      @results = []
-    end
-    
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        prawnto :inline => false        
-      end
-      format.csv do
-        @csv_options = { :col_sep => ',', :row_sep => :auto }
-        @filename = "user_search_.csv"
-        @output_encoding = 'UTF-8'
-      end
-    end
-  end
-  
   def show_advanced
-    unless request.post?
+    debugger
+    if request.get? && (params[:conditions].nil? && params[:with].nil? && params[:name].nil?) 
       @results = []
     else
       strip_blank_elements(params[:conditions])
@@ -80,7 +39,6 @@ class SearchesController < ApplicationController
         @results = User.search(params.merge(build_options(params)))
       end
     end
-    
     
     respond_to do |format|
       format.html
@@ -130,44 +88,19 @@ protected
     hsh.delete_if{|k,v| v.to_s.blank?} if hsh
   end
   
-  
   def build_options(params)
     options = {
-      :retry_stale => true,                    # avoid nil results
-      :order => :name,                         # ascending order on name
-      :page => params[:page].to_i||1,          # paginate pages
-      :per_page => params[:per_page].to_i||8, # paginate entries per page
-      :star => true                            # auto wildcard
+      :retry_stale => true,                                        # avoid nil results
+      :order => :name,                                             # ascending order on name
+      :page => params[:page] ? params[:page].to_i : 1,             # paginate pages
+      :per_page => params[:per_page] ? params[:per_page].to_i : 8, # paginate entries per page
+      :star => true                                                # auto wildcard
     }
     if %w(pdf csv).include?(params[:format])
       options[:per_page] = 30000
       options[:max_matches] = 30000
     end
     return options
-  end
-
-  def build_filters(params,filters={})
-    [:role_ids,:jurisdiction_ids].each do |f|
-      if params[f]
-        filter = params[f].compact.reject(&:blank?)
-        filters[f] = filter unless filter.empty?
-      end
-    end
-    filters
-  end
-
-  def build_fields(params,fields={})
-    [:name,:first_name,:last_name,:display_name,:email,:title].each do |f|
-      field = params[f]
-      fields[f] = field.gsub(/(:|@|-|!|~|&|"|\(|\)|\\|\|)/) { "\\#{$1}" } unless field.blank?
-    end
-    
-    unless fields[:name].blank? || fields[:name].index('@').nil?
-      fields[:email] = fields[:name]
-      fields.delete(:name)
-    end
-    fields[:phone] = params[:phone].gsub(/([^0-9*])/,"") unless params[:phone].blank?
-    fields
   end
 
   def sort_by_tag(results, tag)
@@ -182,11 +115,6 @@ protected
         0
       end
     }
-  end
-  
-  def assure_name_not_in_advanced_search(conditions,filters)
-    is_advanced = !conditions.reject{|k,v|k==:name}.empty? && !filters.empty?
-    conditions.reject!{|k,v|k==:name} if is_advanced
   end
   
 end
