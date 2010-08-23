@@ -53,7 +53,7 @@ Background:
     And I follow "Documents"
     Then I wait for the "#document_progress_panel" element to finish
     And I select "#new_share_folder" from the documents toolbar
-    And I fill in "Rockstars" for "Share Name"
+    And I fill in "Share Name" with "Rockstars"
     And I press "Create Share"
     Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
@@ -78,7 +78,7 @@ Background:
     And I follow "Documents"
     Then I wait for the "#document_progress_panel" element to finish
     And I select "#new_share_folder" from the documents toolbar
-    And I fill in "Rockstars" for "Share Name"
+    And I fill in "Share Name" with "Rockstars"
     And I press "Create Share"
     Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
@@ -102,7 +102,7 @@ Background:
     And I follow "Documents"
     Then I wait for the "#document_progress_panel" element to finish
     And I select "#new_share_folder" from the documents toolbar
-    And I fill in "Rockstars" for "Share Name"
+    And I fill in "Share Name" with "Rockstars"
     And I press "Create Share"
     Then I wait for the "#document_progress_panel" element to finish
     And I follow "Inbox"
@@ -126,7 +126,8 @@ Background:
     And "bob.smith@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this share, go to:        |
-
+    And I go to the dashboard page
+    
     Given I am logged in as "bob.smith@example.com"
     When I go to the dashboard page
     And I follow "Documents"

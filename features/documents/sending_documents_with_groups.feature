@@ -84,6 +84,7 @@ Background:
       | body contains | To view this document                 |
     And "john.smith@example.com" should not receive an email
     And "jane.smith@example.com" should not receive an email
+    And I go to the dashboard page
 
     Given I am logged in as "bob.smith@example.com"
     When I go to the dashboard page
@@ -92,7 +93,8 @@ Background:
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     Then I should see "sample.wav"
-
+    And I go to the dashboard page
+    
     Given I am logged in as "jane.smith@example.com"
     When I go to the dashboard page
     And I follow "Documents"
