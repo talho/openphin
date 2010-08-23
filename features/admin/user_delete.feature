@@ -36,6 +36,7 @@ Feature: An admin deleting users
 
     And I am logged in as "bob.jones@example.com"
     And I go to the roles requests page for an admin
+    And I show dropdown menus
     And I follow "Assign Role"
     When I fill out the assign roles form with:
       | People       | Jane Smith     |
@@ -72,12 +73,15 @@ Feature: An admin deleting users
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert form with:
-      | People   | Jane Smith                              |
+    And I fill out the alert "Details" form with:
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
-   And I press "Preview Message"
+    And I check "E-mail"
+    And I press "Select an Audience"
+    And I fill out the alert "Audience" form with:
+      | People   | Jane Smith                              |
+    And I press "Preview Message"
     Then I should see a preview of the message with:
-      | people            | Jane Smith |
+      | People   | Jane Smith |
       
     And I press "Send"
     And "jane.smith@example.com" is deleted as a user by "john.smith@example.com"

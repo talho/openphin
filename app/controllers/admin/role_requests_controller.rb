@@ -64,12 +64,15 @@ class Admin::RoleRequestsController < ApplicationController
   end
 
   def approve
-    request=RoleRequest.find(params[:id])
-    if request
-      if current_user.is_admin_for?(request.jurisdiction)
-        request.approve!(current_user)
-        link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
-        flash[:notice]="#{link} has been approved for the role #{request.role.name} in #{request.jurisdiction.name}"
+    role_req=RoleRequest.find(params[:id])
+    if role_req
+      if current_user.is_admin_for?(role_req.jurisdiction)
+        role_req.approve!(current_user)
+        link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
+        flash[:notice]="#{link} has been approved for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
+
+        # Set referer for redirect when testing
+        request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
 
         if params[:postback].blank?
           redirect_to :back
@@ -84,13 +87,16 @@ class Admin::RoleRequestsController < ApplicationController
   end
   
   def deny
-    request=RoleRequest.find(params[:id])
-    if request
-      if current_user.is_admin_for?(request.jurisdiction)
-        request.deny!
-        ApprovalMailer.deliver_denial(request, current_user)
-        link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
-        flash[:notice]="#{link} has been denied for the role #{request.role.name} in #{request.jurisdiction.name}"
+    role_req=RoleRequest.find(params[:id])
+    if role_req
+      if current_user.is_admin_for?(role_req.jurisdiction)
+        role_req.deny!
+        ApprovalMailer.deliver_denial(role_req, current_user)
+        link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
+        flash[:notice]="#{link} has been denied for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
+
+        # Set referer for redirect when testing
+        request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
 
         if params[:postback].blank?
           redirect_to :back
