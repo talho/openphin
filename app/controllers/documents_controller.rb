@@ -14,19 +14,21 @@ class DocumentsController < ApplicationController
 
   def index
     if params[:channel_id]
-      if @channel = current_user.channels.find(params[:channel_id])
-        @name = @channel.name
+      begin
+        @channel   = current_user.channels.find(params[:channel_id])
+        @name      = @channel.name
         @documents = [@channel.documents].flatten
-      else
+      rescue
         flash[:error] = "Channel does not exist"
         redirect_to documents_panel_path
       end
     elsif params[:folder_id]
-      if @parent_folder = current_user.folders.find(params[:folder_id])
-        @name = @parent_folder.name
-        @folder = Folder.new
-        @documents = [@parent_folder.documents].flatten
-      else
+      begin
+        @parent_folder = current_user.folders.find(params[:folder_id])
+        @name          = @parent_folder.name
+        @folder        = Folder.new
+        @documents     = [@parent_folder.documents].flatten  
+      rescue
         flash[:error] = "Folder does not exist"
         redirect_to documents_panel_path
       end

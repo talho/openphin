@@ -54,11 +54,13 @@ Feature: Creating document channels
 
    Scenario:Inviting users to a share
      Given I created the share "Avian Flu"
+     And I go to the dashboard page
      Given I am logged in as "brandon.keepers@example.com"
      When I go to the dashboard page
      And I follow "Documents"
      Then I wait for the "#document_progress_panel" element to finish
      Then I should not see "Avian Flu"
+     And I go to the dashboard page
 
      Given I am logged in as "john.smith@example.com"
      When I go to the dashboard page
@@ -74,7 +76,8 @@ Feature: Creating document channels
      And "brandon.keepers@example.com" should receive the email:
       | subject       | John Smith invited you to a share |
       | body contains | To view this share |
-
+     And I go to the dashboard page
+     
      Given I am logged in as "brandon.keepers@example.com"
      When I go to the dashboard page
      And I follow "Documents"
