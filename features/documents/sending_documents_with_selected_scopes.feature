@@ -60,6 +60,7 @@ Feature: Sending documents with selected scopes
     And "brandon.keepers@example.com" should receive the email:
       | subject       | John Smith shared a document with you |
       | body contains | To view this document                 |
+    And I go to the dashboard page
 
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the dashboard page
@@ -82,6 +83,7 @@ Feature: Sending documents with selected scopes
       | subject       | John Smith sent a document to you                     |
       | body contains | To view this document                                 |
     And "ed.mcguyver@example.com" should not receive an email
+    And I go to the dashboard page
 
     Given I am logged in as "brandon.keepers@example.com"
     When I go to the dashboard page
@@ -90,6 +92,7 @@ Feature: Sending documents with selected scopes
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     And I should see "sample.wav"
+    And I go to the dashboard page
 
     Given I am logged in as "dan.morrison@example.com"
     When I go to the dashboard page
@@ -112,6 +115,7 @@ Feature: Sending documents with selected scopes
       | body contains | To view this document                           |
     And "ed.mcguyver@example.com" should not receive an email
     And "ethan.waldo@example.com" should not receive an email
+    And I go to the dashboard page
 
     Given I am logged in as "john.smith@example.com"
     When I go to the dashboard page
@@ -120,6 +124,7 @@ Feature: Sending documents with selected scopes
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     And I should see "sample.wav"
+    And I go to the dashboard page
 
     Given I am logged in as "brian.simms@example.com"
     When I go to the dashboard page
@@ -142,6 +147,7 @@ Feature: Sending documents with selected scopes
       | subject       | John Smith sent a document to you                                           |
       | body contains | To view this document                                                       |
     And "brian.simms@example.com" should not receive an email
+    And I go to the dashboard page
 
     Given I am logged in as "john.smith@example.com"
     When I go to the dashboard page
@@ -150,6 +156,7 @@ Feature: Sending documents with selected scopes
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     Then I should see "sample.wav"
+    And I go to the dashboard page
 
     Given I am logged in as "ethan.waldo@example.com"
     When I go to the dashboard page
@@ -158,6 +165,7 @@ Feature: Sending documents with selected scopes
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     Then I should see "sample.wav"
+    And I go to the dashboard page
 
     Given I am logged in as "brian.simms@example.com"
     When I go to the dashboard page
@@ -180,6 +188,7 @@ Feature: Sending documents with selected scopes
       | subject       | John Smith sent a document to you     |
       | body contains | To view this document                 |
     And "ed.mcguyver@example.com" should not receive an email
+    And I go to the dashboard page
 
     Given I am logged in as "john.smith@example.com"
     When I go to the dashboard page
@@ -188,6 +197,7 @@ Feature: Sending documents with selected scopes
     And I follow "Inbox"
     Then I wait for the "#document_progress_panel" element to finish
     Then I should see "sample.wav"
-
+    And I go to the dashboard page
+    
     Given I am logged in as "ed.mcguyver@example.com"
-    Then I should see "You are not authorized to view this page."
+    Then I should not see "Documents"

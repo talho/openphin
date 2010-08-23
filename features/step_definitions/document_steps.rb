@@ -130,3 +130,11 @@ When /^I download the file "([^\"]*)"$/ do |value|
   rescue Capybara::NotSupportedByDriverError
   end 
 end
+
+When /^I should see "([^\"]*)" is an owner of "([^\"]*)"$/ do |owner, share|
+  assert page.find(:xpath, "//ul[@class = \"shares\"]/li[contains(.//a, \"#{share}\")]/p/a/label[contains(., \"#{owner}\")]").nil? == false  
+end
+
+When /^I should see "([^\"]*)" is not an owner of "([^\"]*)"$/ do |owner, share|
+  assert page.find(:xpath, "//ul[@class = \"shares\"]/li[contains(.//a, \"#{share}\")]/p/a/label[contains(., \"#{owner}\")]").nil? == true
+end
