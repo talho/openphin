@@ -157,7 +157,7 @@ When /^I sign in with "([^\"]*)" and "([^\"]*)"$/ do |email, password|
   visit sign_in_path
   fill_in "Email", :with => email
   fill_in "Password", :with => password
-  click_button "Sign In"
+  click_button "Sign in"
 end
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last

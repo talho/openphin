@@ -77,8 +77,8 @@ end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
   visit admin_role_requests_path
-	response.should_not have_selector( ".pending_role_requests")
-  response.should_not have_selector(".requester_email", :content => user_email)
+	page.should_not have_css( ".pending_role_requests")
+  page.should_not have_css(".requester_email", :content => user_email)
 end
 
 Then /^I should see that I have a pending role request$/ do
@@ -105,13 +105,11 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           current_user.jurisdictions.first.id)
 
   visit admin_role_requests_path
-  response.should have_selector( ".pending_role_requests") do |req|
-    req.should have_selector(".requester_email", :content => user_email)
-    req.should have_selector(".role", :content => role_name)
-    req.should have_selector(".jurisdiction", :content => current_user.jurisdictions.first.name )
-    req.should have_selector("a.approve_link[href='#{approve_admin_role_request_path(request)}']")
-    req.should have_selector("a.deny_link[href='#{deny_admin_role_request_path(request)}']")
-  end
+  page.should have_css(".pending_role_requests .requester_email", :content => user_email)
+  page.should have_css(".pending_role_requests .role", :content => role_name)
+  page.should have_css(".pending_role_requests .jurisdiction", :content => current_user.jurisdictions.first.name )
+  page.should have_css(".pending_role_requests a.approve_link[href='#{approve_admin_role_request_path(request)}']")
+  page.should have_css(".pending_role_requests a.deny_link[href='#{deny_admin_role_request_path(request)}']")
 end
 
 Then /^I should see (\d) recent role approvals?$/ do |num|
