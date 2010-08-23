@@ -1,12 +1,14 @@
 pdf.text "User Search Export", :size => 30, :style => :bold
 
-users = @results.map do |user|
-  [
-    user.display_name,
-    user.email,
-    user.role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort.join("\n")
-  ]
+unless @results.empty?
+  users = @results.map do |user|
+    [
+      user.display_name,
+      user.email,
+      user.role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort.join("\n")
+    ]
   
+  end
 end
 
 
