@@ -39,6 +39,7 @@ Feature: Online importing users from a uploaded CSV file
   Scenario: Admin can upload a user import batch file 
     Given I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
+    And I show dropdown menus
     And I follow "Batch Users"
     And a jurisdiction named "Ector"
     And I attach the tmp file at "users.csv" to "Upload User CSV file"
@@ -61,6 +62,7 @@ Feature: Online importing users from a uploaded CSV file
     Given the user "John User" with the email "john@example.com" has the role "Public" in "Ector"
     And I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
+    And I show dropdown menus
     And I follow "Batch Users"
     And a jurisdiction named "Ector"
     And I attach the tmp file at "users.csv" to "Upload User CSV file"

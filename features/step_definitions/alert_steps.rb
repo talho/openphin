@@ -77,8 +77,8 @@ When /^PhinMS delivers the message: (.*)$/ do |filename|
   When "delayed jobs are processed"
 end
 
-When "I fill out the alert form with:" do |table|
-  fill_in_alert_form table
+When /I fill out the alert "([^\"]*)" form with:/ do |subform,table|
+  fill_in_alert_form subform, table
 end
 
 When "I make changes to the alert form with:" do |table|
@@ -125,10 +125,10 @@ Then 'I should see a preview of the message with:' do |table|
     case key
     when /(Jurisdiction|Role|Organization|People)s?/
       value.split(',').each do |item|
-        response.should have_tag(".#{key.parameterize('_')}", Regexp.new(Regexp.escape(item.strip)))
+        page.should have_css(".#{key.parameterize('_')}", :content => Regexp.new(Regexp.escape(item.strip)))
       end
     else
-      response.should have_tag(".#{key.parameterize('_')}", Regexp.new(Regexp.escape(value)))
+      page.should have_css(".#{key.parameterize('_')}", :content => Regexp.new(Regexp.escape(value)))
     end
   end
 end

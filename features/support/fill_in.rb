@@ -64,16 +64,19 @@ module FeatureHelpers
       end
     end
   
-    def fill_in_alert_form(table = nil)
-      fields = { 
-        #"Title" => "H1N1 SNS push packs to be delivered tomorrow",
-        "Message" => "For more details, keep on reading...",
-        "Severity" =>"Moderate",
-        #"Status" => "Actual",
-        "Acknowledge"  => "Normal",
-        #"Communication methods" => "E-mail",
-        "Delivery Time" => "15 minutes"
-      }
+    def fill_in_alert_form(subform, table = nil)
+      fields = case subform
+        when "Details"
+          { #"Title" => "H1N1 SNS push packs to be delivered tomorrow",
+            "Message" => "For more details, keep on reading...",
+            "Severity" =>"Moderate",
+            #"Status" => "Actual",
+            "Acknowledge"  => "Normal",
+            #"Communication methods" => "E-mail",
+            "Delivery Time" => "15 minutes" }
+        when "Audience"
+          { }
+      end
 
       if table.is_a?(Hash)
         fields.merge!(table)
@@ -126,7 +129,12 @@ module FeatureHelpers
       when "People"
         value.split(',').each do |name|
           user = Given "a user named #{name.strip}"
-          fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
+          #fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
+          find(:css, ".maininput").node.click
+          sleep 1
+          find(:css, ".maininput").node.send_keys(user.email)
+          sleep 3
+          find(:css, ".facebook-auto li").node.click
         end
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/, /^Communication methods?/
         value.split(',').map(&:strip).each{ |r| check r }
@@ -136,13 +144,13 @@ module FeatureHelpers
           case value
             when /^(\d+) hours$/ then
               if Alert::DeliveryTimes.include?($1.to_i.hours.to_i/1.minute.to_i)
-                select value, :from => label
+                select value, :from => "alert_delivery_time"
               else
                 raise "Not a valid Delivery Time"
             end
             when /^(\d+) minutes$/ then
               if Alert::DeliveryTimes.include? $1.to_i
-                select value, :from => label
+                select value, :from => "alert_delivery_time"
               else
                 raise "Not a valid Delivery Time"
             end
@@ -178,7 +186,12 @@ module FeatureHelpers
         when "People"
           value.split(',').each do |name| 
             user = Given "a user named #{name.strip}"
-            fill_in "role_assigns_user_ids", :with => user.id.to_s
+            #fill_in "role_assigns_user_ids", :with => user.id.to_s
+            find(:css, ".maininput").node.click
+            sleep 1
+            find(:css, ".maininput").node.send_keys(user.email)
+            sleep 3
+            find(:css, ".facebook-auto li").node.click
           end
         when "Role", "Jurisdiction"
           select value.split(',').map(&:strip), :from => label
@@ -205,8 +218,9 @@ module FeatureHelpers
           user = Given "a user named #{name.strip}"
           find(:css, ".maininput").node.click
           sleep 1
-          find(:css, ".maininput").node.send_keys(user.email, :enter)
-          sleep 1
+          find(:css, ".maininput").node.send_keys(user.email)
+          sleep 3
+          find(:css, ".facebook-auto li").node.click
         }
       when 'Name'
         fill_in "group_#{label.downcase}", :with => value
