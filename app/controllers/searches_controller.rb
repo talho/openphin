@@ -24,7 +24,10 @@ class SearchesController < ApplicationController
 
   
   def show_advanced
-    if request.post?
+    debugger
+    if request.get? && params.count == 2
+      @results = []
+    else
       options = {
         :retry_stale => true,                   # avoid nil results
         :order => :name,                        # ascending order on name
@@ -34,8 +37,8 @@ class SearchesController < ApplicationController
         options[:page] = params[:page]||1
         options[:per_page] = 8
       else
-        options[:per_page] = 30000
-        options[:max_matches] = 30000
+        options[:per_page] = 1000
+        options[:max_matches] = 1000
       end
 
       build_fields params, conditions={}
@@ -46,8 +49,6 @@ class SearchesController < ApplicationController
       options[:match_mode] = :any if conditions[:name]
       options[:with] = filters unless filters.empty?
       @results = (conditions.empty? && filters.empty?) ? nil : User.search(options)
-    else
-      @results = []
     end
     
     respond_to do |format|
