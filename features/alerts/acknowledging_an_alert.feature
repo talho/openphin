@@ -21,10 +21,12 @@ Feature: Acknowledging an alert
       | jurisdictions | Dallas County |
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
+    And I follow "More"
     When I press "Acknowledge"
     Then I have acknowledged the alert for "Piggy Pox"
     
     When I go to the HAN
+    And I follow "More"
     Then I should not see an "Acknowledge" button
     But I should see "Acknowledge: Yes"
     
@@ -48,11 +50,13 @@ Feature: Acknowledging an alert
     And I am logged in as "martin@example.com"
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
+    And I follow "More"
     And I select "if you can respond within 30 minutes" from "Alert Response"
     When I press "Acknowledge"
     Then I have acknowledged the alert for "Piggy Pox"
   
     When I go to the HAN
+    And I follow "More"
     Then I should not see an "Acknowledge" button
     And I should not see "Alert Response"
     But I should see "Acknowledge: if you can respond within 30 minutes"

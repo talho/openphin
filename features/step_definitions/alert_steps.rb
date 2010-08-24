@@ -256,7 +256,8 @@ end
 
 Then /^I can see the alert summary for "([^\"]*)"$/ do |title|
   alert = Alert.find_by_title!(title)
-  response.should have_tag('#?', dom_id(alert))
+  page.has_css?("#" + dom_id(alert))
+  #response.should have_tag('#?', dom_id(alert))
 end
 
 Then 'I should see an alert with the summary:' do |table|
