@@ -25,8 +25,9 @@ Feature: Alert Reports
     When I am on the alert log
     Then I should see an alert titled "Grant Sample"
     When I follow "View"
-    And I follow "Export Contacted Users (CSV)"
-    Then I should see the csv report for the alert titled "Grant Sample"
+    And I will confirm on next step
+    When I download the file "Export Contacted Users (CSV)"
+    Then I should see "Success" within the alert box
 
   Scenario: A non-alerter cannot view a report of an alert
     Given I am logged in as "john.smith@example.com"

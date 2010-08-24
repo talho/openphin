@@ -125,7 +125,7 @@ end
 When /^I download the file "([^\"]*)"$/ do |value|
   elem = page.find("a", :text => value)
   begin
-    evaluate_script("setTimeout(function(){$.get('#{elem[:href]}',function(data){alert('Success')})},1000)")
+    evaluate_script("setTimeout(function(){$.get('#{elem[:href]}',function(data){alert('Success')})},500)")
     sleep 1
   rescue Capybara::NotSupportedByDriverError
   end 
