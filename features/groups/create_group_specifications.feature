@@ -18,6 +18,7 @@ Feature: Creating groups
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
     Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
+    And delayed jobs are processed
 
   Scenario: going to add a user group as an admin
     When I go to the dashboard page
