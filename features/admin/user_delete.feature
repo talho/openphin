@@ -20,18 +20,18 @@ Feature: An admin deleting users
     And a role named Public
     And an approval role named Health Alert and Communications Coordinator
     And I am logged in as "bob.jones@example.com"
+    And the sphinx daemon is running
+    And delayed jobs are processed
   
   Scenario: Attempt to delete an invalid user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     When I go to the users delete page for an admin
-    And the sphinx daemon is running
-    And I fill in "users_user_ids" with "Jonah"
+    And I fill in fcbk control with "Zzzjonah"
     And I press "Delete Users"
     Then I should see "A valid user was not selected"
     
   Scenario: Delete a user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
-    And the sphinx daemon is running
     And all email has been delivered
 
     And I am logged in as "bob.jones@example.com"
@@ -49,15 +49,12 @@ Feature: An admin deleting users
     And I should see "jane.smith@example.com has been approved for the role Medical Director in Dallas County"
 
     When I go to the users delete page for an admin
-    And the sphinx daemon is running
     And I fill out the delete user form with "Jane Smith"
     And I press "Delete Users"
-    And delayed jobs are processed
     
     Then I should see "Users have been successfully deleted"
 
     When I go to the users delete page for an admin
-    And the sphinx daemon is running
     And I fill out the delete user form with "Jane Smith"
     
     Then I should not see "Jane Smith"
@@ -85,7 +82,6 @@ Feature: An admin deleting users
       
     And I press "Send"
     And "jane.smith@example.com" is deleted as a user by "john.smith@example.com"
-    And delayed jobs are processed
     Then an alert should not exist with:
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
@@ -95,9 +91,9 @@ Feature: An admin deleting users
     Given I signup for an account with the following info:
       | Email          | greg.brown@example.com |
       | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | Greg             |
-      | Last name      | Brown            |
+      | Password Confirmation | Apples1   |
+      | First Name     | Greg             |
+      | Last Name      | Brown            |
       | Home Jurisdiction  | Dallas County    |
     Then I should see "Thanks for signing up"
     And "greg.brown@example.com" should have the "Public" role for "Dallas County"
@@ -105,17 +101,15 @@ Feature: An admin deleting users
     When I signup for an account with the following info:
       | Email          | Greg.Brown@example.com |
       | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | Greg             |
-      | Last name      | Brown            |
+      | Password Confirmation | Apples1   |
+      | First Name     | Greg             |
+      | Last Name      | Brown            |
       | Home Jurisdiction  | Dallas County    |
     Then I should not see "Thanks for signing up"
     
     When I go to the users delete page for an admin
-    And the sphinx daemon is running
     And I fill out the delete user form with "Greg Brown"
     And I press "Delete Users"
-    And delayed jobs are processed
     Then I should see "Users have been successfully deleted"
 
     When I signup for an account with the following info:

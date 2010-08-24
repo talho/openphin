@@ -148,6 +148,14 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
+When /I fill in fcbk control with "([^"]*)"/ do |user|
+  fill_in_fcbk_control(user, false)
+end
+
+When /I unselect "([^"]*)" from fcbk control/ do |user|
+  remove_from_fcbk_control(user)
+end
+
 Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, selector|
   regexp = Regexp.new(regexp)
   with_scope(selector) do
