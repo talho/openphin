@@ -12,8 +12,6 @@ Feature: Sending sensitive alerts
     And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the HAN
-    And I follow "Send an Alert"
 
   Scenario: Sending a sensitive email alert
     When I fill out the alert form with:
