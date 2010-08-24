@@ -108,13 +108,17 @@ Feature: Viewing the alert log
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert form with:
+    And I fill out the alert "Details" form with:
       | Jurisdiction          | Texas                |
-      | Jurisdictions         | Texas, Dallas County |
-      | Roles                 | HAN Coordinator      |
       | Title                 | Hello World          |
+      | Message               | Hello World          |
+      | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Roles         | HAN Coordinator      |
+      | Jurisdictions | Texas, Dallas County |
     And I press "Preview Message"
     Then I should see a preview of the message with:
         | Roles | HAN Coordinator |
@@ -123,31 +127,35 @@ Feature: Viewing the alert log
 
     And I am logged in as "jane.smith@example.com"
     And I go to the HAN
-    And I follow the acknowledge alert link
+    And I follow "More"
+    And I press "Acknowledge"
 
     And I am logged in as "john.smith@example.com"
     And delayed jobs are processed
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
+    And I follow "More"
     And I can see the alert for "Hello World" is 33% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 33%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
-    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 33%
-    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 0%
+    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 0%
+    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 33%
     And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Phone"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
     When I go to the HAN
+    And I follow "More"
     And I press "Acknowledge"
     And I am on the alert log
     Then I can see the alert summary for "Hello World"
+    And I follow "More"
     And I should see "Acknowledge: Normal"
     And I can see the alert for "Hello World" is 67% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 67%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
-    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 33%
-    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 33%
+    And I can see the device alert acknowledgement rate for "Hello World" in "E-mail" is 0%
+    And I can see the device alert acknowledgement rate for "Hello World" in "Console" is 67%
     And I can see the device alert acknowledgement rate for "Hello World" in "SMS" is 0%
 
   Scenario: Viewing a really large alert log
@@ -207,9 +215,10 @@ Feature: Viewing the alert log
       Then I should see "Acknowledge: Advanced"
       When I go to the HAN
       And I should see "Alert Response"
+      And I follow "More"
       And I select "if you can respond within 15 minutes" from "Alert Response"
       And I press "Acknowledge"
-      
+
     Scenario: Viewing acknowledged alerts with alert responses from view
       Given the following entities exists:
         | Jurisdiction | Texas         |
@@ -238,6 +247,7 @@ Feature: Viewing the alert log
       And "daniel@example.com" has not acknowledged the alert "Hello World"
       When I go to the HAN
       Then I should see "Alert Response"
+      And I follow "More"
       When I select "if you can respond within 15 minutes" from "Alert Response"
       And I press "Acknowledge"
       When I am on the alert log
@@ -246,7 +256,7 @@ Feature: Viewing the alert log
       Then I should see "if you can respond within 15 minutes"
       When I go to the HAN
       Then I should not see "Alert Response"
-      
+
     Scenario: Viewing audience of Alert and acknowledgement log from view(show)
       Given the following entities exists:
         | Jurisdiction | Texas         |
@@ -257,30 +267,40 @@ Feature: Viewing the alert log
         | Daniel Morrison | daniel@example.com       | Health Officer | Texas |
       And the role "HAN Coordinator" is an alerter
       And I am logged in as "john.smith@example.com"
-      And I've sent an alert with:
-        | Jurisdiction      | Texas                |
-        | Jurisdictions     | Texas                |
-        | Roles             | Health Officer       |
-        | People            | John Smith           |
-        | Title             | Hello World          |
-        | Communication methods | E-mail           |
-        | Alert Response 1  | if you can respond within 15 minutes |
-        | Alert Response 2  | if you can respond within 30 minutes |
-        | Alert Response 3  | if you can respond within 1 hour     |
-        | Alert Response 4  | if you can respond within 4 hours    |
-        | Alert Response 5  | if you cannot respond                |
+      When I go to the HAN
+      And I follow "Send an Alert"
+      And I select "Advanced" from "Acknowledge"
+      And I fill out the alert "Details" form with:
+      | Jurisdiction          | Texas                |
+      | Title                 | Hello World          |
+      | Message               | Hello World          |
+      | Short Message         | Hello World          |
+      | Acknowledge           | Advanced             |
+      | Communication methods | E-mail               |
+      | Alert Response 1  | if you can respond within 15 minutes |
+      | Alert Response 2  | if you can respond within 30 minutes |
+      | Alert Response 3  | if you can respond within 1 hour     |
+      | Alert Response 4  | if you can respond within 4 hours    |
+      | Alert Response 5  | if you cannot respond                |
+      And I press "Audience"
+      And delayed jobs are processed
+      And I fill out the alert "Audience" form with:
+      | Roles         | Health Officer      |
+      | Jurisdictions | Texas |
+      | People | John Smith |
+      And I press "Preview Message"
+      And I press "Send"
       And delayed jobs are processed
       And "jane.smith@example.com" has acknowledged the alert "Hello World" with "" 0 minutes later
       And I follow the acknowledge alert link
-      And "daniel@example.com" has acknowledged the alert "Hello World" with "if you cannot respond" 0 minutes later 
+      And "daniel@example.com" has acknowledged the alert "Hello World" with "if you cannot respond" 0 minutes later
       And delayed jobs are processed
       When I am on the alert log
       Then I can see the alert summary for "Hello World"
       When I click "View" on "Hello World"
-      
+
       Then I should see "John Smith" within ".author"
       And I should see "Created at:"
-#      And I should see /\d\d:\d\d/ within ".created_at"
       Then I should see "Texas" within ".jurisdictions"
       And I should see "Health Officer" within ".roles"
       And I should see "John Smith" within ".people"

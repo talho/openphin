@@ -212,15 +212,17 @@ Then 'an alert should not exist with:' do |table|
 end
 
 Then /^I should see (\d*) alerts?$/ do |n|
-  response.should have_selector('.alert', :count => n.to_i)
+  page.should have_css(".alert", :count => n.to_i)
+  #response.should have_selector('.alert', :count => n.to_i)
 end
 
 Then /^I should see an alert titled "([^\"]*)"$/ do |title|
-  response.should have_tag('.alert .title .moderate', title)
+  page.should have_content(title)
 end
 
 Then /^I should not see an alert titled "([^\"]*)"$/ do |title|
-  response.should_not have_tag('.alert .title', title)
+  page.should have_no_content(title)
+  #response.should_not have_tag('.alert .title', title)
 end
 
 Then /^I should see a ([^\"]*) alert titled "([^\"]*)"$/ do |severity, title|
@@ -279,22 +281,16 @@ Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
 end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|
-  response.should have_selector('.progress', :content => percent)
+  assert page.find('.progress', :text => percent).nil? == false
 end
 
 Then /^I can see the jurisdiction alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, jurisdiction_name, percentage|
-  response.should have_selector(".jur_ackpct") do |elm|
-	  elm.should have_selector(".jurisdiction", :content => jurisdiction_name)
-	  elm.should have_selector(".percentage", :content => percentage)
-  end
+  assert page.find(".jur_ackpct .jurisdiction", :text => jurisdiction_name).nil? == false
+  assert page.find(".jur_ackpct .percentage", :text => percentage).nil? == false
 end
 
 Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, device_type, percentage|
-  response.should have_selector(".dev_ackpct") do |elm|
-    elm.should have_selector(".#{device_type}") do |device|
-	  device.should have_selector(".percentage", :content => percentage)
-    end
-  end
+  assert page.find(".dev_ackpct .#{device_type} .percentage", :text => percentage).nil? == false
 end
 
 Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, alert_response, percentage|
@@ -308,7 +304,7 @@ Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\
 end
 
 Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)"$/ do |alert_name, device_type|
-  response.should_not have_selector(".#{device_type}")
+  assert page.has_css?(".#{device_type}") == false 
 end
 
 Then /^the alert should be acknowledged$/ do

@@ -10,7 +10,6 @@ module FeatureHelpers
       end
       wait_until{page.find(".maininput").nil? == false}
       div_elem = page.find(".maininput")
-      #div_elem.set('')
       div_elem.click
       name_array.each do |c|
         is_click = false
