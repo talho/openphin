@@ -60,7 +60,7 @@ Then /^I should not see a "([^\"]*)" link$/ do |class_name|
 end
 
 Then /^I should not see an "([^\"]+)" button$/ do |button_text|
-  response.should_not have_selector('input[type=button]', :content => button_text)
+  assert page.find('input', :content => button_text).nil? == true
 end
 
 Then /^I should see the following menu\:$/ do |table|
