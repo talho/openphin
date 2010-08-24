@@ -117,7 +117,7 @@ When 'I send a message recording "$filename"' do |filename|
 end
 
 Then 'I should see a preview of the message' do
-  response.should have_tag('#preview')
+  page.should have_css('#preview')
 end
 
 Then 'I should see a preview of the message with:' do |table|
