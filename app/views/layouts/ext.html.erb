@@ -1,10 +1,11 @@
 <head>
   <Title>Ext Dashboard</Title>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug' %>
-  <%= javascript_include_tag 'ext_extensions/MaxWidthHBox', 'ext_extensions/HtmlFormPanel', 'ext_extensions/AjaxPanel', 'ext_extensions/CenteredAjaxPanel', 'ext_extensions/DragDropTabs', 'ext_extensions/RailsJsonReader'%>
+  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug'%>
+  <%= javascript_include_tag 'ext_extensions/MaxWidthHBox', 'ext_extensions/HtmlFormPanel', 'ext_extensions/AjaxPanel', 'ext_extensions/CenteredAjaxPanel', 'ext_extensions/DragDropTabs', 'ext_extensions/RailsJsonReader', 'ext_extensions/DoNotCollapseActive' %>
+  <%= javascript_include_tag 'ext_extensions/TreeGrid/TreeGrid', 'ext_extensions/Ext.ux.grid.RowActions', 'ext_extensions/AudiencePanel', 'ext_extensions/ViewLoadMask', 'ext_extensions/DataTip' %>
   <%= javascript_include_tag '/dashboard/menu' %>
-  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'dashboard/article3panel', 'searches/AdvancedSearch', 'dashboard/index' %>
-  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han'  %>      
+  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index' %>
+  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/Ext.ux.grid.RowActions', 'TreeGrid/css/TreeGrid', 'TreeGrid/css/TreeGridLevels'  %>
 </head>
 <body>
   <%= yield %>

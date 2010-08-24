@@ -30,3 +30,14 @@
 a.inlineLink {text-decoration:underline;cursor:pointer;color:blue;}
 
 .inlineBtn{cursor:pointer;}
+
+
+.contextDownArrow{
+    background-image: url(/images/arrow_down.png) !important;
+    background-position: center;
+}
+
+.removeBtn{
+    background-image: url(/images/cross-circle.png) !important;
+    background-position: center;
+}

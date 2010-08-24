@@ -7,6 +7,12 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     constructor: function(config)
     {
         PhinApplication.superclass.constructor.call(this, config);
+
+        Ext.QuickTips.init();
+        Ext.apply(Ext.QuickTips.getQuickTip(),{
+            dismissDelay: 0
+        });
+
         this.initialConfig = config || {};
 
         this.favorites = new Favorites({
@@ -70,6 +76,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                     },
                     {
                         text: 'Refresh',
+                        id: 'tab_reset',
                         handler: function(){
                             var comp = this.tabPanel.getActiveTab();
                             if(comp.reset)
@@ -82,8 +89,8 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             listeners:{
                 'beforetabchange': function(tab_panel, new_tab, old_tab){
                     if(old_tab)
-                        old_tab.un('ajaxloadcomplete', this.setTabControls, this);
-                    new_tab.on('ajaxloadcomplete', this.setTabControls, this);
+                        old_tab.un('afternavigation', this.setTabControls, this);
+                    new_tab.on('afternavigation', this.setTabControls, this);
                     this.setTabControls(new_tab);
                     return true;
                 },
@@ -188,8 +195,13 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             }
 
             panel.tab_config = config;
-            panel.addListener('show', function(panel){panel.doLayout();}); // This is necessary for when a panel is loading without
-                                                                           // being shown. Layout is never being refired, but it is now.
+            panel.addListener({
+                'show':function(panel){panel.doLayout();},// This is necessary for when a panel is loading without being shown. Layout is never being refired, but it is now.
+                'fatalerror': function(panel){
+                    this.tabPanel.remove(panel, true);
+                },
+                scope: this
+            }); 
         }
         else
         {
@@ -204,6 +216,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     setTabControls: function(panel){
         this.tabPanel.getBottomToolbar().getComponent('tab_back').setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
         this.tabPanel.getBottomToolbar().getComponent('tab_forward').setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
+        this.tabPanel.getBottomToolbar().getComponent('tab_reset').setDisabled(panel.reset ? false : true);
     }
 
 });

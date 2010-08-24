@@ -11,11 +11,17 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
    end
 end
 
-Then /^I should see the add group form$/ do
-  page.should have_css("#audience #group_name")
-  page.should have_css("#audience .jurisdictions")
-  page.should have_css("#audience .roles")
-  page.should have_css("#audience .people")
+Then /^I should see the(?: (ext))? add group form$/ do |ext|
+  if ext.nil?
+    page.should have_css("#audience #group_name")
+    page.should have_css("#audience .jurisdictions")
+    page.should have_css("#audience .roles")
+    page.should have_css("#audience .people")
+  else
+    # we're looking for the ext form here, may as well take advantage of ext and let it find the form for us
+    page.evaluate_script("window.Application.phin.tabPanel.getActiveTab().getComponent('create_group_form').isVisible()").should == true
+  end
+
 end
 
 Then /^I should see the following roles:$/ do |table|
