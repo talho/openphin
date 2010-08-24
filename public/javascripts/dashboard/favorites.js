@@ -34,6 +34,12 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             }
         });
 
+        this.favoritesPanel.on('afterrender', function(panel){
+            panel.loadMask = new Ext.LoadMask(panel.getEl(), {store: this.store});
+            panel.loadMask.show();
+            panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving...'});
+        }, this, {single: true});
+
         var writer = new Ext.data.JsonWriter({
             encode: false,
             createRecord: function(record){
@@ -79,11 +85,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             buttonPanel: ct,
             canDrop: function(tab_config)
             {
-                if (this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
-                {
-                    return false;
-                }
-                else return true;
+                return !(this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
             },
             gettab_config: function(item){
                 return item.tab_config;
@@ -103,7 +105,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
                 if(this.canDrop(tab_config))
                 {
                     this.lock();
-                    this.parent.favoritesPanel.getEl().mask('Saving...');
+                    this.parent.favoritesPanel.saveMask.show();
                     this.parent.store.add(new this.parent.store.recordType({tab_config:tab_config}), true);
                     //this.parent.store.save();
                     return true;
@@ -121,7 +123,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
         }, this);
 
         this.favoritesPanel.dropZone.unlock();
-        this.favoritesPanel.getEl().unmask();
+        this.favoritesPanel.saveMask.hide();
         this.favoritesPanel.doLayout();
     },
 
@@ -146,9 +148,9 @@ var Favorites = Ext.extend(Ext.util.Observable, {
                         elem = evt.getTarget('.favorite_button', 10, true);
 
                         this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [options.recordId]))
-                        
+
                         this.contextMenu.show(elem);
-                    }, this, {recordId: b.recordId, preventDefault:true});                    
+                    }, this, {recordId: b.recordId, preventDefault:true});
                 },
                scope: this
             }
@@ -159,7 +161,8 @@ var Favorites = Ext.extend(Ext.util.Observable, {
 
     removeItem: function(recordId){
         this.favoritesPanel.dropZone.lock();
-        this.favoritesPanel.getEl().mask('Saving...');
+
+        this.favoritesPanel.saveMask.show();
 
         this.store.remove(this.store.getById(recordId));
     }

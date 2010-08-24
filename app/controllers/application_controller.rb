@@ -83,8 +83,16 @@ class ApplicationController < ActionController::Base
 
     def admin_required
       unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
-        flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to root_path
+        message = "That resource does not exist or you do not have access to it."
+        if request.xhr?
+          respond_to do |format|
+            format.html {render :text => message, :status => 404}
+            format.json {render :json => {:message => message}, :status => 404}
+          end
+        else
+          flash[:error] = message
+          redirect_to root_path
+        end
         false
       end
     end

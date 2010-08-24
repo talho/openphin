@@ -18,7 +18,9 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
              * Fires after the ajax document has loaded
              * @param {Ext.Component} this
              */
-                'ajaxloadcomplete'
+                'ajaxloadcomplete',
+                'fatalerror',
+                'afternavigation'
                 );
 
         this.addListener('afterrender', this.loadAJAX, this);
@@ -57,12 +59,16 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         if(!success)
         {
             (new Ext.Window({title: 'Error', html: response.responseText})).show();
+            if(this.canGoBack())
+                this.back();
+            else
+                this.fireEvent('fatalerror', this, this);
             return;
         }
 
         //this.doLayout();
-        if(options && this.history[this.history.length-1] != options.url)
-            this.history.push(options.url);
+        if(options && (this.history.length === 0 || this.history[this.history.length-1].url != options.url))
+            this.history.push({url: options.url, title: this.title});
 
         var currentDomain = window.location.host;
         var domainRegex = new RegExp(currentDomain);
@@ -109,7 +115,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                     this.findParentByType('panel').doLayout();
                 },
                 'actionfailed': function(form, action){
-                    (new Ext.Window({title: 'Error', html: action.response.responseText})).show();
+                    Ext.Msg.alert('Error', action.response.responseText);
                     this.loadAJAX();
                 },
                 scope:this
@@ -122,12 +128,14 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
         this.findParentByType('panel').doLayout();
         this.fireEvent('ajaxloadcomplete', this);
+        this.fireEvent('afternavigation', this);
     },
 
     reset: function(force){
         if(force || this.url != this.initialUrl)
         {
             this.url = this.initialUrl;
+            this.setTitle(this.initialConfig.title);
             this.history = [];
             this.forward_stack = [];
             this.loadAJAX();
@@ -138,7 +146,9 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         if(this.history.length > 1)
         {
             this.forward_stack.push(this.history.pop());
-            this.url = this.history[this.history.length - 1];
+            var historyItem = this.history[this.history.length - 1];
+            this.url = historyItem.url;
+            this.setTitle(historyItem.title);
             this.loadAJAX();
         }
     },
@@ -146,8 +156,10 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
     forward: function(){
         if(this.forward_stack.length > 0)
         {
-            this.url = this.forward_stack.pop();
-            this.history.push(this.url); // Just in case it fails, we still want the forward record to be in the history stack
+            var historyItem = this.forward_stack.pop();
+            this.url = historyItem.url;
+            this.setTitle(historyItem.title);
+            this.history.push(historyItem); // Just in case it fails, we still want the forward record to be in the history stack
             this.loadAJAX();
         }
     },

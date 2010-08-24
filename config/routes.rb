@@ -6,7 +6,8 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
   map.connect "/jurisdictions.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.resources :jurisdictions, :devices, :folders
+  map.resources :devices, :folders
+  map.resources :jurisdictions, :collection => [:user_alerting]
 
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
@@ -94,8 +95,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:get, :post]}
-  map.resource :search, :member => {:show_advanced => [:get, :post]}
+  map.resource :search, :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
   map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
+  map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups]
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
