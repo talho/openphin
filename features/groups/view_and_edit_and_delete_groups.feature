@@ -161,6 +161,8 @@ Feature: Viewing groups
     Then I should see "Successfully deleted the group Dallas County Health Officer Group."
     When I go to the groups page
     Then I should not see "Dallas County Health Officer Group" within "#groups"
+    # Why does the following not work?
+    # And  I should see "Successfully deleted the group Dallas County Health Officer Group."
 
   Scenario: updating changed scope
     When I load the edit group page for "Dallas County Health Officer Group"
