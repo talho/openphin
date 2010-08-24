@@ -264,13 +264,13 @@ end
 
 Then 'I should see an alert with the summary:' do |table|
   table.rows_hash.each do |field, value|
-    response.should have_selector(".alert .summary .#{field}", :content => value)
+    page.should have_css(".alert .summary .#{field}", :content => value)
   end
 end
 
 Then 'I should see an alert with the detail:' do |table|
  table.rows_hash.each do |field, value|
-   response.should have_selector(".alert .details .#{field}", :content => value)
+   page.should have_css(".alert .details .#{field}", :content => value)
  end
 end
 
