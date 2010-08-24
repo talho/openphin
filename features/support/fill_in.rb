@@ -1,5 +1,34 @@
 module FeatureHelpers
   module FillInMethods
+
+    def fill_in_fcbk_control(name, use_email=true)
+      if use_email
+        user = Given "a user named #{name.strip}"
+        name_array = user.email.split("")
+      else
+        name_array = name.split("")
+      end
+      wait_until{page.find(".maininput").nil? == false}
+      div_elem = page.find(".maininput")
+      #div_elem.set('')
+      div_elem.click
+      name_array.each do |c|
+        is_click = false
+        div_elem.set(div_elem.value + c)
+        begin
+          wait_until{page.find("li.outer").nil? == false}
+          sleep 0.5
+          page.find("li.outer").click
+          is_click = true
+        rescue
+        end
+        break if is_click
+      end
+    end
+
+    def remove_from_fcbk_control(name)
+      page.find("a.closebutton").click
+    end
     
     def fill_in_user_signup_form(table=nil)
       fields={"Email"=> "john@example.com",
@@ -98,25 +127,7 @@ module FeatureHelpers
     def fill_in_audience_field(label, value)
       case label
       when "People"
-        value.split(',').each do |name|
-          name_array = name.split("")
-          wait_until{page.find(".maininput").nil? == false}
-          div_elem = page.find(".maininput")
-          div_elem.set('')
-          div_elem.click
-          name_array.each do |c|
-            is_click = false
-            div_elem.set(div_elem.value + c)
-            begin
-              wait_until{page.find("li.outer").nil? == false}
-              sleep 0.5
-              page.find("li.outer").click
-              is_click = true
-            rescue
-            end
-            break if is_click
-          end
-        end
+        value.split(',').each { |name| fill_in_fcbk_control(name) }
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/
         value.split(',').map(&:strip).each{ |r| check r }
       else
@@ -127,15 +138,7 @@ module FeatureHelpers
     def fill_in_alert_field(label, value)
       case label
       when "People"
-        value.split(',').each do |name|
-          user = Given "a user named #{name.strip}"
-          #fill_in 'alert_audiences_attributes_0_user_ids', :with => user.id.to_s
-          find(:css, ".maininput").node.click
-          sleep 1
-          find(:css, ".maininput").node.send_keys(user.email)
-          sleep 3
-          find(:css, ".facebook-auto li").node.click
-        end
+        value.split(',').each { |name| fill_in_fcbk_control(name) }
       when /Jurisdictions/, /Role[s]?/, /Organization[s]?/, /^Groups?$/, /^Communication methods?/
         value.split(',').map(&:strip).each{ |r| check r }
         when 'Acknowledge', 'Status', 'Severity', 'Jurisdiction','Event Interval'
@@ -184,15 +187,7 @@ module FeatureHelpers
       table.rows_hash.each do |label, value|
         case label
         when "People"
-          value.split(',').each do |name| 
-            user = Given "a user named #{name.strip}"
-            #fill_in "role_assigns_user_ids", :with => user.id.to_s
-            find(:css, ".maininput").node.click
-            sleep 1
-            find(:css, ".maininput").node.send_keys(user.email)
-            sleep 3
-            find(:css, ".facebook-auto li").node.click
-          end
+          value.split(',').each { |name| fill_in_fcbk_control(name) }
         when "Role", "Jurisdiction"
           select value.split(',').map(&:strip), :from => label
         else
@@ -210,18 +205,7 @@ module FeatureHelpers
     def fill_in_group_field(label, value)
       case label
       when "Users"
-        #value.split(',').each do |name|
-        #  user = Given "a user named #{name.strip}"
-        #  select user.id.to_s, :from => 'group_user_ids'
-        #end
-        value.split(',').each { |name|
-          user = Given "a user named #{name.strip}"
-          find(:css, ".maininput").node.click
-          sleep 1
-          find(:css, ".maininput").node.send_keys(user.email)
-          sleep 3
-          find(:css, ".facebook-auto li").node.click
-        }
+        value.split(',').each { |name| fill_in_fcbk_control(name) }
       when 'Name'
         fill_in "group_#{label.downcase}", :with => value
       when'Scope'

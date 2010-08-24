@@ -61,6 +61,17 @@ When /^I maliciously post a delete for a role request for "([^\"]*)"$/ do |user_
   user = User.find_by_email!(user_email)
   role_request = user.role_requests.first
   delete_via_redirect admin_role_request_path(role_request)
+
+if false
+  puts "RRRRR: #{admin_role_request_path(role_request)}"
+  script = "elem = document.createElement('a'); " +
+    "elem.setAttribute('href','#{admin_role_request_path(role_request)}'); " +
+    "elem.setAttribute('class','destroy'); " +
+    "elem.innerHTML = 'Remove Role Request'; " +
+    "$('body').append(elem);"
+  page.execute_script(script)
+  page.click_link("Remove Role Request")
+end
 end
 
 When /^I maliciously post an approve for a role request for "([^\"]*)"$/ do |user_email|

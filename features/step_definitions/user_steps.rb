@@ -181,10 +181,7 @@ When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename,
 end
 
 When /^I fill out the delete user form with "([^\"]*)"$/ do |user_ids|
-  user_ids.split(',').each do |name|
-    user = Given "a user named #{name.strip}"
-    fill_in 'users_user_ids', :with => user.id.to_s
-  end
+  user_ids.split(',').each { |name| fill_in_fcbk_control(name) }
 end
 
 Then '"$email" should have the "$role" role for "$jurisdiction"' do |email, role, jurisdiction|

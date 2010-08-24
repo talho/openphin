@@ -62,6 +62,7 @@ Feature: Approving users for roles
   Scenario: Malicious admin cannot remove role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"
+    And I will confirm on next step
     When I maliciously post a delete for a role request for "john@example.com"
     Then I should see "This resource does not exist or is not available."
     And I can't test 'should redirect_to' because of webrat bug
