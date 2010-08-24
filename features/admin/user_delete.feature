@@ -20,7 +20,6 @@ Feature: An admin deleting users
     And a role named Public
     And an approval role named Health Alert and Communications Coordinator
     And I am logged in as "bob.jones@example.com"
-    And the sphinx daemon is running
     And delayed jobs are processed
   
   Scenario: Attempt to delete an invalid user
@@ -108,16 +107,20 @@ Feature: An admin deleting users
     Then I should not see "Thanks for signing up"
     
     When I go to the users delete page for an admin
+    # delayed jobs must be repeated below for the new user to be picked up
+    And delayed jobs are processed
     And I fill out the delete user form with "Greg Brown"
     And I press "Delete Users"
     Then I should see "Users have been successfully deleted"
 
+    # delayed jobs must be repeated below for the delete above to be picked up
+    And delayed jobs are processed
     When I signup for an account with the following info:
       | Email          | greg.brown@example.com |
       | Password       | Apples1          |
-      | Password confirmation | Apples1   |
-      | First name     | Greg             |
-      | Last name      | Brown            |
+      | Password Confirmation | Apples1   |
+      | First Name     | Greg             |
+      | Last Name      | Brown            |
       | Home Jurisdiction  | Dallas County    |
     Then I should see "Thanks for signing up"
  
