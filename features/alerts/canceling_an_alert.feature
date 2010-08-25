@@ -23,7 +23,7 @@ Feature: Canceling an alert
     And I am allowed to send alerts
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | Flying Monkey Disease                 |
       | Message               | For more details, keep on reading...  |
       | Short Message         | For more details, keep on reading...  |
@@ -32,8 +32,6 @@ Feature: Canceling an alert
       | Severity              | Moderate                              |
       | Status                | Actual                                |
       | Delivery Time         | 72 hours                              |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Jurisdictions | Dallas County       |
       | Roles         | Health Officer      |
     And I press "Preview Message"
@@ -78,7 +76,7 @@ Feature: Canceling an alert
 
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | Flying Monkey Disease                 |
       | Message               | For more details, keep on reading...  |
       | Short Message         | For more details, keep on reading...  |
@@ -87,8 +85,6 @@ Feature: Canceling an alert
       | Severity              | Moderate                              |
       | Status                | Actual                                |
       | Delivery Time         | 72 hours                              |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Jurisdictions | Dallas County       |
       | Roles         | Health Officer      |
     And I press "Preview Message"
@@ -140,7 +136,7 @@ Feature: Canceling an alert
 
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | Flying Monkey Disease                 |
       | Message               | For more details, keep on reading...  |
       | Short Message         | For more details, keep on reading...  |
@@ -149,8 +145,6 @@ Feature: Canceling an alert
       | Severity              | Moderate                              |
       | Status                | Actual                                |
       | Delivery Time         | 72 hours                              |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Jurisdictions | Dallas County       |
       | Roles         | Health Officer      |
     And I press "Preview Message"

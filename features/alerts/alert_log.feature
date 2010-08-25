@@ -108,15 +108,13 @@ Feature: Viewing the alert log
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Jurisdiction          | Texas                |
       | Title                 | Hello World          |
       | Message               | Hello World          |
       | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Roles         | HAN Coordinator      |
       | Jurisdictions | Texas, Dallas County |
     And I press "Preview Message"
@@ -270,7 +268,8 @@ Feature: Viewing the alert log
       When I go to the HAN
       And I follow "Send an Alert"
       And I select "Advanced" from "Acknowledge"
-      And I fill out the alert "Details" form with:
+      And delayed jobs are processed
+      And I fill out the alert form with:
       | Jurisdiction          | Texas                |
       | Title                 | Hello World          |
       | Message               | Hello World          |
@@ -282,9 +281,6 @@ Feature: Viewing the alert log
       | Alert Response 3  | if you can respond within 1 hour     |
       | Alert Response 4  | if you can respond within 4 hours    |
       | Alert Response 5  | if you cannot respond                |
-      And I press "Audience"
-      And delayed jobs are processed
-      And I fill out the alert "Audience" form with:
       | Roles         | Health Officer      |
       | Jurisdictions | Texas |
       | People | John Smith |
