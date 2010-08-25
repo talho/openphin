@@ -212,7 +212,7 @@ Feature: Alerts from EDXL
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
-    Scenario:  Receiving a cascade alert without jurisdictions specified should alert state and local jurisdictions
+  Scenario:  Receiving a cascade alert without jurisdictions specified should alert state and local jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_statelocal.edxl
     Then the following users should receive the alert email:
      | People        | keith@example.com,bob@example.com,jphipps@example.com,wisecoordinator@example.com,daniel@example.com,brandon@example.com,zach@example.com,ethan@example.com,mjensen@cdc.gov |
@@ -227,7 +227,7 @@ Feature: Alerts from EDXL
     Then I should see 1 alert
     And I should not see "Example Health Alert"      
 
-    Scenario:  Receiving a cascade alert without jurisdictions specified should alert local jurisdictions
+  Scenario:  Receiving a cascade alert without jurisdictions specified should alert local jurisdictions
     When PhinMS delivers the message: cdc_no_jurisdiction_local.edxl
     Then the following users should receive the alert email:
      | People        | keith@example.com,bob@example.com,jphipps@example.com,wisecoordinator@example.com,daniel@example.com |

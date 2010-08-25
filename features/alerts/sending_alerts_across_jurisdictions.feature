@@ -35,15 +35,17 @@ Feature: Sending alerts across jurisdictions
     And I follow "Send an Alert"
 
   Scenario: Sending an alert to sibling jurisdictions
-    When I fill out the alert form with:
+    When I fill out the alert "Details" form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | For more details, keep on reading...         |
+      | Short Message         | For more details, keep on reading...         |
+      | Communication methods | E-mail                                       |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Roles         | Health Officer      |
       | Jurisdictions | Tarrant County, Wise County |
-      | Roles    | Health Officer |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-      | Communication methods | E-mail                          |
-    
-    When I press "Preview Message"
-    And I press "Send"
+    And I press "Preview Message"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
     And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, keith.gaddis@example.com |
@@ -55,15 +57,17 @@ Feature: Sending alerts across jurisdictions
       | emails        | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
     
   Scenario: Sending an alert to a parent jurisdiction
-    When I fill out the alert form with:
+    When I fill out the alert "Details" form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | For more details, keep on reading...         |
+      | Short Message         | For more details, keep on reading...         |
+      | Communication methods | E-mail                                       |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Roles         | Health Officer      |
       | Jurisdictions | Texas |
-      | Roles    | Health Officer |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-      | Communication methods | E-mail                          |
-
-    When I press "Preview Message"
-    And I press "Send"
+    And I press "Preview Message"
+    When I press "Send"
     Then I should see "Successfully sent the alert"
     And the following users should receive the alert email:
       | People        | brandon.keepers@example.com |
@@ -76,16 +80,18 @@ Feature: Sending alerts across jurisdictions
       | emails        | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |    
         
   Scenario: Sending an alert to a cousin jurisdiction
-    When I fill out the alert form with:
+    When I fill out the alert "Details" form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | For more details, keep on reading...         |
+      | Short Message         | For more details, keep on reading...         |
+      | Communication methods | E-mail                                       |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Roles         | Health Officer      |
       | Jurisdictions | Ottawa County |
-      | Roles    | Health Officer |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-      | Communication methods | E-mail                          |
-
-    When I press "Preview Message"
-    And I press "Send"
-    Then I should see "Successfully sent the alert"
+    And I press "Preview Message"
+    When I press "Send"
+    Then I should see "Successfully sent the alert"  
     And the following users should receive the alert email:
       | People        | dan.morrison@example.com, brandon.keepers@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
