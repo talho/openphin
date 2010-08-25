@@ -21,24 +21,16 @@ Feature: Updating an alert
   Scenario: Updating an alert
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I go to the HAN
-    And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I've sent an alert with:
+      | Jurisdictions | Dallas County       |
+      | Roles         | Health Officer      |
       | Title         | Flying Monkey Disease                |
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
       | Acknowledge   | None                |
+      | Communication methods | E-mail      |
       | Delivery Time | 72 hours            |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
-      | Jurisdictions | Dallas County       |
-      | Roles         | Health Officer      |
-      | People   | Jane Smith                              |
-    And I press "Preview Message"
-    And I press "Send this Alert"
 
     When I am on the alert log
     Then I should see an alert titled "Flying Monkey Disease"
@@ -77,28 +69,21 @@ Feature: Updating an alert
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
+    And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
   Scenario: Updating an alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I go to the HAN
-    And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I've sent an alert with:
+      | Jurisdictions | Dallas County       |
+      | Roles         | Health Officer      |
       | Title         | Flying Monkey Disease                |
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
       | Acknowledge   | None                |
+      | Communication methods | E-mail      |
       | Delivery Time | 72 hours            |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
-      | Jurisdictions | Dallas County       |
-      | Roles         | Health Officer      |
-      | People   | Jane Smith                              |
-    And I press "Preview Message"
-    And I press "Send this Alert"
 
     When I am on the alert log
     Then I should see an alert titled "Flying Monkey Disease"
@@ -146,24 +131,16 @@ Feature: Updating an alert
   Scenario: Make sure re-submitting an update after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I go to the HAN
-    And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I've sent an alert with:
+      | Jurisdictions | Dallas County       |
+      | Roles         | Health Officer      |
       | Title         | Flying Monkey Disease                |
       | Message       | For more details, keep on reading... |
       | Severity      | Moderate            |
       | Status        | Actual              |
       | Acknowledge   | None                |
+      | Communication methods | E-mail      |
       | Delivery Time | 60 minutes          |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
-      | Jurisdictions | Dallas County       |
-      | Roles         | Health Officer      |
-      | People        | Jane Smith          |
-    And I press "Preview Message"
-    And I press "Send this Alert"
 
     When I go to cancel the alert
     And I make changes to the alert form with:
