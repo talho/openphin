@@ -83,6 +83,7 @@ Feature: Acknowledging an alert
      Scenario: Acknowledging an alert through phone
        Given I am logged in as "keith.gaddis@example.com"
        When I go to the edit profile page
+       And I follow "Add Device"
        And I select "Phone" from "Device Type"
        And I fill in "Phone" with "2105551212"
        And I press "Save"
@@ -132,7 +133,7 @@ Feature: Acknowledging an alert
       When I fill out the alert form with:
         | People | Keith Gaddis |
         | Title  | H1N1 SNS push packs to be delivered tomorrow |
-        | Acknowledge | Normal |
+        | Acknowledge | Advanced |
         | Communication methods | E-mail |
         | Alert Response 1 | if you can respond within 15 minutes |
         | Alert Response 2 | if you can respond within 30 minutes |
@@ -155,6 +156,7 @@ Feature: Acknowledging an alert
      Scenario: Acknowledging an alert through phone with call downs
        Given I am logged in as "keith.gaddis@example.com"
        When I go to the edit profile page
+       And I follow "Add Device"
        And I select "Phone" from "Device Type"
        And I fill in "Phone" with "2105551212"
        And I press "Save"
