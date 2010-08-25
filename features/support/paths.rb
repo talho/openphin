@@ -53,9 +53,9 @@ module NavigationHelpers
       when /the new organization page/
         new_organization_path
       when /the update alert page/i
-        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update")
+        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update", :only_path => true)
       when /the cancel alert page/i
-        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel")
+        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel", :only_path => true)
       when /the admin add user page/i
         new_admin_user_path
       when /the groups page/i

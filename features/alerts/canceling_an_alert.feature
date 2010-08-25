@@ -21,16 +21,26 @@ Feature: Canceling an alert
   Scenario: Canceling an alert
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I've sent an alert with:
+    When I go to the HAN
+    And I follow "Send an Alert"
+    And I fill out the alert "Details" form with:
+      | Title                 | Flying Monkey Disease                 |
+      | Message               | For more details, keep on reading...  |
+      | Short Message         | For more details, keep on reading...  |
+      | Acknowledge           | None                                  |
+      | Communication methods | E-mail                                |
+      | Severity              | Moderate                              |
+      | Status                | Actual                                |
+      | Delivery Time         | 72 hours                              |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
       | Jurisdictions | Dallas County       |
       | Roles         | Health Officer      |
-      | Title         | Flying Monkey Disease                |
-      | Message       | For more details, keep on reading... |
-      | Severity      | Moderate            |
-      | Status        | Actual              |
-      | Acknowledge   | None         |
-      | Communication methods | E-mail      |
-      | Delivery Time | 72 hours            |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+        | Roles | Health Officer |
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
 
     When I go to cancel the alert
     And I make changes to the alert form with:
@@ -38,15 +48,15 @@ Feature: Canceling an alert
     And I press "Preview Message"
 
     Then I should see a preview of the message with:
-      | Jurisdictions | Dallas County  |
-      | Roles | Health Officer         |
-      | Title    | [Cancel] - Flying Monkey Disease        |
-      | Message  | Flying monkey disease is not contagious |
-      | Severity | Moderate            |
-      | Status   | Actual              |
-      | Acknowledge | No               |
-      | Communication methods | E-mail |
-      | Delivery Time | 72 hours       |
+      | Jurisdictions         | Dallas County                           |
+      | Roles                 | Health Officer                          |
+      | Title                 | [Cancel] - Flying Monkey Disease        |
+      | Message               | Flying monkey disease is not contagious |
+      | Severity              | Moderate                                |
+      | Status                | Actual                                  |
+      | Acknowledge           | No                                      |
+      | Communication methods | E-mail                                  |
+      | Delivery Time         | 72 hours                                |
     
     When I press "Send"
     Then I should see "Successfully sent the alert"
@@ -54,78 +64,100 @@ Feature: Canceling an alert
     And I should see an alert titled "[Cancel] - Flying Monkey Disease"
     And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Health Alert "[Cancel] - Flying Monkey Disease" |
-      | body contains | Title: [Cancel] - Flying Monkey Disease |
-      | body contains | Alert ID:  |
-      | body contains | Reference:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | Flying monkey disease is not contagious |
+      | subject       | Health Alert "[Cancel] - Flying Monkey Disease"  |
+      | body contains | Title: [Cancel] - Flying Monkey Disease          |
+      | body contains | Alert ID:                                        |
+      | body contains | Reference:                                       |
+      | body contains | Agency: Dallas County                            |
+      | body contains | Sender: John Smith                               |
+      | body contains | Flying monkey disease is not contagious          |
 
   Scenario: Cancelling an alert as another alerter within the same jurisdiction
-      Given I am logged in as "john.smith@example.com"
-      And I am allowed to send alerts
-      And I've sent an alert with:
-        | Jurisdictions | Dallas County       |
-        | Roles         | Health Officer      |
-        | Title         | Flying Monkey Disease                |
-        | Message       | For more details, keep on reading... |
-        | Severity      | Moderate            |
-        | Status        | Actual              |
-        | Acknowledge   | None         |
-        | Communication methods | E-mail      |
-        | Delivery Time | 72 hours            |
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
 
-      When I am on the alert log
-      Then I should see an alert titled "Flying Monkey Disease"
+    When I go to the HAN
+    And I follow "Send an Alert"
+    And I fill out the alert "Details" form with:
+      | Title                 | Flying Monkey Disease                 |
+      | Message               | For more details, keep on reading...  |
+      | Short Message         | For more details, keep on reading...  |
+      | Acknowledge           | None                                  |
+      | Communication methods | E-mail                                |
+      | Severity              | Moderate                              |
+      | Status                | Actual                                |
+      | Delivery Time         | 72 hours                              |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Jurisdictions | Dallas County       |
+      | Roles         | Health Officer      |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | Roles | Health Officer |
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
 
-      Given I am logged in as "jane.smith@example.com"
-      And I am allowed to send alerts
-      When I am on the alert log
-      Then I should see an alert titled "Flying Monkey Disease"
-      When I go to cancel the alert
-      And I make changes to the alert form with:
-        | Message    | Flying monkey disease is not contagious |
-      And I press "Preview Message"
+    When I am on the alert log
+    Then I should see an alert titled "Flying Monkey Disease"
 
-      Then I should see a preview of the message with:
-        | Jurisdictions | Dallas County  |
-        | Roles | Health Officer         |
-        | Title    | [Cancel] - Flying Monkey Disease        |
-        | Message  | Flying monkey disease is not contagious |
-        | Severity | Moderate            |
-        | Status   | Actual              |
-        | Acknowledge | No               |
-        | Communication methods | E-mail |
-        | Delivery Time | 72 hours       |
+    Given I am logged in as "jane.smith@example.com"
+    And I am allowed to send alerts
+    When I am on the alert log
+    Then I should see an alert titled "Flying Monkey Disease"
+    When I go to cancel the alert
+    And I make changes to the alert form with:
+      | Message    | Flying monkey disease is not contagious |
+    And I press "Preview Message"
 
-      When I press "Send"
-      Then I should see "Successfully sent the alert"
-      And I should be on the alert log
-      And I should see an alert titled "[Cancel] - Flying Monkey Disease"
-      And the following users should receive the alert email:
-        | People        | brian.simms@example.com, ed.mcguyver@example.com |
-        | subject       | [Cancel] - Flying Monkey Disease |
-        | body contains | Title: [Cancel] - Flying Monkey Disease |
-        | body contains | Alert ID:  |
-        | body contains | Reference:  |
-        | body contains | Agency: Dallas County |
-        | body contains | Sender: John Smith |
-        | body contains | Flying monkey disease is not contagious |
+    Then I should see a preview of the message with:
+      | Jurisdictions         | Dallas County                           |
+      | Roles                 | Health Officer                          |
+      | Title                 | [Cancel] - Flying Monkey Disease        |
+      | Message               | Flying monkey disease is not contagious |
+      | Severity              | Moderate                                |
+      | Status                | Actual                                  |
+      | Acknowledge           | No                                      |
+      | Communication methods | E-mail                                  |
+      | Delivery Time         | 72 hours                                |
+
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    And I should be on the alert log
+    And I should see an alert titled "[Cancel] - Flying Monkey Disease"
+    And the following users should receive the alert email:
+      | People        | brian.simms@example.com, ed.mcguyver@example.com |
+      | subject       | [Cancel] - Flying Monkey Disease                 |
+      | body contains | Title: [Cancel] - Flying Monkey Disease          |
+      | body contains | Alert ID:                                        |
+      | body contains | Reference:                                       |
+      | body contains | Agency: Dallas County                            |
+      | body contains | Sender: John Smith                               |
+      | body contains | Flying monkey disease is not contagious          |
 
   Scenario: Make sure re-submitting a cancellation after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I've sent an alert with:
+
+    When I go to the HAN
+    And I follow "Send an Alert"
+    And I fill out the alert "Details" form with:
+      | Title                 | Flying Monkey Disease                 |
+      | Message               | For more details, keep on reading...  |
+      | Short Message         | For more details, keep on reading...  |
+      | Acknowledge           | None                                  |
+      | Communication methods | E-mail                                |
+      | Severity              | Moderate                              |
+      | Status                | Actual                                |
+      | Delivery Time         | 72 hours                              |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
       | Jurisdictions | Dallas County       |
       | Roles         | Health Officer      |
-      | Title         | Flying Monkey Disease                |
-      | Message       | For more details, keep on reading... |
-      | Severity      | Moderate            |
-      | Status        | Actual              |
-      | Acknowledge   | None         |
-      | Communication methods | E-mail      |
-      | Delivery Time | 60 minutes          |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | Roles | Health Officer |
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
 
     When I go to cancel the alert
     And I make changes to the alert form with:
