@@ -29,7 +29,7 @@ Feature: Sending alerts to BlackBerry devices
     When I go to the han page
     And I follow "Send an Alert"
 
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
       | Message               | Chicken pox outbreak long Message          |
       | Short Message         | Chicken pox outbreak short message          |
@@ -38,8 +38,6 @@ Feature: Sending alerts to BlackBerry devices
       | Acknowledge | None |
       | Communication methods | Blackberry |
       | Sensitive | <unchecked> |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | People         | Keith Gaddis      |
     And I press "Preview Message"
     Then I should see a preview of the message
