@@ -109,11 +109,16 @@ module FeatureHelpers
         fields.merge!(table.rows_hash)
       end
 
-      details = fields.select {|key, value| ["Title","Message","Short Message","Communication methods","Communication method","Jurisdiction",
+      details = Hash[fields.select {|key, value| ["Title","Message","Short Message","Communication methods","Communication method","Jurisdiction",
                                              "Status","Severity","Delivery Time","Acknowledge","Sensitive","Alert Response 1",
-                                             "Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].include?(key)}
-      audience = fields.select {|key, value| ["Jurisdictions","Roles","Role","Organizations","Organization","Groups","Group","People"].include?(key)}
+                                             "Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].include?(key)}]
+      audience = Hash[fields.select {|key, value| ["Jurisdictions","Roles","Role","Organizations","Organization","Groups","Group","People"].include?(key)}]
 
+      ["Alert Response 1","Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].each do |resp|
+        raise "Cannot fill in Alert Responses without Advanced acknowledgment" if details.has_key?(resp) && details["Acknowledge"] != "Advanced"
+        fill_in_alert_field("Acknowledge",details["Acknowledge"])
+      end
+      
       details.each do |label, value|
         fill_in_alert_field(label, value)
       end
