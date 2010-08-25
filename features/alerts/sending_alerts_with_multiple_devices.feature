@@ -26,6 +26,7 @@ Feature: Sending alerts to multiple devices
       | Phone | 5125551239 |
       | Blackberry | 246D6BA7 |      
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
 
   Scenario: Sending alerts to users with multiple devices
     Given I am logged in as "keith.gaddis@example.com"
@@ -97,6 +98,6 @@ Feature: Sending alerts to multiple devices
        | 246D6BA6      | Chicken pox outbreak |
        | 246D6BA7      | Chicken pox outbreak |
 
-       And the following users should receive the alert email:
-         | People        |  keith.gaddis@example.com, joe.black@example.com, henry.frank@example.com, martin.gons@example.com, george.strait@example.com |
-         | body contains | Title: H1N1 SNS push packs to be delivered tomorrow | 
+    And the following users should receive the alert email:
+      | People        | keith.gaddis@example.com, joe.black@example.com, henry.frank@example.com, martin.gons@example.com, george.strait@example.com |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow | 
