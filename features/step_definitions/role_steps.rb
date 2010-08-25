@@ -60,7 +60,6 @@ end
 
 
 Then /^I should see user role attributes with the following\:$/ do |table|
-debugger
   json = ActiveSupport::JSON.decode(response.body)
   values = table.is_a?(Array) ? table : table.raw
   values.each do |row|
