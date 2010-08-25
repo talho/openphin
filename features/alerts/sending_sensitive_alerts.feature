@@ -9,26 +9,23 @@ Feature: Sending sensitive alerts
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-
-  Scenario: Sending a sensitive email alert
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | For more details, keep on reading... |
-      | Severity      | Moderate            |
-      | Status        | Actual              |
-      | Acknowledge   | None                |
-      | Sensitive     | <checked>           |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
-      | Jurisdictions | Dallas County       |
-      | Roles         | Health Officer      |
-      | People        | Keith Gaddis        |
+
+  Scenario: Sending a sensitive email alert
+    When I fill out the alert form with:
+      | People | Keith Gaddis |
+      | Title  | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | For more details, keep on reading... |
+      | Severity | Moderate |
+      | Status | Actual |
+      | Acknowledge | None |
+      | Communication methods | E-mail |
+      | Sensitive | <checked> |
+
     And I press "Preview Message"
     Then I should see a preview of the message
       

@@ -117,9 +117,11 @@ module FeatureHelpers
       details.each do |label, value|
         fill_in_alert_field(label, value)
       end
-      When "I press \"Select an Audience\""
-      audience.each do |label, value|
-        fill_in_alert_field(label, value)
+      if audience.size > 0
+        When "I press \"Select an Audience\""
+        audience.each do |label, value|
+          fill_in_alert_field(label, value)
+        end
       end
     end
 
