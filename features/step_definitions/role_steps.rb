@@ -34,7 +34,7 @@ end
 
 Then /^I should explicitly not see the "(.*)" role as an option$/ do |name|
   role = Role.find_by_name!(name)
-  response.should_not have_selector("input[name*=role_id]", :value => role.id.to_s)
+  assert page.find("input.audience_role[@value=\"#{role.id.to_s}\"]").nil? == true
 end
 
 Then '"$email" should not have the "$role" role' do |email, role|

@@ -12,6 +12,13 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
+    And I fill out the alert "Details" form with:
+      | Title                 | Hello World          |
+      | Message               | Hello World          |
+      | Short Message         | Hello World          |
+      | Acknowledge           | Normal               |
+      | Communication methods | E-mail               |
+    And I press "Audience"
     Then I should explicitly not see the "Admin" role as an option
 
   Scenario: User with one or more jurisdictions
@@ -27,13 +34,22 @@ Feature: Sending alerts form
 
     When I go to the HAN
     And I follow "Send an Alert"
+
     Then I should see "Dallas County" as a from jurisdiction option
     Then I should see "Potter County" as a from jurisdiction option
     Then I should not see "Tarrant County" as a from jurisdiction option
-    When I fill out the alert form with:
-      | Jurisdiction | Potter County                            |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+
+    And I fill out the alert "Details" form with:
+      | Jurisdiction          | Potter County                            |
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | H1N1 SNS push packs to be delivered tomorrow         |
+      | Short Message         | H1N1 SNS push packs to be delivered tomorrow         |
+      | Communication methods | E-mail               |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Jurisdictions | Potter County |
     And I press "Preview Message"
+
     Then I should see a preview of the message
 
     When I press "Send"
@@ -78,6 +94,12 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
+    And I fill out the alert "Details" form with:
+      | Title                 | Fake Title |
+      | Message               | Fake Message         |
+      | Short Message         | Fake Short Message        |
+      | Communication methods | E-mail               |
+    And I press "Audience"
     Then I should see "Federal" as a jurisdictions option
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
@@ -98,14 +120,21 @@ Feature: Sending alerts form
       | Jurisdiction | Texas         |
     And the following users exist:
       | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
+      | Jane Smith      | jane.smith@example.com   | HAN Coordinator  | Texas |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert form with:
-      | People   | Jane Smith                                   |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
 
+    And I fill out the alert "Details" form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
+      | Message               | H1N1 SNS push packs to be delivered tomorrow          |
+      | Short Message         | H1N1 SNS push packs to be delivered tomorrow          |
+      | Communication methods | E-mail          |
+    And I press "Audience"
+    And delayed jobs are processed
+    And I fill out the alert "Audience" form with:
+      | People         | Jane Smith     |
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | People            | Jane Smith |
@@ -131,7 +160,7 @@ Feature: Sending alerts form
     And I follow "Send an Alert"
 
     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-    And I check "Potter County"
+
     And I fill in "Message" with "Some body text"
     And I select "Advanced" from "Acknowledge"
     And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
@@ -142,9 +171,12 @@ Feature: Sending alerts form
     And I select "Potter County" from "Jurisdiction"
     And I select "Test" from "Status"
     And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
-
+    And I select "72 hours" from "Delivery time"
     And I check "Phone"
+
+    And I press "Audience"
+    And I check "Potter County"
+
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -169,7 +201,7 @@ Feature: Sending alerts form
        | Jurisdiction | Tarrant County |
      And the following users exist:
        | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-       | Jane Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
+       | John Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
      And the role "HAN Coordinator" is an alerter
      And I am logged in as "john.smith@example.com"
 
@@ -177,16 +209,18 @@ Feature: Sending alerts form
      And I follow "Send an Alert"
 
      When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-     And I check "Potter County"
-     And I fill in "Message" with "Some body text"
-     And I check "Disable Cross-Jurisdictional alerting"
 
+     And I fill in "Message" with "Some body text"
+     And I will confirm on next step
+     And I check "Disable Cross-Jurisdictional alerting"
      And I select "Potter County" from "Jurisdiction"
      And I select "Test" from "Status"
      And I select "Minor" from "Severity"
-     And I select "72 hours" from "Delivery Time"
+     And I select "72 hours" from "Delivery time"
      And I select "Normal" from "Acknowledge"
      And I check "Phone"
+     And I press "Audience"
+     And I check "Potter County"
      And I press "Preview Message"
      Then I should see a preview of the message
 
@@ -211,9 +245,14 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert form with:
-      | Organization   | DSHS                                         |
-      | Title          | H1N1 SNS push packs to be delivered tomorrow |
+    And I fill out the alert "Details" form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
+      | Message               | H1N1 SNS push packs to be delivered tomorrow         |
+      | Short Message         | H1N1 SNS push packs to be delivered tomorrow         |
+      | Communication methods | E-mail          |
+    And I press "Audience"
+    And I fill out the alert "Audience" form with:
+      | Organization   | DSHS      |
 
     And I press "Preview Message"
     Then I should see a preview of the message with:
@@ -224,4 +263,3 @@ Feature: Sending alerts form
       | from_jurisdiction | Texas                                        |
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
-
