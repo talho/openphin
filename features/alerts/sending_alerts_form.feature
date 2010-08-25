@@ -12,13 +12,12 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | Hello World          |
       | Message               | Hello World          |
       | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail               |
-    And I press "Audience"
     Then I should explicitly not see the "Admin" role as an option
 
   Scenario: User with one or more jurisdictions
@@ -39,14 +38,12 @@ Feature: Sending alerts form
     Then I should see "Potter County" as a from jurisdiction option
     Then I should not see "Tarrant County" as a from jurisdiction option
 
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Jurisdiction          | Potter County                            |
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | H1N1 SNS push packs to be delivered tomorrow         |
       | Short Message         | H1N1 SNS push packs to be delivered tomorrow         |
       | Communication methods | E-mail               |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Jurisdictions | Potter County |
     And I press "Preview Message"
 
@@ -94,12 +91,11 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | Fake Title |
       | Message               | Fake Message         |
       | Short Message         | Fake Short Message        |
       | Communication methods | E-mail               |
-    And I press "Audience"
     Then I should see "Federal" as a jurisdictions option
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
@@ -125,15 +121,12 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-
-    And I fill out the alert "Details" form with:
+    And delayed jobs are processed
+    And I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
       | Message               | H1N1 SNS push packs to be delivered tomorrow          |
       | Short Message         | H1N1 SNS push packs to be delivered tomorrow          |
       | Communication methods | E-mail          |
-    And I press "Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
       | People         | Jane Smith     |
     And I press "Preview Message"
     Then I should see a preview of the message with:
@@ -245,13 +238,11 @@ Feature: Sending alerts form
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
+    And I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
       | Message               | H1N1 SNS push packs to be delivered tomorrow         |
       | Short Message         | H1N1 SNS push packs to be delivered tomorrow         |
       | Communication methods | E-mail          |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Organization   | DSHS      |
 
     And I press "Preview Message"
