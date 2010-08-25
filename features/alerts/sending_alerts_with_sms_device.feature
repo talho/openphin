@@ -9,10 +9,12 @@ Feature: Sending alerts to SMS devices
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
   
   Scenario: Sending alerts to SMS devices
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
+    And I follow "Add Device"
     And I select "SMS" from "Device Type"
     And I fill in "SMS" with "2105551212"
     And I press "Save"

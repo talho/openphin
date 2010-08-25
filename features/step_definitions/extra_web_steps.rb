@@ -32,3 +32,20 @@ end
 Then /^I refresh page$/ do
   execute_script("self.location.reload()")
 end
+
+module Capybara
+  class Session
+    alias_method :old_check, :check
+    alias_method :old_uncheck, :uncheck
+    
+    def check(locator)
+      field = find_field(locator)
+      old_check(locator) unless field[:checked]
+    end
+
+    def uncheck(locator)
+      field = find_field(locator)
+      old_uncheck(locator) if field[:checked]
+    end
+  end
+end
