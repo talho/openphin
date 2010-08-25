@@ -5,6 +5,7 @@ Feature: Acknowledging an alert
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the HAN

@@ -92,27 +92,33 @@ module FeatureHelpers
       end
     end
   
-    def fill_in_alert_form(subform, table = nil)
-      fields = case subform
-        when "Details"
-          { #"Title" => "H1N1 SNS push packs to be delivered tomorrow",
-            "Message" => "For more details, keep on reading...",
-            "Severity" =>"Moderate",
-            #"Status" => "Actual",
-            "Acknowledge"  => "Normal",
-            #"Communication methods" => "E-mail",
-            "Delivery Time" => "15 minutes" }
-        when "Audience"
-          { }
-      end
+    def fill_in_alert_form(table = nil)
+      fields = {
+        #"Title" => "H1N1 SNS push packs to be delivered tomorrow",
+        "Message" => "For more details, keep on reading...",
+        "Severity" =>"Moderate",
+        #"Status" => "Actual",
+        "Acknowledge"  => "Normal",
+        #"Communication methods" => "E-mail",
+        "Delivery Time" => "15 minutes"
+      }
 
       if table.is_a?(Hash)
         fields.merge!(table)
       elsif !table.nil?
         fields.merge!(table.rows_hash)
       end
-      
-      fields.each do |label, value|
+
+      details = fields.select {|key, value| ["Title","Message","Short Message","Communication methods","Communication method","Jurisdiction",
+                                             "Status","Severity","Delivery Time","Acknowledge","Sensitive","Alert Response 1",
+                                             "Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].include?(key)}
+      audience = fields.select {|key, value| ["Jurisdictions","Roles","Role","Organizations","Organization","Groups","Group","People"].include?(key)}
+
+      details.each do |label, value|
+        fill_in_alert_field(label, value)
+      end
+      When "I press \"Select an Audience\""
+      audience.each do |label, value|
         fill_in_alert_field(label, value)
       end
     end
