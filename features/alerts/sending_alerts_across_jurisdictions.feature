@@ -35,13 +35,11 @@ Feature: Sending alerts across jurisdictions
     And I follow "Send an Alert"
 
   Scenario: Sending an alert to sibling jurisdictions
-    When I fill out the alert "Details" form with:
+    When I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | For more details, keep on reading...         |
       | Short Message         | For more details, keep on reading...         |
       | Communication methods | E-mail                                       |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Roles         | Health Officer      |
       | Jurisdictions | Tarrant County, Wise County |
     And I press "Preview Message"
@@ -57,13 +55,11 @@ Feature: Sending alerts across jurisdictions
       | emails        | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
     
   Scenario: Sending an alert to a parent jurisdiction
-    When I fill out the alert "Details" form with:
+    When I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | For more details, keep on reading...         |
       | Short Message         | For more details, keep on reading...         |
       | Communication methods | E-mail                                       |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Roles         | Health Officer      |
       | Jurisdictions | Texas |
     And I press "Preview Message"
@@ -80,13 +76,11 @@ Feature: Sending alerts across jurisdictions
       | emails        | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |    
         
   Scenario: Sending an alert to a cousin jurisdiction
-    When I fill out the alert "Details" form with:
+    When I fill out the alert form with:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | For more details, keep on reading...         |
       | Short Message         | For more details, keep on reading...         |
       | Communication methods | E-mail                                       |
-    And I press "Audience"
-    And I fill out the alert "Audience" form with:
       | Roles         | Health Officer      |
       | Jurisdictions | Ottawa County |
     And I press "Preview Message"
