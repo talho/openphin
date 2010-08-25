@@ -26,7 +26,6 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.createTransferableRecord();
 
-
         var items = []
 
         if( this.showJurisdictions === true)
@@ -62,12 +61,18 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             border: false,
             layoutConfig: {
                 align: 'stretch',
-                defaultMargins:'0, 20'
+                defaultMargins:'0, 20, 0, 0'
             },
-            items: [accordion, {title: "All Selected Placeholder", flex: 1}]
+            items: [accordion, this.createSelectionBreakdownPanel()]
         });
 
         Ext.ux.AudiencePanel.superclass.initComponent.call(this);
+    },
+
+    findRecordIndexInSelectedItems: function(record, type){
+        return this.selectedItemsStore.findBy(function(record, type, check, id){
+            return record.get('id') === check.get('id') && check.get('type') === type;
+        }.createDelegate(this, [record, type], 0));
     },
 
     createTransferableRecord: function(){
@@ -89,7 +94,19 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         var sm = new Ext.grid.CheckboxSelectionModel({
             checkOnly: true,
-            sortable: true
+            sortable: true,
+            listeners:{
+                scope: this,
+                'rowselect': function(sm, index, record){
+                    if(this.findRecordIndexInSelectedItems(record, 'role') === -1) // If we don't find the record, add it
+                        this.selectedItemsStore.add(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'role'}));
+                },
+                'rowdeselect': function(sm, index, record){
+                    var recordIndex = this.findRecordIndexInSelectedItems(record, 'role');
+                    if(recordIndex !== -1)
+                        this.selectedItemsStore.removeAt(recordIndex);
+                }
+            }
         });
 
         var filterField = new Ext.form.TextField({
@@ -105,7 +122,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 ]);
             }
             else
-                this.roleGridView.getStore().filter();
+                this.roleGridView.getStore().clearFilter();
         }, this, {delay: 50});
 
         this.roleGridView = new Ext.grid.GridPanel({
@@ -165,7 +182,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             autoLoad: true,
             reader: new Ext.data.JsonReader({
                 idProperty: 'id',
-                fields: ['name', 'left', 'right', 'leaf', 'level', 'parent_id']
+                fields: ['name', 'id', 'left', 'right', 'leaf', 'level', 'parent_id']
             }),
             listeners:{
                 'load': function(store){
@@ -185,8 +202,32 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         var sm = new Ext.grid.CheckboxSelectionModel({
             checkOnly: true,
-            sortable: true
+            sortable: false,
+            header: '',
+            listeners:{
+                scope: this,
+                'rowselect': function(sm, index, record){
+                    if(this.findRecordIndexInSelectedItems(record, 'jurisdiction') === -1) // If we don't find the record, add it
+                        this.selectedItemsStore.add(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'jurisdiction'}));
+                },
+                'rowdeselect': function(sm, index, record){
+                    var recordIndex = this.findRecordIndexInSelectedItems(record, 'jurisdiction');
+                    if(recordIndex !== -1)
+                        this.selectedItemsStore.removeAt(recordIndex);
+                }
+            }
         });
+
+        sm.addEvents('massselectionchange');
+        sm.addListener('massselectionchange', function(sm, addedRecords, removedRecords){
+
+            Ext.each(removedRecords, function(record){this.selectedItemsStore.removeAt(this.findRecordIndexInSelectedItems(record, 'jurisdiction'))}, this);
+
+            var transferableItems = [];
+            Ext.each(addedRecords, function(selection){transferableItems.push(new this._transferableRecord({name: selection.get('name'), id: selection.get('id'), type: 'jurisdiction'}));}, this);
+
+            this.selectedItemsStore.add(transferableItems);
+        }, this);
 
         var rowActions = new Ext.ux.grid.RowActions({
             actions: [{iconCls: 'contextDownArrow', hideIndex: 'leaf', cb: function(grid, record, action, index){ this.showJurisdictionTreeContextMenu(grid, index);}.createDelegate(this)}]
@@ -196,7 +237,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             store: store,
             master_column_id : 'name',
             columns: [ sm,
-                {id:'name', header: "Jurisdiction", sortable: true, dataIndex: 'name'},
+                {id:'name', header: "Jurisdiction", sortable: true, dataIndex: 'name', menuDisabled: true},
                     rowActions
             ],
             autoExpandColumn: 'name',
@@ -226,38 +267,74 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         this.jurisdictionContextMenu.show(row);
     },
 
-    selectChildrenOfNode: function(record, index)
-    {
+    selectChildrenOfNode: function(record){
         var store = this.jurisdictionTreeGrid.getStore();
         store.expandNode(record);
         var sm = this.jurisdictionTreeGrid.getSelectionModel();
-        sm.selectRow(index, true);
 
-        var children = store.getNodeDescendants(record);
+        var records = store.getNodeDescendants(record);
 
-        sm.selectRecords(children, true);
+        records.unshift(record);
+
+        sm.suspendEvents();
+        sm.selectRecords(records, true);
+        sm.resumeEvents();
+        sm.fireEvent('massselectionchange', sm, records, []);
     },
 
-    unselectChildrenOfNode: function(record, index)
-    {
+    unselectChildrenOfNode: function(record, index){
         var store = this.jurisdictionTreeGrid.getStore();
         var sm = this.jurisdictionTreeGrid.getSelectionModel();
-        sm.deselectRow(index);
 
-        var childIndexes = [];
-        var childNodes = store.getNodeDescendants(record);
-        Ext.each(childNodes, function(child){childIndexes.push(store.indexOf(child));});
+        var indexes = [];
+        indexes.push(index);
+        var nodes = store.getNodeDescendants(record);
+        Ext.each(nodes, function(child){indexes.push(store.indexOf(child));});
+        nodes.unshift(record);
+        
+        sm.suspendEvents();
+        Ext.each(indexes, function(i){sm.deselectRow(i);});
+        sm.resumeEvents();
+        sm.fireEvent('massselectionchange', sm, [], nodes);
 
-        Ext.each(childIndexes, function(cindex){sm.deselectRow(cindex);});
-
-        store.collapseNode(record);
-        Ext.each(childNodes, function(child){store.collapseNode(child);});
+        Ext.each(nodes, function(child){store.collapseNode(child);});
     },
 
     createUserSearchPanel: function() {
 
+        this.userSearchStore = new Ext.data.JsonStore({
+            url: '/search/show_clean',
+            idProperty: 'id',
+            restful: true,
+            fields: ['name', 'email', 'id', 'title', 'extra'],
+            filters: new Ext.util.MixedCollection(),
+            addFilters: function(ids){
+                Ext.each(ids, function(id){this.filters.add(id, {property: 'id', value: new RegExp('^(?!' + id.toString() + '$).*$')})}, this);
+                this.filter(this.filters.getRange());
+            },
+            removeFilter: function(id){
+                this.filters.removeKey(id);
+                this.filter(this.filters.getRange());
+            }
+        });
+
         this.userStore = new Ext.data.Store({
-              reader: new Ext.data.JsonReader({fields: this._transferableRecord})
+            reader: new Ext.data.JsonReader({fields: this._transferableRecord}),
+            listeners:{
+                scope: this,
+                'add': function(store, records, index){
+                    this.selectedItemsStore.add(records);
+                    this.userSearchStore.addFilters(Ext.invoke(records, 'get', 'id'));
+                },
+                'remove': function(store, record, index){
+                    //var recordIndex = this.findRecordIndexInSelectedItems(record, 'user');
+                    //if(recordIndex !== -1)
+                    //    this.selectedItemsStore.removeAt(recordIndex);
+                    this.selectedItemsStore.remove(record);
+                    
+                    this.userSearchStore.removeFilter(record.get('id'));
+                }
+            }
         });
         
         var rowActions = new Ext.ux.grid.RowActions({
@@ -275,13 +352,15 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                     id: 'name_column',
                     header: 'Name',
                     dataIndex: 'name',
-                    sortable: true
+                    sortable: true,
+                    menuDisabled: true
                 },
                 {
                     header: 'Email',
                     dataIndex: 'email',
                     sortable: true,
-                    width: 125
+                    width: 125,
+                    menuDisabled: true
                 }, rowActions],
                 autoExpandColumn: 'name_column',
                 plugins: [new Ext.ux.DataTip({tpl:'<tpl for="."><div>{tip}</div></tpl>'}), rowActions],
@@ -294,12 +373,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 queryParam: 'tag',
                 mode: 'remote',
                 forceSelection: true,
-                store: new Ext.data.JsonStore({
-                    url: '/search/show_clean',
-                    idProperty: 'id',
-                    restful: true,
-                    fields: ['name', 'email', 'id', 'title', 'extra']
-                }),
+                store: this.userSearchStore,
                 displayField: 'name',
                 valueField: 'id',
                 tpl:'<tpl for="."><div ext:qtip=\'{extra}\' class="x-combo-list-item">{name} - {email}</div></tpl>',
@@ -318,6 +392,60 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         });
 
         return panel;
+    },
+
+    createSelectionBreakdownPanel: function(){
+
+        this.selectedItemsStore = new Ext.data.GroupingStore({
+            reader: new Ext.data.JsonReader({
+                fields: this._transferableRecord
+            }),
+            groupField: 'type'
+        });
+                                  
+        var rowActions = new Ext.ux.grid.RowActions({
+            actions: [{iconCls: 'removeBtn', cb: function(grid, record, action, index){
+                var type = record.get('type');
+                var id = record.get('id');
+                switch(type){
+                    case 'user':
+                            this.userStore.remove(record);
+                            break;
+                    case 'jurisdiction':
+                            var jsm = this.jurisdictionTreeGrid.getSelectionModel();
+                            jsm.deselectRow(this.jurisdictionTreeGrid.getStore().find('id', id.toString()));
+                            break;
+                    case 'role':
+                            var rsm = this.roleGridView.getSelectionModel();
+                            rsm.deselectRow(this.roleGridView.getStore().find('id', id.toString()));
+                            break;
+                } // we're not going to remove the row because the automatic handlers for this on each grid should do that for us.
+            }.createDelegate(this)}]
+        });
+
+        this.selectedItemsGridPanel = new Ext.grid.GridPanel({
+            sm: false,
+            title: "All Selected Items",
+            flex: 2,
+            store: this.selectedItemsStore,
+            colModel: new Ext.grid.ColumnModel({
+                columns: [
+                    {header: "Name", dataIndex: 'name', sortable:true, id: 'name_column'},
+                    {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true},
+                        rowActions
+                ],
+                defaults:{
+                    menuDisabled: true
+                }
+            }),
+            autoExpandColumn: 'name_column',
+            plugins: [rowActions],
+            view: new Ext.grid.GroupingView({
+                groupTextTpl: '{group}s'
+            })
+        });
+
+        return this.selectedItemsGridPanel;
     }
 });
 
