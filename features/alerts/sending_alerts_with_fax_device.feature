@@ -9,10 +9,13 @@ Feature: Sending alerts to faxes
       | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
   
   Scenario: Sending alerts to fax devices
+    Given we start supporting fax again
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
+    And I follow "Add Device"
     And I select "Fax" from "Device Type"
     And I fill in "Fax" with "210-555-1212"
     And I press "Save"
