@@ -37,6 +37,7 @@ Feature: Creating and sending alerts
       | Dallas County | Tarrant County | Wise County | Potter County |  
 
     And the role "Health Officer" is an alerter
+    And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the han page
@@ -98,6 +99,7 @@ Feature: Creating and sending alerts
     When I press "Edit"
     And I make changes to the alert form with:
       | Title    | Something Different |
+    And I press "Select an Audience"
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | Jurisdictions | Dallas County, Potter County            |
