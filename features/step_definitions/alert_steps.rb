@@ -77,8 +77,8 @@ When /^PhinMS delivers the message: (.*)$/ do |filename|
   When "delayed jobs are processed"
 end
 
-When /I fill out the alert "([^\"]*)" form with:/ do |subform,table|
-  fill_in_alert_form subform, table
+When /I fill out the alert form with:/ do |table|
+  fill_in_alert_form table
 end
 
 When "I make changes to the alert form with:" do |table|
@@ -95,7 +95,7 @@ end
 
 When /^I follow the acknowledge alert link$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
-  visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => HOST)
+  visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => "localhost:9887")
 end
 
 When 'I follow the acknowledge alert link "$title"' do |title|
