@@ -173,8 +173,12 @@ module FeatureHelpers
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
       when "Short Message"
         fill_in "alert_short_message", :with => value
-      when "Message", "Title"
+      when "Title"
         fill_in label, :with => value
+      when "Message"
+        # instantly set the message text to avoid javascript not responding
+        # dialog notice in firefox
+        page.execute_script("$('#alert_message').val('#{value}')")
       when "Alert Response 1", "Alert Response 2", "Alert Response 3", "Alert Response 4", "Alert Response 5"
         fill_in label, :with => value
       else
