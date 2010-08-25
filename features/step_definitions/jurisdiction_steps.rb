@@ -14,17 +14,17 @@ end
 
 Then /^I should see "(.*)" as a jurisdictions option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
-  response.should have_selector("input[name='alert[audiences_attributes][0][jurisdiction_ids][]']", :value => jurisdiction.id.to_s)
+  assert page.find("input.audience_jurisdiction[@value=\"#{jurisdiction.id.to_s}\"]").nil? == false
 end
 
 Then /^I should see "(.*)" as a from jurisdiction option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
-  response.should have_selector("select[name*=from_jurisdiction_id] option", :value => jurisdiction.id.to_s)
+  assert page.find("select#alert_from_jurisdiction_id option[@value=\"#{jurisdiction.id.to_s}\"]").nil? == false
 end
 
 Then /^I should not see "(.*)" as a from jurisdiction option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
-  response.should_not have_selector("select[name*=from_jurisdiction_id] option", :value => jurisdiction.id.to_s)
+  assert page.find("select#alert_from_jurisdiction_id option[@value=\"#{jurisdiction.id.to_s}\"]").nil? == true
 end
 
 Then /^I should see the following jurisdictions:$/ do |table|
