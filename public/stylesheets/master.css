@@ -96,6 +96,10 @@ div.help a                                          {color:#fff}
 																							       position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
 #documents_progress_panel div                       {background: url('../images/Ajax-loader.gif') 5px 6px no-repeat #fff;padding-left:45px;margin-left: auto;
                                                      margin-right: auto; position: relative; top: 50%; width: 120px; height: 35px;border:1px solid;padding-top:8px;}
+#documentsFlash                                     {padding: 5px 5px 0 5px; z-index: 150; display: none;
+																										position:absolute; height:260px; left:50px; bottom: 31px; width:458px;}
+#documentsFlash div                                 {background: #fff; margin-top: 20px; padding: 10px; margin-left: auto;
+																										margin-right: auto; position: relative; width: 80%; border:1px solid;}
 
 #chat_panel                                         {border:1px solid black; -moz-border-radius:30px 30px 0 0; padding: 30px 30px 0 30px;
 																							       background: #333; position:absolute; height:200px; left:50px; bottom: 20px; width:600px;}

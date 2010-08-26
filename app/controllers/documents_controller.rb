@@ -43,7 +43,11 @@ class DocumentsController < ApplicationController
     unless @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
       @document = current_user.documents.build(params[:document])
       @document.owner_id = current_user.id
-      @document.save!
+      if @document.valid? 
+        @document.save!
+     else
+       flash[:error] =  @document.errors["file"]
+     end
     else
       flash[:error] = 'File name is already in use. Try renaming the file.'
       @document = current_user.documents.build(params[:document])

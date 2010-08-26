@@ -654,7 +654,15 @@ function setDocumentUploadEvents() {
     complete: function(response, textStatus) {
       //loaded = detectAuthenticityToken(response.responseXML);
       loaded = detectFolderLoaded(response.responseXML);
-      if(!loaded) alert("Error creating new folder, please try again.");
+      if(!loaded) {
+				alert("An error has occurred.  Please try again.");
+			} else {
+				if ( $('#origDocumentsFlash').text().trim().length > 0 ){
+					$('#documentsFlashMessage').text( $('#origDocumentsFlash').text() );
+					$('#documentsFlash').show();
+					$('#origDocumentsFlash').empty();
+				}
+			}
       activateDocumentsPanelActions();
     }
   });
@@ -667,6 +675,11 @@ function setDocumentUploadEvents() {
     $("div#new_share_container:visible").slideToggle("fast");
     upload_document_div.slideToggle("slow");
   });
+}
+
+function closeDocumentsFlash(){
+	$('#documentsFlashMessage').empty();
+	$('#documentsFlash').hide();
 }
 
 function setDocumentNewFolderEvents() {

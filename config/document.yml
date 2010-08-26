@@ -2,6 +2,7 @@ permitted_mimes:
     - image/jpeg 
     - image/gif 
     - image/png 
+    - image/tiff
     - image/svg+xm 
     - image/x-icon 
     - image/bmp 
@@ -9,6 +10,7 @@ permitted_mimes:
     - application/rtf
     - text/plain 
     - text/richtext 
+    - text/csv
     - application/x-compressed 
     - application/x-gzip 
     - application/x-stuffit 
@@ -16,14 +18,20 @@ permitted_mimes:
     - application/zip
     - audio/mid 
     - audio/wav 
+    - application/x-wav
     - audio/mpeg 
     - video/mpeg 
     - video/quicktime 
     - video/x-ms-asf 
     - video/msvideo 
+    - video/dv
+    - video/h264
+    - video/mp4
+    - application/dxf
     - application/msword 
     - application/vnd.ms-excel 
     - application/vnd.ms-outlook 
     - application/vnd.ms-powerpoint 
     - application/vnd.ms-works 
-    - application/x-mswrite 
+    - application/x-mswrite
+  
