@@ -1,4 +1,3 @@
-debugger
 if @results.empty?
   pdf.text "No Results Found", :size => 30, :style => :bold
 else

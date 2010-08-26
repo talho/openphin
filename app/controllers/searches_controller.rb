@@ -24,7 +24,6 @@ class SearchesController < ApplicationController
 
   
   def show_advanced
-    debugger
     if request.get? && params.count == 2
       @results = []
     else
