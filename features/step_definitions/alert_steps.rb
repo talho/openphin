@@ -19,9 +19,16 @@ end
 
 Given "I've sent an alert with:" do |table|
   visit new_alert_path
+      #And I follow "Send an Alert"
+  And %{I select "Advanced" from "Acknowledge"}
+  And %{delayed jobs are processed}
   fill_in_alert_form table
-  click_button "Preview Message"
-  lambda { click_button "Send" }.should change(Alert, :count).by(1)
+  And %{I press "Preview Message"}
+  And %{I press "Send"}
+#  visit new_alert_path
+#  fill_in_alert_form table
+#  click_button "Preview Message"
+#  lambda { click_button "Send" }.should change(Alert, :count).by(1)
 end
 
 Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_address, title|
@@ -296,11 +303,7 @@ end
 Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, alert_response, percentage|
   alert = Alert.find_by_title(alert_name)
   num = alert.call_down_messages.index(alert_response)
-  response.should have_selector(".response_ackpct") do |elm|
-    elm.should have_selector("#response#{num}") do |responses|
-	    responses.should have_selector(".percentage", :content => percentage)
-    end
-  end
+  assert page.find(".response_ackpct #response#{num} .percentage", :text => percentage).nil? == false
 end
 
 Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)"$/ do |alert_name, device_type|

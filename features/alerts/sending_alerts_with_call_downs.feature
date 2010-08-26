@@ -40,7 +40,7 @@ Feature: Sending alerts with call downs
     And I should not see "Advanced"
     When I fill in "Message" with "Update to message"
     And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
+    And I select "72 hours" from "Delivery time"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -96,12 +96,12 @@ Feature: Sending alerts with call downs
     Then I should see "H1N1 SNS push packs to be delivered tomorrow"
     When I fill in "Message" with "H1N1 SNS push packs to be delivered in 15 minutes at point A"
     And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
+    And I select "72 hours" from "Delivery time"
     And I select "if you can respond within 15 minutes" from "Responders"
-		And I unselect "if you can respond within 30 minutes" from "Responders"
-		And I unselect "if you can respond within 1 hour" from "Responders"
-		And I unselect "if you can respond within 4 hours" from "Responders"
-		And I unselect "if you cannot respond" from "Responders"
+		And I unselect option "if you can respond within 30 minutes"
+		And I unselect option "if you can respond within 1 hour"
+		And I unselect option "if you can respond within 4 hours"
+		And I unselect option "if you cannot respond"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -115,13 +115,13 @@ Feature: Sending alerts with call downs
     Then I should see "H1N1 SNS push packs to be delivered tomorrow"
     When I fill in "Message" with "H1N1 SNS push packs to be delivered in 30 minutes at point B"
     And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
+    And I select "72 hours" from "Delivery time"
     And I select "Normal" from "Acknowledge"
-		And I unselect "if you can respond within 15 minutes" from "Responders"
+		And I unselect option "if you can respond within 15 minutes"
 		And I select "if you can respond within 30 minutes" from "Responders"
-		And I unselect "if you can respond within 1 hour" from "Responders"
-		And I unselect "if you can respond within 4 hours" from "Responders"
-		And I unselect "if you cannot respond" from "Responders"
+		And I unselect option "if you can respond within 1 hour"
+		And I unselect option "if you can respond within 4 hours"
+		And I unselect option "if you cannot respond"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -191,7 +191,7 @@ Feature: Sending alerts with call downs
     Then I should see "H1N1 SNS push packs to be delivered tomorrow"
     When I fill in "Message" with "H1N1 SNS push packs all deployed"
     And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
+    And I select "72 hours" from "Delivery time"
     And I select "Normal" from "Acknowledge"
     And I select "if you can respond within 15 minutes" from "Responders"
     And I select "if you can respond within 30 minutes" from "Responders"
@@ -254,4 +254,5 @@ Feature: Sending alerts with call downs
       When I go to the HAN
       And I follow "Alert Log and Reporting"
       And I should see "Acknowledge: Advanced"
+      And I follow "More"
       And I can see the alert acknowledgement response rate for "H1N1 SNS push packs to be delivered tomorrow" in "if you can respond within 15 minutes" is 25%
