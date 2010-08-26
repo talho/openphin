@@ -47,6 +47,10 @@ class Admin::GroupsController < ApplicationController
         @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
         @output_encoding = 'UTF-8'
       end
+      format.json do
+        recipients = TempUser.find(:all)
+        render :json => group_hash_for_display(@group, recipients)
+      end
     end
   end
 
@@ -63,10 +67,12 @@ class Admin::GroupsController < ApplicationController
       if @group.save
         format.html { redirect_to admin_group_path(@group)}
         format.xml  { render :xml => @group, :status => :created, :location => @group }
+        format.json  { render :json => {:group => group_hash_for_display(@group), :success => true}, :status => :created, :location => admin_group_path(@group) }
         flash[:notice] = "Successfully created the group #{params[:group][:name]}."
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @group.errors, :status => :unprocessable_entity }
       end
     end
 
@@ -162,5 +168,22 @@ class Admin::GroupsController < ApplicationController
         format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  private
+
+  def group_hash_for_display(group, recipients = nil)
+    if(recipients.nil?)
+      group.prepare_recipients(:include_public => true, :recreate => true)
+      recipients = TempUser.find(:all)
+    end
+
+    { :name => group.name, :id => group.id, :scope => group.scope, :owner_jurisdiction => Jurisdiction.find(group.owner_jurisdiction_id),
+      :csv_path => admin_group_path(group, :format=>:csv),
+      :users => group.users.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } },
+      :jurisdictions => group.jurisdictions.map {|jurisdiction| {:name => jurisdiction.name, :id => jurisdiction.id } },
+      :roles => group.roles.map {|role| {:name => role.name, :id => role.id } },
+      :recipients => recipients.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } }
+    }
   end
 end
