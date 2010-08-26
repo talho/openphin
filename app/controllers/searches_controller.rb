@@ -23,8 +23,7 @@ class SearchesController < ApplicationController
   end
 
   def show_advanced
-    debugger
-    if request.get? && (params[:conditions].nil? && params[:with].nil? && params[:name].nil?) 
+    if request.get? && params.count == 2 
       @results = []
     else
       strip_blank_elements(params[:conditions])
@@ -34,7 +33,8 @@ class SearchesController < ApplicationController
         @results = User.search( params[:name], build_options(params).merge({:match_mode=>:any}) )
       else
         sanitize(params[:conditions])
-        params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions][:phone].blank?
+       # debugger
+        params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
         params.delete(:name)
         @results = User.search(params.merge(build_options(params)))
       end
