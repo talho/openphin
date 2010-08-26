@@ -84,6 +84,12 @@ When /^(?:|I )select "([^"]*)" from "([^"]*)" within "([^"]*)$/ do |value, field
   end
 end
 
+When /^(?:|I )unselect option "([^"]*)"(?: within "([^"]*)")?$/ do |value, selector|
+  with_scope(selector) do
+    page.execute_script("$('option').each(function(){if($(this).html() == '#{value}') $(this).removeAttr('selected')})") 
+  end
+end
+
 When /^(?:|I )check "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
   with_scope(selector) do
     check(field)
