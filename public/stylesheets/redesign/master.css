@@ -41,3 +41,8 @@ a.inlineLink {text-decoration:underline;cursor:pointer;color:blue;}
     background-image: url(/images/cross-circle.png) !important;
     background-position: center;
 }
+
+.editBtn{
+    background-image: url(/stylesheets/images/page_edit.png) !important;
+    background-position: center;
+}

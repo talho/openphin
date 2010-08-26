@@ -45,7 +45,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         var accordion = new Ext.Panel({
             fieldLabel: 'Group Membership',
             layout: 'accordion',
-            flex: 2,
+            flex: 3,
             layoutConfig: {
                 hideCollapseTool: true,
                 animate: true
@@ -67,6 +67,10 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         });
 
         Ext.ux.AudiencePanel.superclass.initComponent.call(this);
+    },
+
+    destroy: function(){
+        this.jurisdictionContextMenu.destroy();
     },
 
     findRecordIndexInSelectedItems: function(record, type){
@@ -99,12 +103,12 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 scope: this,
                 'rowselect': function(sm, index, record){
                     if(this.findRecordIndexInSelectedItems(record, 'role') === -1) // If we don't find the record, add it
-                        this.selectedItemsStore.add(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'role'}));
+                        this.selectedItemsStore.addSorted(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'role'}));
                 },
                 'rowdeselect': function(sm, index, record){
                     var recordIndex = this.findRecordIndexInSelectedItems(record, 'role');
                     if(recordIndex !== -1)
-                        this.selectedItemsStore.removeAt(recordIndex);
+                        this.selectedItemsStore.remove(this.selectedItemsStore.getAt(recordIndex));
                 }
             }
         });
@@ -152,8 +156,8 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             defaultAlign: 'tl-b?',
             defaultOffsets: [0, 2],
             plain: true,
-            items:[{id:'selectAll', text:'Select All Chilren'},
-                {id: 'selectNone', text: 'Select No Children'}]
+            items:[{id:'selectAll', text:'Select All Sub-jurisdictions'},
+                {id: 'selectNone', text: 'Select No Sub-jurisdictions'}]
         });
 
         var filterField = new Ext.form.TextField({
@@ -186,11 +190,11 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             }),
             listeners:{
                 'load': function(store){
-                    var fed = store.find('name', 'Federal');
+                    var fed = store.findExact('name', 'Federal');
                     if(Ext.isNumber(fed))
                     {
                         store.expandNode(store.getAt(fed));
-                        var tex = store.find('name', 'Texas');
+                        var tex = store.findExact('name', 'Texas');
                         if(Ext.isNumber(tex))
                         {
                             store.expandNode(store.getAt(tex));
@@ -207,13 +211,28 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             listeners:{
                 scope: this,
                 'rowselect': function(sm, index, record){
+                    this.selectedItemsStore.clearFilter();
                     if(this.findRecordIndexInSelectedItems(record, 'jurisdiction') === -1) // If we don't find the record, add it
-                        this.selectedItemsStore.add(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'jurisdiction'}));
+                    {
+                        record.isFullySelected = this.nodeHasAllChildrenSelected(record);
+                        var ancestors = this.jurisdictionTreeGrid.getStore().getNodeAncestors(record);
+                        Ext.each(ancestors, function(ancestor){ ancestor.isFullySelected = this.nodeHasAllChildrenSelected(ancestor); }, this);
+
+                        this.selectedItemsStore.addSorted(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'jurisdiction'}));
+                    }
+                    this.selectedItemsStore.applyFilter();
                 },
                 'rowdeselect': function(sm, index, record){
+                    record.isFullySelected = false;
+
+                    var ancestors = this.jurisdictionTreeGrid.getStore().getNodeAncestors(record);
+                    Ext.each(ancestors, function(ancestor){ ancestor.isFullySelected = false }, this);
+
+                    this.selectedItemsStore.clearFilter();
                     var recordIndex = this.findRecordIndexInSelectedItems(record, 'jurisdiction');
                     if(recordIndex !== -1)
                         this.selectedItemsStore.removeAt(recordIndex);
+                    this.selectedItemsStore.applyFilter();
                 }
             }
         });
@@ -221,12 +240,24 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         sm.addEvents('massselectionchange');
         sm.addListener('massselectionchange', function(sm, addedRecords, removedRecords){
 
+            this.selectedItemsStore.clearFilter();
             Ext.each(removedRecords, function(record){this.selectedItemsStore.removeAt(this.findRecordIndexInSelectedItems(record, 'jurisdiction'))}, this);
+
+            // clean up the added records to make sure we don't add any duplicates
+            var dontAddThese = [];
+            Ext.each(addedRecords, function(record){if(this.findRecordIndexInSelectedItems(record, 'jurisdiction') !== -1) dontAddThese.push(record);}, this);
+            Ext.each(dontAddThese, function(record){addedRecords.remove(record);});
 
             var transferableItems = [];
             Ext.each(addedRecords, function(selection){transferableItems.push(new this._transferableRecord({name: selection.get('name'), id: selection.get('id'), type: 'jurisdiction'}));}, this);
 
-            this.selectedItemsStore.add(transferableItems);
+            if(transferableItems.length > 0)
+            {
+                this.selectedItemsStore.add(transferableItems);
+                this.selectedItemsStore.sort();
+            }
+
+            this.selectedItemsStore.applyFilter();
         }, this);
 
         var rowActions = new Ext.ux.grid.RowActions({
@@ -278,6 +309,9 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         sm.suspendEvents();
         sm.selectRecords(records, true);
+        Ext.each(records, function(record){record.isFullySelected = this.nodeHasAllChildrenSelected(record);}, this);
+        var ancestors = this.jurisdictionTreeGrid.getStore().getNodeAncestors(record);
+        Ext.each(ancestors, function(ancestor){ ancestor.isFullySelected = this.nodeHasAllChildrenSelected(ancestor); }, this);
         sm.resumeEvents();
         sm.fireEvent('massselectionchange', sm, records, []);
     },
@@ -297,7 +331,26 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         sm.resumeEvents();
         sm.fireEvent('massselectionchange', sm, [], nodes);
 
-        Ext.each(nodes, function(child){store.collapseNode(child);});
+        Ext.each(nodes, function(child){child.isFullySelected = false; store.collapseNode(child);});
+        var ancestors = this.jurisdictionTreeGrid.getStore().getNodeAncestors(record);
+        Ext.each(ancestors, function(ancestor){ ancestor.isFullySelected = false; }, this);
+    },
+
+    nodeHasAllChildrenSelected: function(record){
+        var store = this.jurisdictionTreeGrid.getStore();
+        if(store.isLeafNode(record))
+            return false;
+
+        var sm = this.jurisdictionTreeGrid.getSelectionModel();
+
+        if(!sm.isSelected(record))
+            return false;
+        
+        var children = store.getNodeDescendants(record);
+
+        var partitioned = Ext.partition(children, function(child){return sm.isSelected(child);});
+
+        return partitioned[1].length === 0
     },
 
     createUserSearchPanel: function() {
@@ -323,7 +376,13 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             listeners:{
                 scope: this,
                 'add': function(store, records, index){
-                    this.selectedItemsStore.add(records);
+                    if(records.length === 1)
+                        this.selectedItemsStore.addSorted(records[0]);
+                    else
+                    {
+                        this.selectedItemsStore.add(records);
+                        this.selectedItemsStore.applySort();
+                    }
                     this.userSearchStore.addFilters(Ext.invoke(records, 'get', 'id'));
                 },
                 'remove': function(store, record, index){
@@ -400,9 +459,37 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             reader: new Ext.data.JsonReader({
                 fields: this._transferableRecord
             }),
-            groupField: 'type'
+            groupField: 'type',
+            listeners: {
+                scope:this
+            },
+            filterFn: function(record){
+                var type = record.get('type');
+                switch(type)
+                {
+                    case 'user':
+                    case 'role':
+                        return true; // we don't want to filter users or roles
+                    case 'jurisdiction':
+                        var store = this.jurisdictionTreeGrid.getStore();
+                        var parent = store.getNodeParent(store.getAt(store.findExact('id', record.get('id'))));
+                        return parent === null || !parent.isFullySelected;
+                    default: return true; // if we can't figure out what to do with it, we don't want to filter it, in case
+                }
+            },
+            sortInfo: {
+                field: 'type',
+                direction: 'ASC'
+            }
         });
-                                  
+
+        this.selectedItemsStore.applyFilter = function(store){
+            store.filterBy(store.filterFn, this);
+        }.createDelegate(this, [this.selectedItemsStore]);
+        
+        this.selectedItemsStore.on('add', this.selectedItemsStore.applyFilter, this, {delay: 50});
+        this.selectedItemsStore.on('remove', this.selectedItemsStore.applyFilter, this, {delay: 50});
+
         var rowActions = new Ext.ux.grid.RowActions({
             actions: [{iconCls: 'removeBtn', cb: function(grid, record, action, index){
                 var type = record.get('type');
@@ -413,11 +500,11 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                             break;
                     case 'jurisdiction':
                             var jsm = this.jurisdictionTreeGrid.getSelectionModel();
-                            jsm.deselectRow(this.jurisdictionTreeGrid.getStore().find('id', id.toString()));
+                            jsm.deselectRow(this.jurisdictionTreeGrid.getStore().findExact('id', id));
                             break;
                     case 'role':
                             var rsm = this.roleGridView.getSelectionModel();
-                            rsm.deselectRow(this.roleGridView.getStore().find('id', id.toString()));
+                            rsm.deselectRow(this.roleGridView.getStore().findExact('id', id));
                             break;
                 } // we're not going to remove the row because the automatic handlers for this on each grid should do that for us.
             }.createDelegate(this)}]
@@ -430,7 +517,21 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             store: this.selectedItemsStore,
             colModel: new Ext.grid.ColumnModel({
                 columns: [
-                    {header: "Name", dataIndex: 'name', sortable:true, id: 'name_column'},
+                    {header: "Name", dataIndex: 'name', sortable:true, id: 'name_column',
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                        if(record.get('type') === 'jurisdiction')
+                        {
+                            var jts = this.jurisdictionTreeGrid.getStore();
+                            var node = jts.getAt(jts.findExact('id', record.get('id')));
+                        
+                            if(node.isFullySelected)
+                            {
+                                metaData.attr = 'style="font-weight:bold;"';
+                                value = value + ' (ALL)';
+                            }
+                        }
+                        return value;
+                    }.createDelegate(this)},
                     {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true},
                         rowActions
                 ],
@@ -446,7 +547,44 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         });
 
         return this.selectedItemsGridPanel;
+    },
+
+    getSelectedIds: function(){
+        return {role_ids: Ext.invoke(this.selectedItemsStore.query('type', 'role').getRange(), 'get', 'id'),
+                jurisdiction_ids: Ext.invoke(this.selectedItemsStore.query('type', 'jurisdiction').getRange(), 'get', 'id'),
+                group_ids: Ext.invoke(this.selectedItemsStore.query('type', 'group').getRange(), 'get', 'id'), // preparing for group selection sometime later
+                user_ids: Ext.invoke(this.selectedItemsStore.query('type', 'user').getRange(), 'get', 'id')
+        };
+    },
+
+    clear: function(){
+        // we need to clear each selection and then clear the selected store. Going to not listen to events as we add in order to speed things up just in case a lot of things were selected
+
+        var jsm = this.jurisdictionTreeGrid.getSelectionModel();
+        if(jsm.grid)
+        {
+            jsm.suspendEvents();
+            jsm.clearSelections();
+            jsm.resumeEvents();
+        }
+
+        var rsm = this.roleGridView.getSelectionModel();
+        if(rsm.grid)
+        {
+            rsm.suspendEvents();
+            rsm.clearSelections();
+            rsm.resumeEvents();
+        }
+
+        this.userStore.suspendEvents();
+        this.userStore.removeAll();
+        this.userSearchStore.filters.clear();
+        this.userSearchStore.clearFilter();
+        this.userStore.resumeEvents();
+
+        this.selectedItemsStore.clearFilter();
+        this.selectedItemsStore.removeAll();
     }
 });
-
+                                                       
 Ext.reg('audiencepanel', Ext.ux.AudiencePanel);

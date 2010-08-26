@@ -27,4 +27,5 @@ class Group < Audience
   named_scope :personal, lambda{{:conditions => ["scope = ?", "Personal"]}}
   named_scope :jurisdictional, lambda{{:conditions => ["scope = ?", "Jurisdiction"]}}
   named_scope :global, lambda{{:conditions => ["scope = ?", "Global"]}}
+
 end
