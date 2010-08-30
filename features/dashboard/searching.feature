@@ -13,12 +13,21 @@ Feature: Searching for users
       | Role         | Immunization Director |
       | Role         | HAN Coordinator       |
     And Texas is the parent jurisdiction of:
-      | Dallas County | Tarrant County |
+      | Dallas County | Tarrant County | Bee County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |
-      | Jane Smith      | jane.smith@example.com   | Health Officer | Tarrant County |
-      | Sam Body      | sam@example.com   | Health Officer | Dallas County |
-      | Amy Body      | amy@example.com   | HAN Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com  | Public          | Dallas County  |
+      | Jane Smith      | jane.smith@example.com  | Health Officer  | Tarrant County |
+      | Sam Body        | sam@example.com         | Health Officer  | Dallas County  |
+      | Amy Body        | amy@example.com         | HAN Coordinator | Dallas County  |
+      | Al Bee          | al.bee@example.com      | Public          | Bee County     |
+      | Amy Bee         | amy.bee@example.com     | Public          | Bee County     |
+      | Dick Bee        | dick.bee@example.com    | Public          | Bee County     |
+      | Fred Bee        | fred.bee@example.com    | Public          | Bee County     |
+      | Jane Bee        | jane.bee@example.com    | Public          | Bee County     |
+      | Joe Bee         | joe.bee@example.com     | Public          | Bee County     |
+      | Maureen Bee     | mo.bee@example.com      | Public          | Bee County     |
+      | Sam Bee         | sam.bee@example.com     | Public          | Bee County     |
+      | Sue Bee         | sue.bee@example.com     | Public          | Bee County     |
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
     And "sam@example.com" has the title "Chief Bottle Washer"
     And "sam@example.com" has the phone "888-555-1212"
@@ -250,3 +259,21 @@ Feature: Searching for users
     Then I see the following users in the search results
       | Sam Body |
     And I should not see "Amy Body"
+    
+  Scenario: Search for all users from a specific jurisdiction over 2 paginated pages
+    Given I am logged in as "amy@example.com"
+
+    When I go to the dashboard page
+    And I follow "Find People"
+    And I select "Bee County" from "_jurisdiction_ids"
+    
+    And I press "Search"
+    Then I see the following users in the search results
+      | Al Bee, Amy Bee, Dick Bee, Fred Bee, Jane Bee, Joe Bee, Maureen Bee, Sam Bee |
+    
+    When I follow "Next"
+    Then I see the following users in the search results
+      | Sue Bee |
+    
+
+    
