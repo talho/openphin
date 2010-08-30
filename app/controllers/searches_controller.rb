@@ -36,8 +36,8 @@ class SearchesController < ApplicationController
         options[:page] = params[:page]||1
         options[:per_page] = 8
       else
-        options[:per_page] = 1000
-        options[:max_matches] = 1000
+        options[:per_page] = 30000
+        options[:max_matches] = 30000
       end
 
       build_fields params, conditions={}

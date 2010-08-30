@@ -1,9 +1,9 @@
-<div class="flash" style="display: none;" id="origDocumentsFlash"><%- [:notice, :instructions, :completed, :error].each do |type| -%>
+<div class="flash" style="display: none;" id="origDocumentsFlash">
+  <%- [:notice, :instructions, :completed, :error].each do |type| -%>
     <%- if flash[type] -%>
       <p class="<%= type %>"><%= flash[type] %></p>
     <%- end -%>
   <%- end -%>
-  
 </div>
 
 <h4 class="panel_h">Contents of <%= @name %></h4>

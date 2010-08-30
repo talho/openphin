@@ -46,7 +46,7 @@ Please fill in part of the name or email address of the person you would like to
     <p>
       <span class="jurisdiction_select">
         <%= label :jurisdiction_id,  "Jurisdiction" %>
-        <%= collection_select "","jurisdiction_ids", Jurisdiction.nonroot, :id, :name, 
+        <%= collection_select "","jurisdiction_ids", Jurisdiction.nonroot, :id, :name,
             {:include_blank => true}, {:multiple=>true,:size=>10} -%>
       </span>
       <span class="role_select">

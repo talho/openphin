@@ -15,16 +15,9 @@
 #
 
 class Document < ActiveRecord::Base
-  
-#  require 'yaml'
   has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
   validates_attachment_presence :file
-  if File.exist?(doc_yml = RAILS_ROOT+"/config/document.yml")
-    if content_types = YAML.load(IO.read(doc_yml))["permitted_mimes"]
-      validates_attachment_content_type :file, :content_type => content_types,:message=>"This file type is not allowed." 
-    end 
-  end
-  
+
   has_and_belongs_to_many :channels, :after_add => :share_with_channel
   has_many :targets, :as => :item, :after_add => :share
   has_many :audiences, :through => :targets
