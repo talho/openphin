@@ -19,15 +19,15 @@ Feature: Searching for users
       | Jane Smith      | jane.smith@example.com  | Health Officer  | Tarrant County |
       | Sam Body        | sam@example.com         | Health Officer  | Dallas County  |
       | Amy Body        | amy@example.com         | HAN Coordinator | Dallas County  |
-      | Al Bee          | al.bee@example.com      | Public          | Bee County     |
-      | Amy Bee         | amy.bee@example.com     | Public          | Bee County     |
-      | Dick Bee        | dick.bee@example.com    | Public          | Bee County     |
-      | Fred Bee        | fred.bee@example.com    | Public          | Bee County     |
-      | Jane Bee        | jane.bee@example.com    | Public          | Bee County     |
-      | Joe Bee         | joe.bee@example.com     | Public          | Bee County     |
-      | Maureen Bee     | mo.bee@example.com      | Public          | Bee County     |
-      | Sam Bee         | sam.bee@example.com     | Public          | Bee County     |
-      | Sue Bee         | sue.bee@example.com     | Public          | Bee County     |
+      | Al Bee          | al.bee@examp.com        | Public          | Bee County     |
+      | Amy Bee         | amy.bee@examp.com       | Public          | Bee County     |
+      | Dick Bee        | dick.bee@examp.com      | Public          | Bee County     |
+      | Fred Bee        | fred.bee@examp.com      | Public          | Bee County     |
+      | Jane Bee        | jane.bee@examp.com      | Public          | Bee County     |
+      | Joe Bee         | joe.bee@examp.com       | Public          | Bee County     |
+      | Maureen Bee     | mo.bee@examp.com        | Public          | Bee County     |
+      | Sam Bee         | sam.bee@examp.com       | Public          | Bee County     |
+      | Sue Bee         | sue.bee@examp.com       | Public          | Bee County     |
     And the user "Amy Body" with the email "amy@example.com" has the role "Admin" in "Dallas County"
     And "sam@example.com" has the title "Chief Bottle Washer"
     And "sam@example.com" has the phone "888-555-1212"
