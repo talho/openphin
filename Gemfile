@@ -60,6 +60,7 @@ group :cucumber do
   gem "cucumber-rails", "0.3.2"
   gem "database_cleaner", "0.5.0"
   gem "spork", "0.8.4"
+  gem "launchy"
 end
 
 group :tools do
