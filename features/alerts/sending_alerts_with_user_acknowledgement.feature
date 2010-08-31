@@ -177,7 +177,7 @@ Feature: Acknowledging an alert
          | Short Message | Chicken pox outbreak |
          | Severity | Moderate |
          | Status | Actual |
-         | Acknowledge | Normal |
+         | Acknowledge | Advanced |
          | Communication methods | Phone |
          | Sensitive | <unchecked> |
          | Alert Response 1 | if you can respond within 15 minutes |
