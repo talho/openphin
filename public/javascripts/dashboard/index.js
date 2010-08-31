@@ -200,6 +200,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 'fatalerror': function(panel){
                     this.tabPanel.remove(panel, true);
                 },
+                'opentab': this.open_tab,
                 scope: this
             }); 
         }

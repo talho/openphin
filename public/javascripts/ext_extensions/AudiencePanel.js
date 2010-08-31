@@ -26,7 +26,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.createTransferableRecord();
 
-        var items = []
+        var items = [];
 
         if( this.showJurisdictions === true)
         {
@@ -42,7 +42,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         items.push(this.createUserSearchPanel());
 
-        var accordion = new Ext.Panel({
+        this.accordion = new Ext.Panel({
             fieldLabel: 'Group Membership',
             layout: 'accordion',
             flex: 3,
@@ -63,7 +63,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 align: 'stretch',
                 defaultMargins:'0, 20, 0, 0'
             },
-            items: [accordion, this.createSelectionBreakdownPanel()]
+            items: [this.accordion, this.createSelectionBreakdownPanel()]
         });
 
         Ext.ux.AudiencePanel.superclass.initComponent.call(this);
@@ -93,7 +93,21 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 {name: 'name', mapping: 'role.name'},
                 {name: 'id', mapping: 'role.id'}
             ],
-            autoSave: false
+            autoSave: false,
+            listeners:{
+                scope: this,
+                'load': function(store){
+                    // look for all of the roles in the selectedItemsStore
+                    var roles = this.selectedItemsStore.query('type', 'role');
+                    var rows = [];
+                    roles.each(function(role){
+                        var row = store.find('id', new RegExp('^' + role.id + '$'));
+                        if(row != -1)
+                            rows.push(row);
+                    });
+                    this.roleGridView.getSelectionModel().selectRows(rows);
+                }
+            }
         });
 
         var sm = new Ext.grid.CheckboxSelectionModel({
@@ -189,6 +203,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 fields: ['name', 'id', 'left', 'right', 'leaf', 'level', 'parent_id']
             }),
             listeners:{
+                scope:this,
                 'load': function(store){
                     var fed = store.findExact('name', 'Federal');
                     if(Ext.isNumber(fed))
@@ -199,6 +214,23 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                         {
                             store.expandNode(store.getAt(tex));
                         }
+                    }
+
+                    var sm = this.jurisdictionTreeGrid.getSelectionModel();
+                    if(sm.grid)
+                    {
+                        // look for all of the roles in the selectedItemsStore
+                        var jurisdictions = this.selectedItemsStore.query('type', 'jurisdiction');
+                        var rows = [];
+                        jurisdictions.each(function(jurisdiction){
+                            var row = store.find('id', new RegExp('^' + jurisdiction.id + '$'));
+                            if(row != -1)
+                                rows.push(row);
+                        });
+                        sm.suspendEvents();
+                        sm.selectRows(rows);
+                        sm.resumeEvents();
+                        sm.fireEvent('massselectionchange', sm, sm.getSelections(), []);
                     }
                 }
             }
@@ -371,20 +403,23 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             }
         });
 
+        var userAddRecords = function(store, records, index){
+            if(records.length === 1)
+                this.selectedItemsStore.addSorted(records[0]);
+            else
+            {
+                this.selectedItemsStore.add(records);
+                this.selectedItemsStore.applySort();
+            }
+            this.userSearchStore.addFilters(Ext.invoke(records, 'get', 'id'));
+        };
+
         this.userStore = new Ext.data.Store({
             reader: new Ext.data.JsonReader({fields: this._transferableRecord}),
             listeners:{
                 scope: this,
-                'add': function(store, records, index){
-                    if(records.length === 1)
-                        this.selectedItemsStore.addSorted(records[0]);
-                    else
-                    {
-                        this.selectedItemsStore.add(records);
-                        this.selectedItemsStore.applySort();
-                    }
-                    this.userSearchStore.addFilters(Ext.invoke(records, 'get', 'id'));
-                },
+                'add': userAddRecords,
+                'load': userAddRecords,
                 'remove': function(store, record, index){
                     //var recordIndex = this.findRecordIndexInSelectedItems(record, 'user');
                     //if(recordIndex !== -1)
@@ -499,12 +534,26 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                             this.userStore.remove(record);
                             break;
                     case 'jurisdiction':
-                            var jsm = this.jurisdictionTreeGrid.getSelectionModel();
-                            jsm.deselectRow(this.jurisdictionTreeGrid.getStore().findExact('id', id));
+                            if(this.jurisdictionTreeGrid.rendered)
+                            {
+                                var jsm = this.jurisdictionTreeGrid.getSelectionModel();
+                                jsm.deselectRow(this.jurisdictionTreeGrid.getStore().findExact('id', id));
+                            }
+                            else
+                            {
+                                grid.getStore().remove(record);
+                            }
                             break;
                     case 'role':
-                            var rsm = this.roleGridView.getSelectionModel();
-                            rsm.deselectRow(this.roleGridView.getStore().findExact('id', id));
+                            if(this.roleGridView.rendered)
+                            {
+                                var rsm = this.roleGridView.getSelectionModel();
+                                rsm.deselectRow(this.roleGridView.getStore().findExact('id', id));
+                            }
+                            else
+                            {
+                                grid.getStore().remove(record);
+                            }
                             break;
                 } // we're not going to remove the row because the automatic handlers for this on each grid should do that for us.
             }.createDelegate(this)}]
@@ -581,9 +630,79 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         this.userSearchStore.filters.clear();
         this.userSearchStore.clearFilter();
         this.userStore.resumeEvents();
+        this.userStore.fireEvent('datachanged', this.userStore, this.userStore);
 
         this.selectedItemsStore.clearFilter();
         this.selectedItemsStore.removeAll();
+
+        if(this.accordion.rendered)
+        {
+            this.accordion.getLayout().setActiveItem(0);
+        }
+    },
+
+    load: function(jurisdictions, roles, users){
+        // first prep each value
+        Ext.each(jurisdictions, function(j){j.type = 'jurisdiction';});
+        Ext.each(roles, function(r){r.type = 'role'});
+        Ext.each(users, function(u){u.type = 'user'});
+
+        // clear the currently selected items: we're overwriting them
+        this.selectedItemsStore.removeAll();
+
+        // Now we need to see if jurisdictions and roles have been loaded: if they have, then we can set selected items now,
+        // otherwise the load event handler for the roles and jurisdiction stores should check to see if there are any already
+        // selected items
+        var store, rows;
+
+        if(this.roleGridView.getStore().getCount() > 0)
+        {
+            store = this.roleGridView.getStore();
+
+            // since we have the jurisdictions already selected in an array nearby, we'll go ahead and use that instead of going to the selectedItemsStore
+            rows = [];
+            Ext.each(roles, function(role){
+                var row = store.find('id', role.id);
+                if(row != -1)
+                    rows.push(row);
+            });
+
+            this.roleGridView.getSelectionModel().selectRows(rows);
+        }
+        else
+        {
+            this.selectedItemsStore.loadData(roles, true); // append: true
+        }
+
+        if(this.jurisdictionTreeGrid.getStore().getCount() > 0)
+        {
+            store = this.jurisdictionTreeGrid.getStore();
+
+            // since we have the jurisdictions already selected in an array nearby, we'll go ahead and use that instead of going to the selectedItemsStore
+            rows = [];
+            Ext.each(jurisdictions, function(jurisdiction){
+                var row = store.find('id', jurisdiction.id);
+                if(row != -1)
+                    rows.push(row);
+            });
+
+            var sm = this.jurisdictionTreeGrid.getSelectionModel();
+            sm.suspendEvents();
+            sm.selectRows(rows);
+            sm.resumeEvents();
+            var records = sm.getSelections();
+            Ext.each(records, function(record){record.isFullySelected = this.nodeHasAllChildrenSelected(record);}, this);
+            sm.fireEvent('massselectionchange', sm, records, []);
+        }
+        else
+        {
+           this.selectedItemsStore.loadData(jurisdictions, true); // append true
+        }
+
+        // finally, let's handle user load. We're going to do this by loading directly into the user store and letting its events take care of things for us
+        this.userStore.loadData(users);
+
+        this.selectedItemsStore.applySort();
     }
 });
                                                        

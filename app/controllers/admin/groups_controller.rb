@@ -22,7 +22,7 @@ class Admin::GroupsController < ApplicationController
       respond_to do |format|
         format.html
         format.json {render :json => { :groups => @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT 
-                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name }} },
+                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)} },
                             :count => groups.length, :page => page, :per_page => 10 } }
       end
     end
@@ -111,6 +111,7 @@ class Admin::GroupsController < ApplicationController
           flash[:notice] = "Successfully updated the group <b>#{group.name}</b>."
           format.html { redirect_to admin_group_path(@group)}
           format.xml  { render :xml => @group, :status => :created, :location => @group }
+          format.json  { render :json => {:group => group_hash_for_display(@group), :success => true}, :status => :created, :location => admin_group_path(@group) }
         rescue ActiveRecord::StaleObjectError
           group = Group.find_by_id(params[:id])
           @group = current_user.viewable_groups.include?(group) ? group : nil
@@ -124,12 +125,14 @@ class Admin::GroupsController < ApplicationController
             end
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+          format.json  { render :json => @group.errors, :status => :unprocessable_entity }
         rescue StandardError
           format.html {
             flash[:error] = "Could not save group <b>#{group.name}</b>.  Please try again."
             redirect_to edit_admin_group_path(@group)
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+          format.json  { render :json => @group.errors, :status => :unprocessable_entity }
         end
       end
     end 
@@ -162,10 +165,12 @@ class Admin::GroupsController < ApplicationController
         flash[:notice] = "Successfully deleted the group #{name}."
         format.html { redirect_to admin_groups_path }
         format.xml  { head :ok }
+        format.json { render :json => {'success' => true}}
       else
         flash[:error] = "This resource does not exist or is not available."
         format.html { redirect_to admin_groups_path }
         format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+        format.json { render :json => {'errors' => @group.errors}, :status => :unprocessable_entity}
       end
     end
   end

@@ -1,7 +1,14 @@
 
 Ext.ns('Talho');
 
+/**
+ * Talho.ManageGroups creates a card layout panel that manages a set of 3 panels: Group Lists, Create Group, and Group Detail
+ * @param  {Object}  config  configuration for Manage Groups - In this case, for now, it's empty
+ */
 Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
+    /**
+      * @lends Talho.ManageGroups.prototype
+      */
     constructor: function(config){
 
         Ext.apply(this, config);
@@ -28,10 +35,14 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.primary_panel.forward = this.forward.createDelegate(this);
         
         this.primary_panel.addEvents('afternavigation');
+        this.primary_panel.addEvents('opentab');
 
         this.getPanel = function(){ return this.primary_panel; }
     },
 
+    /**
+         * Creates the group view for listing a user's groups
+         */
     _getGroupView: function(){
         var store = new Ext.data.JsonStore({
             restful: true,
@@ -40,11 +51,55 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             idProperty: 'id',
             remoteSort: 'true',
             totalProperty: 'count',
-            fields:['name', 'scope', {name: "owner", mapping: "owner.display_name"}, {name: "owner_id", mapping: "owner.id"}]
+            per_page: 10,
+            paramNames:{
+                limit: 'per_page'
+            },
+            listeners:{
+                scope: this,
+                'beforeload': function(store, options){
+                    if(!options.params){
+                        options.params = {};
+                    }
+                    options.params['page'] = ((options.params.start || 0) / store.per_page) + 1;
+
+                    return true;
+                },
+                'beforesave': function(){
+                    if(!Ext.isBoolean(this.group_list.loadMask))
+                    {
+                        this.group_list.loadMask.msg = "Saving...";
+                        this.group_list.loadMask.show();
+                    }
+                    return true;
+                },
+                'save': function(store){
+                    if(!Ext.isBoolean(this.group_list.loadMask))
+                    {
+                        this.group_list.loadMask.hide();
+                        this.group_list.loadMask.msg = "Loading...";
+                    }
+                    store.load();
+                }
+            },
+            fields:['name', 'scope', {name: "owner", mapping: "owner.display_name"}, {name: "owner_id", mapping: "owner.id"}, {name: 'owner_path', mapping: 'owner.profile_path'}, 'group_path'],
+            autoSave: false,
+            writer: new Ext.data.JsonWriter({
+                encode: false
+            })
         });
 
         var rowActions = new Ext.ux.grid.RowActions({
-           actions: [{iconCls: 'editBtn', qtip: 'edit'}, {iconCls: 'removeBtn', qtip: 'delete'}]
+           actions: [
+               {iconCls: 'editBtn', qtip: 'edit', cb: function(grid, record){
+                   this.showNewGroup(record.id);
+               }.createDelegate(this)},
+               {iconCls: 'removeBtn', qtip: 'delete', cb: function(grid, record, action, index, colIndex){
+                   var store = grid.getStore();
+                   store.remove(record);
+                   store.save();
+               }}
+           ]
         });
 
         this.group_list = new Ext.grid.GridPanel({
@@ -54,7 +109,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             height: 300,
             columns: [
                 {header: 'Name', id: 'name_column', dataIndex: 'name'},
-                {header: 'Owner', dataIndex: 'owner'},
+                {header: 'Owner', dataIndex: 'owner', renderer: function(value, metaData){ metaData.css = 'inlineLink'; return value;}},
                 {header: 'Scope', dataIndex: 'scope'},
                     rowActions
 
@@ -67,13 +122,21 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                 scope: this,
                 'cellclick': function(grid, row, column, e){
                     var fieldName = grid.getColumnModel().getDataIndex(column); // Get field name
+                    var record = grid.getStore().getAt(row);  // Get the Record
                     if(fieldName === 'name')
                     {
-                        var record = grid.getStore().getAt(row);  // Get the Record
                         this.showGroupDetail(record.id);
                     }
+                    else if(fieldName === 'owner')
+                    {
+                        this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('owner'), url: record.get('owner_path'), id: 'user_profile_for_' + record.get('owner_id') });
+                    }
                 }
-            }
+            },
+            bbar: new Ext.PagingToolbar({
+                store: store,       // grid and PagingToolbar using same store
+                pageSize: store.per_page
+            })
         });
 
         this.group_display_panel = new Ext.Panel({
@@ -98,6 +161,9 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         return this.group_display_panel;
     },
 
+    /**
+         * Creates the create/edit view fields: name, scope, owner jurisdiction, and the audience panel
+         */
     _getCreateView: function(){
 
         var jurisdiction_store = new Ext.data.JsonStore({
@@ -118,13 +184,22 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             border:false,
             method: 'POST',
             url: '/admin_groups.json',
+            editing: false,
             items:[
-                {fieldLabel: 'Group Name', xtype:'textfield', name: 'group[name]'},
-                {fieldLabel: 'Scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], editable: false, forceSelection: true},
-                {fieldLabel: 'Owner Jurisdition', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', editable: false, forceSelection: true, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
+                {fieldLabel: 'Group Name', itemId: 'group_name', xtype:'textfield', name: 'group[name]'},
+                {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], editable: false, forceSelection: true, mode: 'local', triggerAction: 'all'},
+                {fieldLabel: 'Owner Jurisdition', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', editable: false, forceSelection: true, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
                 {items: this.audience_panel, border: false},
                 {xtype: 'button', text: 'Submit', scope: this, handler: function(){
-                    this.create_group_form_panel.getForm().submit();
+                    var options = {};
+
+                    if(this.create_group_form_panel.editing)
+                    {
+                        options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
+                        options.method = 'PUT';
+                    }
+
+                    this.create_group_form_panel.getForm().submit(options);
                 }}
             ],
             listeners:{
@@ -136,10 +211,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     }
                 },
                 'actionfailed': function(form, action){
-                    if(action.type == 'submit')
-                    {
+                    //if(action.type == 'submit')
+                    //{
                         Ext.Msg.alert('Error', action.response.responseText);
-                    }
+                    //}
                 }
             }
         });
@@ -149,22 +224,35 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
             action.options.params = {};
 
-            action.options.params['group[jurisdiction_ids]'] = audienceIds.jurisdiction_ids;
-            action.options.params['group[role_ids]'] = audienceIds.role_ids;
-            action.options.params['group[user_ids]'] = audienceIds.user_ids;
+            action.options.params['group[jurisdiction_ids][]'] = audienceIds.jurisdiction_ids;
+            action.options.params['group[role_ids][]'] = audienceIds.role_ids;
+            action.options.params['group[user_ids][]'] = audienceIds.user_ids;
 
             return true;
         }, this);
+
 
         var panel = new Ext.Panel({
             items: [this.create_group_form_panel],
             border:false,
             autoScroll:true
         });
-        
+
+        panel.on('render', function(panel){
+            if(this.create_group_form_panel.mask === true)
+                var showAfter = true;
+
+            this.create_group_form_panel.mask = new Ext.LoadMask(panel.getEl());
+            if(showAfter)
+                this.create_group_form_panel.mask.show();
+        }, this);
+
         return panel;
     },
 
+    /**
+         * Create the group detail view which displays the same information as is in the create/edit form except is not editable from this page
+         */
     _getGroupDetailView: function(){
         this.group_detail_panel = new Ext.Panel({
             autoScroll: true,
@@ -186,9 +274,16 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                                 idProperty: 'id',
                                 fields: ['name', 'id', 'profile_path']
                             }),
-                            columns:[{header: "Name", dataIndex: 'name', id: 'name_column'}],
+                            columns:[{header: "Name", dataIndex: 'name', id: 'name_column', renderer: function(value, metaData){ metaData.css = 'inlineLink'; return value;}}],
                             autoExpandColumn: 'name_column',
-                            sm: false
+                            disableSelection: true,
+                            listeners:{
+                                scope: this,
+                                'rowclick': function(grid, rowIndex){
+                                    var record = grid.getStore().getAt(rowIndex);
+                                    this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), url: record.get('profile_path'), id: 'user_profile_for_' + record.get('id') });
+                                }
+                            }
                         },
                         {
                             xtype: 'grid', itemId: 'audience_grid', title: 'Audiences',
@@ -196,23 +291,39 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                             store: new Ext.data.GroupingStore({
                                 reader: new Ext.data.JsonReader({
                                     idProperty: 'id',
-                                    fields: ['name', 'id', 'type']
+                                    fields: ['name', 'id', 'type', 'profile_path']
                                 }),
                                 groupField: 'type'}),
                             cm: new Ext.grid.ColumnModel({
                                 columns: [
-                                    {header: "Name", dataIndex: 'name', sortable:true, id: 'name_column'},
+                                    {header: "Name", dataIndex: 'name', sortable: true, id: 'name_column', renderer: function(value, metaData, record){
+                                        if(record.get('type') === 'user')
+                                            metaData.css = 'inlineLink';
+                                        return value;
+                                    }},
                                     {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true}
                                 ],
                                 defaults:{
                                     menuDisabled: true
                                 }
                             }),
-                            sm: false,
+                            sortInfo: {
+                                field: 'name',
+                                direction: 'ASC'
+                            },
+                            disableSelection: true,
                             autoExpandColumn: 'name_column',
                             view: new Ext.grid.GroupingView({
                                 groupTextTpl: '{group}s'
-                            })
+                            }),
+                            listeners:{
+                                scope: this,
+                                'rowclick': function(grid, rowIndex){
+                                    var record = grid.getStore().getAt(rowIndex);
+                                    if(record.get('type') === 'user')
+                                        this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), url: record.get('profile_path'), id: 'user_profile_for_' + record.get('id') });
+                                }
+                            }
                         }
                 ]},
                 {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'}
@@ -231,6 +342,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         return this.group_detail_panel;
     },
 
+    /**
+         *  Fills in the details for the Group Detail page from the group that we either had the results from (after creation) or the group that we looked up on click
+         * @param {Object} group    the group that we're going to show the details for
+         */
     fillGroupDetail: function(group){
         this.group_detail_panel.mask.hide();
 
@@ -253,23 +368,66 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         audStore.loadData(group.jurisdictions);
         audStore.loadData(group.roles, true);
         audStore.loadData(group.users, true);
+        audStore.sort();
     },
 
-    showNewGroup: function(){
+    /**
+         * Shows the create group form
+         */
+    showNewGroup: function(groupId){
         // reset the group form
         this.create_group_form_panel.getForm().reset();
         this.audience_panel.clear();
+
+        if(Ext.isNumber(groupId))
+        {
+            // if we passed in a group id, we need to show a mask and load the data for the group of that id into this form
+            if(this.create_group_form_panel.mask && this.create_group_form_panel.mask.show)
+                this.create_group_form_panel.mask.show();
+            else
+                this.create_group_form_panel.mask = true;
+
+            Ext.Ajax.request({
+                url: '/admin_groups/' + groupId + '.json',
+                method: 'GET',
+                success: function(response, options){
+                    var group = Ext.decode(response.responseText);
+
+                    // Fill in the field details
+                    this.create_group_form_panel.groupId = group.id;
+                    this.create_group_form_panel.getComponent('group_name').setValue(group.name);
+                    this.create_group_form_panel.getComponent('group_scope').setValue(group.scope);
+                    this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.jurisdiction.id);
+
+                    // Pass the audience panel the selected items to initialize selected and initial checked items
+                    this.audience_panel.load(group.jurisdictions, group.roles, group.users);
+                    
+                    this.create_group_form_panel.mask.hide();
+                },
+                scope: this
+            });
+
+            this.create_group_form_panel.editing = true;
+        }
+        else
+        {
+            this.create_group_form_panel.editing = false;
+        }
 
         this.primary_panel.layout.setActiveItem(1);
         this.primary_panel.fireEvent('afternavigation', this.primary_panel);
         this.primary_panel.setTitle('Create New Group');
     },
 
+    /**
+         * Shows the group detail form
+         * @param   {Object/Int}    group   Either an object representation of the group or the group ID that we will be looking up
+         */
     showGroupDetail: function(group){
         if(Ext.isObject(group))
         {
             // we have the group already to go and just need to load the json here
-            this.fillGroupDetail(group);
+            this.group_detail_panel.on('show', function(){this.fillGroupDetail(group.group || group)}, this, {delay: 10})
         }
         else
         {
@@ -295,8 +453,14 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.primary_panel.setTitle('Group Detail');
     },
 
+    /**
+         * You can never go forward, only back
+         */
     forward: function(){},
 
+    /**
+         * Handler for the back method, always goes to the Group List card
+         */
     back: function(){
         if(this.canGoBack())
         {
@@ -306,13 +470,23 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         }
     },
 
+    /**
+         * You can never go forward
+         */
     canGoForward: function(){ return false; },
 
+    /**
+         * If we're not on the group list card, we can go back
+         */
     canGoBack: function(){
         return this.primary_panel.items.indexOf(this.primary_panel.layout.activeItem) !== 0
     }
 });
 
+/**
+ * Initializer for the ManageGroup object. Returns a panel
+ * @param   {Ojbect}    config  Configuration for the ManageGroups panel
+ */
 Talho.ManageGroups.initialize = function(config)
 {
     var manage_groups = new Talho.ManageGroups(config);
