@@ -35,4 +35,11 @@ class AppMailer < ActionMailer::Base
     body :message => message
   end
 
+  def delayed_job_check(email)
+    recipients email
+    from DO_NOT_REPLY
+    subject "Delayed Job Check - #{Time.now}"
+    body
+  end
+
 end
