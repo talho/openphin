@@ -102,6 +102,8 @@ ActionController::Routing::Routes.draw do |map|
     forum.resources :topics, :member => { :update_comments => :put }
   end
 
+  map.resources :delayed_job_checks
+
   map.connect "/session.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
 
   # The priority is based upon order of creation: first created -> highest priority.
