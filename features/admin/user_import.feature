@@ -68,3 +68,24 @@ Feature: Online importing users from a uploaded CSV file
     And I attach the tmp file at "users.csv" to "Upload User CSV file"
     And I press "Upload"
     Then I should not see "The user batch was not created"
+
+  Scenario: Reject the attempted upload of a file that is not truly CSV
+    Given I am logged in as "admin@ector.gov"
+    And I go to the user batch page for an admin
+    And I follow "Batch Users"
+    And a jurisdiction named "Ector"
+    And I attach the tmp file at "xls-file-named-csv.csv" to "Upload User CSV file"
+    And I press "Upload"
+    Then I should see "Problem with file"
+    And I should see "Please check CSV file format"
+
+  Scenario: Reject the attempted upload of a CSV file that is not a user batch file
+    Given I am logged in as "admin@ector.gov"
+    And I go to the user batch page for an admin
+    And I follow "Batch Users"
+    And a jurisdiction named "Ector"
+    And I attach the tmp file at "invitees.csv" to "Upload User CSV file"
+    And I press "Upload"
+    Then I should see "There was an error"
+    And I should see "No users were created"
+    
