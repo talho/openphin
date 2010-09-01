@@ -40,7 +40,7 @@ group :default do
     gem "taf2-curb", "0.5.4.0"
   gem "mysql", "2.8.1"
   gem "libxml-ruby", "1.1.3"
-  gem "slim_scrooge", "1.0.10"
+  #gem "slim_scrooge", "1.0.10"
 end
 
 group :test do
