@@ -29,7 +29,7 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
         els.addListener('click', function(evt){
             var elem = Ext.get(evt.getTarget('li.alert'));
             elem.toggleClass('more');
-            panel.doLayout();
+            panel.findParentByType('panel').doLayout();
         });
 
         els.addClass('inlineBtn');
