@@ -14,8 +14,8 @@ page << "Application.rails_environment = '#{ Rails.env }';"
 
   if File.exists?(File.join(Rails.root,"vendor","plugins","rollcall"))
     menu_config += "{name: 'Rollcall', items:[
-                    {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'#{ rollcall_path }'}},
-                    {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{ schools_path }'}},
+                    {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'#{ rollcall_path }', initializer: 'Talho.Rollcall'}},
+                    {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{ schools_path }', initializer: 'Talho.Rollcall'}},
                     {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'#{ about_rollcall_path }'}}]},"
   end
                                                             
