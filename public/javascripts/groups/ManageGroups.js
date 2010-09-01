@@ -187,10 +187,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             editing: false,
             items:[
                 {fieldLabel: 'Group Name', itemId: 'group_name', xtype:'textfield', name: 'group[name]'},
-                {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], editable: false, forceSelection: true, mode: 'local', triggerAction: 'all'},
-                {fieldLabel: 'Owner Jurisdition', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', editable: false, forceSelection: true, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
+                {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, typeAhead: true, typeAheadDelay: 0, mode: 'local', triggerAction: 'all'},
+                {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, typeAhead: true, typeAheadDelay: 0, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
                 {items: this.audience_panel, border: false},
-                {xtype: 'button', text: 'Submit', scope: this, handler: function(){
+                {xtype: 'button', text: 'Save', scope: this, handler: function(){
                     var options = {};
 
                     if(this.create_group_form_panel.editing)
@@ -233,6 +233,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
 
         var panel = new Ext.Panel({
+            itemId: 'create_group_form_holder',
             items: [this.create_group_form_panel],
             border:false,
             autoScroll:true
@@ -257,10 +258,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.group_detail_panel = new Ext.Panel({
             autoScroll: true,
             border: false,
-            items: [{xtype: 'box', itemId:'group_name', html: 'NAME'},
+            items: [{xtype: 'box', cls:'group_name', itemId:'group_name', html: 'NAME'},
                 {border: false, itemId: 'group_form_section', layout: 'form', items:[
-                    {xtype: 'box', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
-                    {xtype: 'box', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'}
+                    {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
+                    {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'}
                 ]},
                 {xtype: 'panel', itemId: 'group_grid_holder', border: false, layout: 'hbox', width: 500, height: 300,
                     layoutConfig: {
@@ -270,6 +271,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     items:[
                         {xtype: 'grid', itemId: 'recipient_grid', title: 'Recipients',
                             flex: 1,
+                            bodyCssClass: 'recipients',
                             store: new Ext.data.JsonStore({
                                 idProperty: 'id',
                                 fields: ['name', 'id', 'profile_path']
@@ -288,9 +290,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                         {
                             xtype: 'grid', itemId: 'audience_grid', title: 'Audiences',
                             flex: 1,
+                            bodyCssClass: 'audiences',
                             store: new Ext.data.GroupingStore({
                                 reader: new Ext.data.JsonReader({
-                                    idProperty: 'id',
+                                    idProperty:'this_will_never_be_filled_because_we_dont_want_collisions',
                                     fields: ['name', 'id', 'type', 'profile_path']
                                 }),
                                 groupField: 'type'}),

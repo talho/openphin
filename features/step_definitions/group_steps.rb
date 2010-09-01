@@ -19,14 +19,16 @@ Then /^I should see the(?: (ext))? add group form$/ do |ext|
     page.should have_css("#audience .people")
   else
     # we're looking for the ext form here, may as well take advantage of ext and let it find the form for us
-    page.evaluate_script("window.Application.phin.tabPanel.getActiveTab().getComponent('create_group_form').isVisible()").should == true
+    page.evaluate_script("window.Application.phin.tabPanel.getActiveTab().getComponent('create_group_form_holder').getComponent('create_group_form').isVisible()").should == true
   end
 
 end
 
-Then /^I should see the following roles:$/ do |table|
+Then /^I should see the following roles(?: in an (ext) grid)?:$/ do |ext, table|
+  css = ext.nil? ? ".roles li" : ".roles"
+
   table.raw.each do |row|
-    page.should have_css(".roles li", :content => row[0])
+    page.should have_css(css, :content => row[0])
   end
 end
 
@@ -34,9 +36,9 @@ Then /^I should see the following group summary:$/ do |table|
   table.rows_hash.each do |key, value|
     value.split(',').each do |item|
       if key =~ /(name|group_scope|owner_jurisdiction)/i
-        page.should have_css(".#{key}", :content => item)
+        page.should have_css(".#{key}", :text => item)
       else
-        page.should have_css(".#{key} *", :content => item)
+        page.should have_css(".#{key} *", :text => item)
       end
     end  
   end

@@ -32,3 +32,6 @@ end
 Then /^I refresh page$/ do
   evaluate_script("window.location.reload()")
 end
+When /^I pause$/ do
+  debugger
+end

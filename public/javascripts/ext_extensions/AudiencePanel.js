@@ -146,6 +146,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         this.roleGridView = new Ext.grid.GridPanel({
             store: store,
             region: 'center',
+            bodyCssClass: 'roles',
             autoExpandColumn: 'name_column',
             cm: new Ext.grid.ColumnModel({
                 columns:[sm, {id:'name_column', header:'Name', dataIndex:'name'}]
@@ -298,6 +299,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.jurisdictionTreeGrid = new Ext.ux.maximgb.tg.GridPanel({
             store: store,
+            bodyCssClass: 'jurisdictions',
             master_column_id : 'name',
             columns: [ sm,
                 {id:'name', header: "Jurisdiction", sortable: true, dataIndex: 'name', menuDisabled: true},
@@ -390,6 +392,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         this.userSearchStore = new Ext.data.JsonStore({
             url: '/search/show_clean',
             idProperty: 'id',
+            bodyCssClass: 'users',
             restful: true,
             fields: ['name', 'email', 'id', 'title', 'extra'],
             filters: new Ext.util.MixedCollection(),
@@ -469,6 +472,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 forceSelection: true,
                 store: this.userSearchStore,
                 displayField: 'name',
+                name: 'User',
                 valueField: 'id',
                 tpl:'<tpl for="."><div ext:qtip=\'{extra}\' class="x-combo-list-item">{name} - {email}</div></tpl>',
                 minChars: 2,
