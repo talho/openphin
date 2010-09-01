@@ -23,7 +23,7 @@ class Admin::GroupsController < ApplicationController
     group = Group.find_by_id(params[:id])
     if current_user.viewable_groups.include?(group)
       @group = group
-      @group.prepare_recipients(:include_public => true, :recreate => (params[:page].blank? || params[:page] == "1"))
+      @group.prepare_recipients(:include_public => true, :role_memberships => true, :recreate => (params[:page].blank? || params[:page] == "1"))
     end
 
     respond_to do |format|
