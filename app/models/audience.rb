@@ -82,11 +82,6 @@ class Audience < ActiveRecord::Base
         " AND `public_role_memberships`.role_id = `public_roles`.id AND `public_role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id" +
         " AND `public_roles`.approval_required = true"
 
-      subselect3 = "SELECT GROUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS email_devices WHERE `email_devices`.type = 'Device::EmailDevice' AND `email_devices`.user_id = users`.id"
-      subselect4 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS phone_devices WHERE `phone_devices`.type = 'Device::PhoneDevice' AND `phone_devices`.user_id = users`.id"
-      subselect5 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS sms_devices WHERE `sms_devices`.type = 'Device::SMSDevice' AND `sms_devices`.user_id = users`.id"
-      subselect6 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS blackberry_devices WHERE `blackberry_devices`.type = 'Device::BlackberryDevice' AND `blackberry_devices`.user_id = users`.id"
-
       sql = "CREATE TEMPORARY TABLE #{recipient_table} "
       if has_roles || (has_roles && has_jurisdictions)
         sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
