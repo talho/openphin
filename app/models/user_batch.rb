@@ -23,13 +23,17 @@ class UserBatch
     @content_type = file_data.content_type
   end
   
-  def valid?
-    if submitter = User.find_by_email(@email)
-      if jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction)
-        return true
-      end
+  def valid
+    unless (submitter = User.find_by_email(@email))
+      return "bad-email"
     end
-    false
+    unless (jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction))
+      return "bad-jurisdiction"
+    end
+    if binary?
+      return "bad-file"
+    end
+    return "valid"
   end
   
   def save
@@ -83,6 +87,11 @@ class UserBatch
     archive_file
   end
   
+  def binary?
+    # uses unix utility 'file' will not work on windows
+    %x(file --mime-type #{self.file_data.path}) !~ /text/
+  end
+
 private
 
   def path
