@@ -26,8 +26,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         this.render_layout();
     },
 
-    render_layout: function()
-    {
+    render_layout: function(){
         var viewport = new Ext.Viewport({
 		    layout: 'fit',
             renderTo: Ext.getBody(),
@@ -41,8 +40,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 	    });
     },
 
-    body: function()
-    {
+    body: function(){
         this.tabPanel = new Ext.TabPanel({
             id: 'tabpanel',
             border:false,
@@ -109,8 +107,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         });
     },
 
-    topbar: function()
-    {
+    topbar: function(){
         var tb = new Ext.Toolbar({
             id: 'top_toolbar',
             items: [{
@@ -130,8 +127,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         return tb;
     },
 
-    bottombar: function()
-    {
+    bottombar: function(){
         var tb = new Ext.Toolbar({id: 'bottom_toolbar'});
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});

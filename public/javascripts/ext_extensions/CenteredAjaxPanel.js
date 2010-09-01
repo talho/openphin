@@ -16,7 +16,7 @@ Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
             bodyCssClass: 'content',
             listeners:{
                 'ajaxloadcomplete': function(){ this.fireEvent('ajaxloadcomplete', this.ajaxPanel);},
-                'afternavigation': function(){ this.fireEvent('ajaxloadcomplete', this);},
+                'afternavigation': function(){ this.fireEvent('afternavigation', this);},
                 'fatalerror': function(panel){ this.fireEvent('fatalerror', this, this);},
                 scope: this
             },
