@@ -82,10 +82,16 @@ class Audience < ActiveRecord::Base
         " AND `public_role_memberships`.role_id = `public_roles`.id AND `public_role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id" +
         " AND `public_roles`.approval_required = true"
 
+      subselect3 = "SELECT GROUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS email_devices WHERE `email_devices`.type = 'Device::EmailDevice' AND `email_devices`.user_id = users`.id"
+      subselect4 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS phone_devices WHERE `phone_devices`.type = 'Device::PhoneDevice' AND `phone_devices`.user_id = users`.id"
+      subselect5 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS sms_devices WHERE `sms_devices`.type = 'Device::SMSDevice' AND `sms_devices`.user_id = users`.id"
+      subselect6 = "SELECT GORUP_CONCAT(SUBSTRING(`devices`.options,22)) FROM devices AS blackberry_devices WHERE `blackberry_devices`.type = 'Device::BlackberryDevice' AND `blackberry_devices`.user_id = users`.id"
+
       sql = "CREATE TEMPORARY TABLE #{recipient_table} "
       if has_roles || (has_roles && has_jurisdictions)
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email, (#{subselect}) AS memberships" +
-          " FROM users, role_memberships, audiences_roles"
+        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
+        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
+        sql += " FROM users, role_memberships, audiences_roles"
         sql += ", roles" if publicsql
         sql += ", audiences_jurisdictions" if has_jurisdictions
         sql += " WHERE `role_memberships`.user_id = `users`.id AND `users`.deleted_at IS NULL"
@@ -94,7 +100,9 @@ class Audience < ActiveRecord::Base
         sql += "#{publicsql})"
         sql += " UNION DISTINCT " if has_users
       else
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email, (#{subselect}) AS memberships FROM users, role_memberships, audiences_jurisdictions"
+        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
+        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
+        sql += " FROM users, role_memberships, audiences_jurisdictions"
         sql += " WHERE `role_memberships`.user_id = `users`.id AND `users`.deleted_at IS NULL"
         sql += " AND `audiences_jurisdictions`.audience_id = #{self.id} AND `role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id"
         sql += " AND (SELECT (#{subselect2}) > 0)" if publicsql
@@ -103,8 +111,9 @@ class Audience < ActiveRecord::Base
       end
 
       if has_users
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email, (#{subselect}) AS memberships" +
-          " FROM users, audiences, audiences_users"
+        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
+        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
+        sql += " FROM users, audiences, audiences_users"
         sql += ", role_memberships, roles" if publicsql
         sql += " WHERE `audiences_users`.audience_id = #{id} AND `audiences_users`.user_id = `users`.id AND `users`.deleted_at IS NULL"
         sql += " AND `role_memberships`.user_id = `users`.id#{publicsql}" if publicsql
