@@ -56,6 +56,15 @@ When /^I import the group file "([^\"]*)" with no update$/ do |filename|
   GroupImporter.import_groups(File.join(Rails.root, 'tmp', filename), {:no_update => true })
 end
 
+When /^the group "([^\"]*)" should(?: (not))? exist$/ do |name, not_option|
+  group = Group.find_by_name(name)
+  if not_option.nil?
+    group.should_not be_nil
+  else # if we are looking for the not option
+    group.should be_nil
+  end
+end
+
 Then /^the group "([^\"]*)" in "([^\"]*)" should exist$/ do |name, jurisdiction_name|
   Group.find_by_name_and_owner_jurisdiction_id(name, Jurisdiction.find_by_name(jurisdiction_name).id).should_not be_nil
 end
