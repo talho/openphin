@@ -125,7 +125,7 @@ class Admin::GroupsController < ApplicationController
             end
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
-          format.json  { render :json => @group.errors, :status => :unprocessable_entity }
+          format.json  { render :text => "The group <b>#{group.name}</b> has been recently modified by another user.  Please try again.", :status => :unprocessable_entity }
         rescue StandardError
           format.html {
             flash[:error] = "Could not save group <b>#{group.name}</b>.  Please try again."
@@ -184,7 +184,7 @@ class Admin::GroupsController < ApplicationController
     end
 
     { :name => group.name, :id => group.id, :scope => group.scope, :owner_jurisdiction => group.owner_jurisdiction_id.nil? ? nil : Jurisdiction.find(group.owner_jurisdiction_id),
-      :csv_path => admin_group_path(group, :format=>:csv),
+      :csv_path => admin_group_path(group, :format=>:csv), :lock_version => group.lock_version,
       :users => group.users.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } },
       :jurisdictions => group.jurisdictions.map {|jurisdiction| {:name => jurisdiction.name, :id => jurisdiction.id } },
       :roles => group.roles.map {|role| {:name => role.name, :id => role.id } },
