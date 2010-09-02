@@ -43,9 +43,9 @@ class DocumentsController < ApplicationController
       @document.owner_id = current_user.id
       if @document.valid? 
         @document.save!
-     else
+      else
        flash[:error] =  @document.errors["file"]
-     end
+      end
     else
       flash[:error] = 'File name is already in use. Try renaming the file.'
       @document = current_user.documents.build(params[:document])

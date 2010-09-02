@@ -1,9 +1,11 @@
 permitted_mimes: 
-    - image/jpeg 
+    - image/jpeg
+    - image/pjpeg
     - image/gif 
-    - image/png 
+    - image/png
+    - image/x-png 
     - image/tiff
-    - image/svg+xm 
+    - image/svg+xml
     - image/x-icon 
     - image/bmp 
     - application/pdf 
@@ -15,6 +17,7 @@ permitted_mimes:
     - application/x-gzip 
     - application/x-stuffit 
     - application/x-tar
+    - application/x-rar
     - application/zip
     - audio/mid 
     - audio/wav 
@@ -34,4 +37,38 @@ permitted_mimes:
     - application/vnd.ms-powerpoint 
     - application/vnd.ms-works 
     - application/x-mswrite
-  
+rejected_extensions:
+    - .applescript
+    - .as
+    - .asp
+    - .aspx
+    - .bat
+    - .cgi
+    - .com
+    - .csh
+    - .exe
+    - .htm
+    - .html
+    - .json
+    - .js
+    - .msi
+    - .php
+    - .phtml
+    - .php5
+    - .phps
+    - .pl
+    - .py
+    - .pyw
+    - .pyo
+    - .pyc
+    - .pyd
+    - .rb
+    - .rbw
+    - .scpt
+    - .sh
+    - .sql
+    - .tcl
+    - .vbs
+    - .vbe
+    - .wsf
+    - .wsc
