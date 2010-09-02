@@ -16,15 +16,16 @@ class Admin::UserBatchController < ApplicationController
         when "bad-jurisdiction"
           flash[:error] = "You do not have permission to add users to that jurisdiction."
         when "bad-file"
-          flash[:error] = "Problem with file.  Please check CSV file format."
+          flash[:error] = "Problem with file.  Please check that it is valid CSV."
         else        
           if @user_batch.save
-            flash[:notice] = 'The user batch has been successfully submitted.'
+            flash[:notice] = 'The user batch has been successfully submitted.' + 
+            '<br /> You will receive an E-Mail if there is a problem processing your request.'
           else
             flash[:error] = 'There was an error. No users were created.'
           end
       end
-      redirect_to admin_role_requests_path
+      redirect_to new_user_batch_path
     end
   end
   

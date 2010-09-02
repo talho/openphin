@@ -27,7 +27,9 @@ class UserImporter
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at 
         if email.blank?
-          $stderr.puts rec.values_at.join(",")         
+          $stderr.puts "CSV File did not contain an email address for the user: \n" + 
+            rec.values_at.join(",")  + 
+            "\n This user was NOT created.\n\n"       
           next
         end
         if options[:update] && options[:create]
@@ -50,7 +52,9 @@ class UserImporter
         if user.valid?
           user.save
         else
-          $stderr.puts rec.values_at.join(",")
+          $stderr.puts "CSV format appears invalid for the user: \n" + 
+            rec.values_at.join(",") + 
+            "\n This user was NOT created.\n\n"
           next
         end
 
