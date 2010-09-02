@@ -227,3 +227,26 @@ Feature: Adding documents to document sharing
     Then I should not see "keith.jpg"
     And I should not see "invitees.csv"
     And I should see "sample.wav"
+    
+  Scenario: Verifying mime type validation during adding a document to private storage
+    Given I have a folder named "Rockstars"
+    When I go to the document viewing panel
+    And I follow "Rockstars"
+    
+    And I attach the fixture file at "fixtures/keith.jpg" to "Upload Document"
+    And I press "Upload"
+    Then I should see "keith.jpg"
+
+    And I attach the fixture file at "fixtures/sample.wav" to "Upload Document"
+    And I press "Upload"
+    Then I should see "sample.wav"
+
+    And I attach the fixture file at "fixtures/invitees.csv" to "Upload Document"
+    And I press "Upload"
+    Then I should see "invitees.csv"
+
+    And I attach the fixture file at "fixtures/notepad.exe" to "Upload Document"
+    And I press "Upload"
+    Then I should not see "notepad.exe"
+
+  
