@@ -23,7 +23,7 @@ class Admin::GroupsController < ApplicationController
     group = Group.find_by_id(params[:id])
     if current_user.viewable_groups.include?(group)
       @group = group
-      @group.prepare_recipients(:include_public => true, :role_memberships => true, :recreate => (params[:page].blank? || params[:page] == "1"))
+      @group.prepare_recipients(:include_public => true, :role_memberships => true, :devices => true, :recreate => (params[:page].blank? || params[:page] == "1"))
     end
 
     respond_to do |format|
@@ -34,7 +34,7 @@ class Admin::GroupsController < ApplicationController
         prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
       end
       format.csv do
-        @csv_options = { :col_sep => ',', :row_sep => :auto }
+        @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
         @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
         @output_encoding = 'UTF-8'
       end
