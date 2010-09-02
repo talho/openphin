@@ -72,18 +72,33 @@ Feature: Online importing users from a uploaded CSV file
     And I go to the user batch page for an admin
     And I follow "Batch Users"
     And a jurisdiction named "Ector"
-    And I attach the tmp file at "xls-file-named-csv.csv" to "Upload User CSV file"
+    And I attach the fixture file at "fixtures/xls-file-named-csv.csv" to "Upload User CSV file"
     And I press "Upload"
     Then I should see "Problem with file"
-    And I should see "Please check CSV file format"
+    And I should see "Please check that it is valid CSV"
 
-  Scenario: Reject the attempted upload of a CSV file that is not a user batch file
+  Scenario: Accept a CSV file that is malformed or not a user batch file and receive a rejection email
     Given I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
     And I follow "Batch Users"
     And a jurisdiction named "Ector"
-    And I attach the tmp file at "invitees.csv" to "Upload User CSV file"
+    And I attach the fixture file at "fixtures/badform.csv" to "Upload User CSV file"
     And I press "Upload"
-    Then I should see "There was an error"
-    And I should see "No users were created"
+    When delayed jobs are processed
+    Then I should see "The user batch has been successfully submitted."
+    And I should see "You will receive an E-Mail if there is a problem processing your request"
+    And "admin@ector.gov" should receive the email:
+      | subject       | TxPhin:  User batching error |
+      | body contains | This user was NOT created |
     
+  Scenario: Accept CSV file with extra/incorrect columns but proper format AND email column.
+    Given I am logged in as "admin@ector.gov"
+    And I go to the user batch page for an admin
+    And I follow "Batch Users"
+    And a jurisdiction named "Ector"
+    And I attach the fixture file at "fixtures/wrongcols.csv" to "Upload User CSV file"
+    And I press "Upload"
+    When delayed jobs are processed
+    Then I should see "The user batch has been successfully submitted."
+    And I should see "You will receive an E-Mail if there is a problem processing your request"
+
