@@ -21,7 +21,7 @@ permitted_mimes:
     - application/zip
     - audio/mid 
     - audio/wav 
-    - application/x-wav
+    - audio/x-wav
     - audio/mpeg 
     - video/mpeg 
     - video/quicktime 
