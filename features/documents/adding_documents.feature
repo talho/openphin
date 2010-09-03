@@ -245,8 +245,9 @@ Feature: Adding documents to document sharing
     And I press "Upload"
     Then I should see "invitees.csv"
 
-    And I attach the fixture file at "fixtures/notepad.exe" to "Upload Document"
+    And I attach the fixture file at "fixtures/cygwin-ldd.exe" to "Upload Document"
     And I press "Upload"
-    Then I should not see "notepad.exe"
+    Then I should not see "cygwin-ldd.exe"
+    And I should see "Filetype not permitted"
 
   
