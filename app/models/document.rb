@@ -19,8 +19,8 @@ class Document < ActiveRecord::Base
 #  require 'yaml'
   has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
   validates_attachment_presence :file
-  validate :validate_mime
-  validate :validate_extension
+  validate_on_create :validate_mime
+  validate_on_create :validate_extension
 
   has_and_belongs_to_many :channels, :after_add => :share_with_channel
   has_many :targets, :as => :item, :after_add => :share
@@ -44,6 +44,7 @@ class Document < ActiveRecord::Base
   }
 
   def validate_mime
+    
     # uses unix utility 'file' will not work on windows
     file_content_type = %x(file --mime-type -b #{file.queued_for_write[:original].path}).chomp
     unless @@content_types.include? file_content_type
@@ -52,7 +53,6 @@ class Document < ActiveRecord::Base
   end
 
   def validate_extension
-    debugger
     file_extension_type = File.extname(file_file_name)
     if  @@extension_types.include? file_extension_type
       errors.add("file"," File extension not permitted. (" + file_extension_type + ") ")
