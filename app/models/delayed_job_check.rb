@@ -4,5 +4,5 @@ class DelayedJobCheck < ActiveRecord::Base
     deliver_status == "200 OK"
   end
 
-  #handle_asynchronously :deliver
+  handle_asynchronously :deliver
 end
