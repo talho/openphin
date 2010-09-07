@@ -42,6 +42,11 @@ Given 'I have "$count" folders named "$name" with the following documents:' do |
   end
 end
 
+When /^I attach the fixture file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
+  full_path = File.join(Rails.root,'features',path)
+  attach_file(field, full_path)
+end
+
 When "I fill out the document sharing form with:" do |table|
   fill_in_audience_form table
 end

@@ -23,13 +23,17 @@ class UserBatch
     @content_type = file_data.content_type
   end
   
-  def valid?
-    if submitter = User.find_by_email(@email)
-      if jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction)
-        return true
-      end
+  def valid
+    unless (submitter = User.find_by_email(@email))
+      return "bad-email"
     end
-    false
+    unless (jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction))
+      return "bad-jurisdiction"
+    end
+    if binary?
+      return "bad-file"
+    end
+    return "valid"
   end
   
   def save
@@ -37,13 +41,12 @@ class UserBatch
       begin
         create_directory
         save_file
-        if RAILS_ENV == "production" 
-          self.send_later(:create_users,path)
-        else
-          self.send(:create_users,path)
-        end
+        pre_verify_csv(path)
+        self.send_later(:create_users,path)
         @file_data = nil
         true
+      rescue FasterCSV::MalformedCSVError => msg
+        false
       rescue
         false
       end
@@ -79,11 +82,25 @@ class UserBatch
       end
     rescue Errno::ENOENT
       AppMailer.deliver_system_error(e, "Could not find user batch file named #{path}.")
+    rescue StandardError => e
+      AppMailer.deliver_system_error(e, "System Error, a batch file by #{@email} was not processed.") 
     end
     archive_file
   end
   
+  def binary?
+    # uses unix utility 'file' will not work on windows
+    %x(file --mime-type #{self.file_data.path}) !~ /text/
+  end
+
 private
+
+  def pre_verify_csv(path)
+     FasterCSV.open(path) do |records|
+       records.each do |rec|  # This will error if FasterCSV doesn't understand the file.
+       end
+     end
+  end  
 
   def path
     File.join(DIRECTORY,@filename)
