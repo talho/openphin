@@ -4,6 +4,7 @@
 .idea
 config/*.db
 config/database.yml
+config/document.yml
 *.sqlite3*
 *.log
 .svn
