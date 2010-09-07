@@ -46,14 +46,14 @@ class Document < ActiveRecord::Base
   def validate_mime
     # uses unix utility 'file' will not work on windows
     file_content_type = %x(file --mime-type -b #{file.queued_for_write[:original].path}).chomp
-    unless @@content_types.include? file_content_type
+    unless CONTENT_TYPES.include? file_content_type
       errors.add("file"," Filetype not permitted. (#{file_content_type}) ")
     end
   end
 
   def validate_extension
     file_extension_type = File.extname(file_file_name)
-    if  @@extension_types.include? file_extension_type
+    if  EXTENSION_TYPES.include? file_extension_type
       errors.add("file"," File extension not permitted. (#{file_extension_type}) ")
     end
   end
@@ -66,26 +66,6 @@ class Document < ActiveRecord::Base
       end
     end
   end
-
-  def self.load_rejected_extensions
-    if File.exist?(doc_yml = RAILS_ROOT+"/config/document.yml")
-      @@extension_types = YAML.load(IO.read(doc_yml))["rejected_extensions"]
-    else
-      @@extension_types = []
-    end
-  end
-  #Fire this on load.  must appear after the def.
-  self.load_rejected_extensions                                      
-
-  def self.load_permitted_mimes
-    if File.exist?(doc_yml = RAILS_ROOT+"/config/document.yml")
-      @@content_types = YAML.load(IO.read(doc_yml))["permitted_mimes"]
-    else
-      @@content_types = []
-    end
-  end
-  #Fire this on load.  must appear after the def.
-  self.load_permitted_mimes
 
   def viewable_by?(user)
     Document.viewable_by(user).exists?(id)
