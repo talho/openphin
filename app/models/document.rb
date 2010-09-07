@@ -60,9 +60,11 @@ class Document < ActiveRecord::Base
   end
 
   def validate_virus
-    virus_status = CLAM_AV.scanfile(file.queued_for_write[:original].path)
-    if virus_status != 0
-      errors.add("file"," #{file_file_name}: Virus detected! (#{virus_status}) ")
+    if defined? CLAM_AV then     # bypass virus check if the virus checker is not loaded
+      virus_status = CLAM_AV.scanfile(file.queued_for_write[:original].path)
+      if virus_status != 0
+        errors.add("file"," #{file_file_name}: Virus detected! (#{virus_status}) ")
+      end
     end
   end
 

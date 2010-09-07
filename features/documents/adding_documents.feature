@@ -252,6 +252,7 @@ Feature: Adding documents to document sharing
 
   Scenario: Scanning uploaded files for viruses
     Given I have a folder named "Badthings"
+    And ClamAV is loaded
     When I go to the document viewing panel
     And I follow "Badthings"
     And I attach the fixture file at "fixtures/virus.doc" to "Upload Document"

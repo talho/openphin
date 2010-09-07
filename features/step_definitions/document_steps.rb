@@ -94,3 +94,8 @@ Then 'I should see "$count" folders named "$folder"' do |count, name|
     Then(%Q|I should see "#{name}#{num.to_s}"|)
   end
 end
+
+Given /^ClamAV is loaded$/ do
+  CLAM_AV = ClamAV.instance
+  CLAM_AV.loaddb()
+end
