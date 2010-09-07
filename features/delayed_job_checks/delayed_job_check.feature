@@ -9,6 +9,7 @@ Feature: Check that delayed_job is running
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
     And I am logged in as "john.smith@example.com"
+    And delayed jobs are processed
 
   Scenario: Send test email to confirm delayed_job is running
     When I go to the delayed job check page"
