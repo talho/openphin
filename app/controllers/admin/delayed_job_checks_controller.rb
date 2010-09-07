@@ -1,4 +1,6 @@
-class DelayedJobChecksController < ApplicationController
+class Admin::DelayedJobChecksController < ApplicationController
+  before_filter :admin_required
+
   def index
     @test_message = DelayedJobCheck.new
   end
