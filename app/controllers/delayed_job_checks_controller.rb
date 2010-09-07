@@ -11,7 +11,7 @@ class DelayedJobChecksController < ApplicationController
       else
         flash[:notice] = "Test message was created but did not send."
       end
-      redirect_to delayed_job_checks_path(@invitation)
+      redirect_to delayed_job_checks_path
     end
   end
 end
