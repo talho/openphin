@@ -17,4 +17,5 @@ Feature: Check that delayed_job is running
     When I fill in "Email" with "jill.smith@example.com"
     And I press "Send Email"
     Then I should see "Test message was successfully sent."
-    And "Jill Smith" should have 1 email
+    And "jill.smith@example.com" should receive the email:
+      | subject | Delayed Job Check |
