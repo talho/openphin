@@ -1,4 +1,6 @@
-permitted_mimes: 
+enable_clam_av:
+    - false
+permitted_mimes:
     - image/jpeg
     - image/pjpeg
     - image/gif 
