@@ -108,6 +108,8 @@ module NavigationHelpers
       when /the invitation reports page for "(.*)"$/i
         invitation = Invitation.find_by_name($1)
         reports_admin_invitation_path(invitation)
+      when /the delayed job check page/i
+        delayed_job_checks_path
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
