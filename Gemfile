@@ -62,7 +62,6 @@ group :cucumber do
   gem "spork", "0.8.4"
 
   gem "culerity", "0.2.4"
-  gem "launchy", "0.3.5"
   gem "mime-types", "1.16"
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
