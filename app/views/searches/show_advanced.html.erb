@@ -23,7 +23,7 @@
         <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query}" %>
         <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
       </p>
-      <%= will_paginate @results %>
+      <%= will_paginate @results, :params => params.reject{|key, value| ["action","controller", "authenticity_token"].include?(key)}.reject{|key, value| value.blank?} %>
       <table class="search">
         <tr>
           <td>Name</td><td>Email</td><td>Role Assignments</td>
@@ -38,7 +38,7 @@
           </tr>
         <%- end -%>
       </table>
-      <%= will_paginate @results %><br/>
+      <%= will_paginate @results, :params => params.reject{|key, value| ["action","controller", "authenticity_token"].include?(key)}.reject{|key, value| value.blank?} %><br/>
       <p>
         <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query_string}" %>
         <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
