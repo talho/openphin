@@ -1,6 +1,7 @@
 <h2 class="title"><%=h @alert.title %></h2>
 
 <div class="alert">
+
   <div class="details">
     <%=simple_format h(@alert.message), :class => 'message' %>
     <p><strong>Short Message:</strong> <%= h(@alert.short_message) %></p>
@@ -47,10 +48,11 @@
     <%- end -%>
 
   </div>
+
 </div>
 
 
-<div class="audience">
+<div class="audience" >
   <br/>
   <h3>Audience</h3>
   <% @alert.audiences.each do |audience| %>
@@ -63,7 +65,7 @@
   <p class="num_of_recipients"><strong># of Recipients: </strong><%= @alert.alert_attempts.count %></p>
 </div>
 
-<div class="contacted_users">
+<div class="contacted_users" >
   <br/>
   <h3>Contacted Users</h3>
   <% unless @alert.new_record? %>
@@ -78,13 +80,25 @@
       <th>Email</th>
       <th>Acknowledged with Device</th>
       <th>Alert Response</th>
+      <th>Acknowledgement Time</th>
     </tr>
     <% attempts.each do |attempt| %>
-      <tr class="user">
+      <tr class="user" style="border-top: 1px lightgray solid;">
         <td class="name"><%= attempt.user.display_name %> </td>
         <td class="email"><%= attempt.user.email %> </td>
         <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
-        <td class="alert_response"><%= attempt.call_down_response unless attempt.call_down_response.nil? %></td>
+        <td class="alert_response"><%=
+            unless attempt.call_down_response.nil?
+                if (attempt.call_down_response == 0)
+                    "<span style='font-size: 180%; font-weight: bold;'>&#x2713</span>"
+                else
+                    @alert.call_down_messages[attempt.call_down_response.to_s]
+                end
+            else
+                "<span style='color: #880000; text-align: middle;'> - </span>"
+            end
+        %></td>
+        <td class="alert_ack_time"><%= attempt.acknowledged_at.strftime("%B %d, %Y %I:%M %p %Z") unless attempt.acknowledged_at.nil? %></td>
       </tr>
     <% end %>
   </table>  
