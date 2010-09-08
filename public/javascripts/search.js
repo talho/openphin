@@ -8,7 +8,17 @@
           params = deParam(uriparams);
           myform = '<form method="post" action="' + uri +'">';
           $.each(params, function(key, value) {
-            myform += '<input type="hidden" name="' + key + '" value="' + value + '">'
+            switch(key) {
+                case "jurisdiction_ids[]":
+                case 'role_ids[]':
+                      $.each(value.split(","), function(pindex, pvalue){
+                          myform += '<input type="hidden" name="' + key + '" value="' + pvalue + '">'
+                      });
+                    break;
+                default:
+                  myform += '<input type="hidden" name="' + key + '" value="' + value + '">'
+                  break;
+            }
           })
           myform += '<input type="hidden" name="authenticity_token" value="' + $("meta#authenticity-token").attr('content') + '" >'
           myform += '</form>'
@@ -19,20 +29,25 @@
         });
 
 
-        function deParam(q) {
-            var e,
-            urlParams = {},
-            d = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); },
-            r = /([^&=]+)=?([^&]*)/g;
+        function deParam(URIstring) { // takes a string of &-separated html parameters and returns a hash.  Duplicate keys are comma-separated in the hash
+            var regexResults;
+            var urlParams = {};
+            var decodedParams = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); };
+            var regex_string = /([^&=]+)=?([^&]*)/g;
 
-            while (e = r.exec(q)) {
-                urlParams[d(e[1])] = d(e[2]);
+            while (regexResults = regex_string.exec(URIstring)) {
+               if ($.trim(urlParams[decodedParams(regexResults[1])]) == "") {
+                    urlParams[decodedParams(regexResults[1])] = decodedParams(regexResults[2]);
+               } else {
+                    urlParams[decodedParams(regexResults[1])] += ',' + decodedParams(regexResults[2]);
+               }
+
             }
             return urlParams;
         };
 
 
-	    $( 'div.advance_search_user' ).before( '<p><a class="advance_search_user" href="#">Advance Search</a></p>' );
+	    $( 'div.advance_search_user' ).before( '<p><a class="advance_search_user" href="#">Advanced Search</a></p>' );
 	    $( 'div.advance_search_user' ).hide();
 	    $('a.advance_search_user').toggle (
 	      function() {
@@ -46,7 +61,7 @@
 			$('div.advance_search_user option').removeAttr('selected');
 			$('div.advance_search_user input').val('');
 		    $( 'div.quick_search_user' ).show();
-	        $(this).html('Advance Search');
+	        $(this).html('Advanced Search');
 	      }
 	    )
 	  }
