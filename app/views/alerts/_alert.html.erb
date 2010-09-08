@@ -88,13 +88,13 @@
         <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
         <td class="alert_response"><%=
             unless attempt.call_down_response.nil?
-                if (attempt.call_down_response == 0)
-                    "<span style='font-size: 180%; font-weight: bold;'>&#x2713</span>"
+                if (attempt.call_down_response == 0)                                                              #invisible span to make this easy to test
+                    "<span class='alert_response_ack'  style='font-size: 180%; font-weight: bold;'>&#x2713</span><span style='display: none;'>user_acknowledged_alert</span>"
                 else
                     @alert.call_down_messages[attempt.call_down_response.to_s]
                 end
             else
-                "<span style='color: #880000; text-align: middle;'> - </span>"
+                "<span class='alert_response_ack' style='color: #880000; text-align: middle;'> - </span>"
             end
         %></td>
         <td class="alert_ack_time"><%= attempt.acknowledged_at.strftime("%B %d, %Y %I:%M %p %Z") unless attempt.acknowledged_at.nil? %></td>
