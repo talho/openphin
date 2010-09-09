@@ -54,6 +54,7 @@ Feature: An admin deleting users
     Then I should see "Users have been successfully deleted"
 
     When I go to the users delete page for an admin
+    And delayed jobs are processed
     And I fill out the delete user form with "Jane Smith"
     
     Then I should not see "Jane Smith"
