@@ -13,3 +13,37 @@
 .dd-tabpanel-proxy a, .dd-tabpanel-proxy span, .dd-tabpanel-proxy em {
 	display: block;
 }
+
+
+
+
+/* --------- Wizard Header control -------------- */
+
+ol.breadCrumbList{
+    list-style: decimal inside none;
+}
+
+ol.breadCrumbList li{
+    float: left;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+ol.breadCrumbList li.selected{
+    background-color: #84B1CC;
+    cursor:default;
+}
+
+/* --------- End Wizard Header ---------------- */
+
+/* --------- ux.center -------------------------*/
+
+.ux-layout-center-item {
+    margin:0 auto;
+    text-align:left;
+}
+/*.ux-layout-center .x-panel-body {
+    text-align:center;
+} */
+
+/* -------- End ux.center ----------------------*/

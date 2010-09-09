@@ -1,10 +1,11 @@
 <head>
   <Title>Ext Dashboard</Title>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', :cache => 'all'%>
+  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application.js', :cache => 'all'%>
   <%= javascript_include_tag 'ext_extensions/MaxWidthHBox', 'ext_extensions/HtmlFormPanel', 'ext_extensions/AjaxPanel', 'ext_extensions/CenteredAjaxPanel', 'ext_extensions/DragDropTabs', 'ext_extensions/RailsJsonReader', 'ext_extensions/DoNotCollapseActive', :cache => 'all' %>
-  <%= javascript_include_tag 'ext_extensions/TreeGrid/TreeGrid', 'ext_extensions/Ext.ux.grid.RowActions', 'ext_extensions/AudiencePanel', 'ext_extensions/ViewLoadMask', 'ext_extensions/DataTip', :cache => 'all' %>
+  <%= javascript_include_tag 'ext_extensions/TreeGrid/TreeGrid', 'ext_extensions/Ext.ux.grid.RowActions', 'ext_extensions/AudiencePanel', 'ext_extensions/ViewLoadMask', 'ext_extensions/DataTip', 'ext_extensions/BreadCrumb', :cache => 'all' %>
+  <%= javascript_include_tag 'ext_extensions/CenterLayout', 'ext_extensions/AudienceDisplayPanel', :cache => 'all' %>
   <%= javascript_include_tag '/dashboard/menu', :cache => 'all' %>
-  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', :cache => 'all' %>
+  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'han/SendAlert', 'han/AlertDetail', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', :cache => 'all' %>
 
   <!-- begin include js for openphin plugins -->
   <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>

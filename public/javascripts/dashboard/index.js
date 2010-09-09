@@ -15,6 +15,13 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
         this.initialConfig = config || {};
 
+        Application.addListener({
+            'opentab':{
+                fn: this.open_tab,
+                scope: this
+            }
+        });
+
         this.favorites = new Favorites({
             parent: this,
             listeners:{
@@ -196,7 +203,6 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 'fatalerror': function(panel){
                     this.tabPanel.remove(panel, true);
                 },
-                'opentab': this.open_tab,
                 scope: this
             }); 
         }
