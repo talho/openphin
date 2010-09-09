@@ -203,9 +203,9 @@ Feature: Assigning roles to users for roles
   Scenario: Malicious admin cannot remove role assignments the user is not an admin of
     Given "admin@dallas.gov" has approved the "Health Officer" role in "Dallas County" for "john@example.com"
     And I am logged in as "admin@potter.gov"
-    When I maliciously post a deny for a role assignment for "john@example.com"
+    When I will confirm on next step
+    And I maliciously post a deny for a role assignment for "john@example.com"
     Then I should see "This resource does not exist or is not available."
-    And I can't test 'should redirect_to' because of webrat bug
     And I should be on the homepage
 
   Scenario: Assigning system roles to a user in my jurisdiction

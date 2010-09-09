@@ -34,6 +34,7 @@ Feature: Managing devices when editing user profiles
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     When I go to the edit profile page
+    And I will confirm on next step
     And I follow "Delete Phone"
     Then "john.smith@example.com" should not have the communication device
       | Phone | 5552345678 |
@@ -64,7 +65,6 @@ Feature: Managing devices when editing user profiles
     When I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"
     Then I should see "This resource does not exist or is not available."
-    #And I can't test 'should redirect_to' because of webrat bug
     And I should be on the homepage
 
   Scenario: Adding a device as an admin

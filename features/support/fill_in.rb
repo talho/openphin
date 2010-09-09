@@ -27,6 +27,7 @@ module FeatureHelpers
 
     def remove_from_fcbk_control(name)
       page.find("a.closebutton").click
+      sleep 0.5
     end
     
     def fill_in_user_signup_form(table=nil)

@@ -31,7 +31,7 @@ When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email
     "$('body').append(elem);"
   page.execute_script(script)
   page.click_link("Remove Device")
-  #delete_via_redirect device_path(device)
+  visit("/") # Bug in capybara where redirect doesn't populate firefox'
 end
 
 Then /^"([^"]+). should have the communication devices?$/ do |email, table|
