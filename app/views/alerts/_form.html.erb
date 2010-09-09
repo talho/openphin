@@ -71,7 +71,7 @@
       </p>
 
       <p>
-        <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]}, { :selected => 4320} %>
+        <%= form.select :delivery_time, Alert::DeliveryTimes.map{|d| [Alert.human_delivery_time(d), d]}, { :selected => @alert.delivery_time} %>
         <%= form.label :delivery_time %>
       </p>
 

@@ -111,7 +111,7 @@ class Alert < ActiveRecord::Base
   }
 
   def self.new_with_defaults(options={})
-    defaults = {:delivery_time => 60, :severity => 'Minor'}
+    defaults = {:delivery_time => 4320, :severity => 'Minor'}
     self.new(options.merge(defaults))
   end
 
