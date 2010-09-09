@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :devices, :folders
 
-  map.resources :jurisdictions, :collection => [:user_alerting]
+  map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
 
   map.resources :documents, :has_many => :shares do |documents|
     documents.resource :copy, :controller => 'copy_documents'
@@ -90,7 +90,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_groups, :controller => "admin/groups"
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
 
-  map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups]
+  map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients]
 
   map.resource :search, :only => [:show], :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
   map.root :controller => "dashboard", :action => "index"

@@ -18,3 +18,27 @@ ul#alerts a.view_less                 {display:none;}
 ul#alerts li.more div.extended        {display:block;}
 ul#alerts li.more a.view_less         {display:block;}
 ul#alerts li.more a.view_more         {display:none;}
+
+
+
+
+/* ------- Send Alerts ---------------- */
+
+.checkBoxGroup{
+    border: 1px #888 solid;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 2px;
+    margin: 0 -3px;
+}
+
+.formInformational{
+    color:#666666;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:13px;
+    margin-bottom: 10px;
+}
+
+/* ------- End Send Alerts ------------ */
+
+

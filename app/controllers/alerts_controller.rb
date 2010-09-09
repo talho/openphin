@@ -36,7 +36,7 @@ class AlertsController < ApplicationController
   end
 
   def create
-    remove_blank_call_downs
+    remove_blank_call_downs unless params[:alert][:call_down_messages].nil?
     set_acknowledge
     @alert = present current_user.alerts.build(params[:alert])
     @acknowledge = if @alert.acknowledge && !(@alert.call_down_messages.blank? || @alert.call_down_messages.empty?)
@@ -54,14 +54,22 @@ class AlertsController < ApplicationController
         @alert.save
         @alert.integrate_voice
         @alert.batch_deliver
-        flash[:notice] = "Successfully sent the alert."
-        redirect_to alerts_path
+        respond_to do |format|
+          format.html {
+            flash[:notice] = "Successfully sent the alert."
+            redirect_to alerts_path
+          }
+          format.json { render :json => {:success => true, :alert_path => alert_path(@alert), :id => @alert.id, :title => @alert.title}}
+        end
       else
         if @alert.errors['message_recording']
           flash[:error] = "Attached message recording is not a valid wav formatted file."
           @preview = true
         end
-        render :new
+        respond_to do |format|
+          format.html { render :new }
+          format.json { render :json => @alert.errors, :status => :unprocessable_entity}
+        end
       end
     else
       @preview = true

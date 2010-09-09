@@ -19,6 +19,11 @@ class JurisdictionsController < ApplicationController
     render :json => jurisdictions.to_json(:only => ['id', 'name'])
   end
 
+  def user_alerter
+    jurisdictions = current_user.alerter_jurisdictions
+    render :json => jurisdictions.to_json(:only => ['id', 'name'])
+  end
+
   # GET /jurisdictions/1
   # GET /jurisdictions/1.xml
   def show

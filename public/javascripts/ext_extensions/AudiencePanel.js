@@ -22,6 +22,8 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
     /**
      *    @lends Ext.ux.AudiencePanel.prototype
      */
+    showJurisdictions: true,
+    
     initComponent: function() {
 
         this.createTransferableRecord();
@@ -35,9 +37,9 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         items.push({title: 'Roles', layout:'border', items: this.createRolesGrid(), border: false});
 
-        if (this.showGroup === true)
+        if (this.showGroups === true)
         {
-            items.push({title: 'Groups', html: 'Group Placeholder', border: false});
+            items.push({title: 'Groups/Organizations', layout:'border', items: this.createGroupsGrid(), border: false});
         }
 
         items.push(this.createUserSearchPanel());
@@ -83,6 +85,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         this._transferableRecord = Ext.data.Record.create(
             ['name', 'id', 'email', 'title', 'tip', 'type']
         );
+        this._transferableRecord.prototype.getData = function(){return this.data};
     },
 
     createRolesGrid: function() {
@@ -166,6 +169,98 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         return this.roleGridView;
     },
 
+    createGroupsGrid: function(){
+        var store = new Ext.data.GroupingStore({
+            url: '/audiences/groups',
+            reader: new Ext.data.JsonReader({
+                idProperty: 'group.id',
+                fields: [
+                    {name: 'name', mapping: 'group.name'},
+                    {name: 'id', mapping: 'group.id'},
+                    {name: 'grouptype', mapping:'group.scope', convert:function(v, record){ return v === 'Organization' ? 'Organization' : 'Group';}}
+                ]}),
+            groupField: 'grouptype',
+            autoSave: false,
+            listeners:{
+                scope: this,
+                'load': function(store){
+                    // look for all of the groups in the selectedItemsStore
+                    var groups = this.selectedItemsStore.query('type', 'group');
+                    var rows = [];
+                    groups.each(function(group){
+                        var row = store.find('id', new RegExp('^' + group.id + '$'));
+                        if(row != -1)
+                            rows.push(row);
+                    });
+                    this.groupGridView.getSelectionModel().selectRows(rows);
+                }
+            },
+            sortInfo:{
+                field: 'grouptype',
+                direction: 'ASC'
+            }
+        });
+
+        var sm = new Ext.grid.CheckboxSelectionModel({
+            checkOnly: true,
+            sortable: true,
+            listeners:{
+                scope: this,
+                'rowselect': function(sm, index, record){
+                    if(this.findRecordIndexInSelectedItems(record, 'group') === -1) // If we don't find the record, add it
+                        this.selectedItemsStore.addSorted(new this._transferableRecord({name: record.get('name'), id: record.get('id'), type: 'group'}));
+                },
+                'rowdeselect': function(sm, index, record){
+                    var recordIndex = this.findRecordIndexInSelectedItems(record, 'group');
+                    if(recordIndex !== -1)
+                        this.selectedItemsStore.remove(this.selectedItemsStore.getAt(recordIndex));
+                }
+            }
+        });
+
+        var filterField = new Ext.form.TextField({
+            enableKeyEvents: true
+        });
+        filterField.on('keypress', function(tf, evt) {
+            var val = tf.getValue();
+            if (!Ext.isEmpty(val))
+            {
+                val = new RegExp('.*' + val + '.*', 'i');
+                this.groupGridView.getStore().filter([
+                    {property:'name', value: val}
+                ]);
+            }
+            else
+                this.groupGridView.getStore().clearFilter();
+        }, this, {delay: 50});
+
+        this.groupGridView = new Ext.grid.GridPanel({
+            store: store,
+            region: 'center',
+            bodyCssClass: 'groups',
+            autoExpandColumn: 'name_column',
+            cm: new Ext.grid.ColumnModel({
+                columns:[sm, {id:'name_column', header:'Name', dataIndex:'name'}, {header: 'Group Type', dataIndex:'grouptype', hidden:true, groupRenderer: Ext.util.Format.capitalize, groupable: true}]
+            }),
+            sm: sm,
+            border:false,
+            loadMask: true,
+            bbar:{
+                items: filterField
+            },            
+            view: new Ext.grid.GroupingView({
+                groupTextTpl: '{group}s',
+                enableGroupingMenu: false
+            })
+        });
+
+        this.groupGridView.on('afterrender', function(grid) {
+            grid.getStore().load();
+        }, this, {single: true});
+
+        return this.groupGridView;
+    },
+
     createJurisdictionsTree: function() {
         this.jurisdictionContextMenu = new Ext.menu.Menu({
             defaultAlign: 'tl-b?',
@@ -220,7 +315,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                     var sm = this.jurisdictionTreeGrid.getSelectionModel();
                     if(sm.grid)
                     {
-                        // look for all of the roles in the selectedItemsStore
+                        // look for all of the jurisdictions in the selectedItemsStore
                         var jurisdictions = this.selectedItemsStore.query('type', 'jurisdiction');
                         var rows = [];
                         jurisdictions.each(function(jurisdiction){
@@ -496,7 +591,8 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.selectedItemsStore = new Ext.data.GroupingStore({
             reader: new Ext.data.JsonReader({
-                fields: this._transferableRecord
+                fields: this._transferableRecord,
+                idProperty: 'this_is_a_really_long_id_that_we_wont_use'
             }),
             groupField: 'type',
             listeners: {
@@ -508,7 +604,8 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 {
                     case 'user':
                     case 'role':
-                        return true; // we don't want to filter users or roles
+                    case 'group':
+                        return true; // we don't want to filter users, groups, or roles
                     case 'jurisdiction':
                         var store = this.jurisdictionTreeGrid.getStore();
                         var parent = store.getNodeParent(store.getAt(store.findExact('id', record.get('id'))));
@@ -533,33 +630,29 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             actions: [{iconCls: 'removeBtn', cb: function(grid, record, action, index){
                 var type = record.get('type');
                 var id = record.get('id');
-                switch(type){
-                    case 'user':
-                            this.userStore.remove(record);
-                            break;
-                    case 'jurisdiction':
-                            if(this.jurisdictionTreeGrid.rendered)
-                            {
-                                var jsm = this.jurisdictionTreeGrid.getSelectionModel();
-                                jsm.deselectRow(this.jurisdictionTreeGrid.getStore().findExact('id', id));
-                            }
-                            else
-                            {
-                                grid.getStore().remove(record);
-                            }
-                            break;
-                    case 'role':
-                            if(this.roleGridView.rendered)
-                            {
-                                var rsm = this.roleGridView.getSelectionModel();
-                                rsm.deselectRow(this.roleGridView.getStore().findExact('id', id));
-                            }
-                            else
-                            {
-                                grid.getStore().remove(record);
-                            }
-                            break;
-                } // we're not going to remove the row because the automatic handlers for this on each grid should do that for us.
+                if(type === 'user')
+                {
+                    this.userStore.remove(record);
+                    return;
+                }
+
+                var cgrid;
+                if(type === 'jurisdiction')
+                    cgrid = this.jurisdictionTreeGrid;
+                else if(type === 'role')
+                    cgrid = this.roleGridView;
+                else if(type === 'group')
+                    cgrid = this.groupGridView;
+              
+                if(cgrid && cgrid.rendered)
+                {
+                    var sm = cgrid.getSelectionModel();
+                    sm.deselectRow(cgrid.getStore().findExact('id', id));
+                }
+                else
+                {
+                   grid.getStore().remove(record);
+                }
             }.createDelegate(this)}]
         });
 
@@ -606,20 +699,31 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
     getSelectedIds: function(){
         return {role_ids: Ext.invoke(this.selectedItemsStore.query('type', 'role').getRange(), 'get', 'id'),
                 jurisdiction_ids: Ext.invoke(this.selectedItemsStore.query('type', 'jurisdiction').getRange(), 'get', 'id'),
-                group_ids: Ext.invoke(this.selectedItemsStore.query('type', 'group').getRange(), 'get', 'id'), // preparing for group selection sometime later
+                group_ids: Ext.invoke(this.selectedItemsStore.query('type', 'group').getRange(), 'get', 'id'),
                 user_ids: Ext.invoke(this.selectedItemsStore.query('type', 'user').getRange(), 'get', 'id')
+        };
+    },
+
+    getSelectedItems: function(){
+        return {roles: Ext.invoke(this.selectedItemsStore.query('type', 'role').getRange(), 'getData'),
+                jurisdictions: Ext.invoke(this.selectedItemsStore.query('type', 'jurisdiction').getRange(), 'getData'),
+                groups: Ext.invoke(this.selectedItemsStore.query('type', 'group').getRange(), 'getData'),
+                users: Ext.invoke(this.selectedItemsStore.query('type', 'user').getRange(), 'getData')
         };
     },
 
     clear: function(){
         // we need to clear each selection and then clear the selected store. Going to not listen to events as we add in order to speed things up just in case a lot of things were selected
 
-        var jsm = this.jurisdictionTreeGrid.getSelectionModel();
-        if(jsm.grid)
+        if(this.jurisdictionTreeGrid)
         {
-            jsm.suspendEvents();
-            jsm.clearSelections();
-            jsm.resumeEvents();
+            var jsm = this.jurisdictionTreeGrid.getSelectionModel();
+            if(jsm.grid)
+            {
+                jsm.suspendEvents();
+                jsm.clearSelections();
+                jsm.resumeEvents();
+            }
         }
 
         var rsm = this.roleGridView.getSelectionModel();
@@ -628,6 +732,17 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             rsm.suspendEvents();
             rsm.clearSelections();
             rsm.resumeEvents();
+        }
+
+        if(this.groupGridView)
+        {
+            var gsm = this.groupGridView.getSelectionModel();
+            if(gsm.grid)
+            {
+                gsm.suspendEvents();
+                gsm.clearSelections();
+                gsm.resumeEvents();
+            }
         }
 
         this.userStore.suspendEvents();
@@ -646,10 +761,12 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    load: function(jurisdictions, roles, users){
+    load: function(jurisdictions, roles, users, groups){
+        groups = groups || [];
         // first prep each value
         Ext.each(jurisdictions, function(j){j.type = 'jurisdiction';});
         Ext.each(roles, function(r){r.type = 'role'});
+        Ext.each(groups, function(r){r.type = 'group'});
         Ext.each(users, function(u){u.type = 'user'});
 
         // clear the currently selected items: we're overwriting them
@@ -677,6 +794,25 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         else
         {
             this.selectedItemsStore.loadData(roles, true); // append: true
+        }
+
+        if(this.groupGridView.getStore().getCount() > 0)
+        {
+            store = this.groupGridView.getStore();
+
+            // since we have the jurisdictions already selected in an array nearby, we'll go ahead and use that instead of going to the selectedItemsStore
+            rows = [];
+            Ext.each(groups, function(group){
+                var row = store.find('id', group.id);
+                if(row != -1)
+                    rows.push(row);
+            });
+
+            this.groupGridView.getSelectionModel().selectRows(rows);
+        }
+        else
+        {
+            this.selectedItemsStore.loadData(groups, true); // append: true
         }
 
         if(this.jurisdictionTreeGrid.getStore().getCount() > 0)

@@ -20,6 +20,24 @@ class AudiencesController < ApplicationController
     render :json => (current_user.visible_groups | Organization.non_foreign.map(&:group)).flatten.compact
   end
 
+  def determine_recipients
+    recipients = []
+    params[:group_ids].compact.each do |id|
+      recipients << Group.find(id).prepare_recipients(:include_public => true, :recreate => true).find(:all) unless id.blank?
+    end
+    params[:jurisdiction_ids].compact.each do |id|
+      recipients << Jurisdiction.find(id).users unless id.blank?
+    end
+    params[:role_ids].compact.each do |id|
+      recipients << Role.find(id).users unless id.blank?
+    end
+    params[:user_ids].compact.each do |id|
+      recipients << User.find(id) unless id.blank?
+    end
+
+    render :json => recipients.flatten.map {|user| {'name' => user.display_name, 'id' => user.id, 'profile_path' => user_profile_path(user)}}.uniq
+  end
+
   private
 
   def build_jurisdiction_hash(jurisdiction, level = 0)

@@ -1,12 +1,12 @@
 
-page << "Application = {};"
+page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
 
   menu_config = "Application.menuConfig = [{name: 'HAN', items:[
                 {name: 'HAN Home', tab:{id: 'han_home', title:'HAN Home', url:'#{ hud_path }', initializer: 'Talho.Alerts'}}"
   if current_user.alerter?
     menu_config +=",
-                {name: 'Send an Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'#{ new_alert_path }'}},
+                {name: 'Send an Alert', tab:{id: 'new_han_alert', title:'Send An Alert', url:'#{ new_alert_path }', initializer: 'Talho.SendAlert'}},
                 {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'#{ alerts_path }'}}"
   end
 

@@ -35,7 +35,6 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.primary_panel.forward = this.forward.createDelegate(this);
         
         this.primary_panel.addEvents('afternavigation');
-        this.primary_panel.addEvents('opentab');
 
         this.getPanel = function(){ return this.primary_panel; }
     },
@@ -132,7 +131,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     }
                     else if(fieldName === 'owner')
                     {
-                        this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('owner'), url: record.get('owner_path'), id: 'user_profile_for_' + record.get('owner_id') });
+                        Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('owner'), url: record.get('owner_path'), id: 'user_profile_for_' + record.get('owner_id') });
                     }
                 }
             },
@@ -260,7 +259,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
          * Create the group detail view which displays the same information as is in the create/edit form except is not editable from this page
          */
     _getGroupDetailView: function(){
-        this.group_detail_panel = new Ext.Panel({
+        this.group_detail_panel = new Ext.Container({
             autoScroll: true,
             border: false,
             items: [{xtype: 'box', cls:'group_name', itemId:'group_name', html: 'NAME'},
@@ -268,72 +267,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
                     {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'}
                 ]},
-                {xtype: 'panel', itemId: 'group_grid_holder', border: false, layout: 'hbox', width: 500, height: 300,
-                    layoutConfig: {
-                        align: 'stretch',
-                        defaultMargins:'0, 20, 0, 0'
-                    },
-                    items:[
-                        {xtype: 'grid', itemId: 'recipient_grid', title: 'Recipients',
-                            flex: 1,
-                            bodyCssClass: 'recipients',
-                            store: new Ext.data.JsonStore({
-                                idProperty: 'id',
-                                fields: ['name', 'id', 'profile_path']
-                            }),
-                            columns:[{header: "Name", dataIndex: 'name', id: 'name_column', renderer: function(value, metaData){ metaData.css = 'inlineLink'; return value;}}],
-                            autoExpandColumn: 'name_column',
-                            disableSelection: true,
-                            listeners:{
-                                scope: this,
-                                'rowclick': function(grid, rowIndex){
-                                    var record = grid.getStore().getAt(rowIndex);
-                                    this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), url: record.get('profile_path'), id: 'user_profile_for_' + record.get('id') });
-                                }
-                            }
-                        },
-                        {
-                            xtype: 'grid', itemId: 'audience_grid', title: 'Audiences',
-                            flex: 1,
-                            bodyCssClass: 'audiences',
-                            store: new Ext.data.GroupingStore({
-                                reader: new Ext.data.JsonReader({
-                                    idProperty:'this_will_never_be_filled_because_we_dont_want_collisions',
-                                    fields: ['name', 'id', 'type', 'profile_path']
-                                }),
-                                groupField: 'type'}),
-                            cm: new Ext.grid.ColumnModel({
-                                columns: [
-                                    {header: "Name", dataIndex: 'name', sortable: true, id: 'name_column', renderer: function(value, metaData, record){
-                                        if(record.get('type') === 'user')
-                                            metaData.css = 'inlineLink';
-                                        return value;
-                                    }},
-                                    {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true}
-                                ],
-                                defaults:{
-                                    menuDisabled: true
-                                }
-                            }),
-                            sortInfo: {
-                                field: 'name',
-                                direction: 'ASC'
-                            },
-                            disableSelection: true,
-                            autoExpandColumn: 'name_column',
-                            view: new Ext.grid.GroupingView({
-                                groupTextTpl: '{group}s'
-                            }),
-                            listeners:{
-                                scope: this,
-                                'rowclick': function(grid, rowIndex){
-                                    var record = grid.getStore().getAt(rowIndex);
-                                    if(record.get('type') === 'user')
-                                        this.primary_panel.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), url: record.get('profile_path'), id: 'user_profile_for_' + record.get('id') });
-                                }
-                            }
-                        }
-                ]},
+                new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel'}),
                 {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'}
             ]
         });
@@ -362,21 +296,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.group_detail_panel.getComponent('group_form_section').getComponent('group_jurisdiction').update(group.owner_jurisdiction.jurisdiction.name);
         this.group_detail_panel.getComponent('group_csv_link').getEl().select('a').set({href: group.csv_path});
 
-        // clear the stores
-        var audStore = this.group_detail_panel.getComponent('group_grid_holder').getComponent('audience_grid').getStore();
-        var recipStore = this.group_detail_panel.getComponent('group_grid_holder').getComponent('recipient_grid').getStore();
-
-        recipStore.loadData(group.recipients);
-
-        // prep the audiences, groups, and users for reading in as json
-        Ext.each(group.jurisdictions, function(jurisdiction){jurisdiction.type = 'jurisdiction';});
-        Ext.each(group.roles, function(role){role.type = 'role';});
-        Ext.each(group.users, function(user){user.type = 'user';});
-
-        audStore.loadData(group.jurisdictions);
-        audStore.loadData(group.roles, true);
-        audStore.loadData(group.users, true);
-        audStore.sort();
+        this.group_detail_panel.getComponent('group_audience_panel').load(group);
     },
 
     /**
