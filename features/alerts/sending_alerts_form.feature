@@ -42,6 +42,34 @@ Feature: Sending alerts form
     Then an alert exists with:
       | from_jurisdiction | Potter County |
       | title | H1N1 SNS push packs to be delivered tomorrow |
+
+  Scenario: Send an alert with a different delivery time
+    Given the following entities exists:
+      | Jurisdiction | Potter County  |
+      | Jurisdiction | Tarrant County  |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
+    And the role "HAN Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+
+    When I go to the HAN
+    And I follow "Send an Alert"
+    Then I should see "Potter County" as a from jurisdiction option
+    Then I should not see "Tarrant County" as a from jurisdiction option
+    When I fill out the alert form with:
+      | Jurisdiction | Potter County                            |
+      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+      | Delivery Time | 60 minutes |
+    And I press "Preview Message"
+    Then I should see a preview of the message with:
+      | Delivery Time | 60 minutes |
+    When I press "Send"
+    Then I should see "Successfully sent the alert"
+    When delayed jobs are processed
+    Then an alert exists with:
+      | from_jurisdiction | Potter County |
+      | title | H1N1 SNS push packs to be delivered tomorrow |
+      | delivery_time | 60 |
   
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
