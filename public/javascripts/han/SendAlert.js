@@ -79,7 +79,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                         data: [[15], [30], [45], [60], [75], [90], [1440], [4320]],
                         fields: ['value', {name: 'display', mapping:0, convert: function(val){return val <= 90 ? val + ' minutes' : (val/60) + ' hours';}}]
                     })},
-                    {xtype: 'combo', fieldLabel: 'Acknowledgement', name: 'alert[acknowledge]', store: ['None', 'Normal', 'Advanced'], editable: false, triggerAction: 'all', value: 'None',
+                    {xtype: 'combo', itemId: 'acknowledge_combo', fieldLabel: 'Acknowledgement', name: 'alert[acknowledge]', store: ['None', 'Normal', 'Advanced'], editable: false, triggerAction: 'all', value: 'None',
                         listeners:{scope: this, 'select': this.acknowledgement_select}},
                     {xtype: 'checkbox', inputValue: 1, boxLabel: 'Disable Cross-Jurisdictional Alerting', name: 'alert[not_cross_jurisdictional]'},
                     {xtype: 'checkbox', inputValue: 1, boxLabel: 'Sensitive (confidential)', name: 'alert[sensitive]'},
@@ -90,7 +90,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                         {boxLabel: 'Phone', inputValue: 'Device::PhoneDevice', handler: this.handlePhoneTypeCheck, scope: this},
                         {itemId: 'sms_communication_method', boxLabel: 'SMS', inputValue: 'Device::SMSDevice', handler: this.handlePhoneTypeCheck, scope: this},
                         {boxLabel: 'Fax', disabled: true, inputValue: 'Device::FaxDevice'},
-                        {itemId: 'blackberry_pin_communication_method', boxLabel: 'Blackberry PIN', inputValue: 'Device::BlackberryDevice'}
+                        {itemId: 'blackberry_pin_communication_method', boxLabel: 'Blackberry PIN', inputValue: 'Device::BlackberryDevice', handler: this.handlePhoneTypeCheck, scope: this}
                     ]},
                     {xtype: 'textfield', hidden: true, itemId: 'caller_id_field', actionMode: 'itemCt', fieldLabel: 'Caller ID', name: 'alert[caller_id]', value: '4114114111', maxLength: '10', maskRe: /^[0-9]{0,10}$/}
                 ]}
@@ -137,8 +137,8 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
                 // And we need to disable sms and blackberry because they cannot handle advanced acknowledgements
                 var cbGroup = this.form_card.getComponent('right_side_form').getComponent('communication_methods');
-                cbGroup.items.get(cbGroup.items.findIndex('itemId', 'sms_communication_method')).disable();
-                cbGroup.items.get(cbGroup.items.findIndex('itemId', 'blackberry_pin_communication_method')).disable();
+                cbGroup.items.get(cbGroup.items.findIndex('itemId', 'sms_communication_method')).disable().setValue();
+                cbGroup.items.get(cbGroup.items.findIndex('itemId', 'blackberry_pin_communication_method')).disable().setValue();
             }
         }
         else
@@ -198,12 +198,16 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             valid = this.form_card.getForm().isValid();
         }
-        else if(currentIndex === 1 && newIndex === 2)
+        if(valid && newIndex === 2)
         {
             var selectedItems = this.audiencePanel.getSelectedItems();
             valid = selectedItems.groups.count > 0 || selectedItems.roles.count > 0 || selectedItems.jurisdictions.count > 0 || selectedItems.users.count > 0;
             if(!valid)
+            {
                 alert('Please select at least one user, jurisdiction, role, or group to send this alert to.');
+                if(currentIndex !== 1)
+                    this.breadCrumb.goToIndex(1);
+            }
         }
         return valid; // need to validate at this stage before we let them move off the current page
     },
@@ -213,6 +217,14 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             // build the output of the form panel and audience panel into a consumable object then pass that to alert_preview.loadData()
             var data = this.form_card.getForm().getFieldValues();
+            if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(data['alert[call_down_messages][]'], 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
+            {
+                var acknowledge_combo = this.form_card.getComponent('right_side_form').getComponent('acknowledge_combo');
+                acknowledge_combo.setValue('Normal');
+                acknowledge_combo.fireEvent('select', acknowledge_combo, acknowledge_combo.getStore().getAt(acknowledge_combo.getStore().find('field1', 'Normal'))); // go the long way around to get the select event to fire since selectByValue or setValue do not fire select
+
+                data = this.form_card.getForm().getFieldValues();
+            }
             data['alert[device_types][]'] = this.getSelectedCommunicationDevices();
             Ext.apply(data, this.audiencePanel.getSelectedItems());
 
