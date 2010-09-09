@@ -19,21 +19,22 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
 
         Ext.apply(config, { // we want to absolutely override the items passed in the constructor.
             items:[
-                {xtype: 'box', itemId: 'alert_title', html: 'title', style: {'text-align': 'center', 'margin-bottom': '10px'}},
+                {xtype: 'box', itemId: 'alert_title', style: {'text-align': 'center', 'margin-bottom': '10px'}},
                 {collapsible: true, itemId: 'alert_detail_panel', title: 'Details', width: 800, layout: 'hbox', padding: '5', items: [
                         {xtype: 'container', itemId: 'left_detail', flex: 2, layout: 'form', labelWidth: 175, items:[
-                            {xtype: 'displayfield', itemId: 'alert_message', html: 'This is message text message text message text. This is message text that can be very long.', hideLabel:true},
-                            {xtype: 'displayfield', itemId: 'alert_short_text', html: 'This is short text, short text yes, short text. It isn\'t quite so long', fieldLabel: 'Short Text'},
-                            {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_created_at', html: 'September Datember', fieldLabel: 'Created at'},
-                            {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', html: 'No', fieldLabel: 'Disable Cross-Jurisdictional alerting?'}
+                            {xtype: 'displayfield', itemId: 'alert_message', hideLabel:true},
+                            {xtype: 'displayfield', itemId: 'alert_short_text', fieldLabel: 'Short Text'},
+                            {xtype: 'container', layout: 'form', labelWidth: 175, itemId: 'alert_response_container', hideLabel: true},
+                            {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_created_at', fieldLabel: 'Created at'},
+                            {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', fieldLabel: 'Disable Cross-Jurisdictional alerting?'}
                         ], margins:'0 15 0 0'},
                         {xtype: 'container', itemId: 'right_detail', flex: 1, layout: 'form', items: [
-                            {xtype: 'displayfield', itemId: 'alert_severity', html: 'Minor', fieldLabel: 'Severity'},
-                            {xtype: 'displayfield', itemId: 'alert_status', html: 'Test', fieldLabel: 'Status'},
-                            {xtype: 'displayfield', itemId: 'alert_acknowledge', html: 'None', fieldLabel: 'Acknowledge'},
-                            {xtype: 'displayfield', itemId: 'alert_sensitive', html: 'No', fieldLabel: 'Sensitive (confidential)'},
-                            {xtype: 'displayfield', itemId: 'alert_delivery_time', html: '72 hours', fieldLabel: 'Delivery Time'},
-                            {xtype: 'displayfield', itemId: 'alert_delivery_methods', html: 'E-mail and Console', fieldLabel: 'Methods'}
+                            {xtype: 'displayfield', itemId: 'alert_severity', fieldLabel: 'Severity'},
+                            {xtype: 'displayfield', itemId: 'alert_status', fieldLabel: 'Status'},
+                            {xtype: 'displayfield', itemId: 'alert_acknowledge', fieldLabel: 'Acknowledge'},
+                            {xtype: 'displayfield', itemId: 'alert_sensitive', fieldLabel: 'Sensitive (confidential)'},
+                            {xtype: 'displayfield', itemId: 'alert_delivery_time', fieldLabel: 'Delivery Time'},
+                            {xtype: 'displayfield', itemId: 'alert_delivery_methods', fieldLabel: 'Methods'}
                         ]}
                     ]
                 },
@@ -81,9 +82,20 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
         {
             this.data = data;
             this.getComponent('alert_title').update(data['alert[title]']);
-            var leftPane = this.getComponent('alert_detail_panel').getComponent('left_detail');
+            var detail_panel = this.getComponent('alert_detail_panel');
+            var leftPane = detail_panel.getComponent('left_detail');
             leftPane.getComponent('alert_message').update(data['alert[message]']);
             leftPane.getComponent('alert_short_text').update(data['alert[short_message]']);
+
+            var alertResponseContainer = leftPane.getComponent('alert_response_container');
+            alertResponseContainer.removeAll(true);
+            Ext.each(data['alert[call_down_messages][]'], function(call_down, index){
+                if(!Ext.isEmpty(call_down))
+                {
+                    alertResponseContainer.add({xtype: 'displayfield', html: call_down, fieldLabel: 'Alert Response ' + (index + 1).toString()});
+                }
+            }, this);
+
             leftPane.getComponent('alert_created_at').hide();
             leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
             var rightPane = this.getComponent('alert_detail_panel').getComponent('right_detail');
@@ -120,6 +132,8 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
             {
                 this.triggerRecipientStoreLoad(audienceHolder);
             }
+
+            detail_panel.doLayout();
         }
     },
 
