@@ -31,6 +31,7 @@ namespace :app do
       #FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
       #FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
     end
+    run "mkdir #{release_path}/tmp/cache"
   end
 
   desc "run bundle install for gem dependencies"
