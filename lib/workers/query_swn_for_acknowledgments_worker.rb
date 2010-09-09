@@ -89,12 +89,14 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
           else
             next
         end
-        if alert_attempt.acknowledge! device, contact['gwbRespIndex']
-          SWN_LOGGER.info "Rcpt id #{rcptStatus['id']} has been acknowledged"
-        else
-          SWN_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"
+        unless alert_attempt.acknowledged?
+          if alert_attempt.acknowledge! device, contact['gwbRespIndex']
+            SWN_LOGGER.info "Rcpt id #{rcptStatus['id']} has been acknowledged"
+          else
+            SWN_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"
+          end
+          ActionController::Base.new.expire_fragment(/alert_log_entry.*#{alert.id}.cache$/)
         end
-        ActionController::Base.new.expire_fragment(/alert_log_entry.*#{alert.id}.cache$/)
       end
 
     end
