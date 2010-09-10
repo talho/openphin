@@ -113,11 +113,10 @@ Feature: Searching for users
     
   Scenario: Search for a user from a specific jurisdiction
     Given I am logged in as "amy@example.com"
-  
     When I go to the dashboard page
     And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I select "Tarrant County" from "_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
@@ -129,7 +128,7 @@ Feature: Searching for users
     When I go to the dashboard page
     And I follow "Find People"
     And I fill in "Search" with "smith"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I select "Public" from "_role_ids"
     And I press "Search"
     Then I see the following users in the search results
@@ -141,7 +140,7 @@ Feature: Searching for users
     When I go to the dashboard page
     And I follow "Find People"
     And I fill in "Search" with "body"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I select "Health Officer" from "_role_ids"
     And I select "Dallas County" from "_jurisdiction_ids"
     And I press "Search"
@@ -154,7 +153,7 @@ Feature: Searching for users
     When I go to the dashboard page
     And I follow "Find People"
     And I fill in "Search" with "body"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I select "Immunization Director" from "_role_ids"
     And I select "Dallas County" from "_jurisdiction_ids"
     And I press "Search"
@@ -165,7 +164,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "First name" with "sam"
     And I press "Search"
     Then I see the following users in the search results
@@ -176,7 +175,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "Last name" with "body"
     And I press "Search"
     Then I see the following users in the search results
@@ -187,7 +186,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "Display name" with "sam body"
     And I press "Search"
     Then I see the following users in the search results
@@ -198,7 +197,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "Email" with "sam@example.com"
     And I press "Search"
     Then I see the following users in the search results
@@ -209,7 +208,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "Phone" with "888-555-1212"
     And I press "Search"
     Then I see the following users in the search results
@@ -220,7 +219,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "Job Title" with "Chief Bottle Washer"
     And I press "Search"
     Then I see the following users in the search results
@@ -231,7 +230,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "First name" with "Amy"
     And I fill in "Last name" with "Body"
     And I press "Search"
@@ -244,7 +243,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
-    And I follow "Advance Search"
+    And I follow "Advanced Search"
     And I fill in "First name" with "sa*"
     And I press "Search"
     Then I see the following users in the search results
@@ -267,6 +266,7 @@ Feature: Searching for users
 
     When I go to the dashboard page
     And I follow "Find People"
+    And I follow "Advanced Search"
     And I select "Bee County" from "_jurisdiction_ids"
 
     And I press "Search"

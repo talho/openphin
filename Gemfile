@@ -23,7 +23,7 @@ group :default do
   gem "httparty", "0.4.4"
   gem "crack", "0.1.8"
   gem "chronic", "0.2.3"
-    gem "json_pure", "1.4.3"
+    gem "json_pure", "1.4.6"
     gem "rubyforge", "2.0.4"
     gem "hoe", "2.6.1"
   gem "validatable", "1.6.7"

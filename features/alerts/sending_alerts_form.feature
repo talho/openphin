@@ -70,9 +70,11 @@ Feature: Sending alerts form
     Then I should see "Potter County" as a from jurisdiction option
     Then I should not see "Tarrant County" as a from jurisdiction option
     When I fill out the alert form with:
-      | Jurisdiction | Potter County                            |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Delivery Time | 60 minutes |
+      | Jurisdiction          | Potter County                                |
+      | Jurisdictions         | Potter County                                |
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Delivery Time         | 60 minutes                                   |
+      | Communication methods | E-mail                                       |
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | Delivery Time | 60 minutes |
