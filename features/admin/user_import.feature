@@ -72,7 +72,6 @@ Feature: Online importing users from a uploaded CSV file
   Scenario: Reject the attempted upload of a file that is not truly CSV
     Given I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
-    And I follow "Batch Users"
     And a jurisdiction named "Ector"
     And I attach the fixture file at "fixtures/xls-file-named-csv.csv" to "Upload User CSV file"
     And I press "Upload"
@@ -82,7 +81,6 @@ Feature: Online importing users from a uploaded CSV file
   Scenario: Accept a CSV file that is malformed or not a user batch file and receive a rejection email
     Given I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
-    And I follow "Batch Users"
     And a jurisdiction named "Ector"
     And I attach the fixture file at "fixtures/badform.csv" to "Upload User CSV file"
     And I press "Upload"
@@ -96,7 +94,6 @@ Feature: Online importing users from a uploaded CSV file
   Scenario: Accept CSV file with extra/incorrect columns but proper format AND email column.
     Given I am logged in as "admin@ector.gov"
     And I go to the user batch page for an admin
-    And I follow "Batch Users"
     And a jurisdiction named "Ector"
     And I attach the fixture file at "fixtures/wrongcols.csv" to "Upload User CSV file"
     And I press "Upload"

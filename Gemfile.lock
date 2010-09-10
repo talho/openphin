@@ -64,7 +64,7 @@ GEM
     hpricot (0.6)
     httparty (0.4.4)
       crack (>= 0.1.1)
-    json_pure (1.4.3)
+    json_pure (1.4.6)
     launchy (0.3.7)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
@@ -172,7 +172,7 @@ DEPENDENCIES
   hoptoad_notifier (= 2.3.0)
   hpricot (= 0.6)
   httparty (= 0.4.4)
-  json_pure (= 1.4.3)
+  json_pure (= 1.4.6)
   launchy
   libxml-ruby (= 1.1.3)
   mdalessio-dryopteris (= 0.1.2)
