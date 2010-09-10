@@ -82,21 +82,30 @@ Feature: Sending alerts form
 
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
-    Then I should see "Dallas County" as a from jurisdiction option
-    Then I should see "Potter County" as a from jurisdiction option
-    Then I should not see "Tarrant County" as a from jurisdiction option
-    When I fill out the alert form with:
-      | Jurisdiction | Potter County                            |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    When I open ext combo "Jurisdiction"
+    Then I should see "Dallas County"
+    Then I should see "Potter County"
+    Then I should not see "Tarrant County"
+    When I fill in the following:
+      | Jurisdiction | Potter County                                |
+      | Title        | H1N1 SNS push packs to be delivered tomorrow |
+      | Message      | H1N1 SNS push packs to be delivered tomorrow |
+    And I check "E-mail"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
-      | from_jurisdiction | Potter County |
-      | title | H1N1 SNS push packs to be delivered tomorrow |
+      | from_jurisdiction | Potter County                                |
+      | title             | H1N1 SNS push packs to be delivered tomorrow |
 
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:

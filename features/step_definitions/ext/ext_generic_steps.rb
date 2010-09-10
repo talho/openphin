@@ -89,10 +89,13 @@ When /^I close the active ext window$/ do
   page.execute_script("Ext.WindowMgr.getActive().close();")
 end
 
-When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
+When /^I open ext combo "([^\"]*)"$/ do |select_box|
   field = find_field(select_box)
   field.click
+end
 
+When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
+  When %Q{I open ext combo "#{select_box}"}
   When %Q{I click x-combo-list-item "#{value}"}
 end
 
