@@ -1,5 +1,5 @@
 class JurisdictionsController < ApplicationController
-  before_filter :admin_required, :except => [:mapping]
+  before_filter :admin_required, :except => [:mapping, :user_alerter]
   app_toolbar "han"
 
 

@@ -36,7 +36,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
     _createFormCard: function(){
         var jurisdiction_store = new Ext.data.JsonStore({
             restful: true,
-            url: '/jurisdictions/user_alerter',
+            url: '/jurisdictions/user_alerter.json',
             idProperty: 'jurisdiction.id',
             fields: [{name: 'name', mapping: 'jurisdiction.name'}, {name: 'id', mapping: 'jurisdiction.id'}]
         });
@@ -201,7 +201,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         if(valid && newIndex === 2)
         {
             var selectedItems = this.audiencePanel.getSelectedItems();
-            valid = selectedItems.groups.count > 0 || selectedItems.roles.count > 0 || selectedItems.jurisdictions.count > 0 || selectedItems.users.count > 0;
+            valid = selectedItems.groups.length > 0 || selectedItems.roles.length > 0 || selectedItems.jurisdictions.length > 0 || selectedItems.users.length > 0;
             if(!valid)
             {
                 alert('Please select at least one user, jurisdiction, role, or group to send this alert to.');

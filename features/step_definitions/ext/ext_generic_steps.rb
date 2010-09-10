@@ -88,3 +88,24 @@ end
 When /^I close the active ext window$/ do
   page.execute_script("Ext.WindowMgr.getActive().close();")
 end
+
+When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
+  field = find_field(select_box)
+  field.click
+
+  When %Q{I click x-combo-list-item "#{value}"}
+end
+
+Then /^the "([^\"]*)" field should be invalid$/ do |field_name|
+  field = find_field(field_name)
+  if field.nil?
+    field = page.find(:xpath, "//div[@id=//label[contains(text(), '#{field_name}')]/@for]") # handle the checkbox group case where it is a div and not an input or text area or other form of field
+  end
+  field.find(:xpath, ".[contains(concat(' ', @class, ' '), 'x-form-invalid')]").should_not be_nil
+end
+
+Then /^the following fields should be invalid:$/ do |table|
+  table.rows.each do |row|
+    Then %Q{the "#{row[0]}" field should be invalid}
+  end
+end
