@@ -14,6 +14,7 @@ Feature: Sending sensitive alerts
     And I am allowed to send alerts
 
   Scenario: Sending a sensitive email alert
+    When I go to the new alert page
     When I fill out the alert form with:
       | People | Keith Gaddis |
       | Title  | H1N1 SNS push packs to be delivered tomorrow |

@@ -109,7 +109,7 @@ class Audience < ActiveRecord::Base
         sql += " AND `audiences_jurisdictions`.audience_id = #{self.id} AND `role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id" if has_jurisdictions
         sql += "#{publicsql})"
         sql += " UNION DISTINCT " if has_users
-      elsif has_jurisdictions
+      else
         sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
         sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
         if options[:devices]

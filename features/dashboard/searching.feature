@@ -52,7 +52,8 @@ Feature: Searching for users
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page
     And I follow "Find People"
-    And I fill in "Search" with "john.smith@example.com"
+    And I follow "Advanced Search"
+    And I fill in "Email" with "john.smith@example.com"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith |
@@ -117,7 +118,7 @@ Feature: Searching for users
     And I follow "Find People"
     And I fill in "Search" with "smith"
     And I follow "Advanced Search"
-    And I select "Tarrant County" from "_jurisdiction_ids"
+    And I select "Tarrant County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
       | Jane Smith |
@@ -129,7 +130,7 @@ Feature: Searching for users
     And I follow "Find People"
     And I fill in "Search" with "smith"
     And I follow "Advanced Search"
-    And I select "Public" from "_role_ids"
+    And I select "Public" from "with_role_ids"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith |
@@ -141,8 +142,8 @@ Feature: Searching for users
     And I follow "Find People"
     And I fill in "Search" with "body"
     And I follow "Advanced Search"
-    And I select "Health Officer" from "_role_ids"
-    And I select "Dallas County" from "_jurisdiction_ids"
+    And I select "Health Officer" from "with_role_ids"
+    And I select "Dallas County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -154,8 +155,8 @@ Feature: Searching for users
     And I follow "Find People"
     And I fill in "Search" with "body"
     And I follow "Advanced Search"
-    And I select "Immunization Director" from "_role_ids"
-    And I select "Dallas County" from "_jurisdiction_ids"
+    And I select "Immunization Director" from "with_role_ids"
+    And I select "Dallas County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I should see "No Results Found"
 
@@ -267,7 +268,7 @@ Feature: Searching for users
     When I go to the dashboard page
     And I follow "Find People"
     And I follow "Advanced Search"
-    And I select "Bee County" from "_jurisdiction_ids"
+    And I select "Bee County" from "with_jurisdiction_ids"
 
     And I press "Search"
     Then I see the following users in the search results

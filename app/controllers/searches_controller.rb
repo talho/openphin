@@ -29,14 +29,13 @@ class SearchesController < ApplicationController
       strip_blank_elements(params[:conditions])
       strip_blank_arrays(params[:with])
       prevent_email_in_name(params)
-      unless params[:name].blank?
-        @results = User.search( params[:name], build_options(params).merge({:match_mode=>:any}) )
-      else
+      if params[:name].blank?
         sanitize(params[:conditions])
-       # debugger
         params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
         params.delete(:name)
         @results = User.search(params.merge(build_options(params)))
+      else
+        @results = User.search( params[:name], build_options(params).merge({:match_mode=>:any}) )
       end
     end
     
@@ -63,7 +62,7 @@ protected
   # this method is to prevent an inadverent denial-of-service
   def prevent_email_in_name(params)
     unless params[:name].blank? || params[:name].index('@').nil?
-      params[:email] = params[:name]
+      params[:conditions][:email] = params[:name]
       params.delete(:name)
     end
   end
@@ -73,7 +72,7 @@ protected
     email = /[:"\*\!&]/
     other = /[:"@\-\*\!\~\&]/
     conditions.reject{ |k,v| exclude.include? k }.each do |k,v|
-      regexp = (k == :email) ? email : other
+      regexp = (k == "email") ? email : other
       conditions[k] = v.gsub(regexp,'') unless conditions[k].blank?
     end
   end
