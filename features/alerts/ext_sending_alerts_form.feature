@@ -68,6 +68,7 @@ Feature: Sending alerts form
     Then I should have the "Audience" breadcrumb selected
     When I click x-accordion-hd "Roles"
     Then I should not see "Admin"
+    When I press "Sign Out"
 
   Scenario: User with one or more jurisdictions
     Given the following entities exists:
@@ -87,7 +88,6 @@ Feature: Sending alerts form
     Then I should see "Potter County"
     Then I should not see "Tarrant County"
     When I fill in the following:
-      | Jurisdiction | Potter County                                |
       | Title        | H1N1 SNS push packs to be delivered tomorrow |
       | Message      | H1N1 SNS push packs to be delivered tomorrow |
     And I check "E-mail"
@@ -112,9 +112,15 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the HAN
-    And I follow "Send an Alert"
-    Then I should see "Federal" as a jurisdictions option
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    When I fill in the following:
+      | Title   | This is a test title to pass validation   |
+      | Message | This is a test message to pass validation |
+    And I check "E-mail"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    Then I should see "Federal"
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
     Given the following entities exist:
@@ -126,27 +132,50 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    And I am on the new alert page
-    Then I should see "Select all children"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    When I fill in the following:
+      | Title   | This is a test title to pass validation   |
+      | Message | This is a test message to pass validation |
+    And I check "E-mail"
+    And I select "Texas" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    And I click contextDownArrow ""
+    Then I should see "Select All Sub-jurisdictions"
+    Then I should see "Select No Sub-jurisdictions"
 
   Scenario: Sending alerts with only People in the audience should work
     Given the following entities exist:
       | Jurisdiction | Texas         |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |
+      | Jane Smith      | jane.smith@example.com   | Health Officer                               | Potter County |
+    When delayed jobs are processed
+    Given the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the HAN
-    And I follow "Send an Alert"
-    And I fill out the alert form with:
-      | People   | Jane Smith                                   |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    When I fill in the following:
+      | Title        | H1N1 SNS push packs to be delivered tomorrow |
+      | Message      | H1N1 SNS push packs to be delivered tomorrow |
+    And I select "Texas" from ext combo "Jurisdiction"
+    And I check "E-mail"
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name       | type | email                  |
+      | Jane Smith | User | jane.smith@example.com |
 
-    And I press "Preview Message"
-    Then I should see a preview of the message with:
-      | People            | Jane Smith |
+    And I click breadCrumbItem "Preview"
+    And I expand ext panel "Audience"
+    And I should see the following audience breakdown
+      | name       | type      |
+      | Jane Smith | Recipient |
+      | Jane Smith | User      |
 
-    And I press "Send"
+    And I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+    
     Then an alert exists with:
       | from_jurisdiction | Texas                                        |
       | people            | Jane Smith                                   |
@@ -163,29 +192,36 @@ Feature: Sending alerts form
     And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the HAN
-    And I follow "Send an Alert"
-
-    When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-    And I check "Potter County"
-    And I fill in "Message" with "Some body text"
-    And I select "Advanced" from "Acknowledge"
-    And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
-    And I fill in "Alert Response 2" with "if you can respond within 30 minutes"
-    And I fill in "Alert Response 3" with "if you can respond within 1 hour"
-    And I fill in "Alert Response 4" with "if you can respond within 4 hour"
-    And I fill in "Alert Response 5" with "if you cannot respond"
-    And I select "Potter County" from "Jurisdiction"
-    And I select "Test" from "Status"
-    And I select "Minor" from "Severity"
-    And I select "72 hours" from "Delivery Time"
-
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I select "Advanced" from ext combo "Acknowledge"
+    # add a 3rd, 4th and 5th response box
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I fill in the following:
+      | Title              | H1N1 SNS push packs to be delivered tomorrow |
+      | Message            | Some body text                               |
+      | Alert Response 1   | if you can respond within 15 minutes         |
+      | Alert Response 2   | if you can respond within 30 minutes         |
+      | Alert Response 3   | if you can respond within 1 hour             |
+      | Alert Response 4   | if you can respond within 4 hour             |
+      | Alert Response 5   | if you cannot respond                        |
+    And I select "Test" from ext combo "Status"
+    And I select "Minor" from ext combo "Severity"
+    And I select "72 hours" from ext combo "Delivery Time"
     And I check "Phone"
-    And I press "Preview Message"
-    Then I should see a preview of the message
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
+    When I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+
+    And I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
 
     Then an alert exists with:
       | from_jurisdiction   | Potter County                                |
@@ -196,7 +232,6 @@ Feature: Sending alerts form
       | call_down_messages  | if you can respond within 4 hours            |
       | call_down_messages  | if you cannot respond                        |
       | acknowledge         | true                                         |
-
 
   Scenario: Sending alerts with non cross jurisdiction
      Given the following entities exists:
@@ -209,53 +244,73 @@ Feature: Sending alerts form
      And the role "HAN Coordinator" is an alerter
      And I am logged in as "john.smith@example.com"
 
-     When I go to the HAN
-     And I follow "Send an Alert"
+     When I go to the ext dashboard page
+     And I navigate to "HAN > Send an Alert"
 
-     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-     And I check "Potter County"
-     And I fill in "Message" with "Some body text"
-     And I check "Disable Cross-Jurisdictional alerting"
-
-     And I select "Potter County" from "Jurisdiction"
-     And I select "Test" from "Status"
-     And I select "Minor" from "Severity"
-     And I select "72 hours" from "Delivery Time"
-     And I select "Normal" from "Acknowledge"
+     And I fill in the following:
+      | Title              | H1N1 SNS push packs to be delivered tomorrow |
+      | Message            | Some body text                               |
+     And I select "Test" from ext combo "Status"
+     And I select "Minor" from ext combo "Severity"
+     And I select "72 hours" from ext combo "Delivery Time"
      And I check "Phone"
-     And I press "Preview Message"
-     Then I should see a preview of the message
+     And I select "Potter County" from ext combo "Jurisdiction"
+     And I select "Normal" from ext combo "Acknowledge"
+    
+     And I check "Disable Cross-Jurisdictional Alerting"
 
-     When I press "Send"
-     Then I should see "Successfully sent the alert"
+     When I click breadCrumbItem "Audience"
+     And I select the following in the audience panel:
+      | name           | type         |
+      | Potter County  | Jurisdiction |
+     And I click breadCrumbItem "Preview"
 
+     And I press "Send Alert"
+     Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+     And the "Send Alert" tab should not be open
+    
      Then an alert exists with:
       | from_jurisdiction         | Potter County                                |
       | title                     | H1N1 SNS push packs to be delivered tomorrow |
       | not_cross_jurisdictional  | true                                         |
 
-
   Scenario: Sending alerts to Organizations
     Given the following entities exist:
-      | Jurisdiction | Texas         |
-      | Organization | DSHS          |
+      | Jurisdiction | Texas          |
+      | Organization | DSHS           |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
-      | Jane Smith      | jane.smith@example.com   | Health Officer   | Texas |
+    # since we're doing this in the texas space and aren't selecting a jurisdiction, I'm going to use the default han coordinator role here.
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |
+      | Jane Smith      | jane.smith@example.com   | Health Officer                               | Texas         |
     And "jane.smith@example.com" is a member of the organization "DSHS"
-    And the role "HAN Coordinator" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the HAN
-    And I follow "Send an Alert"
-    And I fill out the alert form with:
-      | Organization   | DSHS                                         |
-      | Title          | H1N1 SNS push packs to be delivered tomorrow |
 
-    And I press "Preview Message"
-    Then I should see a preview of the message with:
-      | Organization  | DSHS |
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
 
-    And I press "Send"
+    And I fill in the following:
+      | Title              | H1N1 SNS push packs to be delivered tomorrow |
+      | Message            | Some body text                               |
+    And I select "Texas" from ext combo "Jurisdiction" 
+    And I check "Phone"
+
+    When I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name  | type         |
+      | DSHS  | Organization |
+    And I click breadCrumbItem "Preview"
+
+    And I expand ext panel "Audience"
+    And I should see the following audience breakdown
+      | name       | type         |
+      | DSHS       | Organization |
+      | Jane Smith | Recipient    |
+
+    And I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+    
     Then an alert exists with:
       | from_jurisdiction | Texas                                        |
       | people            | Jane Smith                                   |

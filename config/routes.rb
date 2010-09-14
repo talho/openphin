@@ -101,8 +101,8 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
+  map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
   map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
   map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
