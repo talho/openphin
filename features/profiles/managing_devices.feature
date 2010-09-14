@@ -65,7 +65,7 @@ Feature: Managing devices when editing user profiles
     When I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"
     Then I should see "This resource does not exist or is not available."
-    And I should be on the homepage
+    And I should be on the dashboard page
 
   Scenario: Adding a device as an admin
   Scenario: Adding a device as an admin of a parent jurisdiction

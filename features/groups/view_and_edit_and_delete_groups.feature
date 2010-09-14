@@ -154,7 +154,7 @@ Feature: Viewing groups
   Scenario: deleting a user group
     When I go to the groups page
     Then I should see "Dallas County Health Officer Group"
-    #And I will confirm on next step
+    And I will confirm on next step
     When I follow "Destroy"
     Then I should not see "Dallas County Health Officer Group" within "#groups"
     And I should see "Successfully deleted the group Dallas County Health Officer Group."

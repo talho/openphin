@@ -62,7 +62,7 @@ When /^I maliciously post a delete for a role request for "([^\"]*)"$/ do |user_
   role_request = user.role_requests.first
   script = "elem = document.createElement('a'); " +
     "elem.setAttribute('href','#{admin_role_request_path(role_request)}'); " +
-    "elem.setAttribute('class','destroy'); " +
+    destroy_link_onclick("confirm('Are you sure you want to delete this group?')") +
     "elem.innerHTML = 'Remove Role Request'; " +
     "$('body').append(elem);"
   page.execute_script(script)

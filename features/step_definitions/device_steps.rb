@@ -24,14 +24,18 @@ end
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   device = user.devices.first
-  script = "elem = document.createElement('a'); " +
-    "elem.setAttribute('href','#{device_path(device)}'); " +
-    "elem.setAttribute('class','destroy'); " +
-    "elem.innerHTML = 'Remove Device'; " +
-    "$('body').append(elem);"
+  script = "var f = document.createElement('form'); " +
+    "f.style.display = 'none'; " +
+    "$('body').append(f); " +
+    "f.method = 'POST'; " +
+    "f.action = '#{device_path(device)}'; " +
+    "var m = document.createElement('input'); " +
+    "m.setAttribute('type', 'hidden'); " +
+    "m.setAttribute('name', '_method'); " +
+    "m.setAttribute('value', 'delete'); " +
+    "f.appendChild(m); " +
+    "f.submit();"
   page.execute_script(script)
-  page.click_link("Remove Device")
-  visit("/") # Bug in capybara where redirect doesn't populate firefox'
 end
 
 Then /^"([^"]+). should have the communication devices?$/ do |email, table|

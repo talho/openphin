@@ -100,13 +100,18 @@ end
 When /^I maliciously attempt to remove "([^\"]*)" from "([^\"]*)"$/ do |email, org_name|
   user = User.find_by_email!(email)
   org = Organization.find_by_name!(org_name)
-  script = "elem = document.createElement('a'); " +
-    "elem.setAttribute('href','#{admin_organization_membership_request_path(:id => org.id, :user_id => user.id)}'); " +
-    "elem.setAttribute('class','destroy'); " +
-    "elem.innerHTML = 'Remove Organization Membership'; " +
-    "$('body').append(elem);"
+  script = "var f = document.createElement('form'); " +
+    "f.style.display = 'none'; " +
+    "$('body').append(f); " +
+    "f.method = 'POST'; " +
+    "f.action = '#{admin_organization_membership_request_path(:id => org.id, :user_id => user.id)}'; " +
+    "var m = document.createElement('input'); " +
+    "m.setAttribute('type', 'hidden'); " +
+    "m.setAttribute('name', '_method'); " +
+    "m.setAttribute('value', 'delete'); " +
+    "f.appendChild(m); " +
+    "f.submit();"
   page.execute_script(script)
-  page.click_link("Remove Organization Membership")
 end
 
 Then /^I should see the organization "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |org_name, email|

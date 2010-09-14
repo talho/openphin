@@ -64,9 +64,8 @@ Feature: Approving users for roles
     And I am logged in as "admin@potter.gov"
     And I will confirm on next step
     When I maliciously post a delete for a role request for "john@example.com"
-    # There's a bug where the redirect isn't working
-    # Then I should see "This resource does not exist or is not available."
-    # And I should see "Assign Roles"
+    Then I should see "This resource does not exist or is not available."
+    And I should see "Assign Roles"
     And I log in as "admin@dallas.gov"
     And I go to the pending requests page
     Then I should see "john@example.com"

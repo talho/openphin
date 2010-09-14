@@ -10,6 +10,6 @@
     <%= group.scope %>
   </td>
   <td class="editdestroy">
-    <%= link_to 'Edit', edit_admin_group_path(group)%> <%= link_to 'Destroy', admin_group_path(group), :method => :delete, :class => "destroy" %>
+    <%= link_to 'Edit', edit_admin_group_path(group)%> <%= link_to 'Destroy', {:action => "destroy", :id => group}, :method => :delete, :confirm => "Are you sure you want to delete this group?" %>
   </td>
 </tr>

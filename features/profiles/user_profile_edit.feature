@@ -182,7 +182,7 @@ I should be able to edit my profile
     And I should see "DSHS"
     When I will confirm on next step
     And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
-    Then I should be specifically on the user edit profile page for "jane.smith@example.com"
+    Then I should be specifically on the user profile page for "jane.smith@example.com"
     And I should see "Organizations"
     And I should see "DSHS" within ".organizations"
     And "jane.smith@example.com" should not receive an email

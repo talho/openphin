@@ -100,6 +100,10 @@ module FeatureHelpers
         status
       end
     end
+
+    def destroy_link_onclick(confirm_message)
+      "elem.setAttribute('onclick',\"if (#{confirm_message}) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\"); "
+    end
   end
 end
 

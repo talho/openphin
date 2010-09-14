@@ -10,12 +10,16 @@ end
 When /^I maliciously post a deny for a role assignment for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   role_assignment = user.role_memberships.first
-  script = "elem = document.createElement('a'); " +
-    "elem.setAttribute('href','#{role_assignment_path(role_assignment)}'); " +
-    "elem.setAttribute('class','destroy'); " +
-    "elem.innerHTML = 'Remove Role'; " +
-    "$('body').append(elem);"
+  script = "var f = document.createElement('form'); " +
+    "f.style.display = 'none'; " +
+    "$('body').append(f); " +
+    "f.method = 'POST'; " +
+    "f.action = '#{role_assignment_path(role_assignment)}'; " +
+    "var m = document.createElement('input'); " +
+    "m.setAttribute('type', 'hidden'); " +
+    "m.setAttribute('name', '_method'); " +
+    "m.setAttribute('value', 'delete'); " +
+    "f.appendChild(m); " +
+    "f.submit();"
   page.execute_script(script)
-  page.click_link("Remove Role")
-  visit("/") # Strange issue where the redirect isn't occurring'
 end
