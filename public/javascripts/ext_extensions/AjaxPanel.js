@@ -111,7 +111,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
             formPanel.getForm().on({
                 'actioncomplete': function(form, action){
-                    this.update(action.result, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
+                    this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
                     this.findParentByType('panel').doLayout();
                 },
                 'actionfailed': function(form, action){

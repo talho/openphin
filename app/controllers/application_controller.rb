@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_filter :login_required, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
-  layout proc { |controller| controller.request.xhr? ? nil : controller.choose_layout } #disable the default layout for xhr requests
+  layout proc { |controller| controller.request.xhr? || controller.request.format.ext? ? nil : controller.choose_layout } #disable the default layout for xhr requests
   #layout :choose_layout
 
   cattr_accessor :applications
