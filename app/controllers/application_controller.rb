@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_filter :login_required, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
-  layout proc { |controller| controller.request.xhr? ? nil : controller.choose_layout } #disable the default layout for xhr requests
+  layout proc { |controller| controller.request.xhr? || controller.request.format.ext? ? nil : controller.choose_layout } #disable the default layout for xhr requests
   #layout :choose_layout
 
   cattr_accessor :applications
@@ -111,8 +111,16 @@ class ApplicationController < ActionController::Base
       unless !alert.nil? &&
           (alert.recipients.include?(current_user) ||
            alert.from_jurisdiction.self_and_ancestors.detect{|j| j.han_coordinators.include?(current_user)})
-        flash[:error] = "That resource does not exist or you do not have access to it."
-        redirect_to root_path
+        error = "That resource does not exist or you do not have access to it."
+        if request.xhr?
+          respond_to do |format|
+             format.html {render :text => error, :status => 404}
+             format.json {render :json => {:message => error}, :status => 404}
+          end
+        else
+          flash[:error] = error
+          redirect_to root_path
+        end
       end
     end
 
@@ -151,6 +159,10 @@ class ApplicationController < ActionController::Base
 
     def self.if_not_xhr(specified_layout)
       proc { |controller| controller.request.xhr? ? nil : specified_layout }
+    end
+
+    def self.if_not_ext(specified_layout)
+      proc { |controller| controller.request.format.ext? ? nil : specified_layout }
     end
   private
 

@@ -43,7 +43,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
         jurisdiction_store.load();
 
-        this.call_down_message_container = new Ext.Container({layout: 'form', labelAlign: 'top', defaults: {width: 400, name: 'alert[call_down_messages][]'}});
+        this.call_down_message_container = new Ext.Container({layout: 'form', labelAlign: 'top', defaults: {width: 400}});
         this.alert_preview =  new Talho.AlertDetail({});
 
         this.form_card = new Ext.form.FormPanel({
@@ -127,10 +127,11 @@ Talho.SendAlert = Ext.extend(function(){}, {
             if(this.call_down_message_container.items.length === 0)
             {
                 // insert 2 text boxes and a button to add more into the acknowledgement
-                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 1'});
-                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 2'});
+                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 1', name: 'alert[call_down_messages][1]'});
+                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 2', name: 'alert[call_down_messages][2]'});
                 this.call_down_message_container.add({xtype:'button', hideLabel: true, text:"+ Add another response", width: 'auto', name: '', scope: this, handler: function(btn){
-                    this.call_down_message_container.insert(this.call_down_message_container.items.indexOf(btn), {xtype:'textfield', fieldLabel: 'Alert Response ' + this.call_down_message_container.items.length.toString()});
+                    var resp_num = this.call_down_message_container.items.length.toString();
+                    this.call_down_message_container.insert(this.call_down_message_container.items.indexOf(btn), {xtype:'textfield', fieldLabel: 'Alert Response ' + resp_num, name: 'alert[call_down_messages][' + resp_num + ']'});
                     this.form_card.doLayout();
                     this.getPanel().doLayout();
                 }});
@@ -217,7 +218,8 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             // build the output of the form panel and audience panel into a consumable object then pass that to alert_preview.loadData()
             var data = this.form_card.getForm().getFieldValues();
-            if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(data['alert[call_down_messages][]'], 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
+            var call_downs = this.getCallDownMessages(data);
+            if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(call_downs, 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
             {
                 var acknowledge_combo = this.form_card.getComponent('right_side_form').getComponent('acknowledge_combo');
                 acknowledge_combo.setValue('Normal');
@@ -225,6 +227,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
                 data = this.form_card.getForm().getFieldValues();
             }
+            data['alert[call_down_messages][]'] = call_downs;
             data['alert[device_types][]'] = this.getSelectedCommunicationDevices();
             Ext.apply(data, this.audiencePanel.getSelectedItems());
 
@@ -232,6 +235,18 @@ Talho.SendAlert = Ext.extend(function(){}, {
         }
 
         this.wizard_panel.getLayout().setActiveItem(newIndex);
+    },
+
+    getCallDownMessages: function(data){
+        var i = 1, call_downs = [];
+        var call_down = data['alert[call_down_messages][' + i + ']'];
+        while(!Ext.isEmpty(call_down, true))
+        {
+            call_downs.push(call_down);
+            call_down = data['alert[call_down_messages][' + ++i + ']']
+        }
+
+        return call_downs;
     },
 
     getSelectedCommunicationDevices: function(){

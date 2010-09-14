@@ -69,6 +69,14 @@ end
 Then /^the "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_name, activity|
   active = activity.nil? ? true : activity == 'active'
 
+  begin
+    check_for_tab_strip_item(active, tab_name) # this first time may fail because of an element in the tab panel being removed. if so, try again
+  rescue Selenium::WebDriver::Error::ObsoleteElementError # only rescue if it's this specific error
+    check_for_tab_strip_item(active, tab_name) # this should succeed if the first fails.
+  end
+end
+
+def check_for_tab_strip_item(active, tab_name)
   if active
     page.should have_css(".x-tab-strip li.x-tab-strip-active", :text => tab_name)
   else
@@ -111,4 +119,8 @@ Then /^the following fields should be invalid:$/ do |table|
   table.rows.each do |row|
     Then %Q{the "#{row[0]}" field should be invalid}
   end
+end
+
+When /^I expand ext panel "([^\"]*)"$/ do |panel_name|
+  page.find(:xpath, "//div[./*/text()= '#{panel_name}']/div[contains(concat(' ', @class, ' '), ' x-tool-toggle ')]").click
 end

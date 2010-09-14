@@ -1,7 +1,8 @@
 class DashboardController < ApplicationController  
   skip_before_filter :login_required, :only => [:about]
   require 'feedzirra'
-  layout if_not_xhr 'application' #disable the default layout for xhr requests
+
+  #layout if_not_ext 'application' #disable the default layout for ext requests
   #  layout 'application'
 
   def index
