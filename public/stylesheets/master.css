@@ -256,23 +256,6 @@ ul.group_rcpts                                      {list-style-type:none;margin
 ul.group_rcpts li                                   {list-style:none; margin-left:3px;}
 h5.group_header                                     {display:block;clear:both;}
 
-
-div.rollcall_chart                                  {position:absolute; top:0px; left:320px;margin:20px 20px 0 0;}
-div.rollcall_summary                                {position:absolute; top:0px; left:10px; width:300px;min-height:400px;border-right:2px dotted #ccc;}
-ul.rollcall_summary                                 {margin:0;padding:0;list-style-type:none; font-weight:bold; font-size:18px;position:relative;}
-ul.rollcall_summary li                              {list-style:none;}
-li.district_summary                                 {padding:10px;}
-ul.district                                         {margin:5px;padding:10px;list-style-type:none;position:relative}
-li.district                                         {list-style:none}
-ul.schools                                          {margin:0;padding:0;list-style-type:none; font-weight:normal; font-size:12px;border-top:2px solid #ccc;}
-li.school                                           {list-style:none;margin:5px;padding-left:5px}
-ul.school_alerts                                    {margin:0;padding-left:15px;border-top: 2px dotted #888;}
-li.school li.school_alert                           {float:none; background:none; }
-img.severity                                        {width:10px;}
-li.school                                           {position:relative;}
-li.school span.more                                 {position:absolute;right:5px;bottom:0px;}
-li.school_bordered                                  {border:2px solid #369;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;}
-
 table.data-list                                     {border-collapse:collapse;background:#EFF4FB url(images/teaser.gif) repeat-x;border-left:1px solid #686868;border-right:1px solid #686868;color: #333;width: 900px;}
 table.data-list td, table.data-list th              {padding:5px;}
 table.data-list caption                             {padding: 0 0 .5em 0;text-align: left;font-size: 1.4em;font-weight: bold;text-transform: uppercase;color: #333;background: transparent;}
