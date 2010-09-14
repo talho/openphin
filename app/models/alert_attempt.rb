@@ -93,6 +93,12 @@ class AlertAttempt < ActiveRecord::Base
   end
   
   def acknowledge! alert_device_type = nil, response = 0
+    if alert.has_alert_response_messages?
+      if response == 0 || response == ""
+        errors.add('acknowledgement','You must select a response before acknowledging this alert.')  
+        return
+      end
+    end
     unless self.acknowledged?
       device = alert_device_type || "Device::ConsoleDevice"
       find_by_device = alert_device_type.nil? ? "Device::ConsoleDevice" : alert_device_type

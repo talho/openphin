@@ -37,7 +37,7 @@ module FeatureHelpers
               end
             when /body does not contain alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
-              status &&= !email.body.include?(email_acknowledge_alert_url(attempt, :host => HOST))
+              status &&= !email.body.include?(email_acknowledge_alert_url(attempt, :host => HOST, :call_down_response => 0))
             when /attachments/
               filenames = email.attachments
               status &&= !filenames.nil? && value.split(',').all?{|m| filenames.map(&:original_filename).include?(m) }

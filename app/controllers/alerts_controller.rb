@@ -160,20 +160,35 @@ class AlertsController < ApplicationController
         }
       else
         device = "Device::EmailDevice" unless params[:email].blank?
-        if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
-          alert_attempt.acknowledge! device
-        else
-          alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
+        unless params[:call_down_response].blank?
+          params[:alert_attempt] = {}
+          params[:alert_attempt][:call_down_response] = params[:call_down_response]
         end
-        expire_log_entry(alert_attempt.alert)
-        flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
-        format.json {
-          headers["Access-Control-Allow-Origin"] = "*"
-          headers["Access-Control-Allow-Headers"] = "Cookie"
-          render :json => {}, :status => :ok
-        }
+        if params[:alert_attempt].blank?
+            alert_attempt.acknowledge! device
+        else
+          device = "Device::EmailDevice" unless params[:email].blank?
+          if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
+            alert_attempt.acknowledge! device
+          else
+            alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
+          end
+          expire_log_entry(alert_attempt.alert)
+          flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
+          format.json {
+            headers["Access-Control-Allow-Origin"] = "*"
+            headers["Access-Control-Allow-Headers"] = "Cookie"
+            render :json => {}, :status => :ok
+          }
+        end
+        if alert_attempt.errors.empty?
+          expire_log_entry(alert_attempt.alert)
+          flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
+        else
+          flash[:error] = "Error: " + alert_attempt.errors["acknowledgement"]
+        end
       end
-      format.html { redirect_to hud_path }
+      format.html {redirect_to hud_path}
     end
     # respond_to will look for templates, so I avoid that
 #    unless params[:format] == "json"

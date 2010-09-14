@@ -46,7 +46,7 @@
           <% if alert.original_alert.nil? && alert.has_alert_response_messages? %>
             <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %> 
               <%= form.label "call_down_response", "Alert Response" %>
-              <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{:include_blank=>true}) %>
+              <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{ :prompt => true }) %>
               <p><%= form.submit "Acknowledge" %></p>
             <% end %>
           <% else %>

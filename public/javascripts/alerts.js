@@ -18,6 +18,12 @@
 			});
 			return true;
 		});
+      $('#alert_attempt_submit').click(function(e){
+         if ($('#alert_attempt_call_down_response')[0][0].selected){
+             alert('You must select a response before acknowledging this alert.');
+             return false;
+         }
+      });
 	});
 
     $('input[type=submit]').addClass('submit');

@@ -47,6 +47,10 @@ Then /^I should see a link to (.*)$/ do |page_name|
   response.should have_selector('a', :content => page_name)
 end
 
+Then /^I should see a "([^\"]+)" submit button$/ do |button_text|
+  response.should have_selector("input [type=submit] [value=#{button_text}]")
+end
+
 Then /^I should not see a link to (.*)$/ do |page_name|
   response.should_not have_selector('a', :content => page_name)
 end

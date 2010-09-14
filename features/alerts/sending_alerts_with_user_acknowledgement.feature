@@ -135,8 +135,9 @@ Feature: Acknowledging an alert
         | Title  | H1N1 SNS push packs to be delivered tomorrow |
         | Acknowledge | Advanced |
         | Communication methods | E-mail |
-        | Alert Response 1 | if you can respond within 15 minutes |
-        | Alert Response 2 | if you can respond within 30 minutes |
+        | Alert Response 1 | if you can call back within 15 minutes |
+        | Alert Response 2 | if you can call back within 30 minutes |
+        | Alert Response 3 | if you can call back within 45 minutes |
   
       And I press "Preview Message"
       Then I should see a preview of the message
@@ -145,13 +146,19 @@ Feature: Acknowledging an alert
       Then I should see "Successfully sent the alert"
       And the following users should receive the alert email:
         | People        | keith.gaddis@example.com |
-        | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-        | body contains alert acknowledgment link | if you can respond within 15 minutes |
-        | body contains alert acknowledgment link | if you can respond within 30 minutes |
+
       And I am logged in as "keith.gaddis@example.com"
-      And I follow the acknowledge alert link "if you can respond within 15 minutes"
+      And I follow the acknowledge alert link "if you can call back within 30 minutes"
       Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
       And the alert should be acknowledged
+
+      When I am on the HAN
+      Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
+      And I should see "Acknowledge: if you can call back within 30 minutes"
+
+      #### make sure the double-ack error works
+      And I follow the acknowledge alert link "if you can call back within 30 minutes"
+      Then I should see "You may have already acknowledged the alert"
 
      Scenario: Acknowledging an alert through phone with call downs
        Given I am logged in as "keith.gaddis@example.com"
