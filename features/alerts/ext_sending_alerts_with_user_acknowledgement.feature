@@ -108,6 +108,7 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through phone
+    When I sign out
     # legacy code because we haven't converted user profile to ext
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
@@ -131,7 +132,7 @@ Feature: Acknowledging an alert
       | Short Message | Chicken pox outbreak                         |
     And I select "Normal" from ext combo "Acknowledge"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Acutal" from ext combo "Status"
+    And I select "Actual" from ext combo "Status"
     And I select "Moderate" from ext combo "Severity"
     And I check "Phone"
 
@@ -165,9 +166,6 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through an email with signing in and call downs
-    Given I log in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
     And I select "Advanced" from ext combo "Acknowledge"
     # add a 3rd response box
     And I press "+ Add another response"
@@ -179,7 +177,7 @@ Feature: Acknowledging an alert
       | Alert Response 2 | if you can call back within 30 minutes       |
       | Alert Response 3 | if you can call back within 45 minutes       |
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Acutal" from ext combo "Status"
+    And I select "Actual" from ext combo "Status"
     And I check "E-mail"
 
     And I click breadCrumbItem "Audience"
@@ -212,6 +210,8 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through phone with call downs
+    When I sign out
+    # legacy code here because we have not update the user profile
     Given I am logged in as "keith.gaddis@example.com"
     When I go to the edit profile page
     And I follow "Add Device"
@@ -223,29 +223,34 @@ Feature: Acknowledging an alert
     Then I should see "2105551212"
     And I should have a phone device with the phone "2105551212"
     And I sign out
+    # end legacy code: replace when user profile has been updated to work in ext
 
     Given I log in as "john.smith@example.com"
-    And I am allowed to send alerts
-    When I go to the HAN
-    And I follow "Send an Alert"
-    When I fill out the alert form with:
-      | People | Keith Gaddis |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | There is a Chicken pox outbreak in the area |
-      | Short Message | Chicken pox outbreak |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | Advanced |
-      | Communication methods | Phone |
-      | Sensitive | <unchecked> |
-      | Alert Response 1 | if you can respond within 15 minutes |
-      | Alert Response 2 | if you can respond within 30 minutes |
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    And I select "Advanced" from ext combo "Acknowledge"
+    When I fill in the following:
+      | Title            | H1N1 SNS push packs to be delivered tomorrow |
+      | Message          | There is a Chicken pox outbreak in the area  |
+      | Short Message    | Chicken pox outbreak                         |
+      | Alert Response 1 | if you can call back within 15 minutes       |
+      | Alert Response 2 | if you can call back within 30 minutes       |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Actual" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I check "Phone"
 
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name         | type |
+      | Keith Gaddis | User |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+    
     And I sign out
 
     When delayed jobs are processed
