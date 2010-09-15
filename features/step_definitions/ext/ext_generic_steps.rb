@@ -124,3 +124,10 @@ end
 When /^I expand ext panel "([^\"]*)"$/ do |panel_name|
   page.find(:xpath, "//div[./*/text()= '#{panel_name}']/div[contains(concat(' ', @class, ' '), ' x-tool-toggle ')]").click
 end
+
+When /^I should see a display form with:$/ do |table|
+  # table is a | Message  | For more details, keep on reading...         |
+  table.rows_hash.each do |name, value|
+    page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
+  end
+end
