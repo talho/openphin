@@ -41,14 +41,10 @@
     <h5>Methods</h5>
     <p class="communication_methods"><%= @alert.device_types.map{|d| d.constantize.display_name }.to_sentence %></p>
 
-    <h5>Caller ID</h5>
-    <p class="caller_id">
-      <%- if @alert.caller_id.blank? -%>
-        <b>Error:  Not set.</b>
-      <% else %>
-        <%= @alert.caller_id %>
-      <%- end -%>
-    </p>
+    <%- unless @alert.caller_id.blank? -%>
+      <h5>Caller ID</h5>
+      <p class="caller_id"><%= @alert.caller_id %></p>
+    <%- end -%>
 
   </div>
 </div>
