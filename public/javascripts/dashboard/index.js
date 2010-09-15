@@ -211,7 +211,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             var existing_panel = this.tabPanel.getComponent(config.id).show();
             if(existing_panel.reset)
             {
-                existing_panel.reset();
+                existing_panel.reset(config);
             }
         }
     },
