@@ -71,6 +71,7 @@ Feature: Sending alerts to multiple devices
        | Status | Actual |
        | Acknowledge | None |
        | Communication methods | Phone, SMS, E-mail, Blackberry |
+       | Caller ID | 1234567890 |
        | Sensitive | <unchecked> |
     
       And I press "Preview Message"

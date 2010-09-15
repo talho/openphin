@@ -37,6 +37,7 @@ Feature: Sending alerts to SMS devices
       | Status | Actual |
       | Acknowledge | None |
       | Communication methods | SMS |
+      | Caller ID | 1234567890 |
       | Sensitive | <unchecked> |
       
     And I press "Preview Message"

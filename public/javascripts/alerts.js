@@ -66,12 +66,22 @@
               if (jQuery.trim($('#alert_message').val()) == "") {
                 cont = false;
                 alert("You must provide a message for a phone alert.");
+                break;
+              }
+              if (jQuery.trim($('#alert_caller_id').val()) == "") {
+                cont = false;
+                alert("You must provide a Caller ID number for a phone alert.");
               }
               break;
             case "Device::SMSDevice":
               if (jQuery.trim($('.short_message').val()) == "") {
                 cont = false;
                 alert("You must provide a short message for an SMS alert.");
+                break;
+              }
+              if (jQuery.trim($('#alert_caller_id').val()) == "") {
+                cont = false;
+                alert("You must provide a Caller ID number for an SMS alert.");
               }
               break;
             case "Device::FaxDevice":

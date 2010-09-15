@@ -55,10 +55,8 @@ pdf.bounding_box col2.top_left, :width=> col2.width, :height => col2.height do
   pdf.text "Methods", :style => :bold
   pdf.text @alert.device_types.map{|d| d.constantize.display_name }.to_sentence
   pdf.move_down 10
-  unless @alert.caller_id.blank? || @alert.caller_id == "4114114111"
-    pdf.text "Caller ID", :style => :bold
-    @alert.caller_id
-  end
+  pdf.text "Caller ID", :style => :bold
+  @alert.caller_id.blank? ? "Not Set." : @alert.caller_id
 end
 
 pdf.text "Alert Audience", :size => 14, :style => :bold, :align => :center

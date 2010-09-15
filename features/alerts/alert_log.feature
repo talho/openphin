@@ -115,6 +115,7 @@ Feature: Viewing the alert log
       | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
+      | Caller ID             | 1234567890           |
       | Roles         | HAN Coordinator      |
       | Jurisdictions | Texas, Dallas County |
     And I press "Preview Message"
@@ -200,6 +201,7 @@ Feature: Viewing the alert log
         | roles             | HAN Coordinator      |
         | title             | Hello World          |
         | communication methods | Email, SMS       |
+        | caller_id         | 1234567890           |
         | alert_response_1  | if you can respond within 15 minutes |
         | alert_response_2  | if you can respond within 30 minutes |
         | alert_response_3  | if you can respond within 1 hour     |
@@ -235,6 +237,7 @@ Feature: Viewing the alert log
         | roles             | HAN Coordinator      |
         | title             | Hello World          |
         | communication methods | Email, SMS       |
+        | caller_id         | 1234567890           |
         | alert_response_1  | if you can respond within 15 minutes |
         | alert_response_2  | if you can respond within 30 minutes |
         | alert_response_3  | if you can respond within 1 hour     |

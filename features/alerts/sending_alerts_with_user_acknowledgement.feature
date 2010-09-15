@@ -106,6 +106,7 @@ Feature: Acknowledging an alert
          | Status | Actual |
          | Acknowledge | Normal |
          | Communication methods | Phone |
+         | Caller ID | 1234567890 |
          | Sensitive | <unchecked> |
       
        And I press "Preview Message"
@@ -186,6 +187,7 @@ Feature: Acknowledging an alert
          | Status | Actual |
          | Acknowledge | Advanced |
          | Communication methods | Phone |
+         | Caller ID | 1234567890 |
          | Sensitive | <unchecked> |
          | Alert Response 1 | if you can respond within 15 minutes |
          | Alert Response 2 | if you can respond within 30 minutes |

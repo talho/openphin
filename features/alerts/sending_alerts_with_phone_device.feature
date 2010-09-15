@@ -36,7 +36,8 @@ Feature: Sending alerts to phones
       | Severity | Moderate |
       | Status | Actual |
       | Acknowledge | None |
-      | Communication methods | Phone |
+      | Communication methods | Phone, E-mail |
+      | Caller ID | 1234567890 |
       | Sensitive | <unchecked> |
       
     And I press "Preview Message"
@@ -76,6 +77,7 @@ Feature: Sending alerts to phones
       | Status | Actual |
       | Acknowledge | Normal |
       | Communication methods | Phone |
+      | Caller ID | 1234567890 |
       | Sensitive | <unchecked> |
       
     And I press "Preview Message"
@@ -132,6 +134,7 @@ Feature: Sending alerts to phones
       | Status | Actual |
       | Acknowledge | None |
       | Communication methods | Phone |
+      | Caller ID | 1234567890 |
       | Sensitive | <unchecked> |
 
     And I press "Preview Message"
@@ -171,6 +174,7 @@ Feature: Sending alerts to phones
     And I select "Moderate" from "Severity"
     And I select "Advanced" from "Acknowledge"
     And I check "Phone"
+    And I fill in "Caller ID" with "1234567890"
     And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
     And I fill in "Alert Response 2" with "if you can respond within 30 minutes"
     And I fill in "Alert Response 3" with "if you can respond within 1 hour"
