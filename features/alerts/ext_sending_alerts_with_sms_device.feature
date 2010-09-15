@@ -31,26 +31,17 @@ Feature: Sending alerts to SMS devices
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    When I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | Chicken pox outbreak long Message            |
-      | Short Message | Chicken pox outbreak short message           |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "None" from ext combo "Acknowledge"
+    When I fill in the ext alert defaults
+    And I uncheck "E-mail"
     And I check "SMS"
-    
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select "Moderate" from ext combo "Severity"
+    And I fill in "Short Message" with "Chicken pox outbreak short message"
+
+    And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     When delayed jobs are processed
     Then the following SMS calls should be made:

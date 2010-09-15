@@ -35,24 +35,17 @@ Feature: Sending alerts across jurisdictions
     And I navigate to "HAN > Send an Alert"
 
   Scenario: Sending an alert to sibling jurisdictions
-    When I fill in the following:
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name           | type         |
       | Tarrant County | Jurisdiction |
       | Wise County    | Jurisdiction |
       | Health Officer | Role         |
-    And I click breadCrumbItem "Preview"
 
-    And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
-    
+    And I send the alert
+
     And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, keith.gaddis@example.com |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
@@ -63,22 +56,15 @@ Feature: Sending alerts across jurisdictions
       | emails        | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
 
   Scenario: Sending an alert to a parent jurisdiction
-    When I fill in the following:
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name           | type         |
       | Texas          | Jurisdiction |
       | Health Officer | Role         |
-    And I click breadCrumbItem "Preview"
 
-    And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People        | brandon.keepers@example.com |
@@ -91,22 +77,15 @@ Feature: Sending alerts across jurisdictions
       | emails        | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |
 
   Scenario: Sending an alert to a cousin jurisdiction
-    When I fill in the following:
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name           | type         | state    |
       | Ottawa County  | Jurisdiction | Michigan |
       | Health Officer | Role         |          |
-    And I click breadCrumbItem "Preview"
 
-    And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
     
     And the following users should receive the alert email:
       | People        | dan.morrison@example.com, brandon.keepers@example.com |

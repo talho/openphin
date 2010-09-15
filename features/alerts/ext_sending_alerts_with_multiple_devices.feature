@@ -64,21 +64,15 @@ Feature: Sending alerts to multiple devices
     And I am allowed to send alerts
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
-    And I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | There is a Chicken pox outbreak in the area  |
-      | Short Message | Chicken pox outbreak                         |
+
+    When I fill in the ext alert defaults
+    And I select "Moderate" from ext combo "Severity"
+    And I fill in "Short Message" with "Chicken pox outbreak"
     And I check "Phone"
     And I check "SMS"
-    And I check "E-mail"
     And I check "Blackberry"
-    And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "None" from ext combo "Acknowledge"
-    And I select "Dallas County" from ext combo "Jurisdiction"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name          | type |
       | Keith Gaddis  | User |
       | Joe Black     | User |
@@ -86,13 +80,8 @@ Feature: Sending alerts to multiple devices
       | Martin Gons   | User |
       | George Strait | User |
 
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
-
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
-
+    And I send the alert
+    
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  |
