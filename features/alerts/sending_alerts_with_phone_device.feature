@@ -194,3 +194,34 @@ Feature: Sending alerts to phones
       | phone      | message                                                                                                                  | call_down                            |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area | if you can respond within 15 minutes |
     And the phone call should have 5 calldowns
+
+  Scenario: Require Caller ID for Phone Alerts
+    Given I am logged in as "keith.gaddis@example.com"
+    When I go to the edit profile page
+    And I follow "Add Device"
+    And I select "Phone" from "Device Type"
+    And I fill in "Phone" with "210-555-1212"
+    And I press "Save"
+    Then I should see "Profile information saved."
+    When I go to the edit profile page
+    Then I should see "2105551212"
+    And I should have a phone device with the phone "2105551212"
+    And I sign out
+
+    Given I log in as "john.smith@example.com"
+    And I am allowed to send alerts
+    When I go to the HAN
+    And I follow "Send an Alert"
+
+    When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
+    And I fill in "Message" with "There is a Chicken pox outbreak in the area"
+    And I fill in "Short message" with "Chicken pox outbreak"
+    And I select "Actual" from "Status"
+    And I select "Moderate" from "Severity"
+    And I select "Advanced" from "Acknowledge"
+    And I check "Phone"
+
+    Then I will confirm on next step
+    And I press "Select an Audience"
+    Then I should see "You must provide a Caller ID number" within the alert box
+
