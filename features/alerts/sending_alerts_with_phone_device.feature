@@ -36,7 +36,7 @@ Feature: Sending alerts to phones
       | Severity | Moderate |
       | Status | Actual |
       | Acknowledge | None |
-      | Communication methods | Phone, E-mail |
+      | Communication methods | Phone |
       | Caller ID | 1234567890 |
       | Sensitive | <unchecked> |
       
