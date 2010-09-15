@@ -6,9 +6,9 @@ Feature: Sending alerts to faxes
   
   Background: 
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
-      | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
-    And the role "Health Officer" is an alerter
+      | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+      | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
   
   Scenario: Sending alerts to fax devices

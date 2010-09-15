@@ -2,14 +2,14 @@ Feature: Viewing the dashboard
 
     Background:
         Given the following entities exists:
-          | Jurisdiction  | Dallas County         |
-          | Jurisdiction  | Tarrant County        |
-          | Jurisdiction  | Texas                 |
-          | Role          | Public                |
-          | approval role | Health Officer        |
-          | approval role | Immunization Director |
-          | approval role | HAN Coordinator       |
-        And the role "HAN Coordinator" is an alerter
+          | Jurisdiction  | Dallas County                               |
+          | Jurisdiction  | Tarrant County                              |
+          | Jurisdiction  | Texas                                       |
+          | Role          | Public                                      |
+          | approval role | Health Officer                              |
+          | approval role | Immunization Director                       |
+          | approval role | Health Alert and Communications Coordinator |
+        And the role "Health Alert and Communications Coordinator" is an alerter
         And Texas is the parent jurisdiction of:
           | Dallas County | Tarrant County |
         And Dallas County has the following administrators:
@@ -24,7 +24,7 @@ Feature: Viewing the dashboard
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
-    And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
+    And "john.smith@example.com" has requested to be a "Health Alert and Communications Coordinator" for "Dallas County"
     When I go to the user account roles page
     Then I should see 1 pending role request
 
@@ -45,7 +45,7 @@ Feature: Viewing the dashboard
     Scenario: Dashboard should show the alerter navigation
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
-    And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
+    And "admin1@texas.com" has approved the "Health Alert and Communications Coordinator" role in "Dallas County" for "john.smith@example.com"
     And I am logged in as "john.smith@example.com"
     When I go to the han page
     Then I should see a "Sign Out" link
@@ -65,7 +65,7 @@ Feature: Viewing the dashboard
     And I should not see a "View Profile" link
  
     Scenario: Dashboard should show the admin alerter navigation
-    And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
+    And "admin1@texas.com" has approved the "Health Alert and Communications Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
     And I am logged in as "admin1@dallascounty.com"
     When I go to the han page
     Then I should see a "Sign Out" link

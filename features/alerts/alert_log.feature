@@ -1,9 +1,12 @@
 Feature: Viewing the alert log
+  Background:
+    Given the following entities exists:
+      | Role | Health Alert and Communications Coordinator |
+    And the role "Health Alert and Communications Coordinator" is an alerter
 
   Scenario: Viewing list of alerts in your jurisdictions
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
     And I am logged in as "john.smith@example.com"
     And an alert with:
       | from_jurisdiction | Dallas County |
@@ -20,8 +23,7 @@ Feature: Viewing the alert log
 
   Scenario: Viewing list of alerts sent directly to you
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
     And I am logged in as "john.smith@example.com"
     And a sent alert with:
       | from_jurisdiction | Dallas County |
@@ -44,7 +46,6 @@ Feature: Viewing the alert log
       | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And an alert with:
       | from_jurisdiction | Dallas County |
@@ -58,14 +59,12 @@ Feature: Viewing the alert log
 
   Scenario: Can't view alerts from outside jurisdictions
     Given the following entities exists:
-      | Jurisdiction | Potter County                            |
-      | Jurisdiction | Dallas County                            |
+      | Jurisdiction | Potter County |
+      | Jurisdiction | Dallas County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
+      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
     And the following users exist:
-      | Sam Body      | sam@example.com   | HAN Coordinator | Dallas County |
-
-    And the role "HAN Coordinator" is an alerter
+      | Sam Body | sam@example.com | Health Alert and Communications Coordinator | Dallas County |
     And I am logged in as "john.smith@example.com"
     And an alert with:
       | author            | Sam Body      |
@@ -77,13 +76,12 @@ Feature: Viewing the alert log
 
   Scenario: Clicking back on a viewed alert
     Given the following entities exists:
-      | Jurisdiction | Texas                                    |
-      | Jurisdiction | Dallas County                            |
+      | Jurisdiction | Texas |
+      | Jurisdiction | Dallas County |
     And Texas is the parent jurisdiction of:
       | Dallas County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
     And I am logged in as "john.smith@example.com"
     And an alert with:
       | from_jurisdiction | Dallas County |
@@ -101,10 +99,9 @@ Feature: Viewing the alert log
     And Texas is the parent jurisdiction of:
       | Dallas County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-      | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
-      | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+      | Jane Smith      | jane.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+      | Daniel Morrison | daniel@example.com       | Health Alert and Communications Coordinator | Texas |
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
@@ -115,9 +112,14 @@ Feature: Viewing the alert log
       | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
+<<<<<<< HEAD
       | Caller ID             | 1234567890           |
       | Roles         | HAN Coordinator      |
       | Jurisdictions | Texas, Dallas County |
+=======
+      | Roles         | Health Alert and Communications Coordinator |
+      | Jurisdictions | Texas, Dallas County                        |
+>>>>>>> 30e06f34913cfb7341122137c3f57d5f256136b6
     And I press "Preview Message"
     Then I should see a preview of the message with:
         | Roles | HAN Coordinator |
@@ -174,11 +176,10 @@ Feature: Viewing the alert log
     And 20 random alerts in R2
     And 10 random alerts in C1
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | R1 |
-      | John Smith      | john.smith@example.com   | HAN Coordinator | C1 |
-      | John Smith      | john.smith@example.com   | HAN Coordinator | R2 |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | R1 |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | C1 |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | R2 |
     And "john.smith@example.com" is not public in "Texas"
-    And the role "HAN Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I am on the alert log
     Then I should see 10 alerts
@@ -190,12 +191,12 @@ Feature: Viewing the alert log
       And Texas is the parent jurisdiction of:
         | Dallas County |
       And the following users exist:
-        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-        | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
-        | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
-      And the role "HAN Coordinator" is an alerter
+        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+        | Daniel Morrison | daniel@example.com       | Health Alert and Communications Coordinator | Texas |
       And I am logged in as "john.smith@example.com"
       And an alert with:
+<<<<<<< HEAD
         | from_jurisdiction | Texas                |
         | jurisdictions     | Texas, Dallas County |
         | roles             | HAN Coordinator      |
@@ -207,6 +208,18 @@ Feature: Viewing the alert log
         | alert_response_3  | if you can respond within 1 hour     |
         | alert_response_4  | if you can respond within 4 hours    |
         | alert_response_5  | if you cannot respond                |
+=======
+        | from_jurisdiction | Texas                                       |
+        | jurisdictions     | Texas, Dallas County                        |
+        | roles             | Health Alert and Communications Coordinator |
+        | title             | Hello World                                 |
+        | communication methods | Email, SMS                              |
+        | alert_response_1  | if you can respond within 15 minutes        |
+        | alert_response_2  | if you can respond within 30 minutes        |
+        | alert_response_3  | if you can respond within 1 hour            |
+        | alert_response_4  | if you can respond within 4 hours           |
+        | alert_response_5  | if you cannot respond                       |
+>>>>>>> 30e06f34913cfb7341122137c3f57d5f256136b6
       And "jane.smith@example.com" has acknowledged the alert "Hello World"
       And "john.smith@example.com" has not acknowledged the alert "Hello World"
       And "daniel@example.com" has not acknowledged the alert "Hello World"
@@ -226,23 +239,23 @@ Feature: Viewing the alert log
       And Texas is the parent jurisdiction of:
         | Dallas County |
       And the following users exist:
-        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-        | Jane Smith      | jane.smith@example.com   | HAN Coordinator | Texas |
-        | Daniel Morrison | daniel@example.com       | HAN Coordinator | Texas |
-      And the role "HAN Coordinator" is an alerter
+        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+        | Daniel Morrison | daniel@example.com       | Health Alert and Communications Coordinator | Texas |
       And I am logged in as "john.smith@example.com"
       And an alert with:
-        | from_jurisdiction | Texas                |
-        | jurisdictions     | Texas, Dallas County |
-        | roles             | HAN Coordinator      |
-        | title             | Hello World          |
-        | communication methods | Email, SMS       |
-        | caller_id         | 1234567890           |
-        | alert_response_1  | if you can respond within 15 minutes |
-        | alert_response_2  | if you can respond within 30 minutes |
-        | alert_response_3  | if you can respond within 1 hour     |
-        | alert_response_4  | if you can respond within 4 hours    |
-        | alert_response_5  | if you cannot respond                |
+        | from_jurisdiction     | Texas                                       |
+        | jurisdictions         | Texas, Dallas County                        |
+        | roles                 | Health Alert and Communications Coordinator |
+        | title                 | Hello World                                 |
+        | communication methods | Email, SMS                                  |
+        | caller_id             | 1234567890                                  |
+        | alert_response_1      | if you can respond within 15 minutes        |
+        | alert_response_2      | if you can respond within 30 minutes        |
+        | alert_response_3      | if you can respond within 1 hour            |
+        | alert_response_4      | if you can respond within 4 hours           |
+        | alert_response_5      | if you cannot respond                       |
+
       And "jane.smith@example.com" has acknowledged the alert "Hello World"
       And "john.smith@example.com" has not acknowledged the alert "Hello World"
       And "daniel@example.com" has not acknowledged the alert "Hello World"
@@ -263,30 +276,29 @@ Feature: Viewing the alert log
         | Jurisdiction | Texas         |
         | Role         | Health Officer |
       And the following users exist:
-        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-        | Jane Smith      | jane.smith@example.com   | Health Officer  | Texas |
-        | Daniel Morrison | daniel@example.com       | Health Officer | Texas |
-      And the role "HAN Coordinator" is an alerter
+        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Officer                              | Texas |
+        | Daniel Morrison | daniel@example.com       | Health Officer                              | Texas |
       And I am logged in as "john.smith@example.com"
       When I go to the HAN
       And I follow "Send an Alert"
       And I select "Advanced" from "Acknowledge"
       And delayed jobs are processed
       And I fill out the alert form with:
-      | Jurisdiction          | Texas                |
-      | Title                 | Hello World          |
-      | Message               | Hello World          |
-      | Short Message         | Hello World          |
-      | Acknowledge           | Advanced             |
-      | Communication methods | E-mail               |
-      | Alert Response 1  | if you can respond within 15 minutes |
-      | Alert Response 2  | if you can respond within 30 minutes |
-      | Alert Response 3  | if you can respond within 1 hour     |
-      | Alert Response 4  | if you can respond within 4 hours    |
-      | Alert Response 5  | if you cannot respond                |
-      | Roles         | Health Officer      |
-      | Jurisdictions | Texas |
-      | People | John Smith |
+      | Jurisdiction          | Texas                                |
+      | Title                 | Hello World                          |
+      | Message               | Hello World                          |
+      | Short Message         | Hello World                          |
+      | Acknowledge           | Advanced                             |
+      | Communication methods | E-mail                               |
+      | Alert Response 1      | if you can respond within 15 minutes |
+      | Alert Response 2      | if you can respond within 30 minutes |
+      | Alert Response 3      | if you can respond within 1 hour     |
+      | Alert Response 4      | if you can respond within 4 hours    |
+      | Alert Response 5      | if you cannot respond                |
+      | Roles                 | Health Officer                       |
+      | Jurisdictions         | Texas                                |
+      | People                | John Smith                           |
       And I press "Preview Message"
       And I press "Send"
       And delayed jobs are processed

@@ -9,14 +9,14 @@ Feature: Canceling an alert
     Given the following entities exists:
       | Jurisdiction | Dallas County   |
       | Role         | Health Officer  |
-      | Role         | HAN Coordinator |
+      | Role         | Health Alert and Communications Coordinator |
     And the following users exist:
-      | John Smith      | john.smith@example.com     | HAN Coordinator  | Dallas County  |
-      | Jane Smith      | jane.smith@example.com     | HAN Coordinator  | Dallas County  |
-      | Brian Simms     | brian.simms@example.com    | Health Officer  | Dallas County  |
-      | Ed McGuyver     | ed.mcguyver@example.com    | Health Officer  | Dallas County  |
+      | John Smith      | john.smith@example.com     | Health Alert and Communications Coordinator | Dallas County |
+      | Jane Smith      | jane.smith@example.com     | Health Alert and Communications Coordinator | Dallas County |
+      | Brian Simms     | brian.simms@example.com    | Health Officer                              | Dallas County |
+      | Ed McGuyver     | ed.mcguyver@example.com    | Health Officer                              | Dallas County |
       
-    And the role "HAN Coordinator" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
 
   Scenario: Canceling an alert
     Given I am logged in as "john.smith@example.com"
