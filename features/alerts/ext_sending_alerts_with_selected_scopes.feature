@@ -77,63 +77,85 @@ Feature: Creating and sending alerts
     And "fix the above step to include an alert id" should be implemented
 
   Scenario: Previewing an alert
-    When I fill out the alert form with:
-      | Jurisdictions | Dallas County, Potter County            |
-      | Roles | Health Officer, Epidemiologist                  |
-      | People   | Keith Gaddis                                 |
+    When I fill in the following:
       | Title    | H1N1 SNS push packs to be delivered tomorrow |
       | Message  | For more details, keep on reading...         |
-      | Severity | Moderate                                     |
-      | Status   | Actual                                       |
-      | Acknowledge | None                               |
-      | Communication methods | E-mail                          |
-      | Delivery Time | 72 hours                                |
+    And I check "E-mail"
+    And I select "Moderate" from ext combo "Severity"
+    And I select "Actual" from ext combo "Status"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "None" from ext combo "Acknowledge"
+    And I select "72 hours" from ext combo "Delivery Time"
 
-    And I press "Preview Message"
-    And I should see a preview of the message with:
-      | Jurisdictions | Dallas County, Potter County            |
-      | Roles | Health Officer, Epidemiologist                  |
-      | People   | Keith Gaddis                                 |
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-      | Severity | Moderate                                     |
-      | Status   | Actual                                       |
-      | Acknowledge | No                                        |
-      | Communication methods | E-mail                          |
-      | Delivery Time | 72 hours                                |
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name            | type         |
+      | Dallas County   | Jurisdiction |
+      | Potter County   | Jurisdiction |
+      | Health Officer  | Role         |
+      | Epidemiologist  | Role         |
+      | Keith Gaddis    | User         |
+    And I click breadCrumbItem "Preview"
 
-    When I press "Edit"
-    And I make changes to the alert form with:
-      | Title    | Something Different |
-    And I press "Preview Message"
-    Then I should see a preview of the message with:
-      | Jurisdictions | Dallas County, Potter County            |
-      | Roles | Health Officer, Epidemiologist                  |
-      | People   | Keith Gaddis                                 |
-      | Title    | Something Different                          |
-      | Message  | For more details, keep on reading...         |
-      | Severity | Moderate                                     |
-      | Status   | Actual                                       |
-      | Acknowledge | No                                        |
-      | Communication methods | E-mail                          |
-      | Delivery Time | 72 hours                                |
+    And I should see "For more details, keep on reading..."
+    And I should see "H1N1 SNS push packs to be delivered tomorrow"
+    And I should see a display form with:
+      | Severity      | Moderate |
+      | Status        | Actual   |
+      | Acknowledge   | No       |
+      | Methods       | Email    |
+      | Delivery Time | 72 hours |
+
+    And I expand ext panel "Audience"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+      | Potter County  | Jurisdiction |
+      | Health Officer | Role         |
+      | Epidemiologist | Role         |
+      | Keith Gaddis   | User         |
+
+    When I click breadCrumbItem "Details"
+    And I fill in "Title" with "Something Different"
+    And I click breadCrumbItem "Preview"
+    And I should see "For more details, keep on reading..."
+    And I should see "Something Different"
+    And I should see a display form with:
+      | Severity      | Moderate |
+      | Status        | Actual   |
+      | Acknowledge   | No       |
+      | Methods       | Email    |
+      | Delivery Time | 72 hours |
+    And I should see the following audience breakdown
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+      | Potter County  | Jurisdiction |
+      | Health Officer | Role         |
+      | Epidemiologist | Role         |
+      | Keith Gaddis   | User         |
 
   Scenario: Sending an alert to specific users sends alerts to each user
-    When I fill out the alert form with:
-      | People | Keith Gaddis, Dan Morrison |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | E-mail |
+    And I fill in the following:
+      | Title   | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | For more details, keep on reading...         |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Actual" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I select "None" from ext combo "Acknowledge"
+    And I check "E-mail"
 
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name         | type |
+      | Keith Gaddis | User |
+      | Dan Morrison | User |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alert log
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+
     And the following users should receive the alert email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -146,21 +168,26 @@ Feature: Creating and sending alerts
 
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
-    When I fill out the alert form with:
-      | Jurisdictions | Dallas County |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | E-mail |
+    And I fill in the following:
+      | Title   | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | For more details, keep on reading...         |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Actual" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I select "None" from ext combo "Acknowledge"
+    And I check "E-mail"
 
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name          | type         |
+      | Dallas County | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alert log
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+
     And the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -173,22 +200,27 @@ Feature: Creating and sending alerts
 
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
-    When I fill out the alert form with:
-      | Jurisdictions | Dallas County, Tarrant County |
-      | Roles         | Health Officer |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | E-mail |
+    And I fill in the following:
+      | Title   | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | For more details, keep on reading...         |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Actual" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I select "None" from ext combo "Acknowledge"
+    And I check "E-mail"
 
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+      | Tarrant County | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alert log
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+
     And the following users should receive the alert email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -201,23 +233,28 @@ Feature: Creating and sending alerts
 
 
 Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
-    When I fill out the alert form with:
-      | Roles         | Health Officer |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading... |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | E-mail |
+    And I fill in the following:
+      | Title   | H1N1 SNS push packs to be delivered tomorrow |
+      | Message | For more details, keep on reading...         |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Actual" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I select "None" from ext combo "Acknowledge"
+    And I check "E-mail"
 
-    And I press "Preview Message"
-    Then I should see a preview of the message
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type |
+      | Health Officer | Role |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send"
-    Then I should see "Successfully sent the alert"
-    And I should be on the alert log
+    When I press "Send Alert"
+    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    And the "Send Alert" tab should not be open
+  
     And the following users should receive the alert email:
-      | People        | john.smith@example.com, ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
+      | People        | ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
       | body contains | Alert ID:  |
