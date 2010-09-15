@@ -6,10 +6,13 @@ Feature: Managing devices when editing user profiles
   Background:
     Given the following entities exists:
       | Organization | Red Cross      |
+      | Jurisdiction | Federal        |
       | Jurisdiction | Texas          |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
+    And Federal is the parent jurisdiction of:
+      | Texas |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County |
     And the following users exist:
@@ -38,6 +41,7 @@ Feature: Managing devices when editing user profiles
     And I follow "Delete Phone"
     Then "john.smith@example.com" should not have the communication device
       | Phone | 5552345678 |
+    And I should not see "5552345678"
 
   Scenario: Adding an invalid device
   	When I go to the edit profile page
