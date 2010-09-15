@@ -28,12 +28,9 @@ Feature: Sending alerts using groups
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
+                                
+    When I fill in the ext alert defaults
 
-    And I fill in the following:
-      | Title   | A title to pass validation   |
-      | Message | A message to pass validation |
-    And I check "E-mail"
-    And I select "Tarrant County" from ext combo "Jurisdiction"
     And I click breadCrumbItem "Audience"
     And I click x-accordion-hd "Groups/Organizations"
 
@@ -46,11 +43,8 @@ Feature: Sending alerts using groups
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    And I fill in the following:
-      | Title   | A title to pass validation   |
-      | Message | A message to pass validation |
-    And I check "E-mail"
-    And I select "Tarrant County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
+
     And I click breadCrumbItem "Audience"
     And I click x-accordion-hd "Groups/Organizations"
 
@@ -63,11 +57,8 @@ Feature: Sending alerts using groups
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    And I fill in the following:
-      | Title   | A title to pass validation   |
-      | Message | A message to pass validation |
-    And I check "E-mail"
-    And I select "Texas" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
+
     And I click breadCrumbItem "Audience"
     And I click x-accordion-hd "Groups/Organizations"
 
@@ -80,24 +71,15 @@ Feature: Sending alerts using groups
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | Long text message...                         |
-    And I select "Tarrant County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
     And I select "Test" from ext combo "Status"
-    And I check "E-mail"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name          | type         |
       | Potter County | Jurisdiction |
       | G2            | Group        |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People | bob.smith@example.com, leroy@example.com |
@@ -107,23 +89,14 @@ Feature: Sending alerts using groups
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | Long text message...                         |
-    And I select "Tarrant County" from ext combo "Jurisdiction"
+    When I fill in the ext alert defaults
     And I select "Test" from ext combo "Status"
-    And I check "E-mail"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name          | type         |
       | G2            | Group        |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
-    
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+
+    And I send the alert
 
     And the following users should receive the alert email:
       | People | bob.smith@example.com |

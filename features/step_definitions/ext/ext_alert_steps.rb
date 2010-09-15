@@ -8,7 +8,7 @@ end
 When /^I fill in the ext alert defaults$/ do
   When %{I fill in the following:}, table(%{
     | Title   | H1N1 SNS push packs to be delivered tomorrow |
-    | Message | For more details, keep on reading...         |})
+    | Message | There is a Chicken pox outbreak in the area  |})
   And %{I select "" from ext combo "Jurisdiction"}
   And %{I check "E-mail"}
 end

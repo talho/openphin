@@ -31,26 +31,17 @@ Feature: Sending alerts to phones
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    When I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | There is a Chicken pox outbreak in the area  |
-      | Short Message | Chicken pox outbreak                         |
+    When I fill in the ext alert defaults
+    And I uncheck "E-mail"
     And I check "Phone"
     And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "None" from ext combo "Acknowledge"
-    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I fill in "Short Message" with "Chicken pox outbreak"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name          | type |
-      | Keith Gaddis  | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
+    And I select the following alert audience:
+      | name         | type |
+      | Keith Gaddis | User |
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     When delayed jobs are processed
     Then the following phone calls should be made:
@@ -77,26 +68,18 @@ Feature: Sending alerts to phones
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    When I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | There is a Chicken pox outbreak in the area  |
-      | Short Message | Chicken pox outbreak                         |
+    When I fill in the ext alert defaults
+    And I uncheck "E-mail"
     And I check "Phone"
     And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
+    And I fill in "Short Message" with "Chicken pox outbreak"
     And I select "Normal" from ext combo "Acknowledge"
-    And I select "Dallas County" from ext combo "Jurisdiction"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name          | type |
-      | Keith Gaddis  | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
+    And I select the following alert audience:
+      | name         | type |
+      | Keith Gaddis | User |
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     When delayed jobs are processed
     Then the following phone calls should be made:
@@ -143,26 +126,17 @@ Feature: Sending alerts to phones
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    When I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | There is a Chicken pox outbreak in the area  |
-      | Short Message | Chicken pox outbreak                         |
+    When I fill in the ext alert defaults
+    And I uncheck "E-mail"
     And I check "Phone"
     And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "None" from ext combo "Acknowledge"
-    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I fill in "Short Message" with "Chicken pox outbreak"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name          | type |
-      | Keith Gaddis  | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
+    And I select the following alert audience:
+      | name         | type |
+      | Keith Gaddis | User |
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     When delayed jobs are processed
     Then the following phone calls should be made:
@@ -190,36 +164,28 @@ Feature: Sending alerts to phones
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
+    When I fill in the ext alert defaults
+    And I uncheck "E-mail"
+    And I check "Phone"
+    And I select "Moderate" from ext combo "Severity"
     When I select "Advanced" from ext combo "Acknowledge"
-    # add a 3rd, 4th and 5th response box
     And I press "+ Add another response"
     And I press "+ Add another response"
     And I press "+ Add another response"
     And I fill in the following:
-      | Title            | H1N1 SNS push packs to be delivered tomorrow |
-      | Message          | There is a Chicken pox outbreak in the area  |
       | Short Message    | Chicken pox outbreak                         |
       | Alert Response 1 | if you can respond within 15 minutes         |
       | Alert Response 2 | if you can respond within 30 minutes         |
       | Alert Response 3 | if you can respond within 1 hour             |
       | Alert Response 4 | if you can respond within 4 hours            |
       | Alert Response 5 | if you cannot respond                        |
-    And I check "Phone"
-    And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "Dallas County" from ext combo "Jurisdiction"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name          | type |
-      | Keith Gaddis  | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
+    And I select the following alert audience:
+      | name         | type |
+      | Keith Gaddis | User |
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
-    
+    And I send the alert
+        
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  | call_down                            |

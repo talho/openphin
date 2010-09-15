@@ -45,26 +45,16 @@ Feature: Creating and sending alerts
     And I navigate to "HAN > Send an Alert"
 
   Scenario: Sending an alert directly to a user
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading...         |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Actual" from ext combo "Status"
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "None" from ext combo "Acknowledge"
+    And I fill in "Message" with "For more details, keep on reading..."
     And I select "15 minutes" from ext combo "Delivery Time"
-    And I check "E-mail"
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
@@ -77,24 +67,18 @@ Feature: Creating and sending alerts
     And "fix the above step to include an alert id" should be implemented
 
   Scenario: Previewing an alert
-    When I fill in the following:
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-      | Message  | For more details, keep on reading...         |
-    And I check "E-mail"
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "Actual" from ext combo "Status"
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "None" from ext combo "Acknowledge"
-    And I select "72 hours" from ext combo "Delivery Time"
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name            | type         |
       | Dallas County   | Jurisdiction |
       | Potter County   | Jurisdiction |
       | Health Officer  | Role         |
       | Epidemiologist  | Role         |
       | Keith Gaddis    | User         |
+
     And I click breadCrumbItem "Preview"
 
     And I should see "For more details, keep on reading..."
@@ -135,26 +119,16 @@ Feature: Creating and sending alerts
       | Keith Gaddis   | User         |
 
   Scenario: Sending an alert to specific users sends alerts to each user
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading...         |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Actual" from ext combo "Status"
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "None" from ext combo "Acknowledge"
-    And I check "E-mail"
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
       | Dan Morrison | User |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
@@ -166,27 +140,16 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading...         |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Actual" from ext combo "Status"
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "None" from ext combo "Acknowledge"
-    And I check "E-mail"
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name          | type         |
       | Dallas County | Jurisdiction |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
@@ -198,28 +161,17 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading...         |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Actual" from ext combo "Status"
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "None" from ext combo "Acknowledge"
-    And I check "E-mail"
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name           | type         |
       | Dallas County  | Jurisdiction |
       | Tarrant County | Jurisdiction |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
+    And I send the alert
 
     And the following users should receive the alert email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
@@ -231,28 +183,16 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-
-Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
-    And I fill in the following:
-      | Title   | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | For more details, keep on reading...         |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Actual" from ext combo "Status"
+  Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
+    When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
-    And I select "None" from ext combo "Acknowledge"
-    And I check "E-mail"
+    And I fill in "Message" with "For more details, keep on reading..."
 
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
+    And I select the following alert audience:
       | name           | type |
       | Health Officer | Role |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
 
-    When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
-    And the "Send Alert" tab should not be open
-  
+    And I send the alert
     And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
