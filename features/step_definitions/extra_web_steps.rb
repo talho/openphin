@@ -52,3 +52,6 @@ end
 When /^I pause$/ do
   debugger
 end
+When /^I pause$/ do
+  debugger
+end

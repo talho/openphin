@@ -67,9 +67,8 @@ module FeatureHelpers
           find_field(field).select(value.strip)
         when 'What is your primary role',
           'Are you with any of these organizations', 'Organization Type'
-          # must have the if below since check really behaves like toggle
-          page.check("health_professional") if !find(:css, "#health_professional").node.selected?
-          select value.strip, :from => field
+          page.check("health_professional")
+          find_field(field).select(value.strip)
         when /Jurisdiction of Operation/
           field = find_field("organization_jurisdiction_ids")
           value.split(',').each do |id|
