@@ -6,12 +6,12 @@ Feature: Sending alerts to multiple devices
   
   Background: 
     Given the following users exist: 
-      | John Smith      | john.smith@example.com    | Health Officer   | Dallas County  | 
-      | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist   | Wise County    | 
-      | Joe Black       | joe.black@example.com     | Epidemiologist   | Potter County  | 
-      | Henry Frank     | henry.frank@example.com   | Public Relations | Bell County    | 
-      | Martin Gons     | martin.gons@example.com   | Chairopractor    | Travis County  | 
-      | George Strait   | george.strait@example.com | Registered Nurse | Bell County    | 
+      | John Smith      | john.smith@example.com    | Health Alert and Communications Coordinator | Dallas County |
+      | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist                              | Wise County   |
+      | Joe Black       | joe.black@example.com     | Epidemiologist                              | Potter County |
+      | Henry Frank     | henry.frank@example.com   | Public Relations                            | Bell County   |
+      | Martin Gons     | martin.gons@example.com   | Chiropractor                                | Travis County | 
+      | George Strait   | george.strait@example.com | Registered Nurse                            | Bell County   |
     And keith.gaddis@example.com has the following devices:
       | SMS   | 5125551245 |
       | Phone | 5125551235 |
@@ -25,7 +25,7 @@ Feature: Sending alerts to multiple devices
     And george.strait@example.com  has the following devices:
       | Phone | 5125551239 |
       | Blackberry | 246D6BA7 |      
-    And the role "Health Officer" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
 
   Scenario: Sending alerts to users with multiple devices

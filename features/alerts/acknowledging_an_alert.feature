@@ -6,8 +6,8 @@ Feature: Acknowledging an alert
   
   Background:
     Given the following users exist:
-      | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
-    And the role "Health Official" is an alerter
+      | Martin Fowler      | martin@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "martin@example.com"
     
   Scenario: A user acknowledging an alert via the HAN
@@ -32,8 +32,7 @@ Feature: Acknowledging an alert
 
   Scenario: A user acknowledges an alert with a call down response via the HAN
     Given the following users exist:
-      | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
-    And the role "Health Official" is an alerter
+      | Martin Fowler      | martin@example.com   | Health Alert and Communications Coordinator | Dallas County |
     And a sent alert with:
       | title       | Piggy Pox |
       | message     | the world is on fire |
@@ -64,8 +63,7 @@ Feature: Acknowledging an alert
 
    Scenario: A user can not acknowledge an alert with a call down response *without* selecting a response
     Given the following users exist:
-      | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
-    And the role "Health Official" is an alerter
+      | Martin Fowler      | martin@example.com   | Health Alert and Communications Coordinator | Dallas County |
     And a sent alert with:
       | title       | Piggy Pox |
       | message     | the world is on fire |

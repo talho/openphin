@@ -65,8 +65,8 @@ Feature: An admin deleting users
     Given the following entities exist:
       | Jurisdiction | Texas         |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator  | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"

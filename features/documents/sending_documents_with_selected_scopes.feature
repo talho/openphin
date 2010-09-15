@@ -16,14 +16,14 @@ Feature: Sending documents with selected scopes
       | Approval Role | Epidemiologist        |
       | Approval Role | WMD Coordinator       |
     And the following users exist:
-      | John Smith      | john.smith@example.com      | Health Officer  | Dallas County  |
-      | Brian Simms     | brian.simms@example.com     | Epidemiologist  | Dallas County  |
-      | Ed McGuyver     | ed.mcguyver@example.com     | Public          | Dallas County  |
-      | Ethan Waldo     | ethan.waldo@example.com     | Health Officer  | Tarrant County |
-      | Brandon Keepers | brandon.keepers@example.com | Epidemiologist  | Wise County    |
-      | Jason Phipps    | jason.phipps@example.com    | WMD Coordinator | Potter County  |
-      | Dan Morrison    | dan.morrison@example.com    | Health Officer  | Ottawa County  |
-      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Officer  | Tarrant County |
+      | John Smith      | john.smith@example.com      | Health Alert and Communications Coordinator | Dallas County  |
+      | Brian Simms     | brian.simms@example.com     | Epidemiologist                              | Dallas County  |
+      | Ed McGuyver     | ed.mcguyver@example.com     | Public                                      | Dallas County  |
+      | Ethan Waldo     | ethan.waldo@example.com     | Health Alert and Communications Coordinator | Tarrant County |
+      | Brandon Keepers | brandon.keepers@example.com | Epidemiologist                              | Wise County    |
+      | Jason Phipps    | jason.phipps@example.com    | WMD Coordinator                             | Potter County  |
+      | Dan Morrison    | dan.morrison@example.com    | Health Alert and Communications Coordinator | Ottawa County  |
+      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Alert and Communications Coordinator | Tarrant County |
     And "john.smith@example.com" is not public in "Texas"
     And "brian.simms@example.com" is not public in "Texas"
     And "ed.mcguyver@example.com" is not public in "Texas"
@@ -36,7 +36,7 @@ Feature: Sending documents with selected scopes
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |
 
-    And the role "Health Officer" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
     When delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
@@ -137,7 +137,7 @@ Feature: Sending documents with selected scopes
   Scenario: Sending a document with specified Jurisdictions/Roles scopes who the document will be sent to
     When I fill out the document sending form with:
       | Jurisdictions | Dallas County, Tarrant County |
-      | Roles         | Health Officer                |
+      | Roles         | Health Alert and Communications Coordinator                |
 
     And I press "Send"
     Then I wait for the "#document_progress_panel" element to finish

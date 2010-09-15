@@ -6,9 +6,9 @@ Feature: Sending alerts to SMS devices
   
   Background: 
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | Health Officer  | Dallas County  |
-      | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist  | Wise County    |
-    And the role "Health Officer" is an alerter
+      | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+      | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
   
   Scenario: Sending alerts to SMS devices
@@ -29,15 +29,15 @@ Feature: Sending alerts to SMS devices
     When I go to the HAN
     And I follow "Send an Alert"
     When I fill out the alert form with:
-      | People | Keith Gaddis |
-      | Title  | H1N1 SNS push packs to be delivered tomorrow |
-      | Message | Chicken pox outbreak long Message |
-      | Short Message | Chicken pox outbreak short message|
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | SMS |
-      | Sensitive | <unchecked> |
+      | People                | Keith Gaddis                                 |
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Chicken pox outbreak long Message            |
+      | Short Message         | Chicken pox outbreak short message           |
+      | Severity              | Moderate                                     |
+      | Status                | Actual                                       |
+      | Acknowledge           | None                                         |
+      | Communication methods | SMS                                          |
+      | Sensitive             | <unchecked>                                  |
       
     And I press "Preview Message"
     Then I should see a preview of the message
@@ -47,5 +47,5 @@ Feature: Sending alerts to SMS devices
     
     When delayed jobs are processed
     Then the following SMS calls should be made:
-      | sms          | message              |
-      | 12105551212 | Chicken pox outbreak short message|
+      | sms         | message                            |
+      | 12105551212 | Chicken pox outbreak short message |

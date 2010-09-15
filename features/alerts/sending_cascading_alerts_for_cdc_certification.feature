@@ -33,11 +33,11 @@ Feature: Sending CDC test cases
       | Calcasieu Parish  |
       | Beauregard Parish |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | Health Officer  | Texas     |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas     |
       | Mark Jensen     | mjensen@cdc.gov          | Public          | Louisiana |
       | TLP7 CDC        | tlp7@cdc.gov             | Public          | Louisiana |
     And delayed jobs are processed
-    And the role "Health Officer" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
 
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts

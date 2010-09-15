@@ -6,24 +6,24 @@ Feature: Sharing documents with selected scopes
 
   Background:
     Given the following entities exists:
-      | Jurisdiction  | Dallas County         |
-      | Jurisdiction  | Tarrant County        |
-      | Jurisdiction  | Wise County           |
-      | Jurisdiction  | Potter County         |
-      | Jurisdiction  | Texas                 |
-      | Approval Role | Health Officer        |
-      | Approval Role | Immunization Director |
-      | Approval Role | Epidemiologist        |
-      | Approval Role | WMD Coordinator       |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Tarrant County                              |
+      | Jurisdiction  | Wise County                                 |
+      | Jurisdiction  | Potter County                               |
+      | Jurisdiction  | Texas                                       |
+      | Approval Role | Health Alert and Communications Coordinator |
+      | Approval Role | Immunization Director                       |
+      | Approval Role | Epidemiologist                              |
+      | Approval Role | WMD Coordinator                             |
     And the following users exist:
-      | John Smith      | john.smith@example.com      | Health Officer  | Dallas County  |
-      | Brian Simms     | brian.simms@example.com     | Epidemiologist  | Dallas County  |
-      | Ed McGuyver     | ed.mcguyver@example.com     | Public          | Dallas County  |
-      | Ethan Waldo     | ethan.waldo@example.com     | Health Officer  | Tarrant County |
-      | Keith Gaddis    | keith.gaddis@example.com    | Epidemiologist  | Wise County    |
-      | Jason Phipps    | jason.phipps@example.com    | WMD Coordinator | Potter County  |
-      | Dan Morrison    | dan.morrison@example.com    | Health Officer  | Ottawa County  |
-      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Officer  | Tarrant County |
+      | John Smith      | john.smith@example.com      | Health Alert and Communications Coordinator  | Dallas County  |
+      | Brian Simms     | brian.simms@example.com     | Epidemiologist                               | Dallas County  |
+      | Ed McGuyver     | ed.mcguyver@example.com     | Public                                       | Dallas County  |
+      | Ethan Waldo     | ethan.waldo@example.com     | Health Alert and Communications Coordinator  | Tarrant County |
+      | Keith Gaddis    | keith.gaddis@example.com    | Epidemiologist                               | Wise County    |
+      | Jason Phipps    | jason.phipps@example.com    | WMD Coordinator                              | Potter County  |
+      | Dan Morrison    | dan.morrison@example.com    | Health Alert and Communications Coordinator  | Ottawa County  |
+      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Alert and Communications Coordinator  | Tarrant County |
     And "john.smith@example.com" is not public in "Texas"
     And "brian.simms@example.com" is not public in "Texas"
     And "ed.mcguyver@example.com" is not public in "Texas"
@@ -37,7 +37,7 @@ Feature: Sharing documents with selected scopes
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |
 
-    And the role "Health Officer" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     And I have the document "sample.wav" in my inbox
@@ -141,7 +141,7 @@ Feature: Sharing documents with selected scopes
   Scenario: Sharing a document with specified Jurisdictions/Roles scopes who the document will be shared with
     When I fill out the document sharing form with:
       | Jurisdictions | Dallas County, Tarrant County |
-      | Roles         | Health Officer                |
+      | Roles         | Health Alert and Communications Coordinator                |
     And I press "Invite"
     Then I wait for the "#document_progress_panel" element to finish
     And the following users should receive the email:
