@@ -100,4 +100,3 @@ Feature: Online importing users from a uploaded CSV file
     When delayed jobs are processed
     Then I should see "The user batch has been successfully submitted."
     And I should see "You will receive an E-Mail if there is a problem processing your request"
-
