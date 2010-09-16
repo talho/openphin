@@ -31,6 +31,15 @@ Given "I've sent an alert with:" do |table|
 #  lambda { click_button "Send" }.should change(Alert, :count).by(1)
 end
 
+Given /^I've sent an acknowledge alert with:$/ do |table|
+  visit new_alert_path
+  fill_in_alert_form table
+  select("Normal", :from => "alert_acknowledge")
+  click_button "Preview Message"
+  lambda { click_button "Send" }.should change(Alert, :count).by(1)
+end
+
+
 Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_address, title|
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => Time.zone.now, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::EmailDevice"))

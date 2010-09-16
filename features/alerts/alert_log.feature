@@ -213,8 +213,8 @@ Feature: Viewing the alert log
       And I follow "More"
       And I select "if you can respond within 15 minutes" from "Alert Response"
       And I press "Acknowledge"
-
-    Scenario: Viewing acknowledged alerts with alert responses from view
+      
+    Scenario: Viewing acknowledged advanced alerts with alert responses from view
       Given the following entities exists:
         | Jurisdiction | Texas         |
         | Jurisdiction | Dallas County |
@@ -251,8 +251,8 @@ Feature: Viewing the alert log
       Then I should see "if you can respond within 15 minutes"
       When I go to the HAN
       Then I should not see "Alert Response"
-
-    Scenario: Viewing audience of Alert and acknowledgement log from view(show)
+      
+    Scenario: Viewing audience of Alert and advanced acknowledgement log from view(show)
       Given the following entities exists:
         | Jurisdiction | Texas         |
         | Role         | Health Officer |
@@ -296,4 +296,41 @@ Feature: Viewing the alert log
       Then I should see "Texas" within ".jurisdictions"
       And I should see "Health Officer" within ".roles"
       And I should see "John Smith" within ".people"
-      And I should see "5" within ".user .alert_response"
+      And I should see "if you cannot respond" within ".user .alert_response"
+
+      Scenario: Viewing audience of Alert and regular acknowledgement log from view(show)
+      Given the following entities exists:
+        | Jurisdiction | Texas         |
+        | Role         | Health Officer |
+      And the following users exist:
+        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Officer  | Texas |
+        | Daniel Morrison | daniel@example.com       | Health Officer | Texas |
+      And the role "HAN Coordinator" is an alerter
+      And I am logged in as "john.smith@example.com"
+      And I've sent an acknowledge alert with:
+        | Jurisdiction      | Texas                |
+        | Jurisdictions     | Texas                |
+        | Roles             | Health Officer       |
+        | People            | John Smith           |
+        | Title             | Hello World          |
+        | Communication methods | E-mail           |
+      And delayed jobs are processed
+
+      When I am logged in as "daniel@example.com"
+      And I go to the HAN
+      And I follow the acknowledge alert link
+      And delayed jobs are processed
+
+      When I am logged in as "john.smith@example.com"
+      And I am on the alert log
+      Then I can see the alert summary for "Hello World"
+      When I click "View" on "Hello World"
+      Then I should see "John Smith" within ".author"
+      And I should see "Created at:"
+#      And I should see /\d\d:\d\d/ within ".created_at"
+      Then I should see "Texas" within ".jurisdictions"
+      And I should see "Health Officer" within ".roles"
+      And I should see "John Smith" within ".people"
+      And I should see "user_acknowledged_alert" within ".user .alert_response"
+
