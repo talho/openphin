@@ -54,9 +54,11 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
         this.recipientStore = new Ext.data.JsonStore({
             fields: ['name', 'id', 'profile_path'],
             idProperty: 'id',
-            url: url,
-            restful: true,
-            method: options.method || 'GET'
+            proxy: new Ext.data.HttpProxy({
+                api:{
+                    read: {url: url, method: options.method || 'POST'}
+                }                
+            })
         });
 
         this.recipientGrid.reconfigure(this.recipientStore, this.recipientGrid.getColumnModel());

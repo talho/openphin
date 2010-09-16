@@ -153,10 +153,15 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     redirect_to: function(path){
        window.location = path;
     },
-    
+
+    /**
+     * Opens a new tab in the primary tab panel based on the config
+     * @param {Object}    config   Lists the configuration options for the tab
+     * @config {String}     title       Title of the new tab
+     * @config {String}     id          ID of the new tab. This determines if the tab is unique in favorites and in the tab panel.
+     */
     open_tab: function(config) {
-        if(this.tabPanel.getComponent(config.id) === undefined)
-        {
+        if(this.tabPanel.getComponent(config.id) === undefined) {
             var panel;
 
             if(Ext.isFunction(config.initializer))
