@@ -11,13 +11,13 @@ Feature: Sending alerts using groups
       | Role          | BT Coordinator |
       | Jurisdiction  | Potter County  |
     And the role "Admin" is an alerter
-    And the role "Health officer" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And the role "Epidemiologist" is an alerter
     And the following users exist:
       | John Smith | john.smith@example.com | Admin                                       | Tarrant County |
       | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
-      | Jane Smith | jane.smith@example.com | Health Officer                              | Tarrant County |
-      | Bob Smith  | bob.smith@example.com  | Epidemiologist                              | Texas          |
+      | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | Bob Smith  | bob.smith@example.com  | Health Alert and Communications Coordinator | Texas          |
       | Leroy Smith| leroy@example.com      | Epidemiologist                              | Potter County  |
     And the following groups for "john.smith@example.com" exist:
       | G1 | Tarrant County | Health Officer |  | Personal     |                |
