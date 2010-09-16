@@ -329,6 +329,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     if(!group_lock_version) // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
                     {
                         group_lock_version = this.create_group_form_panel.add({itemId: 'group_lock_version', xtype:'hidden', name: 'group[lock_version]'});
+                        this.create_group_form_panel.doLayout();
                     }
                     group_lock_version.setValue(group.lock_version);
 
@@ -350,6 +351,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             var group_lock_version = this.create_group_form_panel.getComponent('group_lock_version');
             if(group_lock_version) {  // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
                 this.create_group_form_panel.remove(group_lock_version);
+                this.create_group_form_panel.doLayout();
             }
         }
 
