@@ -231,6 +231,7 @@ Feature: Creating groups
     When I go to the ext dashboard page
     When I navigate to "Admin > Manage Groups"
     Then I should not see "Dallas County Health Officer Group"
+    When I sign out
 
   Scenario: adding a jurisdiction scoped group should be viewable by other alerters in the same jurisdiction
     When I go to the ext dashboard page
@@ -267,6 +268,7 @@ Feature: Creating groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then I should see "Dallas County Health Officer Group"
+    When I sign out
 
   Scenario: adding a jurisdiction scoped group should not be viewable by other alerts in other jurisdictions
     When I go to the ext dashboard page
@@ -299,10 +301,12 @@ Feature: Creating groups
       | Dallas County   | Jurisdiction |
       | Health Officer  | Role         |
     Given I am on the ext dashboard page
+    When I sign out
     And I am logged in as "jim.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then I should not see "Dallas County Health Officer Group"
+    When I sign out
 
   Scenario: adding a global scoped group should be viewable by alerters in the same or other jurisdictions
     When I go to the ext dashboard page
@@ -335,10 +339,12 @@ Feature: Creating groups
       | Dallas County   | Jurisdiction |
       | Health Officer  | Role         |
     Given I am on the ext dashboard page
+    When I sign out
     And I am logged in as "jim.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then I should see "Dallas County Health Officer Group"
+    When I sign out
 
   Scenario: adding a scoped group without all data to see error
     When I go to the ext dashboard page
