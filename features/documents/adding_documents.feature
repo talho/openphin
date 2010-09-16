@@ -282,3 +282,11 @@
     And I press "Upload"
     Then I should not see "cygwin-ldd.exe"
     And I should see "Filetype not permitted"
+
+  Scenario: Scanning uploaded files for viruses
+    Given I have a folder named "Badthings"
+    When I go to the document viewing panel
+    And I follow "Badthings"
+    And I attach the fixture file at "fixtures/virus.doc" to "Upload Document"
+    And I press "Upload"
+    Then I should see "Virus detected"
