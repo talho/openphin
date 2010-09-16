@@ -49,9 +49,7 @@ module Capybara
     end
   end
 end
-When /^I pause$/ do
-  debugger
-end
-When /^I pause$/ do
+
+When /^(?:I )?pause$/ do
   debugger
 end

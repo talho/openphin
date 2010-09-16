@@ -12,8 +12,7 @@ class ApplicationController < ActionController::Base
   before_filter :login_required, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
-  layout proc { |controller| controller.request.xhr? || controller.request.format.ext? ? nil : controller.choose_layout } #disable the default layout for xhr requests
-  #layout :choose_layout
+  layout :choose_layout
 
   cattr_accessor :applications
   @@applications=HashWithIndifferentAccess.new
@@ -46,9 +45,13 @@ class ApplicationController < ActionController::Base
 
   def choose_layout
     if signed_in?
-      return "application"
+      if request.xhr? || request.format.ext?
+        "ext_panel"
+      else
+        "application"
+      end
     else
-      return "non_application"
+      "non_application"
     end
   end
 
