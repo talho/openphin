@@ -42,6 +42,7 @@ Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
              * @param {Ext.Component} this
              */
                 'ajaxloadcomplete',
+                'afternavigation',
                 'fatalerror'
                 );
 
@@ -60,8 +61,8 @@ Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
     back: function(){this.ajaxPanel.back();},
     forward: function(){this.ajaxPanel.forward();},
     reset: function(force){this.ajaxPanel.reset(force);},
-    canGoBack: function(){this.ajaxPanel.canGoBack();},
-    canGoForward: function(){this.ajaxPanel.canGoForward();}
+    canGoBack: function(){return this.ajaxPanel.canGoBack();},
+    canGoForward: function(){return this.ajaxPanel.canGoForward();}
 });
 
 Ext.reg('centeredajaxpanel', Ext.CenteredAjaxPanel);
