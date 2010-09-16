@@ -1,3 +1,4 @@
+@ext
 Feature: Creating and sending alerts
 
   In order to notify others in a timely fashion

@@ -1,3 +1,4 @@
+@ext
 Feature: Sending alerts to SMS devices
 
   In order to be notified of an alert

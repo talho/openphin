@@ -1,3 +1,4 @@
+@ext
 Feature: Creating groups
   In order to send alerts to a pre-defined list of users
   as an alerter
