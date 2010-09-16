@@ -147,7 +147,7 @@
     <%= render :partial => "player", :locals => {:sample_url => "#{UPLOAD_BASE_URI}/alerts/new/playback.wav?token=#{@token}" } if current_user.has_uploaded? %>
     <div class="details actions">
       <button class="edit">&lt; Edit this Alert</button>
-      <%= form.submit "Send this Alert", :name => 'send', :id => "alert_submit" %>
+      <%= form.submit "Send this Alert!", :name => 'send', :id => "alert_submit" %>
     </div>
   </div>
 <% end %>

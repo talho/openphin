@@ -84,8 +84,8 @@ Feature: Sending alerts form
     Then an alert exists with:
       | from_jurisdiction | Potter County |
       | title | H1N1 SNS push packs to be delivered tomorrow |
-      | delivery_time | 60 |    
-
+      | delivery_time | 60 |
+  
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
