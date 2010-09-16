@@ -8,7 +8,7 @@ OpenPHIN is a portal for public health related projects.
 3. Ruby 1.8.6
 4. RubyGems
 5. Rails 2.3
-6. ClamAV >= 0.96 and at least 'main.cvd' from http://clamav.net
+6. ClamAV >= 0.96 and at least 'main.cvd' from http://clamav.net ( to enable, uncomment the lines in initializers/clamav.rb )
 7. Git (not required to run, but well help getting it installed)
 
 ==Running the app

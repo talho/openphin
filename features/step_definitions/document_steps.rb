@@ -137,4 +137,8 @@ end
 
 When /^I should see "([^\"]*)" is not an owner of "([^\"]*)"$/ do |owner, share|
   assert page.find(:xpath, "//ul[@class = \"shares\"]/li[contains(.//a, \"#{share}\")]/p/a/label[contains(., \"#{owner}\")]").nil? == true
+
+Given /^ClamAV is loaded$/ do
+  CLAM_AV = ClamAV.instance
+  CLAM_AV.loaddb()
 end
