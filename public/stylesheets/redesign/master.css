@@ -46,3 +46,11 @@
     background-image: url(/stylesheets/images/page_edit.png) !important;
     background-position: center;
 }
+
+/* Alerts and notifications */
+div.flash                                           {margin: .8em .8em .4em;}
+p.completed, p.error, p.notice, p.instructions      {font-size: 12px;padding: .8em;margin-top: 0px;border: 2px solid #ddd;}
+p.completed                                         {background: #E6EFC2; color: #264409; border-color: #C6D880; }
+p.error                                             {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
+p.notice                                            {background: #FFF6BF; color: #514721; border-color: #FFD324; }
+p.instructions                                      {background: #CCFFFF; color: #264409; border-color: #33FFFF; }
