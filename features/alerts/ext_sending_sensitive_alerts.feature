@@ -1,3 +1,4 @@
+@ext
 Feature: Sending sensitive alerts
 
   In order to not cause panic

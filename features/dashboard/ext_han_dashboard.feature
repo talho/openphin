@@ -1,3 +1,4 @@
+@ext
 Feature: Viewing the dashboard
 
     Background:

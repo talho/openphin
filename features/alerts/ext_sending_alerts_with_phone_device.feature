@@ -1,3 +1,4 @@
+@ext
 Feature: Sending alerts to phones
 
   In order to be notified of an alert

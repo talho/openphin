@@ -1,3 +1,4 @@
+@ext
 Feature: Acknowledging an alert
 
   Background:
