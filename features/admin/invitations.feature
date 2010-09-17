@@ -90,6 +90,8 @@ Feature: Invitation System
     And "bob@example.com" is an invitee of "DSHS"
     And "john@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
+    And I should see "Bob User <bob@example.com>"
+    And I should see "John User <john@example.com>"
     When delayed jobs are processed
     Then the following Emails should be broadcasted:
       | email            | message                                   |
@@ -319,4 +321,17 @@ Feature: Invitation System
     And I should see "Yes" within "tr#invitee1 td.status"
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
-    And I should see "Yes" within "tr#invitee1 td.status"
+    And I should see "No" within "tr#invitee1 td.status"
+    
+  Scenario: Create and Send an invite via a malformed CSV file with a line of commas
+    When I follow "Admin"
+    And I show dropdown menus
+    And I follow "Invite Users"
+    And I should see "Invite New People"
+    And I fill in "Name" with "DSHS"
+    And I fill in "Subject" with "Please Join DSHS"
+    And I fill in "Body" with "Please click the link below to join DSHS."
+    And I select "DSHS" from "Default Organization"
+    When I attach the file "features/fixtures/invitees-comma-line.csv" to "CSV File"
+    When I press "Submit"
+    Then I should see "Invitees CSV import failed"
