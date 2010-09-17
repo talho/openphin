@@ -796,7 +796,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             this.selectedItemsStore.loadData(roles, true); // append: true
         }
 
-        if(this.groupGridView.getStore().getCount() > 0)
+        if(this.groupGridView && this.groupGridView.getStore().getCount() > 0)
         {
             store = this.groupGridView.getStore();
 
@@ -815,7 +815,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             this.selectedItemsStore.loadData(groups, true); // append: true
         }
 
-        if(this.jurisdictionTreeGrid.getStore().getCount() > 0)
+        if(this.jurisdictionTreeGrid && this.jurisdictionTreeGrid.getStore().getCount() > 0)
         {
             store = this.jurisdictionTreeGrid.getStore();
 

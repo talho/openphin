@@ -1,6 +1,8 @@
 Ext.ns("Talho");
 
 Talho.SendAlert = Ext.extend(function(){}, {
+    mode: 'new',
+
     constructor: function(config){
         Ext.apply(this, config);
 
@@ -15,7 +17,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         });
 
         var panel = new Ext.Panel({
-            title: 'Send Alert',
+            title: this.title,
             padding: 10,
             closable: true,
             autoScroll:true,
@@ -29,6 +31,14 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 this._createFormCard()
             ]
         });
+
+        switch(this.mode)
+        {
+            case 'new': break; // do nothing
+            case 'update': // load values for update from server
+                        break;
+            case 'cancel': break; // load values for cancel from server 
+        }
 
         this.getPanel = function(){ return panel; }
     },

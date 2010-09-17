@@ -85,7 +85,8 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             buttonPanel: ct,
             canDrop: function(tab_config)
             {
-                return !(this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
+                // require a tab_config and a tab_config.id to save a favorite
+                return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
             },
             gettab_config: function(item){
                 return item.tab_config;

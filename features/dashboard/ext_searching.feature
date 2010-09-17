@@ -126,7 +126,7 @@ Feature: Searching for users
     Then the "Find People" tab should be open
     When I click inlineLink "Advanced Search" within ".content"
     And I fill in "Last name" with "smith"
-    And I select "Tarrant County" from "_jurisdiction_ids"
+    And I select "Tarrant County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
       | Jane Smith |
@@ -139,7 +139,7 @@ Feature: Searching for users
     Then the "Find People" tab should be open
     When I click inlineLink "Advanced Search" within ".content"
     And I fill in "Last name" with "smith"
-    And I select "Public" from "_role_ids"
+    And I select "Public" from "with_role_ids"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith |
@@ -152,8 +152,8 @@ Feature: Searching for users
     Then the "Find People" tab should be open
     When I click inlineLink "Advanced Search" within ".content"
     When I fill in "Last name" with "body"
-    And I select "Health Officer" from "_role_ids"
-    And I select "Dallas County" from "_jurisdiction_ids"
+    And I select "Health Officer" from "with_role_ids"
+    And I select "Dallas County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I see the following users in the search results
       | Sam Body |
@@ -166,8 +166,8 @@ Feature: Searching for users
     Then the "Find People" tab should be open
     When I click inlineLink "Advanced Search" within ".content"
     And I fill in "Last name" with "body"
-    And I select "Immunization Director" from "_role_ids"
-    And I select "Dallas County" from "_jurisdiction_ids"
+    And I select "Immunization Director" from "with_role_ids"
+    And I select "Dallas County" from "with_jurisdiction_ids"
     And I press "Search"
     Then I should see "No Results Found"
 
