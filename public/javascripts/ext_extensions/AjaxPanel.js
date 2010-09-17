@@ -86,7 +86,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
                 if (href !== undefined && href !== '' && href !== '#' && href !== location.href && href !== location.href + '#')
                 {
-                    a.addClass('inlineLink');
+                    a.addClass('inlineLink').set({url: href});
 
                     a.addListener('click', function(evt, target, href)
                     {

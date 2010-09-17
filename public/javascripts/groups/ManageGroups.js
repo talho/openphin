@@ -192,7 +192,6 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                 {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, typeAhead: true, typeAheadDelay: 0, mode: 'local', triggerAction: 'all'},
                 {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, typeAhead: true, typeAheadDelay: 0, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
                 {items: this.audience_panel, border: false},
-                {itemId: 'group_lock_version', xtype:'hidden', name: 'group[lock_version]'},
                 {xtype: 'button', text: 'Save', scope: this, handler: function(){
                     var options = {};
 
@@ -326,7 +325,13 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     this.create_group_form_panel.getComponent('group_name').setValue(group.name);
                     this.create_group_form_panel.getComponent('group_scope').setValue(group.scope);
                     this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.jurisdiction.id);
-                    this.create_group_form_panel.getComponent('group_lock_version').setValue(group.lock_version);
+                    var group_lock_version = this.create_group_form_panel.getComponent('group_lock_version');
+                    if(!group_lock_version) // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
+                    {
+                        group_lock_version = this.create_group_form_panel.add({itemId: 'group_lock_version', xtype:'hidden', name: 'group[lock_version]'});
+                        this.create_group_form_panel.doLayout();
+                    }
+                    group_lock_version.setValue(group.lock_version);
 
                     // Pass the audience panel the selected items to initialize selected and initial checked items
                     this.audience_panel.load(group.jurisdictions, group.roles, group.users);
@@ -343,6 +348,11 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         {
             this.create_group_form_panel.editing = false;
             this.primary_panel.setTitle('Create New Group');
+            var group_lock_version = this.create_group_form_panel.getComponent('group_lock_version');
+            if(group_lock_version) {  // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
+                this.create_group_form_panel.remove(group_lock_version);
+                this.create_group_form_panel.doLayout();
+            }
         }
 
         this.primary_panel.layout.setActiveItem(1);

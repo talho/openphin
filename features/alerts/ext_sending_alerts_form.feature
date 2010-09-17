@@ -6,8 +6,8 @@ Feature: Sending alerts form
 
   Scenario: Send alert form should perform client side validation
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -53,8 +53,8 @@ Feature: Sending alerts form
   Scenario: Sending alerts form should not contain system roles
     Given there is an system only Admin role
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -76,9 +76,9 @@ Feature: Sending alerts form
       | Jurisdiction | Potter County  |
       | Jurisdiction | Tarrant County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
     When I go to the ext dashboard page
@@ -109,8 +109,8 @@ Feature: Sending alerts form
 
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -129,8 +129,8 @@ Feature: Sending alerts form
     And Texas is the parent jurisdiction of:
       | Dallas County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -187,9 +187,9 @@ Feature: Sending alerts form
       | Jurisdiction | Potter County  |
       | Jurisdiction | Tarrant County |
     And the following users exist:
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-      | John Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
-    And the role "HAN Coordinator" is an alerter
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
     When I go to the ext dashboard page
@@ -239,9 +239,9 @@ Feature: Sending alerts form
        | Jurisdiction | Potter County  |
        | Jurisdiction | Tarrant County |
      And the following users exist:
-       | John Smith      | john.smith@example.com   | HAN Coordinator | Dallas County |
-       | Jane Smith      | john.smith@example.com   | HAN Coordinator | Potter County |
-     And the role "HAN Coordinator" is an alerter
+       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+       | Jane Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+     And the role "Health Alert and Communications Coordinator" is an alerter
      And I am logged in as "john.smith@example.com"
 
      When I go to the ext dashboard page
