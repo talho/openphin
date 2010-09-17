@@ -299,22 +299,35 @@ Feature: Viewing the alert log
       And I should see "if you cannot respond" within ".user .alert_response"
 
       Scenario: Viewing audience of Alert and regular acknowledgement log from view(show)
-      Given the following entities exists:
+      Given the following entities exist:
         | Jurisdiction | Texas         |
-        | Role         | Health Officer |
+        | Organization | DSHS          |
       And the following users exist:
-        | John Smith      | john.smith@example.com   | HAN Coordinator | Texas |
-        | Jane Smith      | jane.smith@example.com   | Health Officer  | Texas |
-        | Daniel Morrison | daniel@example.com       | Health Officer | Texas |
-      And the role "HAN Coordinator" is an alerter
+        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas |
+        | Jane Smith      | jane.smith@example.com   | Health Officer   | Texas |
+         | Daniel Smith | daniel@example.com | Health Officer | Texas |
+      And "jane.smith@example.com" is a member of the organization "DSHS"
+      And the role "Health Alert and Communications Coordinator" is an alerter
       And I am logged in as "john.smith@example.com"
-      And I've sent an acknowledge alert with:
-        | Jurisdiction      | Texas                |
-        | Jurisdictions     | Texas                |
-        | Roles             | Health Officer       |
-        | People            | John Smith           |
-        | Title             | Hello World          |
-        | Communication methods | E-mail           |
+      When I go to the HAN
+      And I follow "Send an Alert"
+      And delayed jobs are processed
+      And I fill out the alert form with:
+        | Jurisdiction      | Texas          |
+        | Jurisdictions     | Texas          |
+        | Roles             | Health Officer |
+        | People            | John Smith     |
+        | Title             | Hello World    |
+        | Communication methods | E-mail     |
+        | Acknowledge       | Normal         |
+
+      And I press "Preview Message"
+      Then I should see a preview of the message with:
+        | Title             | Hello World    |
+      And I press "Send"
+      Then an alert exists with:
+        | title             | Hello World     |
+
       And delayed jobs are processed
 
       When I am logged in as "daniel@example.com"

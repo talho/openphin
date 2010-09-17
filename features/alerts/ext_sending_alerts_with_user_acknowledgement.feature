@@ -8,7 +8,7 @@ Feature: Acknowledging an alert
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
-    And I am allowed to send alerts
+    And I am allowed to send alerts                      
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
@@ -196,13 +196,10 @@ Feature: Acknowledging an alert
     And I uncheck "E-mail"
     And I select "Moderate" from ext combo "Severity"
     And I check "Phone"
-
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
     And I send the alert
-        
     And I sign out
 
     When delayed jobs are processed
@@ -211,12 +208,14 @@ Feature: Acknowledging an alert
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
     # legacy code because we haven't converted the acknoledgement stuff to ext
-    When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes"
+    When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
     And delayed jobs are processed
     And I log in as "keith.gaddis@example.com"
 
-    When I am on the HAN
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Home"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
+    And I click inlineBtn "More"
     And I should not see an "Acknowledge" button
-    But I should see "Acknowledge: if you can respond within 15 minutes"
+    But I should see "if you can call back within 15 minutes"
     # end legacy code: replace when acknowledgement is implemented

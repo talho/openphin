@@ -129,6 +129,7 @@ Feature: Viewing groups
     And I select the following in the audience panel:
       | name          | type         |
       | Potter County | Jurisdiction |
+      | Dallas County | Jurisdiction |
     And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas and Potter County Group |

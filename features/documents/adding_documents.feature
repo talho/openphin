@@ -260,28 +260,45 @@
     And I should not see "keith.jpg"
     And I should not see "invitees.csv"
     And I should see "sample.wav"
-    
+
   Scenario: Verifying mime type validation during adding a document to private storage
     Given I have a folder named "Rockstars"
-    When I go to the document viewing panel
+
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Rockstars"
-    
-    And I attach the fixture file at "fixtures/keith.jpg" to "Upload Document"
-    And I press "Upload"
-    Then I should see "keith.jpg"
+    Then I wait for the "#document_progress_panel" element to finish
 
-    And I attach the fixture file at "fixtures/sample.wav" to "Upload Document"
-    And I press "Upload"
-    Then I should see "sample.wav"
-
-    And I attach the fixture file at "fixtures/invitees.csv" to "Upload Document"
-    And I press "Upload"
+    And I select "#upload_document" from the documents toolbar
+    Then I wait for the "#document_file" element to load
+    And I attach the file "features/fixtures/invitees.csv" to "Upload Document"
+    And I press "upload"
+    Then I wait for the "#document_progress_panel" element to finish
     Then I should see "invitees.csv"
 
-    And I attach the fixture file at "fixtures/cygwin-ldd.exe" to "Upload Document"
-    And I press "Upload"
+    And I select "#upload_document" from the documents toolbar
+    Then I wait for the "#document_file" element to load
+    And I attach the file "features/fixtures/cygwin-ldd.exe" to "Upload Document"
+    And I press "upload"
+    Then I wait for the "#document_progress_panel" element to finish
     Then I should not see "cygwin-ldd.exe"
     And I should see "Filetype not permitted"
+
+  Scenario: Verifying file extension validation during adding a document to private storage
+    Given I have a folder named "Rockstars"
+
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
+    And I follow "Rockstars"
+    Then I wait for the "#document_progress_panel" element to finish
+    And I select "#upload_document" from the documents toolbar
+    Then I wait for the "#document_file" element to load
+    And I attach the file "features/fixtures/cygwin-ldd.exe" to "Upload Document"
+    And I press "upload"
+    Then I wait for the "#document_progress_panel" element to finish
+    And I should see "File extension not permitted"
 
   Scenario: Scanning uploaded files for viruses
     Given I have a folder named "Badthings"
