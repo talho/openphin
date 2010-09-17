@@ -75,6 +75,7 @@ class ApplicationController < ActionController::Base
       unless signed_in?
         respond_to do |format|
           format.html{ redirect_to sign_in_path }
+          format.ext{ redirect_to sign_in_path }
           format.json do
             headers["Access-Control-Allow-Origin"] = "*"
             render :json => ['SESSION' => 'EXPIRED']

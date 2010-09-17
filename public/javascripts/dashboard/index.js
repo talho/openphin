@@ -54,7 +54,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
             enableTabScroll: true,
-            items: [Talho.Article3Panel.initialize({id:'dashboard_home'})],
+            items: [Talho.Article3Panel.initialize({itemId:'dashboard_home'})],
             plugins: [Ext.plugin.DragDropTabs],
             bbar:{
                 id: 'tab_toolbar',
