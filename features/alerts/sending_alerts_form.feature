@@ -168,6 +168,7 @@ Feature: Sending alerts form
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery time"
     And I check "Phone"
+    And I fill in "Caller ID" with "1234567890"
 
     And I press "Audience"
     And I check "Potter County"
@@ -214,6 +215,7 @@ Feature: Sending alerts form
      And I select "72 hours" from "Delivery time"
      And I select "Normal" from "Acknowledge"
      And I check "Phone"
+     And I fill in "Caller ID" with "1234567890"
      And I press "Audience"
      And I check "Potter County"
      And I press "Preview Message"

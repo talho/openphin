@@ -226,6 +226,6 @@ When /^I attach the tmp file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
 end
 
 When '"$email1" is deleted as a user by "$email2"' do |email1,email2|
-  User.find_by_email(email1).delayed_delete_by(email2,request.remote_ip)
+  User.find_by_email(email1).delayed_delete_by(email2,"127.0.0.1")
 end
 

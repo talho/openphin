@@ -70,18 +70,18 @@ Feature: An admin deleting users
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
-    And I fill out the alert "Details" form with:
-      | Title    | H1N1 SNS push packs to be delivered tomorrow |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And I fill out the alert "Audience" form with:
-      | People   | Jane Smith                              |
+    And I fill out the alert form with:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | People                | Jane Smith                                   |
+      | Communication methods | E-mail                                        |
     And I press "Preview Message"
     Then I should see a preview of the message with:
       | People   | Jane Smith |
       
     And I press "Send"
+    And delayed jobs are processed
     And "jane.smith@example.com" is deleted as a user by "john.smith@example.com"
+    And delayed jobs are processed
     Then an alert should not exist with:
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |

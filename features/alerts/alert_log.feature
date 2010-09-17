@@ -112,11 +112,12 @@ Feature: Viewing the alert log
       | Short Message         | Hello World          |
       | Acknowledge           | Normal               |
       | Communication methods | E-mail, SMS          |
+      | Caller ID             | 1234567890           |
       | Roles         | Health Alert and Communications Coordinator |
-      | Jurisdictions | Texas, Dallas County                        |
+      | Jurisdictions | Texas, Dallas County |
     And I press "Preview Message"
     Then I should see a preview of the message with:
-        | Roles | HAN Coordinator |
+        | Roles | Health Alert and Communications Coordinator |
     When I press "Send"
     And delayed jobs are processed
 
@@ -190,16 +191,17 @@ Feature: Viewing the alert log
         | Daniel Morrison | daniel@example.com       | Health Alert and Communications Coordinator | Texas |
       And I am logged in as "john.smith@example.com"
       And an alert with:
-        | from_jurisdiction | Texas                                       |
-        | jurisdictions     | Texas, Dallas County                        |
+        | from_jurisdiction | Texas                |
+        | jurisdictions     | Texas, Dallas County |
         | roles             | Health Alert and Communications Coordinator |
-        | title             | Hello World                                 |
-        | communication methods | Email, SMS                              |
-        | alert_response_1  | if you can respond within 15 minutes        |
-        | alert_response_2  | if you can respond within 30 minutes        |
-        | alert_response_3  | if you can respond within 1 hour            |
-        | alert_response_4  | if you can respond within 4 hours           |
-        | alert_response_5  | if you cannot respond                       |
+        | title             | Hello World          |
+        | communication methods | Email, SMS       |
+        | caller_id         | 1234567890           |
+        | alert_response_1  | if you can respond within 15 minutes |
+        | alert_response_2  | if you can respond within 30 minutes |
+        | alert_response_3  | if you can respond within 1 hour     |
+        | alert_response_4  | if you can respond within 4 hours    |
+        | alert_response_5  | if you cannot respond                |
       And "jane.smith@example.com" has acknowledged the alert "Hello World"
       And "john.smith@example.com" has not acknowledged the alert "Hello World"
       And "daniel@example.com" has not acknowledged the alert "Hello World"
@@ -229,6 +231,7 @@ Feature: Viewing the alert log
         | roles                 | Health Alert and Communications Coordinator |
         | title                 | Hello World                                 |
         | communication methods | Email, SMS                                  |
+        | caller_id             | 1234567890                                  |
         | alert_response_1      | if you can respond within 15 minutes        |
         | alert_response_2      | if you can respond within 30 minutes        |
         | alert_response_3      | if you can respond within 1 hour            |

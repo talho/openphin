@@ -49,17 +49,15 @@ Feature: Sending CDC test cases
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | For more details, keep on reading...         |
       | Acknowledge           | None                                         |
-    And I check "E-mail"
-    And I press "Select an Audience"
-    And delayed jobs are processed
-    And I fill out the alert "Audience" form with:
       | Jurisdictions         | Texas                                        |
       | Role                  | Bioterrorism Coordinator                     |
+      | Communication methods | E-mail                                       |
     And I press "Preview Message"
     Then I should see a preview of the message
 
     When I press "Send this Alert"
     Then I should see "Successfully sent the alert"
+    And delayed jobs are processed
     And no foreign alert "H1N1 SNS push packs to be delivered tomorrow" is sent
 
   Scenario: Test case 1--Investigation of International Traveler with Multidrug-Resistant Tuberculosis (MDR TB)

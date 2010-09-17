@@ -112,14 +112,20 @@ module FeatureHelpers
 
       details = Hash[fields.select {|key, value| ["Title","Message","Short Message","Communication methods","Communication method","Jurisdiction",
                                              "Status","Severity","Delivery Time","Acknowledge","Sensitive","Alert Response 1",
-                                             "Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].include?(key)}]
+                                             "Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5","Caller ID"].include?(key)}]
       audience = Hash[fields.select {|key, value| ["Jurisdictions","Roles","Role","Organizations","Organization","Groups","Group","People"].include?(key)}]
 
       ["Alert Response 1","Alert Response 2","Alert Response 3","Alert Response 4","Alert Response 5"].each do |resp|
         raise "Cannot fill in Alert Responses without Advanced acknowledgment" if details.has_key?(resp) && details["Acknowledge"] != "Advanced"
         fill_in_alert_field("Acknowledge",details["Acknowledge"])
       end
-      
+      unless details["Caller ID"].blank?
+        if details["Communication methods"] =~ /Phone/
+          fill_in_alert_field("Communication methods" , "Phone")
+        elsif details["Communication methods"] =~ /SMS/
+          fill_in_alert_field("Communication methods" , "SMS")
+        end
+      end
       details.each do |label, value|
         fill_in_alert_field(label, value)
       end
@@ -181,7 +187,9 @@ module FeatureHelpers
             check id
           end
       when 'Communication methods'
-        check value
+        value.split(',').each { |name| check value }
+      when 'Caller ID'
+        fill_in label, :with => value   
 
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
