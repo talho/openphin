@@ -42,8 +42,8 @@ class UserBatch
         create_directory
         save_file
         pre_verify_csv(path)
-        self.send_later(:create_users,path)
         @file_data = nil
+        self.send_later(:create_users,path)
         true
       rescue FasterCSV::MalformedCSVError => msg
         false
