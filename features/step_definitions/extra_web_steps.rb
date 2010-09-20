@@ -7,11 +7,21 @@ When /^I will confirm on next step$/ do
 end
 
 Then /^I should see "([^\"]*)" within the alert box$/ do |msg|
-  assert !(evaluate_script("self.alert_message") =~ Regexp.new(msg)).nil?
+  message = evaluate_script("self.alert_message")
+  if message.nil?
+    assert false
+  else
+    assert !( message =~ Regexp.new(msg) ).nil?    
+  end
 end
 
 Then /^I should see "([^\"]*)" within the confirmation box$/ do |msg|
-  assert !(evaluate_script("self.confirmation_message") =~ Regexp.new(msg)).nil?
+  message = evaluate_script("self.confirmation_message")
+  if message.nil?
+    assert false
+  else
+    assert !( message =~ Regexp.new(msg) ).nil?
+  end
 end
 
 When /^I close "([^\"]*)" modal box$/ do |dom_selector|
