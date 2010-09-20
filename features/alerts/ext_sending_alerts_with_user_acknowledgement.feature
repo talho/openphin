@@ -213,7 +213,7 @@ Feature: Acknowledging an alert
     And I log in as "keith.gaddis@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Home"
-Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
+    Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
     And I click inlineBtn "More"
     And I should not see an "Acknowledge" button
     But I should see "Acknowledge: if you can call back within 15 minutes"

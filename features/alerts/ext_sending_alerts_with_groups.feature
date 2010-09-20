@@ -8,6 +8,7 @@ Feature: Sending alerts using groups
       | Role          | Epidemiologist |
       | Role          | Health Officer |
       | Role          | Admin          |
+      | Role          | Health Alert and Communications Coordinator |
       | Role          | BT Coordinator |
       | Jurisdiction  | Potter County  |
     And the role "Admin" is an alerter

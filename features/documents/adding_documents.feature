@@ -304,14 +304,14 @@
     Given I have a folder named "Badthings"
     And ClamAV is loaded
     
-    When I go to the document viewing panel
+    When I go to the dashboard page
+    And I follow "Documents"
+    Then I wait for the "#document_progress_panel" element to finish
     And I follow "Badthings"
+    Then I wait for the "#document_progress_panel" element to finish
+    And I select "#upload_document" from the documents toolbar
+    Then I wait for the "#document_file" element to load
     And I attach the fixture file at "fixtures/virus.doc" to "Upload Document"
-    And I press "Upload"
+    And I press "upload"
+    Then I wait for the "#document_progress_panel" element to finish
     Then I should see "Virus detected"
-
-    When I go to the document viewing panel
-    And I follow "Badthings"
-    And I attach the fixture file at "fixtures/keith.jpg" to "Upload Document"
-    And I press "Upload"
-    Then I should see "keith.jpg"
