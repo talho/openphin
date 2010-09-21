@@ -37,6 +37,9 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   },
 
   save_failure: function(form, action){
-    Ext.Msg.alert('Error', action.response.responseText);
+    if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
+      Ext.Msg.alert('Error', 'Status:' + action.response.status + ': ' + action.response.statusText);
+    if (action.failureType === Ext.form.Action.SERVER_INVALID)
+      Ext.Msg.alert('Invalid', action.result.errormsg);
   }
 });
