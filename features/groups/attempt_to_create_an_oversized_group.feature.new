@@ -1,0 +1,63 @@
+# Specs for story# 5211835
+Feature: During creating groups limit the individual users to 150
+  In order limit the user from creating to large of groups
+  as an alerter
+  I should be able to add user groups to my profile
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction | Texas          |
+      | Jurisdiction | Potter County  |
+    And the following users exist:
+      | Jane Smith  | jane.smith@example.com  | Health Officer | Potter County |
+      | Jill Smith  | jill.smith@example.com  | Admin          | Potter County |
+      | Will Smith  | will.smith@example.com  | Admin          | Potter County |
+      | Bill Smith  | bill.smith@example.com  | Admin          | Potter County |
+      | Mill Smith  | mill.smith@example.com  | Admin          | Potter County |
+      | Sill Smith  | sill.smith@example.com  | Admin          | Potter County |
+    Given I am logged in as "jill.smith@example.com"
+    And the role "Admin" is an alerter
+    And delayed jobs are processed
+
+  Scenario: adding a user group with individual users and not exceed the limit
+    When I go to the add groups page
+    Then I should see the add group form
+    
+    Then I should see "People"
+    And I should see "Add (limited to 150)"
+    
+    When The system temporarily reset the user limit to 4
+    Then I should see "Add (limited to 4)"
+    
+    When I fill out the group form with:
+      | Name  | User list Group                                |
+      | Users | Jane Smith, Will Smith, Bill Smith, Mill Smith |
+      | Scope | Personal                                       |
+    And I press "Save"
+    Then I should see the following group summary:
+      | name  | User list Group                                      |
+      | group_users | Jane Smith, Will Smith, Bill Smith, Mill Smith |
+      | group_scope | Personal                                       |
+      
+    And I follow "Jane Smith"
+    Then I should see the profile page for "jane.smith@example.com"
+
+  Scenario: adding a user group with individual users and exceed the limit
+    When I go to the add groups page
+    Then I should see the add group form
+
+    Then I should see "People"
+    And I should see "Add (limited to 150)"
+    
+    When The system temporarily reset the user limit to 4
+    Then I should see "Add (limited to 4)"
+    
+    When I fill out the group form with:
+      | Name  | User list Group                                            |
+      | Users | Jane Smith, Will Smith, Bill Smith, Mill Smith, Sill Smith |
+      | Scope | Personal                                                   |
+    And I press "Save"
+    Then I should see "User limit has been exceeded"
+    
+
+
