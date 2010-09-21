@@ -311,7 +311,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
     handlePhoneTypeCheck: function(){
         var cbs = this.getSelectedCommunicationDevices();
         var caller_id = this.form_card.getComponent('right_side_form').getComponent('caller_id_field');
-        if(cbs.indexOf('Device::SMSDevice') != -1 || cbs.indexOf('Device::PhoneDevice') != -1 || cbs.indexOf('Device::BlackberryDevice') != -1) // We should be showing the "Caller ID" box
+        if(cbs.indexOf('Device::SMSDevice') != -1 || cbs.indexOf('Device::PhoneDevice') != -1) // We should be showing the "Caller ID" box
         {
             if(!this.form_card.getComponent('right_side_form').getComponent('caller_id_field'))
             {
