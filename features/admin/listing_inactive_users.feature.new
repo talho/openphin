@@ -1,0 +1,50 @@
+Feature: An admin is able to identify inactive users
+  In order to remove these users  
+  As an superadmin
+  I can manage user accounts
+  
+  Background:
+    Given an organization named Red Cross
+    And the following entities exist:
+      | Jurisdiction | Texas         |
+      | Jurisdiction | Potter County |
+      | Jurisdiction | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Potter County |
+      | Dallas County |
+    And the following users exist:
+      | Jill Smith  | jill.smith@example.com  | Public  | Potter County |
+      | Will Smith  | will.smith@example.com  | Public  | Potter County |
+      | Bill Smith  | bill.smith@example.com  | Public  | Potter County |
+      | Mill Smith  | mill.smith@example.com  | Public  | Dallas County |
+      | Sill Smith  | sill.smith@example.com  | Public  | Dallas County |
+    And the following users last logged-in at days ago:
+      | Jill Smith  | 58  |
+      | Will Smith  | 59  |
+      | Bill Smith  | 60  |
+      | Mill Smith  | 61  |
+      | Sill Smith  | 62  |
+    And Texas has the following super_administrators:
+      | Jane Smith  | jane.smith@example.com  |
+  
+  Scenario: List stale users
+    Given I am logged in as "jane.smith@example.com"
+    When I go to the manage users page
+    And I set the inactive age to 60 days or more
+    And I press "Search"
+    Then I should see the following user summary:
+      | name           | Inactive User                      |
+      | inactive_users | Bill Smith, Mill Smith, Sill Smith |
+      | inactive_days  | 60,         61,         62         |
+
+  Scenario: List inactive users by jurisdiction
+    Given I am logged in as "jane.smith@example.com"
+    When I go to the manage users page
+    And I set the inactive age to 60 days or more
+    And I select the Potter County jurisdiction
+    And I press "Search"
+    Then I should see the following user summary:
+      | name  | Inactive User       |                                           
+      | inactive_users | Bill Smith |
+      | inactive_days  | 60         |
+
