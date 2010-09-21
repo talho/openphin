@@ -1,5 +1,6 @@
-Feature: Creating groups
-  In order to send alerts to a pre-defined list of users
+# Specs for story# 5211835
+Feature: During creating groups limit the individual users to 150
+  In order limit the user from creating to large of groups
   as an alerter
   I should be able to add user groups to my profile
 

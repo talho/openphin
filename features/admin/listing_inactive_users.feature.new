@@ -1,3 +1,4 @@
+# Spec to fulfill story# 5144837
 Feature: An admin is able to identify inactive users
   In order to remove these users  
   As an superadmin
@@ -37,6 +38,7 @@ Feature: An admin is able to identify inactive users
       | inactive_users | Bill Smith, Mill Smith, Sill Smith |
       | inactive_days  | 60,         61,         62         |
 
+# Spec to fulfill story#       5144878
   Scenario: List inactive users by jurisdiction
     Given I am logged in as "jane.smith@example.com"
     When I go to the manage users page
