@@ -1,8 +1,6 @@
 Ext.ns("Talho");
 
 Talho.ProfileBase = Ext.extend(function(){}, {
-  mode: 'new',
-
   constructor: function(config, item_list){
     Ext.apply(this, config);
 
