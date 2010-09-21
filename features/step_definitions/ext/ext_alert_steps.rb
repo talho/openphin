@@ -18,6 +18,6 @@ When /^I send the alert$/ do
   Then %{I should have the "Preview" breadcrumb selected}
 
   When %{I press "Send Alert"}
-  Then %{the "Alert Detail" tab should be open}
+  Then %{the "Alert Detail Log and Reporting" tab should be open}
   And %{the "Send Alert" tab should not be open}
 end

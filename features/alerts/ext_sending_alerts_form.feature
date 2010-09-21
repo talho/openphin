@@ -28,9 +28,11 @@ Feature: Sending alerts form
     And the following fields should be invalid:
       | Message       |
       | Short Message |
+      | Caller ID     |
 
     When I fill in "Message" with "This is a test message to pass validation"
     And I fill in "Short Message" with "This is a test short message to pass validation"
+    And I fill in "Caller ID" with "4114114111"
     And I click breadCrumbItem "Audience"
     Then I should have the "Audience" breadcrumb selected
 
@@ -100,7 +102,7 @@ Feature: Sending alerts form
     Then I should have the "Preview" breadcrumb selected
 
     When I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    Then the "Alert Detail Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
@@ -173,7 +175,7 @@ Feature: Sending alerts form
       | Jane Smith | User      |
 
     And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    Then the "Alert Detail Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     
     Then an alert exists with:
@@ -212,6 +214,7 @@ Feature: Sending alerts form
     And I select "Minor" from ext combo "Severity"
     And I select "72 hours" from ext combo "Delivery Time"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
 
     When I click breadCrumbItem "Audience"
     And I select the following in the audience panel:
@@ -220,7 +223,7 @@ Feature: Sending alerts form
     And I click breadCrumbItem "Preview"
 
     And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    Then the "Alert Detail Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
 
     Then an alert exists with:
@@ -254,6 +257,7 @@ Feature: Sending alerts form
      And I select "Minor" from ext combo "Severity"
      And I select "72 hours" from ext combo "Delivery Time"
      And I check "Phone"
+     And I fill in "Caller ID" with "4114114111"
      And I select "Potter County" from ext combo "Jurisdiction"
      And I select "Normal" from ext combo "Acknowledge"
     
@@ -266,7 +270,7 @@ Feature: Sending alerts form
      And I click breadCrumbItem "Preview"
 
      And I press "Send Alert"
-     Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+     Then the "Alert Detail Log and Reporting" tab should be open
      And the "Send Alert" tab should not be open
     
      Then an alert exists with:
@@ -294,6 +298,7 @@ Feature: Sending alerts form
       | Message            | Some body text                               |
     And I select "Texas" from ext combo "Jurisdiction" 
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
 
     When I click breadCrumbItem "Audience"
     And I select the following in the audience panel:
@@ -308,7 +313,7 @@ Feature: Sending alerts form
       | Jane Smith | Recipient    |
 
     And I press "Send Alert"
-    Then the "Alert Detail - H1N1 SNS push packs to be delivered tomorrow" tab should be open
+    Then the "Alert Detail Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     
     Then an alert exists with:

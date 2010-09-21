@@ -71,6 +71,7 @@ Feature: Sending alerts to multiple devices
     And I check "Phone"
     And I check "SMS"
     And I check "Blackberry"
+    And I fill in "Caller ID" with "4114114111"
 
     And I select the following alert audience:
       | name          | type |

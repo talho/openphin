@@ -88,17 +88,47 @@ class AlertsController < ApplicationController
     end
 
     unless alert.is_updateable_by?(current_user)
-      flash[:error] = "You do not have permission to update or cancel this alert."
-      redirect_to alerts_path
+      msg = "You do not have permission to update or cancel this alert."
+      respond_to do |format|
+        format.html do
+          flash[:error] = msg
+          redirect_to alerts_path
+        end
+        format.json {render :json => {'success' => false, 'msg' => msg}, :status => 401}
+      end
     end
 
     unless alert.original_alert.nil?
-      flash[:error] = "You cannot make changes to updated or cancelled alerts."
-      redirect_to alerts_path
+      msg = "You cannot make changes to updated or cancelled alerts."
+      respond_to do |format|
+        format.html do
+          flash[:error] = msg
+          redirect_to alerts_path
+        end
+        format.json {render :json => {'success' => false, 'msg' => msg}, :status => 401}
+      end
     end
-    @alert = present alert, :action => params[:_action]
-    @update = true if params[:_action].downcase == "update"
-    @cancel = true if params[:_action].downcase == "cancel"
+
+    respond_to do |format|
+      format.html do
+        @alert = present alert, :action => params[:_action]
+        @update = true if params[:_action].downcase == "update"
+        @cancel = true if params[:_action].downcase == "cancel"
+      end
+      format.json do
+        audiences = {:roles => [], :groups => [], :jurisdictions => [], :users => []}
+        alert.audiences.each do |audience|
+          if audience.name.nil?
+            audiences[:roles] = audiences[:roles] | audience.roles
+            audiences[:jurisdictions] = audiences[:jurisdictions] | audience.jurisdictions
+            audiences[:users] = audiences[:users] | audience.users
+          else
+            audiences[:groups].push(audience)
+          end
+        end
+        render :json => {'alert' => alert, 'devices' => @device_types, 'audiences' => audiences, 'success' => true}
+      end
+    end
   end
 
   def update
@@ -110,13 +140,25 @@ class AlertsController < ApplicationController
     end
 
     unless original_alert.is_updateable_by?(current_user)
-      flash[:error] = "You do not have permission to update or cancel this alert."
-      redirect_to alerts_path
+      msg = "You do not have permission to update or cancel this alert."
+      respond_to do |format|
+        format.html do
+          flash[:error] = msg
+          redirect_to alerts_path
+        end
+        format.json {render :json => {'message' => msg, 'success' => false}, :status => 401}
+      end
     end
     
     if original_alert.cancelled?
-      flash[:error] = "You cannot update or cancel an alert that has already been cancelled."
-      redirect_to alerts_path
+      msg = "You cannot update or cancel an alert that has already been cancelled."
+      respond_to do |format|
+        format.html do
+          flash[:error] = msg
+          redirect_to alerts_path
+        end
+        format.json {render :json => {'message' => msg, 'success' => false}, :status => 401}
+      end
       return
     end
     reduce_call_down_messages_from_responses(original_alert)
@@ -139,13 +181,24 @@ class AlertsController < ApplicationController
       if @alert.valid?
         @alert.integrate_voice
         @alert.batch_deliver
-        flash[:notice] = "Successfully sent the alert."
-        redirect_to alerts_path
+        respond_to do |format|
+          format.html do
+            flash[:notice] = "Successfully sent the alert."
+            redirect_to alerts_path
+          end
+          format.json {render :json => {'success' => true}}
+        end  
       else
         if @alert.errors['message_recording']
-          flash[:error] = "Attached message recording is not a valid wav formatted file."
-          @preview = true
-          render :new
+          msg = "Attached message recording is not a valid wav formatted file."
+          respond_to do |format|
+            format.html do
+              flash[:error] = msg
+              @preview = true
+              render :new
+            end
+            format.json {render :json => {'message' => msg, 'success' => false}, :status => 406}
+          end
         end
       end
     else
