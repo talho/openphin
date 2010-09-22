@@ -89,8 +89,10 @@ When /^the "([^\"]*)" tab should not be open$/ do |tab_name|
   page.should_not have_css(".x-tab-strip li", :text => tab_name)
 end
 
-When /^I force open the tab "([^\"]*)" for "([^\"]*)"$/ do |tab_name, tab_url|
-  page.execute_script("window.Application.phin.open_tab({title:'#{tab_name}', url:'#{tab_url}'})")
+When /^I force open the tab "([^\"]*)" for "([^\"]*)"(?: with config "([^\"]*)")?$/ do |tab_name, tab_url, config|
+  tab_config = "{title:'#{tab_name}', url:'#{tab_url}'}"
+  tab_config = config unless config.nil?
+  page.execute_script("window.Application.phin.open_tab(#{tab_config})")
 end
 
 When /^I close the active ext window$/ do

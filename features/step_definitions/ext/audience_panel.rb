@@ -61,7 +61,7 @@ def select_users(users)
 
 end
 
-Then /^I should see the following audience breakdown$/ do |table|
+Then /^I should see the following audience breakdown:?$/ do |table|
   audiences = table.hashes.find_all{|hash| hash['type'] == 'Jurisdiction' || hash['type'] == 'User' || hash['type'] == 'Role' || hash['type'] == 'Group' || hash['type'] == 'Organization'}
   recipients = table.hashes.find_all{|hash| hash['type'] == 'Recipient'}
    

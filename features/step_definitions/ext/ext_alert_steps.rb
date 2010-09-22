@@ -18,6 +18,14 @@ When /^I send the alert$/ do
   Then %{I should have the "Preview" breadcrumb selected}
 
   When %{I press "Send Alert"}
-  Then %{the "Alert Detail Log and Reporting" tab should be open}
+  Then %{the "Alert Log and Reporting" tab should be open}
   And %{the "Send Alert" tab should not be open}
+end
+
+When /^I click "([^"]*)" within alert "([^"]*)"$/ do |link, title|
+  page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).click
+end
+
+Then /^I should not see button "([^\"]*)" for alert "([^\"]*)"$/ do |link, title|
+  page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).should be_nil
 end

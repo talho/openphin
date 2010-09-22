@@ -102,7 +102,7 @@ Feature: Sending alerts form
     Then I should have the "Preview" breadcrumb selected
 
     When I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
+    Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
@@ -175,7 +175,7 @@ Feature: Sending alerts form
       | Jane Smith | User      |
 
     And I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
+    Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     
     Then an alert exists with:
@@ -223,7 +223,7 @@ Feature: Sending alerts form
     And I click breadCrumbItem "Preview"
 
     And I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
+    Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
 
     Then an alert exists with:
@@ -270,7 +270,7 @@ Feature: Sending alerts form
      And I click breadCrumbItem "Preview"
 
      And I press "Send Alert"
-     Then the "Alert Detail Log and Reporting" tab should be open
+     Then the "Alert Log and Reporting" tab should be open
      And the "Send Alert" tab should not be open
     
      Then an alert exists with:
@@ -313,7 +313,7 @@ Feature: Sending alerts form
       | Jane Smith | Recipient    |
 
     And I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
+    Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     
     Then an alert exists with:
