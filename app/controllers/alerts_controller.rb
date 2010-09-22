@@ -87,19 +87,25 @@ class AlertsController < ApplicationController
       @device_types << device_type
     end
 
+    error = false
+    msg = nil
+
     unless alert.is_updateable_by?(current_user)
       msg = "You do not have permission to update or cancel this alert."
-      respond_to do |format|
-        format.html do
-          flash[:error] = msg
-          redirect_to alerts_path
-        end
-        format.json {render :json => {'success' => false, 'msg' => msg}, :status => 401}
-      end
+      error = true
     end
 
     unless alert.original_alert.nil?
       msg = "You cannot make changes to updated or cancelled alerts."
+      error = true
+    end
+
+    if alert.cancelled?
+      msg = "You cannot update or cancel an alert that has already been cancelled."
+      error = true
+    end
+
+    if error
       respond_to do |format|
         format.html do
           flash[:error] = msg
@@ -107,6 +113,7 @@ class AlertsController < ApplicationController
         end
         format.json {render :json => {'success' => false, 'msg' => msg}, :status => 401}
       end
+      return
     end
 
     respond_to do |format|

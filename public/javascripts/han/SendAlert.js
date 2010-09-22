@@ -31,6 +31,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 this._createFormCard()
             ]
         });
+        panel.addEvents('fatalerror');
 
         var showLoading = false;
         switch(this.mode)
@@ -203,7 +204,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
     submit_success: function(form, action){
         if(action.type == 'submit')
         {
-            Application.fireEvent('opentab', {title: 'Alert Detail Log and Reporting', url: '/alerts', id: 'han_alert_log', initializer: 'Talho.Alerts' });
+            Application.fireEvent('opentab', {title: 'Alert Log and Reporting', url: '/alerts', id: 'han_alert_log', initializer: 'Talho.Alerts' });
             this.getPanel().ownerCt.remove(this.getPanel()); // We're going to close the window now that we've successfully created an alert
         }
     },
@@ -270,6 +271,12 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 data['alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.alert.title;
                 data['alert[status]'] = this.alert_json.alert.alert.status;
 
+                data['alert[call_down_messages][]'] = [];
+                Ext.each(this.getSelectedResponders(), function(responder, index){
+                    responder = responder * 1; // turn this into an int
+                    data['alert[call_down_messages][]'][responder - 1] = this.alert_json.alert.alert.call_down_messages[responder];
+                }, this);
+
                 data.roles = [];
                 data.users = [];
                 data.jurisdictions = [];
@@ -300,6 +307,16 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
     getSelectedCommunicationDevices: function(){
         var comm_methods = this.form_card.getComponent('right_side_form').getComponent('communication_methods');
+        if(comm_methods){
+            var selectedBoxes = comm_methods.getValue();
+            return Ext.pluck(selectedBoxes, 'inputValue');
+        }
+
+        return [];
+    },
+
+    getSelectedResponders: function(){
+        var comm_methods = this.form_card.getComponent('right_side_form').getComponent('alert_responders');
         if(comm_methods){
             var selectedBoxes = comm_methods.getValue();
             return Ext.pluck(selectedBoxes, 'inputValue');
@@ -355,6 +372,12 @@ Talho.SendAlert = Ext.extend(function(){}, {
         })
     },
 
+    /**
+     * Loads the values for the form manually. Removes a number of form items, changes a few others, and loads values into the rest.
+     * @param {Object}  options     The configuration object passed in to the Ajax.request
+     * @param {Boolean} success     The success property, as determined by Ext's default methods
+     * @param {Object}  response    The action response. Should decode response.responseText to get the JSON result.
+     */
     alertDetailLoad_complete: function(options, success, response){
         if(success)
         {
@@ -396,6 +419,19 @@ Talho.SendAlert = Ext.extend(function(){}, {
             rightSide.getComponent('communication_methods').destroy();
             rightSide.getComponent('acknowledge_combo').getStore().loadData(['None', 'Normal']);
 
+            // If there are call down messages, create the checkbox group for selecting which responses to carry through
+            if(Ext.isObject(alertInfo.call_down_messages))
+            {
+                var i = 1, groupItems = [];
+                while(!Ext.isEmpty(alertInfo.call_down_messages[i]))
+                {
+                    groupItems.push({boxLabel: alertInfo.call_down_messages[i], inputValue: i, checked: true});
+                    i++;
+                }
+                if(groupItems.length > 0)
+                    rightSide.add({xtype: 'checkboxgroup', itemId: 'alert_responders', fieldLabel: 'Responders', cls: 'checkboxGroup', columns: 1, defaults: {name: 'alert[responders][]'}, items: groupItems})
+            }
+
             // create hidden fields
             Ext.each(deviceTypes, function(value){
                 rightSide.add({xtype:'hidden', value: value, name: 'alert[device_types][]'})
@@ -416,7 +452,14 @@ Talho.SendAlert = Ext.extend(function(){}, {
         }
         else
         {
-            alert("There was an issue with loading the information for the alert. Please try again.")
+            try {
+                var msg = Ext.decode(response.responseText, true).msg;
+                alert(msg);
+            }
+            catch(e){
+                alert("There was an issue with loading the information for the alert. Please try again.");
+            }
+            this.getPanel().fireEvent('fatalerror', this.getPanel());
         }
     }
 });

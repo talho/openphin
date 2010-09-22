@@ -68,12 +68,12 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
 
     updateLink_clicked: function(evt, elem, options){
         var url = Ext.get(elem).getAttribute('url');
-        Application.fireEvent('opentab', {title: 'Alert Update - ' + options.title, url: url, mode: 'update', initializer: 'Talho.SendAlert', alertId: options.id});
+        Application.fireEvent('opentab', {title: 'Create an Alert Update', url: url, mode: 'update', initializer: 'Talho.SendAlert', alertId: options.id});
     },
 
     cancelLink_clicked: function(evt, elem, options){
         var url = Ext.get(elem).getAttribute('url');
-        Application.fireEvent('opentab', {title: 'Cancel Alert - ' + options.title, url: url, mode: 'cancel', initializer: 'Talho.SendAlert', alertId: options.id});
+        Application.fireEvent('opentab', {title: 'Create an Alert Cancellation', url: url, mode: 'cancel', initializer: 'Talho.SendAlert', alertId: options.id});
     },
 
     userLink_clicked: function(evt, elem){
