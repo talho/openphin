@@ -43,9 +43,9 @@ if current_user.has_non_public_role?
 
     menu_config += "{name: 'My Account', items:[
                       {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'#{ edit_user_profile_path(current_user) }'}},
-                      {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ edit_user_profile_path(current_user) }', initializer: 'Talho.EditProfile'}},
-                      {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ edit_user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
-                      {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ edit_user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
+                      {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditProfile'}},
+                      {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
+                      {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
                       {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'#{ new_role_request_path }', initializer: 'Talho.RequestRoles'}}
                     ]},"
 

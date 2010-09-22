@@ -50,7 +50,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
           listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}}
       ]},
       {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:200}, items:[
-        {xtype: 'container', html: '<img src="images/missing.jpg" width=200 height=200>'},
+        {xtype: 'container', name: 'profile[photo]', html: '<img id=photo src="images/missing.jpg" width=200 height=200>'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'profile[name]', maxLength: '15'},
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'profile[public]'},
       ]}
@@ -59,6 +59,9 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var method = "PUT";
 
     Talho.EditProfile.superclass.constructor.call(this, config, item_list, url, method);
+
+    // Override the setValue() method where necessary
+    this.getPanel().find("name", "profile[photo]")[0].setValue = function(val){ Ext.getDom("photo").src = val; };
   },
 });
 

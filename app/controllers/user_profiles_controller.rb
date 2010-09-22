@@ -46,7 +46,7 @@ class UserProfilesController < ApplicationController
     find_user_and_profile
     respond_to do |format|
       format.html
-      format.json { render :json => @user }
+      format.json { render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium)}} }
     end
   end
 
