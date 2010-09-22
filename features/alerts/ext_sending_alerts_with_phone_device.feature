@@ -35,6 +35,7 @@ Feature: Sending alerts to phones
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Short Message" with "Chicken pox outbreak"
 
@@ -72,6 +73,7 @@ Feature: Sending alerts to phones
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Short Message" with "Chicken pox outbreak"
     And I select "Normal" from ext combo "Acknowledge"
@@ -130,6 +132,7 @@ Feature: Sending alerts to phones
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Short Message" with "Chicken pox outbreak"
 
@@ -168,6 +171,7 @@ Feature: Sending alerts to phones
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     When I select "Advanced" from ext combo "Acknowledge"
     And I press "+ Add another response"
@@ -215,6 +219,7 @@ Feature: Sending alerts to phones
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     When I select "Advanced" from ext combo "Acknowledge"
     And I press "+ Add another response"

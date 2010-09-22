@@ -48,16 +48,16 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
             var cancelLink = Ext.get(Ext.DomQuery.selectNode('a:nodeValue(Cancel)', alertDom));
             var userLink = Ext.get(Ext.DomQuery.selectNode('.created_at a', alertDom));
 
-            Ext.each([viewLink, updateLink, cancelLink], function(link){
+            Ext.each(Ext.clean([viewLink, updateLink, cancelLink]), function(link){
                 link.removeAllListeners();
                 link.removeClass('inlineLink').addClass('inlineBtn');
             }, this);
             userLink.removeAllListeners(); // we want to leave this as an inline link so we don't run it through the list;
 
-            viewLink.on('click', this.viewLink_clicked, this, {id: id, title: title});
-            updateLink.on('click', this.updateLink_clicked, this, {id: id, title: title});
-            cancelLink.on('click', this.cancelLink_clicked, this, {id: id, title: title});
-            userLink.on('click', this.userLink_clicked, this);
+            if(viewLink) viewLink.on('click', this.viewLink_clicked, this, {id: id, title: title});
+            if(updateLink) updateLink.on('click', this.updateLink_clicked, this, {id: id, title: title});
+            if(cancelLink) cancelLink.on('click', this.cancelLink_clicked, this, {id: id, title: title});
+            if(userLink) userLink.on('click', this.userLink_clicked, this);
         }, this);
     },
 
