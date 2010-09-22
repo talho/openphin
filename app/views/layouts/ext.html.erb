@@ -6,6 +6,7 @@
   <%= javascript_include_tag 'ext_extensions/CenterLayout', 'ext_extensions/AudienceDisplayPanel', :cache => 'all' %>
   <%= javascript_include_tag '/dashboard/menu', :cache => 'all' %>
   <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'han/SendAlert', 'han/AlertDetail', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', 'dashboard/tutorials', :cache => 'all' %>
+  <%= javascript_include_tag 'profile/ProfileBase', 'profile/EditProfile', 'profile/EditPassword', 'profile/EditDevices', 'profile/RequestRoles', :cache => 'all' %>
 
   <!-- begin include js for openphin plugins -->
   <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
