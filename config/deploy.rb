@@ -13,11 +13,12 @@ set :user, 'apache'
 set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
+set :root_path, "/var/www"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "/var/www/#{application}"
+  set :deploy_to, "#{root_path}/#{application}"
 
 # Unicorn configuration
 set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
@@ -52,16 +53,18 @@ after 'sphinx:rebuild', 'delayed_job:restart'
 namespace :deploy do
   # Overriding the built-in task to add our rollback actions
   task :default, :roles => [:app, :web, :jobs] do
-    transaction {
-      on_rollback do
-        puts "  PERFORMING ROLLBACK, restarting jobs daemons"
-        find_and_execute_task("backgroundrb:restart")
-        find_and_execute_task("delayed_job:restart")
-        puts "  END ROLLBACK"
-      end
-      update
-      restart
-    }
+    unless rails_env == "test"
+      transaction {
+        on_rollback do
+          puts "  PERFORMING ROLLBACK, restarting jobs daemons"
+          find_and_execute_task("backgroundrb:restart")
+          find_and_execute_task("delayed_job:restart")
+          puts "  END ROLLBACK"
+        end
+        update
+        restart
+      }
+    end
   end
 
   desc "unicorn restart"

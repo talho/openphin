@@ -69,6 +69,7 @@ group :cucumber do
   gem "selenium-webdriver", "0.0.27"
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
+  gem "hydra", "0.22.2"
 end
 
 group :tools do

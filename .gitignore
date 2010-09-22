@@ -51,3 +51,4 @@ config/initializers/smtp.rb
 config/email.yml
 .bundle
 vendor/cache
+config/hydra.yml
