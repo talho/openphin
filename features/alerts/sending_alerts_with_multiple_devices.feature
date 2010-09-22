@@ -25,7 +25,8 @@ Feature: Sending alerts to multiple devices
     And george.strait@example.com  has the following devices:
       | Phone | 5125551239 |
       | Blackberry | 246D6BA7 |      
-      And the role "Health Officer" is an alerter
+    And the role "Health Officer" is an alerter
+    And delayed jobs are processed
 
   Scenario: Sending alerts to users with multiple devices
     Given I am logged in as "keith.gaddis@example.com"
