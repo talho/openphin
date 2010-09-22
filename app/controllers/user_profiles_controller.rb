@@ -40,9 +40,14 @@ class UserProfilesController < ApplicationController
   end
 
   # GET /users/1/edit
+  # GET /users/1.json
   def edit
     set_toolbar
     find_user_and_profile
+    respond_to do |format|
+      format.html
+      format.json { render :json => @user }
+    end
   end
 
   # POST /users
