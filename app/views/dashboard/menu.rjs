@@ -23,7 +23,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
 
 if current_user.has_non_public_role?
-    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }'}},"
+    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},"
   end
 
   menu_config += "{name: 'Tutorials', items:[

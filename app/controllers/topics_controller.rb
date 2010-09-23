@@ -8,6 +8,7 @@ class TopicsController < ApplicationController
   
   # GET /topics
   # GET /topics.xml
+  # GET /topics.json
   def index
     options = {:page => params[:page] || 1, :per_page => 8}
     options[:order] = "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc"
@@ -17,28 +18,38 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @topics }
+      format.json  {render :json => {
+        :topics              => @topics,
+        :current_page        => @topics.current_page,
+        :per_page            => @topics.per_page,
+        :total_entries       => @topics.total_entries
+      }}
     end
   end
 
   # GET /topics/1
   # GET /topics/1.xml
+  # GET /topics/1.json
   def show
     @comments = @topic.comments
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @topic }
+      format.json { render :json => @topic }
     end
   end
 
   # GET /topics/new
   # GET /topics/new.xml
+  # GET /topics/new.json
   def new
     @topic = Topic.new
 
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @topic }
+      format.json { render :json => @topic }
     end
   end
 
@@ -48,6 +59,7 @@ class TopicsController < ApplicationController
 
   # POST /topics
   # POST /topics.xml
+  # POST /topics.json
   def create
     @topic = Topic.new(params[:topic])
     respond_to do |format|
@@ -55,15 +67,18 @@ class TopicsController < ApplicationController
         flash[:notice] = 'Topic was successfully created.'
         format.html { redirect_to forum_topics_url }
         format.xml  { render :xml => @topic, :status => :created, :location => @topic }
+        format.json { render :json => @topic, :status => :created, :location => @topic }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
+        format.json { render :json => @topic.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   # PUT /topics/1
   # PUT /topics/1.xml
+  # PUT /topics/1.json
   def update
     # no forum selected for the move, so lets set it to the original
     params[:topic][:forum_id] = params[:topic][:dest_forum_id] unless params[:topic][:dest_forum_id].blank?
@@ -75,9 +90,11 @@ class TopicsController < ApplicationController
           flash[:notice] = 'Topic was successfully updated.'
           format.html { redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url ) }
           format.xml  { head :ok }
+          format.json { head :ok }
         else
           format.html { render :action => "edit" }
           format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
+          format.json  { render :json => @topic.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError
         flash[:error] = "Another user recently updated the same topic.  Please try again."
@@ -91,12 +108,14 @@ class TopicsController < ApplicationController
 
   # DELETE /topics/1
   # DELETE /topics/1.xml
+  # DELETE /topics/1.json
   def destroy
     @topic.destroy
 
     respond_to do |format|
       format.html { redirect_to(forum_topics_url) }
       format.xml  { head :ok }
+      format.json { head :ok }
     end
   end
   
