@@ -28,6 +28,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
         this.url = this.initialUrl = this.url || '';
         this.history = [];
         this.forward_stack = [];
+        this.formPanels = [];
     },
 
     loadAJAX: function()
@@ -108,7 +109,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                     fn: function(){ formPanel.getForm().submit();}
                 }
             });
-
+           
             formPanel.getForm().on({
                 'actioncomplete': function(form, action){
                     this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
@@ -122,8 +123,8 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
             });
 
             var formHolder = form.replaceWith({tag: 'div', cls: 'extFormHolder'});
-
             formPanel.render(formHolder);
+            this.formPanels.push(formPanel);
         }, this);
 
         this.findParentByType('panel').doLayout();
@@ -170,6 +171,10 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
 
     canGoForward: function(){
         return this.forward_stack.length > 0
+    },
+
+    getFormPanels: function(){
+      return this.formPanels;
     }
 });
 
