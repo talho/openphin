@@ -133,3 +133,36 @@ When /^I should see a display form with:$/ do |table|
     page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
   end
 end
+When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
+  begin
+    mask = page.find('.x-mask-loading', :text => mask_text)
+    end_time = Time.now + 5 # wait a max of 5 seconds for the mask to disappear
+    while !mask.nil? and Time.now < end_time
+      mask = page.find('.x-mask-loading', :text => mask_text)
+    end
+
+    mask.should be_nil
+  rescue Selenium::WebDriver::Error::ObsoleteElementError
+    # this is perfect, the element has gone from the dom.
+  end
+end
+
+Then /^I should not be able to navigate to "([^\"]*)"$/ do |menu_navigation_list|
+  menu_array = menu_navigation_list.split('>').map{|x| x.strip}
+
+  tb_button = menu_array.delete_at(0)
+
+  begin
+    When %Q{I press "#{tb_button}"}
+
+    menu_array.each do |menu|
+      When %Q{I click x-menu-item "#{menu}"}
+    end
+
+    menu_item_found = true
+  rescue Capybara::TimeoutError
+    menu_item_found = false # if it times out, we know that we were unable to find the error
+  end
+
+  menu_item_found.should be_false
+end

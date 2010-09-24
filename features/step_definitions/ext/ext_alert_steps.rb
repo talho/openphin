@@ -23,7 +23,12 @@ When /^I send the alert$/ do
 end
 
 When /^I click "([^"]*)" within alert "([^"]*)"$/ do |link, title|
-  page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).click
+  btn = page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link)
+  if btn.nil?
+    sleep 1
+    btn = page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link)
+  end
+  btn.click
 end
 
 Then /^I should not see button "([^\"]*)" for alert "([^\"]*)"$/ do |link, title|

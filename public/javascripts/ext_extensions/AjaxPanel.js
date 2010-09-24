@@ -109,18 +109,27 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                     fn: function(){ formPanel.getForm().submit();}
                 }
             });
-           
+
+            var completeCb = function(form, action){
+                this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
+                this.findParentByType('panel').doLayout();
+            };
+            var failedCb = function(form, action){
+                Ext.Msg.alert('Error', action.response.responseText);
+                this.loadAJAX();
+            };
+
             formPanel.getForm().on({
-                'actioncomplete': function(form, action){
-                    this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
-                    this.findParentByType('panel').doLayout();
-                },
-                'actionfailed': function(form, action){
-                    Ext.Msg.alert('Error', action.response.responseText);
-                    this.loadAJAX();
-                },
+                'actioncomplete': completeCb,
+                'actionfailed': failedCb,
                 scope:this
             });
+
+            formPanel.getForm().removeAllListeners = function(){
+                var form = formPanel.getForm();
+                form.un('actioncomplete', completeCb);
+                form.un('actionfailed', failedCb);
+            };
 
             var formHolder = form.replaceWith({tag: 'div', cls: 'extFormHolder'});
             formPanel.render(formHolder);
