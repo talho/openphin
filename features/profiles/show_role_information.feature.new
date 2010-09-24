@@ -1,0 +1,30 @@
+Feature: Show role information when the user is requesting a role
+  In order to assist users in selecting role requests
+  as a user
+  I should be able to access detailed explanations of roles before I request them
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Dallas County  |
+      | Jurisdiction  | Potter County  |
+      | Jurisdiction  | Texas          |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County  |
+    And the following users exist:
+      | John Smith    | john.smith@example.com   | Public | Dallas County |
+    When delayed jobs are processed
+
+  Scenario: Removing a public role from user profile
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I select "Potter County" from "Jurisdiction"
+
+    And I select "Microbiologist" from "Role"
+    Then I should see "Microbiologist: This role is for"
+    And I should see an external link to "http://cdc.gov"
+
+    When I select "Chief Veterinarian" from "Role"
+    Then I should see "Chief Veterinarian: This role is for"
+    And I should see an external link to "http://cdc.gov"

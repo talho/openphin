@@ -1,0 +1,37 @@
+Feature: Removing public roles
+In order to keep accurate records and avoid unnecessary alerts
+as a user
+I should be able to remove all but one public role from my profile
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Dallas County  |
+      | Jurisdiction  | Potter County  |
+      | Jurisdiction  | Texas          |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County  |
+    And the following users exist:
+      | John Smith    | john.smith@example.com   | Public | Dallas County |
+    When delayed jobs are processed
+
+  Scenario: Removing a public role from user profile
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I select "Public" from "Role"
+    And I select "Potter County" from "Jurisdiction"
+    And I press "Save"
+    And I should not see any errors
+    And I should see "Public in Potter County"
+    And I should see "Public in Dallas County"
+
+    When I will confirm on next step
+    And I click the remove role button for "Public in Dallas County"
+    Then I should see "Are you sure you want to remove your role Public in Dallas County" within the confirmation box
+    And I should not see "Public in Dallas County"
+
+    When I override alert
+    And I click the remove role button for "Public in Potter County"
+    Then I should see "You must keep at least one public role" within the alert box
+    And I should see "Public in Potter County"
