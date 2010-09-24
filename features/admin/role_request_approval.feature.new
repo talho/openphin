@@ -1,0 +1,27 @@
+Feature: Show role information when the administrator is examining a role request
+  In order to assist administrators in role request approvals
+  as an admin
+  I should be able to access detailed explanations of roles before I approve them
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Texas          |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+    And the following users exist:
+      | John Smith    | john.smith@example.com   | Public | Dallas County |
+    And the following administrators exist:
+      | admin@dallas.gov  | Dallas County |
+      | admin@state.tx.us | Texas         |
+    When delayed jobs are processed
+
+  Scenario: Removing a public role from user profile
+    Given I am logged in as "admin@state.tx.us"
+    And "jane@example.com" has requested to be a "Emergency Room Director" for "Dallas County"
+    When I navigate to "Admin > Manage Roles > Pending Role Requests"
+    Then I should see the admin role request tab
+    And I should see "jane@example.com"
+
+    When I follow "Role Description"
+    Then I should see "Emergency Room Director: This role is for"
+    And I should see an external link to "http://cdc.gov"

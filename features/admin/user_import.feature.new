@@ -24,16 +24,6 @@ Feature: Online importing users from a uploaded CSV file
     And I press "Upload"
     Then I should see "The user batch has been successfully submitted"
     
-    # add this step to the existing scenario to fulfill story 5144920 
-    # speculated work effort to include:
-    #   create user batch successful AppMailer
-    #   code in successful user created counter into importer
-    #   add-in success logic to generate the success email 
-    And "admin@ector.gov" should receive the email:
-      | subject       | TxPhin:  User batching success |
-      | body contains | 1 user was created             |
-
-
 # add the following 3 scenarios to fulfill story# 4991718
 # this is not 100% for all of the columns but if it can track for several, it should for all
 
@@ -50,6 +40,10 @@ Feature: Online importing users from a uploaded CSV file
     And "john@example.com" should have the communication device
       | Email | john@example.com |
       | Phone | 5552347000 |
+    # add this step to the existing scenario to fulfill story 5144920 
+    And "john@example.com" should receive the email:
+      | subject       | TxPhin:  Role assigned             |
+      | body contains | You have been assigned the role of |
 
     And "bob@example.com" should have the "Public" role for "Ector"
     And "bob@example.com" should have the communication devices
@@ -58,6 +52,10 @@ Feature: Online importing users from a uploaded CSV file
       | Phone | 5552348001 |
     And "bob@example.com" should not have the communication devices
       | Fax ||
+    # add this step to the existing scenario to fulfill story 5144920 
+    And "bob@example.com" should receive the email:
+      | subject       | TxPhin:  Role assigned             |
+      | body contains | You have been assigned the role of |
 
   Scenario: Importing a well-formatted file with email as last column
     Given the following file "users.csv":
