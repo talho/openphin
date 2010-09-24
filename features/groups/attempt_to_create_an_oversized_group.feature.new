@@ -17,7 +17,7 @@ Feature: During creating groups limit the individual users to 150
     And delayed jobs are processed
 
   Scenario: adding a user group with individual users and not exceed the limit    
-    Given I generate 149 users to the "Jill Smith Group" group with "Personal" scope
+    Given 149 users exist in the "Jill Smith Group" group with "Personal" scope
     When I load the edit group page for "Jill Smith Group"
     Then I should see "People"
     
