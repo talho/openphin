@@ -62,7 +62,8 @@ Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
     forward: function(){this.ajaxPanel.forward();},
     reset: function(force){this.ajaxPanel.reset(force);},
     canGoBack: function(){return this.ajaxPanel.canGoBack();},
-    canGoForward: function(){return this.ajaxPanel.canGoForward();}
+    canGoForward: function(){return this.ajaxPanel.canGoForward();},
+    getFormPanels: function(){return this.ajaxPanel.getFormPanels();}
 });
 
 Ext.reg('centeredajaxpanel', Ext.CenteredAjaxPanel);

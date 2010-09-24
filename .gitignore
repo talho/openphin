@@ -51,4 +51,5 @@ public/tutorials
 config/initializers/smtp.rb
 config/email.yml
 .bundle
+Gemfile.lock
 vendor/cache

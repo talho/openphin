@@ -14,6 +14,7 @@ Ext.ux.BreadCrumb = Ext.extend(Ext.Container, {
         );
 
         var items = this.items;
+        this.length = items.length;
         delete this.items;
 
         // Build up the HTML string with the strings provided in the items element

@@ -106,6 +106,7 @@ Feature: Acknowledging an alert
     And I select "Normal" from ext combo "Acknowledge"
     And I select "Moderate" from ext combo "Severity"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I uncheck "E-mail"
 
     And I select the following alert audience:
@@ -196,6 +197,7 @@ Feature: Acknowledging an alert
     And I uncheck "E-mail"
     And I select "Moderate" from ext combo "Severity"
     And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |

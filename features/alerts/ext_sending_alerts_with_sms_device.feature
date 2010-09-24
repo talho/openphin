@@ -35,6 +35,7 @@ Feature: Sending alerts to SMS devices
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
     And I check "SMS"
+    And I fill in "Caller ID" with "4114114111"
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Short Message" with "Chicken pox outbreak short message"
 

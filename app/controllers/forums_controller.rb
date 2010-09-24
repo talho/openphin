@@ -3,33 +3,72 @@ class ForumsController < ApplicationController
   before_filter :non_public_role_required
   app_toolbar "forums"
 
+  # GET /forums
+  # GET /forums.xml
+  # GET /forums.json
   def index
     @forums = Forum.paginate_for(:all,current_user,params[:page] || 1)
+    for forum in @forums
+      if current_user.moderator_of?(forum)
+        forum[:is_moderator] = true
+      end
+    end
+    respond_to do |format|
+      format.html
+      format.json  {render :json => {
+        :forums              => @forums,
+        :current_page        => @forums.current_page,
+        :per_page            => @forums.per_page,
+        :total_entries       => @forums.total_entries
+      }}
+    end
   end
-  
+
+  # GET /forums/1
+  # GET /forums/1.json
   def show
     @forum = Forum.find_for(params[:id],current_user)
+    respond_to do |format|
+      format.html
+      format.json {render :json => @forum}
+    end
   end
-  
+
+  # GET /forums/new
+  # GET /forums/new.json
   def new
     @forum = Forum.new
+    respond_to do |format|
+      format.html
+      format.json {render :json => @forum}
+    end
   end
-  
+
+  # POST /forums/new
+  # POST /forums/new.json
   def create
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
     @forum = Forum.new(params[:forum])
     if @forum.save
       flash[:notice] = "Forum was successfully created."
-      redirect_to forums_url
+      redirect_to forums_url, {:params => params}
     else
       render :action => 'new'
     end
   end
-  
-  def edit
-      @forum = Forum.find_for(params[:id],current_user)
-    end
 
+  # GET /forums/1/edit
+  # GET /forums/1/edit.json
+  def edit
+    @forum = Forum.find_for(params[:id],current_user)
+    respond_to do |format|
+      format.html
+      format.json {render :json => @forum}
+    end
+  end
+
+  # PUT /forums/1
+  # PUT /forums/1.json
   def update
     @forum = Forum.find_for(params[:id],current_user)
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
@@ -70,7 +109,9 @@ class ForumsController < ApplicationController
       redirect_to forums_path
     end
   end
-  
+
+  # DELETE /forums/1
+  # DELETE /forums/1.json
   def destroy
     @forum = Forum.find_for(params[:id],current_user)
     @forum.destroy

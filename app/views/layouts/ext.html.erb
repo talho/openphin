@@ -5,15 +5,15 @@
   <%= javascript_include_tag 'ext_extensions/TreeGrid/TreeGrid', 'ext_extensions/Ext.ux.grid.RowActions', 'ext_extensions/AudiencePanel', 'ext_extensions/ViewLoadMask', 'ext_extensions/DataTip', 'ext_extensions/BreadCrumb', :cache => 'all' %>
   <%= javascript_include_tag 'ext_extensions/CenterLayout', 'ext_extensions/AudienceDisplayPanel', :cache => 'all' %>
   <%= javascript_include_tag '/dashboard/menu', :cache => 'all' %>
-  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'han/SendAlert', 'han/AlertDetail', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', 'dashboard/tutorials', :cache => 'all' %>
-
+  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'han/SendAlert', 'han/AlertDetail', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', 'dashboard/tutorials', 'forums/forums', :cache => 'all' %>
+  <%= javascript_include_tag 'profile/ProfileBase', 'profile/EditProfile', 'profile/EditPassword', 'profile/EditDevices', 'profile/RequestRoles', :cache => 'all' %>
   <!-- begin include js for openphin plugins -->
   <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
   <% js_list.push({:cache => 'all'}) %>
   <%= javascript_include_tag(*js_list) %>
   <!-- end include js for openphin plugins -->
 
-  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/Ext.ux.grid.RowActions', 'TreeGrid/css/TreeGrid', 'TreeGrid/css/TreeGridLevels', :cache => true  %>
+  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/forum', 'redesign/Ext.ux.grid.RowActions', 'TreeGrid/css/TreeGrid', 'TreeGrid/css/TreeGridLevels', :cache => true  %>
 
   <!-- begin include stylesheets for openphin plugins -->
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>

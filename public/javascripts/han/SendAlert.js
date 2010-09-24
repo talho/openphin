@@ -31,13 +31,24 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 this._createFormCard()
             ]
         });
+        panel.addEvents('fatalerror');
 
+        var showLoading = false;
         switch(this.mode)
         {
             case 'new': break; // do nothing
-            case 'update': // load values for update from server
-                        break;
-            case 'cancel': break; // load values for cancel from server 
+            case 'update':
+            case 'cancel': showLoading = true;
+                    this.loadAlertDetail(this.mode);
+                break; // load values for cancel from server
+        }
+
+        if(showLoading)
+        {
+            panel.on('render', function(panel){
+                panel.loadMask = new Ext.LoadMask(panel.getEl(), {msg:"Loading...", removeMask: true});
+                panel.loadMask.show();
+            }, this, {single: true, delay: 1})
         }
 
         this.getPanel = function(){ return panel; }
@@ -71,28 +82,28 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 'actionfailed': this.save_failure
             },
             items: [
-                {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
-                    {xtype: 'textfield', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', allowBlank: false, blankText: 'You must enter a title'},
-                    {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
-                    {xtype: 'textarea', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
+                {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+                    {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', allowBlank: false, blankText: 'You must enter a title'},
+                    {xtype: 'box', itemId: 'alert_title_label', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
+                    {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: '(<span id="message_length">0</span> characters)<br/>Any message larger than 580 characters including whitespace will cause the message to be truncated and recipients will need to visit the TXPhin website to view the entire message contents.'},
                     this.call_down_message_container,
-                    {xtype: 'textarea', fieldLabel: 'Short Message', name: 'alert[short_message]', maxLength: '160', height: 75, validator: this.validateShortMessage.createDelegate(this)},
+                    {xtype: 'textarea', itemId: 'alert_short_message', fieldLabel: 'Short Message', name: 'alert[short_message]', maxLength: '160', height: 75, validator: this.validateShortMessage.createDelegate(this)},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN. <br/><b>Maximum length: 160 characters.</b>'},
-                    {xtype: 'button', text: 'Enter Audiences >', handler: function(){this.breadCrumb.next();}, scope: this, width:'auto'}
+                    {xtype: 'button', itemId: 'alert_next_btn', text: 'Enter Audiences >', handler: function(){this.breadCrumb.next();}, scope: this, width:'auto'}
                 ]},
                 {xtype: 'container', itemId:'right_side_form', layout: 'form', items:[
-                    {xtype: 'combo', fieldLabel: 'Jurisdiction', hiddenName:'alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
-                    {xtype: 'combo', fieldLabel: 'Status', name: 'alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
-                    {xtype: 'combo', fieldLabel: 'Severity', name: 'alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
-                    {xtype: 'combo', fieldLabel: 'Delivery Time', hiddenName: 'alert[delivery_time]', valueField:'value', displayField:'display', mode: 'local', editable: false, triggerAction: 'all', value: 4320, store: new Ext.data.ArrayStore({
+                    {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
+                    {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
+                    {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
+                    {xtype: 'combo', itemId: 'alert_delivery_time', fieldLabel: 'Delivery Time', hiddenName: 'alert[delivery_time]', valueField:'value', displayField:'display', mode: 'local', editable: false, triggerAction: 'all', value: 4320, store: new Ext.data.ArrayStore({
                         data: [[15], [30], [45], [60], [75], [90], [1440], [4320]],
                         fields: ['value', {name: 'display', mapping:0, convert: function(val){return val <= 90 ? val + ' minutes' : (val/60) + ' hours';}}]
                     })},
                     {xtype: 'combo', itemId: 'acknowledge_combo', fieldLabel: 'Acknowledgement', name: 'alert[acknowledge]', store: ['None', 'Normal', 'Advanced'], editable: false, triggerAction: 'all', value: 'None',
                         listeners:{scope: this, 'select': this.acknowledgement_select}},
-                    {xtype: 'checkbox', inputValue: 1, boxLabel: 'Disable Cross-Jurisdictional Alerting', name: 'alert[not_cross_jurisdictional]'},
-                    {xtype: 'checkbox', inputValue: 1, boxLabel: 'Sensitive (confidential)', name: 'alert[sensitive]'},
+                    {xtype: 'checkbox', itemId: 'alert_cross_jurisdictional', inputValue: 1, boxLabel: 'Disable Cross-Jurisdictional Alerting', name: 'alert[not_cross_jurisdictional]'},
+                    {xtype: 'checkbox', itemId: 'alert_sensitive', inputValue: 1, boxLabel: 'Sensitive (confidential)', name: 'alert[sensitive]'},
                     {xtype: 'checkboxgroup', itemId: 'communication_methods', fieldLabel: 'Communication Methods', cls: 'checkboxGroup', allowBlank: false, columns: 1,
                         emptyText: 'You must select at least one communication method',
                         defaults: {name: 'alert[device_types][]'}, items:[
@@ -100,9 +111,9 @@ Talho.SendAlert = Ext.extend(function(){}, {
                         {boxLabel: 'Phone', inputValue: 'Device::PhoneDevice', handler: this.handlePhoneTypeCheck, scope: this},
                         {itemId: 'sms_communication_method', boxLabel: 'SMS', inputValue: 'Device::SMSDevice', handler: this.handlePhoneTypeCheck, scope: this},
                         {boxLabel: 'Fax', disabled: true, inputValue: 'Device::FaxDevice'},
-                        {itemId: 'blackberry_pin_communication_method', boxLabel: 'Blackberry PIN', inputValue: 'Device::BlackberryDevice', handler: this.handlePhoneTypeCheck, scope: this}
-                    ]},
-                    {xtype: 'textfield', hidden: true, itemId: 'caller_id_field', actionMode: 'itemCt', fieldLabel: 'Caller ID', name: 'alert[caller_id]', value: '4114114111', maxLength: '10', maskRe: /^[0-9]{0,10}$/}
+                        {itemId: 'blackberry_pin_communication_method', boxLabel: 'Blackberry PIN', inputValue: 'Device::BlackberryDevice', handler: this.handlePhoneTypeCheck, scope: this},
+                        {xtype: 'hidden', value:'Device::ConsoleDevice'}
+                    ]}
                 ]}
         ]});
 
@@ -116,13 +127,13 @@ Talho.SendAlert = Ext.extend(function(){}, {
             autoHeight: true,
             items: [
                 this.form_card,
-                {xtype: 'container', layout:'ux.center', items:[
+                {xtype: 'container', itemId: 'audience_container', layout:'ux.center', items:[
                     this._createAudiencePanel(),
                     {xtype: 'button', text: 'View Preview >', handler: function(){this.breadCrumb.next();}, scope: this}
                 ]},
                 {xtype: 'container', layout:'ux.center', items:[
                     this.alert_preview,
-                    {xtype: 'button', text: 'Send Alert', handler: function(){this.form_card.getForm().submit();}, scope: this}
+                    {xtype: 'button', text: 'Send Alert', handler: this.submit_alert, scope: this}
                 ]}
             ],
             activeItem: 0            
@@ -167,24 +178,33 @@ Talho.SendAlert = Ext.extend(function(){}, {
     },
 
     applyAudiences: function(form, action){
+        action.options.params = {};
+        action.options.params['send'] = true;
+
+        if(this.mode === 'new')
+        {
             var audienceIds = this.audiencePanel.getSelectedIds();
 
-            action.options.params = {};
-            action.options.params['send'] = true;
-        
             action.options.params['alert[audiences_attributes][1][jurisdiction_ids][]'] = audienceIds.jurisdiction_ids;
             action.options.params['alert[audiences_attributes][1][role_ids][]'] = audienceIds.role_ids;
             action.options.params['alert[audiences_attributes][1][user_ids][]'] = audienceIds.user_ids;
             action.options.params['alert[audience_ids][]'] = audienceIds.group_ids;
+        }
 
-            return true;
+        return true;
+    },
+
+    submit_alert: function(){
+        if(this.mode === 'new')
+            this.form_card.getForm().submit();
+        else if(this.mode === 'update' || this.mode === 'cancel')
+            this.form_card.getForm().submit({url:'alerts/' + this.alertId + '.json', method: 'PUT'});
     },
 
     submit_success: function(form, action){
         if(action.type == 'submit')
         {
-            var path = action.result.alert_path;
-            Application.fireEvent('opentab', {title: 'Alert Detail - ' + action.result.title, url: path, id: 'alert_detail_for_' + action.result.id });
+            Application.fireEvent('opentab', {title: 'Alert Log and Reporting', url: '/alerts', id: 'han_alert_log', initializer: 'Talho.Alerts' });
             this.getPanel().ownerCt.remove(this.getPanel()); // We're going to close the window now that we've successfully created an alert
         }
     },
@@ -200,7 +220,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
             height: 400
         });
 
-        return {xtype: 'container', items: [this.audiencePanel], width: 600, height: 400};
+        return {xtype: 'container', itemId: 'audience_container', items: [this.audiencePanel], width: 600, height: 400};
     },
 
     bread_crumb_beforenavigation: function(bc, currentIndex, newIndex){
@@ -209,7 +229,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             valid = this.form_card.getForm().isValid();
         }
-        if(valid && newIndex === 2)
+        if(valid && newIndex === 2) // leaving the preview as "2" is a bit of a hack: if we have a 2 to go to, then the audience panel is there, otherwise it's not
         {
             var selectedItems = this.audiencePanel.getSelectedItems();
             valid = selectedItems.groups.length > 0 || selectedItems.roles.length > 0 || selectedItems.jurisdictions.length > 0 || selectedItems.users.length > 0;
@@ -224,23 +244,49 @@ Talho.SendAlert = Ext.extend(function(){}, {
     },
 
     bread_crumb_toindex: function(bc, previousIndex, newIndex){
-        if(newIndex === 2) // if this is the preview panel
+        if(newIndex === this.breadCrumb.length - 1) // if this is the last panel
         {
-            // build the output of the form panel and audience panel into a consumable object then pass that to alert_preview.loadData()
-            var data = this.form_card.getForm().getFieldValues();
-            var call_downs = this.getCallDownMessages(data);
-            if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(call_downs, 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
+            var data = {};
+            if(this.mode === 'new')
             {
-                var acknowledge_combo = this.form_card.getComponent('right_side_form').getComponent('acknowledge_combo');
-                acknowledge_combo.setValue('Normal');
-                acknowledge_combo.fireEvent('select', acknowledge_combo, acknowledge_combo.getStore().getAt(acknowledge_combo.getStore().find('field1', 'Normal'))); // go the long way around to get the select event to fire since selectByValue or setValue do not fire select
-
+                // build the output of the form panel and audience panel into a consumable object then pass that to alert_preview.loadData()
                 data = this.form_card.getForm().getFieldValues();
-            }
-            data['alert[call_down_messages][]'] = call_downs;
-            data['alert[device_types][]'] = this.getSelectedCommunicationDevices();
-            Ext.apply(data, this.audiencePanel.getSelectedItems());
+                var call_downs = this.getCallDownMessages(data);
+                if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(call_downs, 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
+                {
+                    var acknowledge_combo = this.form_card.getComponent('right_side_form').getComponent('acknowledge_combo');
+                    acknowledge_combo.setValue('Normal');
+                    acknowledge_combo.fireEvent('select', acknowledge_combo, acknowledge_combo.getStore().getAt(acknowledge_combo.getStore().find('field1', 'Normal'))); // go the long way around to get the select event to fire since selectByValue or setValue do not fire select
 
+                    data = this.form_card.getForm().getFieldValues();
+                }
+                data['alert[call_down_messages][]'] = call_downs;
+                data['alert[device_types][]'] = this.getSelectedCommunicationDevices();
+                Ext.apply(data, this.audiencePanel.getSelectedItems());
+            }
+            else if(this.mode === 'update' || this.mode === 'cancel')
+            {
+                data = this.form_card.getForm().getFieldValues();
+                // look for json to handle the rest
+                data['alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.alert.title;
+                data['alert[status]'] = this.alert_json.alert.alert.status;
+
+                data['alert[call_down_messages][]'] = [];
+                Ext.each(this.getSelectedResponders(), function(responder, index){
+                    responder = responder * 1; // turn this into an int
+                    data['alert[call_down_messages][]'][responder - 1] = this.alert_json.alert.alert.call_down_messages[responder];
+                }, this);
+
+                data.roles = [];
+                data.users = [];
+                data.jurisdictions = [];
+                data.groups = [];
+
+                Ext.each(this.alert_json.audiences.roles, function(r){data.roles.push({name: r.role.name, id: r.role.id, type: 'role'})});
+                Ext.each(this.alert_json.audiences.users, function(u){data.users.push({name: u.user.display_name, id: u.user.id, profile_path: '/users/' + u.user.id + '/profile', type: 'user'})});
+                Ext.each(this.alert_json.audiences.jurisdictions, function(j){data.jurisdictions.push({name: j.jurisdiction.name, id: j.jurisdiction.id, type: 'jurisdiction'})});
+                Ext.each(this.alert_json.audiences.groups, function(g){data.groups.push({name: g.group.name, id: g.group.id, type: 'group'})});
+            }
             this.alert_preview.loadData(data);
         }
 
@@ -260,20 +306,40 @@ Talho.SendAlert = Ext.extend(function(){}, {
     },
 
     getSelectedCommunicationDevices: function(){
-        var selectedBoxes = this.form_card.getComponent('right_side_form').getComponent('communication_methods').getValue();
-        return Ext.pluck(selectedBoxes, 'inputValue');
+        var comm_methods = this.form_card.getComponent('right_side_form').getComponent('communication_methods');
+        if(comm_methods){
+            var selectedBoxes = comm_methods.getValue();
+            return Ext.pluck(selectedBoxes, 'inputValue');
+        }
+
+        return [];
+    },
+
+    getSelectedResponders: function(){
+        var comm_methods = this.form_card.getComponent('right_side_form').getComponent('alert_responders');
+        if(comm_methods){
+            var selectedBoxes = comm_methods.getValue();
+            return Ext.pluck(selectedBoxes, 'inputValue');
+        }
+
+        return [];
     },
 
     handlePhoneTypeCheck: function(){
         var cbs = this.getSelectedCommunicationDevices();
         var caller_id = this.form_card.getComponent('right_side_form').getComponent('caller_id_field');
-        if(cbs.indexOf('Device::SMSDevice') != -1 || cbs.indexOf('Device::PhoneDevice') != -1 || cbs.indexOf('Device::BlackberryDevice') != -1) // We should be showing the "Caller ID" box
+        if(cbs.indexOf('Device::SMSDevice') != -1 || cbs.indexOf('Device::PhoneDevice') != -1) // We should be showing the "Caller ID" box
         {
-            caller_id.show();
+            if(!this.form_card.getComponent('right_side_form').getComponent('caller_id_field'))
+            {
+                this.form_card.getComponent('right_side_form').add({xtype: 'textfield', itemId: 'caller_id_field', actionMode: 'itemCt', fieldLabel: 'Caller ID', name: 'alert[caller_id]', value: '', allowBlank: false, maxLength: '10', maskRe: /^[0-9]{0,10}$/});
+                this.form_card.doLayout();
+            }
         }
         else // the "Caller ID" box should not be visible
         {
-            caller_id.hide();
+            this.form_card.getComponent('right_side_form').getComponent('caller_id_field').destroy();
+            this.form_card.doLayout();
         }
     },
 
@@ -295,6 +361,106 @@ Talho.SendAlert = Ext.extend(function(){}, {
         }
         else
             return true;
+    },
+
+    loadAlertDetail: function(mode){
+        Ext.Ajax.request({
+            url: '/alerts/' + this.alertId + '/edit.json?_action=' + mode,
+            method: 'GET',
+            callback: this.alertDetailLoad_complete,
+            scope: this
+        })
+    },
+
+    /**
+     * Loads the values for the form manually. Removes a number of form items, changes a few others, and loads values into the rest.
+     * @param {Object}  options     The configuration object passed in to the Ajax.request
+     * @param {Boolean} success     The success property, as determined by Ext's default methods
+     * @param {Object}  response    The action response. Should decode response.responseText to get the JSON result.
+     */
+    alertDetailLoad_complete: function(options, success, response){
+        if(success)
+        {
+            this.alert_json = Ext.decode(response.responseText, true);
+            var alertInfo = this.alert_json.alert.alert;
+            var deviceTypes = this.alert_json.devices;
+
+            // load the form up
+            var bcContainer = this.breadCrumb.ownerCt;
+            var index = bcContainer.items.indexOf(this.breadCrumb);
+            this.breadCrumb.destroy();
+            this.breadCrumb = new Ext.ux.BreadCrumb({
+                itemId: 'bread_crumb_control',
+                items:['Details', 'Preview'],
+                listeners:{
+                    scope: this,
+                    'beforenavigation': this.bread_crumb_beforenavigation,
+                    'toindex': this.bread_crumb_toindex
+                }
+            });
+            bcContainer.insert(index, this.breadCrumb);
+
+            this.wizard_panel.remove(this.wizard_panel.getComponent('audience_container'), true);
+
+            var leftSide = this.form_card.getComponent('left_side_form');
+            var rightSide = this.form_card.getComponent('right_side_form');
+
+            // rewrite forms that should be different
+            var alertTitle = leftSide.getComponent('alert_title');
+            var ix = leftSide.items.indexOf(alertTitle);
+            leftSide.remove(alertTitle, true);
+            leftSide.insert(ix, {xtype: 'displayfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', value: '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alertInfo.title});
+            leftSide.getComponent('alert_title_label').destroy();
+            leftSide.getComponent('alert_next_btn').setText('View Preview >');
+
+            // remove unneeded fields
+            rightSide.getComponent('alert_jurisdiction').destroy();
+            rightSide.getComponent('alert_status').destroy();
+            rightSide.getComponent('communication_methods').destroy();
+            rightSide.getComponent('acknowledge_combo').getStore().loadData(['None', 'Normal']);
+
+            // If there are call down messages, create the checkbox group for selecting which responses to carry through
+            if(Ext.isObject(alertInfo.call_down_messages))
+            {
+                var i = 1, groupItems = [];
+                while(!Ext.isEmpty(alertInfo.call_down_messages[i]))
+                {
+                    groupItems.push({boxLabel: alertInfo.call_down_messages[i], inputValue: i, checked: true});
+                    i++;
+                }
+                if(groupItems.length > 0)
+                    rightSide.add({xtype: 'checkboxgroup', itemId: 'alert_responders', fieldLabel: 'Responders', cls: 'checkboxGroup', columns: 1, defaults: {name: 'alert[responders][]'}, items: groupItems})
+            }
+
+            // create hidden fields
+            Ext.each(deviceTypes, function(value){
+                rightSide.add({xtype:'hidden', value: value, name: 'alert[device_types][]'})
+            }, this);
+            leftSide.add({xtype:'hidden', value: this.mode, name: '_action'});
+
+            leftSide.doLayout();
+            rightSide.doLayout();
+            this.getPanel().doLayout();
+
+            // fill in values
+            leftSide.getComponent('alert_message').setValue(alertInfo.message);
+            leftSide.getComponent('alert_short_message').setValue(alertInfo.short_message);
+            rightSide.getComponent('alert_severity').setValue(alertInfo.severity);
+            
+
+            this.getPanel().loadMask.hide();
+        }
+        else
+        {
+            try {
+                var msg = Ext.decode(response.responseText, true).msg;
+                alert(msg);
+            }
+            catch(e){
+                alert("There was an issue with loading the information for the alert. Please try again.");
+            }
+            this.getPanel().fireEvent('fatalerror', this.getPanel());
+        }
     }
 });
 

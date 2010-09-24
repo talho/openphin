@@ -23,7 +23,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
 
 if current_user.has_non_public_role?
-    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }'}},"
+    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},"
   end
 
   menu_config += "{name: 'Tutorials', items:[
@@ -42,8 +42,12 @@ if current_user.has_non_public_role?
     end
 
     menu_config += "{name: 'My Account', items:[
-                    {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'#{ edit_user_profile_path(current_user) }'}},
-                    {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'#{ new_role_request_path }'}}]},"
+                      {name:'Profile', tab:{id: 'my_profile', title:'My Profile', url:'#{ edit_user_profile_path(current_user) }'}},
+                      {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditProfile'}},
+                      {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
+                      {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
+                      {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'#{ new_role_request_path }', initializer: 'Talho.RequestRoles'}}
+                    ]},"
 
     if current_user.is_admin?
       menu_config += "{name: 'Admin', items:[
