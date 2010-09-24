@@ -1,0 +1,65 @@
+@signup
+Feature: Signing up for an account with device creation
+
+  In order to participate in sending and receiving alerts
+  As a visitor
+  I want my devices to be automatically configured
+
+  Background:
+    Given Texas is the parent jurisdiction of:
+      | Dallas County |
+    And a role named Public
+
+  Scenario: Automatic device creation on signup
+    When I signup for an account with the following info:
+      | Email                 | john@example.com |
+      | Password              | Apples1          |
+      | Password Confirmation | Apples1          |
+      | First Name            | John             |
+      | Last Name             | Smith            |
+      | Preferred name        | Jonathan Smith   |
+      | Home Jurisdiction     | Dallas County    |
+      | Preferred language    | English          |
+      | Office Phone          | 1234567890       |
+      | Mobile Phone          | 5512018811       |
+      | SMS                   | 0987654321       |
+      | Blackberry PIN        | A1B2C3D4F5       |
+    Then I should see "Thanks for signing up"
+    And "john@example.com" should have the "Public" role for "Dallas County"
+    And "john@example.com" should have the communication devices
+      | Email      | john@example.com |
+      | Phone      | 1234567890       |
+      | Phone      | 5512018811       |
+      | SMS        | 0987654321       |
+      | Blackberry | A1B2C3D4F5       |
+    And "john@example.com" should receive the email:
+      | subject       | Confirm your email    |
+      | body contains | Thanks for signing up |
+
+  Scenario: Override automatic device creation on signup
+    When I am on the new user page
+    And I fill in the following:
+      | Email                 | john@example.com |
+      | Password              | Apples1          |
+      | Password Confirmation | Apples1          |
+      | First Name            | John             |
+      | Last Name             | Smith            |
+      | Preferred name        | Jonathan Smith   |
+      | Home Jurisdiction     | Dallas County    |
+      | Preferred language    | English          |
+      | Office Phone          | 1234567890       |
+      | Mobile Phone          | 5512018811       |
+      | SMS                   | 0987654321       |
+      | Blackberry PIN        | A1B2C3D4F5       |
+    And I check "Do not alert me on this device"  next to "SMS"
+    And I check "Do not alert me on this device" next to "Blackberry Pin"
+    And I press "Sign Up"
+    Then I should see "Thanks for signing up"
+    And "john@example.com" should have the "Public" role for "Dallas County"
+    And "john@example.com" should have the communication devices
+      | Email      | john@example.com |
+      | Phone      | 1234567890       |
+      | Phone      | 5512018811       |
+    And "john@example.com" should not have the communication devices
+      | SMS        | 0987654321       |
+      | Blackberry | A1B2C3D4F5       |
