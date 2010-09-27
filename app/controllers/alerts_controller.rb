@@ -13,7 +13,8 @@ class AlertsController < ApplicationController
   end
 
   def show
-    @alert = present Alert.find(params[:id])
+    alert = Alert.find(params[:id])
+    @alert = present alert
     respond_to do |format|
       format.html
       format.pdf do
@@ -21,6 +22,26 @@ class AlertsController < ApplicationController
         alerter_required
       end
       format.xml { render :xml => @alert.to_xml( :include => [:author, :from_jurisdiction] , :dasherize => false)}
+      format.json do
+        original_included_root = ActiveRecord::Base.include_root_in_json
+        ActiveRecord::Base.include_root_in_json = false
+        audiences = {:roles => [], :groups => [], :jurisdictions => [], :users => []}
+        alert.audiences.each do |audience|
+          if audience.name.nil?
+            audiences[:roles] = audiences[:roles] | audience.roles.map {|role| role.as_json(:only => ["id", "name"])}
+            audiences[:jurisdictions] = audiences[:jurisdictions] | audience.jurisdictions {|jurisdiction| jurisdiction.as_json(:only => ["id", "name"])}
+            audiences[:users] = audiences[:users] | audience.users.map {|user| {:id => user.id, :name => user.display_name } }
+          else
+            audiences[:groups].push(audience.as_json(:only => ["id", "name"]))
+          end
+        end
+        render :json => {:alert => alert.as_json(:include => {:alert_device_types => {:only => ['device']} },
+                                      :only => ['acknowledge', 'call_down_messages', 'created_at', 'delivery_time', 'message', 'not_cross_jurisdictional', 'severity', 'short_message', 'status', 'sensitive', 'title']),
+                         :alert_attempts => alert.alert_attempts,
+                         :audiences => audiences
+        }
+        ActiveRecord::Base.include_root_in_json = original_included_root
+      end
       format.csv do
         alerter_required
         @filename = "alert-#{@alert.identifier}.csv"

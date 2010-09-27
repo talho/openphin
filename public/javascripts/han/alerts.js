@@ -107,7 +107,7 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
 
     viewLink_clicked: function(evt, elem, options){
         var url = Ext.get(elem).getAttribute('url');
-        Application.fireEvent('opentab', {title: 'Alert Detail - ' + options.title, url: url, id: 'alert_detail_for_' + options.id});
+        Application.fireEvent('opentab', {title: 'Alert Detail - ' + options.title, url: url, id: 'alert_detail_for_' + options.id, alertId: options.id,  initializer: 'Talho.AlertDetail'});
     },
 
     updateLink_clicked: function(evt, elem, options){
@@ -130,4 +130,4 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
 Talho.Alerts.initialize = function(config){
     var alerts = new Talho.Alerts(config);
     return alerts.getPanel();
-}
+};

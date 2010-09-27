@@ -17,10 +17,12 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
             }
         });
 
+        this.acknowledgement_store = new Ext.data.Store({reader: new Ext.data.JsonReader({fields: ['name', 'email', 'device', 'response', 'acknowledged_at']})});
+
         Ext.apply(config, { // we want to absolutely override the items passed in the constructor.
             items:[
                 {xtype: 'box', itemId: 'alert_title', style: {'text-align': 'center', 'margin-bottom': '10px'}},
-                {collapsible: true, itemId: 'alert_detail_panel', title: 'Details', width: 800, layout: 'hbox', padding: '5', items: [
+                {xtype: 'container', itemId: 'alert_detail_panel', width: 800, layout: 'hbox', padding: '5', items: [
                         {xtype: 'container', itemId: 'left_detail', flex: 2, layout: 'form', labelWidth: 175, items:[
                             {xtype: 'displayfield', itemId: 'alert_message', hideLabel:true},
                             {xtype: 'displayfield', itemId: 'alert_short_text', fieldLabel: 'Short Text'},
@@ -39,16 +41,22 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
                     ]
                 },
                 {collapsible: true, collapsed: true, itemId: 'audience_holder', title: 'Audience', width: 800, items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
-                {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true, title: 'Acknowledgements', width: 800, store: new Ext.data.Store({
-                        reader: new Ext.data.JsonReader({fields: ['name', 'email', 'device', 'response']})
-                    }), disableSelection: true, autoExpandColumn: 'name_column',
+                {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true, title: 'Acknowledgements', width: 800, store: this.acknowledgement_store, disableSelection: true, autoExpandColumn: 'name_column',
                     columns:[
                         {id: 'name_column', field: 'name', header: 'Name'},
                         {field: 'email', header: 'E-mail'},
-                        {field: 'device', header: 'Acknowledgement Device', width: 200},
-                        {field: 'response', header: 'Acknowledgement Response', width: 200}
+                        {field: 'device', header: 'Acknowledgement Device', width: 200, renderer: function(value){return value.match(/(?!Device)[^:\W]*(?=Device)/i)}},
+                        {field: 'response', header: 'Acknowledgement Response', width: 200},
+                        {field: 'acknowledged_at', header: 'Acknowledgement Time', renderer: Ext.util.Format.dateRenderer('F j, Y, g:i a'), width: 200}
                     ],
-                    bbar:{items: ['->', {text:'Export as CSV'}, {text:'Export as PDF'}]}
+                    bbar:new Ext.PagingToolbar({
+                        store: this.acknowledgement_store,
+                        pageSize: 10,
+                        prependButtons: true,
+                        items: [{text:'Export as CSV', handler: function(){window.open("/alerts/" + this.alertId + ".csv");}, scope: this},
+                            {text:'Export as PDF', handler: function(){window.open("/alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
+                        listeners:{'beforechange': function(toolbar, o){return toolbar.cursor != o.start;}}
+                    })
                 }
             ]
         });
@@ -57,16 +65,72 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
     },
 
     initComponent: function(){
-        var loadAlert = Ext.isNumber(this.alertId) ? true: false;
+        var loadAlert = !Ext.isEmpty(this.alertId) ? true: false;
 
         Talho.AlertDetail.superclass.initComponent.call(this);
 
         if(loadAlert)
         {
             // perform load from AJAX
+            Ext.Ajax.request({
+                url: '/alerts/' + this.alertId + '.json',
+                method: 'GET',
+                scope: this,
+                callback: this.getAlertDetailFromServer_complete
+            });
+
+            this.on('render', function(panel){
+                panel.loadMask = new Ext.LoadMask(this.getEl());
+                panel.loadMask.show();
+            }, this, {delay: 10, single: true});
 
             // show the acknowledgement grid
+            this.getComponent('acknowledgement_grid').show();
         }
+    },
+
+    getAlertDetailFromServer_complete: function(options, success, response){
+        var alert_json = Ext.decode(response.responseText);
+
+        var call_downs = [];
+        var i = 1;
+        while(!Ext.isEmpty(alert_json.alert.call_down_messages[i.toString()])){
+            call_downs.push(alert_json.alert.call_down_messages[(i++).toString()]);
+        }
+
+        // we're going to rewrite this into something that the loadData method can understand
+        var data = {
+            'alert[title]': alert_json.alert.title,
+            'alert[message]': alert_json.alert.message,
+            'alert[short_message]': alert_json.alert.short_message,
+            'alert[not_cross_jurisdictional]': alert_json.alert.not_cross_jurisdictional,
+            'alert[severity]': alert_json.alert.severity,
+            'alert[status]': alert_json.alert.status,
+            'alert[acknowledge]': alert_json.alert.acknowledge ? 'Yes' : 'No',
+            'alert[sensitive]': alert_json.alert.sensitive,
+            'alert[delivery_time]': alert_json.alert.delivery_time,
+            'alert[call_down_messages][]': call_downs,
+            'alert[created_at]': new Date(alert_json.alert.created_at),
+            'alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device')
+        };
+
+        Ext.apply(data, alert_json.audiences);
+        this.loadData(data);
+
+        var acknowledgements = [];
+        // let's go ahead and rewrite the alert attempts to something that works better for us
+        Ext.each(alert_json.alert_attempts, function(attempt, index){
+            acknowledgements.push({name: attempt.user.display_name,
+                email: attempt.user.email,
+                device: attempt.acknowledged_alert_device_type.device,
+                response: alert_json.alert.call_down_messages[attempt.call_down_response.toString()],
+                acknowledged_at: attempt.acknowledged_at
+            });
+        }, this);
+
+        this.acknowledgement_store.loadData(acknowledgements);
+
+        if(this.loadMask) this.loadMask.hide();
     },
 
     /**
@@ -96,7 +160,12 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
                 }
             }, this);
 
-            leftPane.getComponent('alert_created_at').hide();
+            if(data['alert[created_at]']){
+                leftPane.getComponent('alert_created_at').update(data['alert[created_at]'].format('F j, Y, g:i a'));
+                leftPane.getComponent('alert_created_at').show();
+            }
+            else
+                leftPane.getComponent('alert_created_at').hide();
             leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
             var rightPane = this.getComponent('alert_detail_panel').getComponent('right_detail');
             rightPane.getComponent('alert_severity').update(data['alert[severity]']);
@@ -146,3 +215,17 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
         panel.getComponent('audience_panel').loadRecipientStoreFromAjax('/audiences/determine_recipients.json', params);
     }
 });
+
+Talho.AlertDetail.initialize = function(config){
+
+    Ext.apply(config, {
+        items:[new Talho.AlertDetail({
+            alertId: config.alertId
+        })],
+        autoScroll: true,
+        closable: true,
+        padding: '10'
+    });
+
+    return new Ext.Panel(config);
+};
