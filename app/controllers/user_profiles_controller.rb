@@ -76,7 +76,7 @@ class UserProfilesController < ApplicationController
 
     # Profile form will return blank devices due to hidden fields used to add devices via ajax
     Device::Types.map(&:name).map(&:demodulize).each do |device_type|
-      if params[device_type].values.first.blank?
+      if params.has_key?(device_type) && params[device_type].values.first.blank?
         params.delete(device_type)
       end
     end
@@ -86,20 +86,22 @@ class UserProfilesController < ApplicationController
       @device.user = @user
     end
 
-    params[:user][:role_requests_attributes].each do |index, role_request|
-      if role_request[:role_id].blank? && role_request[:jurisdiction_id].blank?
-        params[:user][:role_requests_attributes].delete(index)
-        next
-      end
-      jurisdiction = Jurisdiction.find(role_request[:jurisdiction_id])
-      if jurisdiction && current_user.is_admin_for?(jurisdiction)
-        existing_request = RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_request['role_id'], role_request['jurisdiction_id'])
-        if existing_request
-          existing_request.destroy
+    if params[:user].has_key?(:role_requests_attributes)
+      params[:user][:role_requests_attributes].each do |index, role_request|
+        if role_request[:role_id].blank? && role_request[:jurisdiction_id].blank?
+          params[:user][:role_requests_attributes].delete(index)
+          next
         end
-      end
-      unless params[:user_id] == current_user.id
-        role_request[:requester_id] = current_user.id 
+        jurisdiction = Jurisdiction.find(role_request[:jurisdiction_id])
+        if jurisdiction && current_user.is_admin_for?(jurisdiction)
+          existing_request = RoleRequest.find_by_user_id_and_role_id_and_jurisdiction_id(params[:user_id], role_request['role_id'], role_request['jurisdiction_id'])
+          if existing_request
+            existing_request.destroy
+          end
+        end
+        unless params[:user_id] == current_user.id
+          role_request[:requester_id] = current_user.id 
+        end
       end
     end
 
@@ -141,6 +143,7 @@ class UserProfilesController < ApplicationController
           flash[:notice] = "" if flash[:notice].blank?
           flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
           format.html { redirect_to user_profile_path(@user) }
+          format.json { render :json => {:flash => flash[:notice], :type => :notice, :success => true} }
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
@@ -150,11 +153,13 @@ class UserProfilesController < ApplicationController
         flash[:error] = "Another user has recently updated this profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit"}
+        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       rescue StandardError
         flash[:error] = "An error has occurred saving your profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit" }
+        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors, :success => true} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
