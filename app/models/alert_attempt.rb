@@ -109,7 +109,15 @@ class AlertAttempt < ActiveRecord::Base
       alert.update_statistics(:device => device, :jurisdiction => user.jurisdictions, :response => response)
     end
   end
-  
+
+  def as_json(options = {})
+    options[:include] = {} if options[:include].nil?
+    include = {:user => {:only => [:display_name, :email]}}
+    include[:acknowledged_alert_device_type] = {} unless acknowledged_alert_device_type_id.nil?
+    options[:include].merge! include
+    super(options)
+  end
+
   protected
   def generate_acknowledgment_token
     self.token = ActiveSupport::SecureRandom.hex

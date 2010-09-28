@@ -6,6 +6,16 @@ module Phin
       controller.extend ClassMethods
     end
 
+    def self.eval_if_plugin_present(plugin_name, &block)
+      if File.exists?(File.join(Rails.root, "vendor", "plugins", plugin_name.to_s))
+        begin
+          yield block
+        rescue => e
+          raise unless e.message.index(plugin_name.to_s)
+        end
+      end
+    end
+
     module ClassMethods
       attr_accessor_with_default(:access_roles){ Array.new }
 
@@ -32,8 +42,8 @@ module Phin
       end
 
       def register_phin_application
-        
       end
+
       def role_required(role_or_roles)
         access_roles.concat(role_or_roles.is_a?(String) ? [role_or_roles] : role_or_roles)
       end
