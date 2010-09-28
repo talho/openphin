@@ -124,26 +124,27 @@ class UserProfilesController < ApplicationController
     respond_to do |format|
       begin
         if @user.update_attributes(params[:user]) && (@device.nil? || @device.save)
+          flash[:notice] = ""
+
           params[:user][:role_requests_attributes].each do |index, role_requests|
             rr = @user.role_requests.find_by_role_id_and_jurisdiction_id(role_requests['role_id'], role_requests['jurisdiction_id'])
             if !rr.approved? && current_user.is_admin_for?(rr.jurisdiction)
               rr.approve!(current_user)
             end
-          end
+          end unless params[:user][:role_requests_attributes].nil?
 
           params[:user][:organization_membership_requests_attributes].each do |index, request|
             omr = @user.organization_membership_requests.find_by_organization_id(request['organization_id'])
             if !omr.approved? && current_user.is_super_admin?
               omr.approve!(current_user)
             else
-              flash[:notice] = "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
+              flash[:notice] += "Your request to be a member of #{omr.organization.name} has been sent to an administrator for approval."
             end
           end unless params[:user][:organization_membership_requests_attributes].nil?
 
-          flash[:notice] = "" if flash[:notice].blank?
-          flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : "<br/><br/>Profile information saved."
+          flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : '<br/><br/>Profile information saved.'
           format.html { redirect_to user_profile_path(@user) }
-          format.json { render :json => {:flash => flash[:notice], :type => :notice, :success => true} }
+          format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
@@ -155,11 +156,11 @@ class UserProfilesController < ApplicationController
         format.html { render :action => "edit"}
         format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
-      rescue StandardError
+      rescue StandardError => e
         flash[:error] = "An error has occurred saving your profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit" }
-        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors, :success => true} }
+        format.json { render :json => {:flash => flash[:error] + "\n" + e.message, :type => :error, :errors => @user.errors, :success => true} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end

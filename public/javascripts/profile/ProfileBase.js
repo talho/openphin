@@ -70,10 +70,13 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Form callbacks
   submit_success: function(form, action){
-    //alert(action.result.toSource());
-    $("#flash-msg").addClass(action.result.type).html(action.result.flash).show();
+    var json = action.result;
+    //alert(json.toSource());
     var fm = this.getPanel().getEl().select("#flash-msg").first();
+    if (json.type != null)
+      fm.addClass(json.type).update(json.flash).show();
     fm.parent().parent().parent().parent().scrollTo("top", 0);
+    this.getPanel().doLayout();
   },
   submit_failure: function(form, action){
     Ext.Msg.maxWidth = 1000;
