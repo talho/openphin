@@ -4,25 +4,29 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   constructor: function(config, item_list, url, method){
     Ext.apply(this, config);
 
-    // Add buttons at the bottom of the form
-    var buttons = {xtype: 'container', layout: 'hbox', items:[
-      {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
-      {xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
-      {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
-    ]};
-    item_list[0].items.push(buttons);
+    // Add flash msg at top and buttons at the bottom
+    var panel_items = [
+      {xtype: 'container', defaults:{width:700,padding:'10'}, items:[
+        {xtype: 'box', html: '<p id="flash-msg" class="flash">foobar</p>'},
+        {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: item_list},
+        {xtype: 'container', layout: 'hbox', items:[
+          {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
+          {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
+        ]}
+      ]}
+    ];
 
     // Create the ext form panel
     var panel = new Ext.form.FormPanel({
       title: this.title,
       border: false,
-      layout: 'hbox',
-      layoutConfig: {defaultMargins: '10', pack: 'center'},
+      layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       closable: true,
       autoScroll: true,
       url: url, method: method,
       listeners: {scope: this, 'actioncomplete': this.submit_success, 'actionfailed': this.submit_failure},
-      items: item_list
+      items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
 
@@ -52,8 +56,9 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     Ext.Msg.alert('Error loading user info', 'Status:' + response.status + ': ' + response.statusText);
   },
   set_field_values: function(p, obj){
+    //alert(obj.toSource());
     for (var prop in obj) {
-      var elem_list = p.find("name", "profile[" + prop + "]");
+      var elem_list = p.find("name", "user[" + prop + "]");
       if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
     }
   },
@@ -65,13 +70,18 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Form callbacks
   submit_success: function(form, action){
-    if (action.type == 'submit') {
-    }
+    //alert(action.result.toSource());
+    $("#flash-msg").addClass(action.result.type).html(action.result.flash).show();
+    var fm = this.getPanel().getEl().select("#flash-msg").first();
+    fm.parent().parent().parent().parent().scrollTo("top", 0);
   },
   submit_failure: function(form, action){
+    Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
-      Ext.Msg.alert('Error', 'Status:' + action.response.status + ': ' + action.response.statusText);
+      Ext.Msg.alert('Error',
+        '<b>Status: ' + action.response.status + ' => ' + action.response.statusText + '</b><br><br>' +
+        '<div style="height:400px;overflow:scroll;">' + action.response.responseText + '<\div>');
     if (action.failureType === Ext.form.Action.SERVER_INVALID)
-      Ext.Msg.alert('Invalid', action.result.errormsg);
+      Ext.Msg.alert('Invalid!!!', action.result.errormsg);
   }
 });
