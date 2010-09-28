@@ -28,7 +28,7 @@ Feature: Alert Reports
     Then I should see an alert titled "Grant Sample"
     When I click "View" within alert "Grant Sample"
     And I will confirm on next step
-    When I download the file "Export Contacted Users (CSV)"
+    When I click to download the file "Export as CSV"
     Then I should see "Success" within the alert box
 
   Scenario: A non-alerter cannot view a report of an alert

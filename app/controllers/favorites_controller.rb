@@ -13,6 +13,9 @@ class FavoritesController < ApplicationController
   def create
     fav = Favorite.new(:user_id => current_user.id, :tab_config => params[:favorite][:tab_config])
 
+    original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
+
     respond_to do |format|
       if fav.save!
         format.xml {render :xml => fav, :status => :created}
@@ -22,6 +25,8 @@ class FavoritesController < ApplicationController
         format.json {render :json => fav.errors, :status => 500}
       end
     end
+
+    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   def destroy

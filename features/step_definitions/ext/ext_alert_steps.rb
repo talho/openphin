@@ -34,3 +34,7 @@ end
 Then /^I should not see button "([^\"]*)" for alert "([^\"]*)"$/ do |link, title|
   page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).should be_nil
 end
+
+When /^I should see "([^\"]*)" for user "([^\"]*)"$/ do |text, user|
+  page.find(:xpath, "//tr[.//div[text() = '#{user}']]", :text => text).should_not be_nil
+end

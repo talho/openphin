@@ -130,9 +130,15 @@ end
 When /^I should see a display form with:$/ do |table|
   # table is a | Message  | For more details, keep on reading...         |
   table.rows_hash.each do |name, value|
-    page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
+    Then %{I should see "#{value}" within display field "#{name}"}
+    #page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
   end
 end
+
+When /^I should see "([^"]*)" within display field "([^"]*)"/ do |value, name|
+  page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
+end
+
 When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
   begin
     mask = page.find('.x-mask-loading', :text => mask_text)
@@ -165,4 +171,14 @@ Then /^I should not be able to navigate to "([^\"]*)"$/ do |menu_navigation_list
   end
 
   menu_item_found.should be_false
+end
+
+When /^I click to download the file "([^\"]*)"$/ do |value|
+  elem = page.find("button", :text => value)
+  begin
+    evaluate_script("window.open = function(url){setTimeout(function(){$.get(url,function(data){alert('Success')})},500);}")
+    elem.click
+    sleep 1
+  rescue Capybara::NotSupportedByDriverError
+  end
 end
