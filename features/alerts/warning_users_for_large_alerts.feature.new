@@ -31,6 +31,7 @@
        | Texas         | Jurisdiction |
      When I will confirm on next step
      And I click breadCrumbItem "Preview"
+     And I press "Send Alert"
      Then I should see "Caution:  This alert will be sent to everyone in Texas" within the alert box
 
      ### this will deselect Texas and select Federal
@@ -41,6 +42,7 @@
        | Federal       | Jurisdiction |
      When I will confirm on next step
      And I click breadCrumbItem "Preview"
+     And I press "Send Alert"
      Then I should see "Caution:  This alert will be sent to everyone in Federal" within the confirmation box
 
      ### this will deselect Federal and select Region 2
@@ -51,6 +53,7 @@
        | Region 2      | Jurisdiction |
      When I will confirm on next step
      And I click breadCrumbItem "Preview"
+     And I press "Send Alert"
      Then I should see "Caution:  This alert will be sent to everyone in Region 2" within the confirmation box
 
    Scenario: User must confirm if sending alert to more than 50 people.
@@ -92,9 +95,10 @@
        | Tarrant County    | Jurisdiction |
        | Mitchell County   | Jurisdiction |
        | Taylor County     | Jurisdiction |
-
-     When I will confirm on next step
      And I click breadCrumbItem "Preview"
+
+     When I will deny on next step
+     And I press "Send Alert"
      Then I should see "Caution:  This alert will be sent to approximately 70 people" within the confirmation box
      And I click breadCrumbItem "Audience"
      # deselect Dallas and Mitchell counties, making audience < 50
@@ -103,5 +107,6 @@
        | Dallas County     | Jurisdiction |
        | Mitchell County   | Jurisdiction |
      And I click breadCrumbItem "Preview"
+     And I press "Send Alert"
      Then I should not see "Caution:  This alert"
      And I should see "H1N1 SNS push packs to be delivered tomorrow"
