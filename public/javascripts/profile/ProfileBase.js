@@ -7,7 +7,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
       {xtype: 'container', defaults:{width:700,padding:'10'}, items:[
-        {xtype: 'box', html: '<p id="flash-msg" class="flash">foobar</p>'},
+        {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: item_list},
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
@@ -50,6 +50,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     var json = Ext.decode(response.responseText, true);
     this.set_field_values(p, json.model.user);
     this.set_field_values(p, json.extra);
+    p.doLayout();
   },
   load_fail_cb: function(response, options){
     this.getPanel().loadMask.hide();
@@ -86,5 +87,5 @@ Talho.ProfileBase = Ext.extend(function(){}, {
         '<div style="height:400px;overflow:scroll;">' + action.response.responseText + '<\div>');
     if (action.failureType === Ext.form.Action.SERVER_INVALID)
       Ext.Msg.alert('Invalid!!!', action.result.errormsg);
-  }
+  },
 });

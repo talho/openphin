@@ -44,9 +44,14 @@ class UserProfilesController < ApplicationController
   def edit
     set_toolbar
     find_user_and_profile
+    roles = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
     respond_to do |format|
       format.html
-      format.json { render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium)}} }
+      format.json {
+        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium),
+                                                     :devices => @user.devices.collect { |d| d.to_s },
+                                                     :roles => roles}}
+      }
     end
   end
 
@@ -120,6 +125,9 @@ class UserProfilesController < ApplicationController
       params[:user].delete("password")
       params[:user].delete("password_confirmation")
     end
+
+    # Handle unchecked checkboxes
+    params[:user][:public] = 0 if !params[:user].has_key?(:public)
 
     respond_to do |format|
       begin
