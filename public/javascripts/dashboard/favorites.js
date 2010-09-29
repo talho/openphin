@@ -55,8 +55,8 @@ var Favorites = Ext.extend(Ext.util.Observable, {
         });
 
         var reader = new Ext.data.ux.RailsJsonReader({
-            idProperty: 'favorite.id',
-            fields: [{name: 'id', mapping:'favorite.id'}, {name:'tab_config', mapping:'favorite.tab_config'}]
+            idProperty: 'id',
+            fields: [{name: 'id', mapping:'id'}, {name:'tab_config', mapping:'tab_config'}]
         });
 
         this.store = new Ext.data.Store({

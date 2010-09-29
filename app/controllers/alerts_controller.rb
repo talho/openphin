@@ -29,16 +29,16 @@ class AlertsController < ApplicationController
         alert.audiences.each do |audience|
           if audience.name.nil?
             audiences[:roles] = audiences[:roles] | audience.roles.map {|role| role.as_json(:only => ["id", "name"])}
-            audiences[:jurisdictions] = audiences[:jurisdictions] | audience.jurisdictions {|jurisdiction| jurisdiction.as_json(:only => ["id", "name"])}
+            audiences[:jurisdictions] = audiences[:jurisdictions] | audience.jurisdictions.map {|jurisdiction| jurisdiction.as_json(:only => ["id", "name"])}
             audiences[:users] = audiences[:users] | audience.users.map {|user| {:id => user.id, :name => user.display_name } }
           else
             audiences[:groups].push(audience.as_json(:only => ["id", "name"]))
           end
         end
-        render :json => {:alert => alert.as_json(:include => {:alert_device_types => {:only => ['device']} },
-                                      :only => ['acknowledge', 'call_down_messages', 'created_at', 'delivery_time', 'message', 'not_cross_jurisdictional', 'severity', 'short_message', 'status', 'sensitive', 'title']),
+        render :json => {:alert => alert.as_json(:include => {:alert_device_types => {:only => ['device']}, :author => {:only => ["display_name"]} },
+                                                 :only => ['acknowledge', 'call_down_messages', 'created_at', 'delivery_time', 'message', 'not_cross_jurisdictional', 'severity', 'short_message', 'status', 'sensitive', 'title']),
                          :alert_attempts => alert.alert_attempts,
-                         :audiences => audiences
+                         :audiences => audiences 
         }
         ActiveRecord::Base.include_root_in_json = original_included_root
       end

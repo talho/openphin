@@ -26,6 +26,7 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
                         {xtype: 'container', itemId: 'left_detail', flex: 2, layout: 'form', labelWidth: 175, items:[
                             {xtype: 'displayfield', itemId: 'alert_message', hideLabel:true},
                             {xtype: 'displayfield', itemId: 'alert_short_text', fieldLabel: 'Short Text'},
+                            {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_author', fieldLabel: 'Author'},
                             {xtype: 'container', layout: 'form', labelWidth: 175, itemId: 'alert_response_container', hideLabel: true},
                             {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_created_at', fieldLabel: 'Created at'},
                             {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', fieldLabel: 'Disable Cross-Jurisdictional alerting?'}
@@ -94,7 +95,7 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
 
         var call_downs = [];
         var i = 1;
-        while(!Ext.isEmpty(alert_json.alert.call_down_messages[i.toString()])){
+        while(alert_json.alert.call_down_messages && !Ext.isEmpty(alert_json.alert.call_down_messages[i.toString()])){
             call_downs.push(alert_json.alert.call_down_messages[(i++).toString()]);
         }
 
@@ -106,12 +107,13 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
             'alert[not_cross_jurisdictional]': alert_json.alert.not_cross_jurisdictional,
             'alert[severity]': alert_json.alert.severity,
             'alert[status]': alert_json.alert.status,
-            'alert[acknowledge]': alert_json.alert.acknowledge ? 'Yes' : 'No',
+            'alert[acknowledge]': alert_json.alert.acknowledge ? call_downs.length > 0 ? 'Advanced' : 'Normal' : 'None',
             'alert[sensitive]': alert_json.alert.sensitive,
             'alert[delivery_time]': alert_json.alert.delivery_time,
             'alert[call_down_messages][]': call_downs,
             'alert[created_at]': new Date(alert_json.alert.created_at),
-            'alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device')
+            'alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device'),
+            'alert[author]': alert_json.alert.author.display_name
         };
 
         Ext.apply(data, alert_json.audiences);
@@ -122,8 +124,8 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
         Ext.each(alert_json.alert_attempts, function(attempt, index){
             acknowledgements.push({name: attempt.user.display_name,
                 email: attempt.user.email,
-                device: attempt.acknowledged_alert_device_type.device,
-                response: alert_json.alert.call_down_messages[attempt.call_down_response.toString()],
+                device: attempt.acknowledged_alert_device_type ? attempt.acknowledged_alert_device_type.device : "",
+                response: attempt.call_down_response ? alert_json.alert.call_down_messages[attempt.call_down_response.toString()] : attempt.call_down_response === 0 ? "Acknowledged" : "",
                 acknowledged_at: attempt.acknowledged_at
             });
         }, this);
@@ -146,6 +148,8 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
         {
             this.data = data;
             this.getComponent('alert_title').update(data['alert[title]']);
+            if(!Ext.isEmpty(this.alertId)) this.getComponent('alert_title').getEl().id = this.alertId;
+
             var detail_panel = this.getComponent('alert_detail_panel');
             var leftPane = detail_panel.getComponent('left_detail');
             leftPane.getComponent('alert_message').update(data['alert[message]']);
@@ -164,8 +168,11 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
                 leftPane.getComponent('alert_created_at').update(data['alert[created_at]'].format('F j, Y, g:i a'));
                 leftPane.getComponent('alert_created_at').show();
             }
-            else
-                leftPane.getComponent('alert_created_at').hide();
+            if(data['alert[author]']){
+                leftPane.getComponent('alert_author').update(data['alert[author]']);
+                leftPane.getComponent('alert_author').show();
+            }
+
             leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
             var rightPane = this.getComponent('alert_detail_panel').getComponent('right_detail');
             rightPane.getComponent('alert_severity').update(data['alert[severity]']);

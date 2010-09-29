@@ -20,8 +20,9 @@ Feature: Viewing the alert log
     And I should see "Acknowledge: None"
 
     When I click "View" within alert "Hello World"
+    And I wait for the "Loading" mask to go away
     Then I can see the alert summary for "Hello World"
-    And I should see "None" within ".acknowledge"
+    And I should see "None" within display field "Acknowledge"
 
   Scenario: Viewing list of alerts sent directly to you
     Given the following users exist:
@@ -38,8 +39,9 @@ Feature: Viewing the alert log
     And I should see "Acknowledge: None"
 
     When I click "View" within alert "Hello World"
+    And I wait for the "Loading" mask to go away
     Then I can see the alert summary for "Hello World"
-    And I should see "None" within ".acknowledge"
+    And I should see "None" within display field "Acknowledge"
 
   Scenario: Viewing list of alerts in child jurisdictions
     Given the following entities exists:
@@ -184,8 +186,7 @@ Feature: Viewing the alert log
       | roles                 | Health Alert and Communications Coordinator |
       | audiences             |                                             |
       | title                 | Hello World                                 |
-      | communication methods | Email, SMS                                  |
-      | caller_id             | 1234567890                                  |
+      | communication methods | Email                                       |
       | alert_response_1      | if you can respond within 15 minutes        |
       | alert_response_2      | if you can respond within 30 minutes        |
       | alert_response_3      | if you can respond within 1 hour            |
@@ -197,7 +198,8 @@ Feature: Viewing the alert log
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
-    Then I should see "Acknowledge: Advanced"
+    And I should see "Acknowledge: Advanced"
+    When I click "More" within alert "Hello World" 
     And I navigate to "HAN > HAN Home"
     And I click "More" within alert "Hello World"
     And I should see "Alert Response"
@@ -218,8 +220,7 @@ Feature: Viewing the alert log
       | jurisdictions         | Texas, Dallas County                        |
       | roles                 | Health Alert and Communications Coordinator |
       | title                 | Hello World                                 |
-      | communication methods | Email, SMS                                  |
-      | caller_id             | 1234567890                                  |
+      | communication methods | Email                                       |
       | alert_response_1      | if you can respond within 15 minutes        |
       | alert_response_2      | if you can respond within 30 minutes        |
       | alert_response_3      | if you can respond within 1 hour            |
@@ -237,6 +238,7 @@ Feature: Viewing the alert log
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
     When I click "View" within alert "Hello World"
+    And I wait for the "Loading" mask to go away
     Then I should see "if you can respond within 15 minutes"
 
   Scenario: Viewing audience of Alert and advanced acknowledgement log from view(show)
@@ -269,13 +271,17 @@ Feature: Viewing the alert log
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
     When I click "View" within alert "Hello World"
+    And I wait for the "Loading" mask to go away
 
-    Then I should see "John Smith" within ".author"
+    Then I should see "John Smith" within display field "Author"
     And I should see "Created at:"
-    Then I should see "Texas" within ".jurisdictions"
-    And I should see "Health Alert and Communications Coordinator" within ".roles"
-    And I should see "John Smith" within ".name"
-    And I should see "if you cannot respond" within ".user .alert_response"
+    And I expand ext panel "Audience"
+    Then I should see the following audience breakdown:
+      | name                                        | type         |
+      | Texas                                       | Jurisdiction |
+      | Health Alert and Communications Coordinator | Role         |
+    And I should see "John Smith" for user "John Smith"
+    And I should see "if you cannot respond" for user "Daniel Morrison"
 
   Scenario: Viewing audience of Alert and regular acknowledgement log from view(show)
     Given the following entities exist:
@@ -309,11 +315,16 @@ Feature: Viewing the alert log
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
     When I click "View" within alert "Hello World"
-    Then I should see "John Smith" within ".author"
+    And I wait for the "Loading" mask to go away
+
+    Then I should see "John Smith" within display field "Author"
     And I should see "Created at:"
     #      And I should see /\d\d:\d\d/ within ".created_at"
-    Then I should see "Texas" within ".jurisdictions"
-    And I should see "Health Officer" within ".roles"
-    And I should see "John Smith" within ".people"
-    And I should see "user_acknowledged_alert" within ".user .alert_response"
+    And I expand ext panel "Audience"
+    Then I should see the following audience breakdown:
+      | name           | type         |
+      | Texas          | Jurisdiction |
+      | Health Officer | Role         |
+      | John Smith     | User         |
+    And I should see "Acknowledged" for user "Daniel Smith"
 
