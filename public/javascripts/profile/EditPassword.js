@@ -8,6 +8,8 @@ Talho.EditPassword = Ext.extend(Talho.ProfileBase, {
         {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'profile[pw_confirm]', maxLength: '46', allowBlank: false}
       ]}
     ];
+    var url = config.url + ".json";
+    var method = "PUT";
 
     Talho.EditPassword.superclass.constructor.call(this, config, item_list);
   }

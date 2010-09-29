@@ -7,7 +7,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
       {xtype: 'container', defaults:{width:700,padding:'10'}, items:[
-        {xtype: 'box', html: '<p id="flash-msg" class="flash">foobar</p>'},
+        {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: item_list},
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
@@ -50,6 +50,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     var json = Ext.decode(response.responseText, true);
     this.set_field_values(p, json.model.user);
     this.set_field_values(p, json.extra);
+    p.doLayout();
   },
   load_fail_cb: function(response, options){
     this.getPanel().loadMask.hide();
@@ -70,10 +71,13 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Form callbacks
   submit_success: function(form, action){
-    //alert(action.result.toSource());
-    $("#flash-msg").addClass(action.result.type).html(action.result.flash).show();
+    var json = action.result;
+    //alert(json.toSource());
     var fm = this.getPanel().getEl().select("#flash-msg").first();
+    if (json.type != null)
+      fm.addClass(json.type).update(json.flash).show();
     fm.parent().parent().parent().parent().scrollTo("top", 0);
+    this.getPanel().doLayout();
   },
   submit_failure: function(form, action){
     Ext.Msg.maxWidth = 1000;
@@ -83,5 +87,5 @@ Talho.ProfileBase = Ext.extend(function(){}, {
         '<div style="height:400px;overflow:scroll;">' + action.response.responseText + '<\div>');
     if (action.failureType === Ext.form.Action.SERVER_INVALID)
       Ext.Msg.alert('Invalid!!!', action.result.errormsg);
-  }
+  },
 });

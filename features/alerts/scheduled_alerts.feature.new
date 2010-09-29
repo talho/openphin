@@ -25,8 +25,6 @@ Feature: Schedule an alert to be sent sometime in the future
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I select "Test" from ext combo "Status"
     And I select "Moderate" from ext combo "Severity"
-    And I check "Send this alert at:"
-    And I select "July 4 2015 13:00" from ext date picker "Schedule Alert"
     And I press "Select Audience"
 
     Then I should have the "Audience" breadcrumb selected
@@ -36,10 +34,10 @@ Feature: Schedule an alert to be sent sometime in the future
     And I press "View Preview"
 
     Then I should have the "Preview" breadcrumb selected
-    And I should see "TxPhin Scheduled test alert"
-    And I should see "Scheduled to be sent on July 4 2015 at 1:00 pm"
+    And I press "Schedule Alert"
+    And I select "July 4 2015 13:00" from ext date picker "Schedule Alert"
+    And I press "Submit Alert"
 
-    When I press "Send Alert"
     Then the "TxPhin Scheduled test alert" tab should be open
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
