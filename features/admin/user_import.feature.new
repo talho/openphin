@@ -40,16 +40,7 @@ Feature: Online importing users from a uploaded CSV file
     And "john@example.com" should have the communication device
       | Email | john@example.com |
       | Phone | 5552347000 |
-    # add this step to the existing scenario to fulfill story 5144920 
-    And "john@example.com" should receive the email:
-      | subject       | TxPhin:  Role assigned             |
-      | body contains | You have been assigned the role of |
-    # add this step to the existing scenario to fulfill story 5144920 
-    And "john@example.com" should receive the email:
-      | subject       | TxPhin: Confirm your email |
-      | body contains | you have been signup       |
-      | body contains | set your password          |
-
+      
     And "bob@example.com" should have the "Public" role for "Ector"
     And "bob@example.com" should have the communication devices
       | Email | bob@example.com |
@@ -57,16 +48,28 @@ Feature: Online importing users from a uploaded CSV file
       | Phone | 5552348001 |
     And "bob@example.com" should not have the communication devices
       | Fax ||
+
     # add this step to the existing scenario to fulfill story 5144920 
-    And "bob@example.com" should receive the email:
+    When delayed jobs are processed
+    # add this step to the existing scenario to fulfill story 5144920 
+    Then "john@example.com" should receive the email:
+      | subject       | TxPhin: Welecome & Password setting |
+      | body contains | you have been signed up             |
+      | body contains | set your password                   |
+    And "john@example.com" should receive the email:
       | subject       | TxPhin:  Role assigned             |
       | body contains | You have been assigned the role of |
 
     # add this step to the existing scenario to fulfill story 5144920 
+    When delayed jobs are processed
+    # add this step to the existing scenario to fulfill story 5144920 
+    Then "bob@example.com" should receive the email:
+      | subject       | TxPhin: Welecome & Password setting |
+      | body contains | you have been signed up             |
+      | body contains | set your password                   |
     And "bob@example.com" should receive the email:
-      | subject       | TxPhin: Confirm your email |
-      | body contains | you have been signup       |
-      | body contains | set your password          |
+      | subject       | TxPhin:  Role assigned             |
+      | body contains | You have been assigned the role of |
 
     # add this step to the existing scenario to fulfill story 5144993 
     When I go to the sign in page
