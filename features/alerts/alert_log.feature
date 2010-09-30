@@ -346,4 +346,3 @@ Feature: Viewing the alert log
       And I should see "Health Officer" within ".roles"
       And I should see "John Smith" within ".people"
       And I should see "user_acknowledged_alert" within ".user .alert_response"
-
