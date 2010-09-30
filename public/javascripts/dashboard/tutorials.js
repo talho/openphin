@@ -34,3 +34,5 @@ Talho.Tutorials.initialize = function(config)
   var tutorials = new Talho.Tutorials(config);
   return tutorials.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.Tutorials', Talho.Tutorials, Talho.Tutorials.initialize);

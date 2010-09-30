@@ -22,15 +22,17 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             }
         });
 
-        this.favorites = new Favorites({
-            parent: this,
-            listeners:{
-                scope:this,
-                'favoriteclick': this.open_tab
-            }
-        });
-        
-        this.render_layout();
+        Talho.ScriptManager.loadOtherLibrary('Favorites PhinLayout Dashboard', function(){
+            this.favorites = new Favorites({
+                parent: this,
+                listeners:{
+                    scope:this,
+                    'favoriteclick': this.open_tab
+                }
+            });
+
+            this.render_layout();
+        }.createDelegate(this));
     },
 
     render_layout: function(){
@@ -164,7 +166,13 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         if(this.tabPanel.getComponent(config.id) === undefined) {
             var panel;
 
-            if(Ext.isFunction(config.initializer))
+            if(Talho.ScriptManager.exists(config.initializer))
+            {
+                panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
+                Talho.ScriptManager.getInitializer(config.initializer, this.getInitializer_callback.createDelegate(this, [config, panel], true));
+                return;
+            }
+            else if(Ext.isFunction(config.initializer))
             {
                 panel = this.tabPanel.add(config.initializer(config)).show();
                 panel.initializer = config.initializer;
@@ -190,15 +198,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 }
                 else if(xtype == 'centeredajaxpanel')
                 {
-                    panel = this.tabPanel.add({
-                        title: config.title,
-                        itemId: config.id,
-                        xtype:'centeredajaxpanel',
-                        closable: true,
-                        hideBorders:true,
-                        autoScroll:true,
-                        url: config.url
-                    }).show();
+                    panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
+                    Talho.ScriptManager.loadOtherLibrary('AjaxPanel', this.loadOtherLibrary_callback.createDelegate(this, [config, panel], true));
+                    return;
                 }
             }
 
@@ -219,6 +221,41 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 existing_panel.reset(config);
             }
         }
+    },
+
+    loadOtherLibrary_callback: function(name, config, tempPanel){
+        this.tabPanel.remove(tempPanel);
+
+         panel = this.tabPanel.add({
+            title: config.title,
+            itemId: config.id,
+            xtype:'centeredajaxpanel',
+            closable: true,
+            hideBorders:true,
+            autoScroll:true,
+            url: config.url
+        }).show();
+
+        this.newTabPropertiesAndEvents(panel, config);
+    },
+
+    getInitializer_callback: function(initializer, config, tempPanel){
+        this.tabPanel.remove(tempPanel);
+        var panel = this.tabPanel.add(initializer(config)).show();
+        panel.initializer = initializer;
+
+        this.newTabPropertiesAndEvents(panel, config);
+    },
+
+    newTabPropertiesAndEvents: function(panel, config){
+        panel.tab_config = config;
+        panel.addListener({
+            'show':function(panel){panel.doLayout();},// This is necessary for when a panel is loading without being shown. Layout is never being refired, but it is now.
+            'fatalerror': function(panel){
+                this.tabPanel.remove(panel, true);
+            },
+            scope: this
+        });
     },
 
     setTabControls: function(panel){

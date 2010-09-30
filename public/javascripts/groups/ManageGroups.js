@@ -432,3 +432,5 @@ Talho.ManageGroups.initialize = function(config)
     var manage_groups = new Talho.ManageGroups(config);
     return manage_groups.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.ManageGroups', Talho.ManageGroups, Talho.ManageGroups.initialize);

@@ -100,3 +100,5 @@ Talho.AdvancedSearch.initialize = function(config)
     var as = new Talho.AdvancedSearch(config);
     return as.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.AdvancedSearch', Talho.AdvancedSearch, Talho.AdvancedSearch.initialize);
