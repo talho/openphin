@@ -53,7 +53,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         margins: '0 0 0 10', items:[
         {xtype: 'container', name: 'user[photo]', html: '<img id=photo src="images/missing.jpg" width=200 height=200>'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[name]', maxLength: '15', width: 'auto'},
-        {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]'},
+        {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true},
       ]}
     ];
     var url = config.url + ".json";

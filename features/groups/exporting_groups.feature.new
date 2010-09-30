@@ -1,0 +1,48 @@
+#to be added to ext_view_and_edit_and_delete_groups.feature
+@ext
+Feature: Viewing groups
+  In order to send alerts to a pre-defined list of users
+  as an alerter
+  I should be able to view, edit, export and delete user groups
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction | Texas          |
+      | Jurisdiction | Dallas County  |
+      | Jurisdiction | Potter County  |
+      | Role         | Health Officer |
+      | Role         | Epidemiologist |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Potter County |
+    And the role "Admin" is an alerter
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Public         | Dallas County |
+      | Jane Smith      | jane.smith@example.com   | Health Officer | Potter County |
+      | Health Officer2 | ho1@example.com          | Health Officer | Dallas County |
+      | Health Officer1 | ho2@example.com          | Health Officer | Dallas County |
+      | Jill Smith      | jill.smith@example.com   | Admin          | Potter County |
+      | Jim Smith       | jim.smith@example.com    | Admin          | Dallas County |
+      | Will Smith      | will.smith@example.com   | Admin          | Potter County |
+    And the following groups for "jill.smith@example.com" exist:
+      | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Potter County |
+    Given I am logged in as "jill.smith@example.com"
+    When delayed jobs are processed
+
+
+  Scenario: exporting a user group to CSV and PDF
+    When I go to the ext dashboard page
+    And I navigate to "Admin > Manage Groups"
+    Then the "Manage Groups" tab should be open
+    And I should see "Dallas County Health Officer Group"
+    When I click x-grid3-cell "Dallas County Health Officer Group"
+    Then the "Group Detail" tab should be open
+    And I should see "Dallas County Health Officer Group"
+    And I should see the following audience breakdown
+      | name            | type      |
+      | Health Officer1 | Recipient |
+      | Health Officer2 | Recipient |
+    When I follow "Download Report (CSV)"
+    Then I should see a CSV report for the "Dallas County Health Officer Group" group
+    When I follow "Download Report (PDF)"
+    Then I should see a PDF report for the "Dallas County Health Officer Group" group
