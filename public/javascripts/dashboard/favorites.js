@@ -1,81 +1,102 @@
+Ext.ns('Ext.ux.FavoritesPanel');
 
-
-var Favorites = Ext.extend(Ext.util.Observable, {
+Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
     constructor: function(config){
-        Ext.apply(this, config);
+        config = config || {};
 
-        this.addEvents({
-            /**
-                     *  @event favoriteclick
-                     *  Fires when a favorite item is clicked
-                     *  @param {Object}  config  the tab configuration object, everything that should be needed by the index to launch the tab.
-                     */
-           'favoriteclick': true
+        Ext.applyIf(config, {
+            region:'north',
+            height: 44,
+            collapseMode: 'mini',
+            id: 'favoritestoolbar',
+            layout: 'hbox',
+            successProperty: 'success',
+            layoutConfig: {defaultMargins:'5 0 5 5'},
+            listeners: {}
         });
 
-        Favorites.superclass.constructor.call(this, config);
+        Ext.apply(config.listeners, {
+            'render': {fn: this.setupDropZone, scope: this},
+            'afterrender':{
+                fn:function(panel){
+                   panel.loadMask = new Ext.LoadMask(panel.getEl(), {store: this.store});
+                   panel.loadMask.show();
+                   panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving...'});
+                },
+                single: true,
+                scope: this
+            }
+        });
 
+        this.addEvents(
+            /**
+             *  @event favoriteclick
+             *  Fires when a favorite item is clicked
+             *  @param {Object}  config  the tab configuration object, everything that should be needed by the index to launch the tab.
+             */
+           'favoriteclick',
+            /**
+             *  @event favoriteloadcomplete
+             *  Fires when the favorite store has been loaded
+             *  @param {Store}      store   the favorite store whose data has been loaded
+             *  @param {Records[]}  records the records that were loaded
+             */
+           'favoriteloadcomplete'
+        );
+
+        Ext.ux.FavoritesPanel.superclass.constructor.call(this, config);
+    },
+
+    initComponent: function(){         
         this.contextMenu = new Ext.menu.Menu({
             defaultAlign: 'tl-b?',
             defaultOffsets: [0, 2],
             items:[{id:'removeFavoriteItem', text:'Remove'}]
         });
 
-        this.favoritesPanel = new Ext.Panel({
-            region:'north',
-            height: 44,
-            id: 'favoritestoolbar',
-            layout: 'hbox',
-            successProperty: 'success',
-            layoutConfig: {defaultMargins:'5 0 5 5'},
-            listeners:{
-                scope:this,
-                'render': this.setupDropZone
-            }
-        });
+        this.getStore();
 
-        this.favoritesPanel.on('afterrender', function(panel){
-            panel.loadMask = new Ext.LoadMask(panel.getEl(), {store: this.store});
-            panel.loadMask.show();
-            panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving...'});
-        }, this, {single: true});
-
-        var writer = new Ext.data.JsonWriter({
-            encode: false,
-            createRecord: function(record){
-                return {
-                   tab_config: record.get('tab_config') 
-                };
-            },
-            render: function(params, baseParams, data) {
-                var jdata = Ext.apply({}, baseParams);
-                jdata['favorite'] = data;
-                params.jsonData = jdata;
-            }
-        });
-
-        var reader = new Ext.data.ux.RailsJsonReader({
-            idProperty: 'id',
-            fields: [{name: 'id', mapping:'id'}, {name:'tab_config', mapping:'tab_config'}]
-        });
-
-        this.store = new Ext.data.Store({
-            url: '/favorites.json',
-            restful: true,
-            writer: writer,
-            reader: reader,
-            listeners:{
-                scope:this,
-                save: this.renderFavorites,
-                datachanged: this.renderFavorites
-            }
-        });
-
-        this.store.load();
+        Ext.ux.FavoritesPanel.superclass.initComponent.call(this);
     },
 
-    getPanel: function(){
-        return this.favoritesPanel;
+    getStore: function(){
+        if(!this.store){
+            var writer = new Ext.data.JsonWriter({
+                encode: false,
+                createRecord: function(record){
+                    return {
+                       tab_config: record.get('tab_config')
+                    };
+                },
+                render: function(params, baseParams, data) {
+                    var jdata = Ext.apply({}, baseParams);
+                    jdata['favorite'] = data;
+                    params.jsonData = jdata;
+                }
+            });
+
+            var reader = new Ext.data.ux.RailsJsonReader({
+                idProperty: 'id',
+                fields: [{name: 'id', mapping:'id'}, {name:'tab_config', mapping:'tab_config'}]
+            });
+            
+            this.store = new Ext.data.Store({
+                url: '/favorites.json',
+                restful: true,
+                writer: writer,
+                reader: reader,
+                listeners:{
+                    scope:this,
+                    'save': this.renderFavorites,
+                    'datachanged': this.renderFavorites,
+                    'load': function(store){this.fireEvent('favoriteloadcomplete', store);},
+                    'beforesave': function(){this.saveMask.show(); return true;}
+                }
+            });
+            this.store.load();
+        }
+
+        return this.store;
     },
 
     setupDropZone: function(ct){
@@ -86,7 +107,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             canDrop: function(tab_config)
             {
                 // require a tab_config and a tab_config.id to save a favorite
-                return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.favoritesPanel.find('targetId', tab_config.id).length > 0)
+                return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.find('targetId', tab_config.id).length > 0)
             },
             gettab_config: function(item){
                 return item.tab_config;
@@ -106,7 +127,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
                 if(this.canDrop(tab_config))
                 {
                     this.lock();
-                    this.parent.favoritesPanel.saveMask.show();
+                    this.parent.saveMask.show();
                     this.parent.store.add(new this.parent.store.recordType({tab_config:tab_config}), true);
                     //this.parent.store.save();
                     return true;
@@ -117,22 +138,23 @@ var Favorites = Ext.extend(Ext.util.Observable, {
     },
 
     renderFavorites: function(store){
-        this.favoritesPanel.removeAll(true);
+        this.removeAll(true);
 
         store.each(function(record){
             this.addButton(record);
         }, this);
 
-        this.favoritesPanel.dropZone.unlock();
-        this.favoritesPanel.saveMask.hide();
-        this.favoritesPanel.doLayout();
+        this.dropZone.unlock();
+        this.saveMask.hide();
+        this.fireEvent('favoriteloadcomplete', store);
+        this.doLayout();
     },
 
     addButton: function(record){
         // add the button
         var tab_config = record.get('tab_config');
 
-        this.favoritesPanel.add({
+        this.add({
             xtype:'button',
             text: tab_config.title,
             tab_config: tab_config,
@@ -148,7 +170,7 @@ var Favorites = Ext.extend(Ext.util.Observable, {
                     b.getEl().on('contextmenu', function(evt, elem, options){
                         elem = evt.getTarget('.favorite_button', 10, true);
 
-                        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [options.recordId]))
+                        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [options.recordId]));
 
                         this.contextMenu.show(elem);
                     }, this, {recordId: b.recordId, preventDefault:true});
@@ -157,13 +179,13 @@ var Favorites = Ext.extend(Ext.util.Observable, {
             }
         });
 
-        this.favoritesPanel.doLayout();
+        this.doLayout();
     },
 
     removeItem: function(recordId){
-        this.favoritesPanel.dropZone.lock();
+        this.dropZone.lock();
 
-        this.favoritesPanel.saveMask.show();
+        this.saveMask.show();
 
         this.store.remove(this.store.getById(recordId));
     }

@@ -22,6 +22,7 @@ Ext.ns("Talho");
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js /javascripts/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '/dashboard/menu.js /javascripts/dashboard/MenuBuilder.js');
     dominoes.rule('Dashboard', '/javascripts/utility.js /javascripts/dashboard/article3panel.js');
+    dominoes.rule('ManageFavorites', 'RowActions /javascripts/dashboard/ManageFavoritesWindow.js');
 
     var mgr = function(config){};
     Ext.extend(mgr, Ext.util.Observable, {
