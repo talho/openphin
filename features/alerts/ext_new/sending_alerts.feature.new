@@ -1,0 +1,141 @@
+Feature: Sending alerts
+
+  In order to inform people of an issue
+  As an alerter
+  I should be able to send Alerts to audiences.
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Federal                                     |
+      | Jurisdiction  | Texas                                       |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Potter County                               |
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | Bioterrorism Coordinator                    |
+    And Federal is the parent jurisdiction of:
+      | Texas         |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the following users exist:
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send an Alert"
+    And I press "Other"
+
+  Scenario: Create and send a alert with no acknowledgement
+    When I should have the "Details" breadcrumb selected
+
+    When  I fill in the following:
+      | Alert Type    | Earthquake                                   |
+      | Title         | H1N1 SNS push packs to be delivered tomorrow |
+      | Message       | Some body text                               |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Normal" from ext combo "Acknowledge"
+    And I select "Test" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I check "E-mail"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    And I should see "Federal"
+    And I select the following in the audience panel:
+      | name                             | type         |
+      | Texas                            | Jurisdiction |
+    And I press "Next"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Detail Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type              | Health Alert                                 |
+      | title             | H1N1 SNS push packs to be delivered tomorrow |
+      | message           | Some body text                               |
+      | from_jurisdiction | Potter County                                |
+      | acknowledge       | Normal                                       |
+      | jurisdiction      | Texas                                        |
+
+  Scenario: Create and send a alert with normal acknowledgement
+
+  Scenario: Sending alerts with call down
+    Given the following entities exists:
+      | Jurisdiction | Dallas County  |
+      | Jurisdiction | Potter County  |
+      | Jurisdiction | Tarrant County |
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I select "Advanced" from ext combo "Acknowledge"
+    # add a 3rd, 4th and 5th response box
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I fill in the following:
+      | Title              | H1N1 SNS push packs to be delivered tomorrow |
+      | Message            | Some body text                               |
+      | Alert Response 1   | if you can respond within 15 minutes         |
+      | Alert Response 2   | if you can respond within 30 minutes         |
+      | Alert Response 3   | if you can respond within 1 hour             |
+      | Alert Response 4   | if you can respond within 4 hour             |
+      | Alert Response 5   | if you cannot respond                        |
+    And I select "Test" from ext combo "Status"
+    And I select "Minor" from ext combo "Severity"
+    And I select "72 hours" from ext combo "Delivery Time"
+    And I check "Phone"
+    And I fill in "Caller ID" with "4114114111"
+
+    When I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+
+    Then an alert exists with:
+      | from_jurisdiction   | Potter County                                |
+      | title               | H1N1 SNS push packs to be delivered tomorrow |
+      | call_down_messages  | if you can respond within 15 minutes         |
+      | call_down_messages  | if you can respond within 30 minutes         |
+      | call_down_messages  | if you can respond within 1 hour             |
+      | call_down_messages  | if you can respond within 4 hours            |
+      | call_down_messages  | if you cannot respond                        |
+      | acknowledge         | true                                         |
+
+  Scenario: Alerter with more than one jurisdiction can send from either
+
+  Scenario: Sending alerts form should not contain system roles
+    Given there is an system only Admin role
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    Then the "Send Alert" tab should be open
+    When I fill in the following:
+      | Title   | This is a test title to pass validation   |
+      | Message | This is a test message to pass validation |
+    And I check "E-mail"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    Then I should have the "Audience" breadcrumb selected
+    When I click x-accordion-hd "Roles"
+    Then I should not see "Admin"
+    When I press "Sign Out"
+
+  Scenario: Sending alerts should show "Select all sub-jurisdictions" link for parent jurisdictions
+
+
+

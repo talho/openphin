@@ -1,0 +1,5 @@
+Feature: Sending Emergency Response alerts form
+
+  In order to inform people of issue that requires emergency response
+  As an alerter
+  I should be able to send an alert with type Emergency Response

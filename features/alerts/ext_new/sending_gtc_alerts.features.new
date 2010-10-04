@@ -1,0 +1,5 @@
+Feature: Sending General Tactical Communications alerts form
+
+  In order to inform people of a general-purpose issue
+  As an alerter
+  I should be able to send an alert with type GTC

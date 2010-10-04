@@ -88,3 +88,7 @@ end
 Then /^I should see (\d*) "([^\"]+)" sections$/ do |count, section|
 	response.should have_selector(".#{section}", :count => count.to_i)
 end
+
+Then /^"([^"]*)" should be implemented$/ do |arg1|
+  pending arg1
+end
