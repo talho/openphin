@@ -23,7 +23,7 @@ Talho.RequestRoles = Ext.extend(Talho.ProfileBase, {
     var url = config.url + ".json";
     var method = "PUT";
 
-    Talho.RequestRoles.superclass.constructor.call(this, config, item_list);
+    Talho.RequestRoles.superclass.constructor.call(this, config, 400, item_list, url, method);
   }
 });
 

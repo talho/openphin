@@ -59,7 +59,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var url = config.url + ".json";
     var method = "PUT";
 
-    Talho.EditProfile.superclass.constructor.call(this, config, item_list, url, method);
+    Talho.EditProfile.superclass.constructor.call(this, config, 700, item_list, url, method);
 
     // Override the setValue() method where necessary
     this.getPanel().find("name", "user[photo]")[0].setValue = function(val){ Ext.getDom("photo").src = val; };

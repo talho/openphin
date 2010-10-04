@@ -1,0 +1,5 @@
+ul.devices       {margin:0 0 10px 0; padding:0 2px; width:400px}
+ul.devices li    {margin:6px 0; padding:8px 24px; width:330px; list-style:none;
+                  border:1px solid #d9d9d9; background:url(../images/fade_down.png) repeat-x bottom left;}
+
+li.device-selected {outline:#514721 solid 2px;}

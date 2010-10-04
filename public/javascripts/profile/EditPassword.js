@@ -11,7 +11,7 @@ Talho.EditPassword = Ext.extend(Talho.ProfileBase, {
     var url = config.url + ".json";
     var method = "PUT";
 
-    Talho.EditPassword.superclass.constructor.call(this, config, item_list);
+    Talho.EditPassword.superclass.constructor.call(this, config, 400, item_list, url, method);
   }
 });
 

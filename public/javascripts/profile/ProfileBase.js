@@ -1,17 +1,17 @@
 Ext.ns("Talho");
 
 Talho.ProfileBase = Ext.extend(function(){}, {
-  constructor: function(config, item_list, url, method){
+  constructor: function(config, form_width, item_list, url, method){
     Ext.apply(this, config);
 
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
-      {xtype: 'container', defaults:{width:700,padding:'10'}, items:[
+      {xtype: 'container', defaults:{width:form_width,padding:'10'}, items:[
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: item_list},
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
-          {xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
+          //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
         ]}
       ]}
