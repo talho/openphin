@@ -236,3 +236,5 @@ Talho.AlertDetail.initialize = function(config){
 
     return new Ext.Panel(config);
 };
+
+Talho.ScriptManager.reg('Talho.AlertDetail', Talho.AlertDetail, Talho.AlertDetail.initialize);

@@ -1,26 +1,63 @@
 <head>
   <Title>Ext Dashboard</Title>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application.js', :cache => 'all'%>
-  <%= javascript_include_tag 'ext_extensions/MaxWidthHBox', 'ext_extensions/HtmlFormPanel', 'ext_extensions/AjaxPanel', 'ext_extensions/CenteredAjaxPanel', 'ext_extensions/DragDropTabs', 'ext_extensions/RailsJsonReader', 'ext_extensions/DoNotCollapseActive', :cache => 'all' %>
-  <%= javascript_include_tag 'ext_extensions/TreeGrid/TreeGrid', 'ext_extensions/Ext.ux.grid.RowActions', 'ext_extensions/AudiencePanel', 'ext_extensions/ViewLoadMask', 'ext_extensions/DataTip', 'ext_extensions/BreadCrumb', :cache => 'all' %>
-  <%= javascript_include_tag 'ext_extensions/CenterLayout', 'ext_extensions/AudienceDisplayPanel', :cache => 'all' %>
-  <%= javascript_include_tag '/dashboard/menu', :cache => 'all' %>
-  <%= javascript_include_tag 'utility', 'dashboard/MenuBuilder', 'dashboard/favorites', 'han/alerts', 'han/SendAlert', 'han/AlertDetail', 'dashboard/article3panel', 'searches/AdvancedSearch', 'groups/ManageGroups', 'dashboard/index', 'dashboard/tutorials', 'forums/forums', :cache => 'all' %>
+  <%= javascript_include_tag 'lib/dominoes-1.0-rc2.min.js'%>
+  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
+  <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
+  <%= javascript_include_tag 'forums/forums', :cache => 'all' %>
   <%= javascript_include_tag 'profile/ProfileBase', 'profile/EditProfile', 'profile/EditPassword', 'profile/EditDevices', 'profile/RequestRoles', :cache => 'all' %>
-  <!-- begin include js for openphin plugins -->
+  <%# begin include js for openphin plugins %>
   <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
   <% js_list.push({:cache => 'all'}) %>
   <%= javascript_include_tag(*js_list) %>
-  <!-- end include js for openphin plugins -->
+  <%# end include js for openphin plugins %>
 
-  <%= stylesheet_link_tag 'resources/css/ext-all.css', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/forum', 'redesign/Ext.ux.grid.RowActions', 'TreeGrid/css/TreeGrid', 'TreeGrid/css/TreeGridLevels', :cache => true  %>
 
-  <!-- begin include stylesheets for openphin plugins -->
+  <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-access', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/forum', :cache => true  %>
+
+  <%# begin include stylesheets for openphin plugins %>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
   <% css_list.push({:cache => true}) %>
   <%= stylesheet_link_tag(*css_list) %>
-  <!-- end include stylesheets for openphin plugins -->
+  <%# end include stylesheets for openphin plugins %>
+  
+  <%# Experimental loading of resources, on the fly %>
+  <%#<%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => true  %>
+  <%#<script>
+    dominoes.rule('jquery', '/javascripts/jquery.js');
+    dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) )) /javascripts/ext/adapter/jquery/ext-jquery-adapter-debug.js > /javascripts/ext/ext-all-debug.js');
+    dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/han.css) $css(/stylesheets/redesign/forum.css)');
+    dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/Application.js /javascripts/dashboard/ScriptManager.js /javascripts/dashboard/index.js /dashboard/menu.js');
+    dominoes({
+        chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad >| initView',
+        preExtMessage: function(){
+            $('#loading-message').html('Loading Ext...');
+        },
+        prePhinMessage: function(){
+            Ext.get('loading-message').update('Loading PHIN...');
+        },
+        initView: function(){
+            window.Application.phin = new PhinApplication();
+            var loading = Ext.get('loading');
+            loading.fadeOut({ duration: 0.2, remove: true });
+            var loadingMask = Ext.get('loading-mask');
+            loadingMask.setOpacity(0.9);
+            loadingMask.shift({
+                xy: loading.getXY(),
+                width: loading.getWidth(),
+                height: loading.getHeight(),
+                remove: true,
+                duration: 1,
+                opacity: 0.1,
+                easing: 'easeOut'
+            });
+        }
+    });
+  </script>  %>
 </head>
 <body>
+    <%#<div id="loading-mask"></div>
+    <div id="loading">
+        <span id="loading-message">Loading jQuery...</span>
+    </div> %>
   <%= yield %>
 </body>
