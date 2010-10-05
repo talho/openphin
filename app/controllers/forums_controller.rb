@@ -8,20 +8,21 @@ class ForumsController < ApplicationController
   # GET /forums.json
   def index
     @forums = Forum.paginate_for(:all,current_user,params[:page] || 1)
-    for forum in @forums
-      if current_user.moderator_of?(forum)
-        forum[:is_moderator] = true
-      end
-    end
+    original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.html
       format.json  {render :json => {
-        :forums              => @forums,
+        :forums => @forums.each do |f|
+          f[:is_moderator] = true unless !current_user.moderator_of?(f)
+          f[:threads]      = f.topics.length
+        end,
         :current_page        => @forums.current_page,
         :per_page            => @forums.per_page,
         :total_entries       => @forums.total_entries
       }}
     end
+    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   # GET /forums/1
