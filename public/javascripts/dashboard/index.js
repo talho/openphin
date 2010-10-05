@@ -63,6 +63,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             plugins: [Ext.plugin.DragDropTabs],
             bbar:{
                 id: 'tab_toolbar',
+                plugins: [new Ext.ux.ToolBarNav],
                 items:[
                     {
                         text: 'Back',
@@ -123,10 +124,12 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             itemId: 'top_toolbar',
             items: [{
 				id: 'txphinlogo',
-				html: '<img src="/stylesheets/images/app_header_logo.png"/>',
+                buttonSelector: 'img',
+            	template: new Ext.Template('<span id="{4}" class="phinlogo {3}" ><img src="/stylesheets/images/app_header_logo.png" tabindex="0"/></span>'),
 				handler: this.go_to_dashboard,
                 scope: this
-			}]
+			}],
+            plugins: [new Ext.ux.ToolBarNav]
         });
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
@@ -161,7 +164,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     bottombar: function(){
-        var tb = new Ext.Toolbar({id: 'bottom_toolbar'});
+        var tb = new Ext.Toolbar({id: 'bottom_toolbar',
+            plugins: [new Ext.ux.ToolBarNav]
+        });
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
 
@@ -326,4 +331,3 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     }
 
 });
-

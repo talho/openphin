@@ -20,7 +20,7 @@ Ext.ns("Talho");
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js /javascripts/dashboard/favorites.js');
-    dominoes.rule('PhinLayout', '/dashboard/menu.js /javascripts/dashboard/MenuBuilder.js');
+    dominoes.rule('PhinLayout', '/javascripts/utility.js $(ext_extensions)/ToolBarNav.js /dashboard/menu.js /javascripts/dashboard/MenuBuilder.js');
     dominoes.rule('Dashboard', '/javascripts/utility.js /javascripts/dashboard/article3panel.js');
     dominoes.rule('ManageFavorites', 'RowActions /javascripts/dashboard/ManageFavoritesWindow.js');
 
