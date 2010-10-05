@@ -60,6 +60,6 @@ module Capybara
   end
 end
 
-When /^(?:I )?pause$/ do
+When /^(?:I )?(?:pause|debug)$/ do
   debugger
 end

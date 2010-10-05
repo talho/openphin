@@ -156,6 +156,7 @@ class UserProfilesController < ApplicationController
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
+          format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors} }
           format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError

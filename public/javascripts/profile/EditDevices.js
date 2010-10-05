@@ -43,10 +43,15 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
         {xtype: 'spacer', height: '15'}
       ]}
     ];
-    var url = config.url + ".json";
-    var method = "PUT";
+    this.form_config = {
+      load_url: config.url + "/edit.json",
+      form_width: 400,
+      item_list: item_list,
+      save_url: config.url + ".json",
+      save_method: "PUT"
+    };
 
-    Talho.EditDevices.superclass.constructor.call(this, config, 400, item_list, url, method);
+    Talho.EditDevices.superclass.constructor.call(this, config);
 
     // Override the setValue() method where necessary
     this.getPanel().find("name", "user[devices]")[0].setValue = function(val){
