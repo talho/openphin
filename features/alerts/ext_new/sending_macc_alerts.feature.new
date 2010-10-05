@@ -1,0 +1,5 @@
+Feature: Sending Multi-Agency Coordination Center alerts form
+
+  In order to coordinate MACC responders
+  As an alerter
+  I should be able to send an alert with type MACC
