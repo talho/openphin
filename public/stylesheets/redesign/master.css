@@ -31,6 +31,12 @@
 
 .inlineBtn{cursor:pointer;}
 
+ .phinlogo span{
+    background-image: url(../images/app_header_logo.png);
+    display:block;
+    height:32px;
+    width:57px;
+ }
 
 .contextDownArrow{
     background-image: url(/images/arrow_down.png) !important;

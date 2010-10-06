@@ -130,8 +130,8 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             itemId: 'top_toolbar',
             items: [{
 				id: 'txphinlogo',
-                buttonSelector: 'img',
-            	template: new Ext.Template('<span id="{4}" class="phinlogo {3}" ><img src="/stylesheets/images/app_header_logo.png" tabindex="0"/></span>'),
+                buttonSelector: 'span',
+            	template: new Ext.Template('<span id="{4}" class="phinlogo {3}" ><span tabindex="0"></span></span>'),
 				handler: this.go_to_dashboard,
                 scope: this
 			}],

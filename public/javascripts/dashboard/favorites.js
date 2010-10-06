@@ -144,8 +144,8 @@ Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
             this.addButton(record);
         }, this);
 
-        this.dropZone.unlock();
-        this.saveMask.hide();
+        if(this.dropZone) this.dropZone.unlock();
+        if(this.saveMask) this.saveMask.hide();
         this.fireEvent('favoriteloadcomplete', store);
         this.doLayout();
     },
