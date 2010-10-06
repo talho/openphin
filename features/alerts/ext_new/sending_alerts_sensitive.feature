@@ -13,14 +13,13 @@ Feature: Sending sensitive alerts
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
+    And I navigate to "HAN > Send a HAN Alert"
 
   Scenario: Sending a sensitive email alert
     When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Message" with "For more details, keep on reading..."
     And I check "Sensitive"
-
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |

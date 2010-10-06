@@ -14,7 +14,18 @@ class TopicsController < ApplicationController
     options[:order] = "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc"
     options[:conditions] = {:hidden_at => nil} unless current_user.is_super_admin?
     @topics = Topic.paginate_all_by_forum_id_and_comment_id(@forum.id,nil,options)
-
+    for topic in @topics
+      if current_user.moderator_of?(topic)
+        topic[:is_moderator] = true
+      end
+      if current_user.is_super_admin?
+        topic[:is_super_admin] = true
+      end
+      topic[:posts] = topic.comments.length
+      topic[:user_avatar] = User.find_by_id(topic.poster_id).photo.url(:medium)
+    end
+    original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @topics }
@@ -25,6 +36,7 @@ class TopicsController < ApplicationController
         :total_entries       => @topics.total_entries
       }}
     end
+    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   # GET /topics/1

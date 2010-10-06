@@ -1,0 +1,139 @@
+Feature: Sending alerts using groups and organizations
+    In order to conveniently send alerts to predetermined groups of people
+    As an alerter
+    I want to select a predefined group or organization from the alert audience screen
+
+  Background:
+    Given the following entities exist:
+      | Role          | Epidemiologist |
+      | Role          | Health Officer |
+      | Role          | Admin          |
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | BT Coordinator |
+      | Jurisdiction  | Potter County  |
+    And the role "Admin" is an alerter
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the role "Epidemiologist" is an alerter
+    And the following users exist:
+      | John Smith | john.smith@example.com | Admin                                       | Tarrant County |
+      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | Bob Smith  | bob.smith@example.com  | Health Alert and Communications Coordinator | Texas          |
+      | Leroy Smith| leroy@example.com      | Epidemiologist                              | Potter County  |
+    And the following groups for "john.smith@example.com" exist:
+      | G1   | Tarrant County | Health Officer |  | Personal     |                |
+      | G2   | Texas          | Epidemiologist |  | Global       |                |
+      | G3   | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |
+    And an organization exist with the following info:
+      | name               | DSHS                                |
+      | description        | Department of State Health Services |
+      | distribution_email | disco@example.com                   |
+      | street             | 123 Elm Street                      |
+      | phone              | 888-555-1212                        |
+      | locality           | Austin                              |
+      | state              | TX                                  |
+      | postal_code        | 78720                               |
+    And "john.smith@example.com" is a member of the organization "DSHS"
+    And "bob.smith@example.com" is a member of the organization "DSHS"
+    And "leroy.smith@example.com" is a member of the organization "DSHS"
+
+  Scenario: Owner should see all his groups and orgs
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+                                
+    When I fill in the ext alert defaults
+
+    And I click breadCrumbItem "Audience"
+    And I click x-accordion-hd "Groups/Organizations"
+
+    Then I should see "G1"
+    And I should see "G2"
+    And I should see "G3"
+    And I should see "DSHS"
+
+  Scenario: Users in same jurisdiction should see jurisdiction-scoped groups
+    Given I am logged in as "jane.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+
+    When I fill in the ext alert defaults
+
+    And I click breadCrumbItem "Audience"
+    And I click x-accordion-hd "Groups/Organizations"
+
+    Then I should see "G2"
+    And I should see "G3"
+    And I should not see "G1"
+
+  Scenario: Users in another jurisdiction should see only globally-scoped groups
+    Given I am logged in as "bob.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+
+    When I fill in the ext alert defaults
+
+    And I click breadCrumbItem "Audience"
+    And I click x-accordion-hd "Groups/Organizations"
+
+    Then I should see "G2"
+    And I should not see "G3"
+    And I should not see "G1"
+
+  Scenario: Sending an alert with a group selected should include group users as recipients
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+
+    When I fill in the ext alert defaults
+    And I select "Test" from ext combo "Status"
+
+    And I select the following alert audience:
+      | name          | type         |
+      | Potter County | Jurisdiction |
+      | G2            | Group        |
+
+    And I send the alert
+
+    And the following users should receive the alert email:
+      | People | bob.smith@example.com, leroy@example.com |
+
+  Scenario: Sending an alert to only a group with no other audience specified
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+
+    When I fill in the ext alert defaults
+    And I select "Test" from ext combo "Status"
+
+    And I select the following alert audience:
+      | name          | type         |
+      | G2            | Group        |
+
+    And I send the alert
+
+    And the following users should receive the alert email:
+      | People | bob.smith@example.com |
+
+  Scenario: Sending a HAN alert to a cross-jurisdictional group should notify HAN Coordinators
+    
+  Scenario: Sending a non-HAN alert to a cross-jurisdictional group should not notify HAN Coordinators
+
+  Scenario: Sending an alert to an Organization
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send a HAN Alert"
+
+    When I fill in the ext alert defaults
+    And I click breadCrumbItem "Audience"
+    And I select the following alert audience:
+      | name   | type         |
+      | DSHS   | Organization |
+    And I send the alert
+    Then the following users should receive the alert email:
+      | People | john.smith@example.com, bob.smith@example.com, leroy.smith@example.com |
+    And "jane.smith@example.com" should not receive an email
+
+  Scenario: Sending a HAN alert to a cross-jurisdictional organization should notify HAN Coordinators
+
+  Scenario: Sending a non-HAN alert to a cross-jurisdictional organization should not notify HAN Coordinators
