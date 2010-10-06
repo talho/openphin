@@ -1,5 +1,5 @@
 @ext
-Feature: Acknowledging an alert
+Feature: Acknowledging an alert via email 
 
   Background:
    Given the following users exist:
@@ -9,19 +9,17 @@ Feature: Acknowledging an alert
     And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    And I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-  Scenario: Acknowledging an alert through an email with signing in
-    When I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
 
+  Scenario: Acknowledging an alert through an email with signing in
+    Given I fill in the ext alert defaults
+    And I select "Normal" from ext combo "Acknowledge"
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
     And I send the alert
-
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -36,16 +34,13 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through an email without signing in
-    When I fill in the ext alert defaults
+    Given I fill in the ext alert defaults
     And I select "Normal" from ext combo "Acknowledge"
-
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
     And I send the alert
-
-    And the following users should receive the alert email:
+    Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
@@ -58,18 +53,15 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: A user cannot acknowledge an sensitive alert through an email without signing in
-    When I fill in the ext alert defaults
+    Given I fill in the ext alert defaults
     And I select "Normal" from ext combo "Acknowledge"
     And I check "Sensitive (confidential)"
-
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
     And I send the alert
-
-    When delayed jobs are processed
-    And the following users should receive the alert email:
+    And delayed jobs are processed
+    Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body does not contain alert acknowledgment link | |
@@ -82,3 +74,4 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
    
   Scenario: Acknowledging an alert with call downs through an email without signing in
+     Given "SWN sandbox required" should be implemented
