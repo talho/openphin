@@ -19,6 +19,7 @@ Feature: Creating and sending alerts
       | Role         | WMD Coordinator                             |
     And the following users exist:
       | John Smith      | john.smith@example.com     | Health Alert and Communications Coordinator  | Dallas County  |
+      | Jane Smith      | jane.smith@example.com     | Health Officer                               | Potter County |
       | Brian Simms     | brian.simms@example.com    | Epidemiologist                               | Dallas County  |
       | Ed McGuyver     | ed.mcguyver@example.com    | Public                                       | Dallas County  |
       | Ethan Waldo     | ethan.waldo@example.com    | Health Officer                               | Tarrant County |
@@ -68,20 +69,10 @@ Feature: Creating and sending alerts
     And "fix the above step to include an alert id" should be implemented
 
   Scenario: Sending alerts with only People in the audience should work
-    Given the following entities exist:
-      | Jurisdiction | Texas         |
-    And the following users exist:
-      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |
-      | Jane Smith      | jane.smith@example.com   | Health Officer                               | Potter County |
-    When delayed jobs are processed
-    Given the role "Health Alert and Communications Coordinator" is an alerter
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
     When I fill in the following:
       | Title        | H1N1 SNS push packs to be delivered tomorrow |
       | Message      | H1N1 SNS push packs to be delivered tomorrow |
-    And I select "Texas" from ext combo "Jurisdiction"
+    And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "E-mail"
     And I click breadCrumbItem "Audience"
     And I select the following in the audience panel:
@@ -104,58 +95,6 @@ Feature: Creating and sending alerts
       | people            | Jane Smith                                   |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
 
-  Scenario: Previewing an alert
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
-
-    And I select the following alert audience:
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Potter County   | Jurisdiction |
-      | Health Officer  | Role         |
-      | Epidemiologist  | Role         |
-      | Keith Gaddis    | User         |
-
-    And I click breadCrumbItem "Preview"
-
-    And I should see "For more details, keep on reading..."
-    And I should see "H1N1 SNS push packs to be delivered tomorrow"
-    And I should see a display form with:
-      | Severity      | Moderate |
-      | Status        | Actual   |
-      | Acknowledge   | No       |
-      | Methods       | Email    |
-      | Delivery Time | 72 hours |
-
-    And I expand ext panel "Audience"
-    And I should see the following audience breakdown
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Potter County  | Jurisdiction |
-      | Health Officer | Role         |
-      | Epidemiologist | Role         |
-      | Keith Gaddis   | User         |
-
-    When I click breadCrumbItem "Details"
-    And I fill in "Title" with "Something Different"
-    And I click breadCrumbItem "Preview"
-    And I should see "For more details, keep on reading..."
-    And I should see "Something Different"
-    And I should see a display form with:
-      | Severity      | Moderate |
-      | Status        | Actual   |
-      | Acknowledge   | No       |
-      | Methods       | Email    |
-      | Delivery Time | 72 hours |
-    And I should see the following audience breakdown
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Potter County  | Jurisdiction |
-      | Health Officer | Role         |
-      | Epidemiologist | Role         |
-      | Keith Gaddis   | User         |
-
   Scenario: Sending an alert to specific users sends alerts to each user
     When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
@@ -168,7 +107,7 @@ Feature: Creating and sending alerts
 
     And I send the alert
 
-    And the following users should receive the alert email:
+    Then the following users should receive the alert email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
@@ -189,7 +128,7 @@ Feature: Creating and sending alerts
 
     And I send the alert
 
-    And the following users should receive the alert email:
+    Then the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
@@ -211,7 +150,7 @@ Feature: Creating and sending alerts
 
     And I send the alert
 
-    And the following users should receive the alert email:
+    Then the following users should receive the alert email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
@@ -231,7 +170,7 @@ Feature: Creating and sending alerts
       | Health Officer | Role |
 
     And I send the alert
-    And the following users should receive the alert email:
+    Then the following users should receive the alert email:
       | People        | ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |

@@ -8,41 +8,35 @@ Feature: Sending alerts to BlackBerry devices
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist                               | Wise County    |
+    And "keith.gaddis@example.com" has the following devices:
+      | blackberry | 1234567890 |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
 
-  Scenario: Sending alerts to SMS devices
-    # Start legacy code: we don't have the profile working in EXT yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Blackberry PIN" from "Device Type"
-    And I fill in "Blackberry" with "12345678"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "12345678"
-    And I should have a Blackberry device with the Blackberry number "12345678"
-    And I sign out
-    # End legacy code. replace when profile is in EXT
-
-    Given I log in as "john.smith@example.com"
+  Scenario: Sending alerts to Blackberry devices
+    Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
+    And I navigate to "HAN > Send a HAN Alert"
+    And I should have the "Details" breadcrumb selected
 
-    When I fill in the ext alert defaults
-    And I check "Blackberry"
-    And I uncheck "E-mail"
+    When  I fill in the following:
+      | Title         | Chicken pox outbreak               |
+      | Message       | Some body text                     |
+      | Short Message | Chicken pox outbreak short message |
+
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "None" from ext combo "Acknowledge"
+    And I select "Test" from ext combo "Status"
     And I select "Moderate" from ext combo "Severity"
-    And I fill in "Short Message" with "Chicken pox outbreak short message"
-
+    And I check "Blackberry"
+    And I press "Next"
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
-    And I send the alert
+    And I press "Next"
+    And I press "Send Alert"
 
     When delayed jobs are processed
     Then the following Blackberry calls should be made:
       | blackberry | message                            |
-      | 12345678   | Chicken pox outbreak short message |
+      | 1234567890 | Chicken pox outbreak short message |

@@ -1,7 +1,7 @@
 Feature: Sending alerts using groups
-  In order to conveniently send alerts to predetermined groups of people
+  In order to more quickly build a desired alert audience
   As an alerter
-  I want to select a predefined group from the alert audience screen
+  I want to select individual users from predefined groups
 
   Background:
     Given the following entities exist:
@@ -26,7 +26,7 @@ Feature: Sending alerts using groups
   Scenario: View and select individuals from within a group
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
+    And I navigate to "HAN > Send a HAN Alert"
 
     When I fill in the ext alert defaults
     And I click breadCrumbItem "Audience"

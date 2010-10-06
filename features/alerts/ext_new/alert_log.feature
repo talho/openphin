@@ -81,7 +81,7 @@ Feature: Viewing the alert log
     And I navigate to "HAN > Alert Log and Reporting"
     Then I should not see an alert titled "Hello World"
 
-  #Scenario: Clicking back on a viewed alert # this won't be a valid use case, especially after the ext control is worked in: no back button
+  Scenario: View alert log by alert type
 
   Scenario: Viewing percentage of recipients that have acknowledged
     Given the following entities exists:
@@ -327,5 +327,3 @@ Feature: Viewing the alert log
       | Health Officer | Role         |
       | John Smith     | User         |
     And I should see "Acknowledged" for user "Daniel Smith"
-
-  Scenario: View alert log by alert type
