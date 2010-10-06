@@ -15,6 +15,8 @@ Ext.ux.plugin.TabPanelNav = Ext.extend(function(){}, {
             'down': this.down,
             scope: this
         });
+
+        this.component.on('tabchange', this.focus_on_tabchange, this);
     },
 
     left: function(e){
@@ -55,5 +57,12 @@ Ext.ux.plugin.TabPanelNav = Ext.extend(function(){}, {
         var tab = elem.down('a.x-tab-right');
         if(tab)
             tab.focus();
+    },
+
+    focus_on_tabchange: function(tabpanel, panel){
+        var tabStripItem = tabpanel.getTabEl(panel);
+        if(tabStripItem){
+            Ext.get(tabStripItem).down('a.x-tab-right').focus();
+        }
     }
 });
