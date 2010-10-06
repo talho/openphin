@@ -59,11 +59,17 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
             enableTabScroll: true,
+            itemTpl: new Ext.Template(
+                 '<li class="{cls}" id="{id}"><a class="x-tab-strip-close" tabindex="0" alt="Close tab {text}" href="#"></a>', 
+                 '<a class="x-tab-right" href="#"><em class="x-tab-left">',
+                 '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
+                 '</em></a></li>'
+            ),
             items: [Talho.Article3Panel.initialize({itemId:'dashboard_home'})],
-            plugins: [Ext.plugin.DragDropTabs],
+            plugins: [Ext.plugin.DragDropTabs, new Ext.ux.plugin.TabPanelNav()],
             bbar:{
                 id: 'tab_toolbar',
-                plugins: [new Ext.ux.ToolBarNav],
+                plugins: [new Ext.ux.plugin.ToolBarNav],
                 items:[
                     {
                         text: 'Back',
@@ -129,7 +135,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 				handler: this.go_to_dashboard,
                 scope: this
 			}],
-            plugins: [new Ext.ux.ToolBarNav]
+            plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
@@ -165,7 +171,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
     bottombar: function(){
         var tb = new Ext.Toolbar({id: 'bottom_toolbar',
-            plugins: [new Ext.ux.ToolBarNav]
+            plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});

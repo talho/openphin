@@ -1,6 +1,6 @@
-Ext.ns('Ext.ux');
+Ext.ns('Ext.ux.plugin');
 
-Ext.ux.ToolBarNav = Ext.extend(function(config){Ext.apply(this, config);}, {
+Ext.ux.plugin.ToolBarNav = Ext.extend(function(config){Ext.apply(this, config);}, {
     init: function(cmp){
         this.component = cmp;
 
