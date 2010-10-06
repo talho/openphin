@@ -1,0 +1,130 @@
+Feature: Sending alerts
+
+  In order to inform people of an issue
+  As an alerter
+  I should be able to send custom Alerts to audiences.
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Texas                                       |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Potter County                               |
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | Health Officer                              |
+      | Role          | Epidemiologist                              | 
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the following users exist:
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Potter County |
+      | Anne Smith    | anne.smith@example.com | Public                                      | Potter County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a Custom Alert"
+    And the "Send Custom Alert" tab should be open
+
+  Scenario: Create and send a custom alert with no acknowledgement
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | Message               | Some body text            |
+      | From Jurisdiction     | Dallas County             |
+      | Acknowledge           | None                      |
+      | Communication Methods | E-mail                    |
+      | Jurisdictions         | Texas                     |
+    And I press "Send Alert"
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | message           | Some body text            |
+      | from_jurisdiction | Dallas County             |
+      | acknowledge       | None                      |
+      | jurisdiction      | Texas                     |
+
+  Scenario: Create and send a custom alert with normal acknowledgement
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | Message               | Some body text            |
+      | From Jurisdiction     | Dallas County             |
+      | Acknowledge           | Normal                    |
+      | Communication Methods | E-mail                    |
+      | Jurisdictions         | Texas                     |
+    And I press "Send Alert"
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | message           | Some body text            |
+      | from_jurisdiction | Dallas County             |
+      | acknowledge       | Normal                    |
+      | jurisdiction      | Texas                     |
+
+  Scenario: Alerter with more than one jurisdiction can send from either
+    When I open ext combo "Jurisdiction"
+    Then I should see "Dallas County"
+    Then I should see "Potter County"
+    Then I should not see "Tarrant County"
+    When I fill in the following:
+      | Alert Type   | Earthquake                |
+      | Title        | Watch out for aftershocks |
+      | Message      | Some body text            |
+    And I check "E-mail"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | from_jurisdiction | Potter County             |
+      | title             | Watch out for aftershocks |
+    
+  Scenario: Sending alerts form should not contain system roles
+    Given there is an system only Admin role
+    And I should have the "Details" breadcrumb selected
+    When I fill in the following:
+      | Alert Type   | Earthquake             |
+      | Title        | This is a test title   |
+      | Message      | This is a test message |
+    And I check "E-mail"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    When I click x-accordion-hd "Roles"
+    Then I should not see "Admin"
+
+  Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
+    When I should have the "Details" breadcrumb selected
+    And I fill in the following:
+      | Alert Type   | Earthquake             |
+      | Title        | This is a test title   |
+      | Message      | This is a test message |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Test" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I check "E-mail"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    And I click contextDownArrow ""
+    Then I should see "Select All Sub-jurisdictions"
+    Then I should see "Select No Sub-jurisdictions"
+
+  Scenario: Sending "Other" alerts should not display Federal jurisdiction as an option
+    When I fill in the following:
+      | Type    | Earthquake             |
+      | Title   | This is a test title   |
+      | Message | This is a test message |
+    And I check "E-mail"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Federal"

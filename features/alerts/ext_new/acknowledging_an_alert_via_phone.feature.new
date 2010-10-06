@@ -6,46 +6,21 @@ Feature: Acknowledging an alert
       | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
-    And delayed jobs are processed
-    And I am logged in as "john.smith@example.com"
-    And I am allowed to send alerts
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
+    And "john.smith@example.com" is allowed to send alerts
+    And keith.gaddis@example.com has the following devices:
+      | phone | 2105551212 |
 
 Scenario: Acknowledging an alert through phone
-  When I sign out
-  # legacy code because we haven't converted user profile to ext
-  Given I am logged in as "keith.gaddis@example.com"
-  When I go to the edit profile page
-  And I follow "Add Device"
-  And I select "Phone" from "Device Type"
-  And I fill in "Phone" with "2105551212"
-  And I press "Save"
-  Then I should see "Profile information saved."
-  When I go to the edit profile page
-  Then I should see "2105551212"
-  And I should have a phone device with the phone "2105551212"
-  And I sign out
-  # end legacy code
-
   Given I log in as "john.smith@example.com"
-  When I go to the ext dashboard page
-  And I navigate to "HAN > Send an Alert"
-
-  When I fill in the ext alert defaults
-  And I fill in "Short Message" with "Chicken pox outbreak"
-  And I select "Normal" from ext combo "Acknowledge"
-  And I select "Moderate" from ext combo "Severity"
-  And I check "Phone"
-  And I fill in "Caller ID" with "4114114111"
-  And I uncheck "E-mail"
-
-  And I select the following alert audience:
-    | name         | type |
-    | Keith Gaddis | User |
-
-  And I send the alert
-
+  And a sent alert with:
+    | title                 | H1N1 SNS push packs to be delivered tomorrow |
+    | message               | There is a Chicken pox outbreak in the area |
+    | status                | Actual               |
+    | severity              | Moderate             |
+    | acknowledge           | Yes                  |
+    | from_jurisdiction     | Wise County          |
+    | people                | Keith Gaddis         |
+    | communication methods | Phone                |
   And I sign out
 
   When delayed jobs are processed
@@ -57,47 +32,25 @@ Scenario: Acknowledging an alert through phone
   When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
   And delayed jobs are processed
   And I log in as "keith.gaddis@example.com"
-
-  When I am on the HAN
+  And I am on the HAN
   Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
   And I should not see an "Acknowledge" button
-  But I should see "Acknowledge: Yes"
+  And I should see "Acknowledge: Yes"
   # end legacy code: replace when acknowledgement is implemented
 
 Scenario: Acknowledging an alert through phone with call downs
-  When I sign out
-  # legacy code here because we have not update the user profile
-  Given I am logged in as "keith.gaddis@example.com"
-  When I go to the edit profile page
-  And I follow "Add Device"
-  And I select "Phone" from "Device Type"
-  And I fill in "Phone" with "2105551212"
-  And I press "Save"
-  Then I should see "Profile information saved."
-  When I go to the edit profile page
-  Then I should see "2105551212"
-  And I should have a phone device with the phone "2105551212"
-  And I sign out
-  # end legacy code: replace when user profile has been updated to work in ext
-
   Given I log in as "john.smith@example.com"
-  When I go to the ext dashboard page
-  And I navigate to "HAN > Send an Alert"
-
-  When I fill in the ext alert defaults
-  And I select "Advanced" from ext combo "Acknowledge"
-  When I fill in the following:
-    | Short Message    | Chicken pox outbreak                         |
-    | Alert Response 1 | if you can call back within 15 minutes       |
-    | Alert Response 2 | if you can call back within 30 minutes       |
-  And I uncheck "E-mail"
-  And I select "Moderate" from ext combo "Severity"
-  And I check "Phone"
-  And I fill in "Caller ID" with "4114114111"
-  And I select the following alert audience:
-    | name         | type |
-    | Keith Gaddis | User |
-  And I send the alert
+  And a sent alert with:
+    | title                 | H1N1 SNS push packs to be delivered tomorrow |
+    | message               | There is a Chicken pox outbreak in the area |
+    | status                | Actual               |
+    | severity              | Moderate             |
+    | acknowledge           | Yes                  |
+    | from_jurisdiction     | Wise County          |
+    | people                | Keith Gaddis         |
+    | communication methods | Phone                |
+    | alert_response_1      | if you can call back within 15 minutes |
+    | alert_response_2      | if you can call back within 30 minutes |
   And I sign out
 
   When delayed jobs are processed
@@ -109,9 +62,48 @@ Scenario: Acknowledging an alert through phone with call downs
   When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
   And delayed jobs are processed
   And I log in as "keith.gaddis@example.com"
-  When I go to the ext dashboard page
+  And I go to the ext dashboard page
   And I navigate to "HAN > Home"
   Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
   And I click inlineBtn "More"
   And I should not see an "Acknowledge" button
-  But I should see "Acknowledge: if you can call back within 15 minutes"
+  And I should see "Acknowledge: if you can call back within 15 minutes"
+
+
+ Scenario: A user can not acknowledge a phone alert with a call down response without selecting a response
+   Given I log in as "john.smith@example.com"
+   And a sent alert with:
+     | title                 | H1N1 SNS push packs to be delivered tomorrow |
+     | message               | There is a Chicken pox outbreak in the area |
+     | status                | Actual               |
+     | severity              | Moderate             |
+     | acknowledge           | Yes                  |
+     | from_jurisdiction     | Wise County          |
+     | people                | Keith Gaddis         |
+     | communication methods | Phone                |
+     | alert_response_1      | if you can respond within 15 minutes   |
+     | alert_response_2      | if you can respond within 30 minutes   |
+     | alert_response_3      | if you can respond within 1 hour       |
+     | alert_response_4      | if you can respond within 4 hours      |
+     | alert_response_5      | if you cannot respond                  |
+
+    When delayed jobs are processed
+   And I go to the alert log
+  And I pause
+    Then the following phone calls should be made:
+      | phone      | message                                                                                                                  | call_down                            |
+      | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area | if you can respond within 15 minutes |
+    And the phone call should have 5 calldowns
+
+    When "keith.gaddis@example.com" acknowledges the phone alert
+    And delayed jobs are processed
+    And I go to the alert log
+   And I pause
+    And I follow "More"
+    Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
+
+    And I am logged in as "keith.gaddis@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Home"
+    Then I can see the alert summary for "Title for Chicken pox outbreak"
+    And the alert should not be acknowledged
