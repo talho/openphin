@@ -14,6 +14,11 @@ When /^I edit the profile for "([^\"]*)"/ do |email|
   visit edit_user_profile_path(user)
 end
 
+When /^I access the profile json for "([^\"]*)"/ do |email|
+  user = User.find_by_email!(email)
+  visit edit_user_profile_path(user) + ".json"
+end
+
 Then 'I can see the profile' do
   page.should have_css('.user_profile')
 end

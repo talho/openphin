@@ -20,10 +20,15 @@ Talho.RequestRoles = Ext.extend(Talho.ProfileBase, {
         {xtype: 'combo', fieldLabel: 'Preferred language', name: 'profile[language]', store: ['English', 'Spanish'], editable: false, value: 'English', triggerAction: 'all'}
       ]}
     ];
-    var url = config.url + ".json";
-    var method = "PUT";
+    this.form_config = {
+      load_url: config.url + "/edit.json",
+      form_width: 400,
+      item_list: item_list,
+      save_url: config.url + ".json",
+      save_method: "PUT"
+    };
 
-    Talho.RequestRoles.superclass.constructor.call(this, config, item_list);
+    Talho.RequestRoles.superclass.constructor.call(this, config);
   }
 });
 

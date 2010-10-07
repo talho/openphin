@@ -43,6 +43,18 @@ When /^I fill in the form with the following info:$/ do |table|
 	end
 end
 
+When /^I fill in the ext form with the following info:$/ do |table|
+	table.raw.each do |row|
+		if ["Language"
+# Add in more select form elements here
+		].include?(row[0])
+			When "I select \"#{row[1]}\" from ext combo \"#{row[0]}\""
+    else
+      When "I fill in \"#{row[0]}\" with \"#{row[1]}\""
+		end
+	end
+end
+
 Then /^I should see a link to (.*)$/ do |page_name|
   response.should have_selector('a', :content => page_name)
 end

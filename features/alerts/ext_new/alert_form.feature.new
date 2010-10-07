@@ -1,8 +1,8 @@
-Feature: Sending alerts
+Feature: Sending alert Form
 
-  In order to inform people of an issue
+  In order to facilitate alert creation
   As an alerter
-  I should be able to send custom Alerts to audiences.
+  I should be able to easily use the alert creation form
 
   Background:
     Given the following entities exists:
@@ -24,15 +24,15 @@ Feature: Sending alerts
       | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Potter County |
       | Anne Smith    | anne.smith@example.com | Public                                      | Potter County |
       | Fred Smith    | fred.smith@example.com | Public                                      | Potter County |
-        And the following groups for "john.smith@example.com" exist:
+    And the following groups for "john.smith@example.com" exist:
       | My First Group | Dallas County |                | | Personal | Dallas County |
       | hofficers      |               | Health Officer | | Personal | Dallas County |
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Alerts > Send a Custom Alert"
-    And the "Send Custom Alert" tab should be open
+    And I go to the ext dashboard page
 
   Scenario: Preview an alert
+    When I navigate to "Alerts > Send a Custom Alert"
+    And the "Send Custom Alert" tab should be open
     Then I should have the "Details" breadcrumb selected
     When I fill in an alert with the following:
       | Alert Type            | Earthquake                                     |
@@ -51,7 +51,7 @@ Feature: Sending alerts
       | Users                 | anne.smith@example.com, fred.smith@example.com |
     And I click breadCrumbItem "Preview"
 
-    Then I should see "Watch out for aftershocks" within "#alert_title"
+    Then I should see "[Earthquake Alert] Watch out for aftershocks" within "#alert_title"
     And I should see "Some body text" within "#alert_message"
     And I should see "Dallas County" within "#from_jurisdiction"
     And I should see "Moderate" within "#severity"
@@ -188,3 +188,68 @@ Feature: Sending alerts
     And I should see the following audience breakdown
       | name           | type         |
       | Anne Smith     | User         |
+
+  Scenario: Sending an alert closes the alert form/tab and opens the Alert Log tab
+    When I navigate to "Alerts > Send a Custom Alert"
+
+    When I fill in an alert with the following:
+      | Title                 | Cholera Outbreak       |
+      | Message               | Some body text         |
+      | From Jurisdiction     | Dallas County          |
+      | Communication Methods | E-mail                 |
+      | Jurisdictions         | Texas                  |
+    And I press "Send Alert"
+    Then the "Alert Detail Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+
+  Scenario: Sending alerts form should not contain system roles
+    Given there is an system only Admin role
+    When I navigate to "Alerts > Send a Custom Alert"
+    And I fill in an alert with the following:
+      | Title                 | Cholera Outbreak       |
+      | Message               | Some body text         |
+      | From Jurisdiction     | Dallas County          |
+      | Communication Methods | E-mail                 |
+      | Jurisdictions         | Texas                  |
+    And I click breadCrumbItem "Audience"
+    And I click x-accordion-hd "Roles"
+    Then I should not see "Admin"
+
+  Scenario: Audience pane should show "Select all children" link for parent jurisdictions
+    When I navigate to "Alerts > Send a Custom Alert"
+    And I fill in an alert with the following:
+      | Title                 | Cholera Outbreak       |
+      | Message               | Some body text         |
+      | From Jurisdiction     | Dallas County          |
+      | Communication Methods | E-mail                 |
+      | Jurisdictions         | Texas                  |
+    And I click breadCrumbItem "Audience"
+    And I click contextDownArrow ""
+    Then I should see "Select All Sub-jurisdictions"
+    And I should see "Select No Sub-jurisdictions"
+
+  Scenario:  HAN Alerts do not show non-CDC-compliant options
+    When I navigate to "HAN > Send an Alert"
+    Then I should not see "Disable Cross-Jurisdictional alerting"
+    And I should not see "None" within "#acknowledge"
+  
+  Scenario: Sending HAN alerts should display Federal jurisdiction as an option
+    When I navigate to "HAN > Send an Alert"
+    And I fill in an alert with the following:
+      | Message               | Some body text         |
+      | From Jurisdiction     | Dallas County          |
+      | Communication Methods | E-mail                 |
+      | Jurisdictions         | Jurisdictions          |
+    And I click breadCrumbItem "Audience"
+    Then I should see "Federal"
+
+  Scenario: Sending non-HAN alerts should not display Federal jurisdiction as an option
+    When I navigate to "Alerts > Send a Custom Alert"
+    And I fill in an alert with the following:
+      | Alert Type            | Noise Ordinance        |
+      | Message               | Some body text         |
+      | From Jurisdiction     | Dallas County          |
+      | Communication Methods | E-mail                 |
+      | Jurisdictions         | Jurisdictions          |
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Federal"

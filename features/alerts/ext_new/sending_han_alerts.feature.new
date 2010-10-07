@@ -31,32 +31,19 @@ Feature: Sending HAN alerts form
       | Brian Ryckbost  | brian.ryckbost@example.com  | Health Officer                              | Texas          |
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
-    Then I should have the "Details" breadcrumb selected
-    And I should not see "Disable Cross-Jurisdictional alerting"
-    And I should not see "None" within "Acknowledge"
+    And I navigate to "HAN > Send a HAN Alert"
 
   Scenario: Create and send a HAN alert with normal acknowledgement
-    When  I fill in the following:
-      | Title         | H1N1 SNS push packs to be delivered tomorrow |
-      | Message       | Some body text                               |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I select the following in the audience panel:
-      | name                             | type         |
-      | Texas                            | Jurisdiction |
-    And I press "Next"
-    Then I should have the "Preview" breadcrumb selected
-
-    When I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-    When delayed jobs are processed
+    When I fill in an alert with the following:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Some body text            |
+      | From Jurisdiction     | Dallas County             |
+      | Acknowledge           | Normal                    |
+      | Communication Methods | E-mail                    |
+      | Jurisdictions         | Dallas County             |
+    And I click breadCrumbItem "Preview"
+    And I press "Send Alert"
+    And delayed jobs are processed
     Then an alert exists with:
       | type              | HAN                                          |
       | title             | H1N1 SNS push packs to be delivered tomorrow |
@@ -67,82 +54,43 @@ Feature: Sending HAN alerts form
 
   Scenario: Create and send a HAN alert with advanced (calldown) acknowledgement
     When I select "Advanced" from ext combo "Acknowledge"
-    # add a 3rd, 4th and 5th response box
-    And I press "+ Add another response"
-    And I press "+ Add another response"
-    And I press "+ Add another response"
-
-    And I fill in the following:
-      | Title              | H1N1 SNS push packs to be delivered tomorrow |
-      | Message            | Some body text                               |
-      | Alert Response 1   | if you can respond within 15 minutes         |
-      | Alert Response 2   | if you can respond within 30 minutes         |
-      | Alert Response 3   | if you can respond within 1 hour             |
-      | Alert Response 4   | if you can respond within 4 hour             |
-      | Alert Response 5   | if you cannot respond                        |
-
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Advanced" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I select the following in the audience panel:
-      | name                             | type         |
-      | Texas                            | Jurisdiction |
-    And I press "Next"
-    Then I should have the "Preview" breadcrumb selected
-
-    When I press "Send Alert"
-    Then the "Alert Detail Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-    When delayed jobs are processed
+    And  I fill in an alert with the following:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Some body text                               |
+      | Communication Methods | E-mail                                       |
+      | From Jurisdiction     | Dallas County                                |
+      | Alert Response 1      | if you can respond within 15 minutes         |
+      | Alert Response 2      | if you can respond within 30 minutes         |
+      | Alert Response 3      | if you can respond within 1 hour             |
+      | Alert Response 4      | if you can respond within 4 hour             |
+      | Alert Response 5      | if you cannot respond                        |
+      | Jurisdictions         | Dallas County                                |
+    And I press "Send Alert"
+    And delayed jobs are processed
     Then an alert exists with:
       | type               | HAN                                          |
       | title              | H1N1 SNS push packs to be delivered tomorrow |
       | message            | Some body text                               |
       | from_jurisdiction  | Dallas County                                |
       | acknowledge        | Advanced                                     |
-      | jurisdiction       | Texas                                        |
       | call_down_messages | if you can respond within 15 minutes         |
       | call_down_messages | if you can respond within 30 minutes         |
       | call_down_messages | if you can respond within 1 hour             |
       | call_down_messages | if you can respond within 4 hours            |
       | call_down_messages | if you cannot respond                        |
-
-  Scenario: Sending HAN alerts should display Federal jurisdiction as an option
-    Given the following users exist:
-      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
-    When I fill in the following:
-      | Title   | This is a test title   |
-      | Message | This is a test message |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should see "Federal"
+      | jurisdiction       | Dallas County                                |
 
   Scenario: Sending a HAN alert to sibling jurisdictions
-    When  I fill in the following:
-      | Title          | H1N1 SNS push packs to be delivered tomorrow |
-      | Message        | Some body text                               |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    And I select the following alert audience:
-      | name           | type         |
-      | Tarrant County | Jurisdiction |
-      | Wise County    | Jurisdiction |
-      | Health Officer | Role         |
-    And I send the alert
-    And the following users should receive the alert email:
+    When  I fill in an alert with the following:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Some body text                               |
+      | Communication Methods | E-mail                                       |
+      | From Jurisdiction     | Dallas County                                |
+      | Jurisdictions         | Tarrant County, Wise County                  |
+      | Roles                 | Health Officer                               |
+    And I press "Send Alert"
+    And delayed jobs are processed"
+    Then the following users should receive the alert email:
       | People         | ethan.waldo@example.com, keith.gaddis@example.com   |
       | body contains  | Title: H1N1 SNS push packs to be delivered tomorrow |
     And the following users should not receive any alert emails
@@ -152,21 +100,16 @@ Feature: Sending HAN alerts form
       | emails         | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
 
   Scenario: Sending a HAN alert to a parent jurisdiction
-    When  I fill in the following:
-      | Title          | H1N1 SNS push packs to be delivered tomorrow |
-      | Message        | Some body text                               |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    And I select the following alert audience:
-      | name           | type         |
-      | Texas          | Jurisdiction |
-      | Health Officer | Role         |
-    And I send the alert
-    And the following users should receive the alert email:
+    When  I fill in an alert with the following:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Some body text                               |
+      | Communication Methods | E-mail                                       |
+      | From Jurisdiction     | Dallas County                                |
+      | Jurisdictions         | Texas                                        |
+      | Roles                 | Health Officer                               |
+    And I press "Send Alert"
+    And delayed jobs are processed"
+    Then the following users should receive the alert email:
       | People         | brandon.keepers@example.com                         |
       | body contains  | Title: H1N1 SNS push packs to be delivered tomorrow |
     And the following users should not receive any alert emails
@@ -177,22 +120,16 @@ Feature: Sending HAN alerts form
       | emails         | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |
 
   Scenario: Sending a HAN alert to a cousin jurisdiction
-    When  I fill in the following:
-      | Title          | H1N1 SNS push packs to be delivered tomorrow |
-      | Message        | Some body text                               |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-
-    And I select the following alert audience:
-      | name           | type         | state    |
-      | Ottawa County  | Jurisdiction | Michigan |
-      | Health Officer | Role         |          |
-    And I send the alert
-    And the following users should receive the alert email:
+    When  I fill in an alert with the following:
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | Message               | Some body text                               |
+      | Communication Methods | E-mail                                       |
+      | From Jurisdiction     | Dallas County                                |
+      | Jurisdictions         | Ottowa                                       |
+      | Roles                 | Health Officer                               |
+    And I press "Send Alert
+    And delayed jobs are processed"
+    Then the following users should receive the alert email:
       | People         | dan.morrison@example.com, brandon.keepers@example.com |
       | body contains  | Title: H1N1 SNS push packs to be delivered tomorrow   |
     And the following users should not receive any alert emails
@@ -202,4 +139,4 @@ Feature: Sending HAN alerts form
       | emails         | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com |
 
   Scenario: Sending a HAN alert to a foreign jurisdiction
-    # does this belong here?
+# is this already covered with 'cousin'?
