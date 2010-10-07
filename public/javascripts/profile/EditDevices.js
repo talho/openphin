@@ -4,16 +4,15 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
     var store = new Ext.data.Store({
       autoDestroy: true,
-      //url: 'plants.xml', // load remote data using HTTP
+      autoLoad: false,
+      autoSave: false,
+      url: config.url + "/edit.json",
       listeners: {scope: this, 'add': {fn: function(){ this.getPanel().doLayout(); }, delay: 10}},
-      reader: new Ext.data.XmlReader({
-        record: 'device', // records will have a 'device' tag
-        fields: [{name: 'type', type: 'string'}, {name: 'value', type: 'string'}]
-          // use an Array of field definition objects to implicitly create a Record constructor
-          // the 'name' below matches the tag name to read, except 'availDate'
-          // which is mapped to the tag 'availability'
+      reader: new Ext.data.JsonReader({
+        root: "extra.devices",
+        fields: [{name:'id'}, {name:'type'}, {name:'rbclass'}, {name:'value'}]
       }),
-      //sortInfo: {field:'type', direction:'ASC'}
+      //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
     });
 
     var template = new Ext.XTemplate(
@@ -21,7 +20,6 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       '<tpl for=".">',
         '<li class="device-item">',
           '<p><span class="title minor">{value}</span>&nbsp;&nbsp;&nbsp;{type}</p>',
-          //'<a class="destroy">Delete</a>',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -51,12 +49,21 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       save_method: "PUT"
     };
 
+    this.device_types = [
+      ['Device::EmailDevice',      'E-mail'],
+      ['Device::PhoneDevice',      'Phone'],
+      ['Device::SMSDevice',        'SMS'],
+      ['Device::FaxDevice',        'Fax'],
+      ['Device::BlackberryDevice', 'Blackberry PIN']
+    ];
+
     Talho.EditDevices.superclass.constructor.call(this, config);
 
     // Override the setValue() method where necessary
     this.getPanel().find("name", "user[devices]")[0].setValue = function(val){
       var store = this.getStore();
-      var devices = jQuery.map(val, function(e,i){ var toks=e.split(":"); return new store.recordType({type:toks[0],value:toks[1]}); });
+      var devices = jQuery.map(val, function(e,i){ return new store.recordType(e); });
+      store.removeAll();
       store.add(devices);
     };
 
@@ -70,8 +77,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       width: 450,
       items: [
         {xtype: 'textfield', name: 'dev[value]', maxLength: '46', allowBlank: false},
-        {xtype: 'combo', name: 'dev[type]', editable: false, value: 'E-mail', triggerAction: 'all',
-         store: ['E-mail','Phone','SMS','Fax','Blackberry PIN']}
+        {xtype: 'combo', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', triggerAction: 'all', store: this.device_types}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -79,10 +85,13 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     win.show();
   },
   add_cb: function(win){
-    var type = win.find("name", "dev[type]")[0].getValue();
+    var rbclass = win.find("name", "dev[type]")[0].getValue();
+    var type = "";
+    jQuery.each(this.device_types, function(i,e){ if (e[0] == rbclass) type = e[1]; });
     var val = win.find("name", "dev[value]")[0].getValue();
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
-    store.add(new store.recordType({type:type,value:val}));
+    var device = new store.recordType({id: -1, type:type, rbclass:rbclass, value:val});
+    store.add(device);
     win.close();
   },
   remove_device: function(){
@@ -92,8 +101,21 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
   },
 
   save: function(){
+    this.getPanel().loadMask.show();
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
-    alert(store.getRange()[0].data.toSource());
+    var devices = jQuery.map(store.getRange(), function(e,i){ return e.data.toSource(); });
+    //alert(devices.join("\n"));
+    //store.save();
+    var devices = jQuery.map(store.getRange(), function(e,i){ return e.data; });
+    Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[devices]": Ext.encode(devices)},
+      success: this.save_success_cb, failure: this.save_err_cb, scope: this });
+  },
+  save_success_cb: function(response, opts) {
+    this.load_form_values();
+    this.show_message(Ext.decode(response.responseText));
+  },
+  save_err_cb: function(response, opts) {
+    this.show_ajax_error(response);
   }
 });
 

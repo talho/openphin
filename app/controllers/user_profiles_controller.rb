@@ -48,8 +48,12 @@ class UserProfilesController < ApplicationController
     respond_to do |format|
       format.html
       format.json {
+        device_desc = @user.devices.collect { |d|
+          type, value = d.to_s.split(": ")
+          { :id => d.id, :type => type, :rbclass => d.class.to_s, :value => value }
+        }
         render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium),
-                                                     :devices => @user.devices.collect { |d| d.to_s },
+                                                     :devices => device_desc,
                                                      :roles => roles}}
       }
     end
@@ -89,6 +93,12 @@ class UserProfilesController < ApplicationController
     if Device::Types.map(&:name).map(&:demodulize).include?(params[:device_type])
       @device = device_class_for(params[:device_type]).new params[params[:device_type]]
       @device.user = @user
+    end
+
+    # Handle Manage Devices submission (ext only)
+    if params[:user].has_key?(:devices)
+      update_devices(params[:user][:devices])
+      return
     end
 
     if params[:user].has_key?(:role_requests_attributes)
@@ -194,6 +204,50 @@ protected
       self.class.app_toolbar "accounts"
     else
       self.class.app_toolbar "application"
+    end
+  end
+
+  def update_devices(device_list_json)
+    device_list = ActiveSupport::JSON.decode(device_list_json)
+    success = true
+    device_errors = []
+
+    # Handle deleting
+    new_ids = device_list.collect { |d| d["id"] }
+    old_ids = @user.devices.collect { |d| d.id }
+    (old_ids - new_ids).each { |id|
+      Device.find(id).destroy if @user == Device.find(id).user
+    }
+
+    # Handle new devices
+    deviceOptionMap = {
+      'Device::EmailDevice' =>      'email_address',
+      'Device::PhoneDevice' =>      'phone',
+      'Device::SMSDevice' =>        'sms',
+      'Device::FaxDevice' =>        'fax',
+      'Device::BlackberryDevice' => 'blackberry'
+    }
+    device_list.each { |d|
+      if d["id"] == -1
+        attr_name = deviceOptionMap[d["rbclass"]]
+        puts "#{d["rbclass"]} => #{attr_name}, #{d["value"]}"
+        new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
+        new_device.user = @user
+        if !new_device.save
+          success = false
+          device_errors.concat(new_device.errors.full_messages)
+        end
+      end
+    }
+
+    respond_to do |format|
+      format.json {
+        if success
+          render :json => {:flash => "Devices saved.", :type => :completed, :success => true}
+        else
+          render :json => {:flash => nil, :type => :error, :errors => device_errors}
+        end
+      }
     end
   end
     

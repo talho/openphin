@@ -57,7 +57,6 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     Ext.Msg.alert('Error loading user info', 'Status:' + response.status + ': ' + response.statusText);
   },
   set_field_values: function(p, obj){
-    //alert(obj.toSource());
     for (var prop in obj) {
       var elem_list = p.find("name", "user[" + prop + "]");
       if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
@@ -72,31 +71,42 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   // Form callbacks
   submit_success: function(form, action){
     var json = action.result;
-    //alert(json.toSource());
-    var fm = this.getPanel().getEl().select("#flash-msg").first();
-    if (json.type != null)
-      fm.addClass(json.type).update(json.flash).show();
-    fm.parent().parent().parent().parent().scrollTo("top", 0);
-    this.getPanel().doLayout();
+    this.show_message(json);
   },
   submit_failure: function(form, action){
     Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
-      Ext.Msg.alert('Error',
-        '<b>Status: ' + action.response.status + ' => ' + action.response.statusText + '</b><br><br>' +
-        '<div style="height:400px;overflow:scroll;">' + action.response.responseText + '<\div>');
+      this.show_ajax_error(action.response);
     if (action.failureType === Ext.form.Action.SERVER_INVALID) {
       if (action.result.errormsg != null)
         Ext.Msg.alert('Invalid!!!', action.result.errormsg);
-      else {
-        var json = action.result;
-        var msg = "";
-        jQuery.each(json.errors, function(i,e){
-          var item = (jQuery.isArray(e)) ? e.join(" ") : e;
-          msg += item[0].toUpperCase() + item.substr(1) + "\n";
-        });
-        Ext.Msg.alert('Error', '<pre>' + msg + '<\pre>');
-      }
+      else
+        this.show_message(action.result);
     }
   },
+
+  // Flash message utils
+  show_message: function(json){
+    var fm = this.getPanel().getEl().select("#flash-msg").first();
+    var msg = "";
+    if (json.flash != null) {
+      msg += json.flash;
+    } else {
+      jQuery.each(json.errors, function(i,e){
+        var item = (jQuery.isArray(e)) ? e.join(" - ") : e;
+        msg += item[0].toUpperCase() + item.substr(1) + "<br>";
+      });
+    }
+    if (json.type != null) {
+      jQuery("#flash-msg").removeClass(); // remove all classes
+      fm.addClass("flash").addClass(json.type).update(msg).show();
+    }
+    fm.parent().parent().parent().parent().scrollTo("top", 0);
+    this.getPanel().doLayout();
+  },
+  show_ajax_error: function(response){
+    Ext.Msg.alert('Error',
+      '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
+      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>');
+  }
 });
