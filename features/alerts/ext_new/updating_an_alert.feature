@@ -8,13 +8,19 @@ Feature: Updating an alert
    Background:
     Given the following entities exists:
       | Jurisdiction | Dallas County                               |
+      | Jurisdiction | Potter County                               |
+      | Jurisdiction | Tarrant County                              |
       | Role         | Health Officer                              |
       | Role         | Health Alert and Communications Coordinator |
     And the following users exist:
       | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith  | jane.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
+      | Anne Smith  | anne.smith@example.com  | Health Alert and Communications Coordinator | Potter County |
       | Brian Simms | brian.simms@example.com | Health Officer                              | Dallas County |
       | Ed McGuyver | ed.mcguyver@example.com | Health Officer                              | Dallas County |
+      | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
+      | Frank Chung | frank.chung@example.com | Health Officer                              | Potter County |
+      | John Wayne  | john.wayne@example.com  | Health Officer                              | Potter County |
 
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
@@ -89,18 +95,12 @@ Feature: Updating an alert
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
 
-    When I am on the ext dashboard page
-    And I navigate to "HAN > Alert Log and Reporting"
-    Then I should see an alert titled "Flying Monkey Disease"
-    When I sign out
-
     Given I am logged in as "jane.smith@example.com"
     And I am allowed to send alerts
+
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    Then I should see an alert titled "Flying Monkey Disease"
-
-    When I click "Update" within alert "Flying Monkey Disease"
+    And I click "Update" within alert "Flying Monkey Disease"
     Then the "Create an Alert Update" tab should be open
     And I should not see "Jurisdictions"
     And I should not see "Limit Roles"
@@ -108,7 +108,6 @@ Feature: Updating an alert
 
     When I fill in "Message" with "Flying monkey disease contagion is more widespread"
     And I click breadCrumbItem "Preview"
-
     Then I should see a display form with:
       | Severity      | Moderate       |
       | Status        | Actual         |
@@ -125,10 +124,7 @@ Feature: Updating an alert
       | Health Officer | Role         |
 
     When I press "Send Alert"
-    Then the "Alert Log and Reporting" tab should be open
-    And the "Create an Alert Update" tab should not be open
-    
-    And I should see an alert titled "[Update] - Flying Monkey Disease"
+    Then I should see an alert titled "[Update] - Flying Monkey Disease"
     And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com   |
       | subject       | [Update] - Flying Monkey Disease                   |
@@ -139,15 +135,8 @@ Feature: Updating an alert
       | body contains | Sender: John Smith                                 |
       | body contains | Flying monkey disease contagion is more widespread |
 
-  Scenario: Updating an alert with call down
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
-      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
-      | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Potter County |
-    And I am logged in as "john.smith@example.com"
+  Scenario: Updating an alert that used Advanced Acknowledgement
+    Given I am logged in as "john.smith@example.com"
     And I've sent an alert with:
       | Jurisdictions         | Potter County                                |
       | Jurisdiction          | Dallas County                                |
@@ -163,21 +152,21 @@ Feature: Updating an alert
       | Alert Response 3      | if you can respond within 1 hour             |
       | Alert Response 4      | if you can respond within 4 hours            |
       | Alert Response 5      | if you cannot respond                        |
-
+    And delayed jobs are processed
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    When I click "Update" within alert "H1N1 SNS push packs to be delivered tomorrow"
-
+    And I click "Update" within alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I should see "[Update] - H1N1 SNS push packs to be delivered tomorrow"
     And I should not see "Alert Response 1"
+
     When I open ext combo "Acknowledgement"
     Then I should not see "Advanced" within ".x-combo-list"
+
     When I fill in "Message" with "Update to message"
     And I select "Minor" from ext combo "Severity"
     And I select "72 hours" from ext combo "Delivery Time"
-
-    And I send the alert
-
+    And I press "Next"
+    And I press "Send Alert"
     Then an alert exists with:
       | from_jurisdiction  | Dallas County                                           |
       | title              | [Update] - H1N1 SNS push packs to be delivered tomorrow |
@@ -188,18 +177,8 @@ Feature: Updating an alert
       | call_down_messages | if you can respond within 4 hours                       |
       | call_down_messages | if you cannot respond                                   |
 
-  Scenario:Updating an alert with call down and responses
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
-      | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
-      | Jane Smith  | jane.smith@example.com  | Health Officer                              | Potter County |
-      | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
-      | Frank Chung | frank.chung@example.com | Health Officer                              | Potter County |
-      | John Wayne  | john.wayne@example.com  | Health Officer                              | Potter County |
-    And I am logged in as "john.smith@example.com"
+  Scenario:Updating an alert that used Advanced Acknowledgement and removing response options
+    Given I am logged in as "john.smith@example.com"
     And I've sent an alert with:
       | Jurisdictions         | Potter County                                |
       | Jurisdiction          | Dallas County                                |
@@ -242,11 +221,11 @@ Feature: Updating an alert
     And I select "Minor" from ext combo "Severity"
     And I select "72 hours" from ext combo "Delivery Time"
     And I select "Normal" from ext combo "Acknowledge"
-		And I uncheck "if you can respond within 15 minutes"
-		And I check "if you can respond within 30 minutes"
-		And I uncheck "if you can respond within 1 hour"
-		And I uncheck "if you can respond within 4 hours"
-		And I uncheck "if you cannot respond"
+    And I uncheck "if you can respond within 15 minutes"
+    And I check "if you can respond within 30 minutes"
+    And I uncheck "if you can respond within 1 hour"
+    And I uncheck "if you can respond within 4 hours"
+    And I uncheck "if you cannot respond"
 
     And I send the alert
 
