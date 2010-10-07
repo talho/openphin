@@ -131,3 +131,5 @@ Talho.Alerts.initialize = function(config){
     var alerts = new Talho.Alerts(config);
     return alerts.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.Alerts', Talho.Alerts, Talho.Alerts.initialize);

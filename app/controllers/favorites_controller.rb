@@ -3,10 +3,13 @@ class FavoritesController < ApplicationController
 
 
   def index
+    original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.xml {render :xml => current_user.favorites}
       format.json {render :json => current_user.favorites}
     end
+    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   # we're not defining a new here because this is only intended to be used with an AJAX call. Same for edit

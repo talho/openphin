@@ -468,3 +468,5 @@ Talho.SendAlert.initialize = function(config){
     var send_alert = new Talho.SendAlert(config);
     return send_alert.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.SendAlert', Talho.SendAlert, Talho.SendAlert.initialize);

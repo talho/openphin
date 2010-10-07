@@ -1,0 +1,141 @@
+Feature: Sending General Tactical Communications alerts form
+
+  In order to inform people of a general-purpose issue
+  As an alerter
+  I should be able to send an alert with type GTC
+
+ Background:
+    Given the following entities exists:
+      | Jurisdiction  | Federal                                     |
+      | Jurisdiction  | Texas                                       |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Potter County                               |
+      | Jurisdiction  | Tarrant County                              |
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | Bioterrorism Coordinator                    |
+    And Federal is the parent jurisdiction of:
+      | Texas         |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the following users exist:
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a GTC Alert"
+    And the "Send GTC Alert" tab should be open
+    Then I should have the "Details" breadcrumb selected
+
+  Scenario: Create and send a GTC alert with no acknowledgement
+    When  I fill in the following:
+      | Title         | Weekend System Maintenance |
+      | Message       | Some body text             |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "None" from ext combo "Acknowledge"
+    And I select "Test" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I check "E-mail"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    And I select the following in the audience panel:
+      | name                             | type         |
+      | Texas                            | Jurisdiction |
+    And I press "Next"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Detail Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type              | GTC                        |
+      | title             | Weekend System Maintenance |
+      | message           | Some body text             |
+      | from_jurisdiction | Dallas County              |
+      | acknowledge       | None                       |
+      | jurisdiction      | Texas                      |
+
+  Scenario: Create and send a GTC alert with normal acknowledgement
+    When I fill in the following:
+      | Title         | Weekend System Maintenance |
+      | Message       | Some body text             |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Normal" from ext combo "Acknowledge"
+    And I select "Test" from ext combo "Status"
+    And I select "Moderate" from ext combo "Severity"
+    And I check "E-mail"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    And I select the following in the audience panel:
+      | name                             | type         |
+      | Texas                            | Jurisdiction |
+    And I press "Next"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Detail Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type              | GTC                        |
+      | title             | Weekend System Maintenance |
+      | message           | Some body text             |
+      | from_jurisdiction | Dallas County              |
+      | acknowledge       | Normal                     |
+      | jurisdiction      | Texas                      |
+
+  Scenario: Create and send a GTC alert with Advanced (call down) acknowledgement
+    When I should have the "Details" breadcrumb selected
+
+    And I select "Advanced" from ext combo "Acknowledge"
+    # add a 3rd, 4th and 5th response box
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I press "+ Add another response"
+    And I fill in the following:
+      | Title              | Weekend System Maintenance           |
+      | Message            | Some body text                       |
+      | Alert Response 1   | if you can respond within 15 minutes |
+      | Alert Response 2   | if you can respond within 30 minutes |
+      | Alert Response 3   | if you can respond within 1 hour     |
+      | Alert Response 4   | if you can respond within 4 hour     |
+      | Alert Response 5   | if you cannot respond                |
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I select "Test" from ext combo "Status"
+    And I select "Severe" from ext combo "Severity"
+    And I check "E-mail"
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    And I select the following in the audience panel:
+      | name                             | type         |
+      | Texas                            | Jurisdiction |
+    And I press "Next"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Detail Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | type                | GTC                                  |
+      | title               | Weekend System Maintenance           |
+      | message             | Some body text                       |
+      | from_jurisdiction   | Dallas County                        |
+      | acknowledge         | Advanced                             |
+      | jurisdiction        | Texas                                |
+      | call_down_messages  | if you can respond within 15 minutes |
+      | call_down_messages  | if you can respond within 30 minutes |
+      | call_down_messages  | if you can respond within 1 hour     |
+      | call_down_messages  | if you can respond within 4 hours    |
+      | call_down_messages  | if you cannot respond                |
+
+  Scenario: Sending GTC alerts should not display Federal jurisdiction as an option
+    When I fill in the following:
+      | Title   | This is a test title   |
+      | Message | This is a test message |
+    And I check "E-mail"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Federal"

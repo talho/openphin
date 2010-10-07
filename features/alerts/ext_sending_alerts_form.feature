@@ -146,42 +146,7 @@ Feature: Sending alerts form
     Then I should see "Select All Sub-jurisdictions"
     Then I should see "Select No Sub-jurisdictions"
 
-  Scenario: Sending alerts with only People in the audience should work
-    Given the following entities exist:
-      | Jurisdiction | Texas         |
-    And the following users exist:
-      | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |
-      | Jane Smith      | jane.smith@example.com   | Health Officer                               | Potter County |
-    When delayed jobs are processed
-    Given the role "Health Alert and Communications Coordinator" is an alerter
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
-    When I fill in the following:
-      | Title        | H1N1 SNS push packs to be delivered tomorrow |
-      | Message      | H1N1 SNS push packs to be delivered tomorrow |
-    And I select "Texas" from ext combo "Jurisdiction"
-    And I check "E-mail"
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name       | type | email                  |
-      | Jane Smith | User | jane.smith@example.com |
 
-    And I click breadCrumbItem "Preview"
-    And I expand ext panel "Audience"
-    And I should see the following audience breakdown
-      | name       | type      |
-      | Jane Smith | Recipient |
-      | Jane Smith | User      |
-
-    And I press "Send Alert"
-    Then the "Alert Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-    
-    Then an alert exists with:
-      | from_jurisdiction | Texas                                        |
-      | people            | Jane Smith                                   |
-      | title             | H1N1 SNS push packs to be delivered tomorrow |
 
   Scenario: Sending alerts with call down
     Given the following entities exists:
@@ -235,48 +200,6 @@ Feature: Sending alerts form
       | call_down_messages  | if you can respond within 4 hours            |
       | call_down_messages  | if you cannot respond                        |
       | acknowledge         | true                                         |
-
-  Scenario: Sending alerts with non cross jurisdiction
-     Given the following entities exists:
-       | Jurisdiction | Dallas County  |
-       | Jurisdiction | Potter County  |
-       | Jurisdiction | Tarrant County |
-     And the following users exist:
-       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
-       | Jane Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
-     And the role "Health Alert and Communications Coordinator" is an alerter
-     And I am logged in as "john.smith@example.com"
-
-     When I go to the ext dashboard page
-     And I navigate to "HAN > Send an Alert"
-
-     And I fill in the following:
-      | Title              | H1N1 SNS push packs to be delivered tomorrow |
-      | Message            | Some body text                               |
-     And I select "Test" from ext combo "Status"
-     And I select "Minor" from ext combo "Severity"
-     And I select "72 hours" from ext combo "Delivery Time"
-     And I check "Phone"
-     And I fill in "Caller ID" with "4114114111"
-     And I select "Potter County" from ext combo "Jurisdiction"
-     And I select "Normal" from ext combo "Acknowledge"
-    
-     And I check "Disable Cross-Jurisdictional Alerting"
-
-     When I click breadCrumbItem "Audience"
-     And I select the following in the audience panel:
-      | name           | type         |
-      | Potter County  | Jurisdiction |
-     And I click breadCrumbItem "Preview"
-
-     And I press "Send Alert"
-     Then the "Alert Log and Reporting" tab should be open
-     And the "Send Alert" tab should not be open
-    
-     Then an alert exists with:
-      | from_jurisdiction         | Potter County                                |
-      | title                     | H1N1 SNS push packs to be delivered tomorrow |
-      | not_cross_jurisdictional  | true                                         |
 
   Scenario: Sending alerts to Organizations
     Given the following entities exist:

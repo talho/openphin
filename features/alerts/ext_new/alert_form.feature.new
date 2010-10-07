@@ -1,0 +1,190 @@
+Feature: Sending alerts
+
+  In order to inform people of an issue
+  As an alerter
+  I should be able to send custom Alerts to audiences.
+
+  Background:
+    Given the following entities exists:
+      | Jurisdiction  | Texas                                       |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Potter County                               |
+      | Jurisdiction  | Sender County                               |
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | Health Officer                              |
+      | Role          | Epidemiologist                              |
+      | Organization  | DSHS                                        |
+      | Organization  | TALHO                                       |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the following users exist:
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Potter County |
+      | Anne Smith    | anne.smith@example.com | Public                                      | Potter County |
+      | Fred Smith    | fred.smith@example.com | Public                                      | Potter County |
+        And the following groups for "john.smith@example.com" exist:
+      | My First Group | Dallas County |                | | Personal | Dallas County |
+      | hofficers      |               | Health Officer | | Personal | Dallas County |
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a Custom Alert"
+    And the "Send Custom Alert" tab should be open
+
+  Scenario: Preview an alert
+    Then I should have the "Details" breadcrumb selected
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                                     |
+      | Title                 | Watch out for aftershocks                      |
+      | Message               | Some body text                                 |
+      | From Jurisdiction     | Dallas County                                  |
+      | Acknowledge           | None                                           |
+      | Communication Methods | E-mail                                         |
+      | Severity              | Moderate                                       |
+      | Status                | Actual                                         |
+      | Delivery Time         | 72 hours                                       |
+      | Jurisdictions         | Dallas County, Potter County                   |
+      | Roles                 | Health Officer,Epidemiologist                  |
+      | Groups                | My First Group, hofficers                      |
+      | Organizations         | DSHS, TALHO                                    |
+      | Users                 | anne.smith@example.com, fred.smith@example.com |
+    And I click breadCrumbItem "Preview"
+
+    Then I should see "Watch out for aftershocks" within "#alert_title"
+    And I should see "Some body text" within "#alert_message"
+    And I should see "Dallas County" within "#from_jurisdiction"
+    And I should see "Moderate" within "#severity"
+    And I should see "Actual" within "#status"
+    And I should see "None" within "#acknowledgment"
+    And I should see "E-mail" within ".communication_methods"
+    And I should see "72 hours" within "#delivery_time"
+
+    When I expand ext panel "Audience"
+    Then I should see the following audience breakdown
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+      | Potter County  | Jurisdiction |
+      | Health Officer | Role         |
+      | Epidemiologist | Role         |
+      | DSHS           | Organization |
+      | TALHO          | Organization |
+      | My First Group | Group        |
+      | hofficers      | Group        |
+      | Anne Smith     | User         |
+      | Fred Smith     | User         |
+
+    When I click breadCrumbItem "Details"
+    And I fill in "Title" with "Something Different"
+    And I click breadCrumbItem "Preview"
+    Then I should see "Something Different" within "#alert_title"
+    And I should not see "Watch out for aftershocks"
+
+    When I press "Back"
+    Then I should have the "Audience" breadcrumb selected
+    When I press "Back"
+    Then I should have the "Details" breadcrumb selected
+    When I select "Advanced" from ext combo "Acknowledgment"
+    And I fill in an alert with the following:
+      | Alert Response 1      | if you can respond within 15 minutes |
+      | Alert Response 2      | if you can respond within 30 minutes |
+      | Alert Response 3      | if you can respond within 1 hour     |
+      | Alert Response 4      | if you can respond within 4 hour     |
+      | Alert Response 5      | if you cannot respond                |
+    And I press "Next"
+    Then I should have the "Audience" breadcrumb selected
+    When I press "Next"
+    Then I should have the "Preview" breadcrumb selected
+    And I should see "if you can respond within 15 minutes" within ".alert_response"
+    And I should see "if you can respond within 30 minutes" within ".alert_response"
+    And I should see "if you can respond within 1 hour" within ".alert_response"
+    And I should see "if you can respond within 4 hour" within ".alert_response"
+
+    When I click breadCrumbItem "Details"
+    And I check "Phone"
+    And I click breadCrumbItem "Preview"
+    Then I should see "E-mail" within ".communication_methods"
+    And I should see "Phone" within ".communication_methods"
+
+    When I click breadCrumbItem "Details"
+    And I uncheck "E-mail"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "E-mail"
+    And I should see "Phone" within ".communication_methods"
+
+    When I click breadCrumbItem "Details"
+    And I uncheck "Phone"
+    And I check "SMS"
+    And I fill in "Short Message" with "this is a short message."
+    And I click breadCrumbItem "Preview"
+    Then I should not see "Phone"
+    And I should see "SMS" within ".communication_methods"
+    And I should see "this is a short message." within "#short_message"
+
+    When I click breadCrumbItem "Details"
+    And I uncheck "Phone"
+    And I check "Blackberry PIN"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "SMS"
+    And I should see "Blackberry PIN" within ".communication_methods"
+
+    When I click breadCrumbItem "Details"
+    And I select "24 Hours" from ext combo "Delivery Time"
+    And I click breadCrumbItem "Preview"
+    Then I should see "24 Hours" within "#delivery_time"
+
+    When I click breadCrumbItem "Details"
+    And I check "Sensitive"
+    And I click breadCrumbItem "Preview"
+    Then I should see "Yes" within "#sensitive"
+
+    When I click breadCrumbItem "Details"
+    And I select "Severe" from ext combo "Severity"
+    And I click breadCrumbItem "Preview"
+    Then I should see "Severe" within "#sensitive"
+
+    When I click breadCrumbItem "Details"
+    And I select "Sender County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Preview"
+    Then I should see "Sender County" within "#from_jurisdiction"
+    And I should not see "Dallas County"
+
+    When I click breadCrumbItem "Audience"
+    And I uncheck ext checkbox "Potter County"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "Potter County"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+
+    When I click breadCrumbItem "Audience"
+    And I uncheck ext checkbox "Health Officer"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "Health Officer"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | Epidemiologist | Role         |
+
+    When I click breadCrumbItem "Audience"
+    And I uncheck ext checkbox "DSHS"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "DSHS"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | TALHO          | Organization |
+
+    When I click breadCrumbItem "Audience"
+    And I uncheck ext checkbox "My First Group"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "My First Group"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | hofficers      | Group        |
+
+    When I click breadCrumbItem "Audience"
+    And I uncheck ext checkbox "Fred Smith"
+    And I click breadCrumbItem "Preview"
+    Then I should not see "Fred Smith"
+    And I should see the following audience breakdown
+      | name           | type         |
+      | Anne Smith     | User         |
