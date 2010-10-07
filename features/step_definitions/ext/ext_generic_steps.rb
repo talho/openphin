@@ -1,5 +1,5 @@
 
-When /^I click ([a-zA-Z0-9\-]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
+When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
   with_scope(selector) do
     wait_until {!page.find('.' + class_type, :text => button).nil?}
     page.find('.' + class_type, :text => button).click
@@ -181,4 +181,22 @@ When /^I click to download the file "([^\"]*)"$/ do |value|
     sleep 1
   rescue Capybara::NotSupportedByDriverError
   end
+end
+
+When /^I click ([a-zA-Z0-9\-]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
+  # we want to find the row with the content, and get the div that's a few levels up
+  with_scope(within_selector) do
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), '#{selector}')]").click
+  end
+end
+
+Then /^the "([^\"]*)" window should be open$/ do |window_title|
+  page.evaluate_script("Ext.WindowMgr.getActive().title").should == window_title
+end
+
+When /^I should see "([^\"]*)" (\d) times? within "([^\"]*)"$/ do |item_name, number, selector|
+   with_scope(selector) do
+     page.all(:xpath, "//*[./text() = '#{item_name}']").length.should == number.to_i
+   end
 end

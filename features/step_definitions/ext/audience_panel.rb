@@ -91,11 +91,3 @@ Then /^I should see the profile tab for "([^\"]*)"$/ do |email|
   tab_url = page.evaluate_script("window.Application.phin.tabPanel.getActiveTab().url")
   URI.parse(tab_url).path.should == user_profile_path(user)
 end
-
-When /^I click ([a-zA-Z0-9\-]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
-  # we want to find the row with the content, and get the div that's a few levels up
-  with_scope(within_selector) do
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
-    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), '#{selector}')]").click
-  end
-end

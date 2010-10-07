@@ -185,3 +185,8 @@ Factory.define :comment, :class => Topic do |m|
   m.association :poster, :factory => :user
   m.association :forum
 end
+
+Factory.define :favorite, :class => Favorite do |f|
+  f.tab_config  "{:id => 'test_favorite', :title =>'Test Favorite'}"
+  f.association :user
+end

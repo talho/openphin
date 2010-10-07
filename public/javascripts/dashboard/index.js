@@ -330,7 +330,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     manage_favorites: function(){
         Talho.ScriptManager.loadOtherLibrary('ManageFavorites', function(){
             (new Ext.ux.ManageFavoritesWindow({
-                title: "Manage Favorites",
+                title: "Manage Bookmarks",
                 store: this.favoritesToolbar.getStore()
         })).show();
         }.createDelegate(this));

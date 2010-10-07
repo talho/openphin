@@ -169,10 +169,7 @@ Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
                 'render': function(b){
                     b.getEl().on('contextmenu', function(evt, elem, options){
                         elem = evt.getTarget('.favorite_button', 10, true);
-
-                        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [options.recordId]));
-
-                        this.contextMenu.show(elem);
+                        this.showContextMenu(elem, options.recordId);
                     }, this, {recordId: b.recordId, preventDefault:true});
                 },
                scope: this
@@ -180,6 +177,12 @@ Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
         });
 
         this.doLayout();
+    },
+
+    showContextMenu: function(elem, recordId){
+        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [recordId]));
+
+        this.contextMenu.show(elem);
     },
 
     removeItem: function(recordId){

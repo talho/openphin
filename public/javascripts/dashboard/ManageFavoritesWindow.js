@@ -20,7 +20,7 @@ Ext.ux.ManageFavoritesWindow = Ext.extend(Ext.Window, {
         Ext.apply(config, {
             items: [{xtype: 'grid',
                 region: 'center',
-                title: 'Current Favorites',
+                title: 'Current Bookmarks',
                 border: false,
                 itemId: 'favorites_grid',
                 store: config.store,
@@ -31,7 +31,7 @@ Ext.ux.ManageFavoritesWindow = Ext.extend(Ext.Window, {
                 autoExpandColumn: 'name_column',
                 sm: false
             },
-                {xtype: 'box', region: 'south', margins: '5', html: 'To add additional favorites, drag tabs into the favorite toolbar area. In addition to clicking the "x" above, you can remove items by right clicking the favorite button and selecting remove.'}]
+                {xtype: 'box', region: 'south', margins: '5', html: 'To add additional bookmarks, drag tabs into the bookmark toolbar area. In addition to clicking the "x" above, you can remove items by right clicking the bookmark button and selecting remove.'}]
         });
 
         config.store.on('beforesave', function(){
