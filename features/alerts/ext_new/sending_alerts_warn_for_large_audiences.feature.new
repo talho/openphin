@@ -1,4 +1,5 @@
  Feature: Warning Users for large audiences on Send Alert form
+   #TODO:  custom alerts will have different audience sizes than HAN alerts, due to coordinators.  test them both.
    In order to ensure accidentally large alerts are not sent
    As an admin
    Users should be required to confirm their large audience choices

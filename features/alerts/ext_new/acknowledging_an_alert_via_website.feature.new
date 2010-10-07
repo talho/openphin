@@ -1,9 +1,9 @@
 @ext
-Feature: Acknowledging an alert
+Feature: Acknowledging an alert on the website
 
   In order to report that I read an alerts
   As a user
-  I can acknowledge an alert
+  I can acknowledge an alert on the website
 
   Background:
     Given the following users exist:
@@ -12,7 +12,7 @@ Feature: Acknowledging an alert
     And I am logged in as "martin@example.com"
     When I am on the ext dashboard page
 
-  Scenario: A user acknowledging an alert via the website
+  Scenario: A user acknowledging an alert on the website
     Given a sent alert with:
       | title             | Piggy Pox            |
       | message           | the world is on fire |
@@ -23,17 +23,17 @@ Feature: Acknowledging an alert
       | jurisdictions     | Dallas County        |
     And I navigate to "HAN > HAN Home"
     Then I can see the alert summary for "Piggy Pox"
+
     When I click "More" within alert "Piggy Pox"
     And I press "Acknowledge"
     And I wait for the "Saving" mask to go away
-    When I click "More" within alert "Piggy Pox"
+    And I click "More" within alert "Piggy Pox"
     Then I have acknowledged the alert for "Piggy Pox"
+    And I should not see an "Acknowledge" button
+    And I should see "Acknowledge: Yes"
 
-    Then I should not see an "Acknowledge" button
-    But I should see "Acknowledge: Yes"
-
-  Scenario: A user acknowledges an alert with a call down response via the website
-    And a sent alert with:
+  Scenario: A user acknowledges an alert with an alert response on the website
+    Given a sent alert with:
       | title             | Piggy Pox                            |
       | message           | the world is on fire                 |
       | status            | Actual                               |
@@ -47,21 +47,23 @@ Feature: Acknowledging an alert
       | alert_response_4  | if you can respond within 4 hours    |
       | alert_response_5  | if you cannot respond                |
     And I navigate to "HAN > HAN Home"
-    Then I can see the alert summary for "Piggy Pox"
+    Then I can see the alert summary for "[Health Alert] Piggy Pox"
+
     When I click "More" within alert "Piggy Pox"
     And I select "if you can respond within 30 minutes" from "Alert Response"
-    When I press "Acknowledge"
+    And I press "Acknowledge"
     And I wait for the "Saving" mask to go away
-    When I click "More" within alert "Piggy Pox"
-
+    And I click "More" within alert "Piggy Pox"
     Then I have acknowledged the alert for "Piggy Pox"
-    Then I should not see an "Acknowledge" button
+    And I should not see an "Acknowledge" button
     And I should not see "Alert Response"
-    But I should see "Acknowledge: if you can respond within 30 minutes"
+    And I should see "Acknowledge: if you can respond within 30 minutes"
     And the alert should be acknowledged
 
-  Scenario: A user can not acknowledge an alert with a call down response *without* selecting a response
-    And a sent alert with:
+  Scenario: A user can not acknowledge an alert with an alert response without selecting a response
+    Given a sent alert with:
+    #TODO overall
+      | type              | Custom                               |
       | title             | Piggy Pox                            |
       | message           | the world is on fire                 |
       | status            | Actual                               |
@@ -74,9 +76,11 @@ Feature: Acknowledging an alert
       | alert_response_3  | if you can respond within 1 hour     |
       | alert_response_4  | if you can respond within 4 hours    |
       | alert_response_5  | if you cannot respond                |
-    And I navigate to "HAN > HAN Home"
+#   TODO over all
+    And I navigate to "Alerts > View Logs & Reports"
     Then I can see the alert summary for "Piggy Pox"
+
     When I click "More" within alert "Piggy Pox"
-    Then I press "Acknowledge"
+    And I press "Acknowledge"
     Then I should see "Please select an alert response before acknowledging"
     And the alert should not be acknowledged

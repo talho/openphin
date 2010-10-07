@@ -1,0 +1,66 @@
+@ext
+#TODO: Remove alerter_role.feature
+Feature: Users with appropriate roles can send alerts
+
+  Scenario: Sending a custom alert without an alerter role
+    Given the following users exist:
+      | John Smith      | john.smith@example.com     | Health Officer  | Dallas County  |
+    And I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    Then I should not be able to navigate to "HAN > Send Alert"
+
+  Scenario: Cannot send an alert without an alerter role
+
+  Scenario: Cannot malicously send an alert without an alerter role
+    
+  Scenario: Cannot send a HAN alert without an alerter role
+
+  Scenario: Cannot maliciously send a HAN alert without an alerter role
+
+  Scenario: Cannot send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot maliciously send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot view the alert log without an alerter role
+
+  Scenario: Can view the alert log but cannot view HAN alerts with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Can view the alert log and view HAN alerts with the 'Health and Communications Coordinator' role
+
+  Scenario: Can view alerts in the alert log from a child jurisdiction
+
+  Scenario: Cannot view alerts in the alert log from a cousin jurisdiction
+
+  Scenario: Cannot view alerts in the alert log from a parent jurisdiction
+
+  Scenario: Cannot maliciously update an alert without an alerter role
+
+  Scenario: Cannot update a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot maliciously update a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot update an alert from a different jurisdiction
+
+  Scenario: Can update an alert from the same jurisdiction
+
+  Scenario: Can update an alert from a child jurisdiction
+
+  Scenario: Cannot maliciously update an alert from a cousin jurisdiction
+
+  Scenario: Cannot maliciously update an alert from a parent jurisdiction
+
+  Scenario: Cannot maliciously cancel an alert without an alerter role
+
+  Scenario: Cannot cancel a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot maliciously cancel a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+
+  Scenario: Cannot cancel an alert from a different jurisdiction
+
+  Scenario: Can cancel an alert from the same jurisdiction
+
+  Scenario: Can cancel an alert from a child jurisdiction
+
+  Scenario: Cannot maliciously cancel an alert from a cousin jurisdiction
+
+  Scenario: Cannot maliciously cancel an alert from a parent jurisdiction

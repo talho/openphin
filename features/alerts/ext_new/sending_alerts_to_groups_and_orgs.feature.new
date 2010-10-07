@@ -80,6 +80,8 @@ Feature: Sending alerts using groups and organizations
     And I should not see "G3"
     And I should not see "G1"
 
+  #TODO:  need duplicates for non-HAN
+
   Scenario: Sending an alert with a group selected should include group users as recipients
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
@@ -115,9 +117,9 @@ Feature: Sending alerts using groups and organizations
     And the following users should receive the alert email:
       | People | bob.smith@example.com |
 
-  Scenario: Sending a HAN alert to a cross-jurisdictional group should notify HAN Coordinators
-    
-  Scenario: Sending a non-HAN alert to a cross-jurisdictional group should not notify HAN Coordinators
+  Scenario: Sending a HAN alert to a group with members in other jurisdictions should notify HAN Coordinators
+
+  Scenario: Sending a non-HAN alert to a group with members in other jurisdictions should not notify HAN Coordinators
 
   Scenario: Sending an alert to an Organization
     Given I am logged in as "john.smith@example.com"
@@ -134,6 +136,6 @@ Feature: Sending alerts using groups and organizations
       | People | john.smith@example.com, bob.smith@example.com, leroy.smith@example.com |
     And "jane.smith@example.com" should not receive an email
 
-  Scenario: Sending a HAN alert to a cross-jurisdictional organization should notify HAN Coordinators
+  Scenario: Sending a HAN alert to an organization with members in other jurisdictions should notify HAN Coordinators
 
-  Scenario: Sending a non-HAN alert to a cross-jurisdictional organization should not notify HAN Coordinators
+  Scenario: Sending a non-HAN alert to an organization with members in other jurisdictions should not notify HAN Coordinators
