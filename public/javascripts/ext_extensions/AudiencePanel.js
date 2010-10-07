@@ -23,6 +23,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
      *    @lends Ext.ux.AudiencePanel.prototype
      */
     showJurisdictions: true,
+    showUsers: true,
     
     initComponent: function() {
 
@@ -42,7 +43,10 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             items.push({title: 'Groups/Organizations', layout:'border', items: this.createGroupsGrid(), border: false});
         }
 
-        items.push(this.createUserSearchPanel());
+        if (this.showUsers)
+        {
+            items.push(this.createUserSearchPanel());
+        }
 
         this.accordion = new Ext.Panel({
             fieldLabel: 'Group Membership',
@@ -53,6 +57,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                 animate: true
             },
             items: items,
+            margins: '0 20 0 0',
             activeItem: 0,
             plugins: ['donotcollapseactive']
         });
@@ -62,8 +67,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             layout: 'hbox',
             border: false,
             layoutConfig: {
-                align: 'stretch',
-                defaultMargins:'0, 20, 0, 0'
+                align: 'stretch'
             },
             items: [this.accordion, this.createSelectionBreakdownPanel()]
         });
@@ -485,7 +489,10 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
     createUserSearchPanel: function() {
 
         this.userSearchStore = new Ext.data.JsonStore({
-            url: '/search/show_clean',
+            proxy: new Ext.data.HttpProxy({
+                url: '/search/show_clean',
+                api: {read: {url: '/search/show_clean', method:'POST'}}
+            }),
             idProperty: 'id',
             bodyCssClass: 'users',
             restful: true,
@@ -745,12 +752,15 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             }
         }
 
-        this.userStore.suspendEvents();
-        this.userStore.removeAll();
-        this.userSearchStore.filters.clear();
-        this.userSearchStore.clearFilter();
-        this.userStore.resumeEvents();
-        this.userStore.fireEvent('datachanged', this.userStore, this.userStore);
+        if(this.userStore)
+        {
+            this.userStore.suspendEvents();
+            this.userStore.removeAll();
+            this.userSearchStore.filters.clear();
+            this.userSearchStore.clearFilter();
+            this.userStore.resumeEvents();
+            this.userStore.fireEvent('datachanged', this.userStore, this.userStore);
+        }
 
         this.selectedItemsStore.clearFilter();
         this.selectedItemsStore.removeAll();
@@ -841,7 +851,8 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
         }
 
         // finally, let's handle user load. We're going to do this by loading directly into the user store and letting its events take care of things for us
-        this.userStore.loadData(users);
+        if(this.userStore)
+            this.userStore.loadData(users);
 
         this.selectedItemsStore.applySort();
     }
