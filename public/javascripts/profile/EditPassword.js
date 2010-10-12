@@ -24,3 +24,5 @@ Talho.EditPassword.initialize = function(config){
   var o = new Talho.EditPassword(config);
   return o.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.EditPassword', Talho.EditPassword, Talho.EditPassword.initialize);

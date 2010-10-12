@@ -76,3 +76,5 @@ Talho.EditProfile.initialize = function(config){
   var o = new Talho.EditProfile(config);
   return o.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.EditProfile', Talho.EditProfile, Talho.EditProfile.initialize);
