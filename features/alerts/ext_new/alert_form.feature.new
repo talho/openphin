@@ -202,8 +202,8 @@ Feature: Sending alert Form
     Then the "Alert Detail Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
 
-  Scenario: Sending alerts form should not contain system roles
-    Given there is an system only Admin role
+  Scenario: Non-admins sending alerts should not be able to select system roles
+    Given there is a system only Admin role
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
       | Title                 | Cholera Outbreak       |
@@ -215,7 +215,7 @@ Feature: Sending alert Form
     And I click x-accordion-hd "Roles"
     Then I should not see "Admin"
 
-  Scenario: Audience pane should show "Select all children" link for parent jurisdictions
+  Scenario: Audience pane should show "Sub-jurisdictions" link for parent jurisdictions
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
       | Title                 | Cholera Outbreak       |
@@ -227,13 +227,9 @@ Feature: Sending alert Form
     And I click contextDownArrow ""
     Then I should see "Select All Sub-jurisdictions"
     And I should see "Select No Sub-jurisdictions"
-
-  Scenario:  HAN Alerts do not show non-CDC-compliant options
-    When I navigate to "HAN > Send an Alert"
-    Then I should not see "Disable Cross-Jurisdictional alerting"
-    And I should not see "None" within "#acknowledge"
   
-  Scenario: Sending HAN alerts should display Federal jurisdiction as an option
+  Scenario: Sending HAN alerts should display foreign jurisdiction as an option
+    #TODO: Change this to be foreign
     When I navigate to "HAN > Send an Alert"
     And I fill in an alert with the following:
       | Message               | Some body text         |
@@ -243,7 +239,8 @@ Feature: Sending alert Form
     And I click breadCrumbItem "Audience"
     Then I should see "Federal"
 
-  Scenario: Sending non-HAN alerts should not display Federal jurisdiction as an option
+  Scenario: Sending non-HAN alerts should not display foreign jurisdiction as an option
+     #TODO: Change this to be foreign, do one per alert type
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
       | Alert Type            | Noise Ordinance        |

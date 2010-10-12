@@ -1,5 +1,5 @@
 Feature: Sending alerts
-
+  #TODO:  verify each element in the alert form, except devices & audiences
   In order to inform people of an issue
   As an alerter
   I should be able to send custom Alerts to audiences.

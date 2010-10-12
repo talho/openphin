@@ -14,12 +14,15 @@ Feature: Acknowledging an alert via email
 
 
   Scenario: Acknowledging an alert through an email with signing in
-    Given I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-    And I send the alert
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | There is a Chicken pox outbreak in the area |
+      | status                | Actual               |
+      | severity              | Moderate             |
+      | acknowledge           | Yes                  |
+      | from_jurisdiction     | Wise County          |
+      | people                | Keith Gaddis         |
+      | communication methods | E-mail               |
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -29,37 +32,43 @@ Feature: Acknowledging an alert via email
     When I sign out
     And I log in as "keith.gaddis@example.com"
     And I follow the acknowledge alert link
-    Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
+    Then I should see "[Health Alert] H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through an email without signing in
-    Given I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-    And I send the alert
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | There is a Chicken pox outbreak in the area |
+      | status                | Actual               |
+      | severity              | Moderate             |
+      | acknowledge           | Yes                  |
+      | from_jurisdiction     | Wise County          |
+      | people                | Keith Gaddis         |
+      | communication methods | E-mail               |
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
-    # legacy code because we haven't converted the acknoledgement stuff to ext
+    # legacy code because we haven't converted the acknowledgment stuff to ext
     When I sign out
     And I follow the acknowledge alert link
-    Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
+    Then I should see "[Health Alert] H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: A user cannot acknowledge an sensitive alert through an email without signing in
-    Given I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
-    And I check "Sensitive (confidential)"
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-    And I send the alert
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | There is a Chicken pox outbreak in the area  |
+      | status                | Actual                                       |
+      | severity              | Moderate                                     |
+      | acknowledge           | Yes                                          |
+      | from_jurisdiction     | Wise County                                  |
+      | people                | Keith Gaddis                                 |
+      | communication methods | E-mail                                       |
+      | sensitive             | checked                                      |
     And delayed jobs are processed
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
@@ -73,5 +82,27 @@ Feature: Acknowledging an alert via email
     And the alert should not be acknowledged
     # end legacy code: replace when acknowledgement is implemented
    
-  Scenario: Acknowledging an alert with call downs through an email without signing in
-     Given "SWN sandbox required" should be implemented
+  Scenario: Acknowledging an alert with an alert response through an email without signing in
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | There is a Chicken pox outbreak in the area  |
+      | status                | Actual                                       |
+      | severity              | Moderate                                     |
+      | acknowledge           | Yes                                          |
+      | from_jurisdiction     | Wise County                                  |
+      | people                | Keith Gaddis                                 |
+      | communication methods | E-mail                                       |
+      | alert_response_1      | if you can respond within 15 minutes         |
+      | alert_response_2      | if you can respond within 30 minutes         |
+    And delayed jobs are processed
+    Then the following users should receive the alert email:
+      | People        | keith.gaddis@example.com |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | body contains alert acknowledgment link | if you can respond within 15 minutes,if you can respond within 30 minutes |
+
+    When I sign out
+    And I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
+    And I follow the acknowledge alert link
+    Then I should see "[Health Alert] H1N1 SNS push packs to be delivered tomorrow"
+    And I should see "Acknowledge: if you can call back within 15 minutes"
+
