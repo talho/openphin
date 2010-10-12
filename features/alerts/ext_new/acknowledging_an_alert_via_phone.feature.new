@@ -14,13 +14,13 @@ Scenario: Acknowledging an alert through phone
   Given I log in as "john.smith@example.com"
   And a sent alert with:
     | title                 | H1N1 SNS push packs to be delivered tomorrow |
-    | message               | There is a Chicken pox outbreak in the area |
-    | status                | Actual               |
-    | severity              | Moderate             |
-    | acknowledge           | Yes                  |
-    | from_jurisdiction     | Wise County          |
-    | people                | Keith Gaddis         |
-    | communication methods | Phone                |
+    | message               | There is a Chicken pox outbreak in the area  |
+    | status                | Actual                                       |
+    | severity              | Moderate                                     |
+    | acknowledge           | Yes                                          |
+    | from_jurisdiction     | Wise County                                  |
+    | people                | Keith Gaddis                                 |
+    | communication methods | Phone                                        |
   And I sign out
 
   When delayed jobs are processed
@@ -28,7 +28,6 @@ Scenario: Acknowledging an alert through phone
     | phone      | message                                                                                           |
     | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
-  # legacy code because we haven't converted the acknowledgement stuff to ext
   When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
   And delayed jobs are processed
   And I log in as "keith.gaddis@example.com"
@@ -36,9 +35,8 @@ Scenario: Acknowledging an alert through phone
   Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
   And I should not see an "Acknowledge" button
   And I should see "Acknowledge: Yes"
-  # end legacy code: replace when acknowledgement is implemented
 
-Scenario: Acknowledging an alert through phone with call downs
+Scenario: Acknowledging an alert through phone with alert responses
   Given I log in as "john.smith@example.com"
   And a sent alert with:
     | title                 | H1N1 SNS push packs to be delivered tomorrow |
@@ -70,7 +68,7 @@ Scenario: Acknowledging an alert through phone with call downs
   And I should see "Acknowledge: if you can call back within 15 minutes"
 
 
- Scenario: A user can not acknowledge a phone alert with a call down response without selecting a response
+ Scenario: A user can not acknowledge a phone alert with an alert response without selecting a response
    Given I log in as "john.smith@example.com"
    And a sent alert with:
      | title                 | H1N1 SNS push packs to be delivered tomorrow |
@@ -81,29 +79,26 @@ Scenario: Acknowledging an alert through phone with call downs
      | from_jurisdiction     | Wise County          |
      | people                | Keith Gaddis         |
      | communication methods | Phone                |
-     | alert_response_1      | if you can respond within 15 minutes   |
-     | alert_response_2      | if you can respond within 30 minutes   |
-     | alert_response_3      | if you can respond within 1 hour       |
-     | alert_response_4      | if you can respond within 4 hours      |
-     | alert_response_5      | if you cannot respond                  |
+     | alert_response_1      | if you can respond within 15 minutes |
+     | alert_response_2      | if you can respond within 30 minutes |
+     | alert_response_3      | if you can respond within 1 hour     |
+     | alert_response_4      | if you can respond within 4 hours    |
+     | alert_response_5      | if you cannot respond                |
 
     When delayed jobs are processed
-   And I go to the alert log
-  And I pause
     Then the following phone calls should be made:
-      | phone      | message                                                                                                                  | call_down                            |
+      | phone      | message                                                                                                                  | alert response                       |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area | if you can respond within 15 minutes |
-    And the phone call should have 5 calldowns
+    And the phone call should have 5 alert_responses
 
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
     And I go to the alert log
-   And I pause
     And I follow "More"
     Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
 
-    And I am logged in as "keith.gaddis@example.com"
-    When I go to the ext dashboard page
+    When I am logged in as "keith.gaddis@example.com"
+    And I go to the ext dashboard page
     And I navigate to "HAN > Home"
     Then I can see the alert summary for "Title for Chicken pox outbreak"
     And the alert should not be acknowledged

@@ -1,4 +1,6 @@
 @ext
+
+#TODO:   replicate this for non-HAN (Custom).  Test same jurisdiction AND cross-jurisdictional results, with and without Roles selected
 Feature: Creating and sending alerts
 
   In order to notify others in a timely fashion
@@ -52,12 +54,18 @@ Feature: Creating and sending alerts
     And I fill in "Message" with "For more details, keep on reading..."
     And I select "15 minutes" from ext combo "Delivery Time"
 
+    #TODO: Fix the alert audience below
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
+      | Dan Morrison | User |
 
-    And I send the alert
-
+    And I click breadCrumbItem "Preview"
+    And I expand ext panel "Audience"
+    And I should see the following audience breakdown
+      | name       | type      |
+      | Jane Smith | Recipient |
+      | Jane Smith | User      |
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
@@ -68,54 +76,6 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-  Scenario: Sending alerts with only People in the audience should work
-    When I fill in the following:
-      | Title        | H1N1 SNS push packs to be delivered tomorrow |
-      | Message      | H1N1 SNS push packs to be delivered tomorrow |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I check "E-mail"
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name       | type | email                  |
-      | Jane Smith | User | jane.smith@example.com |
-
-    And I click breadCrumbItem "Preview"
-    And I expand ext panel "Audience"
-    And I should see the following audience breakdown
-      | name       | type      |
-      | Jane Smith | Recipient |
-      | Jane Smith | User      |
-
-    And I press "Send Alert"
-    Then the "Alert Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-
-    Then an alert exists with:
-      | from_jurisdiction | Texas                                        |
-      | people            | Jane Smith                                   |
-      | title             | H1N1 SNS push packs to be delivered tomorrow |
-
-  Scenario: Sending an alert to specific users sends alerts to each user
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
-
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-      | Dan Morrison | User |
-
-    And I send the alert
-
-    Then the following users should receive the alert email:
-      | People       | keith.gaddis@example.com, dan.morrison@example.com |
-      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
     When I fill in the ext alert defaults
