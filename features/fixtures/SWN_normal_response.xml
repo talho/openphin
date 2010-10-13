@@ -1,0 +1,91 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema‐instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing" xmlns:wsse="http://docs.oasis‐open.org/wss/2004/01/oasis‐200401‐wss‐wssecurity‐secext‐1.0.xsd" xmlns:wsu="http://docs.oasis‐open.org/wss/2004/01/oasis‐200401‐wss‐wssecurity‐utility‐1.0.xsd">
+    <soap:Header>
+      <wsa:RelatesTo>uuid:ab2d8edd-2ad2-4a67-888e-f035daafa53a</wsa:RelatesTo>
+      <wsse:Security>
+        <wsu:Timestamp>
+          <wsu:Expires>2010-10-08T15:12:11Z</wsu:Expires>
+          <wsu:Id>Timestamp-884cb4fe-bb29-444e-b106-882e31783686</wsu:Id>
+          <wsu:Created>2010-10-08T15:07:11Z</wsu:Created>
+        </wsu:Timestamp>
+      </wsse:Security>
+      <wsa:Action>http://www.sendwordnow.com/notification/getNotificationResultsResponse</wsa:Action>
+      <wsa:MessageID>uuid:25393a22-f2d5-444e-9d3c-ba7d20911e02</wsa:MessageID>
+      <wsa:To>http://schemas.xmlsoap.org/ws/2004/03/addressing/role/anonymous</wsa:To>
+    </soap:Header>
+  
+    <soap:Body>
+      <getNotificationResultsResponse>
+        <getNotificationResultsResult>
+          <gwbStatistics>
+            <gwb>
+              <nbrResponses>0</nbrResponses>
+              <gwbText>Please press one to acknowledge this alert.</gwbText>
+              <index>1</index>
+            </gwb>
+          </gwbStatistics>
+          <custSentTimestamp>2010-10-08T10:57:10</custSentTimestamp>
+          <notification>
+            <body>The following is an alert from the Texas Public Health Information Network.
+
+This alert requires acknowledgment.  Please follow the instructions below to acknowledge this alert.
+
+TEST PLEASE DISREGARD
+
+Title: TEST ALERT
+Alert ID: DSHS-Test-2010-40
+Agency: Bell County
+Sender: John Smith
+Status: Test
+Time Sent: October 08, 2010 05:57 PM CDT</body>
+            <subject>Health Alert "TEST ALERT"</subject>
+          </notification>
+          <sender>
+            <introName>John Smith</introName>
+            <phone nil="true"></phone>
+            <introOrganization>Bell</introOrganization>
+            <email>john.smith@example.com</email>
+          </sender>
+          <statistics>
+            <nbrContactPnts>1</nbrContactPnts>
+            <nbrVoiceContactPnts>0</nbrVoiceContactPnts>
+            <nbrEmailAndTextContactPnts>1</nbrEmailAndTextContactPnts>
+            <nbrRcpts>1</nbrRcpts>
+          </statistics>
+          <id>DSHS-Test-2010-40-EMAIL</id>
+          <confCall>
+            <isConfCall>false</isConfCall>
+            <isExternal>false</isExternal>
+            <id nil="true"></id>
+            <phone nil="true"></phone>
+          </confCall>
+          <rcptsStatus>
+            <rcptStatus>
+              <lastName>Smith</lastName>
+              <middleName nil="true"></middleName>
+              <id>1</id>
+              <contactPntsStatus>
+                <contactPntStatus>
+                  <label>Email Device</label>
+                  <address>john.smith@example.com</address>
+                  <deliveryTimestamp>2010-10-08T11:06:19.4</deliveryTimestamp>
+                  <id>1</id>
+                  <type>Email</type>
+                  <gwbRespIndex>1</gwbRespIndex>
+                  <status>Delivered (See Response)</status>
+                </contactPntStatus>
+              </contactPntsStatus>
+            <firstName>John</firstName>
+            <gwbRespIndex>1</gwbRespIndex>
+          </rcptStatus>
+        </rcptsStatus>
+        <resultGeneratedTimestamp>2010-10-08T11:07:10.5341337-04:00</resultGeneratedTimestamp>
+        <status>Complete</status>
+        <sentTimestamp>2010-10-08T10:51:25.027</sentTimestamp>
+      </getNotificationResultsResult>
+      <xmlns>http://www.sendwordnow.com/notification</xmlns>
+    </getNotificationResultsResponse>
+  </soap:Body>
+</soap:Envelope>

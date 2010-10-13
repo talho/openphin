@@ -60,7 +60,7 @@ Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (
   aa = alert.alert_attempts.find_by_user_id(u.id)
   aa.created_at += (delta)
   aa.save
-  aa.acknowledge! nil, alert.call_down_messages.index(message)
+  aa.acknowledge! :ack_response => alert.call_down_messages.index(message)
 end
 
 Given /^(\d*) random alerts$/ do |count|
@@ -185,6 +185,8 @@ Then 'an alert exists with:' do |table|
       alert.sent_at.should be_close(Time.zone.parse(value), 1)
     when 'acknowledge'
       alert.acknowledge.should == (value == "true" ? true : false)
+    when 'acknowledged_at'
+      alert.acknowledged_at.to_s.should == value
     when 'people'
       value.split(",").each do |user|
         first_name, last_name = user.split(" ")
@@ -324,9 +326,19 @@ Then /^the alert should be acknowledged$/ do
   attempt.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
 end
 
+Then /^the alert should be acknowledged with response number "([^\"]*)"$/ do |alert_response|
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+  attempt.call_down_response.should == alert_response.to_i
+end
+
 Then /^the alert should not be acknowledged$/ do
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   attempt.acknowledged_at.should be_blank
+end
+
+Then /^the alert should be acknowledged at time "([^\"]*)"$/ do |time|
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+  attempt.acknowledged_at.to_s(:db).should == time.to_time.to_s(:db)
 end
 
 Then /^I have acknowledged the alert for "([^\"]*)"$/ do |alert|
@@ -387,4 +399,11 @@ Then 'I should see the csv report for the alert titled "$title"' do |title|
     row += [(attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name)]
     response.body.should include(row.join(','))
   end
+end
+
+Then /^the backgroundRB worker has queried and processed the SWN XML data "([^\"]*)"$/ do | filename |
+  require 'vendor/plugins/backgroundrb/server/lib/bdrb_server_helper.rb'
+  require 'vendor/plugins/backgroundrb/server/lib/meta_worker.rb'
+  require 'lib/workers/query_swn_for_acknowledgments_worker.rb'
+  QuerySwnForAcknowledgmentsWorker.new.query :filename => filename
 end
