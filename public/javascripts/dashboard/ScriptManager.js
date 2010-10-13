@@ -5,7 +5,7 @@ Ext.ns("Talho");
     dominoes.property('ext_extensions', '/javascripts/ext_extensions');
     dominoes.rule('RowActions', '(( $css(/stylesheets/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css(/stylesheets/TreeGrid/css/TreeGrid.css) $css(/stylesheets/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js');
-    dominoes.rule('AudiencePanel', '$(ext_extensions)/DataTip.js RowActions TreeGrid $(ext_extensions)/DoNotCollapseActive.js > $(ext_extensions)/AudiencePanel.js');
+    dominoes.rule('AudiencePanel', 'TreeGrid $(ext_extensions)/DataTip.js RowActions $(ext_extensions)/DoNotCollapseActive.js > $(ext_extensions)/AudiencePanel.js');
     dominoes.rule('AlertDetail', '$(ext_extensions)/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
 
     var regList = {
@@ -14,7 +14,8 @@ Ext.ns("Talho");
         'Talho.AdvancedSearch': {js:'AjaxPanel > /javascripts/searches/AdvancedSearch.js'},
         'Talho.ManageGroups': {js:'$(ext_extensions)/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
-        'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"}
+        'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
+        'Talho.Forums': {js: "RowActions AudiencePanel $(ext_extensions)/SubmitFalse.js /javascripts/forums/forums.js"}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

@@ -67,19 +67,33 @@ class TopicsController < ApplicationController
 
   # GET /topics/1/edit
   def edit
-   end
+    respond_to do |format|
+      format.json {render :json => {:data => { 'topic[name]' => @topic.name, 'topic[content]' => @topic.content, 'topic[sticky]' => @topic.sticky,
+                                               'topic[hide]' => @topic.hidden_at ? 1 : 0, 'topic[locked]' => @topic.locked_at ? 1: 0,
+                                               'topic[lock_version]' => @topic.lock_version},
+                                    :success => true }}
+    end
+  end
 
   # POST /topics
   # POST /topics.xml
   # POST /topics.json
   def create
+    params[:topic][:poster_id] = current_user.id if params[:poster_id].nil?
     @topic = Topic.new(params[:topic])
     respond_to do |format|
       if @forum.topics << @topic
-        flash[:notice] = 'Topic was successfully created.'
-        format.html { redirect_to forum_topics_url }
-        format.xml  { render :xml => @topic, :status => :created, :location => @topic }
-        format.json { render :json => @topic, :status => :created, :location => @topic }
+        format.html do
+          flash[:notice] = 'Topic was successfully created.'
+          redirect_to forum_topics_url
+        end
+        format.xml  { render :xml => @topic, :status => :created, :location => forum_topics_url }
+        format.json do
+          original_included_root = ActiveRecord::Base.include_root_in_json
+          ActiveRecord::Base.include_root_in_json = false
+          render :json => {:topic => @topic, :success => true}, :status => :created, :location => forum_topics_url          
+          ActiveRecord::Base.include_root_in_json = original_included_root
+         end
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
@@ -99,21 +113,31 @@ class TopicsController < ApplicationController
     respond_to do |format|
       begin
         if @topic.update_attributes(params[:topic])
-          flash[:notice] = 'Topic was successfully updated.'
-          format.html { redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url ) }
-          format.xml  { head :ok }
-          format.json { head :ok }
+          format.html do
+            flash[:notice] = 'Topic was successfully updated.'
+            redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url )
+          end
+          format.xml  { render :json => {:success => true} }
+          format.json { render :json => {:success => true} }
         else
           format.html { render :action => "edit" }
           format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
           format.json  { render :json => @topic.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError
-        flash[:error] = "Another user recently updated the same topic.  Please try again."
-        format.html { redirect_to edit_forum_topic_path(@topic)}
+        error = "Another user recently updated the same topic.  Please try again."
+        format.html do
+          flash[:error] = error
+          redirect_to edit_forum_topic_path(@topic)
+        end
+        format.json {render :json => {:success => false, :msg => error, :retry => true}}
       rescue StandardError
-        flash[:error] = "There was an unexpected error while saving this topic."
-        format.html { redirect_to forum_topic_path(@topic)}
+        error = "There was an unexpected error while saving this topic."
+        format.html do
+          flash[:error] = error
+          redirect_to forum_topic_path(@topic)
+        end
+        format.json {render :json => {:success => false, :msg => error}}
       end
     end
   end
