@@ -92,21 +92,26 @@ class AlertAttempt < ActiveRecord::Base
     acknowledged_at || false
   end
   
-  def acknowledge! alert_device_type = nil, response = 0
+  def acknowledge! options = {} # accepted options: ack_device, ack_response, ack_time
     if alert.has_alert_response_messages?
-      if response == 0 || response == ""
-        errors.add('acknowledgement','You must select a response before acknowledging this alert.')  
+      #TODO: narrow range of allowed responses to the number on that alert
+      if !(1..5).include? options[:ack_response].to_i || options[:ack_response].blank?
+        errors.add('acknowledgement','You must select a response before acknowledging this alert.')
         return
+      else
+        ack_response = options[:ack_response]
       end
+    else
+      ack_response = 0       # although SWN replies with a 1, 0 (zero) means a normal acknowledgement in our system.  this is not conventional.
     end
     unless self.acknowledged?
-      device = alert_device_type || "Device::ConsoleDevice"
-      find_by_device = alert_device_type.nil? ? "Device::ConsoleDevice" : alert_device_type
-      update_attributes( 
-        :acknowledged_alert_device_type_id => AlertDeviceType.find_by_alert_id_and_device(alert.id, find_by_device ).id,
-        :acknowledged_at => Time.zone.now,
-        :call_down_response => response.to_i)
-      alert.update_statistics(:device => device, :jurisdiction => user.jurisdictions, :response => response)
+      ack_device = options[:ack_device].blank? ? "Device::ConsoleDevice" : options[:ack_device]
+      ack_time = options[:ack_time].blank? ? Time.zone.now : options[:ack_time]
+      update_attributes(
+        :acknowledged_alert_device_type_id => AlertDeviceType.find_by_alert_id_and_device(alert.id, ack_device ).id,
+        :acknowledged_at => ack_time,
+        :call_down_response => ack_response.to_i)
+      alert.update_statistics(:device => ack_device, :jurisdiction => user.jurisdictions, :response => ack_response)
     end
   end
   

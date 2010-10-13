@@ -18,7 +18,7 @@ end
 
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
-  a.acknowledge! "Device::PhoneDevice"
+  a.acknowledge! :ack_device => "Device::PhoneDevice"
 end
 
 When /^I maliciously post a destroy for a device for "([^\"]*)"$/ do |user_email|

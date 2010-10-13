@@ -1,0 +1,109 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema‐instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing" xmlns:wsse="http://docs.oasis‐open.org/wss/2004/01/oasis‐200401‐wss‐wssecurity‐secext‐1.0.xsd" xmlns:wsu="http://docs.oasis‐open.org/wss/2004/01/oasis‐200401‐wss‐wssecurity‐utility‐1.0.xsd">
+    <soap:Header>
+      <wsa:RelatesTo>uuid:240e93e4-c5cd-41de-9ada-8676e95f1447</wsa:RelatesTo>
+      <wsse:Security>
+        <wsu:Timestamp>
+          <wsu:Expires>2010-10-12T16:34:36Z</wsu:Expires>
+          <wsu:Id>Timestamp-1cf0ce6d-bf8d-4e98-8cae-744bf7e760ed</wsu:Id>
+          <wsu:Created>2010-10-12T16:29:36Z</wsu:Created>
+        </wsu:Timestamp>
+      </wsse:Security>
+      <wsa:Action>http://www.sendwordnow.com/notification/getNotificationResultsResponse</wsa:Action>
+      <wsa:MessageID>uuid:c7468959-f735-43a4-b2a8-a50666be4dd2</wsa:MessageID>
+      <wsa:To>http://schemas.xmlsoap.org/ws/2004/03/addressing/role/anonymous</wsa:To>
+    </soap:Header>
+  
+    <soap:Body>
+      <getNotificationResultsResponse>
+        <getNotificationResultsResult>
+          <gwbStatistics>
+          <gwb type="array">
+          <gwb>
+            <nbrResponses>0</nbrResponses>
+            <gwbText>response one</gwbText>
+            <index>1</index>
+          </gwb>
+          <gwb>
+            <nbrResponses>0</nbrResponses>
+            <gwbText>Response the second</gwbText>
+            <index>2</index>
+          </gwb>
+            <gwb>
+              <nbrResponses>0</nbrResponses>
+              <gwbText>this is Response three</gwbText>
+              <index>3</index>
+            </gwb>
+            <gwb>
+              <nbrResponses>0</nbrResponses>
+              <gwbText>Fourth response</gwbText>
+              <index>4</index>
+            </gwb>
+          </gwb>
+        </gwbStatistics>
+        <custSentTimestamp>2010-10-13T00:35:05.526Z</custSentTimestamp>
+        <notification>
+          <body>The following is an alert from the Texas Public Health Information Network.
+
+This alert requires acknowledgment.  Please follow the instructions below to acknowledge this alert.
+
+TEST DISREGARD PLEASE
+
+Title: TEST ALERT ACK
+Alert ID: DSHS-Test-2010-41
+Agency: Bell
+Sender: John Smith
+Status: Test
+Time Sent: October 12, 2010 07:35 PM CDT
+
+</body>
+            <subject>Health Alert "TEST ALERT ACK"</subject>
+        </notification>
+        <sender>
+          <introName>John Smith</introName>
+          <phone nil="true"></phone>
+          <introOrganization>Bell</introOrganization>
+          <email>john.smith@example.com</email>
+        </sender>
+        <statistics>
+          <nbrContactPnts>1</nbrContactPnts>
+          <nbrVoiceContactPnts>0</nbrVoiceContactPnts>
+          <nbrEmailAndTextContactPnts>1</nbrEmailAndTextContactPnts>
+          <nbrRcpts>1</nbrRcpts>
+        </statistics>
+        <id>DSHS-Test-2010-41-EMAIL</id>
+        <confCall>
+          <isConfCall>false</isConfCall>
+          <isExternal>false</isExternal>
+          <id nil="true"></id>
+          <phone nil="true"></phone>
+        </confCall>
+        <rcptsStatus>
+          <rcptStatus>
+            <lastName>Smith</lastName>
+            <id>1</id>
+            <contactPntsStatus>
+              <contactPntStatus>
+                <label>Email Device</label>
+                <address>john.smith@example.com</address>
+                <deliveryTimestamp>2010-10-12T12:35:46.36</deliveryTimestamp>
+                <id>1</id>
+                <type>Email</type>
+                <gwbRespIndex>3</gwbRespIndex>
+                <status>Delivered (See Response)</status>
+              </contactPntStatus>
+            </contactPntsStatus>
+            <firstName>John</firstName>
+            <gwbRespIndex>3</gwbRespIndex>
+          </rcptStatus>
+        </rcptsStatus>
+        <resultGeneratedTimestamp>2010-10-12T12:30:49.4197108+03:00</resultGeneratedTimestamp>
+        <status>Complete</status>
+        <sentTimestamp>2010-10-12T12:29:18.38</sentTimestamp>
+      </getNotificationResultsResult>
+      <xmlns>http://www.sendwordnow.com/notification</xmlns>
+    </getNotificationResultsResponse>
+  </soap:Body>
+</soap:Envelope>

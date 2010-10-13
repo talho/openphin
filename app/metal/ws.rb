@@ -39,7 +39,7 @@ post "/ws/alert/:distribution_id/ack" do
     if attempt.acknowledged?
       {:success => "Alert has already been acknowledged"}.to_json
     else
-      attempt.acknowledge! "Device::ConsoleDevice"
+      attempt.acknowledge! :ack_device => "Device::ConsoleDevice"
       {:success => "Alert acknowledged"}.to_json
     end
 
