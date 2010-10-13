@@ -58,7 +58,9 @@ Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (
   alert = Alert.find_by_title(title)
   delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
   aa = alert.alert_attempts.find_by_user_id(u.id)
-  aa.acknowledge! :ack_response => alert.call_down_messages.index(message).to_i, :acknowledged_at => (Time.now + delta)
+  aa.created_at += (delta)
+  aa.save
+  aa.acknowledge! :ack_response => alert.call_down_messages.index(message)
 end
 
 Given /^(\d*) random alerts$/ do |count|
@@ -404,6 +406,7 @@ Then /^the backgroundRB worker has queried and processed the SWN XML data "([^\"
   require 'vendor/plugins/backgroundrb/server/lib/meta_worker.rb'
   require 'lib/workers/query_swn_for_acknowledgments_worker.rb'
   QuerySwnForAcknowledgmentsWorker.new.query :filename => filename
+<<<<<<< HEAD
 end
 
 Given /^(?:|I )am using (.+)$/ do |browser|
@@ -416,3 +419,6 @@ Given /^(?:|I )am using (.+)$/ do |browser|
   end
 end
 
+=======
+end
+>>>>>>> Changed SWN acknowledgment to reflect SWN timestamp
