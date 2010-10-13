@@ -45,6 +45,10 @@ class UserProfilesController < ApplicationController
     set_toolbar
     find_user_and_profile
     roles = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
+    role_desc = roles.collect { |r|
+      {:role_id=>r.role_id, :rname=>Role.find(r.role_id).to_s,
+       :jurisdiction_id=>r.jurisdiction_id, :jname=>Jurisdiction.find(r.jurisdiction_id).to_s }
+    }
     respond_to do |format|
       format.html
       format.json {
@@ -54,6 +58,8 @@ class UserProfilesController < ApplicationController
         }
         render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium),
                                                      :devices => device_desc,
+                                                     :role_desc => role_desc,
+                                                     :user_roles => @user.roles,
                                                      :roles => roles}}
       }
     end
@@ -98,6 +104,12 @@ class UserProfilesController < ApplicationController
     # Handle Manage Devices submission (ext only)
     if params[:user].has_key?(:devices)
       update_devices(params[:user][:devices])
+      return
+    end
+
+    # Handle Jurisdiction, Role, etc. requests
+    if params[:user].has_key?(:req)
+      handle_requests(params[:user][:req])
       return
     end
 
@@ -246,6 +258,20 @@ protected
           render :json => {:flash => "Devices saved.", :type => :completed, :success => true}
         else
           render :json => {:flash => nil, :type => :error, :errors => device_errors}
+        end
+      }
+    end
+  end
+
+  def handle_requests(req_json)
+    req = ActiveSupport::JSON.decode(req_json)
+    success = true
+    respond_to do |format|
+      format.json {
+        if success
+          render :json => {:flash => "Requests sent.", :type => :completed, :success => true}
+        else
+          render :json => {:flash => nil, :type => :error, :errors => nil}
         end
       }
     end

@@ -15,7 +15,12 @@ Ext.ns("Talho");
         'Talho.ManageGroups': {js:'$(ext_extensions)/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
-        'Talho.Forums': {js: "RowActions AudiencePanel $(ext_extensions)/SubmitFalse.js /javascripts/forums/forums.js"}
+        'Talho.Forums': {js: "RowActions AudiencePanel $(ext_extensions)/SubmitFalse.js /javascripts/forums/forums.js"},
+        'Talho.EditProfile': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditProfile.js'},
+        'Talho.EditPassword': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditPassword.js'},
+        'Talho.EditDevices': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditDevices.js'},
+        'Talho.ManageRoles': {js:'/javascripts/profile/ProfileBase.js AudiencePanel > /javascripts/profile/ManageRoles.js'},
+        'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js AudiencePanel > /javascripts/profile/ManageOrganizations.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
