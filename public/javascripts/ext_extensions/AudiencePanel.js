@@ -36,11 +36,11 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             items.push({title: 'Jurisdictions', layout: 'fit', items: this.createJurisdictionsTree(), border: false});
         }
 
-        items.push({title: 'Roles', layout:'border', items: this.createRolesGrid(), border: false});
+        items.push({title: 'Roles', layout:'fit', items: this.createRolesGrid(), border: false});
 
         if (this.showGroups === true)
         {
-            items.push({title: 'Groups/Organizations', layout:'border', items: this.createGroupsGrid(), border: false});
+            items.push({title: 'Groups/Organizations', layout:'fit', items: this.createGroupsGrid(), border: false});
         }
 
         if (this.showUsers)
@@ -108,7 +108,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                     var roles = this.selectedItemsStore.query('type', 'role');
                     var rows = [];
                     roles.each(function(role){
-                        var row = store.find('id', new RegExp('^' + role.id + '$'));
+                        var row = store.find('id', new RegExp('^' + role.get('id') + '$'));
                         if(row != -1)
                             rows.push(row);
                     });
@@ -152,7 +152,6 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.roleGridView = new Ext.grid.GridPanel({
             store: store,
-            region: 'center',
             bodyCssClass: 'roles',
             autoExpandColumn: 'name_column',
             cm: new Ext.grid.ColumnModel({
@@ -240,7 +239,6 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         this.groupGridView = new Ext.grid.GridPanel({
             store: store,
-            region: 'center',
             bodyCssClass: 'groups',
             autoExpandColumn: 'name_column',
             cm: new Ext.grid.ColumnModel({
@@ -323,7 +321,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                         var jurisdictions = this.selectedItemsStore.query('type', 'jurisdiction');
                         var rows = [];
                         jurisdictions.each(function(jurisdiction){
-                            var row = store.find('id', new RegExp('^' + jurisdiction.id + '$'));
+                            var row = store.find('id', new RegExp('^' + jurisdiction.get('id') + '$'));
                             if(row != -1)
                                 rows.push(row);
                         });
@@ -615,8 +613,12 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                         return true; // we don't want to filter users, groups, or roles
                     case 'jurisdiction':
                         var store = this.jurisdictionTreeGrid.getStore();
-                        var parent = store.getNodeParent(store.getAt(store.findExact('id', record.get('id'))));
-                        return parent === null || !parent.isFullySelected;
+                        var rc = store.getAt(store.findExact('id', record.get('id')));
+                        if(rc){
+                            var parent = store.getNodeParent(rc);
+                            return parent === null || !parent.isFullySelected;
+                        }
+                        else return true;
                     default: return true; // if we can't figure out what to do with it, we don't want to filter it, in case
                 }
             },
@@ -678,7 +680,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
                             var jts = this.jurisdictionTreeGrid.getStore();
                             var node = jts.getAt(jts.findExact('id', record.get('id')));
                         
-                            if(node.isFullySelected)
+                            if(node && node.isFullySelected)
                             {
                                 metaData.attr = 'style="font-weight:bold;"';
                                 value = value + ' (ALL)';

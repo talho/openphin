@@ -103,8 +103,6 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
   save: function(){
     this.getPanel().loadMask.show();
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
-    var devices = jQuery.map(store.getRange(), function(e,i){ return e.data.toSource(); });
-    //alert(devices.join("\n"));
     //store.save();
     var devices = jQuery.map(store.getRange(), function(e,i){ return e.data; });
     Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[devices]": Ext.encode(devices)},
@@ -123,3 +121,5 @@ Talho.EditDevices.initialize = function(config){
   var o = new Talho.EditDevices(config);
   return o.getPanel();
 };
+
+Talho.ScriptManager.reg('Talho.EditDevices', Talho.EditDevices, Talho.EditDevices.initialize);

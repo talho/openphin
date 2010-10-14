@@ -51,21 +51,40 @@ class ForumsController < ApplicationController
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
     @forum = Forum.new(params[:forum])
     if @forum.save
-      flash[:notice] = "Forum was successfully created."
-      redirect_to forums_url, {:params => params}
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "Forum was successfully created."
+          redirect_to forums_url, {:params => params}
+        end
+        format.json {render :json => {:success => true}}
+      end
     else
-      render :action => 'new'
+      respond_to do |format|
+        format.html {render :action => 'new'}
+        format.json {render :json => {:success => false, :msg => @forums.errors.join(". ")}, :status => 406}
+      end
     end
   end
 
   # GET /forums/1/edit
   # GET /forums/1/edit.json
   def edit
+    original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
+
     @forum = Forum.find_for(params[:id],current_user)
     respond_to do |format|
       format.html
-      format.json {render :json => @forum}
+      format.json {render :json => @forum.as_json(:include => {:audience => {:include => {:users => {:only => [:id, :display_name, :email, :title ]},
+                                                                                          :roles => {:only => [:id, :name]},
+                                                                                          :jurisdictions => {:only => [:id, :name]} },
+                                                                             :only => [] }
+                                                              }
+                                                  ) }
     end
+
+    ActiveRecord::Base.include_root_in_json = original_included_root
+
   end
 
   # PUT /forums/1
