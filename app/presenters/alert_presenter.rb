@@ -16,4 +16,5 @@ class AlertPresenter < CachingPresenter
   def ask_for_acknowledgement?
     @alert.acknowledge? && !@alert.new_record? && !acknowledged_by_user?
   end
+
 end

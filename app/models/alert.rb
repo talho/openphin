@@ -80,6 +80,7 @@ class Alert < ActiveRecord::Base
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   Acknowledgement = ['None', 'Normal', 'Advanced']
   DeliveryTimes = [15, 30, 45, 60, 75, 90, 1440, 4320]
+  ExpirationGracePeriod = 240 # in minutes
 
   serialize :call_down_messages, Hash
 
@@ -109,6 +110,8 @@ class Alert < ActiveRecord::Base
       :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
       :conditions => "alerts.id=#{object_id}"
   }
+  named_scope :active, :conditions => ["UNIX_TIMESTAMP(created_at) + ((delivery_time + #{ExpirationGracePeriod}) * 60) > UNIX_TIMESTAMP(UTC_TIMESTAMP())"]
+  named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
 
   def self.new_with_defaults(options={})
     defaults = {:delivery_time => 4320, :severity => 'Minor'}
@@ -120,6 +123,14 @@ class Alert < ActiveRecord::Base
       return false
     end
     true
+  end
+
+  def expired?
+    if created_at.blank? || delivery_time.blank?
+      return true
+    else
+      Time.now.to_i > (created_at.to_i + ((delivery_time + ExpirationGracePeriod) * 60) )
+    end
   end
 
   def audiences_attributes=(attrs={})
