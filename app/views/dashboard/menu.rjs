@@ -45,7 +45,9 @@ if current_user.has_non_public_role?
                       {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditProfile'}},
                       {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
                       {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
-                      {name: 'Request Roles', tab:{id: 'request_roles', title:'Request Roles', url:'#{ new_role_request_path }', initializer: 'Talho.RequestRoles'}}
+                      {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
+                      {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
+                        initializer: 'Talho.ManageOrganizations'}}
                     ]},"
 
     if current_user.is_admin?
