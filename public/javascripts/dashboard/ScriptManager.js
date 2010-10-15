@@ -15,7 +15,7 @@ Ext.ns("Talho");
         'Talho.ManageGroups': {js:'$(ext_extensions)/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
-        'Talho.Forums': {js: "RowActions AudiencePanel $(ext_extensions)/SubmitFalse.js /javascripts/forums/forums.js"},
+        'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
         'Talho.EditProfile': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditProfile.js'},
         'Talho.EditPassword': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditDevices.js'},

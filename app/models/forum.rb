@@ -77,7 +77,7 @@ class Forum < ActiveRecord::Base
       return forum unless forum
       forum = self.find(id,options)
     else
-      result.select{|f| self.accessible_to(f,user) }
+      result = result.select{|f| self.accessible_to(f,user) }
       forum_ids = result.collect(&:id)
       options[:page] = page
       forums = self.paginate(forum_ids,options)

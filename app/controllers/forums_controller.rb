@@ -19,7 +19,8 @@ class ForumsController < ApplicationController
         end,
         :current_page        => @forums.current_page,
         :per_page            => @forums.per_page,
-        :total_entries       => @forums.total_entries
+        :total_entries       => @forums.total_entries,
+        :is_super_admin      => current_user.is_super_admin?
       }}
     end
     ActiveRecord::Base.include_root_in_json = original_included_root

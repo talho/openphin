@@ -7,7 +7,6 @@ Ext.ux.form.SubmitFalse = Ext.extend(function(config){
     uncheckedValue: 'off',
     
     init:function(component){
-        var originalRender = component.onRender;
         var originalSetValue = component.setValue;
         var negValue = this.uncheckedValue;
 
@@ -21,16 +20,6 @@ Ext.ux.form.SubmitFalse = Ext.extend(function(config){
         };
 
         Ext.apply(component, {
-            onRender: function(){
-                originalRender.apply(this, arguments);
-                if (!this.checked) {
-                    this.uncheckedHiddenElement = buildInputElement(this.el, this.getName());
-                }
-                else {
-                    this.uncheckedHiddenElement = null;
-                }
-            },
-
             setValue: function(){
                 originalSetValue.apply(this, arguments);
                 if (this.checked) {

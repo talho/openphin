@@ -30,7 +30,7 @@ class TopicsController < ApplicationController
       format.html # index.html.erb
       format.xml  { render :xml => @topics }
       format.json  {render :json => {
-        :topics              => @topics,
+        :topics              => @topics.map {|x| x.as_json(:include => {:poster => {:only => [:display_name, :id]}})},
         :current_page        => @topics.current_page,
         :per_page            => @topics.per_page,
         :total_entries       => @topics.total_entries
@@ -68,6 +68,7 @@ class TopicsController < ApplicationController
   # GET /topics/1/edit
   def edit
     respond_to do |format|
+      format.html
       format.json {render :json => {:data => { 'topic[name]' => @topic.name, 'topic[content]' => @topic.content, 'topic[sticky]' => @topic.sticky,
                                                'topic[hide]' => @topic.hidden_at ? 1 : 0, 'topic[locked]' => @topic.locked_at ? 1: 0,
                                                'topic[lock_version]' => @topic.lock_version},
@@ -151,7 +152,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(forum_topics_url) }
       format.xml  { head :ok }
-      format.json { head :ok }
+      format.json { render :json => {:success => true}, :status => :ok }
     end
   end
   

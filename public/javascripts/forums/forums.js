@@ -33,10 +33,19 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             restful: true,
             root: 'forums',
             idProperty: 'id',
-            fields: ['name', {name:'hidden_at', type: 'date'}, {name:'created_at', type:'date'}, {name:'updated_at', type:'date'},
-                'lock_version', 'id', {name: 'not_moderator', mapping: 'is_moderator', type: 'boolean', convert: this.inverse_boolean}, 'threads'
+            fields: ['name', {name:'hidden_at', type: 'date'}, {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
+                'lock_version', 'id', {name: 'is_moderator', type: 'boolean'}, 'threads'
             ],
-            autoLoad: true
+            autoLoad: true,
+            listeners:{
+                scope: this,
+                'load': function(store){
+                    if(store.reader.getBaseProperty('is_super_admin')){
+                        this.forum_grid.getBottomToolbar().getComponent('add_forum_button').show();
+                        this.forum_grid.doLayout();
+                    }
+                }
+            }
         });
 
         var layout_config = {
@@ -47,13 +56,10 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             split: true,
             title: 'Forums',
             collapsible: true,
-            bbar: [{ iconCls:'add_forum', text:'Add Forum', handler: this.create_or_edit_forum,  scope: this}]
+            bbar: [{ iconCls:'add_forum', text:'Add Forum', handler: this.create_or_edit_forum,  scope: this, hidden: true, itemId: 'add_forum_button'}]
         };
 
-        var rowActions = new Ext.ux.grid.RowActions({
-            keepSelection: true,
-            actions:[{iconCls: 'edit_cell', hideIndex: 'not_moderator', cb: function(grid, record){this.create_or_edit_forum(record.id);}.createDelegate(this), qtip: 'Edit'}]
-        });
+        var rowActionConfig = {xtype: 'xactioncolumn', icon: '/stylesheets/images/pencil.png', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_forum(grid.getStore().getAt(row).id);}, scope:this, tooltip: 'Edit'}
 
         var grid_config = {
             loadMask: true,
@@ -61,18 +67,17 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             colModel: new Ext.grid.ColumnModel({
                 columns: [
                     {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name', renderer: function(value, p, record){
-                        var tip = "Created: " + record.get("created_at").format('m-d-Y') + '<br/>' +
-                                  "Last Post: " + record.get('updated_at').format('m-d-Y');
+                        var tip = '' + (record.get("created_at") ? "Created: " + record.get("created_at").format('m-d-Y') + '<br/>' : '' ) +
+                                  (record.get("updated_at") ? "Last Post: " + record.get('updated_at').format('m-d-Y') : '');
                         p.attr = 'qtip="' + tip + '" qtitle="' + value + '"';
                         return value;
                     }},
                     {header: 'Created', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('m-d-Y'), hidden: true},
                     {header: 'Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('m-d-Y'), hidden: true},
                     {header: 'Threads', sortable: true, dataIndex: 'threads', width: 55},
-                    rowActions
+                    rowActionConfig
                 ]
             }),
-            plugins: [rowActions],
             autoExpandColumn: 'name_column',
             sm: new Ext.grid.RowSelectionModel({
                 listeners: {
@@ -91,18 +96,36 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
     },
 
     _create_topic_list_grid: function(store){
-        var rowActions = new Ext.ux.grid.RowActions({
-            actions:[
-                {iconCls: 'edit_cell', qtip: 'Edit Topic', hideIndex: 'not_moderator', cb: function(grid, record){this.create_or_edit_topic(record.id);}.createDelegate(this) },
-                {iconCls: 'move_topic', qtip: 'Move Topic', hideIndex: 'not_moderator'},
-                {iconCls: 'delete_cell', qtip: 'Delete Topic', hideIndex: 'not_super_admin'}
-            ]
-        });
+        var iconConfig = [
+            {icon: '/stylesheets/images/pencil.png', tooltip: 'Edit Topic', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_topic(grid.getStore().getAt(row).id);}, scope: this },
+            {icon: '/stylesheets/resources/images/default/layout/collapse.gif', tooltip: 'Move Topic', showField: 'is_super_admin', handler: function(grid, row){this.move_topic(grid.getStore().getAt(row).id);}, scope: this},
+            {icon: '/stylesheets/images/cross-circle.png', tooltip: 'Delete Topic', showField: 'is_super_admin', scope: this, handler: function(grid, row){
+                var store = grid.getStore();
+                Ext.Msg.confirm("Delete Record", 'Are you sure you wish to delete the topic "' + store.getAt(row).get("name") + '"', function(btn){
+                    if(btn === 'yes'){
+                        store.removeAt(row);
+                    }
+                });
+            }}
+        ];
+
+        var leadIconConfig = [
+            {icon: '/images/yellow_thumbtack.png', tooltip: 'Pinned', showField: 'sticky'},
+            {icon: '/stylesheets/resources/images/default/grid/hmenu-lock.png', tooltip: 'Closed', showField: 'locked'}
+        ];
 
         var ptoolbar = new Ext.PagingToolbar({
             store: store,
             prependButtons: true,
-            buttons:[{ iconCls:'add_forum', text:'New Topic', handler: function(){this.create_or_edit_topic();}, scope: this}, '->']
+            pageSize: 8,
+            buttons:[{ iconCls:'add_forum', text:'New Topic', handler: function(){this.create_or_edit_topic();}, scope: this}, '->'],
+            listeners:{
+                scope: this,
+                'beforechange': function(tb, options){
+                    options['page'] = Math.floor(options.start / options.per_page) + 1; 
+                    return true;
+                }
+            }
         });
 
         this.topic_grid = new Ext.grid.GridPanel({
@@ -114,16 +137,34 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             }),
             cm: new Ext.grid.ColumnModel({
                 columns: [
+                    {xtype: 'xactioncolumn', items: leadIconConfig, vertical: true},
                     {header: ' ', sortable: false, dataIndex: 'user_avatar', renderer: this.render_user_avatar, width: 75},
-                    {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name'},
+                    {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name', renderer: function(val){
+                        return '<span class="inlineLink">' + val + '</span>';
+                    }},
                     {header: 'Replies', sortable: true, dataIndex: 'posts', width: 55},
-                    {header: 'Created At', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('l M jS Y, h:i:s A'), width: 210},
-                    {header: 'Last Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('l M jS Y, h:i:s A'), width: 210},
-                    rowActions
+                    {header: 'Poster', sortable: true, dataIndex: 'poster_name', width: 100, renderer: function(val){
+                        return '<span class="inlineLink">' + val + '</span>';
+                    }},
+                    {header: 'Created At', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
+                    {header: 'Last Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
+                    {xtype: 'xactioncolumn', items: iconConfig}
                 ]
             }),
+            listeners:{
+                'cellclick': function(grid, row, column, event){
+                    var target = event.getTarget(null, null, true);
+                    var fieldName = grid.getColumnModel().getDataIndex(column);
+                    var record = grid.getStore().getAt(row);
+                    if(target.hasClass('inlineLink') && fieldName == 'name'){
+                        Application.fireEvent('opentab', {title: record.get('name')});
+                    }
+                    else if(target.hasClass('inlineLink') && fieldName == 'poster_name'){
+                        Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('poster_name'), url: 'users/' + record.get('poster_id') + '/profile', id: 'user_profile_for_' + record.get('poster_id') });
+                    }
+                }
+            },
             autoExpandColumn: 'name_column',
-            plugins: [rowActions],
             bbar: ptoolbar,
             store: store
         });
@@ -253,15 +294,30 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             idProperty: 'id',
             totalProperty: 'total_entries',
             forumId: record.id,
-            paramsNames:{
-                start: 'page',
+            paramNames:{
+                start: 'start',
                 limit: 'per_page'
             },
             autoLoad: true,
-            fields: ['forum_id', 'comment_id', 'sticky', 'locked_at', 'name', 'content', 'poster_id', {name:'hidden_at', type: 'date'},
-                {name:'created_at', type:'date'}, {name:'updated_at', type:'date'}, 'lock_version', {name:'not_moderator',type:'boolean', mapping: 'is_moderator', convert: this.inverse_boolean},
-                {name:'not_super_admin', mapping: 'is_super_admin', convert: this.inverse_boolean, type:'boolean'}, 'id', 'posts', 'user_avatar'],
-            url: '/forums/' + record.id + '/topics.json'
+            fields: ['forum_id', 'comment_id', {name: 'sticky', type:'boolean'}, 'locked_at', {name: 'locked', mapping: 'locked_at', convert: function(val){return val ? true : false;}, type: 'boolean'},
+                'name', 'content', 'poster_id', {name:'hidden_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name: 'poster_name', mapping:'poster.display_name'},
+                {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
+                'lock_version', {name:'is_moderator', type:'boolean'}, {name:'is_super_admin', type:'boolean'}, 'id', 'posts', 'user_avatar'
+            ],
+            url: '/forums/' + record.id + '/topics.json' ,
+            writer: {},
+            listeners:{
+                scope: this,
+                'beforesave': function(){
+                    if(!this.topic_grid.saveMask) this.topic_grid.saveMask = new Ext.LoadMask(this.topic_grid.getEl(), {msg: 'Saving...'});
+                    this.topic_grid.saveMask.show();
+                    return true;
+                },
+                'save': function(){
+                    if(this.topic_grid.saveMask) this.topic_grid.saveMask.hide();
+                    this.refresh();
+                }
+            }
         });
 
         if(!this.topic_grid){
@@ -293,6 +349,12 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             };
         }
 
+        var is_super_admin = this.forum_grid.getStore().reader.getBaseProperty('is_super_admin');
+        var items = [];
+        if(is_super_admin) items.push({xtype: 'checkbox', boxLabel: 'Pinned', name: 'topic[sticky]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]});
+        items.push({xtype: 'checkbox', boxLabel: 'Hidden', margins:'0 5 0 5', name: 'topic[hide]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]});
+        items.push({xtype: 'checkbox', boxLabel: 'Closed', name: 'topic[locked]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]});
+
         var topic_window = new Ext.Window({
             title: edit_mode ? 'Edit Topic' : 'New Topic',
             height: 500,
@@ -309,11 +371,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                 items: [
                     {xtype: 'textfield', fieldLabel: 'Topic Title', anchor: '100%', name: 'topic[name]', allowBlank: false},
                     {xtype: 'textarea', fieldLabel: 'Topic Content', anchor: '100% -50', name: 'topic[content]'},
-                    {xtype: 'container', layout: 'hbox', hideLabel: true, anchor: '100%', layoutConfig: {pack: 'center'}, items:[
-                        {xtype: 'checkbox', boxLabel: 'Pinned', name: 'topic[sticky]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]},
-                        {xtype: 'checkbox', boxLabel: 'Hidden', margins:'0 5 0 5', name: 'topic[hide]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]},
-                        {xtype: 'checkbox', boxLabel: 'Closed', name: 'topic[locked]', inputValue: '1', plugins:[new Ext.ux.form.SubmitFalse({uncheckedValue: '0'})]}
-                    ]},
+                    {xtype: 'container', layout: 'hbox', hideLabel: true, anchor: '100%', layoutConfig: {pack: 'center'}, items: items},
                     {xtype: 'hidden', name:'topic[lock_version]', value: '0'}
                 ],
                 buttons:[
@@ -373,9 +431,65 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
         topic_window.show();
     },
 
+    move_topic: function(topic_id){
+        var forum_store = this.forum_grid.getStore();
+
+        var store = new Ext.data.Store({
+            reader: new Ext.data.DataReader({}, forum_store.recordType)
+        });
+
+        var selected_forum = this.forum_grid.getSelectionModel().getSelected();
+        var forums = forum_store.getRange();
+        forums.remove(selected_forum);
+        store.add(forums);
+
+        var move_topic_window = new Ext.Window({
+            title: 'Move Topic',
+            width: 300,
+            padding: '5',
+            modal: true,
+            layout: 'form',
+            labelAlign: 'top',
+            items:[{xtype: 'label', text: this.topic_grid.getStore().getById(topic_id).get('name'), fieldLabel: 'Topic Name'},
+                {xtype:'combo', itemId: 'move_window_combo', fieldLabel: 'Forum to move topic to', mode: 'local', triggerAction: 'all', editable: false, store: store, displayField: 'name', valueField: 'id', anchor: '100%'}],
+            buttons: [{text: 'Save', scope: this, handler: function(){
+                var selected = move_topic_window.getComponent('move_window_combo').getValue();
+                if(selected === ''){
+                    alert("Please select a forum to move this topic to.");
+                    return;
+                }
+
+                if(!move_topic_window.saveMask) move_topic_window.saveMask = new Ext.LoadMask(move_topic_window.getLayoutTarget(), {msg: 'Saving...'});
+                move_topic_window.saveMask.show();
+
+                Ext.Ajax.request({
+                    url: '/forums/' + selected_forum.id + '/topics/' + topic_id + '.json',
+                    method: 'PUT',
+                    params: {'topic[dest_forum_id]': selected},
+                    scope: this,
+                    callback: function(options, success, response){
+                        move_topic_window.saveMask.hide();
+                        if(success){
+                            move_topic_window.close();
+                            this.refresh();
+                        }
+                        else
+                        {
+                            Ext.Msg.alert("Error", response.responseText);
+                        }
+                    }
+                })
+            }},
+                {text: 'Cancel', handler: function(){move_topic_window.close();}}
+            ]
+        });
+
+        move_topic_window.show();
+    },
+
     refresh: function(){
         this.forum_grid.getStore().load();
-        if(this.topic_grid) this.topic_grid.loadMask.show();//.getStore().load();            
+        if(this.topic_grid) this.topic_grid.getStore().load();            
     }
 });
 

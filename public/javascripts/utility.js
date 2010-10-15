@@ -40,4 +40,11 @@ if(Ext)
         });
         return r;
     };
+
+    Ext.override(Ext.data.JsonReader, {
+        getBaseProperty: function(name){
+            if(this.jsonData) return this.jsonData[name];
+            else return null;
+        }
+    });
 }
