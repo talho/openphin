@@ -39,13 +39,13 @@ Feature: Acknowledging an alert via email
   Scenario: Acknowledging an alert through an email without signing in
     Given a sent alert with:
       | title                 | H1N1 SNS push packs to be delivered tomorrow |
-      | message               | There is a Chicken pox outbreak in the area |
-      | status                | Actual               |
-      | severity              | Moderate             |
-      | acknowledge           | Yes                  |
-      | from_jurisdiction     | Wise County          |
-      | people                | Keith Gaddis         |
-      | communication methods | E-mail               |
+      | message               | There is a Chicken pox outbreak in the area  |
+      | status                | Actual                                       |
+      | severity              | Moderate                                     |
+      | acknowledge           | Yes                                          |
+      | from_jurisdiction     | Wise County                                  |
+      | people                | Keith Gaddis                                 |
+      | communication methods | E-mail                                       |
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |

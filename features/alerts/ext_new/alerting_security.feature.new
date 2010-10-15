@@ -1,66 +1,390 @@
 @ext
-#TODO: Remove alerter_role.feature
 Feature: Users with appropriate roles can send alerts
 
-  Scenario: Sending a custom alert without an alerter role
-    Given the following users exist:
-      | John Smith      | john.smith@example.com     | Health Officer  | Dallas County  |
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    Then I should not be able to navigate to "HAN > Send Alert"
+  Background:
+    Given the following entities exists:
+      | Jurisdiction | Texas                                       |
+      | Jurisdiction | Region 1                                    |
+      | Jurisdiction | Region 2                                    |
+      | Jurisdiction | Dallas County                               |
+      | Jurisdiction | Potter County                               |
+      | Jurisdiction | Tarrant County                              |
+      | Role         | Health Officer                              |
+      | Role         | BT Coordinator                              |
+      | Role         | Health Alert and Communications Coordinator |
+    And "Texas" is the parent jurisdiction of:
+      | Region 1 | Region 2 |
+    And "Region 1" is the parent jurisdiction of:
+      | Dallas County | Potter County |
+    And "Region 2" is the parent jurisdiction of:
+      | Tarrant County |
+    And the following users exist:
+      | Reg1 Alerter  | reg1.alerter@example.com | Health Alert and Communications Coordinator | Region 1       |
+      | Dall Alerter  | dall.alerter@example.com | Health Alert and Communications Coordinator | Dallas County  |
+      | Pott Alerter  | pott.alerter@example.com | Health Alert and Communications Coordinator | Potter County  |
+      | Tarr Alerter  | tarr.alerter@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | BT   Alerter  | bt.alerter@example.com   | BT Coordinator                              | Dallas County  |
+      | Fred Officer  | fred.officer@example.com | Health Officer                              | Dallas County  |
+      | Ryan Officer  | ryan.officer@example.com | Health Officer                              | Tarrant County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And the role "BT Coordinator" is an alerter
+    And delayed jobs are processed
 
   Scenario: Cannot send an alert without an alerter role
+    Given I am logged in as "fred.officer@example.com"
+    When I go to the ext dashboard page
+    Then I should not see "Send a Custom Alert" in the "Alerts" menu
 
   Scenario: Cannot malicously send an alert without an alerter role
-    
+    Given I am logged in as "fred.officer@example.com"
+    When I maliciously build and submit a POST request to create and send an alert with:
+      | title | 0WN3D   |
+      | type  | Hacker  |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | title | 0WN3D |
+
   Scenario: Cannot send a HAN alert without an alerter role
+    Given I am logged in as "fred.officer@example.com"
+    When I go to the ext dashboard page
+    Then I should not see "Send a HAN Alert" in the "HAN" menu
 
   Scenario: Cannot maliciously send a HAN alert without an alerter role
+    Given I am logged in as "fred.officer@example.com"
+    When I maliciously build and submit a POST request to create and send an alert with:
+      | title | 0WN3D   |
+      | type  | HAN     |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | title | 0WN3D |
 
   Scenario: Cannot send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+    Given I am logged in as "bt.alerter@example.com"
+    When I go to the ext dashboard page
+    Then I should not see "Send a HAN Alert" in the "HAN" menu
 
   Scenario: Cannot maliciously send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+    Given I am logged in as "bt.alerter@example.com"
+    When I maliciously build and submit a POST request to create and send an alert with:
+      | title | 0WN3D   |
+      | type  | HAN     |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | title | 0WN3D |
 
   Scenario: Cannot view the alert log without an alerter role
+    Given I am logged in as "bt.alerter@example.com"
+    When I go to the ext dashboard page
+    Then I should not see "View Alert Logs and Reports" in the "Alerts" menu
 
   Scenario: Can view the alert log but cannot view HAN alerts with an alerter role that is not the 'Health and Communications Coordinator' role
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | from_jurisdiction     | Dallas County                        |
+      | jurisdictions         | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Look Out Behind You                  |
+      | message               | For more details, turn around...     |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    When I am logged in as "bt.alerter@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should be on the "Alert Logs and Reports" tab
+    And I should see "Look Out Behind You"
+    And I should not see "Flying Monkey Disease"
 
   Scenario: Can view the alert log and view HAN alerts with the 'Health and Communications Coordinator' role
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Look Out Behind You                  |
+      | message               | For more details, turn around...     |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    When I am logged in as "dall.alerter@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should be on the "Alert Logs and Reports" tab
+    And I should see "Flying Monkey Disease"
+    And I should see "Look Out Behind You"
 
   Scenario: Can view alerts in the alert log from a child jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    When I am logged in as "reg1.alerter@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should be on the "Alert Logs and Reports" tab
+    And I should see "Flying Monkey Disease"
 
   Scenario: Cannot view alerts in the alert log from a cousin jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    When I am logged in as "tarr.alerter@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should be on the "Alert Logs and Reports" tab
+    And I should not see "Flying Monkey Disease"
 
   Scenario: Cannot view alerts in the alert log from a parent jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Region 2                             |
+      | from_jurisdiction     | Region 2                             |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    When I am logged in as "tarr.alerter@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should be on the "Alert Logs and Reports" tab
+    And I should not see "Flying Monkey Disease"
 
   Scenario: Cannot maliciously update an alert without an alerter role
-
-  Scenario: Cannot update a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "fred.alerter@example.com"
+    When I maliciously build and submit a POST request to update the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot maliciously update a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "bt.alerter@example.com"
+    When I maliciously build and submit a POST request to update the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot update an alert from a different jurisdiction
+    # redundant?
 
   Scenario: Can update an alert from the same jurisdiction
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "dall.alerter@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    And I can see "Flying Monkey Disease"
+    When I click "Update" within alert "Flying Monkey Disease"
+    Then the "Create an Alert Update" tab should be open
 
   Scenario: Can update an alert from a child jurisdiction
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "reg1.alerter@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    And I can see "Flying Monkey Disease"
+    When I click "Update" within alert "Flying Monkey Disease"
+    Then the "Create an Alert Update" tab should be open
 
   Scenario: Cannot maliciously update an alert from a cousin jurisdiction
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "tarr.alerter@example.com"
+    When I maliciously build and submit a POST request to update the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot maliciously update an alert from a parent jurisdiction
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Region 1                             |
+      | from_jurisdiction     | Region 1                             |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "dall.alerter@example.com"
+    When I maliciously build and submit a POST request to update the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot maliciously cancel an alert without an alerter role
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "fred.alerter@example.com"
+    When I maliciously build and submit a POST request to cancel the alert titled "Flying Monkey Disease"
+    And delayed jobs are processed
+    Then an alert should exist with:
+      | title | Flying Monkey Disease |
 
   Scenario: Cannot cancel a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+     # redundant?
 
   Scenario: Cannot maliciously cancel a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
+      Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "bt.alerter@example.com"
+    When I maliciously build and submit a POST request to cancel the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot cancel an alert from a different jurisdiction
+    # redundant?
 
   Scenario: Can cancel an alert from the same jurisdiction
+      Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "dall.alerter@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should see "Flying Monkey Disease"
+    When I click "Cancel" within alert "Flying Monkey Disease"
+    Then I should be on the "Create an Alert Cancellation" tab
 
   Scenario: Can cancel an alert from a child jurisdiction
+      Given a sent alert with:
+      | type                  | MACC                                 |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "reg1.alerter@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "Alerts > View Alert Logs and Reports"
+    Then I should see "Flying Monkey Disease"
+    When I click "Cancel" within alert "Flying Monkey Disease"
+    Then I should be on the "Create an Alert Cancellation" tab
 
   Scenario: Cannot maliciously cancel an alert from a cousin jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Dallas County                        |
+      | from_jurisdiction     | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "tarr.alerter@example.com"
+    When I maliciously build and submit a POST request to cancel the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |
 
   Scenario: Cannot maliciously cancel an alert from a parent jurisdiction
+   Given a sent alert with:
+      | type                  | HAN                                  |
+      | jurisdictions         | Region 1                             |
+      | from_jurisdiction     | Region 1                             |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    And I am logged in as "dall.alerter@example.com"
+    When I maliciously build and submit a POST request to cancel the alert titled "Flying Monkey Disease" with:
+      | message | 0WN3D |
+    And delayed jobs are processed
+    Then an alert should not exist with:
+      | message | 0WN3D |

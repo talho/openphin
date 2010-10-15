@@ -22,7 +22,6 @@ Scenario: Acknowledging an alert through phone
     | people                | Keith Gaddis                                 |
     | communication methods | Phone                                        |
   And I sign out
-
   When delayed jobs are processed
   Then the following phone calls should be made:
     | phone      | message                                                                                           |
@@ -38,19 +37,17 @@ Scenario: Acknowledging an alert through phone
 
 Scenario: Acknowledging an alert through phone with alert responses
   Given I log in as "john.smith@example.com"
-  And a sent alert with:
+  And an alert with:
     | title                 | H1N1 SNS push packs to be delivered tomorrow |
-    | message               | There is a Chicken pox outbreak in the area |
-    | status                | Actual               |
-    | severity              | Moderate             |
-    | acknowledge           | Yes                  |
-    | from_jurisdiction     | Wise County          |
-    | people                | Keith Gaddis         |
-    | communication methods | Phone                |
-    | alert_response_1      | if you can call back within 15 minutes |
-    | alert_response_2      | if you can call back within 30 minutes |
-  And I sign out
-
+    | message               | There is a Chicken pox outbreak in the area  |
+    | status                | Actual                                       |
+    | severity              | Moderate                                     |
+    | acknowledge           | Yes                                          |
+    | from_jurisdiction     | Wise County                                  |
+    | people                | Keith Gaddis                                 |
+    | communication methods | Phone                                        |
+    | alert_response_1      | if you can call back within 15 minutes       |
+    | alert_response_2      | if you can call back within 30 minutes       |
   When delayed jobs are processed
   Then the following phone calls should be made:
     | phone      | message                                                                                           |
@@ -70,21 +67,20 @@ Scenario: Acknowledging an alert through phone with alert responses
 
  Scenario: A user can not acknowledge a phone alert with an alert response without selecting a response
    Given I log in as "john.smith@example.com"
-   And a sent alert with:
+   And an alert with:
      | title                 | H1N1 SNS push packs to be delivered tomorrow |
-     | message               | There is a Chicken pox outbreak in the area |
-     | status                | Actual               |
-     | severity              | Moderate             |
-     | acknowledge           | Yes                  |
-     | from_jurisdiction     | Wise County          |
-     | people                | Keith Gaddis         |
-     | communication methods | Phone                |
-     | alert_response_1      | if you can respond within 15 minutes |
-     | alert_response_2      | if you can respond within 30 minutes |
-     | alert_response_3      | if you can respond within 1 hour     |
-     | alert_response_4      | if you can respond within 4 hours    |
-     | alert_response_5      | if you cannot respond                |
-
+     | message               | There is a Chicken pox outbreak in the area  |
+     | status                | Actual                                       |
+     | severity              | Moderate                                     |
+     | acknowledge           | Yes                                          |
+     | from_jurisdiction     | Wise County                                  |
+     | people                | Keith Gaddis                                 |
+     | communication methods | Phone                                        |
+     | alert_response_1      | if you can respond within 15 minutes         |
+     | alert_response_2      | if you can respond within 30 minutes         |
+     | alert_response_3      | if you can respond within 1 hour             |
+     | alert_response_4      | if you can respond within 4 hours            |
+     | alert_response_5      | if you cannot respond                        |
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  | alert response                       |

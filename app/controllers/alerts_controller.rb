@@ -254,13 +254,13 @@ class AlertsController < ApplicationController
           params[:alert_attempt][:call_down_response] = params[:call_down_response]
         end
         if params[:alert_attempt].blank?
-            alert_attempt.acknowledge! device
+            alert_attempt.acknowledge! :ack_device => device
         else
           device = "Device::EmailDevice" unless params[:email].blank?
           if params[:alert_attempt].nil? || params[:alert_attempt][:call_down_response].nil? || params[:alert_attempt][:call_down_response].empty?
-            alert_attempt.acknowledge! device
+            alert_attempt.acknowledge! :ack_device => device
           else
-            alert_attempt.acknowledge! device, params[:alert_attempt][:call_down_response]
+            alert_attempt.acknowledge! :ack_device => device, :ack_response => params[:alert_attempt][:call_down_response]
           end
           expire_log_entry(alert_attempt.alert)
           flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
@@ -296,7 +296,7 @@ class AlertsController < ApplicationController
       if alert_attempt.alert.sensitive?
         flash[:error] = "You are not authorized to view this page."
       else
-        alert_attempt.acknowledge! "Device::EmailDevice"
+        alert_attempt.acknowledge! :ack_device => "Device::EmailDevice"
         expire_log_entry(alert_attempt.alert)
         flash[:notice] = "Successfully acknowledged alert: #{alert_attempt.alert.title}."
       end

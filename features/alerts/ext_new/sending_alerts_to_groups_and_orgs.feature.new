@@ -5,25 +5,27 @@ Feature: Sending alerts using groups and organizations
 
   Background:
     Given the following entities exist:
-      | Role          | Epidemiologist |
-      | Role          | Health Officer |
-      | Role          | Admin          |
+      | Role          | Health Officer                              |
       | Role          | Health Alert and Communications Coordinator |
-      | Role          | BT Coordinator |
-      | Jurisdiction  | Potter County  |
+      | Jurisdiction  | Region 1                                    |
+      | Jurisdiction  | Potter County                               |
+      | Jurisdiction  | Dallas County                               |
+    And "Region 1" is the parent jurisdiction of:
+     | Potter County | Dallas County |
     And the role "Admin" is an alerter
     And the role "Health Alert and Communications Coordinator" is an alerter
-    And the role "Epidemiologist" is an alerter
     And the following users exist:
-      | John Smith | john.smith@example.com | Admin                                       | Tarrant County |
-      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
-      | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
-      | Bob Smith  | bob.smith@example.com  | Health Alert and Communications Coordinator | Texas          |
-      | Leroy Smith| leroy@example.com      | Epidemiologist                              | Potter County  |
+      | Anne Smith | anne.smith@example.com | Admin                                       | Region 1      |
+      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+      | Nerf Smith | nerf.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
+      | Dolf Smith | dolf.smith@example.com | Health Officer                              | Dallas County |
+      | Fred Smith | fred.smith@example.com | Health Alert and Communications Coordinator | Potter County |
+      | Sara Smith | sara.smith@example.com | Health Officer                              | Potter County |
     And the following groups for "john.smith@example.com" exist:
-      | G1   | Tarrant County | Health Officer |  | Personal     |                |
-      | G2   | Texas          | Epidemiologist |  | Global       |                |
-      | G3   | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |
+      # name,  jurisdictions,   roles,           users,                   scope,         owner_jurisdiction
+      | G1   |                |                | sara.smith@example.com | Personal     | Dallas County     |
+      | G2   |                | Health Officer |                        | Global       | Dallas County     |
+      | G3   | Dallas County  |                |                        | Jurisdiction | Dallas County     |
     And an organization exist with the following info:
       | name               | DSHS                                |
       | description        | Department of State Health Services |
@@ -34,8 +36,8 @@ Feature: Sending alerts using groups and organizations
       | state              | TX                                  |
       | postal_code        | 78720                               |
     And "john.smith@example.com" is a member of the organization "DSHS"
-    And "bob.smith@example.com" is a member of the organization "DSHS"
-    And "leroy.smith@example.com" is a member of the organization "DSHS"
+    And "anne.smith@example.com" is a member of the organization "DSHS"
+    And "sara.smith@example.com" is a member of the organization "DSHS"
 
   Scenario: Owner should see all his groups and orgs
     Given I am logged in as "john.smith@example.com"
@@ -67,75 +69,114 @@ Feature: Sending alerts using groups and organizations
     And I should not see "G1"
 
   Scenario: Users in another jurisdiction should see only globally-scoped groups
-    Given I am logged in as "bob.smith@example.com"
+    Given I am logged in as "fred.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send a HAN Alert"
-
-    When I fill in the ext alert defaults
-
+    And I fill in the ext alert defaults
     And I click breadCrumbItem "Audience"
     And I click x-accordion-hd "Groups/Organizations"
-
     Then I should see "G2"
     And I should not see "G3"
     And I should not see "G1"
 
-  #TODO:  need duplicates for non-HAN
+  Scenario: Sending a HAN alert to only a group with no other audience specified
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | from_jurisdiction     | Dallas County                        |
+      | groups                | G1                                   |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | sara.smith@example.com |
+
+  Scenario: Sending a non-HAN alert to only a group with no other audience specified
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | from_jurisdiction     | Dallas County                        |
+      | groups                | G1                                   |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | sara.smith@example.com |
 
   Scenario: Sending an alert with a group selected should include group users as recipients
-    Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send a HAN Alert"
-
-    When I fill in the ext alert defaults
-    And I select "Test" from ext combo "Status"
-
-    And I select the following alert audience:
-      | name          | type         |
-      | Potter County | Jurisdiction |
-      | G2            | Group        |
-
-    And I send the alert
-
-    And the following users should receive the alert email:
-      | People | bob.smith@example.com, leroy@example.com |
-
-  Scenario: Sending an alert to only a group with no other audience specified
-    Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send a HAN Alert"
-
-    When I fill in the ext alert defaults
-    And I select "Test" from ext combo "Status"
-
-    And I select the following alert audience:
-      | name          | type         |
-      | G2            | Group        |
-
-    And I send the alert
-
-    And the following users should receive the alert email:
-      | People | bob.smith@example.com |
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | from_jurisdiction     | Dallas County                        |
+      | jurisdictions         | Dallas County                        |
+      | groups                | G2                                   |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | sara.smith@example.com |
 
   Scenario: Sending a HAN alert to a group with members in other jurisdictions should notify HAN Coordinators
+    # John's an alerter in Dallas, his group G2 includes Health Officers in Potter.   Thus, Nerf, Fred, and Region 1 Coordinator Anne should also get a copy.
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | from_jurisdiction     | Dallas County                        |
+      | groups                | G2                                   |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | anne.smith@example.com, nerf.smith@example.com, fred.smith@example.com, dolf.smith@example.com, sara.smith@example.com |
 
   Scenario: Sending a non-HAN alert to a group with members in other jurisdictions should not notify HAN Coordinators
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | from_jurisdiction     | Dallas County                        |
+      | groups                | G2                                   |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should not receive the alert email:
+      | People | anne.smith@example.com, nerf.smith@example.com, fred.smith@example.com |
 
   Scenario: Sending an alert to an Organization
-    Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send a HAN Alert"
-
-    When I fill in the ext alert defaults
-    And I click breadCrumbItem "Audience"
-    And I select the following alert audience:
-      | name   | type         |
-      | DSHS   | Organization |
-    And I send the alert
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | from_jurisdiction     | Dallas County                        |
+      | organizations         | DSHS                                 |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
     Then the following users should receive the alert email:
-      | People | john.smith@example.com, bob.smith@example.com, leroy.smith@example.com |
-    And "jane.smith@example.com" should not receive an email
+      | People | john.smith@example.com, anne.smith@example.com, sara.smith@example.com |
+    And the following users should not receive the alert email:
+      | People | nerf.smith@example.com, dolf.smith@example.com, fred.smith@example.com |
 
   Scenario: Sending a HAN alert to an organization with members in other jurisdictions should notify HAN Coordinators
+    Given a sent alert with:
+      | type                  | HAN                                  |
+      | from_jurisdiction     | Dallas County                        |
+      | organizations         | DSHS                                 |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | anne.smith@example.com, nerf.smith@example.com, fred.smith@example.com, dolf.smith@example.com, sara.smith@example.com |
 
   Scenario: Sending a non-HAN alert to an organization with members in other jurisdictions should not notify HAN Coordinators
+    Given a sent alert with:
+      | type                  | MACC                                 |
+      | from_jurisdiction     | Dallas County                        |
+      | organizations         | DSHS                                 |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
+      | acknowledge           | None                                 |
+      | communication_methods | E-mail                               |
+    Then the following users should receive the alert email:
+      | People | anne.smith@example.com, john.smith@example.com, sara.smith@example.com |
+    And the following users should not receive the alert email:
+      | People | nerf.smith@example.com, dolf.smith@example.com, fred.smith@example.com |
