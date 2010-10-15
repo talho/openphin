@@ -407,3 +407,14 @@ Then /^the backgroundRB worker has queried and processed the SWN XML data "([^\"
   require 'lib/workers/query_swn_for_acknowledgments_worker.rb'
   QuerySwnForAcknowledgmentsWorker.new.query :filename => filename
 end
+
+Given /^(?:|I )am using (.+)$/ do |browser|
+  case browser
+  when "mobile safari"
+    agent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11 Safari/528.16"
+    add_headers({'User-Agent' => agent})
+  else
+    # don't set a special User-Agent header
+  end
+end
+

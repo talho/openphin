@@ -59,6 +59,11 @@ Given /^I am logged in as "([^\"]*)"$/ do |email|
   login_as user
 end
 
+Given /^"([^\"]*)" is allowed to send alerts$/ do |email|
+  user = User.find_by_email(email)
+  user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
+end
+
 Given 'I am allowed to send alerts' do
   current_user.role_memberships(:role => Factory(:role, :alerter => true), :jurisdiction => Factory(:jurisdiction))
 end

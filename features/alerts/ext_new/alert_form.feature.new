@@ -10,6 +10,9 @@ Feature: Sending alert Form
       | Jurisdiction  | Dallas County                               |
       | Jurisdiction  | Potter County                               |
       | Jurisdiction  | Sender County                               |
+      | Jurisdiction  | Wisconsin                                   |
+      | Jurisdiction  | Racine County                               |
+      | Jurisdiction  | Milwaukee County                            |
       | Role          | Health Alert and Communications Coordinator |
       | Role          | Health Officer                              |
       | Role          | Epidemiologist                              |
@@ -18,6 +21,9 @@ Feature: Sending alert Form
     And Texas is the parent jurisdiction of:
       | Dallas County |
       | Potter County |
+    And Wisconsin is the parent jurisdiction of: 
+      | Racine County    |
+      | Milwaukee County |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
       | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
@@ -119,7 +125,7 @@ Feature: Sending alert Form
     And I click breadCrumbItem "Preview"
     Then I should not see "Phone"
     And I should see "SMS" within ".communication_methods"
-    And I should see "this is a short message." within "#short_message"
+    And I should see "this is a short message." within ".short_message"
 
     When I click breadCrumbItem "Details"
     And I uncheck "Phone"
@@ -131,22 +137,22 @@ Feature: Sending alert Form
     When I click breadCrumbItem "Details"
     And I select "24 Hours" from ext combo "Delivery Time"
     And I click breadCrumbItem "Preview"
-    Then I should see "24 Hours" within "#delivery_time"
+    Then I should see "24 Hours" within ".delivery_time"
 
     When I click breadCrumbItem "Details"
     And I check "Sensitive"
     And I click breadCrumbItem "Preview"
-    Then I should see "Yes" within "#sensitive"
+    Then I should see "Yes" within ".sensitive"
 
     When I click breadCrumbItem "Details"
     And I select "Severe" from ext combo "Severity"
     And I click breadCrumbItem "Preview"
-    Then I should see "Severe" within "#sensitive"
+    Then I should see "Severe" within ".severity"
 
     When I click breadCrumbItem "Details"
     And I select "Sender County" from ext combo "Jurisdiction"
     And I click breadCrumbItem "Preview"
-    Then I should see "Sender County" within "#from_jurisdiction"
+    Then I should see "Sender County" within ".from_jurisdiction"
     And I should not see "Dallas County"
 
     When I click breadCrumbItem "Audience"
@@ -232,21 +238,47 @@ Feature: Sending alert Form
     #TODO: Change this to be foreign
     When I navigate to "HAN > Send an Alert"
     And I fill in an alert with the following:
-      | Message               | Some body text         |
-      | From Jurisdiction     | Dallas County          |
-      | Communication Methods | E-mail                 |
-      | Jurisdictions         | Jurisdictions          |
+      | Message               | Some body text |
+      | From Jurisdiction     | Dallas County  |
+      | Communication Methods | E-mail         |
     And I click breadCrumbItem "Audience"
-    Then I should see "Federal"
+    Then I should see "Wisconsin"
 
-  Scenario: Sending non-HAN alerts should not display foreign jurisdiction as an option
+  # I am hoping that cucumber can support the following repeated scenario in a more compact form
+  Scenario: Sending Custom alerts should not display foreign jurisdiction as an option
      #TODO: Change this to be foreign, do one per alert type
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
-      | Alert Type            | Noise Ordinance        |
-      | Message               | Some body text         |
-      | From Jurisdiction     | Dallas County          |
-      | Communication Methods | E-mail                 |
-      | Jurisdictions         | Jurisdictions          |
+      | Alert Type            | Noise Ordinance |
+      | Message               | Some body text  |
+      | From Jurisdiction     | Dallas County   |
+      | Communication Methods | E-mail          |
     And I click breadCrumbItem "Audience"
-    Then I should not see "Federal"
+    Then I should not see "Wisconsin"
+    
+  Scenario: Sending MACC alerts should not display foreign jurisdiction as an option
+    When I navigate to "Alerts > Send a MACC Alert"
+    And I fill in an alert with the following:
+      | Message               | Some body text |
+      | From Jurisdiction     | Dallas County  |
+      | Communication Methods | E-mail         |
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Wisconsin"
+    
+  Scenario: Sending GTC alerts should not display foreign jurisdiction as an option
+    When I navigate to "Alerts > Send a GTC Alert"
+    And I fill in an alert with the following:
+      | Message               | Some body text |
+      | From Jurisdiction     | Dallas County  |
+      | Communication Methods | E-mail         |
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Wisconsin"
+    
+  Scenario: Sending ER alerts should not display foreign jurisdiction as an option
+    When I navigate to "Alerts > Send a ER Alert"
+    And I fill in an alert with the following:
+      | Message               | Some body text |
+      | From Jurisdiction     | Dallas County  |
+      | Communication Methods | E-mail         |
+    And I click breadCrumbItem "Audience"
+    Then I should not see "Wisconsin"
