@@ -19,7 +19,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       '<ul class="devices">',
       '<tpl for=".">',
         '<li class="device-item">',
-          '<p><span class="title minor">{value}</span>&nbsp;&nbsp;&nbsp;{type}</p>',
+          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}</p>',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -90,29 +90,35 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     jQuery.each(this.device_types, function(i,e){ if (e[0] == rbclass) type = e[1]; });
     var val = win.find("name", "dev[value]")[0].getValue();
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
-    var device = new store.recordType({id: -1, type:type, rbclass:rbclass, value:val});
+    var device = new store.recordType({id: -1, type:type, rbclass:rbclass, value:val, state:'new'});
     store.add(device);
     win.close();
   },
   remove_device: function(){
     var dv = this.getPanel().find("name", "user[devices]")[0];
     var store = dv.getStore();
-    store.remove(dv.getSelectedRecords());
+    jQuery.each(dv.getSelectedRecords(), function(i,e){ e.data.state = "deleted"; });
+    store.filterBy(function(e){ return e.data.state!="deleted"; });
   },
 
   save: function(){
+    var saveButton = this.getPanel().find("name", "save_button")[0];
+    if (saveButton.disabled) return;
+    saveButton.disable();
     this.getPanel().loadMask.show();
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
-    //store.save();
+    store.clearFilter();
     var devices = jQuery.map(store.getRange(), function(e,i){ return e.data; });
     Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[devices]": Ext.encode(devices)},
       success: this.save_success_cb, failure: this.save_err_cb, scope: this });
   },
   save_success_cb: function(response, opts) {
+    this.getPanel().find("name", "save_button")[0].enable();
     this.load_form_values();
     this.show_message(Ext.decode(response.responseText));
   },
   save_err_cb: function(response, opts) {
+    this.getPanel().find("name", "save_button")[0].enable();
     this.show_ajax_error(response);
   }
 });

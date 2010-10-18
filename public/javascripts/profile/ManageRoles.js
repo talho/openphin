@@ -10,34 +10,27 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
       listeners: {scope: this, 'add': {fn: function(){ this.getPanel().doLayout(); }, delay: 10}},
       reader: new Ext.data.JsonReader({
         root: "extra.role_desc",
-        fields: [{name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'}]
+        fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
+                 {name:'type'}, {name:'state'}]
       }),
       //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
     });
 
-    /* ROLE
-    this.audiencePanel = new Ext.ux.AudiencePanel({showGroups: true, showUsers: false, width: 600, height: 400});
-    this.roleGridView = this.audiencePanel.createRolesGrid();
-    */
-
-    this.jurisdiction_store = new Ext.data.JsonStore({
-      url: '/audiences/jurisdictions_flat',
-      idProperty: 'id',
-      fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}],
-      autoSave: false
+    this.jurisdictions_store = new Ext.data.JsonStore({
+      url: '/users/jurisdictions', autoLoad: true, autoSave: false,
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'display'}],
     });
     this.roles_store = new Ext.data.JsonStore({
-      url: '/audiences/roles',
-      idProperty: 'role.id',
-      fields: [{name: 'name', mapping: 'role.name'}, {name: 'id', mapping: 'role.id'}],
-      autoSave: false
+      url: '/users/roles', autoLoad: true, autoSave: false,
+      fields: [{name: 'name'}, {name: 'id'}],
     });
 
     var template = new Ext.XTemplate(
       '<ul class="roles">',
       '<tpl for=".">',
-        '<li class="role-item">',
-          '<p><span class="title minor">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}</p>',
+        '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
+          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>',
+          '&nbsp;<tpl if="state==' + "'pending'" + '"><small>pending</small></tpl></p>',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -54,35 +47,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
           height: 250, autoHeight: false, autoScroll: true,
           multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'
         },
-        /*
-        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
-          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
-            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'req[jurisdiction]', editable: true, triggerAction: 'all',
-              store: this.jurisdiction_store, displayField: 'name',
-              enableKeyEvents: true,
-              listeners: {
-                scope: this,
-                'keypress': {fn: function(){
-                  var cb = this.getPanel().find("name", "req[jurisdiction]")[0];
-                  this.jurisdiction_store.filter("name", cb.getValue(), true, false); }, delay: 10}
-              }
-            }
-          ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
-            {xtype: 'combo', fieldLabel: 'Role', name: 'req[role]', editable: true, triggerAction: 'all',
-              store: this.roles_store, displayField: 'name',
-              enableKeyEvents: true,
-              listeners: {
-                scope: this,
-                'keypress': {fn: function(){
-                  var cb = this.getPanel().find("name", "req[role]")[0];
-                  this.roles_store.filter("name", cb.getValue(), true, false); }, delay: 10}
-              }
-            }
-          ]},
-        ]}
-        */
-        //{xtype: 'container', items: this.roleGridView, defaults:{width:400,height:400}}
+        {xtype: 'spacer', height: '10'}
       ]}
     ];
 
@@ -105,18 +70,25 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     };
 
     this.getPanel().doLayout();
+    this.getPanel().addListener("beforeclose", function(p){
+      Ext.Msg.confirm("Save Is Needed",
+        "Changes need to be saved.  Press 'Yes' to close and abandon your changes.",
+        function(id){  if (id == "yes") p.destroy(); });
+      return false;
+    });
   },
 
   add_role: function(){
+    var template = new Ext.XTemplate('<tpl for="."><div ext:qtip="{name}" class="x-combo-list-item">{display}</div></tpl>');
     var win = new Ext.Window({
       title: "Add Role",
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       width: 600,
       items: [
-        {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
-          store: this.jurisdiction_store, displayField: 'name'},
-        {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
-          store: this.roles_store, displayField: 'name'}
+        {xtype: 'combo', title: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
+          store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'},
+        {xtype: 'combo', title: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
+          store: this.roles_store, mode: 'local', displayField: 'name'}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -124,16 +96,46 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     win.show();
   },
   add_cb: function(win){
-    var jurisdiction = win.find("name", "rq[jurisdiction]")[0].getValue();
-    var role = win.find("name", "rq[role]")[0].getValue();
-    alert("Add: " + jurisdiction + " => " + role);
+    var jcombo = win.find("name", "rq[jurisdiction]")[0];
+    var rcombo = win.find("name", "rq[role]")[0];
+    var jname = jcombo.getValue();
+    var rname = rcombo.getValue();
+    var j_idx = jcombo.getStore().findExact("name", jname);
+    var r_idx = rcombo.getStore().findExact("name", rname);
+    var j_id = jcombo.getStore().getAt(j_idx).data.id;
+    var r_id = rcombo.getStore().getAt(r_idx).data.id;
+    var store = this.getPanel().find("name", "user[role_desc]")[0].getStore();
+    var jr = new store.recordType({id:-1, role_id:r_id, jurisdiction_id:j_id, rname:rname, jname:jname, state:'new'});
+    store.add(jr);
     win.close();
   },
   remove_role: function(){
     var dv = this.getPanel().find("name", "user[role_desc]")[0];
     var store = dv.getStore();
-    store.remove(dv.getSelectedRecords());
+    jQuery.each(dv.getSelectedRecords(), function(i,e){ e.data.state = "deleted"; });
+    store.filterBy(function(e){ return e.data.state!="deleted"; });
   },
+
+  save: function(){
+    var saveButton = this.getPanel().find("name", "save_button")[0];
+    if (saveButton.disabled) return;
+    saveButton.disable();
+    this.getPanel().loadMask.show();
+    var store = this.getPanel().find("name", "user[role_desc]")[0].getStore();
+    store.clearFilter();
+    var rq = jQuery.map(store.getRange(), function(e,i){ return e.data; });
+    Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[rq]": Ext.encode(rq)},
+      success: this.save_success_cb, failure: this.save_err_cb, scope: this });
+  },
+  save_success_cb: function(response, opts) {
+    this.getPanel().find("name", "save_button")[0].enable();
+    this.load_form_values();
+    this.show_message(Ext.decode(response.responseText));
+  },
+  save_err_cb: function(response, opts) {
+    this.getPanel().find("name", "save_button")[0].enable();
+    this.show_ajax_error(response);
+  }
 });
 
 Talho.ManageRoles.initialize = function(config){

@@ -1,13 +1,15 @@
 ul.devices       {margin:0 0 10px 0; padding:0 2px; width:380px}
-ul.devices li    {margin:6px 0; padding:8px 24px; width:330px; list-style:none;
+ul.devices li    {margin:6px 0; padding:8px 24px; width:326px; list-style:none;
                   position: relative; left: 2px;
                   border:1px solid #d9d9d9; background:url(../images/fade_down.png) repeat-x bottom left;}
 ul.devices a.destroy {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden; background:url(../images/cross-circle.png) no-repeat center;}
 li.device-selected {outline:#514721 solid 2px;}
+span.device-title  {font-size:15px; font-weight:bold; color:#333;}
 
-ul.roles       {margin:0 0 10px 0; padding:0 2px; width:380px}
-ul.roles li    {margin:6px 0; padding:8px 24px; width:330px; list-style:none;
+ul.roles       {margin:0 0 10px 0; padding:0 2px; width:580px}
+ul.roles li    {margin:6px 0; padding:8px 24px; width:524px; list-style:none;
                   position: relative; left: 2px;
                   border:1px solid #d9d9d9; background:url(../images/fade_down.png) repeat-x bottom left;}
 ul.roles a.destroy {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden; background:url(../images/cross-circle.png) no-repeat center;}
 li.role-selected {outline:#514721 solid 2px;}
+span.role-title  {font-size:15px; font-weight:bold; color:#333;}

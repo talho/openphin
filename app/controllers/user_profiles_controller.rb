@@ -44,23 +44,24 @@ class UserProfilesController < ApplicationController
   def edit
     set_toolbar
     find_user_and_profile
-    roles = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
-    role_desc = roles.collect { |r|
-      {:role_id=>r.role_id, :rname=>Role.find(r.role_id).to_s,
-       :jurisdiction_id=>r.jurisdiction_id, :jname=>Jurisdiction.find(r.jurisdiction_id).to_s }
-    }
     respond_to do |format|
       format.html
       format.json {
+        rm_list = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
+        role_desc = rm_list.collect { |rm|
+          {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
+          :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
+        }
+        @user.role_requests.each { |rq|
+          rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
+                :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
+          role_desc.push(rq)
+        }
         device_desc = @user.devices.collect { |d|
           type, value = d.to_s.split(": ")
-          { :id => d.id, :type => type, :rbclass => d.class.to_s, :value => value }
+          {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
-        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium),
-                                                     :devices => device_desc,
-                                                     :role_desc => role_desc,
-                                                     :user_roles => @user.roles,
-                                                     :roles => roles}}
+        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}}
       }
     end
   end
@@ -101,15 +102,15 @@ class UserProfilesController < ApplicationController
       @device.user = @user
     end
 
-    # Handle Manage Devices submission (ext only)
+    # Handle manage devices submission (ext only)
     if params[:user].has_key?(:devices)
       update_devices(params[:user][:devices])
       return
     end
 
-    # Handle Jurisdiction, Role, etc. requests
-    if params[:user].has_key?(:req)
-      handle_requests(params[:user][:req])
+    # Handle role requests (ext only)
+    if params[:user].has_key?(:rq)
+      handle_role_requests(params[:user][:rq])
       return
     end
 
@@ -197,6 +198,20 @@ class UserProfilesController < ApplicationController
     end
   end
 
+  def jurisdictions
+    jurisdictions = Jurisdiction.root.self_and_descendants
+    jurisdictions.delete_if { |j| j.foreign }
+    render :json => jurisdictions.collect { |j|
+      dname = "#{"<b>" if !j.leaf?}#{"&nbsp;&nbsp;"*j.level}#{j.name}#{"</b>" if !j.leaf?}"
+      {:id => j.id, :name => j.name, :display => dname}
+    }
+  end
+
+  def roles
+    roles = current_user.is_admin? ? Role.all : Role.user_roles
+    render :json => roles.collect { |r| {:id => r.id, :name => r.name} }
+  end
+
 protected
 
   def device_class_for(device_type)
@@ -224,14 +239,7 @@ protected
     success = true
     device_errors = []
 
-    # Handle deleting
-    new_ids = device_list.collect { |d| d["id"] }
-    old_ids = @user.devices.collect { |d| d.id }
-    (old_ids - new_ids).each { |id|
-      Device.find(id).destroy if @user == Device.find(id).user
-    }
-
-    # Handle new devices
+    # Device: class to attr_name map
     deviceOptionMap = {
       'Device::EmailDevice' =>      'email_address',
       'Device::PhoneDevice' =>      'phone',
@@ -240,7 +248,8 @@ protected
       'Device::BlackberryDevice' => 'blackberry'
     }
     device_list.each { |d|
-      if d["id"] == -1
+      case d["state"]
+      when "new"
         attr_name = deviceOptionMap[d["rbclass"]]
         puts "#{d["rbclass"]} => #{attr_name}, #{d["value"]}"
         new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
@@ -249,6 +258,10 @@ protected
           success = false
           device_errors.concat(new_device.errors.full_messages)
         end
+      when "deleted"
+        device_to_delete = Device.find(d["id"])
+        puts "Deleting #{d["id"]}"
+        device_to_delete.destroy if @user == device_to_delete.user
       end
     }
 
@@ -263,9 +276,41 @@ protected
     end
   end
 
-  def handle_requests(req_json)
-    req = ActiveSupport::JSON.decode(req_json)
+  def handle_role_requests(req_json)
+    rq_list = ActiveSupport::JSON.decode(req_json)
     success = true
+    rq_errors = []
+
+    rq_list.each { |rq|
+      case rq["state"]
+        when "new"
+          jurisdiction = Jurisdiction.find(rq["jurisdiction_id"])
+          role = Role.find(rq["role_id"])
+          puts "#{rq["jname"]} / #{rq["rname"]} => #{jurisdiction.to_s}, #{role.to_s}"
+
+          role_request = RoleRequest.new
+          role_request.jurisdiction_id = rq["jurisdiction_id"]
+          role_request.role_id = rq["role_id"]
+          role_request.requester = @user
+          role_request.user = @user
+          if role_request.save
+            RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+          else
+            success = false
+            rq_errors.concat(role_request.errors)
+          end
+        when "deleted"
+          puts "Delete #{rq["jname"]} / #{rq["rname"]}"
+          rqType = (rq["type"]=="req") ? RoleRequest : RoleMembership
+          rq_to_delete = rqType.find(rq["id"])
+          if rq_to_delete && @user == rq_to_delete.user
+            rq_to_delete.destroy
+          else
+            rq_errors.concat(rq_to_delete.errors)
+          end
+      end
+    }
+
     respond_to do |format|
       format.json {
         if success

@@ -10,7 +10,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: this.form_config.item_list},
         {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Save', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', text: 'Save', name: 'save_button', handler: this.save, scope: this, width:'auto'},
           //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
         ]}
@@ -64,16 +64,23 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   },
 
   // Button callbacks
-  save: function(){ this.getPanel().getForm().submit(); },
+  save: function(){
+    var saveButton = this.getPanel().find("name", "save_button")[0];
+    if (saveButton.disabled) return;
+    saveButton.disable();
+    this.getPanel().getForm().submit();
+  },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
   save_close: function(){ this.save(); this.close(); },
 
   // Form callbacks
   submit_success: function(form, action){
+    this.getPanel().find("name", "save_button")[0].enable();
     var json = action.result;
     this.show_message(json);
   },
   submit_failure: function(form, action){
+    this.getPanel().find("name", "save_button")[0].enable();
     Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
       this.show_ajax_error(action.response);
