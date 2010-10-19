@@ -9,6 +9,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       {xtype: 'container', defaults:{width:this.form_config.form_width,padding:'10'}, items:[
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: this.form_config.item_list},
+        {xtype: 'spacer', height: '15'},
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Save', name: 'save_button', handler: this.save, scope: this, width:'auto'},
           //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},

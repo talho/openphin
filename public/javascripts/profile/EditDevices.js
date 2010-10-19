@@ -26,24 +26,22 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     );
 
     var item_list = [
-      {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+      {xtype: 'panel', layout: 'form', frame: true, title: 'Devices', labelAlign: 'top', defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
           {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
         ]},
         {xtype: 'spacer', height: '10'},
         {xtype: 'dataview', name: 'user[devices]', store: store, tpl: template, emptyText: 'No devices to display',
-          height: 250, autoHeight: false, autoScroll: true,
           multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected',
           //overClass: 'x-view-over',
           //plugins: [new Ext.DataView.DragSelector()],
-        },
-        {xtype: 'spacer', height: '15'}
+        }
       ]}
     ];
     this.form_config = {
       load_url: config.url + "/edit.json",
-      form_width: 400,
+      form_width: 440,
       item_list: item_list,
       save_url: config.url + ".json",
       save_method: "PUT"
@@ -98,6 +96,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     var device = new store.recordType({id: -1, type:type, rbclass:rbclass, value:val, state:'new'});
     store.add(device);
     win.close();
+    this.getPanel().doLayout();
   },
   remove_device: function(){
     var dv = this.getPanel().find("name", "user[devices]")[0];

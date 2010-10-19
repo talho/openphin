@@ -39,14 +39,13 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     );
 
     var item_list = [
-      {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:600}, items:[
+      {xtype: 'panel', layout: 'form', frame: true, title: 'Roles', labelAlign: 'top', defaults:{width:560}, items:[
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'},
           {xtype: 'button', text: 'Remove role', handler: this.remove_role, scope: this, width:'auto'}
         ]},
         {xtype: 'spacer', height: '10'},
         {xtype: 'dataview', name: 'user[role_desc]', store: store, tpl: template, emptyText: 'No roles to display',
-          height: 250, autoHeight: false, autoScroll: true,
           multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'
         },
         {xtype: 'spacer', height: '10'}
@@ -114,6 +113,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     var jr = new store.recordType({id:-1, role_id:r_id, jurisdiction_id:j_id, rname:rname, jname:jname, state:'new'});
     store.add(jr);
     win.close();
+    this.getPanel().doLayout();
   },
   remove_role: function(){
     var dv = this.getPanel().find("name", "user[role_desc]")[0];
