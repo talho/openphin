@@ -1,18 +1,18 @@
 <div id="search-results">
   <%- query_string = params.map{|key,value|
-    unless %w(action,controller page per_page).include?(key)
-      if key == "jurisdiction_ids" || key == "role_ids"
-        [value].flatten.collect do |val|
-          "[#{key}][]=#{val}"
-        end.join("&")
-      else
+    if key == "with"
+        value.collect do | k,v | 
+          v.collect{|id| "#{key}[#{k}][]=#{id}" } .join("&")
+        end
+    elsif key == "conditions"
+        value.collect do | k,v | 
+          v.collect{|id| "#{key}[#{k}]=#{id}" }.join("&")
+        end
+    else
+      unless %w(action,controller page per_page).include?(key)   
         "#{key}=#{value}"
-      end
-    end}.compact.join("&") -%>
-    <%- 
-    query = params[:conditions] ? params[:conditions].map{|k,v| "conditions[#{k}]=#{v}"} : []
-    query << params[:with].map{|k,v| "with[#{k}][]=#{v}"} if params[:with] 
-    query = query.join("&")
+      end  
+    end}.compact.join("&") 
     -%>
   <p>
     <%= render :partial => "search" %>
@@ -20,7 +20,7 @@
   <% unless @results.nil? %>
     <% unless @results.empty? %>
       <p>
-        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query}" %>
+        <%= link_to "Printable Report (PDF)", "#{show_advanced_search_path(:format=>:pdf)}?#{query_string}" %>
         <%= link_to "Download Report (CSV)", "#{show_advanced_search_path(:format=>:csv)}?#{query_string}" %>
       </p>
       <%= will_paginate @results, :params => params.reject{|key, value| ["action","controller", "authenticity_token"].include?(key)}.reject{|key, value| value.blank?} %>
@@ -48,4 +48,3 @@
     <% end %>
   <% end %>
 </div>
-
