@@ -76,8 +76,13 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       width: 450,
       items: [
-        {xtype: 'textfield', name: 'dev[value]', maxLength: '46', allowBlank: false},
-        {xtype: 'combo', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', triggerAction: 'all', store: this.device_types}
+        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
+          {xtype: 'textfield', fieldLabel: 'Device info', name: 'dev[value]', maxLength: '46', allowBlank: false}
+        ]},
+        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
+          {xtype: 'combo', fieldLabel: 'Device type', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', triggerAction: 'all',
+            store: this.device_types}
+        ]}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -109,6 +114,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     var store = this.getPanel().find("name", "user[devices]")[0].getStore();
     store.clearFilter();
     var devices = jQuery.map(store.getRange(), function(e,i){ return e.data; });
+    store.filterBy(function(e){ return e.data.state!="deleted"; });
     Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[devices]": Ext.encode(devices)},
       success: this.save_success_cb, failure: this.save_err_cb, scope: this });
   },

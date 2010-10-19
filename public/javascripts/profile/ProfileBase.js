@@ -105,7 +105,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       });
     }
     if (json.type != null) {
-      jQuery("#flash-msg").removeClass(); // remove all classes
+      jQuery(fm.dom).removeClass(); // remove all classes
       fm.addClass("flash").addClass(json.type).update(msg).show();
     }
     fm.parent().parent().parent().parent().scrollTo("top", 0);

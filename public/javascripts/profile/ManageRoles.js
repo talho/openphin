@@ -29,8 +29,10 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>',
-          '&nbsp;<tpl if="state==' + "'pending'" + '"><small>pending</small></tpl></p>',
+          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>&nbsp;',
+            '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
+            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '</p>',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -85,10 +87,14 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       width: 600,
       items: [
-        {xtype: 'combo', title: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
-          store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'},
-        {xtype: 'combo', title: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
-          store: this.roles_store, mode: 'local', displayField: 'name'}
+        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
+          {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
+            store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
+        ]},
+        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
+          {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
+            store: this.roles_store, mode: 'local', displayField: 'name'}
+        ]}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -124,13 +130,18 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     var store = this.getPanel().find("name", "user[role_desc]")[0].getStore();
     store.clearFilter();
     var rq = jQuery.map(store.getRange(), function(e,i){ return e.data; });
+    store.filterBy(function(e){ return e.data.state!="deleted"; });
     Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: {"user[rq]": Ext.encode(rq)},
       success: this.save_success_cb, failure: this.save_err_cb, scope: this });
   },
   save_success_cb: function(response, opts) {
     this.getPanel().find("name", "save_button")[0].enable();
-    this.load_form_values();
-    this.show_message(Ext.decode(response.responseText));
+    var json = Ext.decode(response.responseText);
+    if (json.type != "rollback")
+      this.load_form_values();
+    else
+      this.getPanel().loadMask.hide();
+    this.show_message(json);
   },
   save_err_cb: function(response, opts) {
     this.getPanel().find("name", "save_button")[0].enable();
