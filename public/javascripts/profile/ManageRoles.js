@@ -47,8 +47,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
         {xtype: 'spacer', height: '10'},
         {xtype: 'dataview', name: 'user[role_desc]', store: store, tpl: template, emptyText: 'No roles to display',
           multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'
-        },
-        {xtype: 'spacer', height: '10'}
+        }
       ]}
     ];
 
