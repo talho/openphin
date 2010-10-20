@@ -5,6 +5,7 @@
     var appClass = Ext.extend(Ext.util.Observable, {
         constructor: function(config){
             this.addEvents('opentab');
+            this.addEvents('forumtopicdeleted');
         }
     });
     window.Application = new appClass();

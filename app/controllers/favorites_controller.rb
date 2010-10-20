@@ -7,7 +7,7 @@ class FavoritesController < ApplicationController
     ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.xml {render :xml => current_user.favorites}
-      format.json {render :json => current_user.favorites}
+      format.json {render :json => current_user.favorites.as_json}
     end
     ActiveRecord::Base.include_root_in_json = original_included_root
   end

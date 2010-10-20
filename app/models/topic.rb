@@ -17,7 +17,7 @@ class Topic < ActiveRecord::Base
   named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 
   validates_presence_of :poster_id, :forum_id, :name
-  before_save :sanitize_content
+  #before_save :sanitize_content # removing this because redcloth escapes outgoing html. If we switch to bbcode, we need this even less
 
 
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
@@ -40,7 +40,16 @@ class Topic < ActiveRecord::Base
   end
 
   def comment_attributes=(attributes)
-    comments << comments.build(attributes)        
+    if attributes[:id]
+      # allow for delete
+      unless attributes[:_destroy].nil?
+        Topic.destroy(attributes[:id])
+      else
+        Topic.update(attributes[:id], attributes)
+      end
+    else
+      comments << comments.build(attributes)
+    end
   end
   
   def dest_forum_id

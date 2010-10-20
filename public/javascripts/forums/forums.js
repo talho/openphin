@@ -17,7 +17,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             layout: 'border',
             items:[
                 this._create_forum_list_grid(),
-                {xtype: 'container', itemId: 'topic_grid_holder', region: 'center', layout: 'fit', margins: '5 5 5 0', items: {xtype: 'panel', title:'Topics', frame: true}}//, items: this._create_topic_list_grid(new Ext.data.JsonStore())}
+                {xtype: 'container', itemId: 'topic_grid_holder', region: 'center', layout: 'fit', margins: '5 5 5 0', items: {xtype: 'panel', title:'Topics', frame: true}}
             ],
             reset: this.refresh.createDelegate(this)
         });
@@ -25,6 +25,8 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
         this.getPanel = function() {
             return panel;
         };
+
+        Application.on('forumtopicdeleted', function(){this.refresh();}, this);
     },
 
     _create_forum_list_grid: function(){
@@ -116,9 +118,8 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
 
         var ptoolbar = new Ext.PagingToolbar({
             store: store,
-            prependButtons: true,
             pageSize: 8,
-            buttons:[{ iconCls:'add_forum', text:'New Topic', handler: function(){this.create_or_edit_topic();}, scope: this}, '->'],
+            buttons:['->', { iconCls:'add_forum', text:'New Topic', handler: function(){this.create_or_edit_topic();}, scope: this}],
             listeners:{
                 scope: this,
                 'beforechange': function(tb, options){
@@ -157,7 +158,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                     var fieldName = grid.getColumnModel().getDataIndex(column);
                     var record = grid.getStore().getAt(row);
                     if(target.hasClass('inlineLink') && fieldName == 'name'){
-                        Application.fireEvent('opentab', {title: record.get('name')});
+                        Application.fireEvent('opentab', {title: record.get('name'), topic_id: record.id, forum_id: grid.getStore().forumId, initializer: "Talho.Topic", id: 'forum_topic_' + record.id});
                     }
                     else if(target.hasClass('inlineLink') && fieldName == 'poster_name'){
                         Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('poster_name'), url: 'users/' + record.get('poster_id') + '/profile', id: 'user_profile_for_' + record.get('poster_id') });
@@ -304,7 +305,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                 {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
                 'lock_version', {name:'is_moderator', type:'boolean'}, {name:'is_super_admin', type:'boolean'}, 'id', 'posts', 'user_avatar'
             ],
-            url: '/forums/' + record.id + '/topics.json' ,
+            url: '/forums/' + record.id + '/topics.json',
             writer: {},
             listeners:{
                 scope: this,

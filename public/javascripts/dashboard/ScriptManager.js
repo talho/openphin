@@ -16,6 +16,7 @@ Ext.ns("Talho");
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
+        'Talho.Topic': {js: "/javascripts/forums/topic.js"},
         'Talho.EditProfile': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditProfile.js'},
         'Talho.EditPassword': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditDevices.js'},

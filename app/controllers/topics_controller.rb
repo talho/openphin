@@ -43,12 +43,33 @@ class TopicsController < ApplicationController
   # GET /topics/1.xml
   # GET /topics/1.json
   def show
+    options = {:page => params[:page] || 1, :per_page => params[:per_page] || 20}
     @comments = @topic.comments
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @topic }
-      format.json { render :json => @topic }
+      format.json do
+        comments = []
+        comments.push(@topic)
+        comments.concat(@comments)
+        @comments = comments.paginate(options)
+
+        original_included_root = ActiveRecord::Base.include_root_in_json
+        ActiveRecord::Base.include_root_in_json = false
+        render :json => {:comments => @comments.map do |x|
+                            x[:user_avatar] = x.poster.photo.url(:medium)
+                            x[:is_moderator] = current_user.moderator_of?(x)
+                            x[:formatted_content] = RedCloth.new(h(x.content)).to_html
+                            x.as_json(:include => {:poster => {:only => [:display_name, :id, :photo] }})
+                         end,
+                         :page => @comments.current_page,
+                         :per_page => @comments.per_page,
+                         :total_entries => @comments.total_entries,
+                         :locked => !@topic.locked_at.nil?
+        }
+        ActiveRecord::Base.include_root_in_json = original_included_root
+      end
     end
   end
 
@@ -111,6 +132,10 @@ class TopicsController < ApplicationController
     params[:topic][:forum_id] = params[:topic][:dest_forum_id] unless params[:topic][:dest_forum_id].blank?
     params[:topic].delete("dest_forum_id")
 
+    unless params[:topic][:comment_attributes].nil?
+      params[:topic][:comment_attributes][:poster_id] = current_user.id if params[:topic][:comment_attributes][:poster_id].nil?
+    end
+
     respond_to do |format|
       begin
         if @topic.update_attributes(params[:topic])
@@ -132,13 +157,13 @@ class TopicsController < ApplicationController
           redirect_to edit_forum_topic_path(@topic)
         end
         format.json {render :json => {:success => false, :msg => error, :retry => true}}
-      rescue StandardError
+      rescue StandardError => e
         error = "There was an unexpected error while saving this topic."
         format.html do
           flash[:error] = error
           redirect_to forum_topic_path(@topic)
         end
-        format.json {render :json => {:success => false, :msg => error}}
+        format.json {render :json => {:success => false, :msg => error, :extra => e.message}}
       end
     end
   end
