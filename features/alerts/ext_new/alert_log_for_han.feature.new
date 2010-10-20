@@ -39,13 +39,14 @@ Feature: Viewing the alert log for HAN alerts
     And I should see "None" within "#acknowledge"
 
   Scenario: Viewing alert log for alerts in child jurisdictions
-    And an alert with:
+    Given an alert with:
       | type              | HAN           |
       | author            | John Smith    |
       | from_jurisdiction | Dallas County |
       | title             | Hello World   |
       | jurisdictions     | Dallas County |
     And delayed jobs are processed
+    
     When I am logged in as "anne.smith@example.com"
     And I am on the ext dashboard page
     And I navigate to "HAN > View Alert Logs and Reports"
@@ -61,6 +62,7 @@ Feature: Viewing the alert log for HAN alerts
       | from_jurisdiction | Potter County           |
       | title             | Hello World             |
       | jurisdiction      | Potter County           |
+      
     When I am logged in as "john.smith@example.com"
     And delayed jobs are processed
     And I am on the ext dashboard page
@@ -78,7 +80,8 @@ Feature: Viewing the alert log for HAN alerts
       | communication methods | Email                                       |
       | jurisdictions         | Dallas County, Region 1                     |
     And delayed jobs are processed
-    And "fred.smith@example.com" has acknowledged the alert "Hello World"
+    
+    When "fred.smith@example.com" has acknowledged the alert "Hello World"
     And "anne.smith@example.com" has acknowledged the alert "Hello World"
     And I am logged in as "john.smith@example.com"
     And delayed jobs are processed
@@ -143,10 +146,11 @@ Feature: Viewing the alert log for HAN alerts
       | alert_response_4      | if you can respond within 4 hours           |
       | alert_response_5      | if you cannot respond                       |
     And delayed jobs are processed
-    And "anne.smith@example.com" has acknowledged the alert "Hello World" with response "if you can respond within 15 minutes"
+    
+    When "anne.smith@example.com" has acknowledged the alert "Hello World" with response "if you can respond within 15 minutes"
     And I am on the ext dashboard page
 
-    When I navigate to "HAN > View Alert Logs and Reports"
+    And I navigate to "HAN > View Alert Logs and Reports"
     Then I can see the alert summary for "[Health Alert] Hello World"
     And I should see "Acknowledge: Advanced"
 
@@ -198,7 +202,8 @@ Feature: Viewing the alert log for HAN alerts
       | acknowledge           | Yes            |
       | author                | John Smith     |
     And delayed jobs are processed
-    And "fred.smith@example.com" has acknowledged the alert "[Health Alert] Hello World"
+    
+    When "fred.smith@example.com" has acknowledged the alert "[Health Alert] Hello World"
     And delayed jobs are processed
     And I am logged in as "john.smith@example.com"
     And I am on the ext dashboard page
