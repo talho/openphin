@@ -21,7 +21,8 @@ class RoleRequest < ActiveRecord::Base
       req.errors.add("User is already a member of this role and jurisdiction")
     end
   end
-  validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.", :unless => Proc.new { |rr| !RoleRequest.find_all_by_jurisdiction_id_and_user_id(rr.jurisdiction_id, rr.user_id).map(&:approver_id).include?(nil)}
+  validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.",
+    :unless => Proc.new { |rr| !RoleRequest.find_all_by_jurisdiction_id_and_user_id(rr.jurisdiction_id, rr.user_id).map(&:approver_id).include?(nil)}
   
   attr_protected :approver_id
 
@@ -51,25 +52,26 @@ class RoleRequest < ActiveRecord::Base
     unless RoleMembership.already_exists?(user, role, jurisdiction)
       self.approver=approving_user
       create_role_membership(:user => user, :role => role, :jurisdiction => jurisdiction)
-      self.save
-      AppMailer.deliver_role_assigned(role, jurisdiction, user, approver) unless user == approver
+      if self.save
+        AppMailer.deliver_role_assigned(role, jurisdiction, user, approver) unless user == approver
+      end
     end 
   end
-  
+
   def deny!
     self.destroy
   end
-  
-  private 
+
+private
 
   def auto_approve_if_public_role
     approve!(user) unless role.approval_required?
   end
-  
+
   def auto_approve_if_requester_is_jurisdiction_admin
     approve!(requester) if requester && requester.is_admin_for?(jurisdiction)
   end
-  
+
   def auto_approve_if_approver_is_specified
     approve!(approver) if !approver.blank? && approver.is_admin_for?(jurisdiction)
   end
@@ -77,5 +79,5 @@ class RoleRequest < ActiveRecord::Base
   def set_requester_if_nil
     requester = user if requester.blank?
   end
-    
+ 
 end

@@ -6,43 +6,34 @@ Feature: Sending alerts
 
   Background:
     Given the following entities exists:
-      | Jurisdiction  | Texas                                       |
       | Jurisdiction  | Dallas County                               |
       | Jurisdiction  | Potter County                               |
       | Role          | Health Alert and Communications Coordinator |
-      | Role          | Health Officer                              |
-      | Role          | Epidemiologist                              | 
-    And Texas is the parent jurisdiction of:
-      | Dallas County |
-      | Potter County |
+      | Role          | Epidemiologist                              |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
       | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
-      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Potter County |
-      | Anne Smith    | anne.smith@example.com | Public                                      | Potter County |
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Alerts > Send a Custom Alert"
-    And the "Send Custom Alert" tab should be open
+      | Anne Smith    | anne.smith@example.com | Epidemiologist                              | Dallas County |
 
   Scenario: Create and send a alert with no acknowledgement
-    When I should have the "Details" breadcrumb selected
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a Custom Alert"
+    Then the "Send Custom Alert" tab should be open
+    And I should have the "Details" breadcrumb selected
 
-    And  I fill in the following:
-      | Alert Type    | Earthquake                |
-      | Title         | Watch out for aftershocks |
-      | Message       | Some body text            |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "None" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I select the following in the audience panel:
-      | name                             | type         |
-      | Texas                            | Jurisdiction |
-    And I press "Next"
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                   |
+      | Title                 | Watch out for aftershocks    |
+      | Message               | Some body text               |
+      | Delivery Time         | 24 Hours                     |
+      | From Jurisdiction     | Dallas County                |
+      | Acknowledge           | None                         |
+      | Status                | Test                         |
+      | Severity              | Moderate                     |
+      | Communication Methods | Email                        |
+      | Roles                 | Epidemiologist               |
+      | Jurisdictions         | Potter County                |
     Then I should have the "Preview" breadcrumb selected
 
     When I press "Send Alert"
@@ -50,31 +41,37 @@ Feature: Sending alerts
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
-      | type              | Earthquake                |
-      | title             | Watch out for aftershocks |
-      | message           | Some body text            |
-      | from_jurisdiction | Potter County             |
-      | acknowledge       | None                      |
-      | jurisdiction      | Texas                     |
+      | type                  | Earthquake                |
+      | title                 | Watch out for aftershocks |
+      | message               | Some body text            |
+      | delivery_time         | 24 hours                  |
+      | from_jurisdiction     | Dallas County             |
+      | acknowledge           | None                      |
+      | status                | test                      |
+      | severity              | moderate                  |
+      | communication_methods | Email                     |
+      | roles                 | Epidemiologist            |
+      | jurisdictions         | Potter County             |
 
   Scenario: Create and send a alert with normal acknowledgement
-    When I should have the "Details" breadcrumb selected
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a Custom Alert"
+    Then the "Send Custom Alert" tab should be open
+    And I should have the "Details" breadcrumb selected
 
-    And  I fill in the following:
-      | Alert Type    | Earthquake                |
-      | Title         | Watch out for aftershocks |
-      | Message       | Some body text            |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I select the following in the audience panel:
-      | name                             | type         |
-      | Texas                            | Jurisdiction |
-    And I press "Next"
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                   |
+      | Title                 | Watch out for aftershocks    |
+      | Message               | Some body text               |
+      | Delivery Time         | 24 Hours                     |
+      | From Jurisdiction     | Dallas County                |
+      | Acknowledge           | Normal                       |
+      | Status                | Test                         |
+      | Severity              | Moderate                     |
+      | Communication Methods | Email                        |
+      | Roles                 | Epidemiologist               |
+      | Jurisdictions         | Potter County                |
     Then I should have the "Preview" breadcrumb selected
 
     When I press "Send Alert"
@@ -82,40 +79,42 @@ Feature: Sending alerts
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
-      | type              | Earthquake                |
-      | title             | Watch out for aftershocks |
-      | message           | Some body text            |
-      | from_jurisdiction | Potter County             |
-      | acknowledge       | Normal                    |
-      | jurisdiction      | Texas                     |
+      | type                  | Earthquake                |
+      | title                 | Watch out for aftershocks |
+      | message               | Some body text            |
+      | delivery_time         | 24 hours                  |
+      | from_jurisdiction     | Dallas County             |
+      | acknowledge           | Normal                    |
+      | status                | test                      |
+      | severity              | moderate                  |
+      | communication_methods | Email                     |
+      | roles                 | Epidemiologist            |
+      | jurisdictions         | Potter County             |
 
   Scenario: Create and send a alert with Advanced (call down) acknowledgement
-    When I should have the "Details" breadcrumb selected
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send a Custom Alert"
+    Then the "Send Custom Alert" tab should be open
+    And I should have the "Details" breadcrumb selected
 
-    And I select "Advanced" from ext combo "Acknowledge"
-    # add a 3rd, 4th and 5th response box
-    And I press "+ Add another response"
-    And I press "+ Add another response"
-    And I press "+ Add another response"
-    And I fill in the following:
-      | Alert Type         | Earthquake                           |
-      | Title              | Watch out for aftershocks            |
-      | Message            | Some body text                       |
-      | Alert Response 1   | if you can respond within 15 minutes |
-      | Alert Response 2   | if you can respond within 30 minutes |
-      | Alert Response 3   | if you can respond within 1 hour     |
-      | Alert Response 4   | if you can respond within 4 hour     |
-      | Alert Response 5   | if you cannot respond                |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I select the following in the audience panel:
-      | name                             | type         |
-      | Texas                            | Jurisdiction |
-    And I press "Next"
+    When I fill in an alert with the following:
+      | Alert Type            | Earthquake                           |
+      | Title                 | Watch out for aftershocks            |
+      | Message               | Some body text                       |
+      | Delivery Time         | 24 Hours                             |
+      | From Jurisdiction     | Dallas County                        |
+      | Acknowledge           | Advanced                             |
+      | Alert Response 1      | if you can respond within 15 minutes |
+      | Alert Response 2      | if you can respond within 30 minutes |
+      | Alert Response 3      | if you can respond within 1 hour     |
+      | Alert Response 4      | if you can respond within 4 hour     |
+      | Alert Response 5      | if you cannot respond                |
+      | Status                | Test                                 |
+      | Severity              | Moderate                             |
+      | Communication Methods | Email                                |
+      | Roles                 | Epidemiologist                       |
+      | Jurisdictions         | Potter County                        |
     Then I should have the "Preview" breadcrumb selected
 
     When I press "Send Alert"
@@ -123,132 +122,19 @@ Feature: Sending alerts
     And the "Send Alert" tab should not be open
     When delayed jobs are processed
     Then an alert exists with:
-      | type                | Earthquake                           |
-      | title               | Watch out for aftershocks            |
-      | message             | Some body text                       |
-      | from_jurisdiction   | Potter County                        |
-      | acknowledge         | Advanced                             |
-      | jurisdiction        | Texas                                |
-      | call_down_messages  | if you can respond within 15 minutes |
-      | call_down_messages  | if you can respond within 30 minutes |
-      | call_down_messages  | if you can respond within 1 hour     |
-      | call_down_messages  | if you can respond within 4 hours    |
-      | call_down_messages  | if you cannot respond                |
-
-  Scenario: Preview an alert
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
-
-    And I select the following alert audience:
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Potter County   | Jurisdiction |
-      | Health Officer  | Role         |
-      | Epidemiologist  | Role         |
-      | Anne Smith      | User         |
-
-    And I click breadCrumbItem "Preview"
-
-    And I should see "For more details, keep on reading..."
-    And I should see "H1N1 SNS push packs to be delivered tomorrow"
-    And I should see a display form with:
-      | Severity      | Moderate |
-      | Status        | Actual   |
-      | Acknowledge   | No       |
-      | Methods       | Email    |
-      | Delivery Time | 72 hours |
-
-    And I expand ext panel "Audience"
-    And I should see the following audience breakdown
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Potter County  | Jurisdiction |
-      | Health Officer | Role         |
-      | Epidemiologist | Role         |
-      | Anne Smith     | User         |
-
-    When I click breadCrumbItem "Details"
-    And I fill in "Title" with "Something Different"
-    And I click breadCrumbItem "Preview"
-    And I should see "For more details, keep on reading..."
-    And I should see "Something Different"
-    And I should see a display form with:
-      | Severity      | Moderate |
-      | Status        | Actual   |
-      | Acknowledge   | No       |
-      | Methods       | Email    |
-      | Delivery Time | 72 hours |
-    And I should see the following audience breakdown
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Potter County  | Jurisdiction |
-      | Health Officer | Role         |
-      | Epidemiologist | Role         |
-      | Anne Smith     | User         |
-
-  Scenario: Alerter with more than one jurisdiction can send from either
-    When I open ext combo "Jurisdiction"
-    Then I should see "Dallas County"
-    Then I should see "Potter County"
-    Then I should not see "Tarrant County"
-    When I fill in the following:
-      | Alert Type   | Earthquake                |
-      | Title        | Watch out for aftershocks |
-      | Message      | Some body text            |
-    And I check "E-mail"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-    And I click breadCrumbItem "Preview"
-    Then I should have the "Preview" breadcrumb selected
-
-    When I press "Send Alert"
-    Then the "Alert Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-    When delayed jobs are processed
-    Then an alert exists with:
-      | from_jurisdiction | Potter County             |
-      | title             | Watch out for aftershocks |
-    
-  Scenario: Sending alerts form should not contain system roles
-    Given there is an system only Admin role
-    And I should have the "Details" breadcrumb selected
-    When I fill in the following:
-      | Alert Type   | Earthquake             |
-      | Title        | This is a test title   |
-      | Message      | This is a test message |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    When I click x-accordion-hd "Roles"
-    Then I should not see "Admin"
-
-  Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
-    When I should have the "Details" breadcrumb selected
-    And I fill in the following:
-      | Alert Type   | Earthquake             |
-      | Title        | This is a test title   |
-      | Message      | This is a test message |
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I select "Test" from ext combo "Status"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "E-mail"
-    And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
-    And I click contextDownArrow ""
-    Then I should see "Select All Sub-jurisdictions"
-    Then I should see "Select No Sub-jurisdictions"
-
-  Scenario: Sending "Other" alerts should not display Federal jurisdiction as an option
-    When I fill in the following:
-      | Type    | Earthquake             |
-      | Title   | This is a test title   |
-      | Message | This is a test message |
-    And I check "E-mail"
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should not see "Federal"
+      | type                  | Earthquake                           |
+      | title                 | Watch out for aftershocks            |
+      | message               | Some body text                       |
+      | delivery_time         | 24 hours                             |
+      | from_jurisdiction     | Dallas County                        |
+      | acknowledge           | Advanced                             |
+      | Alert Response 1      | if you can respond within 15 minutes |
+      | Alert Response 2      | if you can respond within 30 minutes |
+      | Alert Response 3      | if you can respond within 1 hour     |
+      | Alert Response 4      | if you can respond within 4 hour     |
+      | Alert Response 5      | if you cannot respond                |
+      | status                | test                                 |
+      | severity              | moderate                             |
+      | communication_methods | Email                                |
+      | roles                 | Epidemiologist                       |
+      | jurisdictions         | Potter County                        |    

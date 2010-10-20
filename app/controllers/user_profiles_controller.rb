@@ -44,23 +44,24 @@ class UserProfilesController < ApplicationController
   def edit
     set_toolbar
     find_user_and_profile
-    roles = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
-    role_desc = roles.collect { |r|
-      {:role_id=>r.role_id, :rname=>Role.find(r.role_id).to_s,
-       :jurisdiction_id=>r.jurisdiction_id, :jname=>Jurisdiction.find(r.jurisdiction_id).to_s }
-    }
     respond_to do |format|
       format.html
       format.json {
+        rm_list = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
+        role_desc = rm_list.collect { |rm|
+          {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
+          :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
+        }
+        @user.role_requests.unapproved.each { |rq|
+          rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
+                :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
+          role_desc.push(rq)
+        }
         device_desc = @user.devices.collect { |d|
           type, value = d.to_s.split(": ")
-          { :id => d.id, :type => type, :rbclass => d.class.to_s, :value => value }
+          {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
-        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium),
-                                                     :devices => device_desc,
-                                                     :role_desc => role_desc,
-                                                     :user_roles => @user.roles,
-                                                     :roles => roles}}
+        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}}
       }
     end
   end
@@ -101,15 +102,15 @@ class UserProfilesController < ApplicationController
       @device.user = @user
     end
 
-    # Handle Manage Devices submission (ext only)
+    # Handle manage devices submission (ext only)
     if params[:user].has_key?(:devices)
       update_devices(params[:user][:devices])
       return
     end
 
-    # Handle Jurisdiction, Role, etc. requests
-    if params[:user].has_key?(:req)
-      handle_requests(params[:user][:req])
+    # Handle role requests (ext only)
+    if params[:user].has_key?(:rq)
+      handle_role_requests(params[:user][:rq])
       return
     end
 
@@ -178,20 +179,20 @@ class UserProfilesController < ApplicationController
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
-          format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors} }
+          format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages} }
           format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError
         flash[:error] = "Another user has recently updated this profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit"}
-        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors} }
+        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors.full_messages} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       rescue StandardError => e
         flash[:error] = "An error has occurred saving your profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit" }
-        format.json { render :json => {:flash => flash[:error] + "\n" + e.message, :type => :error, :errors => @user.errors, :success => true} }
+        format.json { render :json => {:flash => flash[:error] + "\n" + e.message, :type => :error, :errors => @user.errors.full_messages, :success => true} }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
@@ -224,14 +225,7 @@ protected
     success = true
     device_errors = []
 
-    # Handle deleting
-    new_ids = device_list.collect { |d| d["id"] }
-    old_ids = @user.devices.collect { |d| d.id }
-    (old_ids - new_ids).each { |id|
-      Device.find(id).destroy if @user == Device.find(id).user
-    }
-
-    # Handle new devices
+    # Device: class to attr_name map
     deviceOptionMap = {
       'Device::EmailDevice' =>      'email_address',
       'Device::PhoneDevice' =>      'phone',
@@ -239,16 +233,17 @@ protected
       'Device::FaxDevice' =>        'fax',
       'Device::BlackberryDevice' => 'blackberry'
     }
-    device_list.each { |d|
-      if d["id"] == -1
-        attr_name = deviceOptionMap[d["rbclass"]]
-        puts "#{d["rbclass"]} => #{attr_name}, #{d["value"]}"
-        new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
-        new_device.user = @user
-        if !new_device.save
-          success = false
-          device_errors.concat(new_device.errors.full_messages)
-        end
+    device_list.find_all{|d| d["state"]=="deleted"}.each { |d|
+      device_to_delete = Device.find(d["id"])
+      device_to_delete.destroy if @user == device_to_delete.user
+    }
+    device_list.find_all{|d| d["state"]=="new"}.each { |d|
+      attr_name = deviceOptionMap[d["rbclass"]]
+      new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
+      new_device.user = @user
+      if !new_device.save
+        success = false
+        device_errors.concat(new_device.errors.full_messages)
       end
     }
 
@@ -263,15 +258,53 @@ protected
     end
   end
 
-  def handle_requests(req_json)
-    req = ActiveSupport::JSON.decode(req_json)
-    success = true
+  def handle_role_requests(req_json)
+    rq_list = ActiveSupport::JSON.decode(req_json)
+    result = "success"
+    rq_errors = []
+
+    ActiveRecord::Base.transaction {
+      rq_list.find_all{|rq| rq["state"]=="deleted"}.each { |rq|
+        rqType = (rq["type"]=="req") ? RoleRequest : RoleMembership
+        rq_to_delete = rqType.find(rq["id"])
+        if rq_to_delete && @user == rq_to_delete.user
+          rq_to_delete.destroy
+        else
+          rq_errors.concat(rq_to_delete.errors.full_messages)
+        end
+      }
+      rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
+        jurisdiction = Jurisdiction.find(rq["jurisdiction_id"])
+        role = Role.find(rq["role_id"])
+        role_request = RoleRequest.new
+        role_request.jurisdiction_id = rq["jurisdiction_id"]
+        role_request.role_id = rq["role_id"]
+        role_request.requester = @user
+        role_request.user = @user
+        if role_request.save && role_request.valid?
+          RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+        else
+          result = "failure"
+          rq_errors.concat(role_request.errors.full_messages)
+        end
+      }
+
+      if @user.role_memberships.public_roles.empty?
+        result = "rollback"
+        rq_errors.push("You must have at least one public role.  Please add a public role and re-save.")
+        raise ActiveRecord::Rollback
+      end
+    }
+
     respond_to do |format|
       format.json {
-        if success
+        case result
+        when "success"
           render :json => {:flash => "Requests sent.", :type => :completed, :success => true}
-        else
-          render :json => {:flash => nil, :type => :error, :errors => nil}
+        when "rollback"
+          render :json => {:flash => nil, :type => :rollback, :errors => rq_errors}
+        else # failure
+          render :json => {:flash => nil, :type => :error, :errors => rq_errors}
         end
       }
     end

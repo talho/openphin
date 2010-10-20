@@ -3,7 +3,6 @@
   <%= javascript_include_tag 'lib/dominoes-1.0-rc2.min.js'%>
   <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
   <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
-  <%= javascript_include_tag 'profile/ProfileBase', 'profile/EditProfile', 'profile/EditPassword', 'profile/EditDevices', 'profile/RequestRoles', :cache => 'all' %>
   <%# begin include js for openphin plugins %>
   <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
   <% js_list.push({:cache => 'all'}) %>

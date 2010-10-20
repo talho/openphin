@@ -270,9 +270,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             panel.tab_config = config;
             panel.addListener({
                 'show':function(panel){panel.doLayout();},// This is necessary for when a panel is loading without being shown. Layout is never being refired, but it is now.
-                'fatalerror': function(panel){
-                    this.tabPanel.remove(panel, true);
-                },
+                'fatalerror': function(panel){ this.tabPanel.remove(panel, true); },
                 scope: this
             }); 
         }

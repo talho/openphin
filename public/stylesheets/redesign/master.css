@@ -58,6 +58,7 @@
 /* Alerts and notifications */
 p.flash         {font-size: 12px;padding: .8em;margin: 0 0 .8em 0;border: 2px solid #ddd;}
 p.completed     {background: #E6EFC2; color: #264409; border-color: #C6D880; }
+p.rollback      {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
 p.error         {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
 p.notice        {background: #FFF6BF; color: #514721; border-color: #FFD324; }
 p.instructions  {background: #CCFFFF; color: #264409; border-color: #33FFFF; }

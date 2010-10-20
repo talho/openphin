@@ -9,7 +9,13 @@ class AudiencesController < ApplicationController
   end
 
   def jurisdictions_flat
-    render :json => Jurisdiction.root.self_and_descendants.map {|node| {:name => node.name, :id => node.id, :leaf => node.leaf?, :left => node.left, :right => node.right, :level => node.level, :parent_id => node.parent_id} }
+    jurisdictions = Jurisdiction.root.self_and_descendants
+    jurisdictions.delete_if { |j| j.foreign } if params[:ns] == "nonforeign"
+    data = Array.new
+    Jurisdiction.each_with_level(jurisdictions) { |j,level|
+      data << {:name => j.name, :id => j.id, :leaf => j.leaf?, :left => j.left, :right => j.right, :level => level, :parent_id => j.parent_id}
+    }
+    render :json => data
   end
 
   def roles

@@ -72,11 +72,14 @@ ActionController::Routing::Routes.draw do |map|
   #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
   map.resources :admin_users, :controller => "admin/users"
 
+  map.connect "users/jurisdictions", :controller => "user_profiles", :action => "jurisdictions"
+  map.connect "users/roles",         :controller => "user_profiles", :action => "roles"
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.resources :devices
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
+
   map.resources :alerts, :member => {:acknowledge => [:get, :put]}
   map.email_acknowledge_alert "alerts/:id/emailack/:call_down_response", :controller => "alerts", :action => "acknowledge", :email => "1"
   map.connect "alerts/:id/acknowledge.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}

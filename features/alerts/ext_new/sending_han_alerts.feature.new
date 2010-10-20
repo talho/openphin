@@ -97,7 +97,7 @@ Feature: Sending HAN alerts form
       | call_down_messages | if you cannot respond                        |
       | jurisdiction       | Dallas County                                |
 
-  Scenario: Sending a HAN alert to sibling jurisdictions
+  Scenario: Sending a HAN alert to sibling jurisdictions should alert HACC in both
     When  I fill in an alert with the following:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | Some body text                               |
@@ -116,7 +116,7 @@ Feature: Sending HAN alerts form
       | roles          | Texas / Health Alert and Communications Coordinator                             |
       | emails         | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
 
-  Scenario: Sending a HAN alert to a parent jurisdiction
+  Scenario: Sending a HAN alert to a parent jurisdiction should alert HACC in parent
     When  I fill in an alert with the following:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | Some body text                               |
@@ -136,7 +136,7 @@ Feature: Sending HAN alerts form
       | roles          | Potter County / Health Alert and Communications Coordinator                                           |
       | emails         | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |
 
-  Scenario: Sending a HAN alert to a cousin jurisdiction
+  Scenario: Sending a HAN alert to a cousin jurisdiction should alert up to Texas
     When  I fill in an alert with the following:
       | Title                 | H1N1 SNS push packs to be delivered tomorrow |
       | Message               | Some body text                               |

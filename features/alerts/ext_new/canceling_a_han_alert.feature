@@ -1,30 +1,31 @@
-@ext
-Feature: Updating an alert
+@alert, @ext
+Feature: Canceling an han alert
+
   In order to keep everyone informed with up to date information
   As an alerter
-  I want to be able to send out an update to a HAN alert
+  I want to be able to send out a HAN cancel alert
 
-   Background:
-    Given the following entities exists:
-      | Jurisdiction | Dallas County                               |
-      | Jurisdiction | Potter County                               |
-      | Jurisdiction | Tarrant County                              |
-      | Role         | Health Officer                              |
-      | Role         | Health Alert and Communications Coordinator |
-    And the following users exist:
-      | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
-      | Jane Smith  | jane.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
-      | Anne Smith  | anne.smith@example.com  | Health Alert and Communications Coordinator | Potter County |
-      | Brian Simms | brian.simms@example.com | Health Officer                              | Dallas County |
-      | Ed McGuyver | ed.mcguyver@example.com | Health Officer                              | Dallas County |
-      | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
-      | Frank Chung | frank.chung@example.com | Health Officer                              | Potter County |
-      | John Wayne  | john.wayne@example.com  | Health Officer                              | Potter County |
+  Background:
+   Given the following entities exists:
+     | Jurisdiction | Dallas County                               |
+     | Jurisdiction | Potter County                               |
+     | Jurisdiction | Tarrant County                              |
+     | Role         | Health Officer                              |
+     | Role         | Health Alert and Communications Coordinator |
+   And the following users exist:
+     | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
+     | Jane Smith  | jane.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
+     | Anne Smith  | anne.smith@example.com  | Health Alert and Communications Coordinator | Potter County |
+     | Brian Simms | brian.simms@example.com | Health Officer                              | Dallas County |
+     | Ed McGuyver | ed.mcguyver@example.com | Health Officer                              | Dallas County |
+     | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
+     | Frank Chung | frank.chung@example.com | Health Officer                              | Potter County |
+     | John Wayne  | john.wayne@example.com  | Health Officer                              | Potter County |
 
-    And the role "Health Alert and Communications Coordinator" is an alerter
-    And delayed jobs are processed
+   And the role "Health Alert and Communications Coordinator" is an alerter
+   And delayed jobs are processed
 
-  Scenario: Updating a HAN alert
+  Scenario: Canceling an HAN alert
     Given I am logged in as "john.smith@example.com"
     And a sent alert with:
       | Type                  | HAN                                  |
@@ -38,16 +39,16 @@ Feature: Updating an alert
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
 
-    When I am on the ext dashboard page
+    When I go to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     Then I should see an alert titled "Flying Monkey Disease"
 
-    When I click "Update" within alert "Flying Monkey Disease"
-    Then the "Create an Alert Update" tab should be open
+    When I click "Cancel" within alert "Flying Monkey Disease"
+    Then the "Create an Alert Cancellation" tab should be open
     And I should not see "Jurisdictions"
     And I should not see "Limit Roles"
     And I should not see "Organizations"
-
+    
     When I fill in "Message" with "Flying monkey disease contagion is more widespread"
     And I click breadCrumbItem "Preview"
     Then I should see a display form with:
@@ -56,7 +57,7 @@ Feature: Updating an alert
       | Acknowledge   | No             |
       | Methods       | Email, Console |
       | Delivery Time | 72 hours       |
-    And I should see "[Update] - Flying Monkey Disease"
+    And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease contagion is more widespread"
 
     When I expand ext panel "Audience"
@@ -67,12 +68,12 @@ Feature: Updating an alert
 
     When I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
-    And the "Send Alert" tab should not be open
-    And I should see an alert titled "[Update] - Flying Monkey Disease"
+    And the "Create an Alert Cancellation" tab should not be open
+    And I should see an alert titled "[Cancel] - Flying Monkey Disease"
     And the following users should receive the alert email:
       | People        | brian.simms@example.com, ed.mcguyver@example.com   |
-      | subject       | Health Alert "[Update] - Flying Monkey Disease"    |
-      | body contains | Title: [Update] - Flying Monkey Disease            |
+      | subject       | Health Alert "[Cancel] - Flying Monkey Disease"    |
+      | body contains | Title: [Cancel] - Flying Monkey Disease            |
       | body contains | Alert ID:                                          |
       | body contains | Reference:                                         |
       | body contains | Agency: Dallas County                              |
@@ -80,7 +81,7 @@ Feature: Updating an alert
       | body contains | Flying monkey disease contagion is more widespread |
     And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
-  Scenario: Updating a HAN alert as another alerter within the same jurisdiction
+  Scenario: Cancelling a HAN alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     And a sent alert with:
@@ -99,7 +100,7 @@ Feature: Updating an alert
     And I am allowed to send alerts
     And I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    And I click "Update" within alert "Flying Monkey Disease"
+    And I click "Cancel" within alert "Flying Monkey Disease"
     Then the "Create an Alert Update" tab should be open
     And I should not see "Jurisdictions"
     And I should not see "Limit Roles"
@@ -113,7 +114,7 @@ Feature: Updating an alert
       | Acknowledge   | No             |
       | Methods       | Email, Console |
       | Delivery Time | 72 hours       |
-    And I should see "[Health Alert] [UPDATE] Flying Monkey Disease"
+    And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease contagion is more widespread"
 
     When I expand ext panel "Audience"
@@ -123,18 +124,22 @@ Feature: Updating an alert
       | Health Officer | Role         |
 
     When I press "Send Alert"
-    Then I should see an alert titled "[Health Alert] [UPDATE] Flying Monkey Disease"
-    And the following users should receive the alert email:
-      | People        | brian.simms@example.com, ed.mcguyver@example.com      |
-      | subject       | [Health Alert] [UPDATE] Flying Monkey Disease         |
-      | body contains | Title: [Health Alert] [UPDATE] Flying Monkey Disease  |
-      | body contains | Alert ID:                                             |
-      | body contains | Reference:                                            |
-      | body contains | Agency: Dallas County                                 |
-      | body contains | Sender: John Smith                                    |
-      | body contains | Flying monkey disease contagion is more widespread    |
+    Then the "Alert Log and Reporting" tab should be open
+    And the "Create an Alert Cancellation" tab should not be open
 
-  Scenario: Updating an alert that used Advanced Acknowledgement
+    When I press "Send Alert"
+    Then I should see an alert titled "[Cancel] - Flying Monkey Disease"
+    And the following users should receive the alert email:
+      | People        | brian.simms@example.com, ed.mcguyver@example.com   |
+      | subject       | [Cancel] - Flying Monkey Disease                   |
+      | body contains | Title: [Cancel] - Flying Monkey Disease            |
+      | body contains | Alert ID:                                          |
+      | body contains | Reference:                                         |
+      | body contains | Agency: Dallas County                              |
+      | body contains | Sender: John Smith                                 |
+      | body contains | Flying monkey disease contagion is more widespread |
+
+  Scenario: Cancelling an alert that used Advanced Acknowledgement
     Given I am logged in as "john.smith@example.com"
     And a sent alert with:
       | Type                  | HAN                                          |
@@ -155,8 +160,8 @@ Feature: Updating an alert
     And delayed jobs are processed
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    And I click "Update" within alert "H1N1 SNS push packs to be delivered tomorrow"
-    Then I should see "[Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow"
+    And I click "Cancel" within alert "H1N1 SNS push packs to be delivered tomorrow"
+    Then I should see "[Cancel] - H1N1 SNS push packs to be delivered tomorrow"
     And I should not see "Alert Response 1"
 
     When I open ext combo "Acknowledgement"
@@ -168,16 +173,16 @@ Feature: Updating an alert
     And I press "Next"
     And I press "Send Alert"
     Then an alert exists with:
-      | from_jurisdiction  | Dallas County                                                       |
-      | title              | [Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow|
-      | message            | Update to message                                                   |
-      | call_down_messages | if you can respond within 15 minutes                                |
-      | call_down_messages | if you can respond within 30 minutes                                |
-      | call_down_messages | if you can respond within 1 hour                                    |
-      | call_down_messages | if you can respond within 4 hours                                   |
-      | call_down_messages | if you cannot respond                                               |
+      | from_jurisdiction  | Dallas County                                           |
+      | title              | [Update] - H1N1 SNS push packs to be delivered tomorrow |
+      | message            | Update to message                                       |
+      | call_down_messages | if you can respond within 15 minutes                    |
+      | call_down_messages | if you can respond within 30 minutes                    |
+      | call_down_messages | if you can respond within 1 hour                        |
+      | call_down_messages | if you can respond within 4 hours                       |
+      | call_down_messages | if you cannot respond                                   |
 
-  Scenario: Updating an alert that used Advanced Acknowledgement and removing response options
+  Scenario:Cancelling an alert that used Advanced Acknowledgement and removing response options
     Given I am logged in as "john.smith@example.com"
     And a sent alert with:
       | Type                  | HAN                                          |
@@ -201,9 +206,9 @@ Feature: Updating an alert
 
     When I am on the ext dashboard page
     And I navigate to "HAN > View HAN Alert Logs and Reports"
-    And I click "Update" within alert "H1N1 SNS push packs to be delivered tomorrow"
+    And I click "Cancel" within alert "H1N1 SNS push packs to be delivered tomorrow"
 
-    Then I should see "[Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow"
+    Then I should see "H1N1 SNS push packs to be delivered tomorrow"
     When I fill in "Message" with "H1N1 SNS push packs to be delivered in 15 minutes at point A"
     And I select "Minor" from ext combo "Severity"
     And I select "72 hours" from ext combo "Delivery Time"
@@ -215,7 +220,7 @@ Feature: Updating an alert
 
     And I send the alert
 
-    And I click "Update" within alert "H1N1 SNS push packs to be delivered tomorrow"
+    And I click "Cancel" within alert "H1N1 SNS push packs to be delivered tomorrow"
 
     Then I should see "H1N1 SNS push packs to be delivered tomorrow"
     When I fill in "Message" with "H1N1 SNS push packs to be delivered in 30 minutes at point B"
@@ -231,30 +236,30 @@ Feature: Updating an alert
     And I send the alert
 
     Then an alert exists with:
-      | from_jurisdiction   | Dallas County                                                        |
-      | title               | [Health ALert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow |
-      | message             | H1N1 SNS push packs to be delivered in 15 minutes at point A         |
-      | targets             | john.wayne@example.com                                               |
-      | call_down_messages  | if you can respond within 15 minutes                                 |
-      | acknowledge         | false                                                                |
+      | from_jurisdiction   | Dallas County                                                |
+      | title               | [Cancel] - H1N1 SNS push packs to be delivered tomorrow      |
+      | message             | H1N1 SNS push packs to be delivered in 15 minutes at point A |
+      | targets             | john.wayne@example.com                                       |
+      | call_down_messages  | if you can respond within 15 minutes                         |
+      | acknowledge         | false                                                        |
     Then an alert should not exist with:
-      | title   | [Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow                         |
+      | title   | [Cancel] - H1N1 SNS push packs to be delivered tomorrow                                      |
       | message | H1N1 SNS push packs to be delivered in 15 minutes at point A                                 |
       | targets | john.smith@example.com,jane.smith@example.com,jackie.sue@example.com,frank.chung@example.com |
 
     Then an alert exists with:
-      | from_jurisdiction   | Dallas County                                                        |
-      | title               | [Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow |
-      | message             | H1N1 SNS push packs to be delivered in 30 minutes at point B         |
-      | targets             | jane.smith@example.com                                               |
-      | call_down_messages  | if you can respond within 30 minutes                                 |
-      | acknowledge         | true                                                                 |
+      | from_jurisdiction   | Dallas County                                                |
+      | title               | [Cancel] - H1N1 SNS push packs to be delivered tomorrow      |
+      | message             | H1N1 SNS push packs to be delivered in 30 minutes at point B |
+      | targets             | jane.smith@example.com                                       |
+      | call_down_messages  | if you can respond within 30 minutes                         |
+      | acknowledge         | true                                                         |
     Then an alert should not exist with:
-      | title   | [Health Alert] [UPDATE] H1N1 SNS push packs to be delivered tomorrow                         |
+      | title   | [Cancel] - H1N1 SNS push packs to be delivered tomorrow                                      |
       | message | H1N1 SNS push packs to be delivered in 30 minutes at point B                                 |
       | targets | john.smith@example.com,john.wayne@example.com,jackie.sue@example.com,frank.chung@example.com |
 
-  Scenario: Make sure re-submitting an update after alert is canceled doesn't work
+  Scenario: Make sure re-submitting a cancellation after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     And a sent alert with:
@@ -271,13 +276,13 @@ Feature: Updating an alert
 
     When I am on the ext dashboard page
     And I navigate to "HAN > View HAN Alert Logs and Reports"
-    When I click "Update" within alert "Flying Monkey Disease"
+    And I click "Cancel" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"
     And I send the alert
-    Then I should not see button "Update" for alert "Flying Monkey Disease"
+    Then I should not see button "Cancel" for alert "Flying Monkey Disease"
     
     When I override alert
-    When I force open the tab "Create an Alert Update" for "" with config "{title: 'Create an Alert Update', url: 'alerts/1/edit?_action=update', mode: 'update', initializer: 'Talho.SendAlert', alertId: 1}"
+    When I force open the tab "Create an Alert Update" for "" with config "{title: 'Create an Alert Cancellation', url: 'alerts/1/edit?_action=cancel', mode: 'update', initializer: 'Talho.SendAlert', alertId: 1}"
     Then I should see "You cannot update or cancel an alert that has already been cancelled." within the alert box
     Then the "Alert Log and Reporting" tab should be open
     And the "Create an Alert Update" tab should not be open

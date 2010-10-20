@@ -1,4 +1,4 @@
-Feature: Form Validation when Sending Alerts
+Feature: Client-Side Form Validation when Sending Alerts
 
   In order to prevent errors and invalid alerts
   As an alerter
@@ -63,6 +63,7 @@ Feature: Form Validation when Sending Alerts
     And the following fields should be invalid:
       | Short Message  |
     When I fill in "Short Message" with "hey, this is a short message"
+    When I fill in "Caller ID" with "1234567890"
     And I press "Next"
     Then I should have the "Audience" breadcrumb selected
 
