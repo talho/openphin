@@ -1,6 +1,0 @@
-Feature: Sending Other alerts form
-
-  In order to inform people of an issue that is not specifically covered with existing alert types
-  As an alerter
-  I should be able to send an alert with alerter-defined type
-
