@@ -1,11 +1,9 @@
 @ext
-
-#TODO:   replicate this for non-HAN (Custom).  Test same jurisdiction AND cross-jurisdictional results, with and without Roles selected
-Feature: Creating and sending alerts
+Feature: Creating and sending HAN (cross-jurisdictional) alerts
 
   In order to notify others in a timely fashion
-  As a user
-  I can create and send alerts
+  As an alerter
+  I can create and send alerts to individuals, jurisdictions, and roles
 
   Background:
     Given the following entities exists:
@@ -13,22 +11,30 @@ Feature: Creating and sending alerts
       | Jurisdiction | Tarrant County                              |
       | Jurisdiction | Wise County                                 |
       | Jurisdiction | Potter County                               |
+      | Jurisdiction | Region 1                                    |
+      | Jurisdiction | Region 2                                    |
       | Jurisdiction | Texas                                       |
       | Role         | Health Alert and Communications Coordinator |
       | Role         | Health Officer                              |
-      | Role         | Immunization Director                       |
       | Role         | Epidemiologist                              |
-      | Role         | WMD Coordinator                             |
+      | Role         | Public                                      |
     And the following users exist:
+      | Tay Hoss        | tejas@example.com          | Health Alert and Communications Coordinator  | Texas          |
+      | Reg One         | reg.one@example.com        | Health Alert and Communications Coordinator  | Region 1       |
+      | Reg Two         | reg.two@example.com        | Health Alert and Communications Coordinator  | Region 2       |
       | John Smith      | john.smith@example.com     | Health Alert and Communications Coordinator  | Dallas County  |
-      | Jane Smith      | jane.smith@example.com     | Health Officer                               | Potter County |
       | Brian Simms     | brian.simms@example.com    | Epidemiologist                               | Dallas County  |
       | Ed McGuyver     | ed.mcguyver@example.com    | Public                                       | Dallas County  |
+      | Tarrant HACC    | tarr.hacc@example.com      | Health Alert and Communications Coordinator  | Tarrant County |
       | Ethan Waldo     | ethan.waldo@example.com    | Health Officer                               | Tarrant County |
+      | Brian Ryckbost  | brian.ryckbost@example.com | Epidemiologist                               | Tarrant County |
+      | Potter HACC     | pott.hacc@example.com      | Health Alert and Communications Coordinator  | Potter County  |
+      | Jason Phipps    | jason.phipps@example.com   | Public        r                              | Potter County  |
+      | Jane Smith      | jane.smith@example.com     | Health Officer                               | Potter County  |
+      | Wise HACC       | wise.hacc@example.com      | Health Alert and Communications Coordinator  | Wise County    |
       | Keith Gaddis    | keith.gaddis@example.com   | Epidemiologist                               | Wise County    |
-      | Jason Phipps    | jason.phipps@example.com   | WMD Coordinator                              | Potter County  |
-      | Dan Morrison    | dan.morrison@example.com   | Health Officer                               | Ottawa County  |
-      | Brian Ryckbost  | brian.ryckbost@example.com | Health Officer                               | Tarrant County |
+      | Dan Morrison    | dan.morrison@example.com   | Health Officer                               | Wise County    |
+      | dan.morrison@example.com | brian.simms@example.com |
     And delayed jobs are processed
     And "john.smith@example.com" is not public in "Texas"
     And "brian.simms@example.com" is not public in "Texas"
@@ -38,106 +44,168 @@ Feature: Creating and sending alerts
     And "jason.phipps@example.com" is not public in "Texas"
     And "dan.morrison@example.com" is not public in "Texas"
     And "brian.ryckbost@example.com" is not public in "Texas"
-
     And Texas is the parent jurisdiction of:
-      | Dallas County | Tarrant County | Wise County | Potter County |
-
+      | Region 1      | Region 2       |
+    And Region 1 is the parent jurisdiction of:
+      | Dallas County | Tarrant County |
+    And Region 2 is the parent jurisdiction of:
+      | Wise County   | Potter County  |
     And the role "Health Alert and Communications Coordinator" is an alerter
-    And I am logged in as "john.smith@example.com"
-    And I am allowed to send alerts
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
 
-  Scenario: Sending a HAN alert directly to a user
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
-    And I select "15 minutes" from ext combo "Delivery Time"
-
-    #TODO: Fix the alert audience below
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-      | Dan Morrison | User |
-
-    And I click breadCrumbItem "Preview"
-    And I expand ext panel "Audience"
-    And I should see the following audience breakdown
-      | name       | type      |
-      | Jane Smith | Recipient |
-      | Jane Smith | User      |
-    And the following users should receive the alert email:
-      | People        | keith.gaddis@example.com |
+  Scenario: Sending a HAN alert directly to users in the same jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                              |
+      | author                | john.smith@example.com                           |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow     |
+      | message               | For more details, keep on reading...             |
+      | acknowledge           | None                                             |
+      | from_jurisdiction     | Dallas County                                    |
+      | people                | brian.simms@example.com, ed.mcguyver@example.com |
+      | communication methods | Email                                            |
+    Then the following users should receive the alert email:
+      | People        | brian.simms@example.com, ed.mcguyver@example.com            |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow         |
+      | body contains | Alert ID:                                                   |
+      | body contains | Agency: Dallas County                                       |
+      | body contains | Sender: John Smith                                          |
+      | body contains | For more details, keep on reading...                        |
     And "fix the above step to include an alert id" should be implemented
+    And the following users should not receive any alert emails
+      | tejas@example.com | reg.one@example.com | reg.two@example.com |
 
+  Scenario: Sending a HAN alert directly to users in a sibling jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                                 |
+      | author                | john.smith@example.com                              |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow        |
+      | message               | For more details, keep on reading...                |
+      | acknowledge           | None                                                |
+      | from_jurisdiction     | Dallas County                                       |
+      | people                | ethan.waldo@example.com, brian.ryckbost@example.com |
+      | communication methods | Email                                               |
+    Then the following users should receive the alert email:
+      | People        | ethan.waldo@example.com, brian.ryckbost@example.com, john.smith@example.com, tarr.hacc@example.com, reg.one@example.com |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow"              |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow                      |
+      | body contains | Alert ID:                                                                |
+      | body contains | Agency: Dallas County                                                    |
+      | body contains | Sender: John Smith                                                       |
+      | body contains | For more details, keep on reading...                                     |
+    And the following users should not receive any alert emails
+      | tejas@example.com, reg.two@example.com |
 
-  Scenario: Sending a HAN alert with specified Jurisdictions sends to all users within those Jurisdictions
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
+  Scenario: Sending a HAN alert directly to users in a cousin jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                                 |
+      | author                | john.smith@example.com                              |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow        |
+      | message               | For more details, keep on reading...                |
+      | acknowledge           | None                                                |
+      | from_jurisdiction     | Dallas County                                       |
+      | people                | keith.gaddis@example.com                            |
+      | communication methods | Email                                               |
+    Then the following users should receive the alert email:
+      | People        | keith.gaddis@example.com, john.smith@example.com, wise.hacc@example.com, reg.one@example.com, reg.two@example.com, tejas@example.com |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow"              |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow                      |
+      | body contains | Alert ID:                                                                |
+      | body contains | Agency: Dallas County                                                    |
+      | body contains | Sender: John Smith                                                       |
+      | body contains | For more details, keep on reading...                                     |
+    And the following users should not receive any alert emails
+      | dan.morrison@example.com | brian.simms@example.com |
 
-    And I select the following alert audience:
-      | name          | type         |
-      | Dallas County | Jurisdiction |
-
-    And I send the alert
+  Scenario: Sending a HAN alert to Jurisdiction alerts all users within that Jurisdiction
+    Given a sent alert with:
+      | type                  | HAN                                          |
+      | author                | john.smith@example.com                       |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | acknowledge           | None                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | jurisdictions         | Dallas County                                |
+      | communication methods | Email                                        |
 
     Then the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
-      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow"              |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow                      |
+      | body contains | Alert ID:                                                                |
+      | body contains | Agency: Dallas County                                                    |
+      | body contains | Sender: John Smith                                                       |
+      | body contains | For more details, keep on reading...                                     |
     And "fix the above step to include an alert id" should be implemented
+    And the following users should not receive any alert emails
+      | reg.one@example.com | tejas@example.com | tarr.hacc@example.com | pott.hacc@example.com |
 
-  Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
+  Scenario: Sending a HAN alert with specified Role alerts all users with that Role
+    Given a sent alert with:
+      | type                  | HAN                                          |
+      | author                | john.smith@example.com                       |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | acknowledge           | None                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | roles                 | Health Officer                               |
+      | communication methods | Email                                        |
+    Then the following users should receive the alert email:
+      | People        | ethan.waldo@example.com, jane.smith@example.com, dan.morrison@example.com, brian.ryckbost@example.com, wise.hacc@example.com, tarr.hacc@example.com, pott.hacc@example.com, john.smith@example.com, reg.one@example.com, reg.two@example.com, tejas@example.com |
+      | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow         |
+      | body contains | Alert ID:                                                   |
+      | body contains | Agency: Dallas County                                       |
+      | body contains | Sender: John Smith                                          |
+      | body contains | For more details, keep on reading...                        |
+    And "fix the above step to include an alert id" should be implemented
+    And the following users should not receive any alert emails
+      | brian.simms@example.com | ed.mcguyver@example.com | jason.phipps@example.com | keith.gaddis@example.com |
 
-    And I select the following alert audience:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Tarrant County | Jurisdiction |
-
-    And I send the alert
+  Scenario: Sending a HAN alert to the intersection of a Jurisdiction and Role
+    Given a sent alert with:
+      | type                  | HAN                                          |
+      | author                | john.smith@example.com                       |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | acknowledge           | None                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | jurisdictions         | Tarrant County                               |
+      | roles                 | Health Officer                               |
+      | communication methods | Email                                        |
 
     Then the following users should receive the alert email:
-      | People        | john.smith@example.com, ethan.waldo@example.com |
+      | People        | ethan.waldo@example.com, tarr.hacc@example.com, john.smith@example.com, reg.one@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow         |
+      | body contains | Alert ID:                                                   |
+      | body contains | Agency: Dallas County                                       |
+      | body contains | Sender: John Smith                                          |
+      | body contains | For more details, keep on reading...                        |
     And "fix the above step to include an alert id" should be implemented
+    And the following users should not receive any alert emails
+      | brian.ryckbost@example.com | jane.smith@example.com | dan.morrison@example.com | reg.two@example.com | tejas@example.com |
 
-  Scenario: Sending a HAN alert with specified Roles scopes who the alerts are sent to
-    When I fill in the ext alert defaults
-    And I select "Moderate" from ext combo "Severity"
-    And I fill in "Message" with "For more details, keep on reading..."
+  Scenario: Sending a HAN alert to the intersection of a Jurisdiction and Role plus an Individual
+    Given a sent alert with:
+      | type                  | HAN                                          |
+      | author                | john.smith@example.com                       |
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | acknowledge           | None                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | jurisdictions         | Tarrant County                               |
+      | roles                 | Health Officer                               |
+      | people                | jane.smith@example.com                       |
+      | communication methods | Email                                        |
 
-    And I select the following alert audience:
-      | name           | type |
-      | Health Officer | Role |
-
-    And I send the alert
     Then the following users should receive the alert email:
-      | People        | ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
+      | People        | ethan.waldo@example.com, tarr.hacc@example.com, john.smith@example.com, reg.one@example.com, jane.smith@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
-      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow |
-      | body contains | Alert ID:  |
-      | body contains | Agency: Dallas County |
-      | body contains | Sender: John Smith |
-      | body contains | For more details, keep on reading... |
+      | body contains | Title: H1N1 SNS push packs to be delivered tomorrow         |
+      | body contains | Alert ID:                                                   |
+      | body contains | Agency: Dallas County                                       |
+      | body contains | Sender: John Smith                                          |
+      | body contains | For more details, keep on reading...                        |
     And "fix the above step to include an alert id" should be implemented
-
-
+    And the following users should not receive any alert emails
+      | brian.ryckbost@example.com | dan.morrison@example.com | reg.two@example.com | tejas@example.com |
