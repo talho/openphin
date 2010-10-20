@@ -50,7 +50,6 @@ Feature: Updating an alert
 
     When I fill in "Message" with "Flying monkey disease contagion is more widespread"
     And I click breadCrumbItem "Preview"
-
     Then I should see a display form with:
       | Severity      | Moderate       |
       | Status        | Actual         |
@@ -96,10 +95,9 @@ Feature: Updating an alert
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
 
-    Given I am logged in as "jane.smith@example.com"
+    When I am logged in as "jane.smith@example.com"
     And I am allowed to send alerts
-
-    When I am on the ext dashboard page
+    And I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     And I click "Update" within alert "Flying Monkey Disease"
     Then the "Create an Alert Update" tab should be open
@@ -275,10 +273,9 @@ Feature: Updating an alert
     And I navigate to "HAN > View HAN Alert Logs and Reports"
     When I click "Update" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"
-
     And I send the alert
-
     Then I should not see button "Update" for alert "Flying Monkey Disease"
+    
     When I override alert
     When I force open the tab "Create an Alert Update" for "" with config "{title: 'Create an Alert Update', url: 'alerts/1/edit?_action=update', mode: 'update', initializer: 'Talho.SendAlert', alertId: 1}"
     Then I should see "You cannot update or cancel an alert that has already been cancelled." within the alert box

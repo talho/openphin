@@ -5,30 +5,156 @@ Feature: Sending Custom alerts
 
   Background:
     Given the following entities exists:
-      | Jurisdiction  | Dallas County                               |
-      | Role          | Health Alert and Communications Coordinator |
+      | Jurisdiction    | Texas                                        |
+      | Jurisdiction    | Michigan                                     |
+      | Jurisdiction    | Dallas County                                |
+      | Jurisdiction    | Tarrant County                               |
+      | Jurisdiction    | Wise County                                  |
+      | Jurisdiction    | Potter County                                |
+      | Jurisdiction    | Ottawa County                                |
+      | Role            | Health Officer                               |
+      | Role            | Health Alert and Communications Coordinator  |
+    And Texas is the parent jurisdiction of:
+      | Dallas County   | Tarrant County | Wise County | Potter County |
+    And Michigan is the parent jurisdiction of:
+      | Ottowa County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
-      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
-
-  Scenario: Create and send an Custom alert with no acknowledgement
-    Given I am logged in as "john.smith@example.com"
+      | John Smith      | john.smith@example.com      | Health Alert and Communications Coordinator | Dallas County  |
+      | Ethan Waldo     | ethan.waldo@example.com     | Health Alert and Communications Coordinator | Tarrant County |
+      | Keith Gaddis    | keith.gaddis@example.com    | Health Alert and Communications Coordinator | Wise County    |
+      | Jason Phipps    | jason.phipps@example.com    | Health Alert and Communications Coordinator | Potter County  |
+      | Dan Morrison    | dan.morrison@example.com    | Health Alert and Communications Coordinator | Ottawa County  |
+      | Zach Dennis     | zach.dennis@example.com     | Health Alert and Communications Coordinator | Dallas County  |
+      | Brandon Keepers | brandon.keepers@example.com | Health Alert and Communications Coordinator | Texas          |
+      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Officer                              | Texas          |
+    And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "Alerts > Send an Custom Alert"
-    And the "Send Custom Alert" tab should be open
-    And I fill in an alert with the following:
-      | type                  | Earthquake                  |
-      | Title                 | Watch out for aftershocks   |
-      | Message               | Some body text              |
-      | From Jurisdiction     | Dallas County               |
-      | Acknowledge           | None                        |
-      | Jurisdictions         | Dallas County               |
+    And I navigate to "HAN > Send a HAN Alert"
 
-    When I press "Send Alert"
+  Scenario: Create and send a Custom alert without acknowledgement
+    When I fill in an alert with the following:
+      | Type                  | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | Message               | Some body text            |
+      | From Jurisdiction     | Dallas County             |
+      | Acknowledge           | None                      |
+      | Communication Methods | E-mail                    |
+      | Jurisdictions         | Texas                     |
+    And I press "Send Alert"
     And delayed jobs are processed
     Then an alert exists with:
-      | type                  | Earthquake                  |
-      | title                 | Watch out for aftershocks   |
-    And "john.smith@example.com" should receive the email:
-      | subject   | [Earthquake Alert] - Watch out for aftershocks |
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | message           | Some body text            |
+      | from_jurisdiction | Dallas County             |
+      | acknowledge       | None                      |
+      | jurisdiction      | Texas                     |
 
+  Scenario: Create and send a Custom alert with normal acknowledgement
+    When I fill in an alert with the following:
+      | Type                  | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | From Jurisdiction     | Dallas County             |
+      | Acknowledge           | Normal                    |
+      | Communication Methods | E-mail                    |
+      | Jurisdictions         | Texas                     |
+    And I press "Send Alert"
+    And delayed jobs are processed
+    Then an alert exists with:
+      | type              | Earthquake                 |
+      | title             | Watch out for aftershocks  |
+      | message           | Some body text             |
+      | from_jurisdiction | Dallas County              |
+      | acknowledge       | Normal                     |
+      | jurisdiction      | Texas                      |
+
+  Scenario: Create and send a Custom alert with advanced (calldown) acknowledgement
+    When I select "Advanced" from ext combo "Acknowledge"
+    And  I fill in an alert with the following:
+      | Type                  | Earthquake                           |
+      | Title                 | Watch out for aftershocks            |
+      | Message               | Some body text                       |
+      | Communication Methods | E-mail                               |
+      | From Jurisdiction     | Dallas County                        |
+      | Alert Response 1      | if you can respond within 15 minutes |
+      | Alert Response 2      | if you can respond within 30 minutes |
+      | Alert Response 3      | if you can respond within 1 hour     |
+      | Alert Response 4      | if you can respond within 4 hour     |
+      | Alert Response 5      | if you cannot respond                |
+      | Jurisdictions         | Dallas County                        |
+    And I press "Send Alert"
+    And delayed jobs are processed
+    Then an alert exists with:
+      | type               | Earthquake                           |
+      | title              | Watch out for aftershocks            |
+      | message            | Some body text                       |
+      | from_jurisdiction  | Dallas County                        |
+      | acknowledge        | Advanced                             |
+      | call_down_messages | if you can respond within 15 minutes |
+      | call_down_messages | if you can respond within 30 minutes |
+      | call_down_messages | if you can respond within 1 hour     |
+      | call_down_messages | if you can respond within 4 hours    |
+      | call_down_messages | if you cannot respond                |
+      | jurisdiction       | Dallas County                        |
+
+  Scenario: Sending a Custom alert to sibling jurisdictions should not alert HACC in both
+    When  I fill in an alert with the following:
+      | Type                  | Earthquake                  |
+      | Title                 | Watch out for aftershocks   |
+      | Message               | Some body text              |
+      | Communication Methods | E-mail                      |
+      | From Jurisdiction     | Dallas County               |
+      | Jurisdictions         | Tarrant County, Wise County |
+      | Roles                 | Health Officer              |
+    And I press "Send Alert"
+    And delayed jobs are processed"
+    Then the following users should not receive the alert email:
+      | People         | ethan.waldo@example.com, keith.gaddis@example.com |
+      | body contains  | Title: Watch out for aftershocks                  |
+    And the following users should not receive any alert emails
+      | roles          | Potter County / Health Alert and Communications Coordinator                     |
+      | roles          | Ottawa County / Health Alert and Communications Coordinator                     |
+      | roles          | Texas / Health Alert and Communications Coordinator                             |
+      | emails         | jason.phipps@example.com, dan.morrison@example.com, brandon.keepers@example.com |
+
+  Scenario: Sending a Custom alert to a parent jurisdiction should not alert HACC in parent
+    When  I fill in an alert with the following:
+      | Type                  | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | Message               | Some body text            |
+      | Communication Methods | E-mail                    |
+      | From Jurisdiction     | Dallas County             |
+      | Jurisdictions         | Texas                     |
+      | Roles                 | Health Officer            |
+    And I press "Send Alert"
+    And delayed jobs are processed"
+    Then the following users should not receive the alert email:
+      | People         | brandon.keepers@example.com      |
+      | body contains  | Title: Watch out for aftershocks |
+    And the following users should not receive any alert emails
+      | roles          | Potter County / Health Alert and Communications Coordinator                                           |
+      | roles          | Ottawa County / Health Alert and Communications Coordinator                                           |
+      | roles          | Tarrant County / Health Alert and Communications Coordinator                                          |
+      | roles          | Potter County / Health Alert and Communications Coordinator                                           |
+      | emails         | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com, dan.morrison@example.com |
+
+  Scenario: Sending a Custom alert to a cousin jurisdiction should not alert up to Texas
+    When  I fill in an alert with the following:
+      | Type                  | Earthquake                |
+      | Title                 | Watch out for aftershocks |
+      | Message               | Some body text            |
+      | Communication Methods | E-mail                    |
+      | From Jurisdiction     | Dallas County             |
+      | Jurisdictions         | Ottowa                    |
+      | Roles                 | Health Officer            |
+    And I press "Send Alert
+    And delayed jobs are processed"
+    Then the following users should not receive the alert email:
+      | People         | dan.morrison@example.com, brandon.keepers@example.com |
+      | body contains  | Title: Watch out for aftershocks                      |
+    And the following users should not receive any alert emails
+      | roles          | Potter County / Health Alert and Communications Coordinator                 |
+      | roles          | Tarrant County / Health Alert and Communications Coordinator                |
+      | roles          | Potter County / Health Alert and Communications Coordinator                 |
+      | emails         | ethan.waldo@example.com, keith.gaddis@example.com, jason.phipps@example.com |
