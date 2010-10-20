@@ -38,6 +38,7 @@ Feature: Sending alerts using groups and organizations
     And "john.smith@example.com" is a member of the organization "DSHS"
     And "anne.smith@example.com" is a member of the organization "DSHS"
     And "sara.smith@example.com" is a member of the organization "DSHS"
+    
 
   Scenario: Owner should see all his groups and orgs
     Given I am logged in as "john.smith@example.com"

@@ -1,5 +1,5 @@
 @ext
-Feature: Acknowledging an alert
+Feature: Acknowledging an alert by Phone
 
   Background:
    Given the following users exist:

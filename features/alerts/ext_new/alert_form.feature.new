@@ -221,6 +221,34 @@ Feature: Sending alert Form
     And I click x-accordion-hd "Roles"
     Then I should not see "Admin"
 
+  Scenario: Alerter with more than one jurisdiction can send from either
+    When I navigate to "Alerts > Send a Custom Alert"
+    And I open ext combo "Jurisdiction"
+    Then I should see "Dallas County"
+    And I should see "Potter County"
+    And I should not see "Sender County"
+
+    When I fill in the following:
+      | Alert Type   | Earthquake                |
+      | Title        | Watch out for aftershocks |
+      | Message      | Some body text            |
+    And I check "E-mail"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I click breadCrumbItem "Audience"
+    And I select the following in the audience panel:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I click breadCrumbItem "Preview"
+    Then I should have the "Preview" breadcrumb selected
+
+    When I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
+    And the "Send Alert" tab should not be open
+    When delayed jobs are processed
+    Then an alert exists with:
+      | from_jurisdiction | Potter County             |
+      | title             | Watch out for aftershocks |
+
   Scenario: Audience pane should show "Sub-jurisdictions" link for parent jurisdictions
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
@@ -235,7 +263,6 @@ Feature: Sending alert Form
     And I should see "Select No Sub-jurisdictions"
   
   Scenario: Sending HAN alerts should display foreign jurisdiction as an option
-    #TODO: Change this to be foreign
     When I navigate to "HAN > Send an Alert"
     And I fill in an alert with the following:
       | Message               | Some body text |
@@ -246,7 +273,6 @@ Feature: Sending alert Form
 
   # I am hoping that cucumber can support the following repeated scenario in a more compact form
   Scenario: Sending Custom alerts should not display foreign jurisdiction as an option
-     #TODO: Change this to be foreign, do one per alert type
     When I navigate to "Alerts > Send a Custom Alert"
     And I fill in an alert with the following:
       | Alert Type            | Noise Ordinance |
