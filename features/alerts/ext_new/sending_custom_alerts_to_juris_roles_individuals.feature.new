@@ -115,7 +115,7 @@ Feature: Creating and sending Custom (non-cross-jurisdictional) alerts
     And the following users should not receive any alert emails
       | dan.morrison@example.com | brian.simms@example.com | john.smith@example.com | wise.hacc@example.com | reg.one@example.com | reg.two@example.com | tejas@example.com |
 
-  Scenario: Sending a Custom alert to Jurisdiction should alert all users within that Jurisdiction
+  Scenario: Sending a Custom alert to a Jurisdiction should alert all users within that Jurisdiction
     Given a sent alert with:
       | type                  | Bad Music                                        |
       | author                | john.smith@example.com                           |
