@@ -1,5 +1,8 @@
 @ext
 Feature: Users with appropriate roles can send alerts
+  In order to prevent unauthorized viewing or use of the Alert system
+  As an Admin
+  I want to be sure that only authorized users can access alert features.
 
   Background:
     Given the following entities exists:
@@ -35,7 +38,7 @@ Feature: Users with appropriate roles can send alerts
     When I go to the ext dashboard page
     Then I should not see "Send a Custom Alert" in the "Alerts" menu
 
-  Scenario: Cannot malicously send an alert without an alerter role
+  Scenario: Cannot maliciously send an alert without an alerter role
     Given I am logged in as "fred.officer@example.com"
     When I maliciously build and submit a POST request to create and send an alert with:
       | title | 0WN3D   |

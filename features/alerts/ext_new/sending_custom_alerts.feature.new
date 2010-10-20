@@ -1,93 +1,34 @@
-Feature: Sending alerts
-  #TODO:  verify each element in the alert form, except devices & audiences
-  In order to inform people of an issue
+Feature: Sending Custom alerts
+  In order to inform people of a specific issue
   As an alerter
   I should be able to send custom Alerts to audiences.
 
   Background:
     Given the following entities exists:
-      | Jurisdiction  | Texas                                       |
       | Jurisdiction  | Dallas County                               |
-      | Jurisdiction  | Potter County                               |
       | Role          | Health Alert and Communications Coordinator |
-      | Role          | Health Officer                              |
-      | Role          | Epidemiologist                              | 
-    And Texas is the parent jurisdiction of:
-      | Dallas County |
-      | Potter County |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
       | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
-      | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Potter County |
-      | Anne Smith    | anne.smith@example.com | Public                                      | Potter County |
-    And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Alerts > Send a Custom Alert"
-    Then the "Send Custom Alert" tab should be open
 
-  Scenario: Create and send a custom alert with no acknowledgement
-    Given I fill in an alert with the following:
-      | Alert Type            | Earthquake                  |
+  Scenario: Create and send an Custom alert with no acknowledgement
+    Given I am logged in as "john.smith@example.com"
+    When I go to the ext dashboard page
+    And I navigate to "Alerts > Send an Custom Alert"
+    And the "Send Custom Alert" tab should be open
+    And I fill in an alert with the following:
+      | type                  | Earthquake                  |
       | Title                 | Watch out for aftershocks   |
       | Message               | Some body text              |
-      | Short Message         | this is a short message     |
       | From Jurisdiction     | Dallas County               |
-      | Status                | Test                        |
-      | Severity              | Moderate                    |
-      | Delivery Time         | 24 Hours                    |
       | Acknowledge           | None                        |
-      | Sensitive             | Yes                         |
-      | Jurisdictions         | Texas                       |
+      | Jurisdictions         | Dallas County               |
+
     When I press "Send Alert"
     And delayed jobs are processed
     Then an alert exists with:
-      | type                  | Earthquake                                  |
-      | title                 | Watch out for aftershocks                   |
-      | message               | Some body text                              |
-      | short_message         | this is a short message                     |
-      | from_jurisdiction     | Dallas County                               |
-      | status                | Test                                        |
-      | severity              | Moderate                                    |
-      | delivery_time         | 24 Hours                                    |
-      | acknowledge           | None                                        |
-      | sensitive             | true                                        |
-      | jurisdiction          | Texas                                       |
+      | type                  | Earthquake                  |
+      | title                 | Watch out for aftershocks   |
+    And "john.smith@example.com" should receive the email:
+      | subject   | [Earthquake Alert] - Watch out for aftershocks |
 
-  Scenario: Create and send a custom alert with normal acknowledgement
-    Given I fill in an alert with the following:
-      | Alert Type            | Earthquake                |
-      | Title                 | Watch out for aftershocks |
-      | Message               | Some body text            |
-      | From Jurisdiction     | Dallas County             |
-      | Acknowledge           | Normal                    |
-      | Communication Methods | E-mail                    |
-      | Jurisdictions         | Texas                     |
-    When I press "Send Alert"
-    And delayed jobs are processed
-    Then an alert exists with:
-      | type              | Earthquake                |
-      | title             | Watch out for aftershocks |
-      | message           | Some body text            |
-      | from_jurisdiction | Dallas County             |
-      | acknowledge       | Normal                    |
-      | jurisdiction      | Texas                     |
-
-  Scenario: Alerter with more than one jurisdiction can send from either
-    Given I open ext combo "Jurisdiction"
-    Then I should see "Dallas County"
-    And  I should see "Potter County"
-    And  I should not see "Tarrant County"
-
-    When I fill in an alert with the following:
-      | Alert Type            | Earthquake                |
-      | Title                 | Watch out for aftershocks |
-      | Message               | Some body text            |
-      | From Jurisdiction     | Potter County             |
-      | Acknowledge           | Normal                    |
-      | Communication Methods | E-mail                    |
-      | Jurisdictions         | Texas                     |
-    And I press "Send Alert"
-    And delayed jobs are processed
-    Then an alert exists with:
-      | from_jurisdiction | Potter County             |
-      | title             | Watch out for aftershocks |

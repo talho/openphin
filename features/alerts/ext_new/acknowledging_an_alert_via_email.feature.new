@@ -12,7 +12,6 @@ Feature: Acknowledging an alert via email
     And I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-
   Scenario: Acknowledging an alert through an email with signing in
     Given a sent alert with:
       | title                 | H1N1 SNS push packs to be delivered tomorrow |
@@ -22,7 +21,7 @@ Feature: Acknowledging an alert via email
       | acknowledge           | Yes                  |
       | from_jurisdiction     | Wise County          |
       | people                | Keith Gaddis         |
-      | communication methods | E-mail               |
+      | communication methods | Email               |
     Then the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
