@@ -198,20 +198,6 @@ class UserProfilesController < ApplicationController
     end
   end
 
-  def jurisdictions
-    jurisdictions = Jurisdiction.root.self_and_descendants
-    jurisdictions.delete_if { |j| j.foreign }
-    render :json => jurisdictions.collect { |j|
-      dname = "#{"<b>" if !j.leaf?}#{"&nbsp;&nbsp;"*j.level}#{j.name}#{"</b>" if !j.leaf?}"
-      {:id => j.id, :name => j.name, :display => dname}
-    }
-  end
-
-  def roles
-    roles = current_user.is_admin? ? Role.all : Role.user_roles
-    render :json => roles.collect { |r| {:id => r.id, :name => r.name} }
-  end
-
 protected
 
   def device_class_for(device_type)

@@ -17,12 +17,12 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     });
 
     this.jurisdictions_store = new Ext.data.JsonStore({
-      url: '/users/jurisdictions', autoLoad: true, autoSave: false,
-      fields: [{name: 'name'}, {name: 'id'}, {name: 'display'}],
+      url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}],
     });
     this.roles_store = new Ext.data.JsonStore({
-      url: '/users/roles', autoLoad: true, autoSave: false,
-      fields: [{name: 'name'}, {name: 'id'}],
+      url: '/audiences/roles', autoLoad: true, autoSave: false,
+      fields: [{name: 'name', mapping: 'role.name'}, {name: 'id', mapping: 'role.id'}],
     });
 
     var template = new Ext.XTemplate(
@@ -79,7 +79,20 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
   },
 
   add_role: function(){
-    var template = new Ext.XTemplate('<tpl for="."><div ext:qtip="{name}" class="x-combo-list-item">{display}</div></tpl>');
+    var template = new Ext.XTemplate(
+      '<tpl for="."><div ext:qtip="{name}" class="x-combo-list-item">',
+        '<tpl if="!leaf"><b></tpl>',
+          '<tpl if="level &gt; 0">&nbsp;&nbsp;</tpl>',
+          '<tpl if="level &gt; 1">&nbsp;&nbsp;</tpl>',
+          '<tpl if="level &gt; 2">&nbsp;&nbsp;</tpl>',
+          '<tpl if="level &gt; 3">&nbsp;&nbsp;</tpl>',
+          '<tpl if="level &gt; 4">&nbsp;&nbsp;</tpl>',
+          '<tpl if="level &gt; 5">&nbsp;&nbsp;</tpl>',
+          '{name}',
+        '<tpl if="!leaf"></b></tpl>',
+      '</div></tpl>'
+    );
+
     var win = new Ext.Window({
       title: "Add Role",
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
