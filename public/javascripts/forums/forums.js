@@ -219,18 +219,22 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                     if(!create_forum_win.saveMask) create_forum_win.saveMask = new Ext.LoadMask(create_forum_win.getLayoutTarget(), {msg: 'Saving...'});
                     create_forum_win.saveMask.show();
 
+                    var params = {
+                        'forum[audience_attributes][jurisdiction_ids][]': selectedItems.jurisdiction_ids,
+                        'forum[audience_attributes][role_ids][]': selectedItems.role_ids,
+                        'forum[audience_attributes][user_ids][]': selectedItems.user_ids,
+                        'forum[hide]': hidden ? '1' : '0',
+                        'forum[name]': name
+                    };
+                    if(edit_mode){
+                        params['forum[audience_attributes][id]'] = create_forum_win.audience_id;
+                        params['forum[audience_attributes][lock_version]'] = create_forum_win.lock_version;
+                    }
+
                     Ext.Ajax.request({
                         url: url,
                         method: method,
-                        params: {
-                            'forum[audience_attributes][jurisdiction_ids][]': selectedItems.jurisdiction_ids,
-                            'forum[audience_attributes][role_ids][]': selectedItems.role_ids,
-                            'forum[audience_attributes][user_ids][]': selectedItems.user_ids,
-                            'forum[audience_attributes][id]': edit_mode ?  create_forum_win.audience_id : null,
-                            'forum[audience_attributes][lock_version]': edit_mode ? create_forum_win.lock_version : null,
-                            'forum[hide]': hidden ? '1' : '0',
-                            'forum[name]': name
-                        },
+                        params: params,
                         callback: function(options, success, response){
                             create_forum_win.saveMask.hide();
                             if(success){

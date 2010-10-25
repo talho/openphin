@@ -87,6 +87,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     store: store,
                     title: this.tab_config.title,
                     frame: true,
+                    bodyCssClass: 'topic_grid',
                     columns: [
                         {xtype:'templatecolumn', width: 165, tpl: '<div class="topic-user-info-column"><div class="topic-user-name">{user_name}</div><div><img height="100" width="100" src="{user_avatar}"</div><div>Posted: {created_at:date("n/j/y g:i:s A")}</div></div>'},
                         {id: 'post_content_column', xtype: 'templatecolumn', tpl: '<div class="topic-content">{formatted_content}</div>'}

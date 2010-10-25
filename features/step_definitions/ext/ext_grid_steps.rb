@@ -2,25 +2,25 @@
 When /^I click ([a-zA-Z0-9\-_]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
 
     if row.nil?
       sleep(1)
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
     end
 
-    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), '#{selector}')]").click
+    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{selector} ')]").click
   end
 end
 
 When /^I select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
 
     if row.nil?
       sleep(1)
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
     end
 
     row.click
@@ -32,11 +32,11 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: within "([^"]*)")?
   with_scope(within_selector) do
     #first make sure the row is there at all
     if not_exists.nil?
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
 
       if row.nil?
         sleep(1)
-        row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+        row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
       end
 
       if row.nil?
@@ -45,7 +45,11 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: within "([^"]*)")?
     end
 
     #now, get all
-    grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//text() = '#{content}']]")
+    if not_exists.nil?
+      grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]]")
+    else
+      grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ')]") #had better provide a scope for this
+    end
     rows = grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-row ')]")
 
     if not_exists.nil?
@@ -59,11 +63,11 @@ end
 When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ do |content, not_exists, icon_name|
   # we want to find the row with the content, and get the div that's a few levels up
   begin
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
 
     if row.nil?
       sleep(1)
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//text() = '#{content}']")
+      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
     end
 
     if not_exists.nil?

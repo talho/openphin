@@ -119,7 +119,7 @@ I should be able to create topics to forums and place comments to these topics
     Then the "Measuring Fulfillment" tab should be open
     When I wait for the "Loading..." mask to go away
 
-    Then I should not see "Edit" in grid row 2
+    Then I should not see "Edit" in grid row 2 within ".topic_grid"
     When I click topic-quote-comment-button on the "This is a response" grid row
     Then the "topic[comment_attributes][content]" field should contain "bq.. __Originally posted by: Harry Simon__\n\nThis is a response\n\np. "
     When I press "Save"

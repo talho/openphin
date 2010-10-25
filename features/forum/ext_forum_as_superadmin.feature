@@ -26,6 +26,7 @@ Feature: Creating a forum (room)
     And the user "Joe Black" with the email "joe.black@example.com" has the role "Health Officer" in "Potter County"
     And there is an system administrator role
     And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Superadmin" in "Texas"
+    And I am on the dashboard page
 
 
   # issue: currently a forum without an audience does not show to anyone outside of superadmins.
@@ -294,6 +295,7 @@ Feature: Creating a forum (room)
       | Potter County  | Jurisdiction |
     And I press "Save"
     And I wait for the "Saving..." mask to go away
+    And I navigate to "Sign Out"
 
     Given session name is "default"
     When I press "Save"
@@ -322,6 +324,7 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
     Then I should see "Measuring Time" within ".x-grid3"
+    And I navigate to "Sign Out"
 
     Given session name is "default"
     When I override alert
