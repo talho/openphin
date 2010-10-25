@@ -79,7 +79,7 @@ class ForumsController < ApplicationController
       format.json {render :json => @forum.as_json(:include => {:audience => {:include => {:users => {:only => [:id, :display_name, :email, :title ]},
                                                                                           :roles => {:only => [:id, :name]},
                                                                                           :jurisdictions => {:only => [:id, :name]} },
-                                                                             :only => [] }
+                                                                             :only => [:id] }
                                                               }
                                                   ) }
     end
@@ -116,18 +116,33 @@ class ForumsController < ApplicationController
           flash[:notice] = "Topic was successfully created."
           redirect_to forum_topics_path(@forum)
         else
-          flash[:notice] = "Forum was successfully updated."
-          redirect_to forums_path
+          respond_to do |format|
+            format.html do
+              flash[:notice] = "Forum was successfully updated."
+              redirect_to forums_path
+            end
+            format.json {render :json => {:success => true}, :status => 200}
+          end
         end
       else
         redirect_to :back
       end
     rescue ActiveRecord::StaleObjectError
-      flash[:error] = "This forum was recently changed by another user.  Please try again."
-      redirect_to edit_forum_path(@forum)
-    rescue StandardError
-      flash[:error] = "There was a problem updating the forum."
-      redirect_to forums_path
+      respond_to do |format|
+        format.html do
+          flash[:error] = "This forum was recently changed by another user.  Please try again."
+          redirect_to edit_forum_path(@forum)
+        end
+        format.json {render :json => {:success => false, :msg => "This forum was recently changed by another user. Please try again."}, :status => 406}
+      end
+    rescue StandardError => e
+      respond_to do |format|
+        format.html do
+          flash[:error] = "There was a problem updating the forum."
+          redirect_to forums_path
+        end
+        format.json {render :json => {:success => false, :msg => "There was a problem updating the forum", :error => e.to_s}, :status => 400}
+      end
     end
   end
 
