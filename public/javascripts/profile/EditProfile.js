@@ -55,6 +55,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'spacer', height: '10'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[name]', maxLength: '15', width: 'auto'},
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true},
+        {xtype: 'hidden', name: 'user[lock_version]', value: ''}
       ]}
     ];
     this.form_config = {
