@@ -5,34 +5,203 @@ Feature: Viewing the alert log for Custom alerts
   I want to be able to see detailed information on all sent Custom alerts 
   Background:
     Given the following entities exists:
-      | Role | Health Alert and Communications Coordinator |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Health Officer                              |
+      | Jurisdiction | Region 1                                    |
+      | Jurisdiction | Dallas County                               |
+      | Jurisdiction | Potter County                               |
+    And "Region 1" is the parent jurisdiction of:
+      | Dallas County |  Potter County |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
+      | Anne Smith      | anne.smith@example.com   | Health Alert and Communications Coordinator | Region 1      |
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
-    
-  Scenario: Viewing list of alerts in your jurisdictions
+      | Pots Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+      | Fred Smith      | fred.smith@example.com   | Health Officer                              | Dallas County |
+
+  Scenario: Viewing alert log for alerts in your jurisdictions
     Given I am logged in as "john.smith@example.com"
-    And an alert with:
-      | type              | Livestock     |
-      | from_jurisdiction | Dallas County |
-      | title             | Fall Festival |
-      | jurisdictions     | Dallas County |
-      | acknowledge       | No            |
-    And an alert with:
-      | type              | HAN           |
-      | from_jurisdiction | Dallas County |
-      | title             | Hello World   |
-      | jurisdictions     | Dallas County |
-      | acknowledge       | No            |
+    When an alert with:
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | from_jurisdiction | Dallas County             |
+      | jurisdictions     | Dallas County             |
+      | acknowledge       | No                        |
     And delayed jobs are processed
     And I am on the ext dashboard page
-    And I navigate to "Alerts > View Alert Logs and Reports"
-    And I select "Custom" from "Alert Type"
-    Then I should see an alert titled "[Livestock Alert] Fall Festival"
-    And I should not see an alert titled "[Han Alert] Hello World"
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I should see an alert titled "[Earthquake Alert] Watch out for aftershocks"
     And I should see "Acknowledge: None"
 
-    When I click "View" within alert "[Livestock Alert] Fall Festival"
+    When I click "View" within alert "[Earthquake Alert] Watch out for aftershocks"
     And I wait for the "Loading" mask to go away
-    Then I can see the alert summary for "[Livestock Alert] Fall Festival"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
     And I should see "None" within "#acknowledge"
+
+  Scenario: Viewing alert log for alerts in child jurisdictions
+    Given an alert with:
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | author            | John Smith                |
+      | from_jurisdiction | Dallas County             |
+      | jurisdictions     | Dallas County            |
+    And delayed jobs are processed
+    
+    When I am logged in as "anne.smith@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I should see an alert titled "[Earthquake Alert] Watch out for aftershocks"
+
+    When I click "View" within alert "[Earthquake Alert] Watch out for aftershocks"
+    Then I should see "Watch out for aftershocks"
+
+  Scenario: Can't view alerts from outside jurisdictions
+    Given an alert with:
+      | type              | Earthquake                |
+      | title             | Watch out for aftershocks |
+      | author            | Pots Smith                |
+      | from_jurisdiction | Potter County             |
+      | jurisdiction      | Potter County             |
+      
+    When I am logged in as "john.smith@example.com"
+    And delayed jobs are processed
+    And I am on the ext dashboard page
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I should not see an alert titled "[Earthquake Alert] Watch out for aftershocks"
+
+  Scenario: Viewing percentage of recipients that have acknowledged
+    Given  an alert with:
+      | type                  | Earthquake                |
+      | title                 | Watch out for aftershocks |
+      | author                | John Smith                |
+      | from_jurisdiction     | Dallas County             |
+      | message               | Shocking                  |
+      | acknowledge           | Yes                       |
+      | communication methods | Email                     |
+      | jurisdictions         | Dallas County, Region 1   |
+    And delayed jobs are processed
+    
+    When "fred.smith@example.com" has acknowledged the alert "Watch out for aftershocks"
+    And "anne.smith@example.com" has acknowledged the alert "Watch out for aftershocks"
+    And I am logged in as "john.smith@example.com"
+    And delayed jobs are processed
+    And I am on the ext dashboard page
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
+
+    When I click "More" within alert "[Earthquake Alert] Watch out for aftershocks"
+    Then I can see the alert for "Watch out for aftershocks" is 67% acknowledged
+    And I can see the jurisdiction alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Region 1" is 100%
+    And I can see the jurisdiction alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Dallas County" is 50%
+    And I can see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "E-mail" is 0%
+    And I can see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Console" is 67%
+    And I cannot see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "SMS"
+    And I cannot see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Phone"
+    And I cannot see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Fax"
+    And I cannot see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Blackberry"
+
+    When I navigate to "HAN > HAN Home"
+    And I click "More" within alert "[Earthquake Alert] Watch out for aftershocks"
+    And I press "Acknowledge"
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
+
+    When I click "More" within alert "[Earthquake Alert] Watch out for aftershocks"
+    Then I should see "Acknowledge: Normal"
+    And I can see the alert for "[Earthquake Alert] Watch out for aftershocks" is 100% acknowledged
+    And I can see the jurisdiction alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Region 1" is 100%
+    And I can see the jurisdiction alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Dallas County" is 100%
+    And I can see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "E-mail" is 0%
+    And I can see the device alert acknowledgement rate for "[Earthquake Alert] Watch out for aftershocks" in "Console" is 100%
+
+  Scenario: Viewing acknowledged alerts with alert responses from view
+    Given I am logged in as "john.smith@example.com"
+    And an alert with:
+      | type                  | Earthquake                           |
+      | title                 | Watch out for aftershocks            |
+      | from_jurisdiction     | Region 1                             |
+      | jurisdictions         | Region 1, Dallas County              |
+      | communication methods | Email                                |
+      | alert_response_1      | if you can respond within 15 minutes |
+      | alert_response_2      | if you can respond within 30 minutes |
+      | alert_response_3      | if you can respond within 1 hour     |
+      | alert_response_4      | if you can respond within 4 hours    |
+      | alert_response_5      | if you cannot respond                |
+    And delayed jobs are processed
+    
+    When "anne.smith@example.com" has acknowledged the alert "[Earthquake Alert] Watch out for aftershocks" with response "if you can respond within 15 minutes"
+    Then I am on the ext dashboard page
+
+    When I navigate to "HAN > View Alert Logs and Reports"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
+    And I should see "Acknowledge: Advanced"
+
+    When I click "View" within  alert "[Earthquake Alert] Watch out for aftershocks"
+    Then I can see the advanced alert acknowledgement response "if you can respond within 15 minutes" for "[Earthquake Alert] Watch out for aftershocks" is 33%
+
+    When "fred.smith@example.com" has acknowledged the alert "[Earthquake Alert] Watch out for aftershocks" with response "if you can respond within 15 minutes"
+    And I navigate to "HAN > View Alert Logs and Reports"
+    And I click "View" within  alert "[Earthquake Alert] Watch out for aftershocks"
+    Then I can see the advanced alert acknowledgement response "if you can respond within 15 minutes" for "[Earthquake Alert] Watch out for aftershocks" is 67%
+
+  Scenario: View alert audience for alert with advanced acknowledgement via [show]
+    Given I am logged in as "john.smith@example.com"
+    And a sent alert with:
+      | type                  | Earthquake                             |
+      | title                 | Watch out for aftershocks              |
+      | from_jurisdiction     | Dallas County                          |
+      | jurisdictions         | Dallas County                          |
+      | message               | Hello World                            |
+      | acknowledge           | Yes                                    |
+      | communication methods | Email                                  |
+      | alert_response_1      | if you can respond within 15 minutes   |
+      | alert_response_2      | if you can respond within 30 minutes   |
+      | alert_response_3      | if you can respond within 1 hour       |
+      | alert_response_4      | if you can respond within 4 hours      |
+      | alert_response_5      | if you cannot respond                  |
+
+    When "john.smith@example.com" has acknowledged the alert "[Earthquake Alert] Watch out for aftershocks" with "if you can respond within 15 minutes" 0 minutes later
+    And "fred.smith@example.com" has acknowledged the alert "[Earthquake Alert] Watch out for aftershocks" with "if you cannot respond" 0 minutes later
+    And delayed jobs are processed
+    Then I am on the ext dashboard page
+    
+    When I navigate to "HAN > View Alert Logs and Reports"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
+
+    When I click "View" within alert "[Earthquake Alert] Watch out for aftershocks"
+    And I wait for the "Loading" mask to go away
+    And I expand ext panel "Audience"
+    Then I should see the following audience breakdown:
+      | name                                        | type         |
+      | Dallas County                               | Jurisdiction |
+    And I should see "John Smith" for user "John Smith"
+    And I should see "if you cannot respond" for user "Fred Smith"
+
+  Scenario: View alert audience for alert with regular acknowledgement via [show]
+    Given a sent alert with:
+      | type                  | Earthquake                |
+      | title                 | Watch out for aftershocks |
+      | from_jurisdiction     | Dallas County             |
+      | jurisdictions         | Dallas County             |
+      | communication methods | Email                     |
+      | acknowledge           | Yes                       |
+      | author                | John Smith                |
+    And delayed jobs are processed
+    
+    When "fred.smith@example.com" has acknowledged the alert "[Earthquake Alert] Watch out for aftershocks"
+    And delayed jobs are processed
+    And I am logged in as "john.smith@example.com"
+    And I am on the ext dashboard page
+    And I navigate to "HAN > View Alert Logs and Reports"
+    Then I can see the alert summary for "[Earthquake Alert] Watch out for aftershocks"
+
+    When I click "View" within alert "[Earthquake Alert] Watch out for aftershocks"
+    And I wait for the "Loading" mask to go away
+    Then I should see "John Smith" within "#author"
+    And I should see "Created at:"
+
+    When I expand ext panel "Audience"
+    Then I should see the following audience breakdown:
+      | name           | type         |
+      | Dallas County  | Jurisdiction |
+    And I should see "Acknowledged" for user "Fred Smith"

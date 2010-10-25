@@ -81,7 +81,7 @@ Feature: Canceling an han alert
       | body contains | Flying monkey disease contagion is more widespread |
     And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
-  Scenario: Cancelling a HAN alert as another alerter within the same jurisdiction
+  Scenario: Canceling a HAN alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
     And a sent alert with:
@@ -139,7 +139,7 @@ Feature: Canceling an han alert
       | body contains | Sender: John Smith                                 |
       | body contains | Flying monkey disease contagion is more widespread |
 
-  Scenario: Cancelling an alert that used Advanced Acknowledgement
+  Scenario: Canceling a HAN alert that used Advanced Acknowledgement
     Given I am logged in as "john.smith@example.com"
     And a sent alert with:
       | Type                  | HAN                                          |
@@ -182,7 +182,7 @@ Feature: Canceling an han alert
       | call_down_messages | if you can respond within 4 hours                       |
       | call_down_messages | if you cannot respond                                   |
 
-  Scenario:Cancelling an alert that used Advanced Acknowledgement and removing response options
+  Scenario: Canceling a HAN alert that used Advanced Acknowledgement and removing response options
     Given I am logged in as "john.smith@example.com"
     And a sent alert with:
       | Type                  | HAN                                          |
@@ -259,28 +259,26 @@ Feature: Canceling an han alert
       | message | H1N1 SNS push packs to be delivered in 30 minutes at point B                                 |
       | targets | john.smith@example.com,john.wayne@example.com,jackie.sue@example.com,frank.chung@example.com |
 
-  Scenario: Make sure re-submitting a cancellation after alert is canceled doesn't work
+  Scenario: Cannot cancel a HAN alert twice
     Given I am logged in as "john.smith@example.com"
-    And I am allowed to send alerts
     And a sent alert with:
-      | Type                  | HAN                                  |
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
+      | type                  | HAN                                  |
+      | author                | john.smith@example.com               |
+      | from_jurisdiction     | Dallas County                        |
+      | jurisdictions         | Dallas County                        |
+      | roles                 | Health Officer                       |
+      | title                 | Flying Monkey Disease                |
+      | message               | For more details, keep on reading... |
       | Acknowledge           | None                                 |
       | Communication methods | E-mail                               |
-      | Delivery Time         | 60 minutes                           |
 
     When I am on the ext dashboard page
-    And I navigate to "HAN > View HAN Alert Logs and Reports"
-    And I click "Cancel" within alert "Flying Monkey Disease"
+    And I navigate to "HAN > View Alert Logs and Reports"
+    When I click "Cancel" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"
     And I send the alert
+
     Then I should not see button "Cancel" for alert "Flying Monkey Disease"
-    
     When I override alert
     When I force open the tab "Create an Alert Update" for "" with config "{title: 'Create an Alert Cancellation', url: 'alerts/1/edit?_action=cancel', mode: 'update', initializer: 'Talho.SendAlert', alertId: 1}"
     Then I should see "You cannot update or cancel an alert that has already been cancelled." within the alert box

@@ -116,7 +116,7 @@ Feature: Creating and sending HAN (cross-jurisdictional) alerts
     And the following users should not receive any alert emails
       | dan.morrison@example.com | brian.simms@example.com |
 
-  Scenario: Sending a HAN alert to Jurisdiction alerts all users within that Jurisdiction
+  Scenario: Sending a HAN alert directly to a Jurisdiction alerts all users within that Jurisdiction
     Given a sent alert with:
       | type                  | HAN                                          |
       | author                | john.smith@example.com                       |
@@ -139,7 +139,7 @@ Feature: Creating and sending HAN (cross-jurisdictional) alerts
     And the following users should not receive any alert emails
       | reg.one@example.com | tejas@example.com | tarr.hacc@example.com | pott.hacc@example.com |
 
-  Scenario: Sending a HAN alert with specified Role alerts all users with that Role
+  Scenario: Sending a HAN alert directly to a Role alerts all users with that Role
     Given a sent alert with:
       | type                  | HAN                                          |
       | author                | john.smith@example.com                       |
