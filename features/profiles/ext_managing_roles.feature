@@ -4,10 +4,11 @@ as a user
 I should be able to remove all but one public role from my profile
 
   Background:
-    Given the following entities exists:
-      | Jurisdiction  | Dallas County  |
-      | Jurisdiction  | Potter County  |
-      | Jurisdiction  | Texas          |
+    Given the following entities exist:
+      | Jurisdiction  | Dallas County            |
+      | Jurisdiction  | Potter County            |
+      | Jurisdiction  | Texas                    |
+      | approval role | BioTerrorism Coordinator |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County  |
     And the following users exist:
@@ -73,11 +74,11 @@ I should be able to remove all but one public role from my profile
     Then the "Manage Roles" tab should be open
     When I press "Add role"
     And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Zavala County" from ext combo "Jurisdiction"
+    And I select "Potter County" from ext combo "Jurisdiction"
     And I press "Add"
     Then I should see the following within ".role-item":
-      | Zavala County | BioTerrorism Coordinator | needs to be saved |
+      | Potter County | BioTerrorism Coordinator | needs to be saved |
     When I press "Save"
     Then I should not see any errors
     And I should see the following within ".role-item":
-      | Zavala County | BioTerrorism Coordinator | waiting for approval |
+      | Potter County | BioTerrorism Coordinator | waiting for approval |
