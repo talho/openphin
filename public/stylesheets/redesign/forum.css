@@ -79,6 +79,12 @@
     border-width: 1px 0 0 0;
 }
 
+.topic-result-grid .x-grid3-td-post_content_column > div{
+    border: #DDD solid;
+    margin: 0 0 0 -1px;
+    border-width: 0 0 0 1px;
+}
+
 .topic-user-info-column{
     text-align: center;
     border: solid;

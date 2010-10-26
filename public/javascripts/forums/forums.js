@@ -61,7 +61,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             bbar: [{ iconCls:'add_forum', text:'Add Forum', handler: this.create_or_edit_forum,  scope: this, hidden: true, itemId: 'add_forum_button'}]
         };
 
-        var rowActionConfig = {xtype: 'xactioncolumn', icon: '/stylesheets/images/pencil.png', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_forum(grid.getStore().getAt(row).id);}, scope:this, tooltip: 'Edit'}
+        var rowActionConfig = {xtype: 'xactioncolumn', iconCls: 'edit_forum', icon: '/stylesheets/images/pencil.png', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_forum(grid.getStore().getAt(row).id);}, scope:this, tooltip: 'Edit'};
 
         var grid_config = {
             loadMask: true,
@@ -99,9 +99,9 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
 
     _create_topic_list_grid: function(store){
         var iconConfig = [
-            {icon: '/stylesheets/images/pencil.png', tooltip: 'Edit Topic', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_topic(grid.getStore().getAt(row).id);}, scope: this },
-            {icon: '/stylesheets/resources/images/default/layout/collapse.gif', tooltip: 'Move Topic', showField: 'is_super_admin', handler: function(grid, row){this.move_topic(grid.getStore().getAt(row).id);}, scope: this},
-            {icon: '/stylesheets/images/cross-circle.png', tooltip: 'Delete Topic', showField: 'is_super_admin', scope: this, handler: function(grid, row){
+            {icon: '/stylesheets/images/pencil.png', iconCls: 'edit_topic', tooltip: 'Edit Topic', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_topic(grid.getStore().getAt(row).id);}, scope: this },
+            {icon: '/stylesheets/resources/images/default/layout/collapse.gif', iconCls: 'move_topic', tooltip: 'Move Topic', showField: 'is_super_admin', handler: function(grid, row){this.move_topic(grid.getStore().getAt(row).id);}, scope: this},
+            {icon: '/stylesheets/images/cross-circle.png', tooltip: 'Delete Topic', iconCls: 'delete_topic', showField: 'is_super_admin', scope: this, handler: function(grid, row){
                 var store = grid.getStore();
                 Ext.Msg.confirm("Delete Record", 'Are you sure you wish to delete the topic "' + store.getAt(row).get("name") + '"', function(btn){
                     if(btn === 'yes'){
@@ -112,8 +112,8 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
         ];
 
         var leadIconConfig = [
-            {icon: '/images/yellow_thumbtack.png', tooltip: 'Pinned', showField: 'sticky'},
-            {icon: '/stylesheets/resources/images/default/grid/hmenu-lock.png', tooltip: 'Closed', showField: 'locked'}
+            {icon: '/images/yellow_thumbtack.png', iconCls: 'topic_pinned', tooltip: 'Pinned', showField: 'sticky'},
+            {icon: '/stylesheets/resources/images/default/grid/hmenu-lock.png', iconCls: 'topic_closed', tooltip: 'Closed', showField: 'locked'}
         ];
 
         var ptoolbar = new Ext.PagingToolbar({
@@ -129,6 +129,11 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             }
         });
 
+        var tpl = new Ext.XTemplate('<span qtip="{[this.limit(values.content)]}" class="inlineLink">{name}</span>',{
+          limit: function(val){if(val.length > 30) return val.substr(0, 30) + '...'; else return val;}
+        });
+        tpl.compile();
+
         this.topic_grid = new Ext.grid.GridPanel({
             frame: true,
             title: 'Topics',
@@ -140,13 +145,9 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                 columns: [
                     {xtype: 'xactioncolumn', items: leadIconConfig, vertical: true},
                     {header: ' ', sortable: false, dataIndex: 'user_avatar', renderer: this.render_user_avatar, width: 75},
-                    {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name', renderer: function(val){
-                        return '<span class="inlineLink">' + val + '</span>';
-                    }},
+                    {xtype: 'templatecolumn', id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name', tpl: tpl  },
                     {header: 'Replies', sortable: true, dataIndex: 'posts', width: 55},
-                    {header: 'Poster', sortable: true, dataIndex: 'poster_name', width: 100, renderer: function(val){
-                        return '<span class="inlineLink">' + val + '</span>';
-                    }},
+                    {xtype: 'templatecolumn', header: 'Poster', sortable: true, dataIndex: 'poster_name', width: 100, tpl: '<span class="inlineLink">{poster_name}</span>'},
                     {header: 'Created At', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
                     {header: 'Last Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
                     {xtype: 'xactioncolumn', items: iconConfig}
@@ -198,9 +199,6 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             buttons: [{
                 text:'Save',
                 handler: function(){
-                    if(!create_forum_win.saveMask) create_forum_win.saveMask = new Ext.LoadMask(create_forum_win.getLayoutTarget(), {msg: 'Saving...'});
-                    create_forum_win.saveMask.show();
-
                     var name = forum_name_box.getValue();
                     if(name === ""){
                         alert('Please provide a name for this forum.');
@@ -208,12 +206,6 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                     }
 
                     var selectedItems = create_forum_audience_panel.getSelectedIds();
-                    var valid = selectedItems.role_ids.length > 0 || selectedItems.jurisdiction_ids.length > 0 || selectedItems.user_ids.length > 0;
-                    if(!valid)
-                    {
-                        alert('Please select at least one user, jurisdiction, role, or group as an Audience for this forum.');
-                        return;
-                    }
 
                     var hidden = forum_hidden_box.getValue();
 
@@ -224,16 +216,25 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                         method = 'PUT';
                     }
 
+                    if(!create_forum_win.saveMask) create_forum_win.saveMask = new Ext.LoadMask(create_forum_win.getLayoutTarget(), {msg: 'Saving...'});
+                    create_forum_win.saveMask.show();
+
+                    var params = {
+                        'forum[audience_attributes][jurisdiction_ids][]': selectedItems.jurisdiction_ids,
+                        'forum[audience_attributes][role_ids][]': selectedItems.role_ids,
+                        'forum[audience_attributes][user_ids][]': selectedItems.user_ids,
+                        'forum[hide]': hidden ? '1' : '0',
+                        'forum[name]': name
+                    };
+                    if(edit_mode){
+                        params['forum[audience_attributes][id]'] = create_forum_win.audience_id;
+                        params['forum[audience_attributes][lock_version]'] = create_forum_win.lock_version;
+                    }
+
                     Ext.Ajax.request({
                         url: url,
                         method: method,
-                        params: {
-                            'forum[audience_attributes][jurisdiction_ids][]': selectedItems.jurisdiction_ids,
-                            'forum[audience_attributes][role_ids][]': selectedItems.role_ids,
-                            'forum[audience_attributes][user_ids][]': selectedItems.user_ids,
-                            'forum[hide]': hidden ? '1' : '0',
-                            'forum[name]': name
-                        },
+                        params: params,
                         callback: function(options, success, response){
                             create_forum_win.saveMask.hide();
                             if(success){
@@ -241,7 +242,13 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                                 this.refresh();
                             }
                             else{
-                                Ext.Msg.alert(response.responseText);
+                                var result = Ext.decode(response.responseText);
+                                if(result && result.msg){
+                                    Ext.Msg.alert(result.msg);
+                                }
+                                else{
+                                    Ext.Msg.alert(response.responseText);
+                                }
                             }
                         },
                         scope: this
@@ -269,6 +276,8 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                         create_forum_win.loadMask.hide();
                         var forum_detail = Ext.decode(response.responseText);
                         forum_name_box.setValue(forum_detail.name);
+                        create_forum_win.audience_id = forum_detail.audience.id;
+                        create_forum_win.lock_version = forum_detail.lock_version;
                         forum_hidden_box.setValue(forum_detail.hidden_at ? true : false);
                         Ext.each(forum_detail.audience.users, function(user){user.name = user.display_name;});
                         create_forum_audience_panel.load(forum_detail.audience.jurisdictions,  forum_detail.audience.roles, forum_detail.audience.users);

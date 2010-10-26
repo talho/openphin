@@ -63,6 +63,7 @@ class TopicsController < ApplicationController
                             x[:formatted_content] = RedCloth.new(h(x.content)).to_html
                             x.as_json(:include => {:poster => {:only => [:display_name, :id, :photo] }})
                          end,
+                         :is_super_admin => current_user.is_super_admin?,
                          :page => @comments.current_page,
                          :per_page => @comments.per_page,
                          :total_entries => @comments.total_entries,
@@ -133,6 +134,18 @@ class TopicsController < ApplicationController
     params[:topic].delete("dest_forum_id")
 
     unless params[:topic][:comment_attributes].nil?
+      #we're going to check and make sure that the topic that we're updating isn't closed. if it's closed and there are comments, well, we need to return an error
+      unless @topic.locked_at.nil?
+        error = "This forum topic was closed and you will be unable to add or edit comments herein."
+        respond_to do |format|
+          format.html do
+            flash[:error] = error
+            redirect_to forum_topic_path(@topic)
+          end
+          format.json {render :json => {:success => false, :msg => error}, :status => 406}
+        end
+        return
+      end
       params[:topic][:comment_attributes][:poster_id] = current_user.id if params[:topic][:comment_attributes][:poster_id].nil?
     end
 

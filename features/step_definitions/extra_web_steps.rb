@@ -63,3 +63,11 @@ end
 When /^(?:I )?(?:pause|debug)$/ do
   debugger
 end
+
+Then /^I should see html "([^\"]*)"$/ do |html|
+  begin
+    page.source.should =~ /#{html}/
+  rescue
+    raise "Could not find \"#{html}\""
+  end
+end

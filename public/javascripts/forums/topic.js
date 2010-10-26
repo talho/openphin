@@ -22,8 +22,18 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
             ],
             listeners:{
                 scope: this,
-                'load': function(){
+                'load': function(store){
                     this.getPanel().doLayout();
+
+                    // If this topic is locked, we need to make sure we have removed the add reply buttons
+                    var locked = store.reader.getBaseProperty('locked');
+                    if(locked){
+                        var grid = this.getPanel().getComponent('topic_grid');
+                        var tbar = grid.getTopToolbar();
+                        var bbar = grid.getBottomToolbar();
+                        tbar.remove(tbar.getComponent('add_comment_button'));
+                        bbar.remove(bbar.getComponent('add_comment_button'));
+                    }
                 },
                 'exception':function(proxy, type, action, options, response){
                     if(response.status == 404){
@@ -46,7 +56,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
             pageSize: 20,
             buttons:[
                 '->',
-                {text: 'Add Reply', iconCls: 'topic-add-comment-button', scope: this,
+                {itemId: 'add_comment_button', text: 'Add Reply', iconCls: 'topic-add-comment-button', scope: this,
                     handler: function(){
                         if(!this.comment_window_open){
                             this.show_comment_window();
@@ -77,6 +87,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     store: store,
                     title: this.tab_config.title,
                     frame: true,
+                    bodyCssClass: 'topic_grid',
                     columns: [
                         {xtype:'templatecolumn', width: 165, tpl: '<div class="topic-user-info-column"><div class="topic-user-name">{user_name}</div><div><img height="100" width="100" src="{user_avatar}"</div><div>Posted: {created_at:date("n/j/y g:i:s A")}</div></div>'},
                         {id: 'post_content_column', xtype: 'templatecolumn', tpl: '<div class="topic-content">{formatted_content}</div>'}
@@ -86,7 +97,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     tbar: {
                         items:[
                             '->',
-                            {text: 'Add Reply', iconCls: 'topic-add-comment-button', scope: this,
+                            {itemId: 'add_comment_button', text: 'Add Reply', iconCls: 'topic-add-comment-button', scope: this,
                                 handler: function(){
                                     if(!this.comment_window_open){
                                         this.show_comment_window();
@@ -120,9 +131,15 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                             '</div>'
                         ),
                         getRowClass: function(record, index, rowParams, store){
+                            var locked = store.reader.getBaseProperty('locked');
+                            var is_super_admin = store.reader.getBaseProperty('is_super_admin');
                             rowParams.body = '<div class="topic-additional-row x-toolbar">&nbsp; <div class="topic-control-buttons">';
-                            if(record.get('is_moderator')) rowParams.body += '<span class="topic-delete-comment-button">Delete</span><span class="topic-edit-comment-button">Edit</span>';
-                            rowParams.body += '<span class="topic-quote-comment-button">Quote</span></div></div>';
+                            if(is_super_admin) rowParams.body += '<span class="topic-delete-comment-button">Delete</span>';
+                            if(!locked){
+                                if(record.get('is_moderator')) rowParams.body += '<span class="topic-edit-comment-button">Edit</span>';
+                                rowParams.body += '<span class="topic-quote-comment-button">Quote</span>';
+                            }
+                            rowParams.body += '</div></div>';
                             return "topic-result-grid";
                         }
                     },
@@ -224,7 +241,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                 layout: 'anchor',
                 border: false,
                 items: [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -20', hideLabel: true, name: 'topic[comment_attributes][content]'},
-                    {xtype:'box', anchor: '100% b', autoEl:{tag: 'a', href: 'http://redcloth.org/hobix.com/textile/quick.html'}, html: 'Textile Quick Reference'}],
+                    {xtype:'box', anchor: '100% b', autoEl:{tag: 'a', href: 'http://redcloth.org/hobix.com/textile/quick.html', target: '_blank'}, html: 'Textile Quick Reference'}],
                 buttons:[
                     {text: 'Save', scope: this, handler: function(){
                         var formPanel = win.getComponent('comment_form');
@@ -253,15 +270,17 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                             },
                             failure: function(form, action){
                                 win.saveMask.hide();
-                                var result = Ext.decode(action.responseText);
+                                var result = Ext.decode(action.response.responseText);
                                 if(Ext.isArray(result)){
                                     alert('There was an error with validation: ' + Ext.flatten(result).join(', '));
                                 }
                                 else if(result && result.msg){
                                     alert(result.msg);
+                                    if(action.response.status == 406)
+                                        win.close();
                                 }
                                 else{
-                                    alert(action.responseText);
+                                    alert(action.response.responseText);
                                 }
                             }
                         });

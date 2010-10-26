@@ -9,7 +9,7 @@ Ext.ns("Talho");
     dominoes.rule('AlertDetail', '$(ext_extensions)/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
 
     var regList = {
-        'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
+        'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js > /javascripts/han/alert_constants.js'},
         'Talho.AlertDetail': {js:'AlertDetail'},
         'Talho.AdvancedSearch': {js:'AjaxPanel > /javascripts/searches/AdvancedSearch.js'},
         'Talho.ManageGroups': {js:'$(ext_extensions)/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
