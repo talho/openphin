@@ -190,13 +190,12 @@ I should be able to edit my profile
 
   Scenario: Editing profile concurrently to an admin editing the user's profile
     Given I am logged in as "john.smith@example.com"
-    When I go to the edit profile page
-    Then I should see the profile edit form
-
-    When I fill in the form with the following info:
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Edit Profile"
+    And I fill in the ext form with the following info:
       | Job description                   | A developer |
-      | Preferred name to be displayed    | Keith G. |
-      | Preferred language                | English |
+      | Display name                      | Keith G. |
+      | Language                          | English |
       | Job title                         | Developer |
       | Bio                               | Maybe the austin powers reference was too much |
       | Credentials                       | Rock star, Certified |
@@ -219,20 +218,21 @@ I should be able to edit my profile
     Given I am logged in as "john.smith@example.com"
     And session name is "default"
     And I press "Save"
-    Then I should see the profile edit form
+    #Then I should see the profile edit form
     And I should see "Another user has recently updated this profile, please try again."
-    And the "Preferred name to be displayed" field should contain "John Smith"
-    When I fill in the form with the following info:
+    And I press "Cancel"
+    And I navigate to "My Account > Edit Profile"
+    And the "Display name" field should contain "John Smith"
+    When I fill in the ext form with the following info:
       | Job description                   | A developer |
-      | Preferred name to be displayed    | Keith G. |
-      | Preferred language                | English |
+      | Display name                      | Keith G. |
+      | Language                          | English |
       | Job title                         | Developer |
       | Bio                               | Maybe the austin powers reference was too much |
       | Credentials                       | Rock star, Certified |
       | Experience                        | Summer camp director  |
       | Employer                          | State of Texas |
     And I press "Save"
-    Then I should see the profile page
-    And I should not see any errors
-    And I should see "Profile information saved."
+    Then I should not see any errors
+    And I should see "Profile information saved"
     And quit session name "admin session"

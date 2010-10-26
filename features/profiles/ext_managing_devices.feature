@@ -28,13 +28,13 @@ Feature: Managing devices when editing user profiles
     And I select "E-mail" from ext combo "Device type"
     And I fill in "Device info" with "johnny@example.com"
     And I press "Add"
-    Then I should see "johnny@example.com" within ".device-item"
-    And I should see "E-mail" within ".device-item"
+    Then I should see the following within ".device-item":
+      | johnny@example.com | E-mail | needs to be saved |
     When I press "Save"
     Then "john.smith@example.com" should have the communication device
       | Email | johnny@example.com |
-    And I should see "johnny@example.com" within ".device-item"
-    And I should see "E-mail" within ".device-item"
+    And I should see the following within ".device-item":
+      | johnny@example.com | E-mail |
 
   Scenario: Removing a device as a user
     Given john.smith@example.com has the following devices:

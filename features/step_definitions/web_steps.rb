@@ -150,6 +150,20 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
+Then /^(?:|I )should (not )?see the following within "([^"]*)":$/ do |selector, flavor, table|
+  with_scope(selector) do
+    table.raw.each { |row|
+      row.each { |e|
+        if page.respond_to? :should
+          page.should have_content(e)
+        else
+          assert page.has_content?(e)
+        end
+      }
+    }
+  end
+end
+
 When /I fill in fcbk control with "([^"]*)"/ do |user|
   fill_in_fcbk_control(user, false)
 end
