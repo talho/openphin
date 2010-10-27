@@ -31,12 +31,13 @@ Feature: Managing devices when editing user profiles
     Then I should see the following within ".device-item":
       | johnny@example.com | E-mail | needs to be saved |
     When I press "Save"
-    Then "john.smith@example.com" should have the communication device
+    Then I should not see any errors
+    And "john.smith@example.com" should have the communication device
       | Email | johnny@example.com |
     And I should see the following within ".device-item":
       | johnny@example.com | E-mail |
 
-  Scenario: Removing a device as a user
+  Scenario: Removing a device
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     When I go to the ext dashboard page
@@ -45,7 +46,8 @@ Feature: Managing devices when editing user profiles
     And I press "Remove device"
     Then I should not see "5552345678"
     When I press "Save"
-    Then "john.smith@example.com" should not have the communication device
+    Then I should not see any errors
+    And "john.smith@example.com" should not have the communication device
       | Phone | 5552345678 |
     And I should not see "5552345678"
 
@@ -72,6 +74,34 @@ Feature: Managing devices when editing user profiles
     Then I should see "Phone is invalid"
     And "john.smith@example.com" should not have the communication device
       | Phone |  |
+
+  Scenario: Adding a duplicate device
+    Given john.smith@example.com has the following devices:
+      | Phone | 5552345678 |
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Devices"
+    And I press "Add device"
+    And I select "Phone" from ext combo "Device type"
+    And I fill in "Device info" with "5552345678"
+    And I press "Add"
+    And I press "Save"
+    Then I should see "Device already exists"
+
+  Scenario: Add and remove a device then save
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Devices"
+    And I press "Add device"
+    And I select "SMS" from ext combo "Device type"
+    And I fill in "Device info" with "5556667788"
+    And I press "Add"
+    Then I should see the following within ".device-item":
+      | 5556667788 | SMS | needs to be saved |
+    When I click device-item "5556667788"
+    And I press "Remove device"
+    Then I should not see "5556667788"
+    When I press "Save"
+    Then I should not see any errors
+    And I should see "Devices saved"
 
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"

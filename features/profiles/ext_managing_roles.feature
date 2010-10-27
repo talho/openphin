@@ -82,3 +82,19 @@ I should be able to remove all but one public role from my profile
     Then I should not see any errors
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
+
+  Scenario: Add and remove a role then save
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    And I press "Add role"
+    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I press "Add"
+    Then I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | needs to be saved |
+    When I click role-item "BioTerrorism Coordinator"
+    And I press "Remove role"
+    Then I should not see "BioTerrorism Coordinator"
+    When I press "Save"
+    Then I should not see any errors
+    And I should see "Requests sent"
