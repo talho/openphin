@@ -60,8 +60,33 @@ class Audience < ActiveRecord::Base
   #TODO: opportunity for optimization:  perform this function in SQL, not using map
   def foreign_users
     @foreign_users ||= users.reject{|u| u.jurisdictions.foreign.empty? }
+  end                                                                        
+
+  def copy
+    attrs = self.attributes
+    ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
+    a = Audience.new(attrs)
+    jurisdictions.each{|jur| a.jurisdictions << jur}
+    roles.each{|role| a.roles << role}
+    users.each{|user| a.users << user}
+    a
   end
 
+  def refresh_recipients
+    self.update_attribute('recipients_expires', Time.now + 1.minute)
+    ActiveRecord::Base.transaction do
+      clear_recipients ? true : raise(ActiveRecord::Rollback)
+      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) unless self.users.empty?
+      (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
+      (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
+      (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
+      target = Target.find_by_audience_id(self.id)
+      (update_han_coordinators_recipients ? true : raise(ActiveRecord::Rollback)) if target && target.item_type == "Alert"
+    end
+    return true
+  end
+
+<<<<<<< HEAD
   def copy
     attrs = self.attributes
     ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
@@ -96,6 +121,18 @@ class Audience < ActiveRecord::Base
   private
   def clear_recipients
     db = ActiveRecord::Base.connection()
+=======
+  protected
+  def at_least_one_recipient?
+    if roles.empty? & jurisdictions.empty? & users.empty?
+      errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
+    end
+  end
+
+  private
+  def clear_recipients
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     sql = "DELETE FROM audiences_recipients WHERE audience_id = #{id}"
 
     begin
@@ -107,7 +144,11 @@ class Audience < ActiveRecord::Base
   end
 
   def update_jurisdictions_recipients
+<<<<<<< HEAD
     db = ActiveRecord::Base.connection()
+=======
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     jurisdictions.each do |j|
       sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
       sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
@@ -123,7 +164,11 @@ class Audience < ActiveRecord::Base
   end
 
   def update_roles_recipients
+<<<<<<< HEAD
     db = ActiveRecord::Base.connection()
+=======
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     roles.each do |r|
       sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
       sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
@@ -139,7 +184,11 @@ class Audience < ActiveRecord::Base
   end
 
   def update_roles_jurisdictions_recipients
+<<<<<<< HEAD
     db = ActiveRecord::Base.connection()
+=======
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     jurisdictions.each do |j|
       roles.each do |r|
         sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
@@ -157,7 +206,11 @@ class Audience < ActiveRecord::Base
   end
 
   def update_users_recipients
+<<<<<<< HEAD
     db = ActiveRecord::Base.connection()
+=======
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
     sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
     sql += " WHERE au.audience_id = #{id} AND ar.user_id IS NULL"
@@ -189,16 +242,28 @@ class Audience < ActiveRecord::Base
       # intersecting will give us all the ancestors in common
       intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
 
+<<<<<<< HEAD
       # So we grab the lowest common ancestor; ancestory at the loweest level
       ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level}]).compact
     end
 
     db = ActiveRecord::Base.connection()
+=======
+      # So we grab the lowest common ancestor; ancestory at the lowest level
+      ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level }]).compact
+    end
+
+    db = ActiveRecord::Base.connection();
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     sql = "INSERT INTO audiences_recipients (audience_id, user_id, is_hacc)"
     sql += " SELECT DISTINCT #{id}, rm.user_id, true FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
     sql += " WHERE rm.role_id = #{Role.han_coordinator.id}"
     sql += " AND rm.jurisdiction_id IN (#{jurs.map(&:id).join(',')})"
     sql += " AND ar.user_id IS NULL"
+<<<<<<< HEAD
+=======
+
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.
     begin
       db.execute sql
     rescue
@@ -206,4 +271,8 @@ class Audience < ActiveRecord::Base
     end
     true
   end
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> Refactoring audiences from using single complex SQL query to audiences_recipients lookup table.  Built in association extensions to support refreshing based on a specified time interval.

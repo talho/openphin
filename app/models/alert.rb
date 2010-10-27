@@ -402,12 +402,6 @@ class Alert < ActiveRecord::Base
 
   end
 
-  def recipients
-    @recips ||= targets.map(&:users).flatten
-    @recips += User.find(required_han_coordinators).uniq if is_cross_jurisdictional?
-    @recips.flatten.uniq
-  end
-
   def total_jurisdictions
     total_jurisdictions = audiences.map(&:jurisdictions).flatten
     
