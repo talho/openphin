@@ -29,7 +29,7 @@ end
 
 height_position -= height
 
-TempUser.paginated_each(:per_page => 1000, :order => "last_name", :order => "last_name") { |user|
+@group.recipients.with_refresh(:batch_size => 1000, :order => "last_name") { |user|
   name = user.display_name
   height = pdf.height_of(name)
   email = user.email

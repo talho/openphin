@@ -108,13 +108,13 @@ end
 When 'I follow the acknowledge alert link "$title"' do |title|
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   if title.blank?
-    visit token_acknowledge_alert_url(attempt, attempt.token, :host => "localhost:9887")
+    visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => "localhost:9887")
   else
     call_down_response = attempt.alert.call_down_messages.index(title).to_i
     if current_user.nil?
       raise "Step not yet supported if no user is logged in"
     else
-      visit email_acknowledge_alert_url(attempt, call_down_response, :host => "localhost:9887")
+      visit email_acknowledge_alert_url(attempt.alert, call_down_response, :host => "localhost:9887")
     end
   end
 end

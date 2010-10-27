@@ -11,10 +11,15 @@ Feature: Sending documents with selected scopes
       | Jurisdiction  | Wise County           |
       | Jurisdiction  | Potter County         |
       | Jurisdiction  | Texas                 |
+      | Jurisdiction  | Federal               |
       | Approval Role | Health Officer        |
       | Approval Role | Immunization Director |
       | Approval Role | Epidemiologist        |
       | Approval Role | WMD Coordinator       |
+    And Federal is the parent jurisdiction of:
+      | Texas |
+    And Texas is the parent jurisdiction of:
+      | Dallas County | Tarrant County | Wise County | Potter County |
     And the following users exist:
       | John Smith      | john.smith@example.com      | Health Alert and Communications Coordinator | Dallas County  |
       | Brian Simms     | brian.simms@example.com     | Epidemiologist                              | Dallas County  |
@@ -32,9 +37,6 @@ Feature: Sending documents with selected scopes
     And "jason.phipps@example.com" is not public in "Texas"
     And "dan.morrison@example.com" is not public in "Texas"
     And "brian.ryckbost@example.com" is not public in "Texas"
-
-    And Texas is the parent jurisdiction of:
-      | Dallas County | Tarrant County | Wise County | Potter County |
 
     And the role "Health Alert and Communications Coordinator" is an alerter
     When delayed jobs are processed

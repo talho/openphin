@@ -66,6 +66,7 @@ class AlertsController < ApplicationController
     else
       @preview = true
       @token = current_user.token
+      @num_recipients = 0
       render :new
     end
   end
