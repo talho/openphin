@@ -47,7 +47,10 @@ Talho.ux.BaseSelectionGrid = Ext.extend(Ext.Panel,{
                 rows.push(row);
         });
 
-        this.getSelectionModel().selectRows(rows);
+        if(this.getSelectionModel().grid)
+            this.getSelectionModel().selectRows(rows);
+        else
+            this.getSelectionModel().selectRows(rows, true); // get around the case when this is called prior to the grid being fully rendered
     },
 
     _createFilterField: function(){

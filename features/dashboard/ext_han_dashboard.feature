@@ -20,17 +20,7 @@ Feature: Viewing the dashboard
           | TarrantCounty Admin  | admin@tarrantcounty.com      |
         And Texas has the following administrators:
           | Zach Dennis   | admin@texas.com      |
-
-    Scenario: Dashboard should show the unapproved role requests
-    Given the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |
-    And I am logged in as "john.smith@example.com"
-    And "john.smith@example.com" has requested to be a "HAN Coordinator" for "Dallas County"
-    When I go to the ext dashboard page
-    And I navigate to "My Account > Request Roles"
-    Then the "Request Roles" tab should be open
-    Then I should see 1 pending role request
-
+        
     Scenario: Dashboard should show only the panels each user has access to
 
     Scenario: Dashboard should show the user navigation

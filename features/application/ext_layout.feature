@@ -62,9 +62,12 @@ Feature: Application layout should have communications, portal & application too
       | Rollcall        |
     When I press "My Account" within "#top_toolbar"
     Then I should see the following ext menu items:
-      | name          |
-      | Profile       |
-      | Request Roles |
+      | name                 |
+      | Edit Profile         |
+      | Change Password      |
+      | Manage Devices       |
+      | Manage Roles         |
+      | Manage Organizations |
     #And I should see 4 "article" sections
 
   Scenario: Seeing the Administrator menu as an admin

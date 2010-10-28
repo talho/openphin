@@ -116,10 +116,10 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
             store_listeners:{
                 scope: this,
                 'load': function(){
-                         // look for all of the jurisdictions in the selectedItemsStore
-                        var jurisdictions = [];
-                        this.selectedItemsStore.query('type', 'jurisdiction').each( function(jurisdiction){jurisdictions.push({id:jurisdiction.get('id')}); } );
-                        this.jurisdictionTree.load(jurisdictions);
+                     // look for all of the jurisdictions in the selectedItemsStore
+                    var jurisdictions = [];
+                    this.selectedItemsStore.query('type', 'jurisdiction').each( function(jurisdiction){jurisdictions.push({id:jurisdiction.get('id')}); } );
+                    this.jurisdictionTree.load(jurisdictions);
                 }
             },
             sm_listeners:{

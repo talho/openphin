@@ -79,7 +79,6 @@ Feature: Creating and sending alerts
       | Health Officer  | Role         |
       | Epidemiologist  | Role         |
       | Keith Gaddis    | User         |
-
     And I click breadCrumbItem "Preview"
 
     And I should see "For more details, keep on reading..."
