@@ -72,8 +72,6 @@ ActionController::Routing::Routes.draw do |map|
   #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
   map.resources :admin_users, :controller => "admin/users"
 
-  map.connect "users/jurisdictions", :controller => "user_profiles", :action => "jurisdictions"
-  map.connect "users/roles",         :controller => "user_profiles", :action => "roles"
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.resources :devices

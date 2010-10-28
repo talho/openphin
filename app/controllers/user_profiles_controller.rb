@@ -233,7 +233,7 @@ protected
       'Device::FaxDevice' =>        'fax',
       'Device::BlackberryDevice' => 'blackberry'
     }
-    device_list.find_all{|d| d["state"]=="deleted"}.each { |d|
+    device_list.find_all{|d| d["state"]=="deleted" && d["id"] > 0}.each { |d|
       device_to_delete = Device.find(d["id"])
       device_to_delete.destroy if @user == device_to_delete.user
     }
@@ -264,7 +264,7 @@ protected
     rq_errors = []
 
     ActiveRecord::Base.transaction {
-      rq_list.find_all{|rq| rq["state"]=="deleted"}.each { |rq|
+      rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
         rqType = (rq["type"]=="req") ? RoleRequest : RoleMembership
         rq_to_delete = rqType.find(rq["id"])
         if rq_to_delete && @user == rq_to_delete.user

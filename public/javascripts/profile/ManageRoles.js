@@ -95,17 +95,23 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
 
     var win = new Ext.Window({
       title: "Add Role",
-      layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
-      width: 600,
+      layout: 'form',
+      labelAlign: 'top',
+      padding: '10',
+      width: 600, height: 250,
       items: [
-        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
-          {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
-            store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
+        {xtype: 'container', layout: 'hbox', anchor: '100%', items: [
+          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.4, items: [
+            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
+              anchor: '100%', store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.6, margins: '0 0 0 10', items: [
+            {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
+              anchor: '100%', store: this.roles_store, mode: 'local', displayField: 'name'}
+          ]}
         ]},
-        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
-          {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
-            store: this.roles_store, mode: 'local', displayField: 'name'}
-        ]}
+        {xtype: 'textarea', fieldLabel: 'Role Description', anchor: '100% -50',
+          html: 'Role description per CDC bureaucratic explanation process'}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -148,12 +154,8 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
   },
   save_success_cb: function(response, opts) {
     this.getPanel().find("name", "save_button")[0].enable();
-    var json = Ext.decode(response.responseText);
-    if (json.type != "rollback")
-      this.load_form_values();
-    else
-      this.getPanel().loadMask.hide();
-    this.show_message(json);
+    this.load_form_values();
+    this.show_message(Ext.decode(response.responseText));
   },
   save_err_cb: function(response, opts) {
     this.getPanel().find("name", "save_button")[0].enable();

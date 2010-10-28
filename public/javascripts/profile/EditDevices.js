@@ -19,7 +19,9 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       '<ul class="devices">',
       '<tpl for=".">',
         '<li class="device-item">',
-          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}</p>',
+          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<br>',
+            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '</p>',
         '</li>',
       '</tpl>',
       '</ul>'

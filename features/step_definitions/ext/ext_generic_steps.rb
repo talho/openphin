@@ -192,3 +192,7 @@ When /^I should see "([^\"]*)" (\d) times? within "([^\"]*)"$/ do |item_name, nu
      page.all(:xpath, "//*[./text() = '#{item_name}']").length.should == number.to_i
    end
 end
+
+When /^(?:I )?sleep (\d+)/ do |sec|
+  sleep(sec.to_f)
+end
