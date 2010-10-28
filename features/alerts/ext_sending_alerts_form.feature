@@ -142,7 +142,7 @@ Feature: Sending alerts form
     And I check "E-mail"
     And I select "Texas" from ext combo "Jurisdiction"
     And I click breadCrumbItem "Audience"
-    And I click contextDownArrow ""
+    And I click contextArrow ""
     Then I should see "Select All Sub-jurisdictions"
     Then I should see "Select No Sub-jurisdictions"
 

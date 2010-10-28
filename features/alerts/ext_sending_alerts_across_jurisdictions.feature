@@ -21,7 +21,7 @@ Feature: Sending alerts across jurisdictions
       | Dan Morrison    | dan.morrison@example.com    | Health Alert and Communications Coordinator | Ottawa County  |
       | Zach Dennis     | zach.dennis@example.com     | Health Alert and Communications Coordinator | Dallas County  |
       | Brandon Keepers | brandon.keepers@example.com | Health Alert and Communications Coordinator | Texas          |
-      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Officer                              | Texas          |
+      | Brian Ryckbost  | brian.ryckbost@example.com  | Health Alert and Communications Coordinator | Texas          |
 
     And Texas is the parent jurisdiction of:
       | Dallas County | Tarrant County | Wise County | Potter County |
@@ -39,10 +39,10 @@ Feature: Sending alerts across jurisdictions
     And I fill in "Message" with "For more details, keep on reading..."
 
     And I select the following alert audience:
-      | name           | type         |
-      | Tarrant County | Jurisdiction |
-      | Wise County    | Jurisdiction |
-      | Health Officer | Role         |
+      | name                                        | type         |
+      | Tarrant County                              | Jurisdiction |
+      | Wise County                                 | Jurisdiction |
+      | Health Alert and Communications Coordinator | Role         |
 
     And I send the alert
 
@@ -60,9 +60,9 @@ Feature: Sending alerts across jurisdictions
     And I fill in "Message" with "For more details, keep on reading..."
 
     And I select the following alert audience:
-      | name           | type         |
-      | Texas          | Jurisdiction |
-      | Health Officer | Role         |
+      | name                                        | type         |
+      | Texas                                       | Jurisdiction |
+      | Health Alert and Communications Coordinator | Role         |
 
     And I send the alert
 
@@ -81,9 +81,9 @@ Feature: Sending alerts across jurisdictions
     And I fill in "Message" with "For more details, keep on reading..."
 
     And I select the following alert audience:
-      | name           | type         | state    |
-      | Ottawa County  | Jurisdiction | Michigan |
-      | Health Officer | Role         |          |
+      | name                                        | type         | state    |
+      | Ottawa County                               | Jurisdiction | Michigan |
+      | Health Alert and Communications Coordinator | Role         |          |
 
     And I send the alert
     

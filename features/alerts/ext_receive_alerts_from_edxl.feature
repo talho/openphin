@@ -132,7 +132,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-184" has an original alert "CDC-2009-183"
     And the following users should receive the alert email:
       | People        | keith@example.com |
-      | subject       | Health Alert "[Update] - Cases of Vibrio vulnificus identified among Hurricane Katrina evacuees" |
+      | subject       | Health Alert "[Update] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
@@ -157,7 +157,7 @@ Feature: Alerts from EDXL
     And the cancelled alert "CDC-2009-185" has an original alert "CDC-2009-183"
     And the following users should receive the alert email:
       | People        | keith@example.com |
-      | subject       | Health Alert "[Cancel] - Cases of Vibrio vulnificus identified among Hurricane Katrina evacuees" |
+      | subject       | Health Alert "[Cancel] - Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page

@@ -188,7 +188,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
         var forum_hidden_box = new Ext.form.Checkbox({boxLabel: 'Hidden'});
 
         var create_forum_win = new Ext.Window({
-            title: edit_mode ? 'Edite Forum' : 'New Forum',
+            title: edit_mode ? 'Edit Forum' : 'New Forum',
             layout: 'border',
             width: 600,
             height: 500,

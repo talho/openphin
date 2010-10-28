@@ -160,7 +160,7 @@ module EDXL
           a.save!
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
-
+          
           if a.message_type == "Cancel" || a.message_type == "Update"
             a.title = "[#{a.message_type}] - #{a.title}"
             a.original_alert_id = original_alert.id
