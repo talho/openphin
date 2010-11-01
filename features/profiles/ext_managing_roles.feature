@@ -98,3 +98,78 @@ I should be able to remove all but one public role from my profile
     When I press "Save"
     Then I should not see any errors
     And I should see "Requests sent"
+
+  Scenario: Adding a duplicate role
+    BioTerrorism Coordinator
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I press "Add role"
+    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I press "Add"
+    Then I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | needs to be saved |
+    When I press "Save"
+    Then I should not see any errors
+    And I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | waiting for approval |
+
+  Scenario: Add and remove a role then save
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I press "Add role"
+    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I press "Add"
+    Then I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | needs to be saved |
+    When I press "Save"
+    Then I should not see any errors
+    And I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | waiting for approval |
+
+  Scenario: Adding a duplicate role request
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I press "Add role"
+    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I press "Add"
+    When I press "Add role"
+    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
+    And I select "Potter County" from ext combo "Jurisdiction"
+    And I press "Add"
+    And I press "Save"
+    Then I should see "Role has already been requested for this jurisdiction"
+
+  Scenario: Adding a role request duplicating an existing role membership
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+    Then the "Manage Roles" tab should be open
+    When I press "Add role"
+    And I select "Public" from ext combo "rq[role]"
+    And I select "Dallas County" from ext combo "Jurisdiction"
+    And I press "Add"
+    And I press "Save"
+    Then I should see "User is already a member of this role and jurisdiction"
+  
+  Scenario: As a user the add role window should not display system-roles or foreign jurisdictions
+    Given there is an system only Admin role
+    And the following users exist:
+      | John Smith      | john.smith@example.com   | Public | Dallas County |
+    And I am logged in as "john.smith@example.com" 
+    When I go to the ext dashboard page
+    And I navigate to "My Account > Manage Roles"
+
+    And I press "Add role"
+    And I open ext combo "rq[role]"
+    Then I should see "BioTerrorism Coordinator"
+    And I should not see "Admin"
+
+    When I press "Add role"
+    And I open ext combo "Jurisdiction"
+    Then I should see "Dallas County"
+    And I should not see "Federal"
