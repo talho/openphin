@@ -4,15 +4,19 @@ Ext.ns("Talho");
 (function(){
     dominoes.property('ext_extensions', '/javascripts/ext_extensions');
     dominoes.rule('RowActions', '(( $css(/stylesheets/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
-    dominoes.rule('TreeGrid', '(( $css(/stylesheets/TreeGrid/css/TreeGrid.css) $css(/stylesheets/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js');
-    dominoes.rule('AudiencePanel', 'TreeGrid $(ext_extensions)/DataTip.js RowActions $(ext_extensions)/DoNotCollapseActive.js > $(ext_extensions)/AudiencePanel.js');
-    dominoes.rule('AlertDetail', '$(ext_extensions)/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
+    dominoes.rule('TreeGrid', '(( $css(/stylesheets/TreeGrid/css/TreeGrid.css) $css(/stylesheets/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
+    dominoes.rule('JurisdictionsTree', 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/JurisdictionsTree.js )');
+    dominoes.rule('RoleSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/RoleSelectionGrid.js )');
+    dominoes.rule('GroupSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/GroupSelectionGrid.js )');
+    dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js /javascripts/audience/UserSelectionGrid.js');
+    dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid /javascripts/audience/AudiencePanel.js');
+    dominoes.rule('AlertDetail', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
 
     var regList = {
-        'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js > /javascripts/han/alert_constants.js'},
+        'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
         'Talho.AlertDetail': {js:'AlertDetail'},
         'Talho.AdvancedSearch': {js:'AjaxPanel > /javascripts/searches/AdvancedSearch.js'},
-        'Talho.ManageGroups': {js:'$(ext_extensions)/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
+        'Talho.ManageGroups': {js:'/javascripts/audience/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
