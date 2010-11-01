@@ -27,7 +27,13 @@ class Target < ActiveRecord::Base
 #            inner join role_memberships on users.id=role_memberships.user_id
 #          where #{conditions_for(audience)}"
 #    )
-    user_ids = audience.recipients(:include_public => item.include_public_users?, :recreate => true).find(:all, :select => "id").map(&:id)
+    user_ids = if item_type == 'Alert' && !item.not_cross_jurisdictional
+      audience.recipients.with_refresh(:select => "id", :force => true).map(&:id)
+    elsif ["Channel", "Document"].include?(item_type)
+      audience.recipients.with_refresh_and_no_hacc(:select => "id", :force => true, :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
+    else
+      audience.recipients.with_refresh_and_no_hacc(:select => "id", :force => true).map(&:id)
+    end
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end
 

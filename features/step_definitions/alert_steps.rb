@@ -58,9 +58,7 @@ Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (
   alert = Alert.find_by_title(title)
   delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
   aa = alert.alert_attempts.find_by_user_id(u.id)
-  aa.created_at += (delta)
-  aa.save
-  aa.acknowledge! :ack_response => alert.call_down_messages.index(message)
+  aa.acknowledge! :ack_response => alert.call_down_messages.index(message).to_i, :acknowledged_at => (Time.now + delta)
 end
 
 Given /^(\d*) random alerts$/ do |count|
@@ -117,13 +115,13 @@ end
 When 'I follow the acknowledge alert link "$title"' do |title|
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   if title.blank?
-    visit token_acknowledge_alert_url(attempt, attempt.token, :host => "localhost:9887")
+    visit token_acknowledge_alert_url(attempt.alert, attempt.token, :host => "localhost:9887")
   else
     call_down_response = attempt.alert.call_down_messages.index(title).to_i
     if current_user.nil?
       raise "Step not yet supported if no user is logged in"
     else
-      visit email_acknowledge_alert_url(attempt, call_down_response, :host => "localhost:9887")
+      visit email_acknowledge_alert_url(attempt.alert, call_down_response, :host => "localhost:9887")
     end
   end
 end
@@ -365,12 +363,12 @@ end
 
 When /^I re\-submit a cancellation for "([^\"]*)"$/ do |title|
   visit path_to("the cancel alert page", title)
-  When "I press \"Preview Message\""
+  #When "I press \"Preview Message\""
 end
 
 When /^I re\-submit an update for "([^\"]*)"$/ do |title|
   visit path_to("the update alert page", title)
-  When "I press \"Preview Message\""
+  #When "I press \"Preview Message\""
 end
 
 Then /^there should be an file "([^\"]*)" in the PhinMS queue$/ do | filename |

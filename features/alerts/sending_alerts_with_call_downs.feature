@@ -134,25 +134,25 @@ Feature: Sending alerts with call downs
       | from_jurisdiction   | Dallas County                                                |
       | title               | [Update] - H1N1 SNS push packs to be delivered tomorrow      |
       | message             | H1N1 SNS push packs to be delivered in 15 minutes at point A |
-      | targets             | john.wayne@example.com                                       |
+      | targets             | john.wayne@example.com, john.smith@example.com               |
       | call_down_messages  | if you can respond within 15 minutes                         |
       | acknowledge         | false                                                        |
     Then an alert should not exist with:
-      | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow                                      |
-      | message | H1N1 SNS push packs to be delivered in 15 minutes at point A                                 |
-      | targets | john.smith@example.com,jane.smith@example.com,jackie.sue@example.com,frank.chung@example.com |
+      | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow               |
+      | message | H1N1 SNS push packs to be delivered in 15 minutes at point A          |
+      | targets | jane.smith@example.com,jackie.sue@example.com,frank.chung@example.com |
 
     Then an alert exists with:
       | from_jurisdiction   | Dallas County                                                |
       | title               | [Update] - H1N1 SNS push packs to be delivered tomorrow      |
       | message             | H1N1 SNS push packs to be delivered in 30 minutes at point B |
-      | targets             | jane.smith@example.com                                       |
+      | targets             | jane.smith@example.com, john.smith@example.com               |
       | call_down_messages  | if you can respond within 30 minutes                         |
       | acknowledge         | true                                                         |
     Then an alert should not exist with:
-      | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow                                      |
-      | message | H1N1 SNS push packs to be delivered in 30 minutes at point B                                 |
-      | targets | john.smith@example.com,john.wayne@example.com,jackie.sue@example.com,frank.chung@example.com |
+      | title   | [Update] - H1N1 SNS push packs to be delivered tomorrow               |
+      | message | H1N1 SNS push packs to be delivered in 30 minutes at point B          |
+      | targets | john.wayne@example.com,jackie.sue@example.com,frank.chung@example.com |
 
   Scenario: Sending alert cancellation with call down and responses
     Given the following entities exists:

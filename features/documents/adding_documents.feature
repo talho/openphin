@@ -237,6 +237,7 @@
 
     Given quit session name "admin_session"
     Given session name is "default"
+    And I will confirm on next step
     And I press "Update"
 
     Then I should see "Another user recently updated the document you are attempting to update to invitees.csv.  Please try again." within the alert box
