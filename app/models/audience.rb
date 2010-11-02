@@ -18,6 +18,38 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
+
+  has_and_belongs_to_many :recipients, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true do
+    def with_refresh(options={}, &block)
+      proxy_owner.refresh_recipients if options[:force] || proxy_owner.recipients_expires.nil? || Time.now > proxy_owner.recipients_expires
+      options.delete(:force)
+      if(options[:batch_size])
+        find_in_batches(options) do |users|
+          block.call(users)
+        end
+      else
+        find(:all, options)
+      end
+    end
+
+    def with_refresh_and_no_hacc(options={},&block)
+      proxy_owner.refresh_recipients if options[:force] || proxy_owner.recipients_expires.nil? || Time.now > proxy_owner.recipients_expires
+      options.delete(:force)
+      with_no_hacc(options,&block)
+    end
+
+    def with_no_hacc(options={},&block)
+      options[:conditions => ["audiences_recipients.is_hacc = ?", false]]
+      options.delete(:force)
+      if(options[:batch_size])
+        find_in_batches(options) do |users|
+          block.call(users)
+        end
+      else
+        find(:all, options)
+      end
+    end
+  end
   
   belongs_to :forum
   named_scope :with_forum, :conditions => "forum_id is not NULL"
@@ -46,110 +78,6 @@ class Audience < ActiveRecord::Base
     @foreign_users ||= users.reject{|u| u.jurisdictions.foreign.empty? }
   end
 
-  def recipients(options = {})
-    prepare_recipients(options)
-  end
-
-  def prepare_recipients(options = {})
-    recipient_table = "temp_audience_#{self.id}"
-    TempUser.set_table_name recipient_table
-    db = ActiveRecord::Base.connection();
-
-    begin
-      db.execute "SELECT id FROM #{recipient_table} LIMIT 1"
-    rescue
-      options[:recreate] = true
-    end
-
-    if options[:recreate]
-      begin
-        db.execute "DROP TEMPORARY TABLE #{recipient_table}"
-      rescue
-      end
-
-      has_roles = self.roles.size > 0
-      has_jurisdictions = self.jurisdictions.size > 0
-      has_users = self.users.size > 0
-
-      publicsql = " AND `role_memberships`.role_id = `roles`.id AND `roles`.approval_required = true" unless options[:include_public]
-
-      subselect = "SELECT GROUP_CONCAT(CONCAT_WS(' in ',`sub_roles`.name, `sub_jurisdictions`.name)) FROM role_memberships AS sub_role_memberships," +
-        " roles AS sub_roles, jurisdictions AS sub_jurisdictions WHERE `sub_role_memberships`.user_id = `users`.id" +
-        " AND `sub_role_memberships`.role_id = `sub_roles`.id AND `sub_role_memberships`.jurisdiction_id = `sub_jurisdictions`.id"
-
-      subselect2 = "SELECT count(*) FROM role_memberships AS public_role_memberships, roles AS public_roles" +
-        " WHERE `public_role_memberships`.user_id = `users`.id" +
-        " AND `public_role_memberships`.role_id = `public_roles`.id AND `public_role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id" +
-        " AND `public_roles`.approval_required = true"
-
-      subselect3 = "SELECT GROUP_CONCAT(TRIM(TRIM(BOTH '\n' FROM TRIM(SUBSTRING(`email_devices`.options,INSTR(`email_devices`.options,':email_address:')+15)))) SEPARATOR ', ')" +
-        " AS email_addresses FROM devices AS email_devices WHERE `email_devices`.type = 'Device::EmailDevice' AND `email_devices`.user_id = `users`.id"
-      subselect4 = "SELECT GROUP_CONCAT(TRIM(BOTH '\"' FROM TRIM(TRIM(BOTH '\n' FROM TRIM(SUBSTRING(`phone_devices`.options,INSTR(`phone_devices`.options,':phone:')+7))))) SEPARATOR ', ')" +
-        " AS phones FROM devices AS phone_devices WHERE `phone_devices`.type = 'Device::PhoneDevice' AND `phone_devices`.user_id = `users`.id"
-      subselect5 = "SELECT GROUP_CONCAT(TRIM(BOTH '\"' FROM TRIM(TRIM(BOTH '\n' FROM TRIM(SUBSTRING(`sms_devices`.options,INSTR(`sms_devices`.options,':sms:')+5))))) SEPARATOR ', ')" +
-        " AS sms FROM devices AS sms_devices WHERE `sms_devices`.type = 'Device::SMSDevice' AND `sms_devices`.user_id = `users`.id"
-      subselect6 = "SELECT GROUP_CONCAT(TRIM(BOTH '\"' FROM TRIM(TRIM(BOTH '\n' FROM TRIM(SUBSTRING(`blackberry_devices`.options,INSTR(`blackberry_devices`.options,':blackberry:')+12))))) SEPARATOR ', ')" +
-        " AS blackberry FROM devices AS blackberry_devices WHERE `blackberry_devices`.type = 'Device::BlackberryDevice' AND `blackberry_devices`.user_id = `users`.id"
-
-      sql = "CREATE TEMPORARY TABLE #{recipient_table} "
-      if has_roles || (has_roles && has_jurisdictions)
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
-        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
-        if options[:devices]
-          sql += ", (#{subselect3}) AS email_devices"
-          sql += ", (#{subselect4}) AS phone_devices"
-          sql += ", (#{subselect5}) AS sms_devices"
-          sql += ", (#{subselect6}) AS blackberry_devices"
-        end
-        sql += " FROM users, role_memberships, audiences_roles"
-        sql += ", roles" if publicsql
-        sql += ", audiences_jurisdictions" if has_jurisdictions
-        sql += " WHERE `role_memberships`.user_id = `users`.id AND `users`.deleted_at IS NULL"
-        sql += " AND `audiences_roles`.audience_id = #{self.id} AND `role_memberships`.role_id  = `audiences_roles`.role_id"
-        sql += " AND `audiences_jurisdictions`.audience_id = #{self.id} AND `role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id" if has_jurisdictions
-        sql += "#{publicsql})"
-        sql += " UNION DISTINCT " if has_users
-      else
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
-        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
-        if options[:devices]
-          sql += ", (#{subselect3}) AS email_devices"
-          sql += ", (#{subselect4}) AS phone_devices"
-          sql += ", (#{subselect5}) AS sms_devices"
-          sql += ", (#{subselect6}) AS blackberry_devices"
-        end
-        sql += " FROM users, role_memberships, audiences_jurisdictions"
-        sql += " WHERE `role_memberships`.user_id = `users`.id AND `users`.deleted_at IS NULL"
-        sql += " AND `audiences_jurisdictions`.audience_id = #{self.id} AND `role_memberships`.jurisdiction_id = `audiences_jurisdictions`.jurisdiction_id"
-        sql += " AND (SELECT (#{subselect2}) > 0)" if publicsql
-        sql += ")"
-        sql += " UNION DISTINCT " if has_users
-      end
-
-      if has_users
-        sql += "(SELECT DISTINCT `users`.id, `users`.last_name, `users`.display_name, `users`.email"
-        sql += ", (#{subselect}) AS memberships" if options[:role_memberships]
-        if options[:devices]
-          sql += ", (#{subselect3}) AS email_devices"
-          sql += ", (#{subselect4}) AS phone_devices"
-          sql += ", (#{subselect5}) AS sms_devices"
-          sql += ", (#{subselect6}) AS blackberry_devices"
-        end
-        sql += " FROM users, audiences, audiences_users"
-        sql += ", role_memberships, roles" if publicsql
-        sql += " WHERE `audiences_users`.audience_id = #{id} AND `audiences_users`.user_id = `users`.id AND `users`.deleted_at IS NULL"
-        sql += " AND `role_memberships`.user_id = `users`.id#{publicsql}" if publicsql
-        sql += ")"
-      end
-
-      begin
-        db.execute sql
-      rescue
-      end
-      TempUser
-    end
-  end
-
   def copy
     attrs = self.attributes
     ["id","updated_at","created_at"].each{|item| attrs.delete(item)}
@@ -160,14 +88,138 @@ class Audience < ActiveRecord::Base
     a
   end
 
+  def refresh_recipients
+    self.update_attribute('recipients_expires', Time.now + 1.minute)
+    ActiveRecord::Base.transaction do
+      clear_recipients ? true : raise(ActiveRecord::Rollback)
+      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) unless self.users.empty?
+      (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
+      (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
+      (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
+      target = Target.find_by_audience_id(self.id)
+      (update_han_coordinators_recipients ? true : raise(ActiveRecord::Rollback)) if target && target.item_type == "Alert"
+    end
+    return true
+  end
+
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
       errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
     end
   end
-end
 
-class TempUser < ActiveRecord::Base
-  set_primary_key "id"
+  private
+  def clear_recipients
+    db = ActiveRecord::Base.connection()
+    sql = "DELETE FROM audiences_recipients WHERE audience_id = #{id}"
+
+    begin
+      db.execute sql
+    rescue
+      return false
+    end
+    true
+  end
+
+  def update_jurisdictions_recipients
+    db = ActiveRecord::Base.connection()
+    jurisdictions.each do |j|
+      sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
+      sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
+      sql += " WHERE rm.jurisdiction_id = #{j.id} AND ar.user_id IS NULL"
+
+      begin
+        db.execute sql
+      rescue
+        return false
+      end
+    end
+    true
+  end
+
+  def update_roles_recipients
+    db = ActiveRecord::Base.connection()
+    roles.each do |r|
+      sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
+      sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
+      sql += " WHERE rm.role_id = #{r.id} AND ar.user_id IS NULL"
+
+      begin
+        db.execute sql
+      rescue
+        return false
+      end
+    end
+    true
+  end
+
+  def update_roles_jurisdictions_recipients
+    db = ActiveRecord::Base.connection()
+    jurisdictions.each do |j|
+      roles.each do |r|
+        sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
+        sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
+        sql += " WHERE rm.jurisdiction_id = #{j.id} AND rm.role_id = #{r.id} AND ar.user_id IS NULL"
+
+        begin
+          db.execute sql
+        rescue
+          return false
+        end
+      end
+    end
+    true
+  end
+
+  def update_users_recipients
+    db = ActiveRecord::Base.connection()
+    sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
+    sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
+    sql += " WHERE au.audience_id = #{id} AND ar.user_id IS NULL"
+
+    begin
+      db.execute sql
+    rescue
+      return false
+    end
+    true
+  end
+
+  def update_han_coordinators_recipients
+    alert = Target.find_by_audience_id(self.id).item
+    jurs = alert.audiences.map(&:jurisdictions).flatten.uniq
+    self.recipients.find_in_batches do |user|
+      jurs |= user.map(&:jurisdictions).flatten
+    end
+    #jurs = jurs.flatten.compact.uniq
+    # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
+    jurs = if alert.from_jurisdiction.nil?
+      jurs.map(&:self_and_ancestors).flatten.uniq - (Jurisdiction.federal)
+    else
+      selves_and_ancestors = (jurisdictions + [alert.from_jurisdiction]).compact.map(&:self_and_ancestors)
+
+      # union them all, but that may give us too many ancestors
+      unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
+
+      # intersecting will give us all the ancestors in common
+      intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
+
+      # So we grab the lowest common ancestor; ancestory at the loweest level
+      ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level}]).compact
+    end
+
+    db = ActiveRecord::Base.connection()
+    sql = "INSERT INTO audiences_recipients (audience_id, user_id, is_hacc)"
+    sql += " SELECT DISTINCT #{id}, rm.user_id, true FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
+    sql += " WHERE rm.role_id = #{Role.han_coordinator.id}"
+    sql += " AND rm.jurisdiction_id IN (#{jurs.map(&:id).join(',')})"
+    sql += " AND ar.user_id IS NULL"
+    begin
+      db.execute sql
+    rescue
+      return false
+    end
+    true
+  end
 end

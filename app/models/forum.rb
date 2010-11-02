@@ -90,7 +90,7 @@ class Forum < ActiveRecord::Base
     unless (audience = result.audience)
       forum = result
     else
-      forum = ( user.is_super_admin? || audience.recipients(:include_public=>false, :recreate => true).find(:first, :conditions => ["id = ?", user.id]) ) ? result : nil
+      forum = ( user.is_super_admin? || audience.recipients.with_refresh(:conditions => ["id = ?", user.id]).first ) ? result : nil
     end
   end
   

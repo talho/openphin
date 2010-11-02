@@ -111,7 +111,7 @@ class AlertAttempt < ActiveRecord::Base
         :acknowledged_alert_device_type_id => AlertDeviceType.find_by_alert_id_and_device(alert.id, ack_device ).id,
         :acknowledged_at => ack_time,
         :call_down_response => ack_response.to_i)
-      alert.update_statistics(:device => ack_device, :jurisdiction => user.jurisdictions, :response => ack_response.to_i)
+      alert.update_statistics(:device => ack_device, :jurisdiction => user.jurisdictions, :response => ack_response)
     end
   end
 

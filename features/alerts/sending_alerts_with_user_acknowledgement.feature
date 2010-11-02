@@ -24,7 +24,7 @@ Feature: Acknowledging an alert
     When I press "Send"
     Then I should see "Successfully sent the alert"
     Then the following users should receive the alert email:
-      | People        | keith.gaddis@example.com |
+      | People        | keith.gaddis@example.com, john.smith@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
@@ -121,7 +121,7 @@ Feature: Acknowledging an alert
          | phone      | message                                                                                           |
          | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
        
-       When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
+       When "keith.gaddis@example.com" acknowledges the phone message for "H1N1 SNS push packs to be delivered tomorrow"
        And delayed jobs are processed
        And I log in as "keith.gaddis@example.com"
 
@@ -204,7 +204,7 @@ Feature: Acknowledging an alert
          | phone      | message                                                                                           |
          | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
-       When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes"
+       When "keith.gaddis@example.com" acknowledges the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can respond within 15 minutes"
        And delayed jobs are processed
        And I log in as "keith.gaddis@example.com"
 

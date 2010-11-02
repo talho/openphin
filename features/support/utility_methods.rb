@@ -30,10 +30,10 @@ module FeatureHelpers
             when /body contains alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
               if value.blank?
-                status &&= email.body.include?(email_acknowledge_alert_url(attempt, :call_down_response => 0, :host => HOST))
+                status &&= email.body.include?(email_acknowledge_alert_url(attempt.alert, :call_down_response => 0, :host => HOST))
               else
                 call_down_response = attempt.alert.call_down_messages.index(value).to_i
-                status &&= email.body.include?(email_acknowledge_alert_url(attempt, :call_down_response => call_down_response, :host => HOST))
+                status &&= email.body.include?(email_acknowledge_alert_url(attempt.alert, :call_down_response => call_down_response, :host => HOST))
               end
             when /body does not contain alert acknowledgment link/
               attempt = User.find_by_email(email_address).alert_attempts.last
