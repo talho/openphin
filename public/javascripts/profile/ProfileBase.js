@@ -26,7 +26,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       closable: true,
       autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
-      listeners: {scope: this, 'actioncomplete': this.submit_success, 'actionfailed': this.submit_failure},
+      listeners: {scope: this, 'actioncomplete': this.form_submit_success, 'actionfailed': this.form_submit_failure},
       items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
@@ -39,49 +39,49 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     if (this.form_config.load_url == null) return;
     panel.loadMask = new Ext.LoadMask(panel.getEl(), {msg:"Loading...", removeMask: true});
     panel.loadMask.show();
-    this.load_form_values();
+    this.load_json();
   },
-  load_form_values: function(){
+  load_json: function(){
     Ext.Ajax.request({ url: this.form_config.load_url, method: 'GET',
       success: this.load_complete_cb, failure: this.load_fail_cb, scope: this });
   },
   load_complete_cb: function(response, options){
-    var p = this.getPanel();
-    p.loadMask.hide();
+    this.getPanel().loadMask.hide();
     var json = Ext.decode(response.responseText, true);
-    this.set_field_values(p, json.model.user);
-    this.set_field_values(p, json.extra);
-    p.doLayout();
+    this.load_data(json);  // derived class must have load_data method defined
+    this.getPanel().doLayout();
   },
   load_fail_cb: function(response, options){
     this.getPanel().loadMask.hide();
     Ext.Msg.alert('Error loading user info', 'Status:' + response.status + ': ' + response.statusText);
   },
-  set_field_values: function(p, obj){
-    for (var prop in obj) {
-      var elem_list = p.find("name", "user[" + prop + "]");
-      if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
-    }
-  },
 
   // Button callbacks
   save: function(){
-    var saveButton = this.getPanel().find("name", "save_button")[0];
-    if (saveButton.disabled) return;
-    saveButton.disable();
-    this.getPanel().getForm().submit();
+    this.save_data();  // derived class must have save_data method defined
   },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
   save_close: function(){ this.save(); this.close(); },
 
-  // Form callbacks
-  submit_success: function(form, action){
-    this.getPanel().find("name", "save_button")[0].enable();
+  // Save via AJAX callbacks
+  save_json: function(url, json){
+    Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: json,
+      success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
+  },
+  ajax_save_success_cb: function(response, opts) {
+    this.load_json();
+    this.show_message(Ext.decode(response.responseText));
+  },
+  ajax_save_err_cb: function(response, opts) {
+    this.show_ajax_error(response);
+  },
+
+  // Save form callbacks
+  form_submit_success: function(form, action){
     var json = action.result;
     this.show_message(json);
   },
-  submit_failure: function(form, action){
-    this.getPanel().find("name", "save_button")[0].enable();
+  form_submit_failure: function(form, action){
     Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
       this.show_ajax_error(action.response);

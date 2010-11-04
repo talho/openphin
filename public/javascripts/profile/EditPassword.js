@@ -17,7 +17,9 @@ Talho.EditPassword = Ext.extend(Talho.ProfileBase, {
     };
 
     Talho.EditPassword.superclass.constructor.call(this, config);
-  }
+  },
+
+  save_data: function(){ this.getPanel().getForm().submit(); }
 });
 
 Talho.EditPassword.initialize = function(config){

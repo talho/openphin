@@ -71,6 +71,20 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     // Override the setValue() method where necessary
     this.getPanel().find("name", "user[photo]")[0].setValue = function(val){ Ext.getDom("photo").src = val; };
   },
+
+  load_data: function(json){
+    var p = this.getPanel();
+    this.set_field_values(p, json.model.user);
+    this.set_field_values(p, json.extra);
+  },
+  save_data: function(){ this.getPanel().getForm().submit(); },
+
+  set_field_values: function(p, obj){
+    for (var prop in obj) {
+      var elem_list = p.find("name", "user[" + prop + "]");
+      if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
+    }
+  },
 });
 
 Talho.EditProfile.initialize = function(config){
