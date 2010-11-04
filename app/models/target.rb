@@ -28,11 +28,11 @@ class Target < ActiveRecord::Base
 #          where #{conditions_for(audience)}"
 #    )
     user_ids = if item_type == 'Alert' && !item.not_cross_jurisdictional
-      audience.recipients.with_refresh(:select => "id", :force => true).map(&:id)
+      audience.recipients(:select => "id", :force => true).map(&:id)
     elsif ["Channel", "Document"].include?(item_type)
-      audience.recipients.with_refresh_and_no_hacc(:select => "id", :force => true, :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
+      audience.recipients(:force => true).with_no_hacc(:select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
     else
-      audience.recipients.with_refresh_and_no_hacc(:select => "id", :force => true).map(&:id)
+      audience.recipients(:force => true).with_no_hacc(:select => "id").map(&:id)
     end
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end
