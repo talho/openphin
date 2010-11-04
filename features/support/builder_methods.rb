@@ -52,9 +52,9 @@ module FeatureHelpers
         end
       end
 
-      returning Factory(:alert, attributes) do |alert|
-        alert.audiences.create! :jurisdictions => jurisdictions, :roles => roles, :users => users
-      end
+      audience = Audience.new(:jurisdictions => jurisdictions, :roles => roles, :users => users)
+      attributes["audiences"] = [audience]
+      Factory(:alert, attributes)
     end
   end
 end
