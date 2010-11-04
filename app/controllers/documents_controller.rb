@@ -118,10 +118,16 @@ class DocumentsController < ApplicationController
   end
   
   def remove_from_channel
-    @document = Document.editable_by(current_user).find(params[:id])
-    @channel = current_user.channels.find(params[:channel_id])
-    @channel.documents.delete(@document)
-    redirect_to channel_documents_path(@channel)
+    begin
+      @document = Document.editable_by(current_user).find(params[:id])
+      @channel = current_user.channels.find(params[:channel_id])
+      @channel.documents.delete(@document)
+      redirect_to channel_documents_path(@channel)
+    rescue
+      respond_to do |type|
+        type.all { render :nothing => true, :status => 404 }
+      end   
+    end
   end
   
   def remove_from_folder
