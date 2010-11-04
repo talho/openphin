@@ -3,8 +3,14 @@ class SharesController < ApplicationController
   
   layout "documents"
   def new
-    @document = current_user.documents.find(params[:document_id])
-    @audience = Audience.new
+    begin
+      @document = current_user.documents.find(params[:document_id])
+      @audience = Audience.new
+    rescue
+      respond_to do |type|
+        type.all { render :nothing => true, :status => 404 }
+      end
+    end
   end
   
   def create
