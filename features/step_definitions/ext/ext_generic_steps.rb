@@ -22,6 +22,16 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
   end
 end
 
+When /^(?:|I )navigate to ([^\"]*)$/ do |path|
+  path_lookup = {
+    "the rollcall dashboard page".to_sym => "Rollcall > Main",
+    "the rollcall search page".to_sym => "Rollcall > Search"
+  }
+
+  When %Q{I go to the ext dashboard page}
+  When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
+end
+
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|
   within(:css, "##{name}") do
 	 	table.rows.each do |row|
