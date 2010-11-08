@@ -1,12 +1,14 @@
 Ext.ns("Talho");
 
 Talho.RolesControl = Ext.extend(function(){}, {
-  constructor: function(config, ancestor){
+  constructor: function(save_url, ancestor){
+    this.save_url = save_url;
+    this.ancestor = ancestor;
     this.store = new Ext.data.Store({
       autoDestroy: true,
       autoLoad: false,
       autoSave: false,
-      url: config.url + "/edit.json",
+      //url: config.url + "/edit.json",
       listeners: {scope: this, 'add': {fn: function(){ ancestor.getPanel().doLayout(); }, delay: 100}},
       reader: new Ext.data.JsonReader({
         root: "extra.role_desc",
@@ -15,8 +17,6 @@ Talho.RolesControl = Ext.extend(function(){}, {
       }),
       //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
     });
-    this.ancestor = ancestor;
-    this.form_config = ancestor.form_config;
 
     this.jurisdictions_store = new Ext.data.JsonStore({
       url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
@@ -45,7 +45,7 @@ Talho.RolesControl = Ext.extend(function(){}, {
         multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
     );
     this.item_list = [
-      {xtype: 'panel', layout: 'form', frame: true, title: 'Roles', labelAlign: 'top', defaults:{width:560}, items:[
+      {xtype: 'panel', layout: 'form', frame: true, title: 'Roles', labelAlign: 'top', padding: 10, defaults:{boxMinWidth:400}, items:[
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'},
           {xtype: 'button', text: 'Remove role', handler: this.remove_role, scope: this, width:'auto'}
@@ -127,6 +127,6 @@ Talho.RolesControl = Ext.extend(function(){}, {
     this.store.clearFilter();
     var rq = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.data.state!="deleted"; });
-    this.ancestor.save_json(this.form_config.save_url, {"user[rq]": Ext.encode(rq)});
+    this.ancestor.save_json(this.save_url, {"user[rq]": Ext.encode(rq)});
   }
 });

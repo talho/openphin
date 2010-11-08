@@ -1,12 +1,14 @@
 Ext.ns("Talho");
 
 Talho.DevicesControl = Ext.extend(function(){}, {
-  constructor: function(config, ancestor){
+  constructor: function(save_url, ancestor){
+    this.save_url = save_url;
+    this.ancestor = ancestor;
     this.store = new Ext.data.Store({
       autoDestroy: true,
       autoLoad: false,
       autoSave: false,
-      url: config.url + "/edit.json",
+      //url: config.url + "/edit.json",
       listeners: {scope: this, 'add': {fn: function(){ ancestor.getPanel().doLayout(); }, delay: 10}},
       reader: new Ext.data.JsonReader({
         root: "extra.devices",
@@ -14,8 +16,6 @@ Talho.DevicesControl = Ext.extend(function(){}, {
       }),
       //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
     });
-    this.ancestor = ancestor;
-    this.form_config = ancestor.form_config;
 
     var template = new Ext.XTemplate(
       '<ul class="devices">',
@@ -34,7 +34,7 @@ Talho.DevicesControl = Ext.extend(function(){}, {
         multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected'}
     );
     this.item_list = [
-      {xtype: 'panel', layout: 'form', frame: true, title: 'Devices', labelAlign: 'top', defaults:{width:400}, items:[
+      {xtype: 'panel', layout: 'form', frame: true, title: 'Devices', labelAlign: 'top', padding: 10, defaults:{boxMinWidth:400}, items:[
         {xtype: 'container', layout: 'hbox', items:[
           {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
           {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
@@ -98,6 +98,6 @@ Talho.DevicesControl = Ext.extend(function(){}, {
     this.store.clearFilter();
     var devices = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.data.state!="deleted"; });
-    this.ancestor.save_json(this.form_config.save_url, {"user[devices]": Ext.encode(devices)});
+    this.ancestor.save_json(this.save_url, {"user[devices]": Ext.encode(devices)});
   }
 });
