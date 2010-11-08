@@ -2,11 +2,11 @@ Ext.ns("Talho");
 
 Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
-    this.roles_control = new Talho.RolesControl(config.url + ".json", this);
+    this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
     this.form_config = {
       load_url: config.url + "/edit.json",
       form_width: 440,
-      item_list: this.roles_control.item_list,
+      item_list: [this.roles_control],
       save_url: config.url + ".json",
       save_method: "PUT"
     };

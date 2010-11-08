@@ -2,8 +2,8 @@ Ext.ns("Talho");
 
 Talho.AddUser = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
-    this.roles_control = new Talho.RolesControl(config.url + ".json", this);
-    this.devices_control = new Talho.DevicesControl(config.url + ".json", this);
+    this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
+    this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
     var item_list = [
       {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -16,6 +16,14 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         ]},
         {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true},
         {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: false}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false}
+          ]}
+        ]},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true}
@@ -45,9 +53,9 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:440},
         margins: '0 0 0 10', items:[
-        this.roles_control.item_list,
+        this.roles_control,
         {xtype: 'spacer', height: '10'},
-        this.devices_control.item_list
+        this.devices_control
       ]}
     ];
     this.form_config = {

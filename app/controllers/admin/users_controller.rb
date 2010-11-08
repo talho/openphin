@@ -21,15 +21,17 @@ class Admin::UsersController < ApplicationController
     end
 
     unless params[:health_professional]
-      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
+      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id if params[:user].has_key?(:role_requests_attributes)
       params[:user].delete("organization_membership_requests_attributes")
       params[:user].delete("description")
     end
 
-    remove_blank_role_requests
-    if params[:user][:role_requests_attributes]['0']['role_id'].blank? && params[:user][:role_requests_attributes]['0']['jurisdiction_id'].blank?
-      params[:user][:role_requests_attributes]['0'] = {} if params[:user][:role_requests_attributes]['0'].nil?
-      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
+    if params[:user].has_key?(:role_requests_attributes)
+      remove_blank_role_requests
+      if params[:user][:role_requests_attributes]['0']['role_id'].blank? && params[:user][:role_requests_attributes]['0']['jurisdiction_id'].blank?
+        params[:user][:role_requests_attributes]['0'] = {} if params[:user][:role_requests_attributes]['0'].nil?
+        params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
+      end
     end
 
     @user = User.new params[:user]
@@ -47,9 +49,11 @@ class Admin::UsersController < ApplicationController
         @user.confirm_email!
         flash[:notice] = 'The user has been successfully created.'
         format.html { redirect_to new_admin_user_path }
+        format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
+        format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages} }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
