@@ -104,13 +104,34 @@ class UserProfilesController < ApplicationController
 
     # Handle manage devices submission (ext only)
     if params[:user].has_key?(:devices)
-      update_devices(params[:user][:devices])
+      success,device_errors = update_devices(params[:user][:devices])
+      respond_to do |format|
+        format.json {
+          if success
+            render :json => {:flash => "Devices saved.", :type => :completed, :success => true}
+          else
+            render :json => {:flash => nil, :type => :error, :errors => device_errors}
+          end
+        }
+      end
       return
     end
 
     # Handle role requests (ext only)
     if params[:user].has_key?(:rq)
-      handle_role_requests(params[:user][:rq])
+      result,rq_errors = handle_role_requests(params[:user][:rq])
+      respond_to do |format|
+        format.json {
+          case result
+          when "success"
+            render :json => {:flash => "Requests sent.", :type => :completed, :success => true}
+          when "rollback"
+            render :json => {:flash => nil, :type => :rollback, :errors => rq_errors}
+          else # failure
+            render :json => {:flash => nil, :type => :error, :errors => rq_errors}
+          end
+        }
+      end
       return
     end
 
@@ -217,96 +238,6 @@ protected
       self.class.app_toolbar "accounts"
     else
       self.class.app_toolbar "application"
-    end
-  end
-
-  def update_devices(device_list_json)
-    device_list = ActiveSupport::JSON.decode(device_list_json)
-    success = true
-    device_errors = []
-
-    # Device: class to attr_name map
-    deviceOptionMap = {
-      'Device::EmailDevice' =>      'email_address',
-      'Device::PhoneDevice' =>      'phone',
-      'Device::SMSDevice' =>        'sms',
-      'Device::FaxDevice' =>        'fax',
-      'Device::BlackberryDevice' => 'blackberry'
-    }
-    device_list.find_all{|d| d["state"]=="deleted" && d["id"] > 0}.each { |d|
-      device_to_delete = Device.find(d["id"])
-      device_to_delete.destroy if @user == device_to_delete.user
-    }
-    device_list.find_all{|d| d["state"]=="new"}.each { |d|
-      attr_name = deviceOptionMap[d["rbclass"]]
-      new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
-      new_device.user = @user
-      if !new_device.save
-        success = false
-        device_errors.concat(new_device.errors.full_messages)
-      end
-    }
-
-    respond_to do |format|
-      format.json {
-        if success
-          render :json => {:flash => "Devices saved.", :type => :completed, :success => true}
-        else
-          render :json => {:flash => nil, :type => :error, :errors => device_errors}
-        end
-      }
-    end
-  end
-
-  def handle_role_requests(req_json)
-    rq_list = ActiveSupport::JSON.decode(req_json)
-    result = "success"
-    rq_errors = []
-
-    ActiveRecord::Base.transaction {
-      rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
-        rqType = (rq["type"]=="req") ? RoleRequest : RoleMembership
-        rq_to_delete = rqType.find(rq["id"])
-        if rq_to_delete && @user == rq_to_delete.user
-          rq_to_delete.destroy
-        else
-          rq_errors.concat(rq_to_delete.errors.full_messages)
-        end
-      }
-      rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
-        jurisdiction = Jurisdiction.find(rq["jurisdiction_id"])
-        role = Role.find(rq["role_id"])
-        role_request = RoleRequest.new
-        role_request.jurisdiction_id = rq["jurisdiction_id"]
-        role_request.role_id = rq["role_id"]
-        role_request.requester = @user
-        role_request.user = @user
-        if role_request.save && role_request.valid?
-          RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
-        else
-          result = "failure"
-          rq_errors.concat(role_request.errors.full_messages)
-        end
-      }
-
-      if @user.role_memberships.public_roles.empty?
-        result = "rollback"
-        rq_errors.push("You must have at least one public role.  Please add a public role and re-save.")
-        raise ActiveRecord::Rollback
-      end
-    }
-
-    respond_to do |format|
-      format.json {
-        case result
-        when "success"
-          render :json => {:flash => "Requests sent.", :type => :completed, :success => true}
-        when "rollback"
-          render :json => {:flash => nil, :type => :rollback, :errors => rq_errors}
-        else # failure
-          render :json => {:flash => nil, :type => :error, :errors => rq_errors}
-        end
-      }
     end
   end
     

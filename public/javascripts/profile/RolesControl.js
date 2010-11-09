@@ -4,7 +4,6 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
   constructor: function(save_url, ancestor){
     this.save_url = save_url;
     this.ancestor = ancestor;
-    this._loadJurisdictionsAndRoles();
 
     Talho.ux.RolesControl.superclass.constructor.call(this);
   },
@@ -26,6 +25,8 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     ];
 
     Talho.ux.RolesControl.superclass.initComponent.call(this);
+
+    this.addListener('afterrender', this._loadJurisdictionsAndRoles, this);
   },
 
   add_role: function(){
@@ -102,7 +103,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     return Ext.encode(rq);
   },
   save_data: function(){
-    this.ancestor.save_json(this.save_url, {"user[rq]": grab_data()});
+    this.ancestor.save_json(this.save_url, {"user[rq]": this.grab_data()});
   },
 
   // Methods for private use

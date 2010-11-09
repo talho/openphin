@@ -35,18 +35,20 @@ class Admin::UsersController < ApplicationController
     end
 
     @user = User.new params[:user]
-    @user.role_requests.each do |role_request|
+    @user.role_requests.each { |role_request|
       role_request.requester = current_user
-      if current_user.is_admin_for?(role_request.jurisdiction)
-        role_request.approver = current_user
-      end
-    end
-    @user.organization_membership_requests.each do |omr|
-      omr.requester = current_user
-    end
+      role_request.approver = current_user if current_user.is_admin_for?(role_request.jurisdiction)
+    }
+    @user.organization_membership_requests.each { |omr| omr.requester = current_user }
+
     respond_to do |format|
       if @user.save
         @user.confirm_email!
+
+        # Handle new devices and role requests (ext only)
+        update_devices(params[:user][:new_devices]) if params[:user].has_key?(:new_devices)
+        handle_role_requests(params[:user][:new_roles]) if params[:user].has_key?(:new_roles)
+
         flash[:notice] = 'The user has been successfully created.'
         format.html { redirect_to new_admin_user_path }
         format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
