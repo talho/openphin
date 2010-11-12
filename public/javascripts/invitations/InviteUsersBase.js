@@ -7,11 +7,11 @@ Talho.InviteUsersBase = Ext.extend(function(){}, {
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
       {xtype: 'container', defaults:{width:this.form_config.form_width,padding:'10'}, items:[
-        {xtype: 'box', html: '<p class="flash">&nbsp;</p>', hidden: true},
+        {xtype: 'box', id: 'flashBox', html: '<p class="flash">&nbsp;</p>', hidden: true},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: this.form_config.item_list},
         {xtype: 'spacer', height: '15'},
         {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Send Invitation', name: 'save_button', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', id: 'invitation_submit', text: 'Send Invitation', name: 'save_button', handler: this.save, scope: this, width:'auto', disabled: true},
           //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
         ]}
@@ -30,7 +30,6 @@ Talho.InviteUsersBase = Ext.extend(function(){}, {
       items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
-
     this.getPanel = function(){ return panel; }
   },
 
@@ -97,7 +96,7 @@ Talho.InviteUsersBase = Ext.extend(function(){}, {
   show_message: function(json){
     var fm = this.getPanel().getEl().select(".flash").first();
     var msg = "";
-    if (json.flash != null) {
+    if (typeof json.flash != "undefined") {
       msg += json.flash;
     } else {
       jQuery.each(json.errors, function(i,e){
@@ -105,12 +104,16 @@ Talho.InviteUsersBase = Ext.extend(function(){}, {
         msg += item[0].toUpperCase() + item.substr(1) + "<br>";
       });
     }
-    if (json.type != null) {
-      jQuery(fm.dom).removeClass(); // remove all classes
+    fm.parent().parent().parent().parent().scrollTo("top", 0);
+    if (msg != "") {
+      fm.parent().removeClass('x-hide-display');; // remove all classes
       fm.addClass("flash").addClass(json.type).update(msg).show();
     }
-    fm.parent().parent().parent().parent().scrollTo("top", 0);
     this.getPanel().doLayout();
+    var task = new Ext.util.DelayedTask(function(){
+      fm.parent().addClass('x-hide-display');; // remove all classes
+    },fm.parent());
+    task.delay(10000);
   },
   show_ajax_error: function(response){
     Ext.Msg.alert('Error',
