@@ -95,7 +95,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
       reader: new Ext.data.JsonReader({
         root: "extra.devices",
         fields: [{name:'id'}, {name:'type'}, {name:'rbclass'}, {name:'value'}]
-      }),
+      })
     });
 
     var template = new Ext.XTemplate(

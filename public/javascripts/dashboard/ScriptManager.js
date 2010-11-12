@@ -25,8 +25,7 @@ Ext.ns("Talho");
         'Talho.EditPassword': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js > /javascripts/profile/EditDevices.js'},
         'Talho.ManageRoles': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/RolesControl.js > /javascripts/profile/ManageRoles.js'},
-        'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/ManageOrganizations.js'},
-        'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/admin/AddUser.js'}
+        'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/ManageOrganizations.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
@@ -51,6 +50,13 @@ Ext.ns("Talho");
                 initializer: initializer,
                 classVariable: classVariable
             });
+        },
+
+        addInitializer:function(name, config){
+            if(regList[name]){
+                throw("Initializer " + name +" has already been configured. Please use a unique name");
+            }
+            regList[name] = config;
         },
 
         exists: function(name){
