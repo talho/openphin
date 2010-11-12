@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
   def admin_or_self_required(var = :id)
     ensure_admin_or_self(params[var])
   end
+  
   def ensure_admin_or_self(user_id)
     unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
       flash[:error] = "That resource does not exist or you do not have access to it."
@@ -55,6 +56,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from Exception, :with => :render_error
+  
   protected
 
     def folder_or_inbox_path(document)
@@ -200,5 +203,25 @@ class ApplicationController < ActionController::Base
   def sign_in(user)
     user.update_attribute(:last_signed_in_at, Time.now)
     super user
+  end
+
+  def render_error(exception)
+    log_error(exception)
+    notify_hoptoad(exception)
+    if request.format.to_sym == :json
+      render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s)}.as_json
+    else
+      local_request? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
+    end
+  end
+
+  def render_json_error_as_html(exception)
+    log_error(exception)
+    notify_hoptoad(exception)
+    render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s)}.as_json, :content_type => 'text/html'
+  end
+
+  def force_json_as_html
+    self.class.rescue_from Exception, :with => :render_json_error_as_html
   end
 end

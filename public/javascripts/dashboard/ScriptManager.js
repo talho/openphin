@@ -11,6 +11,7 @@ Ext.ns("Talho");
     dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js /javascripts/audience/UserSelectionGrid.js');
     dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid /javascripts/audience/AudiencePanel.js');
     dominoes.rule('AlertDetail', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
+    dominoes.rule('InviteUsers', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/invitations/InviteUsersBase.js');
 
     var regList = {
         'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
@@ -25,7 +26,8 @@ Ext.ns("Talho");
         'Talho.EditPassword': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js > /javascripts/profile/EditDevices.js'},
         'Talho.ManageRoles': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/RolesControl.js > /javascripts/profile/ManageRoles.js'},
-        'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/ManageOrganizations.js'}
+        'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/ManageOrganizations.js'},
+        'Talho.InviteUsers': {js:'InviteUsers /javascripts/ext/src/widgets/grid/EditorGrid.js > /javascripts/invitations/InviteUsers.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

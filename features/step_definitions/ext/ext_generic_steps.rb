@@ -25,7 +25,8 @@ end
 When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   path_lookup = {
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
-    "the rollcall search page".to_sym => "Rollcall > Search"
+    "the rollcall search page".to_sym => "Rollcall > Search",
+    "the invitations page".to_sym => "Admin > Manage Invitations > Invite Users"
   }
 
   When %Q{I go to the ext dashboard page}
