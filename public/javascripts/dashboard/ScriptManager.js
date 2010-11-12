@@ -54,6 +54,13 @@ Ext.ns("Talho");
             });
         },
 
+        addInitializer:function(name, config){
+            if(regList[name]){
+                throw("Initializer " + name +" has already been configured. Please use a unique name");
+            }
+            regList[name] = config;
+        },
+
         exists: function(name){
             return !Ext.isEmpty(regList[name]);
         },

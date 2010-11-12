@@ -1,49 +1,9 @@
-Ext.ns("Talho");
+Ext.ns("Talho.ux");
 
-Talho.DevicesControl = Ext.extend(function(){}, {
-  constructor: function(config, ancestor){
-    this.store = new Ext.data.Store({
-      autoDestroy: true,
-      autoLoad: false,
-      autoSave: false,
-      url: config.url + "/edit.json",
-      listeners: {scope: this, 'add': {fn: function(){ ancestor.getPanel().doLayout(); }, delay: 10}},
-      reader: new Ext.data.JsonReader({
-        root: "extra.devices",
-        fields: [{name:'id'}, {name:'type'}, {name:'rbclass'}, {name:'value'}]
-      }),
-      //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
-    });
+Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
+  constructor: function(save_url, ancestor){
+    this.save_url = save_url;
     this.ancestor = ancestor;
-    this.form_config = ancestor.form_config;
-
-    var template = new Ext.XTemplate(
-      '<ul class="devices">',
-      '<tpl for=".">',
-        '<li class="device-item">',
-          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<br>',
-            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
-          '</p>',
-        '</li>',
-      '</tpl>',
-      '</ul>'
-    );
-
-    this.dv = new Ext.DataView(
-      {name: 'user[devices]', store: this.store, tpl: template, emptyText: 'No devices to display',
-        multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected'}
-    );
-    this.item_list = [
-      {xtype: 'panel', layout: 'form', frame: true, title: 'Devices', labelAlign: 'top', defaults:{width:400}, items:[
-        {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
-          {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
-        ]},
-        {xtype: 'spacer', height: '10'},
-        this.dv
-      ]}
-    ];
-
     this.device_types = [
       ['Device::EmailDevice',      'E-mail'],
       ['Device::PhoneDevice',      'Phone'],
@@ -51,6 +11,27 @@ Talho.DevicesControl = Ext.extend(function(){}, {
       ['Device::FaxDevice',        'Fax'],
       ['Device::BlackberryDevice', 'Blackberry PIN']
     ];
+
+    Talho.ux.DevicesControl.superclass.constructor.call(this);
+  },
+
+  initComponent: function(){
+    this.layout = 'form';
+    this.frame = true;
+    this.title = 'Devices';
+    this.labelAlign = 'top';
+    this.padding = 10;
+    this.defaults = {boxMinWidth:400};
+    this.items = [
+      {xtype: 'container', layout: 'hbox', items:[
+        {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
+        {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
+      ]},
+      {xtype: 'spacer', height: '10'},
+      this._createStoreAndDataView()
+    ];
+
+    Talho.ux.DevicesControl.superclass.initComponent.call(this);
   },
 
   add_device: function(){
@@ -94,10 +75,46 @@ Talho.DevicesControl = Ext.extend(function(){}, {
     store.removeAll();
     store.add(devices);
   },
-  save_data: function(json){
+  grab_data: function(){
     this.store.clearFilter();
     var devices = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.data.state!="deleted"; });
-    this.ancestor.save_json(this.form_config.save_url, {"user[devices]": Ext.encode(devices)});
+    return Ext.encode(devices);
+  },
+  save_data: function(){
+    this.ancestor.save_json(this.save_url, {"user[devices]": this.grab_data()});
+  },
+
+  // Methods for private use
+  _createStoreAndDataView: function(){
+    this.store = new Ext.data.Store({
+      autoDestroy: true,
+      autoLoad: false,
+      autoSave: false,
+      listeners: {scope: this, 'add': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 10}},
+      reader: new Ext.data.JsonReader({
+        root: "extra.devices",
+        fields: [{name:'id'}, {name:'type'}, {name:'rbclass'}, {name:'value'}]
+      })
+    });
+
+    var template = new Ext.XTemplate(
+      '<ul class="devices">',
+      '<tpl for=".">',
+        '<li class="device-item">',
+          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<br>',
+            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '</p>',
+        '</li>',
+      '</tpl>',
+      '</ul>'
+    );
+
+    this.dv = new Ext.DataView(
+      {name: 'user[devices]', store: this.store, tpl: template, emptyText: 'No devices to display',
+        multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected'}
+    );
+  
+    return this.dv;
   }
 });

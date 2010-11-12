@@ -24,6 +24,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       border: false,
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       closable: true,
+      autoWidth: true,
       autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
       listeners: {scope: this, 'actioncomplete': this.form_submit_success, 'actionfailed': this.form_submit_failure},
@@ -65,7 +66,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Save via AJAX callbacks
   save_json: function(url, json){
-    Ext.Ajax.request({ url: this.form_config.save_url, method: "PUT", params: json,
+    Ext.Ajax.request({ url: url, method: "PUT", params: json,
       success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
   },
   ajax_save_success_cb: function(response, opts) {
@@ -113,8 +114,9 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     this.getPanel().doLayout();
   },
   show_ajax_error: function(response){
-    Ext.Msg.alert('Error',
-      '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
-      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>');
+    var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
+      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900,
+      buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
   }
 });
