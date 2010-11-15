@@ -284,7 +284,7 @@ private
       if Rails.env.downcase == "production"
         render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support."}.as_json
       else
-        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.each{|b| h(b)}}.as_json
+        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}.as_json
       end
     else
       local_request? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
@@ -297,7 +297,7 @@ private
     if Rails.env.downcase == "production"
       render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support."}.as_json, :content_type => 'text/html'
     else
-      render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.each{|b| h(b)}}.as_json, :content_type => 'text/html'
+      render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}.as_json, :content_type => 'text/html'
     end
   end
 
