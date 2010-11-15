@@ -147,7 +147,6 @@ When /^I create a user account with the following info:$/ do |table|
   click_button "Save"
 end
 
-
 When 'I signup for an account with the following info:' do |table|
   visit new_user_path
   fill_in_user_signup_form(table)
@@ -164,6 +163,7 @@ When /^I sign in with "([^\"]*)" and "([^\"]*)"$/ do |email, password|
   fill_in "Password", :with => password
   click_button "Sign in"
 end
+
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   user = User.find_by_email!(user_email)

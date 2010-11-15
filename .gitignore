@@ -53,3 +53,4 @@ config/email.yml
 .bundle
 Gemfile.lock
 vendor/cache
+config/hydra.yml

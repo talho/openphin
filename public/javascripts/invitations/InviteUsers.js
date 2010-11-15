@@ -130,6 +130,7 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
         sortable: true,
         editor: {
           xtype: 'textfield',
+          id: 'invitee_name',
           allowBlank: false
         }
       },{
@@ -139,6 +140,7 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
         sortable: true,
         editor: {
           xtype: 'textfield',
+          id: 'invitee_email',
           allowBlank: false,
           vtype: 'email'
         }

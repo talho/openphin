@@ -57,7 +57,6 @@ class Admin::InvitationsController < ApplicationController
   end
   
   def create
-    debugger
     paramsWithCSVInvitees unless params[:invitation][:csvfile].blank?
     params[:invitation].delete("csvfile")
     params[:invitation][:author_id] = current_user.id
