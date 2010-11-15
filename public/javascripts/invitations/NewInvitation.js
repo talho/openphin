@@ -281,7 +281,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
       });
       return true;
     }, this);
-  },
+  }
 });
 
 Talho.NewInvitation.initialize = function(config){
