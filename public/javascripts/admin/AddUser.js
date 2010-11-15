@@ -53,9 +53,9 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:440},
         margins: '0 0 0 10', items:[
-        this.roles_control, {xtype: 'hidden', name: 'user[new_roles]', value: ''},
+        this.roles_control,
         {xtype: 'spacer', height: '10'},
-        this.devices_control, {xtype: 'hidden', name: 'user[new_devices]', value: ''}
+        this.devices_control
       ]}
     ];
     this.form_config = {
@@ -73,11 +73,11 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
 
   load_data: function(json){ },
   save_data: function(){
-    var devices_json = this.devices_control.grab_data();
-    var roles_json = this.roles_control.grab_data();
-    this.getPanel().find("name", "user[new_devices]")[0].setValue(devices_json);
-    this.getPanel().find("name", "user[new_roles]")[0].setValue(roles_json);
-    this.getPanel().getForm().submit();
+    var options = {};
+    options.params = {};
+    options.params["user[new_devices]"] = this.devices_control.grab_data();
+    options.params["name", "user[new_roles]"] = this.roles_control.grab_data();
+    this.getPanel().getForm().submit(options);
   }
 });
 

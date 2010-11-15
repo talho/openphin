@@ -100,11 +100,23 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     var msg = "";
     if (json.flash != null) {
       msg += json.flash;
-    } else {
+    } else if (json.errors != null) {
       jQuery.each(json.errors, function(i,e){
         var item = (jQuery.isArray(e)) ? e.join(" - ") : e;
         msg += item[0].toUpperCase() + item.substr(1) + "<br>";
       });
+    } else {
+      var w = 300;
+      var msg = '<b>Server Error:</b> ' + json.error + '<br>';
+      if (json.exception != null) {
+        w = 900;
+        msg += '<b>Exception:</b> ' + json.exception + '<br><br>';
+        msg += '<div style="height:400px;overflow:scroll;">';
+        for (var i = 0; i < json.backtrace.length; i++)
+          msg += '&nbsp;&nbsp;' + json.backtrace[i] + '<br>';
+        msg += '<\div>';
+      }
+      Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
     }
     if (json.type != null) {
       jQuery(fm.dom).removeClass(); // remove all classes
@@ -116,7 +128,6 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   show_ajax_error: function(response){
     var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
       '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
-    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900,
-      buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
   }
 });

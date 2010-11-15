@@ -1,0 +1,3 @@
+table.pending_role_requests     {border-collapse: collapse; color: #666666; font-size: 13px;}
+table.pending_role_requests th  {padding:5px 20px 5px 0; font-weight: bold;}
+table.pending_role_requests td  {padding:5px 20px 5px 0;}
