@@ -1,6 +1,6 @@
 Ext.ns("Talho");
 
-Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
+Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
   constructor: function(config){
     var Invitee = Ext.data.Record.create([{
       name: 'name',
@@ -37,8 +37,6 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       }
     }, this, {delay: 10});
 
-    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Uploading file.  Please wait..."});
-
     this.uploadButton = new Ext.ux.form.FileUploadField({
       name: 'invitation[csvfile]',
       itemId: 'myfileuploadfield',
@@ -48,7 +46,7 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       listeners: {
         scope: this,
         'fileselected': function(fb, v) {
-          myMask.show();
+          grid.myMask.show();
           this.uploadForm.submit({
             scope: grid,
             success: function(form, action) {
@@ -59,10 +57,10 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
                 Ext.getCmp('invitation_submit').enable();
               }
               form.reset();
-              myMask.hide();
+              this.myMask.hide();
             },
             failure: function(form, action) {
-              myMask.hide();
+              this.myMask.hide();
               data = Ext.decode(action.response.responseText);
               Ext.Msg.alert('Import Error', data['error']);
             }
@@ -144,7 +142,10 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
           allowBlank: false,
           vtype: 'email'
         }
-      }]
+      }],
+      set_gridmask: function(panel){
+        this.myMask = new Ext.LoadMask(panel.getEl(), {msg:"Loading...", removeMask: true});
+      }
     });
 
     grid.on('afterrender', function(){
@@ -173,7 +174,7 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       } else {
         this.getPanel().form.items.each(function() {
           this.validate();
-        })
+        });
       }
     };
 
@@ -190,8 +191,9 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       } else {
         this.getPanel().form.items.each(function() {
           this.validate();
-        })
-      }    };
+        });
+      }
+    };
 
     var item_list = [{
       id: 'card-wizard-panel',
@@ -267,7 +269,9 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       save_method: "POST"
     };
 
-    Talho.InviteUsers.superclass.constructor.call(this, config);
+    Talho.NewInvitation.superclass.constructor.call(this, config);
+
+    this.getPanel().on('render', grid.set_gridmask, grid, {delay: 1});
 
     this.getPanel().getForm().on('beforeaction', function(form, action) {
       action.options.params = {}
@@ -277,12 +281,12 @@ Talho.InviteUsers = Ext.extend(Talho.InviteUsersBase, {
       });
       return true;
     }, this);
-  }
+  },
 });
 
-Talho.InviteUsers.initialize = function(config){
-  var o = new Talho.InviteUsers(config);
+Talho.NewInvitation.initialize = function(config){
+  var o = new Talho.NewInvitation(config);
   return o.getPanel();
 };
 
-Talho.ScriptManager.reg('Talho.InviteUsers', Talho.InviteUsers, Talho.InviteUsers.initialize);
+Talho.ScriptManager.reg('Talho.NewInvitation', Talho.NewInvitation, Talho.NewInvitation.initialize);

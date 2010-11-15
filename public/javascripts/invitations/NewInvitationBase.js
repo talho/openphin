@@ -1,6 +1,6 @@
 Ext.ns("Talho");
 
-Talho.InviteUsersBase = Ext.extend(function(){}, {
+Talho.NewInvitationBase = Ext.extend(function(){}, {
   constructor: function(config){
     Ext.apply(this, config);
 

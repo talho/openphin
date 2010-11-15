@@ -63,7 +63,7 @@ if current_user.has_non_public_role?
                           {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'#{ new_user_batch_path }'}},
                           {name: 'Delete a User', tab: {id: 'delete_user', title:'Delete A User', url:'#{ new_users_delete_path }'}}]},
                       {name: 'Manage Invitations', items:[
-                          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.InviteUsers'}},
+                          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"
     end
 
