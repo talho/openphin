@@ -12,19 +12,23 @@ Feature: Invitation System
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
     And I am logged in as "joe.smith@example.com"
-    And I navigate to the invitations page
-    
+    And I navigate to the new invitation page
+
   Scenario: Create and Send an invite
-    And I want to debug
-    When I fill in "Name" with "DSHS"
-    And I fill in "Subject" with "Please Join DSHS"
-    And I fill in "Body" with "Please click the link below to join DSHS."
-    And I select "DSHS" from "Default Organization"
-    And I fill in "Invitee Name" with "Jane Smith"
-    And I fill in "Invitee Email" with "jane.smith@example.com"
-    When I press "Submit"
-    Then I should see "Invitation was successfully sent."
-    And "jane.smith@example.com" is an invitee of "DSHS"
+    When I fill in "Invitation Name:" with "DSHS"
+    And I fill in "Email Subject:" with "Please Join DSHS"
+    And I fill in the htmleditor "Email Body:" with "Please click the link below to join DSHS."
+    And I select "DSHS" from ext combo "Default Organization:"
+    And I press "Next"
+    And I press "Add User"
+    And I fill in "invitee_name" with "Jane Smith"
+    And I fill in "invitee_email" with "jane.smith@example.com"
+    And I sleep 1
+    And I press "Update"
+    And I sleep 1
+    When I press "Send Invitation"
+    Then I should see "Invitation was successfully sent"
+    Then "jane.smith@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
     When delayed jobs are processed
     Then the following Emails should be broadcasted:
@@ -44,11 +48,10 @@ Feature: Invitation System
       | Are you a public health professional?   | <checked>              |
     And "jane.smith@example.com" clicks the confirmation link in the email
     And I am logged in as "joe.smith@example.com"
-    And I am on the invitation reports page for "DSHS"
-    And I select "By Organization" from "Report type"
+    And I navigate to the invitations page
+    And I follow "View"
 
-    Then I should see "Invitation report for DSHS by organization"
-    And I should see "Organization: DSHS"
+    Then I should see "Invitation: DSHS"
     And I should see "Jane Smith" within "#invitee1"
     And I should see "jane.smith@example.com" within "#invitee1"
     And I should explictly see "Yes" within "#invitee1 td.status"

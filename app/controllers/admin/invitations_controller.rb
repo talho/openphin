@@ -40,7 +40,7 @@ class Admin::InvitationsController < ApplicationController
     respond_to do |format|
       format.html do
         if error.nil?
-          render :json => {:success => true, :root => invitees}.as_json, :content_type => 'text/html'
+          render :json => {:success => true, :invitees_attributes => invitees}.as_json, :content_type => 'text/html'
         else
           render :json => {:success => false, :error => error}.as_json, :content_type => 'text/html'
         end
@@ -48,7 +48,7 @@ class Admin::InvitationsController < ApplicationController
 
       format.json do
         if error.nil?
-           render :json => {:success => true, :root => invitees}.as_json
+           render :json => {:success => true, :invitees_attributes => invitees}.as_json
          else
            render :json => {:success => false, :error => error}.as_json
          end
@@ -65,12 +65,24 @@ class Admin::InvitationsController < ApplicationController
 
     @invitation = Invitation.new(params[:invitation])
     if @invitation.save
-      if @invitation.deliver
-        flash[:notice] = "Invitation was successfully sent."
-      else
-        flash[:notice] = "Invitation was created but did not send."
+      respond_to do |format|
+        format.html do
+          if @invitation.deliver
+            flash[:notice] = "Invitation was successfully sent."
+          else
+            flash[:notice] = "Invitation was created but did not send."
+          end
+          redirect_to admin_invitation_path(@invitation)
+        end
+
+        format.json do
+          if @invitation.deliver
+            render :json => {:success => true, :flash => 'Invitation was successfully sent'}.as_json
+          else
+            render :json => {:success => false, :error => 'Invitation was created but did not send'}.as_json
+          end
+        end
       end
-      redirect_to admin_invitation_path(@invitation)
     end
   end
 
@@ -206,7 +218,7 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def addSignupLinkToBody
-    if params[:invitation][:organization_id]
+    if params[:invitation][:organization_id] && params[:invitation][:organization_id] != "Select an Organization..."
       link = "\n\n" + new_user_url + "?organization=" + params[:invitation][:organization_id]
       params[:invitation][:body] = params[:invitation][:body] + link
     end
