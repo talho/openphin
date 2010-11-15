@@ -8,7 +8,8 @@ class Admin::RoleRequestsController < ApplicationController
     @role_requests = RoleRequest.unapproved.in_jurisdictions(current_user.jurisdictions)
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
+      format.ext
       format.xml  { render :xml => @role_requests }
     end
   end
@@ -73,15 +74,22 @@ class Admin::RoleRequestsController < ApplicationController
 
         # Set referer for redirect when testing
         request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
-
-        if params[:postback].blank?
-          redirect_to :back
+        if request.xhr?
+          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
         else
-          redirect_to params[:postback]
+          if params[:postback].blank?
+            redirect_to :back
+          else
+            redirect_to params[:postback]
+          end
         end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to root_path
+        if request.xhr?
+          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+        else
+          redirect_to root_path
+        end
       end
     end
   end
@@ -98,14 +106,22 @@ class Admin::RoleRequestsController < ApplicationController
         # Set referer for redirect when testing
         request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
 
-        if params[:postback].blank?
-          redirect_to :back
+        if request.xhr?
+          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
         else
-          redirect_to params[:postback]
+          if params[:postback].blank?
+            redirect_to :back
+          else
+            redirect_to params[:postback]
+          end
         end
       else
         flash[:error]="This resource does not exist or is not available."
-        redirect_to root_path
+        if request.xhr?
+          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+        else
+          redirect_to root_path
+        end
       end
     end
   end
