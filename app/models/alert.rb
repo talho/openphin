@@ -404,7 +404,7 @@ class Alert < ActiveRecord::Base
 
   def total_jurisdictions
     total_jurisdictions = audiences.map(&:jurisdictions).flatten
-    
+
     total_jurisdictions += User.find(required_han_coordinators).map(&:jurisdictions) if is_cross_jurisdictional?
 
     total_users = audiences.map(&:users).flatten.uniq.reject do |user|
@@ -437,7 +437,23 @@ class Alert < ActiveRecord::Base
   def responders(responder_categories=[1,2,3,4,5])
     alert_attempts.find_all_by_call_down_response(responder_categories).map(&:user).uniq
   end
-   
+
+  def preview_recipients(params)
+    temp_recipients = []
+    ActiveRecord::Base.transaction do
+      temp_alert = Alert.new(params[:alert])
+      temp_alert.save!
+      temp_recipients = temp_alert.recipients({:force => true})
+
+        # A bit of a hack
+        # Calling .size on this forces Rails to actually fetch .recipients now.
+        # Otherwise it will wait until after the rollback and always be zero
+      temp_recipients_size = temp_recipients.size
+
+      raise ActiveRecord::Rollback
+    end
+    return temp_recipients
+  end
 
 
   private
