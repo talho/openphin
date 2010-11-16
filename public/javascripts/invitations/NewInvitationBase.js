@@ -1,17 +1,17 @@
 Ext.ns("Talho");
 
-Talho.ProfileBase = Ext.extend(function(){}, {
+Talho.NewInvitationBase = Ext.extend(function(){}, {
   constructor: function(config){
     Ext.apply(this, config);
 
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
       {xtype: 'container', defaults:{width:this.form_config.form_width,padding:'10'}, items:[
-        {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
+        {xtype: 'box', id: 'flashBox', html: '<p class="flash">&nbsp;</p>', hidden: true},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: this.form_config.item_list},
         {xtype: 'spacer', height: '15'},
         {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Save', name: 'save_button', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', id: 'invitation_submit', text: 'Send Invitation', name: 'save_button', handler: this.save, scope: this, width:'auto', disabled: true},
           //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
         ]}
@@ -24,14 +24,12 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       border: false,
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       closable: true,
-      autoWidth: true,
       autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
-      listeners: {scope: this, 'actioncomplete': this.form_submit_success, 'actionfailed': this.form_submit_failure},
+      listeners: {scope: this, 'actioncomplete': this.submit_success, 'actionfailed': this.submit_failure},
       items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
-
     this.getPanel = function(){ return panel; }
   },
 
@@ -40,49 +38,49 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     if (this.form_config.load_url == null) return;
     panel.loadMask = new Ext.LoadMask(panel.getEl(), {msg:"Loading...", removeMask: true});
     panel.loadMask.show();
-    this.load_json();
+    this.load_form_values();
   },
-  load_json: function(){
+  load_form_values: function(){
     Ext.Ajax.request({ url: this.form_config.load_url, method: 'GET',
       success: this.load_complete_cb, failure: this.load_fail_cb, scope: this });
   },
   load_complete_cb: function(response, options){
-    this.getPanel().loadMask.hide();
+    var p = this.getPanel();
+    p.loadMask.hide();
     var json = Ext.decode(response.responseText, true);
-    this.load_data(json);  // derived class must have load_data method defined
-    this.getPanel().doLayout();
+    this.set_field_values(p, json.model.user);
+    this.set_field_values(p, json.extra);
+    p.doLayout();
   },
   load_fail_cb: function(response, options){
     this.getPanel().loadMask.hide();
     Ext.Msg.alert('Error loading user info', 'Status:' + response.status + ': ' + response.statusText);
   },
+  set_field_values: function(p, obj){
+    for (var prop in obj) {
+      var elem_list = p.find("name", "user[" + prop + "]");
+      if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
+    }
+  },
 
   // Button callbacks
   save: function(){
-    this.save_data();  // derived class must have save_data method defined
+    var saveButton = this.getPanel().find("name", "save_button")[0];
+    if (saveButton.disabled) return;
+    saveButton.disable();
+    this.getPanel().getForm().submit();
   },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
   save_close: function(){ this.save(); this.close(); },
 
-  // Save via AJAX callbacks
-  save_json: function(url, json){
-    Ext.Ajax.request({ url: url, method: "PUT", params: json,
-      success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
-  },
-  ajax_save_success_cb: function(response, opts) {
-    this.load_json();
-    this.show_message(Ext.decode(response.responseText));
-  },
-  ajax_save_err_cb: function(response, opts) {
-    this.show_ajax_error(response);
-  },
-
-  // Save form callbacks
-  form_submit_success: function(form, action){
+  // Form callbacks
+  submit_success: function(form, action){
+    this.getPanel().find("name", "save_button")[0].enable();
     var json = action.result;
     this.show_message(json);
   },
-  form_submit_failure: function(form, action){
+  submit_failure: function(form, action){
+    this.getPanel().find("name", "save_button")[0].enable();
     Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
       this.show_ajax_error(action.response);
@@ -96,38 +94,30 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Flash message utils
   show_message: function(json){
-    var fm = this.getPanel().getEl().select("#flash-msg").first();
+    var fm = this.getPanel().getEl().select(".flash").first();
     var msg = "";
-    if (json.flash != null) {
+    if (typeof json.flash != "undefined") {
       msg += json.flash;
-    } else if (json.errors != null) {
+    } else {
       jQuery.each(json.errors, function(i,e){
         var item = (jQuery.isArray(e)) ? e.join(" - ") : e;
         msg += item[0].toUpperCase() + item.substr(1) + "<br>";
       });
-    } else {
-      var w = 300;
-      var msg = '<b>Server Error:</b> ' + json.error + '<br>';
-      if (json.exception != null) {
-        w = 900;
-        msg += '<b>Exception:</b> ' + json.exception + '<br><br>';
-        msg += '<div style="height:400px;overflow:scroll;">';
-        for (var i = 0; i < json.backtrace.length; i++)
-          msg += '&nbsp;&nbsp;' + json.backtrace[i] + '<br>';
-        msg += '<\div>';
-      }
-      Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-    }
-    if (json.type != null) {
-      jQuery(fm.dom).removeClass(); // remove all classes
-      fm.addClass("flash").addClass(json.type).update(msg).show();
     }
     fm.parent().parent().parent().parent().scrollTo("top", 0);
+    if (msg != "") {
+      fm.parent().removeClass('x-hide-display');; // remove all classes
+      fm.addClass("flash").addClass(json.type).update(msg).show();
+    }
     this.getPanel().doLayout();
+    var task = new Ext.util.DelayedTask(function(){
+      fm.parent().addClass('x-hide-display');; // remove all classes
+    },fm.parent());
+    task.delay(10000);
   },
   show_ajax_error: function(response){
-    var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
-      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
-    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+    Ext.Msg.alert('Error',
+      '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
+      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>');
   }
 });

@@ -1,6 +1,7 @@
 class Admin::InvitationsController < ApplicationController
   require 'fastercsv'
   before_filter :admin_required
+  before_filter :force_json_as_html, :only => :import
   app_toolbar "admin"
 
   def index
@@ -14,6 +15,46 @@ class Admin::InvitationsController < ApplicationController
   def new
     @invitation = Invitation.new
   end
+
+  def import
+    invitees = []
+    csvfile = params[:invitation][:csvfile]
+    newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
+    File.open(newfile,'wb') do |file|
+      file.puts csvfile.read
+    end
+    error = nil
+
+    begin
+      FasterCSV.open(newfile, :col_sep => ",", :headers => true) do |records|
+        records.each do |record|
+          invitees.push({:name => record["name"].delete(","), :email => record["email"]})
+        end
+      end
+    rescue FasterCSV::MalformedCSVError => detail
+      error = "CSV file was malformed or corrupted.<br/><br/>Error:<br/>#{detail.message}"
+    rescue
+      error = "This does not appear to be a CSV file."
+    end
+
+    respond_to do |format|
+      format.html do
+        if error.nil?
+          render :json => {:success => true, :invitees_attributes => invitees}.as_json, :content_type => 'text/html'
+        else
+          render :json => {:success => false, :error => error}.as_json, :content_type => 'text/html'
+        end
+      end
+
+      format.json do
+        if error.nil?
+           render :json => {:success => true, :invitees_attributes => invitees}.as_json
+         else
+           render :json => {:success => false, :error => error}.as_json
+         end
+       end
+    end
+  end
   
   def create
     paramsWithCSVInvitees unless params[:invitation][:csvfile].blank?
@@ -24,12 +65,24 @@ class Admin::InvitationsController < ApplicationController
 
     @invitation = Invitation.new(params[:invitation])
     if @invitation.save
-      if @invitation.deliver
-        flash[:notice] = "Invitation was successfully sent."
-      else
-        flash[:notice] = "Invitation was created but did not send."
+      respond_to do |format|
+        format.html do
+          if @invitation.deliver
+            flash[:notice] = "Invitation was successfully sent."
+          else
+            flash[:notice] = "Invitation was created but did not send."
+          end
+          redirect_to admin_invitation_path(@invitation)
+        end
+
+        format.json do
+          if @invitation.deliver
+            render :json => {:success => true, :flash => 'Invitation was successfully sent'}.as_json
+          else
+            render :json => {:success => false, :error => 'Invitation was created but did not send'}.as_json
+          end
+        end
       end
-      redirect_to admin_invitation_path(@invitation)
     end
   end
 
@@ -165,7 +218,7 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def addSignupLinkToBody
-    if params[:invitation][:organization_id]
+    if params[:invitation][:organization_id] && params[:invitation][:organization_id] != "Select an Organization..."
       link = "\n\n" + new_user_url + "?organization=" + params[:invitation][:organization_id]
       params[:invitation][:body] = params[:invitation][:body] + link
     end
@@ -220,5 +273,4 @@ class Admin::InvitationsController < ApplicationController
   def csv_download
     send_file Rails.root.join("tmp","invitee.csv"), :type=>"application/xls" 
   end
-  
 end

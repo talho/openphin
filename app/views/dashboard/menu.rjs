@@ -15,7 +15,9 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   Phin::Application.eval_if_plugin_present(:rollcall) do
     menu_config += "{name: 'Rollcall', items:[
                     {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'#{ rollcall_path }', initializer: 'Talho.Rollcall'}},
-                    {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{ schools_path }.ext', initializer: 'Talho.Rollcall'}},
+                    {name: 'Search', tab:{id: 'rollcall_search', title:'Rollcall Search', url:'#{ rollcall_queries_path }', initializer: 'Talho.RollcallQuery'}},
+                    {name: 'Nurse Assistant', tab:{id: 'rollcall_nurse', title:'Nurse Assistant', url:'', initializer: 'Talho.NurseAssistant'}},
+                    {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{ rollcall_schools_path }.ext', initializer: 'Talho.Rollcall'}},
                     {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'#{ about_rollcall_path }'}}]},"
   end
 
@@ -57,11 +59,11 @@ if current_user.has_non_public_role?
                           {name: 'Assign Roles', tab: {id: 'assign_roles', title:'Assign Roles', url:'#{ new_role_assignment_path }'}}]},
                       {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }', initializer: 'Talho.ManageGroups'}},
                       {name: 'Manage Users', items: [
-                          {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }'}},
+                          {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},
                           {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'#{ new_user_batch_path }'}},
                           {name: 'Delete a User', tab: {id: 'delete_user', title:'Delete A User', url:'#{ new_users_delete_path }'}}]},
                       {name: 'Manage Invitations', items:[
-                          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ new_admin_invitation_path }'}},
+                          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"
     end
 

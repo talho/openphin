@@ -30,13 +30,12 @@ class Admin::GroupsController < ApplicationController
 
   def show
     group = Group.find_by_id(params[:id])
-    @group = current_useer.viewable_groups.include?(group) ? group : nil
+    @group = current_user.viewable_groups.include?(group) ? group : nil
+    @recipients = @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
 
     respond_to do |format|
       format.html do
         if @group
-          @group.refresh_recipients
-          @recipients = @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
         end
       end
       format.pdf do
@@ -48,8 +47,7 @@ class Admin::GroupsController < ApplicationController
         @output_encoding = 'UTF-8'
       end
       format.json do
-        recipients = TempUser.find(:all)
-        render :json => group_hash_for_display(@group, recipients)
+        render :json => group_hash_for_display(@group, @recipients)
       end
     end
   end
@@ -179,8 +177,7 @@ class Admin::GroupsController < ApplicationController
 
   def group_hash_for_display(group, recipients = nil)
     if(recipients.nil?)
-      group.prepare_recipients(:include_public => true, :recreate => true)
-      recipients = TempUser.find(:all)
+      recipients = group.recipients
     end
 
     { :name => group.name, :id => group.id, :scope => group.scope, :owner_jurisdiction => group.owner_jurisdiction_id.nil? ? nil : Jurisdiction.find(group.owner_jurisdiction_id),

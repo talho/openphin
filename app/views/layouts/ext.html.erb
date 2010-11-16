@@ -1,6 +1,7 @@
 <head>
   <Title>Ext Dashboard</Title>
   <%= javascript_include_tag 'lib/dominoes-1.0-rc2.min.js'%>
+  <%= javascript_tag "var FORM_AUTH_TOKEN = '#{form_authenticity_token}';" %>
   <%# <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
   <%# <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
   <%# begin include js for openphin plugins %>
@@ -9,7 +10,7 @@
   <%# <%= javascript_include_tag(*js_list) %>
   <%# end include js for openphin plugins %>
 
-  <%# <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-gray', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/profile', 'redesign/forum', :cache => true  %>
+  <%# <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-gray', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/admin', 'redesign/profile', 'redesign/forum', :cache => true  %>
 
   <%# begin include stylesheets for openphin plugins %>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>

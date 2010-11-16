@@ -1,7 +1,9 @@
 Ext.ns("Talho");
 
-Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
+Talho.AddUser = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
+    this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
+    this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
     var item_list = [
       {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -16,14 +18,20 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: false}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false}
+          ]}
+        ]},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true}
           ]},
           {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Employer', name: 'user[employer]', maxLength: '46', allowBlank: true}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Job description', name: 'user[description]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true}
@@ -41,55 +49,41 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
           ]}
         ]},
         {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all',
-          store: ['English', 'Spanish'], value: 'English'},
-        {xtype: 'textarea', fieldLabel: 'Bio', name: 'user[bio]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
-        {xtype: 'textarea', fieldLabel: 'Credentials', name: 'user[credentials]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
-        {xtype: 'textarea', fieldLabel: 'Experience', name: 'user[experience]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}}
+          store: ['English', 'Spanish'], value: 'English'}
       ]},
-      {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:300},
+      {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:440},
         margins: '0 0 0 10', items:[
-        {xtype: 'container', name: 'user[photo]', html: '<img id=photo src="images/missing.jpg" width=200 height=200>'},
+        this.roles_control,
         {xtype: 'spacer', height: '10'},
-        {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[name]', maxLength: '15', width: 'auto'},
-        {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true},
-        {xtype: 'hidden', name: 'user[lock_version]', value: ''}
+        this.devices_control
       ]}
     ];
     this.form_config = {
-      load_url: config.url + "/edit.json",
-      form_width: 700,
+      load_url: null,
+      form_width: 850,
       item_list: item_list,
-      save_url: config.url + ".json",
-      save_method: "PUT"
+      save_url: "admin_users.json",
+      save_method: "POST"
     };
 
-    Talho.EditProfile.superclass.constructor.call(this, config);
+    Talho.AddUser.superclass.constructor.call(this, config);
 
-    // Override the setValue() method where necessary
-    this.getPanel().find("name", "user[photo]")[0].setValue = function(val){ Ext.getDom("photo").src = val; };
+    this.getPanel().doLayout();
   },
 
-  load_data: function(json){
-    var p = this.getPanel();
-    this.set_field_values(p, json.model.user);
-    this.set_field_values(p, json.extra);
-  },
-  save_data: function(){ this.getPanel().getForm().submit(); },
-
-  set_field_values: function(p, obj){
-    for (var prop in obj) {
-      var elem_list = p.find("name", "user[" + prop + "]");
-      if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
-    }
-  },
+  load_data: function(json){ },
+  save_data: function(){
+    var options = {};
+    options.params = {};
+    options.params["user[new_devices]"] = this.devices_control.grab_data();
+    options.params["name", "user[new_roles]"] = this.roles_control.grab_data();
+    this.getPanel().getForm().submit(options);
+  }
 });
 
-Talho.EditProfile.initialize = function(config){
-  var o = new Talho.EditProfile(config);
+Talho.AddUser.initialize = function(config){
+  var o = new Talho.AddUser(config);
   return o.getPanel();
 };
 
-Talho.ScriptManager.reg('Talho.EditProfile', Talho.EditProfile, Talho.EditProfile.initialize);
+Talho.ScriptManager.reg('Talho.AddUser', Talho.AddUser, Talho.AddUser.initialize);

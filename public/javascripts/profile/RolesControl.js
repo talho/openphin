@@ -1,59 +1,32 @@
-Ext.ns("Talho");
+Ext.ns("Talho.ux");
 
-Talho.RolesControl = Ext.extend(function(){}, {
-  constructor: function(config, ancestor){
-    this.store = new Ext.data.Store({
-      autoDestroy: true,
-      autoLoad: false,
-      autoSave: false,
-      url: config.url + "/edit.json",
-      listeners: {scope: this, 'add': {fn: function(){ ancestor.getPanel().doLayout(); }, delay: 100}},
-      reader: new Ext.data.JsonReader({
-        root: "extra.role_desc",
-        fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
-                 {name:'type'}, {name:'state'}]
-      })
-      //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
-    });
+Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
+  constructor: function(save_url, ancestor){
+    this.save_url = save_url;
     this.ancestor = ancestor;
-    this.form_config = ancestor.form_config;
 
-    this.jurisdictions_store = new Ext.data.JsonStore({
-      url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
-      fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}]
-    });
-    this.roles_store = new Ext.data.JsonStore({
-      url: '/audiences/roles', autoLoad: true, autoSave: false,
-      fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}]
-    });
+    Talho.ux.RolesControl.superclass.constructor.call(this);
+  },
 
-    var template = new Ext.XTemplate(
-      '<ul class="roles">',
-      '<tpl for=".">',
-        '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>&nbsp;',
-            '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
-            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
-          '</p>',
-        '</li>',
-      '</tpl>',
-      '</ul>'
-    );
-
-    this.dv = new Ext.DataView(
-      {name: 'user[role_desc]', store: this.store, tpl: template, emptyText: 'No roles to display',
-        multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
-    );
-    this.item_list = [
-      {xtype: 'panel', layout: 'form', frame: true, title: 'Roles', labelAlign: 'top', defaults:{width:560}, items:[
-        {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'},
-          {xtype: 'button', text: 'Remove role', handler: this.remove_role, scope: this, width:'auto'}
-        ]},
-        {xtype: 'spacer', height: '10'},
-        this.dv
-      ]}
+  initComponent: function(){
+    this.layout = 'form';
+    this.frame = true;
+    this.title = 'Roles';
+    this.labelAlign = 'top';
+    this.padding = 10;
+    this.defaults = {boxMinWidth:400};
+    this.items = [
+      {xtype: 'container', layout: 'hbox', items:[
+        {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'},
+        {xtype: 'button', text: 'Remove role', handler: this.remove_role, scope: this, width:'auto'}
+      ]},
+      {xtype: 'spacer', height: '10'},
+      this._createStoreAndDataView()
     ];
+
+    Talho.ux.RolesControl.superclass.initComponent.call(this);
+
+    this.addListener('afterrender', this._loadJurisdictionsAndRoles, this);
   },
 
   add_role: function(){
@@ -123,10 +96,59 @@ Talho.RolesControl = Ext.extend(function(){}, {
     store.removeAll();
     store.add(entries);
   },
-  save_data: function(json){
+  grab_data: function(){
     this.store.clearFilter();
     var rq = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.data.state!="deleted"; });
-    this.ancestor.save_json(this.form_config.save_url, {"user[rq]": Ext.encode(rq)});
+    return Ext.encode(rq);
+  },
+  save_data: function(){
+    this.ancestor.save_json(this.save_url, {"user[rq]": this.grab_data()});
+  },
+
+  // Methods for private use
+  _createStoreAndDataView: function(){
+    this.store = new Ext.data.Store({
+      autoDestroy: true,
+      autoLoad: false,
+      autoSave: false,
+      listeners: {scope: this, 'add': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 100}},
+      reader: new Ext.data.JsonReader({
+        root: "extra.role_desc",
+        fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
+                 {name:'type'}, {name:'state'}]
+      })
+    });
+
+    var template = new Ext.XTemplate(
+      '<ul class="roles">',
+      '<tpl for=".">',
+        '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
+          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>&nbsp;',
+            '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
+            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '</p>',
+        '</li>',
+      '</tpl>',
+      '</ul>'
+    );
+
+    this.dv = new Ext.DataView(
+      {name: 'user[role_desc]', store: this.store, tpl: template, emptyText: 'No roles to display',
+        multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
+    );
+
+    return this.dv;
+  },
+
+  _loadJurisdictionsAndRoles: function(){
+    this.jurisdictions_store = new Ext.data.JsonStore({
+      url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}]
+    });
+    this.roles_store = new Ext.data.JsonStore({
+      url: '/audiences/roles', autoLoad: true, autoSave: false,
+      fields: [{name: 'name', mapping: 'role.name'}, {name: 'id', mapping: 'role.id'}]
+    });
   }
 });

@@ -1,3 +1,44 @@
+module Capybara
+  class Session
+    def fill_in(locator, options={})
+      msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
+      raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
+      field = locate(:xpath, XPath.fillable_field(locator), msg)
+      id = field.node.attribute('id') if options[:hidden]
+      execute_script("Ext.getCmp('#{id}').removeClass('x-hidden')") if options[:hidden]
+      if options[:htmleditor]
+        execute_script("Ext.getCmp('#{id}').setValue('#{options[:with]}')")
+      else
+        field.set(options[:with])
+      end
+      execute_script("Ext.getCmp('#{id}').addClass('x-hidden')") if options[:hidden]
+    end
+  end
+end
+
+When /^(?:|I )fill in the hidden field "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
+  with_scope(selector) do
+    fill_in(field, :with => value, :hidden => true)
+  end
+end
+
+When /^(?:|I )fill in this hidden field "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+  with_scope(selector) do
+    fill_in(field, :with => value, :hidden => true)
+  end
+end
+
+When /^(?:|I )fill in the htmleditor "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
+  with_scope(selector) do
+    fill_in(field, :with => value, :hidden => true, :htmleditor => true)
+  end
+end
+
+When /^(?:|I )fill in this htmleditor "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+  with_scope(selector) do
+    fill_in(field, :with => value, :hidden => true, :htmleditor => true)
+  end
+end
 
 When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
   with_scope(selector) do
@@ -20,6 +61,18 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
   menu_array.each do |menu|
     When %Q{I click x-menu-item "#{menu}"}
   end
+end
+
+When /^(?:|I )navigate to ([^\"]*)$/ do |path|
+  path_lookup = {
+    "the rollcall dashboard page".to_sym => "Rollcall > Main",
+    "the rollcall search page".to_sym => "Rollcall > Search",
+    "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
+    "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations"
+  }
+
+  When %Q{I go to the ext dashboard page}
+  When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
 end
 
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|

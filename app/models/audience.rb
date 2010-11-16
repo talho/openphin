@@ -22,36 +22,17 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :roles, :uniq => true
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
 
-  has_and_belongs_to_many :recipients, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true do
-    def with_refresh(options={}, &block)
-      proxy_owner.refresh_recipients if options[:force] || proxy_owner.recipients_expires.nil? || Time.now > proxy_owner.recipients_expires
-      options.delete(:force)
-      if(options[:batch_size])
-        find_in_batches(options) do |users|
-          block.call(users)
-        end
-      else
-        find(:all, options)
-      end
+  has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true do
+    def with_no_hacc(options={})
+      options[:conditions] = User.merge_conditions(options[:conditions], ["audiences_recipients.is_hacc = ?", false])
+      scoped(options)
     end
+  end
 
-    def with_refresh_and_no_hacc(options={},&block)
-      proxy_owner.refresh_recipients if options[:force] || proxy_owner.recipients_expires.nil? || Time.now > proxy_owner.recipients_expires
-      options.delete(:force)
-      with_no_hacc(options,&block)
-    end
-
-    def with_no_hacc(options={},&block)
-      options[:conditions => ["audiences_recipients.is_hacc = ?", false]]
-      options.delete(:force)
-      if(options[:batch_size])
-        find_in_batches(options) do |users|
-          block.call(users)
-        end
-      else
-        find(:all, options)
-      end
-    end
+  def recipients(options={})
+    refresh_recipients if options[:force] || self.recipients_expires.nil? || Time.now > self.recipients_expires
+    options.delete(:force)
+    recipients_default.scoped(options)
   end
   
   belongs_to :forum
