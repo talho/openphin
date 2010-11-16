@@ -3,10 +3,15 @@ module FeatureHelpers
     def create_alert_with(attributes)
       attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
       jurisdictions = (attributes.delete('jurisdictions') || attributes.delete('jurisdiction')).to_s.split(',').map{|m| Jurisdiction.find_by_name(m.strip)}
-      roles = attributes.delete('roles').to_s.split(',').map{|m| Role.find_or_create_by_name(m.strip)}
+      roles = attributes.delete('roles').to_s.split(',').map{
+        |m| Role.find_or_create_by_name(m.strip)
+      }
       users = attributes.delete('people').to_s.split(',').map{ |m|
         first_name, last_name = m.split(/\s+/)
         User.find_by_first_name_and_last_name(first_name, last_name)
+      }
+      users += attributes.delete('emails').to_s.split(',').map{ |m|
+        User.find_by_email(m.strip)
       }
       
       if attributes['author'].blank?
@@ -17,6 +22,10 @@ module FeatureHelpers
 
       if attributes.has_key?('acknowledge')
         attributes['acknowledge'] = true_or_false(attributes.delete('acknowledge'))
+      end
+
+      if attributes.has_key?('not_cross_jurisdictional')
+        attributes['not_cross_jurisdictional'] = true_or_false(attributes.delete('not_cross_jurisdictional'))
       end
 
       if attributes.has_key?("communication methods")

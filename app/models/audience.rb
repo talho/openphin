@@ -75,12 +75,13 @@ class Audience < ActiveRecord::Base
     self.update_attribute('recipients_expires', Time.now + 1.minute)
     ActiveRecord::Base.transaction do
       clear_recipients ? true : raise(ActiveRecord::Rollback)
-      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) unless self.users.empty?
+      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) 
       (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
       (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
       (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
       target = Target.find_by_audience_id(self.id)
-      (update_han_coordinators_recipients ? true : raise(ActiveRecord::Rollback)) if target && target.item_type == "Alert"
+      primary_audience_jurisdictions = determine_primary_audience_jurisdictions({:audience_roles => roles, :audience_jurisdictions => jurisdictions, :audience_users => users})
+      (update_han_coordinators_recipients(primary_audience_jurisdictions) ? true : raise(ActiveRecord::Rollback)) if target && target.item_type == "Alert"
     end
     return true
   end
@@ -156,6 +157,16 @@ class Audience < ActiveRecord::Base
   end
 
   def update_users_recipients
+    # force the author to receive the alert
+    Target.find_by_audience_id(self.id).item.author_id
+    db = ActiveRecord::Base.connection();
+    sql = "INSERT INTO audiences_recipients (audience_id, user_id) VALUES (#{id}, #{Target.find_by_audience_id(self.id).item.author_id}) "
+    begin
+      db.execute sql
+    rescue
+      return false
+    end
+
     db = ActiveRecord::Base.connection()
     sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
     sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
@@ -169,41 +180,57 @@ class Audience < ActiveRecord::Base
     true
   end
 
-  def update_han_coordinators_recipients
-    alert = Target.find_by_audience_id(self.id).item
-    jurs = alert.audiences.map(&:jurisdictions).flatten.uniq
-    self.recipients.find_in_batches do |user|
-      jurs |= user.map(&:jurisdictions).flatten
-    end
-    #jurs = jurs.flatten.compact.uniq
-    # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
-    jurs = if alert.from_jurisdiction.nil?
-      jurs.map(&:self_and_ancestors).flatten.uniq - (Jurisdiction.federal)
+  def determine_primary_audience_jurisdictions (elements = {})  # returns an array of jurisdiction objects
+    jj = elements[:audience_jurisdictions].map(&:id)    # ids of every specified jurisdiction
+    rr = elements[:audience_roles].map(&:id)            # ids of every specified role
+    uu = RoleMembership.find_all_by_user_id(elements[:audience_users]).map(&:jurisdiction).map(&:id)           # ids of every jurisdiction that every manually-specified user has a role in
+#    debugger
+    if ( jj.size > 0 && rr.size > 0 )
+      juris_ids = RoleMembership.find_all_by_role_id_and_jurisdiction_id(rr,jj).map(&:jurisdiction_id) + uu   # an array of every role <-> juris association that matches plus userjuris
     else
-      selves_and_ancestors = (jurisdictions + [alert.from_jurisdiction]).compact.map(&:self_and_ancestors)
-
-      # union them all, but that may give us too many ancestors
-      unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
-
-      # intersecting will give us all the ancestors in common
-      intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
-
-      # So we grab the lowest common ancestor; ancestory at the loweest level
-      ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level}]).compact
+      juris_ids = RoleMembership.find_all_by_jurisdiction_id(jj).map(&:jurisdiction_id) + RoleMembership.find_all_by_role_id(rr).map(&:jurisdiction_id) + uu
     end
+    jurs = Jurisdiction.find_all_by_id(juris_ids)
+    return jurs.flatten.uniq
+  end
 
-    db = ActiveRecord::Base.connection()
-    sql = "INSERT INTO audiences_recipients (audience_id, user_id, is_hacc)"
-    sql += " SELECT DISTINCT #{id}, rm.user_id, true FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
-    sql += " WHERE rm.role_id = #{Role.han_coordinator.id}"
-    sql += " AND rm.jurisdiction_id IN (#{jurs.map(&:id).join(',')})"
-    sql += " AND ar.user_id IS NULL"
+  def update_han_coordinators_recipients(jurs)
+    alert = Target.find_by_audience_id(self.id).item
+    unless (jurs == [alert.from_jurisdiction] || jurs.blank? )           # only sending within the originating jurisdiction? no need for coordinators to be notified
+      unless ( jurs.include?(alert.from_jurisdiction)) then    # otherwise we need to include the originating jurisdiction for the calculations to work properly.
+        jurs << alert.from_jurisdiction
+      end
+      # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
+      jurs = if alert.from_jurisdiction.nil?
+        jurs.map(&:self_and_ancestors).flatten.uniq - (Jurisdiction.federal)
+      else
+        selves_and_ancestors =  jurs.flatten.compact.uniq.map(&:self_and_ancestors)
 
-    begin
-      db.execute sql
-    rescue
+        # union them all, but that may give us too many ancestors
+        unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
+
+        # intersecting will give us all the ancestors in common
+        intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
+
+        # So we grab the lowest common ancestor; ancestry at the lowest level
+        ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level }]).compact
+      end
+
+      db = ActiveRecord::Base.connection()
+      sql = "INSERT INTO audiences_recipients (audience_id, user_id, is_hacc)"
+      sql += " SELECT DISTINCT #{id}, rm.user_id, true FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
+      sql += " WHERE rm.role_id = #{Role.han_coordinator.id}"
+      sql += " AND rm.jurisdiction_id IN (#{jurs.map(&:id).join(',')})"
+      sql += " AND ar.user_id IS NULL"
+
+      begin
+        db.execute sql
+      rescue
+        return false
+      end
+      true
+    else
       return false
     end
-    true
   end
 end

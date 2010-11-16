@@ -59,6 +59,7 @@ class AlertsController < ApplicationController
   def create
     remove_blank_call_downs unless params[:alert][:call_down_messages].nil?
     set_acknowledge
+    params[:alert][:author_id] = current_user.id
     @alert = present current_user.alerts.build(params[:alert])
     @acknowledge = if @alert.acknowledge && !(@alert.call_down_messages.blank? || @alert.call_down_messages.empty?)
       'Advanced'
@@ -71,7 +72,7 @@ class AlertsController < ApplicationController
     
     if params[:send]
       if @alert.valid?
-        params[:alert][:author_id]=current_user.id
+
         @alert.save
         @alert.integrate_voice
         @alert.batch_deliver
@@ -377,5 +378,5 @@ private
     end
     params[:alert].delete("responders")
   end
-  
+
 end

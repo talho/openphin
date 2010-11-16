@@ -108,3 +108,7 @@ Then /^I should see html "([^\"]*)"$/ do |html|
     raise "Could not find \"#{html}\""
   end
 end
+
+When /^I click "([^\"]*)"$/ do |arg1|
+  page.find(arg1).click
+end

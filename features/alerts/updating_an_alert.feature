@@ -40,7 +40,7 @@ Feature: Updating an alert
     And I should not see "Jurisdictions"
     And I should not see "Limit Roles"
     And I should not see "Organizations"
-    
+
     When I make changes to the alert form with:
       | Message    | Flying monkey disease contagion is more widespread |
     And I press "Preview Message"
