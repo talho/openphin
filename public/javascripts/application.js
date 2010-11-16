@@ -360,10 +360,10 @@ function setMediaNewShareEvents() {
   myform.ajaxForm({
       target: "#documents_panel",
       beforeSend: function(response) {
-        if(jQuery.trim($("form input#channel_name").val()) == "") {
+        if(jQuery.trim($("form input#share_name").val()) == "") {
           alert("You must specify a share name");
           return false;
-        }else if(jQuery.trim($("form input#channel_name").val()).length > 32 ){
+        }else if(jQuery.trim($("form input#share_name").val()).length > 32 ){
           alert("Share name cannot exceed 32 characters in length.");
           return false;
         }

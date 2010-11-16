@@ -29,11 +29,11 @@ describe Document do
       Document.viewable_by(Factory(:user)).should_not include(@document)
     end
     
-    it "should include documents in a channel" do
-      channel = Factory(:channel)
-      channel.documents << @document
+    it "should include documents in a share" do
+      share = Factory(:share)
+      share.documents << @document
       user = Factory(:user)
-      channel.users << user
+      share.users << user
       Document.viewable_by(user).should include(@document)
     end
   end
@@ -50,19 +50,19 @@ describe Document do
       Document.editable_by(Factory(:user)).should_not include(@document)
     end
     
-    it "should include documents in a channel owned by the user" do
-      channel = Factory(:channel)
-      channel.documents << @document
+    it "should include documents in a share owned by the user" do
+      share = Factory(:share)
+      share.documents << @document
       user = Factory(:user)
-      user.subscriptions.create!(:owner => true, :channel => channel)
+      user.subscriptions.create!(:owner => true, :share => share)
       Document.editable_by(user).should include(@document)
     end
     
-    it "should not include documents in a channel not owned by the user" do
-      channel = Factory(:channel)
-      channel.documents << @document
+    it "should not include documents in a share not owned by the user" do
+      share = Factory(:share)
+      share.documents << @document
       user = Factory(:user)
-      user.subscriptions.create!(:owner => false, :channel => channel)
+      user.subscriptions.create!(:owner => false, :share => share)
       Document.editable_by(user).should_not include(@document)
     end
   end

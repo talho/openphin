@@ -12,7 +12,7 @@ Talho.RolesControl = Ext.extend(function(){}, {
         root: "extra.role_desc",
         fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
                  {name:'type'}, {name:'state'}]
-      }),
+      })
       //writer: new Ext.data.JsonWriter({encode: true, writeAllFields: true})
     });
     this.ancestor = ancestor;
@@ -20,11 +20,11 @@ Talho.RolesControl = Ext.extend(function(){}, {
 
     this.jurisdictions_store = new Ext.data.JsonStore({
       url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
-      fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}],
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}]
     });
     this.roles_store = new Ext.data.JsonStore({
       url: '/audiences/roles', autoLoad: true, autoSave: false,
-      fields: [{name: 'name', mapping: 'role.name'}, {name: 'id', mapping: 'role.id'}],
+      fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}]
     });
 
     var template = new Ext.XTemplate(

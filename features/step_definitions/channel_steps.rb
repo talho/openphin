@@ -1,5 +1,5 @@
 Given 'a share named "$name"' do |name|
-  Channel.find_by_name(name) || Factory(:channel, :name => name)
+  Share.find_by_name(name) || Factory(:share, :name => name, :owner => current_user)
 end
 
 Given 'I created the share "$name"' do |name|
@@ -12,31 +12,40 @@ Given 'I created the share "$name"' do |name|
 end
 
 Given 'I have been added to the share "$name"' do |name|
-  channel = Given(%Q|a share named "#{name}"|)
-  channel.users << current_user
+  share = Given(%Q|a share named "#{name}"|) 
+  share.audience.users << current_user
+  share.audience.recipients.with_refresh(:force => true)
+
+  true
 end
 
-Given 'I have been added as owner to the share "$name"' do |name|
-  channel = Given(%Q|a share named "#{name}"|)
-  channel.subscriptions.create!( :owner => true, :user => current_user )
-end
-
-Given '"$email" has been added as owner to the share "$channel_name"' do |email,channel_name|
+Given '"$email" has been added as owner to the share "$share_name"' do |email,share_name|
   user = Given(%Q|a user with the email "#{email}"|)
-  channel = Given(%Q|a share named "#{channel_name}"|)
-  channel.subscriptions.create!( :owner => true, :user => user )
+  share = Given(%Q|a share named "#{share_name}"|)
+  share.audience.users << user
+  share.save!
+  share.audience.recipients.with_refresh(:force => true)
+
+  user.permissions << Permission.new(:share => share, :permission => 1)
+  user.save!
+
+  true
+  #share.subscriptions.create!( :owner => true, :user => user )
 end
 
-Given '"$email" has been added to the share "$channel_name"' do |email, channel_name|
+Given '"$email" has been added to the share "$share_name"' do |email, share_name|
   user = Given(%Q|a user with the email "#{email}"|)
-  channel = Given(%Q|a share named "#{channel_name}"|)
-  channel.users << user
+  share = Given(%Q|a share named "#{share_name}"|)
+  share.audience.users << user
+  share.audience.recipients.with_refresh(:force => true)
+
+  true
 end
 
-Given 'a document "$document" is in the share "$channel"' do |filename, channel|
+Given 'a document "$document" is in the share "$share"' do |filename, share|
   user = Given('a user in a non-public role')
   document = user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
-  document.channels << Given(%Q|a share named "#{channel}"|)
+  document.shares << Given(%Q|a share named "#{share}"|)
 end
 
 

@@ -1,5 +1,5 @@
 <div id="new_share_container">
-  <%- form_for :channel, nil, :url => { :controller => "channels", :action => "create"} do |f| -%>
+  <%- form_for :share, nil, :url => { :controller => "shares", :action => "create"} do |f| -%>
     <%= f.label :name, "Share Name" %>
     <%= f.text_field :name, :size => "18" %>
     <%= f.submit "Create Share" %>

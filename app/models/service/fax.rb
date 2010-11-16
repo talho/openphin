@@ -88,7 +88,7 @@ class Service::Fax < Service::Base
             request.usr_id user_id
             request.activation_detail :start_result => "0", :results_requested => "30000" do |activation_detail|
               activation_detail.id campaign_activation.activation_id
-              activation_detail.channel type
+              activation_detail.share type
             end
           end
         end

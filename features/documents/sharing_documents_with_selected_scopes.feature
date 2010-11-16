@@ -203,37 +203,39 @@ Feature: Sharing documents with selected scopes
     Then I should not see "Documents"
 
   Scenario: Forwarding documents to another group of recipients as owners
-    When I fill out the document sharing form with:
-      | People | Keith Gaddis |
-    And I check "Make these people owners"
-    And I press "Invite"
-    Then I wait for the "#document_progress_panel" element to finish
-    And I go to the dashboard page
-
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the dashboard page
-    And I follow "Documents"
-    Then I wait for the "#document_progress_panel" element to finish
-    And I should see "Rockstars"
-    And I check "Rockstars"
-    And I select "#invite" from the documents toolbar
-    Then I wait for the "div#invitation div#audience" element to load
-    And I fill out the document sharing form with:
-      | People | Brian Ryckbost |
-    And I press "Invite"
-    Then I wait for the "#document_progress_panel" element to finish
-    And I go to the dashboard page
-    And "brian.ryckbost@example.com" should receive the email:
-      | subject       | John Smith invited you to a share |
-      | body contains | To view this share, go to:        |
-
-    Given I am logged in as "brian.ryckbost@example.com"
-    When I go to the dashboard page
-    And I follow "Documents"
-    Then I wait for the "#document_progress_panel" element to finish
-    And I follow "Rockstars"
-    Then I wait for the "#document_progress_panel" element to finish
-    And I should see "sample.wav"
+    #we're switching from the concept of switching ownership to setting up user permissions and such
+    Then "Audience authorship" should be implemented
+    #When I fill out the document sharing form with:
+    #  | People | Keith Gaddis |
+    #And I check "Make these people owners"
+    #And I press "Invite"
+    #Then I wait for the "#document_progress_panel" element to finish
+    #And I go to the dashboard page
+    #
+    #Given I am logged in as "keith.gaddis@example.com"
+    #When I go to the dashboard page
+    #And I follow "Documents"
+    #Then I wait for the "#document_progress_panel" element to finish
+    #And I should see "Rockstars"
+    #And I check "Rockstars"
+    #And I select "#invite" from the documents toolbar
+    #Then I wait for the "div#invitation div#audience" element to load
+    #And I fill out the document sharing form with:
+    #  | People | Brian Ryckbost |
+    #And I press "Invite"
+    #Then I wait for the "#document_progress_panel" element to finish
+    #And I go to the dashboard page
+    #And "brian.ryckbost@example.com" should receive the email:
+    #  | subject       | John Smith invited you to a share |
+    #  | body contains | To view this share, go to:        |
+    #
+    #Given I am logged in as "brian.ryckbost@example.com"
+    #When I go to the dashboard page
+    #And I follow "Documents"
+    #Then I wait for the "#document_progress_panel" element to finish
+    #And I follow "Rockstars"
+    #Then I wait for the "#document_progress_panel" element to finish
+    #And I should see "sample.wav"
 
   Scenario: Forwarding documents to another group of recipients who are not owners
     When I fill out the document sharing form with:
@@ -267,7 +269,6 @@ Feature: Sharing documents with selected scopes
     Then I wait for the "div#invitation div#audience" element to load
     And I fill out the document sharing form with:
       | People | Keith Gaddis |
-    And I check "Make these people owners"
     And I press "Invite"
     Then I wait for the "#document_progress_panel" element to finish
     And "keith.gaddis@example.com" should receive the email:
@@ -279,4 +280,4 @@ Feature: Sharing documents with selected scopes
     When I go to the dashboard page
     And I follow "Documents"
     Then I wait for the "#document_progress_panel" element to finish
-    And I should see "Keith Gaddis" is an owner of "Rockstars"
+    And I should see "John Smith" is an owner of "Rockstars"

@@ -7,11 +7,11 @@ Talho.ux.GroupSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {
         this.store = new Ext.data.GroupingStore({
             url: '/audiences/groups',
             reader: new Ext.data.JsonReader({
-                idProperty: 'group.id',
+                idProperty: 'id',
                 fields: [
-                    {name: 'name', mapping: 'group.name'},
-                    {name: 'id', mapping: 'group.id'},
-                    {name: 'grouptype', mapping:'group.scope', convert:function(v, record){ return v === 'Organization' ? 'Organization' : 'Group';}}
+                    {name: 'name', mapping: 'name'},
+                    {name: 'id', mapping: 'id'},
+                    {name: 'grouptype', mapping:'scope', convert:function(v, record){ return v === 'Organization' ? 'Organization' : 'Group';}}
                 ]}),
             groupField: 'grouptype',
             autoSave: false,

@@ -1,0 +1,152 @@
+.documents-folder-item{
+    float: left;
+    margin: 2px;
+    padding: 5px;
+    width: 90px;
+    word-wrap: break-word;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.documents-folder-item-hover{
+    background: #ffffcc;
+}
+
+.documents-folder-item-selected{
+    background: #99aacc;
+}
+
+.documents-folder-item div{
+    margin: 0 auto;
+    text-align:center;
+}
+
+.documents-folder-item-icon{
+    width: 48px;
+    height: 48px;
+}
+
+.documents-folder-item-folder-icon{
+    background: no-repeat center url(/images/documents/folder.png);
+}
+
+.documents-folder-item-file-icon{
+    background: no-repeat center url(/images/documents/text-x-generic.png);
+}
+
+.documents-folder-item-audio-icon{
+    background: no-repeat center url(/images/documents/audio-x-generic.png);
+}
+
+.documents-folder-item-image-icon{
+    background: no-repeat center url(/images/documents/image-x-generic.png);
+}
+
+.documents-folder-item-video-icon{
+    background: no-repeat center url(/images/documents/video-x-generic.png);
+}
+
+.documents-folder-item-doc-icon{
+    background: no-repeat center url(/images/documents/x-office-document.png);
+}
+
+.documents-folder-item-presentation-icon{
+    background: no-repeat center url(/images/documents/x-office-presentation.png);
+}
+
+.documents-folder-item-spreadsheet-icon{
+    background: no-repeat center url(/images/documents/x-office-spreadsheet.png);
+}
+
+.documents-file-action-button{
+    cursor:pointer;
+}
+
+.documents-file-action-button span{
+    display: inline-block;
+    line-height: 16px;
+    margin:3px 1px;
+}
+
+.documents-add-folder-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/folder-add.png);
+}
+
+.documents-delete-folder-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/folder-delete.png);
+}
+
+.documents-edit-folder-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/folder-edit.png);
+}
+
+.documents-add-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/document-new-6.png);
+}
+
+.documents-download-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/document-save-4.png);
+}
+
+.documents-replace-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/edit-copy-3.png);
+}
+
+.documents-move-icon{
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/document-export-4.png);
+}
+
+.documents-delete-file-icon{                             
+    width: 16px;
+    height: 16px;
+    background: no-repeat url(/images/documents/document-close-4.png);
+}
+
+.icon-16{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    line-height: 16px;
+    margin: 3px 1px;
+}
+
+.documents-detail-row-body .inlineLink{
+    display: inline-block;
+    line-height: 16px;
+    margin: 3px 1px;
+}
+
+.documents-detail-row-body > span{
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+.x-tool-icon-view{
+    background-image: url(/images/documents/view-list-icons.png)
+}
+
+.x-tool-detail-view{
+    background-image: url(/images/documents/view-list-details-4.png)
+}
+
+.documents-detail-row .x-grid3-row-body-tr{
+    display: none;
+}
+
+.documents-detail-row.x-grid3-row-selected .x-grid3-row-body-tr{
+    display: block;
+}

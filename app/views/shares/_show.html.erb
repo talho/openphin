@@ -1,17 +1,15 @@
 <div id="share">
-  <h2><%=@channel.name %></h2>
+  <h2><%=@share.name %></h2>
   <div>
     <h4>Owners</h4>
     <ul>
-      <% @channel.owners.each do |owner| %>
-          <li><%=h owner.display_name %></li>
-      <% end %>
+      <li><%=h @share.owner.display_name %></li>
     </ul>
   </div>
   <div>
     <h4>Subscribers</h4>
     <ul>
-      <% @channel.users.each do |user| %>
+      <% @share.users.each do |user| %>
           <li><%=h user.display_name %></li>
       <% end %>
     </ul>
@@ -19,7 +17,7 @@
   <div>
     <h4>Documents</h4>
     <ul>
-      <% @channel.documents.each do |document| %>
+      <% @share.documents.each do |document| %>
           <li><%=h document.file_file_name %></li>
       <% end %>
     </ul>

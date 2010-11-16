@@ -1,0 +1,20 @@
+<div id="edit">
+  <% form_for @document, :url => document_shares2_index_path, :html => {:method => :post} do |form| %>
+    <div id="audience">
+      <fieldset class="filterable list shares">
+        <legend>Select shares</legend>
+        <ul class="check_selector">
+          <%- (current_user.authoring_shares | current_user.owned_shares).each do |c| -%>
+            <li>
+              <%- id = [form.object_name.parameterize('_'), dom_id(c)].join('_') -%>
+              <%= check_box_tag "#{form.object_name}[share_ids][]", c.id,
+                  form.object.share_ids.include?(c.id), :id => id %>
+              <%= label_tag id, c.name %>
+            </li>
+          <%- end -%>
+        </ul>
+      </fieldset>
+    </div>
+    <%= form.submit "Share" %>
+  </div>
+<% end %>

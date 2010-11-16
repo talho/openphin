@@ -1,17 +1,18 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :tutorials
 
-  map.resources :channels, :has_many => :subscriptions,
-    :member => {:unsubscribe => :delete}
+  map.resources :shares, :member => {:unsubscribe => :delete, :edit_audience => :get, :update_audience => :put}
 
 #  map.resources :user_profiles, :as => "profile"
   map.connect "/jurisdictions.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :devices, :folders
   map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
 
-  map.resources :documents, :has_many => :shares do |documents|
+  map.resources :documents, :collection => [:mock_folder_list], :has_many => :shares2 do |documents|
     documents.resource :copy, :controller => 'copy_documents'
   end
+
+  map.mock_file_list 'documents/mock_file_list/:folder_id', :controller => 'documents', :action => 'mock_file_list'
 
   map.documents_panel 'documents_panel',
     :controller => 'documents', :action => 'panel_index',
@@ -21,12 +22,12 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'documents', :action => 'media_list',
     :conditions => {:method => :get}
 
-  map.channel_documents 'channels/:channel_id/documents',
+  map.share_documents 'shares/:share_id/documents',
     :controller => 'documents', :action => 'index',
     :conditions => {:method => :get}
 
-  map.channel_document 'channels/:channel_id/documents/:id',
-    :controller => 'documents', :action => 'remove_from_channel',
+  map.share_document 'shares/:share_id/documents/:id',
+    :controller => 'documents', :action => 'remove_from_share',
     :conditions => {:method => :delete}
 
   map.folder_documents "folders/:folder_id/documents",
@@ -41,12 +42,12 @@ ActionController::Routing::Routes.draw do |map|
     :controller => "documents", :action => "inbox",
     :conditions => {:method => :get}
 
-  map.show_destroy_channel 'channels/:id/show_destroy',
-    :controller => 'channels', :action => 'show_destroy',
+  map.show_destroy_share 'shares/:id/show_destroy',
+    :controller => 'shares', :action => 'show_destroy',
     :conditions => {:method => :get}
 
-  map.popup_channel 'channels/:id/popup_channel',
-    :controller => 'channels', :action => 'popup_channel',
+  map.popup_share 'shares/:id/popup_share',
+    :controller => 'shares', :action => 'popup_share',
     :conditions => {:method => :get}
 
   map.popup_documents 'popup_inbox',

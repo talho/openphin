@@ -50,7 +50,7 @@
     Then I wait for the "#document_file" element to load
     And I attach the file "spec/fixtures/keith.jpg" to "Upload Document"
     And I press "upload"
-    Then I should see "File name is already in use" within the confirmation box
+    Then I should see "File name is already in use"
     And I should see "keith.jpg"
 
   Scenario: Viewing documents
@@ -239,7 +239,7 @@
     Given session name is "default"
     And I will confirm on next step
     And I press "Update"
-
+    And I sleep 1 second
     Then I should see "Another user recently updated the document you are attempting to update to invitees.csv.  Please try again." within the alert box
     And I sign out
     And I am logged in as "admin@dallas.gov"

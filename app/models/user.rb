@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
+
   has_many :documents do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'
@@ -74,9 +75,21 @@ class User < ActiveRecord::Base
       scoped :conditions => 'folders.parent_id IS NULL'
     end
   end
-  has_many :subscriptions
-  has_many :channels, :through => :subscriptions
-  has_many :owned_channels, :through => :subscriptions, :source => 'channel', :conditions => {:subscriptions => {:owner => true}}
+  #has_many :subscriptions
+  #has_many :shares, :through => :subscriptions
+  has_many :owned_shares, :class_name => 'Share'
+  has_many :permissions
+  has_many :authoring_shares, :through => :permissions, :source => :share, :conditions => ['permissions.permission = 1']
+  has_and_belongs_to_many :opt_out_shares, :class_name => 'Share', :join_table => 'opt_out_shares_users'
+  has_and_belongs_to_many :audiences, :join_table => 'audiences_recipients'
+
+  def shares
+    Share.scoped :joins => ', audiences_recipients', :conditions => ['audiences_recipients.audience_id = shares.audience_id and audiences_recipients.user_id = ?', self.id]
+  end
+
+  def shares_with_owner
+    Share.scoped :joins => ', audiences_recipients', :conditions => ['(audiences_recipients.audience_id = shares.audience_id and audiences_recipients.user_id = ?) or (shares.user_id = ?)', self.id, self.id], :group => 'shares.id'
+  end
 
   has_many :favorites
 
