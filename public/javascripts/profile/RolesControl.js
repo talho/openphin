@@ -148,7 +148,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     });
     this.roles_store = new Ext.data.JsonStore({
       url: '/audiences/roles', autoLoad: true, autoSave: false,
-      fields: [{name: 'name', mapping: 'role.name'}, {name: 'id', mapping: 'role.id'}]
+      fields: [{name: 'name'}, {name: 'id'}]
     });
   }
 });
