@@ -28,6 +28,42 @@ class Admin::UserBatchController < ApplicationController
       redirect_to new_user_batch_path
     end
   end
-  
-end
 
+  def import
+    fields = [ :lastname, :firstname, :displayname, :jurisdiction, :mobile, :fax, :phone, :email ]
+
+    csvfile = params[:users][:csvfile]
+    users = []
+    error = nil
+    begin
+      FasterCSV.new(csvfile, :col_sep => ",", :headers => true).each { |record|
+        new_user = Hash.new
+        fields.each_with_index { |field,i| new_user[field] = record[field.to_s] }
+        users.push(new_user)
+      }
+    rescue FasterCSV::MalformedCSVError => detail
+      error = "CSV file was malformed or corrupted.<br/><br/>Error:<br/>#{detail.message}"
+    rescue => e
+      puts "#{e.class}: #{e.message}\n  #{e.backtrace[0..5].join("\n  ")}"
+      error = "This does not appear to be a CSV file."
+    end
+
+    respond_to do |format|
+      format.html do
+        if error.nil?
+          render :json => {:success => true, :users_attributes => users}.as_json, :content_type => 'text/html'
+        else
+          render :json => {:success => false, :error => error}.as_json, :content_type => 'text/html'
+        end
+      end
+
+      format.json do
+        if error.nil?
+           render :json => {:success => true, :users_attributes => users}.as_json
+         else
+           render :json => {:success => false, :error => error}.as_json
+         end
+       end
+    end
+  end
+end
