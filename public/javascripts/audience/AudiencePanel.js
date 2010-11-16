@@ -4,7 +4,7 @@ Ext.ns("Ext.ux");
  * An Ext.Panel that represents the Audience selection form. Will be able to output users, juridictions, and roles from its 3 "public" stores
  * Note: To put in a FormPanel, needs to be contained inside a panel in the form. Not sure why, but I blame the form panel
  */
-Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
+Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
     /**
      *    @lends Ext.ux.AudiencePanel.prototype
      */
@@ -35,12 +35,25 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Panel, {
 
         Ext.apply(this, { // override properties that were set in the config that we don't want
             layout: 'hbox',
-            border: false,
             layoutConfig: { align: 'stretch' },
             items: [this.accordion, this.createSelectionBreakdownPanel()]
         });
 
         Ext.ux.AudiencePanel.superclass.initComponent.call(this);
+    },
+
+    disable: function(){
+        this.accordion.disable();
+        this.selectedItemsGridPanel.disable();
+        if(!this.selectedItemsGridPanel.getEl())
+            this.selectedItemsGridPanel.on('afterrender', function(){this.selectedItemsGridPanel.removeClass('x-masked-relative');}, this, {delay: 10, single: true});
+        else
+            this.selectedItemsGridPanel.removeClass('x-masked-relative');
+    },
+
+    enable: function(){
+        this.accordion.enable();
+        this.selectedItemsGridPanel.enable();
     },
 
     destroy: function(){

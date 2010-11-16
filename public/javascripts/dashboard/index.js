@@ -1,6 +1,6 @@
 
 Ext.onReady(function(evt){
-    window.Application.phin = new PhinApplication();
+    if(PhinApplication) window.Application.phin = new PhinApplication();
 });
 
 var PhinApplication = Ext.extend(Ext.util.Observable, {

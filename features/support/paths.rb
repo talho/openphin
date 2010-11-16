@@ -85,8 +85,8 @@ module NavigationHelpers
       when /the Documents page/i
         documents_path
       when /the show destroy Share page for "(.*)"$/i
-        channel = Channel.find_by_name($1)
-        show_destroy_channel_path(channel)
+        share = Share.find_by_name($1)
+        show_destroy_share_path(share)
       when /the document viewing panel/i
         documents_panel_path
       when /the user batch page/i

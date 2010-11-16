@@ -22,7 +22,7 @@ class Document < ActiveRecord::Base
   validate_on_create :validate_extension
   validate_on_create :validate_virus
 
-  has_and_belongs_to_many :channels, :after_add => :share_with_channel
+  has_and_belongs_to_many :shares, :after_add => :share_with_share
   has_many :targets, :as => :item, :after_add => :share
   has_many :audiences, :through => :targets
   accepts_nested_attributes_for :audiences
@@ -31,17 +31,47 @@ class Document < ActiveRecord::Base
   belongs_to :folder
   belongs_to :owner, :class_name => 'User'
 
-  after_post_process :notify_channels_of_update
+  after_post_process :notify_shares_of_update
 
-  named_scope :viewable_by, lambda{|user|
-    {:conditions => ['documents.user_id = :user OR subscriptions.user_id = :user', {:user => user}],
-    :include => {:channels => :subscriptions}}
-  }
+  # having to move away from a named scope here, for now, because we're using audience direct instead of these other tables
+  #named_scope :viewable_by, lambda{|user|
+  #  {:conditions => ['documents.user_id = :user OR subscriptions.user_id = :user', {:user => user}],
+  #  :include => [:shares => :subscriptions]}
+  #}
 
-  named_scope :editable_by, lambda{|user|
-    {:conditions => ['documents.user_id = :user OR (subscriptions.user_id = :user AND subscriptions.owner = :true)', {:user => user, :true => true}],
-    :include => {:channels => :subscriptions}}
-  }
+  #named_scope :editable_by, lambda{|user|
+  #  {:conditions => ['documents.user_id = :user OR (subscriptions.user_id = :user AND subscriptions.owner = :true)', {:user => user, :true => true}],
+  #  :include => {:shares => :subscriptions}}
+  #}
+
+  def viewable_by? (user)
+    if user_id == user.id || !(shares & user.owned_shares).empty? || !(shares & user.shares).empty?
+      true
+    else
+      false
+    end
+  end
+
+  def viewable_by(user)
+    self if viewable_by?(user)
+  end
+
+  def editable_by? (user)
+    if user_id == user.id || !(shares & user.owned_shares).empty? || !(shares & user.authoring_shares).empty?
+      true
+    else
+      false
+    end
+  end
+
+  def editable_by(user)
+    self if editable_by?(user)
+  end
+
+  def self.editable_by(user)
+    user.documents | user.owned_shares.map(&:documents).flatten | user.authoring_shares.map(&:documents).flatten
+  end
+
 
   def validate_mime
     # uses unix utility 'file' will not work on windows
@@ -67,13 +97,13 @@ class Document < ActiveRecord::Base
     end
   end
 
-  def viewable_by?(user)
-    Document.viewable_by(user).exists?(id)
-  end
-  
-  def editable_by?(user)
-    Document.editable_by(user).exists?(id)
-  end
+  #def viewable_by?(user)
+  #  Document.viewable_by(user).exists?(id)
+  #end
+  #
+  #def editable_by?(user)
+  #  Document.editable_by(user).exists?(id)
+  #end
   
   def to_s
     file_file_name
@@ -91,15 +121,15 @@ class Document < ActiveRecord::Base
     DocumentMailer.deliver_document(self, target)
   end
   
-  def share_with_channel(channel)
-    DocumentMailer.deliver_document_addition(channel, self) unless channel.users.empty?
+  def share_with_share(share)
+    DocumentMailer.deliver_document_addition(share, self) unless share.users.empty?
   end
   
-  def notify_channels_of_update
-    channels.each do |channel|
-      recipients = channel.users
+  def notify_shares_of_update
+    shares.each do |share|
+      recipients = share.users
       unless recipients.empty?
-        DocumentMailer.deliver_document_update(self, recipients, channel)
+        DocumentMailer.deliver_document_update(self, recipients, share)
       end
     end
   end

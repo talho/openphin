@@ -117,7 +117,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
         root: "extra.role_desc",
         fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
                  {name:'type'}, {name:'state'}]
-      }),
+      })
     });
 
     var template = new Ext.XTemplate(

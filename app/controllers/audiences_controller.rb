@@ -1,5 +1,8 @@
 class AudiencesController < ApplicationController
 
+  before_filter :change_include_root
+  after_filter :change_include_root_back
+  
   def index
     # this will at some point possibly return all of the audience data that we need
   end
@@ -29,7 +32,7 @@ class AudiencesController < ApplicationController
   def determine_recipients
     recipients = []
     params[:group_ids].compact.each do |id|
-      recipients << Group.find(id).prepare_recipients(:include_public => true, :recreate => true).find(:all) unless id.blank?
+      #recipients << Group.find(id).prepare_recipients(:include_public => true, :recreate => true).find(:all) unless id.blank?
     end
     params[:jurisdiction_ids].compact.each do |id|
       recipients << Jurisdiction.find(id).users unless id.blank?

@@ -3,19 +3,19 @@ class SubscriptionsController < ApplicationController
   
   layout "documents"
   def new
-    @channel = current_user.owned_channels.find(params[:channel_id])
-    @subscription = @channel.subscriptions.build
+    @share = current_user.owned_shares.find(params[:share_id])
+    @subscription = @share.subscriptions.build
   end
   
   def create
-    @channel = current_user.owned_channels.find(params[:channel_id])
+    @share = current_user.owned_shares.find(params[:share_id])
     @audience = Audience.new(params[:audience])
-    @channel.targets.create! :audience => @audience, :creator => current_user
-    @channel.promote_to_owner(@audience) if params[:owner]
-    if params[:channel]
-      params[:channel][:audience_ids].each do |id|
-        @channel.targets.create! :audience_id => id, :creator => current_user
-        @channel.promote_to_owner(Audience.find(id)) if params[:owner]
+    @share.targets.create! :audience => @audience, :creator => current_user
+    @share.promote_to_owner(@audience) if params[:owner]
+    if params[:share]
+      params[:share][:audience_ids].each do |id|
+        @share.targets.create! :audience_id => id, :creator => current_user
+        @share.promote_to_owner(Audience.find(id)) if params[:owner]
       end
     end
 

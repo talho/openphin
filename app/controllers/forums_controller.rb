@@ -1,6 +1,7 @@
 class ForumsController < ApplicationController
 
-  before_filter :non_public_role_required
+  before_filter :non_public_role_required, :change_include_root
+  after_filter :change_include_root_back
   app_toolbar "forums"
 
   # GET /forums
@@ -8,8 +9,6 @@ class ForumsController < ApplicationController
   # GET /forums.json
   def index
     @forums = Forum.paginate_for(:all,current_user,params[:page] || 1)
-    original_included_root = ActiveRecord::Base.include_root_in_json
-    ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.html
       format.json  {render :json => {
@@ -23,7 +22,6 @@ class ForumsController < ApplicationController
         :is_super_admin      => current_user.is_super_admin?
       }}
     end
-    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   # GET /forums/1
@@ -70,9 +68,6 @@ class ForumsController < ApplicationController
   # GET /forums/1/edit
   # GET /forums/1/edit.json
   def edit
-    original_included_root = ActiveRecord::Base.include_root_in_json
-    ActiveRecord::Base.include_root_in_json = false
-
     @forum = Forum.find_for(params[:id],current_user)
     respond_to do |format|
       format.html
@@ -83,9 +78,6 @@ class ForumsController < ApplicationController
                                                               }
                                                   ) }
     end
-
-    ActiveRecord::Base.include_root_in_json = original_included_root
-
   end
 
   # PUT /forums/1

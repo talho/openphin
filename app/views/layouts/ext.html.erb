@@ -1,16 +1,16 @@
 <head>
   <Title>Ext Dashboard</Title>
   <%= javascript_include_tag 'lib/dominoes-1.0-rc2.min.js'%>
-  <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
-  <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
   <%= javascript_tag "var FORM_AUTH_TOKEN = '#{form_authenticity_token}';" %>
+  <%# <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
+  <%# <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
   <%# begin include js for openphin plugins %>
-  <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
-  <% js_list.push({:cache => 'all'}) %>
-  <%= javascript_include_tag(*js_list) %>
+  <%# <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
+  <%# <% js_list.push({:cache => 'all'}) %>
+  <%# <%= javascript_include_tag(*js_list) %>
   <%# end include js for openphin plugins %>
 
-  <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-gray', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/admin', 'redesign/profile', 'redesign/forum', :cache => true  %>
+  <%# <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-gray', 'redesign/ext_extensions', 'redesign/master', 'redesign/dashboard', 'redesign/han', 'redesign/admin', 'redesign/profile', 'redesign/forum', :cache => true  %>
 
   <%# begin include stylesheets for openphin plugins %>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
@@ -19,12 +19,13 @@
   <%# end include stylesheets for openphin plugins %>
   
   <%# Experimental loading of resources, on the fly %>
-  <%#<%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => true  %>
-  <%#<script>
+  <%#%><%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => true  %>
+  <%#%><script>
     dominoes.rule('jquery', '/javascripts/jquery.js');
-    dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) )) /javascripts/ext/adapter/jquery/ext-jquery-adapter-debug.js > /javascripts/ext/ext-all-debug.js');
-    dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/han.css) $css(/stylesheets/redesign/forum.css)');
+    dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/xtheme-gray.css) )) /javascripts/ext/adapter/jquery/ext-jquery-adapter-debug.js > /javascripts/ext/ext-all-debug.js');
+    dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/han.css) $css(/stylesheets/redesign/profile.css) $css(/stylesheets/redesign/forum.css) $css(/stylesheets/redesign/documents.css)');
     dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/Application.js /javascripts/dashboard/ScriptManager.js /javascripts/dashboard/index.js /dashboard/menu.js');
+    dominoes.rule('phinPlugins', '<%=  (defined?($expansion_list)) ? $expansion_list.dup.map {|p| javascript_path(p.to_s) }.join(' ') : '' %>');
     dominoes({
         chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad >| initView',
         preExtMessage: function(){
@@ -36,26 +37,20 @@
         initView: function(){
             window.Application.phin = new PhinApplication();
             var loading = Ext.get('loading');
-            loading.fadeOut({ duration: 0.2, remove: true });
             var loadingMask = Ext.get('loading-mask');
-            loadingMask.setOpacity(0.9);
-            loadingMask.shift({
-                xy: loading.getXY(),
-                width: loading.getWidth(),
-                height: loading.getHeight(),
-                remove: true,
-                duration: 1,
-                opacity: 0.1,
-                easing: 'easeOut'
-            });
+            setTimeout(function(){
+                loadingMask.setOpacity(0.9);
+                loading.fadeOut({ duration: 0.4, remove: true });
+                loadingMask.fadeOut({ duration: 0.4, remove: true });
+            }, 200);
         }
     });
-  </script>  %>
+  </script>
 </head>
 <body>
-    <%#<div id="loading-mask"></div>
+    <div id="loading-mask"></div>
     <div id="loading">
         <span id="loading-message">Loading jQuery...</span>
-    </div> %>
+    </div> <%#%>
   <%= yield %>
 </body>

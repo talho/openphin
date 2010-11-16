@@ -60,6 +60,15 @@ class ApplicationController < ActionController::Base
   
   protected
 
+  def change_include_root
+    @original_included_root = ActiveRecord::Base.include_root_in_json
+    ActiveRecord::Base.include_root_in_json = false
+  end
+
+  def change_include_root_back
+    ActiveRecord::Base.include_root_in_json = @original_included_root
+  end
+
   def folder_or_inbox_path(document)
     document.folder ? folder_documents_path(document.folder) : folder_inbox_path
   end

@@ -96,8 +96,9 @@ Then 'I should see "$count" folders named "$folder"' do |count, name|
 end
 
 When /^I select "([^\"]*)" from the documents toolbar$/ do |value|
-  elem = page.find("#{value}")
-  elem.click
+  with_scope('#documents_panel') do
+    page.find("#{value}").click
+  end
 end
 
 When /^I wait and fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|

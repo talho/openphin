@@ -1,0 +1,11 @@
+<% content_tag_for :li, share, :class => "share" do %>
+  <%- if share -%>
+    <p>
+      <%= check_box_tag("share[id][#{share.id}]", share.id) %>
+      <%= link_to(label_tag("share[id][#{share.id}]", "#{link_to(share.name,share_documents_path(share.id))} (#{share.owner.display_name})"),share_documents_path(share.id)) %>
+    </p>
+    <%= link_to "Invite", edit_audience_share_path(share.id), {:class => "invis invite"} if share.owner == current_user || share.authors.include?(current_user) %>
+    <%= link_to "Unsubscribe", unsubscribe_share_path(share.id), :class => "invis destroy unsubscribe" unless share.owner == current_user || share.authors.include?(current_user) %>
+    <%= link_to "Delete Share", show_destroy_share_path(share.id), :class => "invis remove_share" if share.owner == current_user || share.authors.include?(current_user) %>
+  <%- end -%>
+<% end %>

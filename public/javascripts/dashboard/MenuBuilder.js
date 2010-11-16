@@ -39,7 +39,7 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
         var handler;
         if(!Ext.isEmpty(menuConfig.tab))
         {
-            handler = this.tab.createDelegate(this.parent, [menuConfig.tab])
+            handler = this.tab.createDelegate(this.parent, [menuConfig.tab]);
         }
         else if(!Ext.isEmpty(menuConfig.handler) && Ext.isFunction(this.parent[menuConfig.handler]))
         {

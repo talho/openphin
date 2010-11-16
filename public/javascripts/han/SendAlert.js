@@ -58,8 +58,8 @@ Talho.SendAlert = Ext.extend(function(){}, {
         var jurisdiction_store = new Ext.data.JsonStore({
             restful: true,
             url: '/jurisdictions/user_alerter.json',
-            idProperty: 'jurisdiction.id',
-            fields: [{name: 'name', mapping: 'jurisdiction.name'}, {name: 'id', mapping: 'jurisdiction.id'}]
+            idProperty: 'id',
+            fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}]
         });
 
         jurisdiction_store.load();

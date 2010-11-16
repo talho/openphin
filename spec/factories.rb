@@ -148,8 +148,8 @@ Factory.define :target do |m|
   m.association :item, :factory => :alert
 end
 
-Factory.define :channel do |m|
-  m.sequence(:name){|t| "Channel ##{t}"}
+Factory.define :share do |m|
+  m.sequence(:name){|t| "share ##{t}"}
 end
 
 Factory.define :document do |m|

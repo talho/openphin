@@ -1,7 +1,7 @@
-Feature: Creating document channels
+Feature: Creating document shares
   In order to push documents to groups of people while keeping documents current
   As a user
-  I should be able to create a document channel that other users can subscribe to
+  I should be able to create a document share that other users can subscribe to
 
   Background:
     Given the following entities exists:
@@ -16,7 +16,7 @@ Feature: Creating document channels
     And I go to the dashboard page
     When delayed jobs are processed
 
-   Scenario: Creating a new channel
+   Scenario: Creating a new share
      When I follow "Documents"
      And I wait for the "#new_share_folder" element to load
      And I select "#new_share_folder" from the documents toolbar
@@ -85,7 +85,7 @@ Feature: Creating document channels
      Then I should see "Avian Flu"
 
    Scenario: Unsubscribing from a share
-     Given I have been added as owner to the share "Kitty Pictures"
+     Given a share named "Kitty Pictures"
      And "brandon.keepers@example.com" has been added to the share "Kitty Pictures"
      And I am logged in as "brandon.keepers@example.com"
      When I go to the dashboard page
@@ -98,9 +98,8 @@ Feature: Creating document channels
      Then I wait for the "#document_progress_panel" element to finish
      And I should not see "Kitty Pictures"
 
-   Scenario: Unsubscribing from a share while I am the only owner
-     Given I have been added as owner to the share "Kitty Pictures"
-     And "brandon.keepers@example.com" has been added to the share "Kitty Pictures"
+   Scenario: Unsubscribing from a share while I am the owner
+     Given a share named "Kitty Pictures"
 
      When I go to the dashboard page
      And I follow "Documents"
@@ -109,7 +108,7 @@ Feature: Creating document channels
      When I check "Kitty Pictures"
      And I will confirm on next step
      And I select "#unsubscribe" from the documents toolbar
-     Then I wait for the "#document_progress_panel" element to finish
+     Then I should see "Cannot unsubscribe from this share." within the alert box
      And I should see "Kitty Pictures"
 
    Scenario: Removing documents from share

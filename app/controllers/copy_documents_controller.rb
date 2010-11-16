@@ -6,7 +6,6 @@ class CopyDocumentsController < ApplicationController
   end
 
   def new
-    @document = Document.find(params[:document_id])
   end
   
   def create
@@ -17,7 +16,6 @@ class CopyDocumentsController < ApplicationController
   end
 
   def update
-    @document = Document.viewable_by(current_user).find(params[:document_id])
     @audience = Audience.new(params[:audience])
     @document.targets.create! :audience => @audience, :creator => current_user
     if params[:document]
@@ -38,8 +36,9 @@ class CopyDocumentsController < ApplicationController
 
 private
 
-  def find_document
-    @document = Document.viewable_by(current_user).find(params[:document_id])
+  def find_document()
+    @document = Document.find(params[:document_id])
+    @document = nil unless @document.viewable_by?(current_user)
   end
   
 end

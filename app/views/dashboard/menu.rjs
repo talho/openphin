@@ -80,7 +80,7 @@ if current_user.has_non_public_role?
   page << menu_config
 
   bbar_config = "Application.bbarConfig = [{name: 'Calendar'},
-                                         {name: 'Documents'},
+                                         {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
                                          {name: 'Chat'},
                                          {name: 'Links'},
                                          '->',

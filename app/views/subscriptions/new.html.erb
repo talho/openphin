@@ -1,4 +1,4 @@
-<% form_for @channel, :url => channel_subscriptions_path, :html => {:method => :post} do |form| %>
+<% form_for @share, :url => share_subscriptions_path, :html => {:method => :post} do |form| %>
   <div id="audience">
     <div id="edit">
       <% fields_for Audience.new do |audience| %>

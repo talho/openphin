@@ -349,7 +349,7 @@ span.media_list ul.check_selector                   {top:36px !important; paddin
 span.media_list fieldset.list                       {height:245px; float:left;}
 span.media_list fieldset.list ul.check_selector     {top:20px; left:0; right:0; bottom:26px; overflow:auto;}
 span.media_list #folder_name                        {margin:5px 0px;}
-span.media_list #channel_name                       {margin:5px 0px;}
+span.media_list #share_name                       {margin:5px 0px;}
 span.media_list div.withsubfolders ul.shares input  {left:0px !important;}
 span.media_list div.withsubfolders a#toggle_closed  {top:1px !important; left:18px !important;}
 span.media_list div.withsubfolders label.with_sub_folder {margin-left: 15px !important;}
@@ -367,7 +367,7 @@ span.media_list fieldset.withsubfolders ul.check_selector li li li label {paddin
 span.container div.document_panel_action            {padding:10px;position: fixed; left: 75px; bottom: 100px; border: medium solid black; z-index: 200; background-color: #eeeeee}
 
 div.document_panel_action span.load_panel_text      {position:relative;top:-10px;padding-left:2px;}
-div.document_panel_action > #channel_submit         {margin-top:20px;}
+div.document_panel_action > #share_submit         {margin-top:20px;}
 div.document_panel_action > #share                  {font-size:11px;margin-top:15px;}
 div.document_panel_action > #share h2               {margin-bottom:10px;}
 div.document_panel_action > #share ul               {margin-left: 5px !important;}

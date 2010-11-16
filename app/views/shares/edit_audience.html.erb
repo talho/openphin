@@ -1,0 +1,12 @@
+<% form_for @share, :url => update_audience_share_path, :html => {:method => :put} do |form| %>
+  <div id="audience">
+    <div id="edit">
+      <% fields_for @share.audience do |audience| %>
+        <% unless audience.object.is_a?(Group) %>
+          <%= render 'audiences/fields', :form => audience, :group_form => false %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <%= form.submit 'Invite' %>
+<% end %>
