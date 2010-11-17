@@ -76,7 +76,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     var options = {};
     options.params = {};
     options.params["user[new_devices]"] = this.devices_control.grab_data();
-    options.params["name", "user[new_roles]"] = this.roles_control.grab_data();
+    options.params["user[new_roles]"] = this.roles_control.grab_data();
     this.getPanel().getForm().submit(options);
   }
 });

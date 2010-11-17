@@ -5,9 +5,56 @@ class Admin::UserBatchController < ApplicationController
   def new
     @jurisdictions = current_user.jurisdictions.admin.find(:all, :select => "DISTINCT name", :order => "name")
   end
+
+  def admin_jurisdictions
+    jurisdictions = current_user.jurisdictions.admin.find(:all, :select => "DISTINCT name", :order => "name")
+    render :json => jurisdictions
+  end
   
+  def create_from_json
+    success = true
+    error_messages = []
+
+    user_list = ActiveSupport::JSON.decode(params[:batch][:users])
+    user_list.each { |u|
+      #next unless User.find_by_email(u["email"]).nil?
+      if User.find_by_email(u["email"]).nil?
+        puts "#{u["email"]} #{u["lastname"]} #{u["firstname"]}"
+        new_user = User.new(:email => u["email"])
+        new_user.update_password("Password1", "Password1")
+        new_user.update_attributes(:first_name => u["firstname"], :last_name => u["lastname"], :display_name => u["displayname"])
+
+        if u["jurisdiction"] != "Texas"
+          j = Jurisdiction.find_by_name(u["jurisdiction"])
+          j = params[:batch][:default_jurisdiction] if j.blank?
+          new_user.role_memberships.create(:jurisdiction => j, :role => Role.public) if !j.blank?
+        end
+
+        if new_user.valid?
+          new_user.save
+          new_user.confirm_email!
+        else
+          success = false
+          error_messages.concat(new_user.errors.full_messages)
+        end
+      else
+        puts "#{u["email"]} already exists"
+      end
+    }
+
+    respond_to do |format|
+      format.json {
+        if success
+          render :json => {:flash => "Users created.", :type => :completed, :success => true}
+        else
+          render :json => {:flash => nil, :type => :error, :errors => error_messages}
+        end
+      }
+    end
+  end
+
   def create
-   if request.post?
+    if request.post?
       @user_batch = UserBatch.new params[:user_batch]
       @user_batch.email = current_user.email
       case @user_batch.valid

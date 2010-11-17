@@ -35,17 +35,17 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       listeners: {
         scope: this,
         'fileselected': function(fb, v) {
-          this.grid.myMask.show();
+          this.getPanel().loadMask.show();
           this.uploadForm.submit({
             scope: this,
             success: function(form, action) {
               this.store.loadData(Ext.decode(action.response.responseText), !Ext.getCmp('chk-overwrite').checked);
               this.set_savebutton_state();
               form.reset();
-              this.grid.myMask.hide();
+              this.getPanel().loadMask.hide();
             },
             failure: function(form, action) {
-              this.grid.myMask.hide();
+              this.getPanel().loadMask.hide();
               data = Ext.decode(action.response.responseText);
               Ext.Msg.alert('Import Error', data['error']);
             }
@@ -110,10 +110,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
         {header: 'Phone', dataIndex: 'phone', sortable: true, editor: {xtype:'textfield',id:'n_phone',allowBlank:true}},
         {id: 'email', header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false, vtype: 'email'}}
-      ],
-      set_gridmask: function(panel){
-        this.myMask = new Ext.LoadMask(panel.getEl(), {msg:"Loading...", removeMask: true});
-      }
+      ]
     });
 
     this.grid.on('afterrender', function(){
@@ -126,25 +123,37 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       this.grid.removeBtn.setDisabled(sm.getCount() < 1);
     });
 
+    var jurisdictions_store = new Ext.data.JsonStore({
+      url: 'admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
+      fields: [{name: 'name', mapping: 'jurisdiction.name'}]
+    });
     this.form_config = {
       form_width: 900,
-      item_list: [ this.grid ],
-      save_url: config.url + ".json",
+      item_list: [
+        {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
+          {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'batch[default_jurisdiction]', editable: false, triggerAction: 'all',
+            store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
+          this.grid
+        ]}
+      ],
+      save_url: "admin_user_batch/create_from_json.json",
       save_method: "POST"
     };
 
     Talho.BatchUsers.superclass.constructor.call(this, config);
+  },
 
-    this.getPanel().on('render', this.grid.set_gridmask, this.grid, {delay: 1});
+  // AJAX load and save methods
+  load_data: function(json){ },
+  save_data: function(){
+    var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
+    //var json = Ext.encode(users);
+    //this.save_json(this.form_config.save_url, {"batch[users]": json});
+    var options = {};
+    options.params = {};
+    options.params["batch[users]"] = Ext.encode(users);
+    this.getPanel().getForm().submit(options);
 
-    this.getPanel().getForm().on('beforeaction', function(form, action){
-      action.options.params = {}
-      this.store.each(function(item, index){
-        action.options.params['invitation[users_attributes][' + index + '][name]'] = item.data['name']
-        action.options.params['invitation[users_attributes][' + index + '][email]'] = item.data['email']
-      });
-      return true;
-    }, this);
   },
 
   set_savebutton_state: function(){
