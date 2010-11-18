@@ -14,6 +14,7 @@ Ext.ns("Talho");
     dominoes.rule('NewInvitation', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/invitations/NewInvitationBase.js');
     dominoes.rule('ProfileBase', '(( $css(/stylesheets/redesign/profile.css) )) /javascripts/profile/ProfileBase.js');
     dominoes.rule('BatchUsers', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/ext/src/widgets/grid/EditorGrid.js');
+    dominoes.rule('EditUsers', '(( $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/xActionColumn.js $(ext_extensions)/RowEditor.js /javascripts/ext/src/widgets/grid/EditorGrid.js');
 
     var regList = {
         'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
@@ -33,7 +34,8 @@ Ext.ns("Talho");
         'Talho.NewInvitation': {js:'NewInvitation /javascripts/ext/src/widgets/grid/EditorGrid.js > /javascripts/invitations/NewInvitation.js'},
         'Talho.Invitations': {js:'/javascripts/invitations/Invitations.js'},
         'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/admin/AddUser.js'},
-        'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'}
+        'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'},
+        'Talho.EditUsers': {js:'EditUsers ProfileBase > /javascripts/admin/EditUsers.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

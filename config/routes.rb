@@ -74,6 +74,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :admin_users, :controller => "admin/users"
   map.resources :admin_user_batch, :controller => "admin/user_batch", :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get]}
   map.connect "/admin_user_batch/create_from_json.:format", :controller => "admin/user_batch", :action => "create_from_json"
+  map.resources :admin_edit_users, :controller => "admin/edit_users", :collection => {:admin_users => [:get]}
 
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"

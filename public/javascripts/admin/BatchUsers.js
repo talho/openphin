@@ -2,20 +2,11 @@ Ext.ns("Talho");
 
 Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
-    var User = Ext.data.Record.create([
-      {name: 'lastname', type: 'string'},
-      {name: 'firstname', type: 'string'},
-      {name: 'displayname', type: 'string'},
-      {name: 'jurisdiction', type: 'string'},
-      {name: 'mobile', type: 'string'},
-      {name: 'fax', type: 'string'},
-      {name: 'phone', type: 'string'},
-      {name: 'email', type: 'string'}
-    ]);
-
     this.store = new Ext.data.GroupingStore({
-      fields: ['lastname','firstname','displayname','jurisdiction','mobile','fax','phone','email'],
-      reader: new Ext.data.JsonReader({fields: User, root: 'users_attributes'}),
+      reader: new Ext.data.JsonReader({
+        fields: ['lastname', 'firstname', 'displayname', 'jurisdiction', 'mobile', 'fax', 'phone', 'email'],
+        root: 'users_attributes'
+      }),
       data: {'users_attributes': []},
       sortInfo: {field: 'lastname', direction: 'ASC'}
     });
@@ -68,10 +59,9 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         text: 'Add User',
         scope: this,
         handler: function(){
-          var u = new User({lastname: '', firstname: '', displayname: '', jurisdiction: '', mobile: '', fax: '', phone: '', email: ''});
           if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
             editor.stopEditing();
-            this.store.insert(0, u);
+            this.store.insert(0, new this.store.recordType());
             this.grid.getView().refresh();
             this.grid.getSelectionModel().selectRow(0);
             editor.startEditing(0);
@@ -102,14 +92,14 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         submitValue: false
       }],
       columns: [
-        {header: 'Last Name', dataIndex: 'lastname', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:false}},
-        {header: 'First Name', dataIndex: 'firstname', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:false}},
+        {header: 'Last Name', dataIndex: 'lastname', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
+        {header: 'First Name', dataIndex: 'firstname', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
         {header: 'Display Name', dataIndex: 'displayname', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
-        {header: 'Jurisdiction', dataIndex: 'jurisdiction', sortable: true, editor: {xtype:'textfield',id:'n_jurisdiction',allowBlank:false}},
+        {header: 'Jurisdiction', dataIndex: 'jurisdiction', sortable: true, editor: {xtype:'textfield',id:'n_jurisdiction',allowBlank:true}},
         {header: 'Mobile', dataIndex: 'mobile', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
         {header: 'Phone', dataIndex: 'phone', sortable: true, editor: {xtype:'textfield',id:'n_phone',allowBlank:true}},
-        {id: 'email', header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false, vtype: 'email'}}
+        {id: 'email', header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}}
       ]
     });
 
@@ -153,7 +143,6 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     options.params = {};
     options.params["batch[users]"] = Ext.encode(users);
     this.getPanel().getForm().submit(options);
-
   },
 
   set_savebutton_state: function(){

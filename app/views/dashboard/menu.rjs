@@ -60,8 +60,8 @@ if current_user.has_non_public_role?
                       {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }', initializer: 'Talho.ManageGroups'}},
                       {name: 'Manage Users', items: [
                           {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},
-                          {name: 'Batch Users', tab: {id: 'batch_new_users', title:'Batch Users', url:'#{ new_user_batch_path }', initializer: 'Talho.BatchUsers'}},
-                          {name: 'Delete a User', tab: {id: 'delete_user', title:'Delete A User', url:'#{ new_users_delete_path }'}}]},
+                          {name: 'Batch Add Users', tab: {id: 'batch_new_users', title:'Batch Add Users', url:'#{ new_user_batch_path }', initializer: 'Talho.BatchUsers'}},
+                          {name: 'Edit Users', tab: {id: 'edit_user', title:'Edit Users', url:'#{ new_users_delete_path }', initializer: 'Talho.EditUsers'}}]},
                       {name: 'Manage Invitations', items:[
                           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"
