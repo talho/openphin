@@ -82,7 +82,10 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
   set_field_values: function(p, obj){
     for (var prop in obj) {
       var elem_list = p.find("name", "user[" + prop + "]");
-      if (elem_list.length > 0) elem_list[0].setValue(obj[prop]);
+      if (elem_list.length > 0) {
+        elem_list[0].setValue(obj[prop]);
+        elem_list[0].originalValue = obj[prop]; // necessary for isDirty() on the form to work
+      }
     }
   },
 });

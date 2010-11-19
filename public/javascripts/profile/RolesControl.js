@@ -85,26 +85,20 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     this.ancestor.getPanel().doLayout();
   },
   remove_role: function(){
-    jQuery.each(this.dv.getSelectedRecords(), function(i,e){ e.data.state = "deleted"; });
-    this.store.filterBy(function(e){ return e.data.state!="deleted"; });
+    jQuery.each(this.dv.getSelectedRecords(), function(i,e){ e.set("state", "deleted"); });
+    this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
   },
 
   // AJAX load and save methods
-  load_data: function(json){
-    var store = this.store;
-    var entries = jQuery.map(json, function(e,i){ return new store.recordType(e); });
-    store.removeAll();
-    store.add(entries);
-  },
+  load_data: function(json){ this.store.loadData(json); },
   grab_data: function(){
     this.store.clearFilter();
     var rq = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
-    this.store.filterBy(function(e){ return e.data.state!="deleted"; });
+    this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
     return Ext.encode(rq);
   },
-  save_data: function(){
-    this.ancestor.save_json(this.save_url, {"user[rq]": this.grab_data()});
-  },
+  save_data: function(){ this.ancestor.save_json(this.save_url, {"user[rq]": this.grab_data()}); },
+  is_dirty: function(){ return this.store.getModifiedRecords().length > 0; },
 
   // Methods for private use
   _createStoreAndDataView: function(){
@@ -112,9 +106,13 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       autoDestroy: true,
       autoLoad: false,
       autoSave: false,
-      listeners: {scope: this, 'add': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 100}},
+      pruneModifiedRecords: true,
+      listeners: {
+        scope: this,
+        'load': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 10},
+        'add': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 10}
+      },
       reader: new Ext.data.JsonReader({
-        root: "extra.role_desc",
         fields: [{name:'id'}, {name:'role_id'}, {name:'jurisdiction_id'}, {name:'rname'}, {name:'jname'},
                  {name:'type'}, {name:'state'}]
       })

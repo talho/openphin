@@ -27,10 +27,12 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       autoWidth: true,
       autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
+      trackResetOnLoad: true,
       listeners: {scope: this, 'actioncomplete': this.form_submit_success, 'actionfailed': this.form_submit_failure},
       items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
+    panel.addListener("beforeclose", this.closeOrPrompt, this);
 
     this.getPanel = function(){ return panel; }
   },
@@ -63,6 +65,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
   save_close: function(){ this.save(); this.close(); },
+  is_dirty: function(p){ return p.getForm().isDirty(); },
 
   // Save via AJAX callbacks
   save_json: function(url, json){
@@ -92,6 +95,15 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       else
         this.show_message(action.result);
     }
+  },
+
+  // Prompt if changes are present
+  closeOrPrompt: function(p){
+    var dirty = this.is_dirty(p);
+    if (dirty)
+      Ext.Msg.confirm("Save Is Needed", "Changes need to be saved.  Press 'Yes' to close and abandon your changes.",
+        function(id){  if (id == "yes") p.destroy(); });
+    return !dirty;
   },
 
   // Flash message utils

@@ -14,16 +14,11 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     Talho.ManageRoles.superclass.constructor.call(this, config);
 
     this.getPanel().doLayout();
-    this.getPanel().addListener("beforeclose", function(p){
-      Ext.Msg.confirm("Save Is Needed",
-        "Changes need to be saved.  Press 'Yes' to close and abandon your changes.",
-        function(id){  if (id == "yes") p.destroy(); });
-      return false;
-    });
   },
 
   load_data: function(json){ this.roles_control.load_data(json.extra.role_desc); },
-  save_data: function(){ this.roles_control.save_data(); }
+  save_data: function(){ this.roles_control.save_data(); },
+  is_dirty: function(){ return this.roles_control.is_dirty(); }
 });
 
 Talho.ManageRoles.initialize = function(config){

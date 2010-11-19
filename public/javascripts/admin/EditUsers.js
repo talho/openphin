@@ -5,7 +5,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.store = new Ext.data.GroupingStore({
       autoLoad: false, autoSave: false,
       reader: new Ext.data.JsonReader({
-        fields: ['last_name', 'first_name', 'display_name', 'mobile', 'fax', 'phone', 'email',]
+        fields: ['last_name', 'first_name', 'display_name', 'mobile_phone', 'fax', 'phone', 'email',]
       }),
       sortInfo: {field: 'last_name', direction: 'ASC'}
     });
@@ -53,13 +53,12 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
         {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
         {header: 'Display Name', dataIndex: 'display_name', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
-        {header: 'Mobile', dataIndex: 'mobile', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
+        {header: 'Mobile', dataIndex: 'mobile_phone', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
         {header: 'Phone', dataIndex: 'phone', sortable: true, editor: {xtype:'textfield',id:'n_phone',allowBlank:true}},
         {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}},
         {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', scope: this, handler: function(grid, row){
           var record = grid.getStore().getAt(row);
-          var id = record.get('id');
           record.data.state = "deleted";
           grid.getStore().filterBy(function(e){ return e.data.state!="deleted"; });
         }}
@@ -92,12 +91,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.store.clearFilter();
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.data.state!="deleted"; });
-    //var json = Ext.encode(users);
-    //this.save_json(this.form_config.save_url, {"batch[users]": json});
-    var options = {};
-    options.params = {};
-    options.params["batch[users]"] = Ext.encode(users);
-    this.getPanel().getForm().submit(options);
+    this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
   },
 
   handle_row_modification: function(re, changes, record, row_index){
@@ -105,10 +99,9 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.set_savebutton_state();
   },
   set_savebutton_state: function(){
-    if(this.store.getCount() == 0)
-      this.getPanel().find("name", "save_button")[0].disable();
-    else
-      this.getPanel().find("name", "save_button")[0].enable();
+    var b = this.getPanel().find("name", "save_button")[0];
+    if (b == null) return;
+    (this.store.getCount() == 0) ?  b.disable() : b.enable();
   }
 });
 

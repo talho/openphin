@@ -17,7 +17,8 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
   },
 
   load_data: function(json){ this.devices_control.load_data(json.extra.devices); },
-  save_data: function(){ this.devices_control.save_data(); }
+  save_data: function(){ this.devices_control.save_data(); },
+  is_dirty: function(){ return this.devices_control.is_dirty(); }
 });
 
 Talho.EditDevices.initialize = function(config){
