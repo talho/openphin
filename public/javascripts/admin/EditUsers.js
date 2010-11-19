@@ -5,7 +5,16 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.store = new Ext.data.GroupingStore({
       autoLoad: false, autoSave: false,
       reader: new Ext.data.JsonReader({
-        fields: ['last_name', 'first_name', 'display_name', 'mobile_phone', 'fax', 'phone', 'email',]
+        fields: [
+          {name: 'last_name', mapping: 'user.last_name'},
+          {name: 'first_name', mapping: 'user.first_name'},
+          {name: 'display_name', mapping: 'user.display_name'},
+          {name: 'mobile_phone', mapping: 'user.mobile_phone'},
+          {name: 'fax', mapping: 'user.fax'},
+          {name: 'phone', mapping: 'user.phone'},
+          {name: 'email', mapping: 'user.email'},
+          {name: 'state'}
+        ]
       }),
       sortInfo: {field: 'last_name', direction: 'ASC'}
     });
@@ -44,8 +53,8 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         disabled: true,
         scope: this,
         handler: function(){
-          jQuery.each(this.grid.getSelectionModel().getSelections(), function(i,e){ e.data.state = "deleted"; });
-          this.store.filterBy(function(e){ return e.data.state!="deleted"; });
+          jQuery.each(this.grid.getSelectionModel().getSelections(), function(i,e){ e.set("state", "deleted"); });
+          this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
           this.set_savebutton_state();
         }
       }],
@@ -59,8 +68,8 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}},
         {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', scope: this, handler: function(grid, row){
           var record = grid.getStore().getAt(row);
-          record.data.state = "deleted";
-          grid.getStore().filterBy(function(e){ return e.data.state!="deleted"; });
+          record.set("state", "deleted");
+          grid.getStore().filterBy(function(e){ return e.get("state")!="deleted"; });
         }}
       ]
     });
@@ -81,21 +90,17 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   },
 
   // AJAX load and save methods
-  load_data: function(json){
-    var store = this.store;
-    var users = jQuery.map(json, function(e,i){ return new store.recordType(e.user); });
-    store.removeAll();
-    store.add(users);
-  },
+  load_data: function(json){ this.store.loadData(json); },
   save_data: function(){
     this.store.clearFilter();
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
-    this.store.filterBy(function(e){ return e.data.state!="deleted"; });
+    this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
     this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
   },
+  is_dirty: function(){ return this.store.getModifiedRecords().length > 0; },
 
   handle_row_modification: function(re, changes, record, row_index){
-    record.data.state = "changed";
+    record.set("state", "changed");
     this.set_savebutton_state();
   },
   set_savebutton_state: function(){

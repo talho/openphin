@@ -137,12 +137,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   load_data: function(json){ },
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
-    //var json = Ext.encode(users);
-    //this.save_json(this.form_config.save_url, {"batch[users]": json});
-    var options = {};
-    options.params = {};
-    options.params["batch[users]"] = Ext.encode(users);
-    this.getPanel().getForm().submit(options);
+    this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
   },
 
   set_savebutton_state: function(){
