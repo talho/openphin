@@ -60,7 +60,7 @@
 
     <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
   <% end %>
-  <p class="num_of_recipients"><strong># of Recipients: </strong><%=  @alert.new_record? ? @alert.preview_recipients(params).size : @alert.alert_attempts.count %></p>
+  <p class="num_of_recipients"><strong># of Recipients: </strong><%= @alert.new_record? ? @alert.preview_recipients_size(params) : @alert.alert_attempts.count %></p>
 </div>
 
 <div class="contacted_users">

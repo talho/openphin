@@ -107,7 +107,6 @@ Feature: Alert Preview Audience Calculation
     And delayed jobs are processed
     And I follow "Alert Log and Reporting"
     And I follow "View"
-    And I want to debug
     Then I should see "# of Recipients: 9"
 
   Scenario: An alert is sent to nobody

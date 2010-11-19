@@ -53,23 +53,23 @@ Background:
    Then the following users should not receive any emails
      | emails | <non_recipients> |
 
-    Scenarios:
-      | target_jurisdictions          | recipients                                 | non_recipients                                                                                                                                                                                                                                       |
-      | Dallas County                 | dal.hacc@example.com, dal.epid@example.com | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Tarrant County                | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com | dal.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Potter County                 | dal.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Region 1                      | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Texas                         | dal.hacc@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Dallas County, Tarrant County | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com | pot.hacc@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Dallas County, Potter County  | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Dallas County, Region 1       | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com | tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Dallas County, Texas          | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Tarrant County, Potter County | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.hacc@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Tarrant County, Region 1      | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tar.hacc@example.com, tar.epid@example.com | dal.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Tarrant County, Texas         | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
-      | Potter County, Region 1       | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tex.hacc@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      | Potter County, Texas          | dal.hacc@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
-      | Region 1, Texas               | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+   Scenarios:
+     | target_jurisdictions          | recipients                                 | non_recipients                                                                                                                                                                                                                                       |
+     | Dallas County                 | dal.hacc@example.com, dal.epid@example.com | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Tarrant County                | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com | dal.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Potter County                 | dal.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Region 1                      | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Texas                         | dal.hacc@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Dallas County, Tarrant County | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com | pot.hacc@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Dallas County, Potter County  | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Dallas County, Region 1       | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com | tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Dallas County, Texas          | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Tarrant County, Potter County | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.hacc@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Tarrant County, Region 1      | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tar.hacc@example.com, tar.epid@example.com | dal.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, tex.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Tarrant County, Texas         | dal.hacc@example.com, reg1.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
+     | Potter County, Region 1       | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tex.hacc@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+     | Potter County, Texas          | dal.hacc@example.com, reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
+     | Region 1, Texas               | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, tex.hacc@example.com, tex.biot@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, pot.hacc@example.com, pot.epid@example.com, fed.hacc@example.com |
 
 
   Scenario Outline: Sending Cross-Jurisdictional alerts to Roles and Jurisdictions from a County-level jurisdiction
@@ -91,11 +91,11 @@ Background:
      | target_jurisdictions          | target_roles                             | recipients                                 | non_recipients                                                                                                                                                                                                                                       |
      |                               | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, pot.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
      |                               | Epidemiologist, Bioterrorism Coordinator | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | fed.hacc@example.com |
-     | Dallas County                 | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com | tar.epid@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
+     | Dallas County                 | Epidemiologist                           | dal.epid@example.com | dal.hacc@example.com, tar.epid@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
      | Dallas County, Tarrant County | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, reg1.hacc@example.com, tar.hacc@example.com | pot.epid@example.com, tex.biot@example.com, pot.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, fed.hacc@example.com |
      | Dallas County, Potter County  | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com, pot.epid@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, fed.hacc@example.com |
-     | Dallas County, Region 1       | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com | reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
-     | Dallas County, Texas          | Epidemiologist                           | dal.hacc@example.com, dal.epid@example.com | reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
+     | Dallas County, Region 1       | Epidemiologist                           | dal.epid@example.com | dal.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
+     | Dallas County, Texas          | Epidemiologist                           | dal.epid@example.com | dal.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com, fed.hacc@example.com |
      | Tarrant County                | Epidemiologist                           | dal.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.hacc@example.com | dal.epid@example.com, pot.epid@example.com, tex.biot@example.com, pot.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, fed.hacc@example.com |
      | Tarrant County, Potter County | Epidemiologist                           | dal.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.epid@example.com, tex.biot@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
      | Tarrant County, Region 1      | Epidemiologist                           | dal.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.hacc@example.com | dal.epid@example.com, pot.epid@example.com, tex.biot@example.com, pot.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, fed.hacc@example.com |
@@ -107,9 +107,40 @@ Background:
      | Region 1, Texas               | Bioterrorism Coordinator                 | dal.hacc@example.com, reg1.biot@example.com, reg1.hacc@example.com, tex.biot@example.com, tex.hacc@example.com | dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
      | Texas                         | Bioterrorism Coordinator                 | dal.hacc@example.com, reg1.hacc@example.com, tex.biot@example.com, tex.hacc@example.com | dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
 
-#
-#  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a County-level jurisdiction
-#
+
+  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a County-level jurisdiction
+    Given the following groups for "dal.hacc@example.com" exist:
+     #| name             | jurisdictions                                | roles                    | users                                      | scope        | owner_jurisdiction
+      | pott_tarr        | Potter County, Tarrant County                |                          |                                            | Personal     | Dallas County |
+      | reg2_biot        | Region 2                                     | Bioterrorism Coordinator |                                            | Jurisdiction | Dallas County |
+      | pott_epid        | Potter County                                | Epidemiologist           |                                            | Personal     | Dallas County |
+      | cool_dudes       |                                              |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | counties         | Dallas County, Potter County, Tarrant County |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | epid_and_texbiot |                                              | Epidemiologist           | tex.biot@example.com                       | Personal     | Dallas County |
+    And a sent alert with:
+      | author                    | Dal Hacc               |
+      | from_jurisdiction         | Dallas County          |
+      | acknowledge               | false                  |
+      | communication methods     | Email                  |
+      | delivery time             | 72 hours               |
+      | not_cross_jurisdictional  | false                  |
+      | jurisdictions             | <target_jurisdictions> |
+      | groups                    | <target_groups>        |
+    Then the following users should receive the alert email:
+      | People | <recipients> |
+    Then the following users should not receive any emails
+      | emails | <non_recipients> |
+
+    Scenarios:
+      | target_jurisdictions | target_groups  | recipients           | non_recipients                                                                                                                                                                                                                                                             |
+      |                | pott_tarr        | dal.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Region 1       | pott_epid        | dal.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Dallas County  | reg2_biot        | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, tex.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      | Dallas County  | cool_dudes       | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, tex.biot@example.com, pot.epid@example.com, pot.hacc@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
+      |                | counties         | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      |                | epid_and_texbiot | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+
+
   Scenario Outline: Sending Cross-Jurisdictional alerts to Individuals and Jurisdictions from a County-level jurisdiction
     Given a sent alert with:
       | author                    | Dal Hacc               |
@@ -120,11 +151,6 @@ Background:
       | not_cross_jurisdictional  | false                  |
       | jurisdictions             | <target_jurisdictions> |
       | emails                    | <target_emails>        |
-#    And I am logged in as "dal.hacc@example.com"
-#    And I follow "HAN"
-#    And I follow "Alert Log and Reporting"
-#    And I follow "View"
-#    And I want to debug
     Then the following users should receive the alert email:
       | People | <recipients> |
     Then the following users should not receive any emails
@@ -132,7 +158,7 @@ Background:
 
     Scenarios:
       | target_jurisdictions          | target_emails                               | recipients           | non_recipients                                                                                                                                                                                                                                                             |
-      |                               | dal.epid@example.com                        | dal.hacc@example.com, dal.epid@example.com | tar.epid@example.com, pot.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      |                               | dal.epid@example.com                        | dal.epid@example.com | dal.hacc@example.com, tar.epid@example.com, pot.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | tar.epid@example.com                        | dal.hacc@example.com, tar.epid@example.com, tar.hacc@example.com, reg1.hacc@example.com | dal.epid@example.com, pot.epid@example.com, pot.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | pot.epid@example.com                        | dal.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com | dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | reg1.biot@example.com                       | dal.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com | dal.epid@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
@@ -217,13 +243,44 @@ Background:
       | Potter County                 | Epidemiologist                           | reg1.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, fed.hacc@example.com |
       | Potter County, Region 1       | Epidemiologist                           | reg1.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, fed.hacc@example.com |
       | Potter County, Texas          | Epidemiologist                           | reg1.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, fed.hacc@example.com |
-      | Region 1                      | Bioterrorism Coordinator                 | reg1.hacc@example.com, reg1.biot@example.com | dal.hacc@example.com, dal.epid@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, fed.hacc@example.com |
+      | Region 1                      | Bioterrorism Coordinator                 | reg1.biot@example.com | reg1.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com, fed.hacc@example.com |
       | Region 1, Texas               | Bioterrorism Coordinator                 | reg1.hacc@example.com, reg1.biot@example.com, tex.biot@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
       | Texas                         | Bioterrorism Coordinator                 | reg1.hacc@example.com, tex.biot@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
 
-#
-#  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a Region-level jurisdiction
-#
+
+  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a Region-level jurisdiction
+    Given the following groups for "reg1.hacc@example.com" exist:
+     #| name             | jurisdictions                                | roles                    | users                                      | scope        | owner_jurisdiction
+      | pott_tarr        | Potter County, Tarrant County                |                          |                                            | Personal     | Dallas County |
+      | reg2_biot        | Region 2                                     | Bioterrorism Coordinator |                                            | Jurisdiction | Dallas County |
+      | pott_epid        | Potter County                                | Epidemiologist           |                                            | Personal     | Dallas County |
+      | cool_dudes       |                                              |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | counties         | Dallas County, Potter County, Tarrant County |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | epid_and_texbiot |                                              | Epidemiologist           | tex.biot@example.com                       | Personal     | Dallas County |
+    And a sent alert with:
+      | author                    | Reg1 Hacc              |
+      | from_jurisdiction         | Region 1               |
+      | acknowledge               | false                  |
+      | communication methods     | Email                  |
+      | delivery time             | 72 hours               |
+      | not_cross_jurisdictional  | false                  |
+      | jurisdictions             | <target_jurisdictions> |
+      | groups                    | <target_groups>        |
+    Then the following users should receive the alert email:
+      | People | <recipients> |
+    Then the following users should not receive any emails
+      | emails | <non_recipients> |
+
+    Scenarios:
+      | target_jurisdictions | target_groups  | recipients           | non_recipients                                                                                                                                                                                                                                                             |
+      |                | pott_tarr        | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Region 1       | pott_epid        | pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Dallas County  | reg2_biot        | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, tex.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      | Dallas County  | cool_dudes       | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, tex.biot@example.com, pot.epid@example.com, pot.hacc@example.com | tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
+      |                | counties         | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      |                | epid_and_texbiot | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+
+
   Scenario Outline: Sending Cross-Jurisdictional alerts to Individuals and Jurisdictions from a Region-level jurisdiction
     Given a sent alert with:
       | author                    | Reg1 Hacc              |
@@ -243,7 +300,7 @@ Background:
       | target_jurisdictions          | target_emails                               | recipients                                                        | non_recipients                                                                                                                                                                                                                |
       |                               | tar.epid@example.com                        | reg1.hacc@example.com, tar.epid@example.com, tar.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, pot.epid@example.com, pot.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | pot.epid@example.com                        | reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      |                               | reg1.biot@example.com                       | reg1.hacc@example.com, reg1.biot@example.com | dal.hacc@example.com, dal.epid@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      |                               | reg1.biot@example.com                       | reg1.biot@example.com | reg1.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | tex.biot@example.com                        | reg1.hacc@example.com, tex.hacc@example.com, tex.biot@example.com | dal.hacc@example.com, dal.epid@example.com, reg2.hacc@example.com, reg1.biot@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
       |                               | dal.epid@example.com, tar.epid@example.com  | reg1.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com | reg2.hacc@example.com, reg1.biot@example.com, pot.hacc@example.com, pot.epid@example.com, tex.hacc@example.com, tex.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
       |                               | reg1.biot@example.com, pot.epid@example.com | reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com, tex.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
@@ -319,11 +376,42 @@ Background:
       | Dallas County, Texas          | Epidemiologist                           | tex.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com | tar.epid@example.com, pot.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, reg2.hacc@example.com, fed.hacc@example.com |
       | Region 1                      | Bioterrorism Coordinator                 | tex.hacc@example.com, reg1.biot@example.com, reg1.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, tex.biot@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
       | Region 1, Texas               | Bioterrorism Coordinator                 | tex.hacc@example.com, reg1.biot@example.com, reg1.hacc@example.com, tex.biot@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
-      | Texas                         | Bioterrorism Coordinator                 | tex.hacc@example.com, tex.biot@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
+      | Texas                         | Bioterrorism Coordinator                 | tex.biot@example.com | tex.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
 
-#
-#  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a State-level jurisdiction
-#
+    
+  Scenario Outline: Sending Cross-Jurisdictional alerts to Groups and Jurisdictions from a State-level jurisdiction
+    Given the following groups for "tex.hacc@example.com" exist:
+     #| name             | jurisdictions                                | roles                    | users                                      | scope        | owner_jurisdiction
+      | pott_tarr        | Potter County, Tarrant County                |                          |                                            | Personal     | Dallas County |
+      | reg2_biot        | Region 2                                     | Bioterrorism Coordinator |                                            | Jurisdiction | Dallas County |
+      | pott_epid        | Potter County                                | Epidemiologist           |                                            | Personal     | Dallas County |
+      | cool_dudes       |                                              |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | counties         | Dallas County, Potter County, Tarrant County |                          | tex.biot@example.com, pot.epid@example.com | Global       | Dallas County |
+      | epid_and_texbiot |                                              | Epidemiologist           | tex.biot@example.com                       | Personal     | Dallas County |
+    And a sent alert with:
+      | author                    | Tex Hacc               |
+      | from_jurisdiction         | Texas                  |
+      | acknowledge               | false                  |
+      | communication methods     | Email                  |
+      | delivery time             | 72 hours               |
+      | not_cross_jurisdictional  | false                  |
+      | jurisdictions             | <target_jurisdictions> |
+      | groups                    | <target_groups>        |
+    Then the following users should receive the alert email:
+      | People | <recipients> |
+    Then the following users should not receive any emails
+      | emails | <non_recipients> |
+
+    Scenarios:
+      | target_jurisdictions | target_groups  | recipients           | non_recipients                                                                                                                                                                                                                                                             |
+      |                | pott_tarr        | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Region 1       | pott_epid        | pot.hacc@example.com, pot.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.hacc@example.com, tex.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
+      | Dallas County  | reg2_biot        | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.hacc@example.com | tar.hacc@example.com, tar.epid@example.com, pot.hacc@example.com, pot.epid@example.com, tex.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      |                | cool_dudes       | reg2.hacc@example.com, tex.hacc@example.com, tex.biot@example.com, pot.epid@example.com, pot.hacc@example.com | reg1.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, tar.hacc@example.com, tar.epid@example.com, reg1.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
+      |                | counties         | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+      |                | epid_and_texbiot | dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg2.hacc@example.com, tex.hacc@example.com, pot.epid@example.com, pot.hacc@example.com, tar.hacc@example.com, tar.epid@example.com, tex.biot@example.com | reg2.biot@example.com, reg1.biot@example.com, fed.hacc@example.com |
+
+
   Scenario Outline: Sending Cross-Jurisdictional alerts to Individuals and Jurisdictions from a State-level jurisdiction
     Given a sent alert with:
       | author                    | Tex Hacc               |
@@ -343,7 +431,7 @@ Background:
       | target_jurisdictions          | target_emails                               | recipients                                                        | non_recipients                                                                                                                                                                                                                |
       |                               | pot.epid@example.com                        | tex.hacc@example.com, reg2.hacc@example.com, pot.hacc@example.com, pot.epid@example.com | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | reg1.biot@example.com                       | tex.hacc@example.com, reg1.biot@example.com, reg1.hacc@example.com | dal.hacc@example.com, dal.epid@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
-      |                               | tex.biot@example.com                        | tex.hacc@example.com, tex.biot@example.com | dal.hacc@example.com, dal.epid@example.com, reg2.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
+      |                               | tex.biot@example.com                        | tex.biot@example.com | tex.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, reg2.hacc@example.com, reg1.hacc@example.com, reg1.biot@example.com, pot.hacc@example.com, pot.epid@example.com, tar.epid@example.com, tar.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |
       |                               | dal.epid@example.com, tar.epid@example.com  | tex.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, tar.epid@example.com, tar.hacc@example.com | reg2.hacc@example.com, reg1.biot@example.com, pot.hacc@example.com, pot.epid@example.com, tex.biot@example.com, reg2.biot@example.com, fed.hacc@example.com |
       |                               | reg1.biot@example.com, dal.epid@example.com | tex.hacc@example.com, dal.hacc@example.com, dal.epid@example.com, reg1.hacc@example.com, reg1.biot@example.com | tar.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, tex.biot@example.com, fed.hacc@example.com |
       |                               | reg1.biot@example.com, tex.biot@example.com | tex.hacc@example.com, reg1.biot@example.com, reg1.hacc@example.com, tex.biot@example.com | dal.hacc@example.com, dal.epid@example.com, tar.epid@example.com, tar.hacc@example.com, pot.hacc@example.com, pot.epid@example.com, reg2.hacc@example.com, reg2.biot@example.com, fed.hacc@example.com |

@@ -5,13 +5,25 @@ Feature: Sending alerts to multiple devices
   I want people to be able to send alerts on all supported devices
   
   Background: 
-    Given the following users exist: 
-    | John Smith      | john.smith@example.com    | Health Officer   | Dallas County  | 
-    | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist   | Wise County    | 
-    | Joe Black       | joe.black@example.com     | Epidemiologist   | Potter County  | 
-    | Henry Frank     | henry.frank@example.com   | Public Relations | Bell County    | 
-    | Martin Gons     | martin.gons@example.com   | Chairopractor    | Travis County  | 
-    | George Strait   | george.strait@example.com | Registered Nurse | Bell County    | 
+    Given the following entities exists:
+      | Role                  | Health Alert and Communications Coordinator |
+      | Role                  | Health Officer                              |
+      | Role                  | Epidemiologist                              |
+      | Role                  | Public Relations                            |
+      | Role                  | Chiropractor                                |
+      | Role                  | Registered Nurse                            |
+      | Jurisdiction          | Potter County                               |
+      | Jurisdiction          | Dallas County                               |
+      | Jurisdiction          | Travis County                               |
+      | Jurisdiction          | Bell County                                 |
+      | Jurisdiction          | Wise County                                 |
+    And the following users exist:
+      | John Smith      | john.smith@example.com    | Health Officer   | Dallas County  |
+      | Keith Gaddis    | keith.gaddis@example.com  | Epidemiologist   | Wise County    |
+      | Joe Black       | joe.black@example.com     | Epidemiologist   | Potter County  |
+      | Henry Frank     | henry.frank@example.com   | Public Relations | Bell County    |
+      | Martin Gons     | martin.gons@example.com   | Chiropractor     | Travis County  |
+      | George Strait   | george.strait@example.com | Registered Nurse | Bell County    |
     And keith.gaddis@example.com has the following devices:
       | SMS   | 5125551245 |
       | Phone | 5125551235 |
@@ -63,16 +75,16 @@ Feature: Sending alerts to multiple devices
      When I go to the HAN
      And I follow "Send an Alert"
      And I fill out the alert form with:
-       | People | Keith Gaddis, Joe Black, Henry Frank, Martin Gons, George Strait |
-       | Title  | H1N1 SNS push packs to be delivered tomorrow |
-       | Message | There is a Chicken pox outbreak in the area |
-       | Short Message | Chicken pox outbreak |
-       | Severity | Moderate |
-       | Status | Actual |
-       | Acknowledge | None |
-       | Communication methods | Phone, SMS, E-mail, Blackberry |
-       | Caller ID | 1234567890 |
-       | Sensitive | <unchecked> |
+       | People                | Keith Gaddis, Joe Black, Henry Frank, Martin Gons, George Strait |
+       | Title                 | H1N1 SNS push packs to be delivered tomorrow                     |
+       | Message               | There is a Chicken pox outbreak in the area                      |
+       | Short Message         | Chicken pox outbreak                                             |
+       | Severity              | Moderate                                                         |
+       | Status                | Actual                                                           |
+       | Acknowledge           | None                                                             |
+       | Communication methods | Phone, SMS, E-mail, Blackberry                                   |
+       | Caller ID             | 1234567890                                                       |
+       | Sensitive             | <unchecked>                                                      |
     
       And I press "Preview Message"
       Then I should see a preview of the message

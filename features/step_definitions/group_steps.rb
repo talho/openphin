@@ -3,10 +3,10 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
     owner = User.find_by_email!(email)
     name, jurisdictions, roles, users, scope, owner_jurisdiction = row
     options = {:owner => owner, :name => name, :scope => scope}
-    options[:jurisdictions] = Jurisdiction.find_all_by_name(jurisdictions.split(',')) unless jurisdictions.blank?
+    options[:jurisdictions] = Jurisdiction.find_all_by_name(jurisdictions.split(',').map(&:strip)) unless jurisdictions.blank?
     options[:owner_jurisdiction] = Jurisdiction.find_by_name(owner_jurisdiction) unless owner_jurisdiction.blank?
-    options[:roles] = Role.find_all_by_name(roles.split(',')) unless roles.blank?
-    options[:users] = User.find_all_by_email(users.split(',')) unless users.blank?
+    options[:roles] = Role.find_all_by_name(roles.split(',').map(&:strip)) unless roles.blank?
+    options[:users] = User.find_all_by_email(users.split(',').map(&:strip)) unless users.blank?
     group = Factory(:group, options)
    end
 end

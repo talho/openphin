@@ -3,12 +3,22 @@ Feature: Sending alerts form
   In order to ensure only accessible information is displayed on the form
   As an admin
   Users should not be able to see certain information on the form
-  
+
+  Background:
+    Given the following entities exist:
+      | Role           | Health Alert and Communications Coordinator |
+      | Role           | Health Officer                              |
+      | Jurisdiction   | Texas                                       |
+      | Jurisdiction   | Dallas County                               |
+      | Jurisdiction   | Potter County                               |
+      | Jurisdiction   | Tarrant County                              |
+      | Organization   | DSHS                                        |
+  And the role "Health Alert and Communications Coordinator" is an alerter
+
   Scenario: Sending alerts form should not contain system roles
     Given there is an system only Admin role
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
@@ -21,16 +31,10 @@ Feature: Sending alerts form
     Then I should explicitly not see the "Admin" role as an option
 
   Scenario: User with one or more jurisdictions
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
+    Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-
     When I go to the HAN
     And I follow "Send an Alert"
 
@@ -57,12 +61,8 @@ Feature: Sending alerts form
       | title | H1N1 SNS push packs to be delivered tomorrow |
 
   Scenario: Send an alert with a different delivery time
-    Given the following entities exists:
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County  |
-    And the following users exist:
+    Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
     When I go to the HAN
@@ -89,7 +89,6 @@ Feature: Sending alerts form
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
@@ -101,25 +100,18 @@ Feature: Sending alerts form
     Then I should see "Federal" as a jurisdictions option
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
-    Given the following entities exist:
-      | Jurisdiction | Texas         |
-      | Jurisdiction | Dallas County |
-    And Texas is the parent jurisdiction of:
+    Given Texas is the parent jurisdiction of:
       | Dallas County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     And I am on the new alert page
     Then I should see "Select all children"
 
   Scenario: Sending alerts with only People in the audience should work
-    Given the following entities exist:
-      | Jurisdiction | Texas         |
-    And the following users exist:
+    Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas |
       | Jane Smith      | jane.smith@example.com   | Health Alert and Communications Coordinator  | Texas |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the HAN
     And I follow "Send an Alert"
@@ -141,21 +133,15 @@ Feature: Sending alerts form
       | title             | H1N1 SNS push packs to be delivered tomorrow |
 
   Scenario: Sending alerts with call down
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
+    Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
-    And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
     When I go to the HAN
     And I follow "Send an Alert"
 
     When I fill in "Title" with "H1N1 SNS push packs to be delivered tomorrow"
-
     And I fill in "Message" with "Some body text"
     And I select "Advanced" from "Acknowledge"
     And I fill in "Alert Response 1" with "if you can respond within 15 minutes"
@@ -172,14 +158,12 @@ Feature: Sending alerts form
 
     And I press "Audience"
     And I check "Potter County"
-
     And I press "Preview Message"
     Then I should see a preview of the message
 
     When I press "Send"
     Then I should see "Successfully sent the alert"
-
-    Then an alert exists with:
+    And an alert exists with:
       | from_jurisdiction   | Potter County                                |
       | title               | H1N1 SNS push packs to be delivered tomorrow |
       | call_down_messages  | if you can respond within 15 minutes         |
@@ -189,16 +173,10 @@ Feature: Sending alerts form
       | call_down_messages  | if you cannot respond                        |
       | acknowledge         | true                                         |
 
-
   Scenario: Sending alerts with non cross jurisdiction
-     Given the following entities exists:
-       | Jurisdiction | Dallas County  |
-       | Jurisdiction | Potter County  |
-       | Jurisdiction | Tarrant County |
-     And the following users exist:
+     Given the following users exist:
        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
        | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
-     And the role "Health Alert and Communications Coordinator" is an alerter
      And I am logged in as "john.smith@example.com"
 
      When I go to the HAN
@@ -229,14 +207,10 @@ Feature: Sending alerts form
       | title                     | H1N1 SNS push packs to be delivered tomorrow |
       | not_cross_jurisdictional  | true                                         |
 
-
   Scenario: Sending alerts to Organizations
-    Given the following entities exist:
-      | Jurisdiction | Texas         |
-      | Organization | DSHS          |
-    And the following users exist:
+    Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas |
-      | Jane Smith      | jane.smith@example.com   | Health Officer   | Texas |
+      | Jane Smith      | jane.smith@example.com   | Health Officer                               | Texas |
     And "jane.smith@example.com" is a member of the organization "DSHS"
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
@@ -246,8 +220,8 @@ Feature: Sending alerts form
       | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
       | Message               | H1N1 SNS push packs to be delivered tomorrow         |
       | Short Message         | H1N1 SNS push packs to be delivered tomorrow         |
-      | Communication methods | E-mail          |
-      | Organization   | DSHS      |
+      | Communication methods | E-mail                                               |
+      | Organization          | DSHS                                                 |
 
     And I press "Preview Message"
     Then I should see a preview of the message with:

@@ -5,20 +5,23 @@ Feature: Acknowledging an alert
   I can acknowledge an alert
   
   Background:
-    Given the following users exist:
+    Given the following entities exist:
+      | Jurisdiction | Dallas County                               |
+      | Role         | Health Alert and Communications Coordinator |
+    And the following users exist:
       | Martin Fowler      | martin@example.com   | Health Alert and Communications Coordinator | Dallas County |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "martin@example.com"
     
   Scenario: A user acknowledging an alert via the HAN
     Given a sent alert with:
-      | title       | Piggy Pox |
-      | message     | the world is on fire |
-      | status      | Actual   |
-      | severity    | Moderate |
-      | acknowledge | Yes      |
-      | from_jurisdiction | Dallas County |
-      | jurisdictions | Dallas County |
+      | title             | Piggy Pox            |
+      | message           | the world is on fire |
+      | status            | Actual               |
+      | severity          | Moderate             |
+      | acknowledge       | Yes                  |
+      | from_jurisdiction | Dallas County        |
+      | jurisdictions     | Dallas County        |
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
     And I follow "More"

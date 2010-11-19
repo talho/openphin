@@ -438,21 +438,20 @@ class Alert < ActiveRecord::Base
     alert_attempts.find_all_by_call_down_response(responder_categories).map(&:user).uniq
   end
 
-  def preview_recipients(params)
-    temp_recipients = []
-    ActiveRecord::Base.transaction do
-      temp_alert = Alert.new(params[:alert])
-      temp_alert.save!
-      temp_recipients = temp_alert.recipients({:force => true})
-
-        # A bit of a hack
-        # Calling .size on this forces Rails to actually fetch .recipients now.
-        # Otherwise it will wait until after the rollback and always be zero
-      temp_recipients_size = temp_recipients.size
-
-      raise ActiveRecord::Rollback
+  def preview_recipients_size(params)
+    temp_recipients_size = nil
+    if ( params["action"] == "update" || params["action"] == "cancel")
+      original_alert = Alert.find_by_id(params[:id])
+      temp_recipients_size = original_alert.targets.first.users.size
+    else
+      ActiveRecord::Base.transaction do
+        temp_alert = Alert.new(params[:alert])
+        temp_alert.save!
+        temp_recipients_size = temp_alert.recipients({:force => true}).size
+        raise ActiveRecord::Rollback
+      end
     end
-    return temp_recipients
+    return temp_recipients_size
   end
 
 

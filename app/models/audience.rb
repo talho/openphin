@@ -72,7 +72,7 @@ class Audience < ActiveRecord::Base
     self.update_attribute('recipients_expires', Time.now + 1.minute)
     ActiveRecord::Base.transaction do
       clear_recipients ? true : raise(ActiveRecord::Rollback)
-      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) 
+      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) unless self.users.empty?
       (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
       (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
       (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
@@ -154,16 +154,6 @@ class Audience < ActiveRecord::Base
   end
 
   def update_users_recipients
-    # force the author to receive the alert
-    Target.find_by_audience_id(self.id).item.author_id
-    db = ActiveRecord::Base.connection();
-    sql = "INSERT INTO audiences_recipients (audience_id, user_id) VALUES (#{id}, #{Target.find_by_audience_id(self.id).item.author_id}) "
-    begin
-      db.execute sql
-    rescue
-      return false
-    end
-
     db = ActiveRecord::Base.connection();
     sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
     sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
@@ -181,7 +171,7 @@ class Audience < ActiveRecord::Base
     jj = elements[:audience_jurisdictions].map(&:id)    # ids of every specified jurisdiction
     rr = elements[:audience_roles].map(&:id)            # ids of every specified role
     uu = RoleMembership.find_all_by_user_id(elements[:audience_users]).map(&:jurisdiction).map(&:id)           # ids of every jurisdiction that every manually-specified user has a role in
-#    debugger
+
     if ( jj.size > 0 && rr.size > 0 )
       juris_ids = RoleMembership.find_all_by_role_id_and_jurisdiction_id(rr,jj).map(&:jurisdiction_id) + uu   # an array of every role <-> juris association that matches plus userjuris
     else
@@ -195,7 +185,7 @@ class Audience < ActiveRecord::Base
     alert = Target.find_by_audience_id(self.id).item
     unless (jurs == [alert.from_jurisdiction] || jurs.blank? )           # only sending within the originating jurisdiction? no need for coordinators to be notified
       unless ( jurs.include?(alert.from_jurisdiction)) then    # otherwise we need to include the originating jurisdiction for the calculations to work properly.
-        jurs << alert.from_jurisdiction
+        jurs << alert.from_jurisdiction if alert.from_jurisdiction
       end
       # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
       jurs = if alert.from_jurisdiction.nil?

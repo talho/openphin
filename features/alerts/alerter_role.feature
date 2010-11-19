@@ -1,5 +1,10 @@
 Feature: Users with an alerter role
 
+  Background:
+    Given the following entities exist:
+      | Jurisdiction | Dallas County  |
+      | Role         | Health Officer |
+     
   Scenario: Sending an alert without an alerter role
     Given the following users exist:
       | John Smith      | john.smith@example.com     | Health Officer  | Dallas County  |
@@ -7,4 +12,5 @@ Feature: Users with an alerter role
     When I go to the new alert page
     Then I should see "You do not have permission to send an alert."
     
-  Scenario: Sending an alert with multiple alerter roles
+#  Scenario: Sending an alert with multiple alerter roles
+#    TODO: write this.
