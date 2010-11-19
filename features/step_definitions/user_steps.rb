@@ -10,13 +10,14 @@ end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
-  juris_obj = Jurisdiction.find_by_name(jurisdiction.to_s)
+  jur_obj = Jurisdiction.find_by_name(jurisdiction.to_s)
   role_obj = Role.find_by_name(role.to_s)
-  user = User.find_by_email(email) ||
-    Factory(:user, :first_name => first_name, :last_name => last_name, :email => email )
-  user.role_memberships.clear    # remove the default Public in Texas rolemembership
-  Factory(:role_membership, :user=>user, :jurisdiction=>juris_obj, :role=>role_obj)
+  unless (user = User.find_by_email(email))
+    user = Factory(:user, :first_name => first_name, :last_name => last_name, :email => email, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )
+  end
+  Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
 end
+
 Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
   u=User.find_by_email(email)
   u.update_password(password,password)

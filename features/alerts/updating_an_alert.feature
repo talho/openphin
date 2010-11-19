@@ -9,13 +9,12 @@ Feature: Updating an alert
       | Jurisdiction | Dallas County                               |
       | Role         | Health Officer                              |
       | Role         | Health Alert and Communications Coordinator |
+    And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
       | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith  | jane.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
       | Brian Simms | brian.simms@example.com | Health Officer                              | Dallas County |
-      | Ed McGuyver | ed.mcguyver@example.com | Health Officer                              | Dallas County |
-      
-    And the role "Health Alert and Communications Coordinator" is an alerter
+      | Ed McGuyver | ed.mcguyver@example.com | Health Officer                              | Dallas County | 
     And delayed jobs are processed
 
   Scenario: Updating an alert
@@ -23,14 +22,14 @@ Feature: Updating an alert
     And I am allowed to send alerts
     And I've sent an alert with:
       | Jurisdictions | Dallas County       |
-      | Roles         | Health Officer      |
-      | Title         | Flying Monkey Disease                |
-      | Message       | For more details, keep on reading... |
-      | Severity      | Moderate            |
-      | Status        | Actual              |
-      | Acknowledge   | None                |
+      | Roles                | Health Officer      |
+      | Title                 | Flying Monkey Disease                |
+      | Message               | For more details, keep on reading... |
+      | Severity              | Moderate            |
+      | Status                | Actual              |
+      | Acknowledge           | None                |
       | Communication methods | E-mail      |
-      | Delivery Time | 72 hours            |
+      | Delivery Time         | 72 hours            |
 
     When I am on the alert log
     Then I should see an alert titled "Flying Monkey Disease"
@@ -69,7 +68,7 @@ Feature: Updating an alert
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | Flying monkey disease contagion is more widespread |
-    And "Fix the above step to include Alert ID and Reference ID" should be implemented
+    #And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
   Scenario: Updating an alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"

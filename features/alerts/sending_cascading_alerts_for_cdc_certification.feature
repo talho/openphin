@@ -5,17 +5,20 @@ Feature: Sending CDC test cases
 
   Background:
     Given the following entities exists:
-      | Jurisdiction | Louisiana                                |
-      | Jurisdiction | Cameron Parish                           |
-      | Jurisdiction | Calcasieu Parish                         |
-      | Jurisdiction | Beauregard Parish                        |
-      | Jurisdiction | Federal                                  |
-      | Jurisdiction | Texas                                    |
-      | Role         | Chief Epidemiologist                     |
-      | Role         | Bioterrorism Coordinator                 |
-      | Role         | Emergency Management Coordinator         |
+      | Jurisdiction | Louisiana                                   |
+      | Jurisdiction | Cameron Parish                              |
+      | Jurisdiction | Calcasieu Parish                            |
+      | Jurisdiction | Beauregard Parish                           |
+      | Jurisdiction | Federal                                     |
+      | Jurisdiction | Texas                                       |
+      | Role         | Chief Epidemiologist                        |
+      | Role         | Bioterrorism Coordinator                    |
+      | Role         | Emergency Management Coordinator            |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Dungeon Master                              |
+
     And the following FIPS codes exist:
-      | Louisiana          | 30    |
+      | Louisiana         | 30    |
       | Cameron Parish    | 30001 |
       | Calcasieu Parish  | 30002 |
       | Beauregard Parish | 30003 |
@@ -34,8 +37,8 @@ Feature: Sending CDC test cases
       | Beauregard Parish |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas     |
-      | Mark Jensen     | mjensen@cdc.gov          | Public          | Louisiana |
-      | TLP7 CDC        | tlp7@cdc.gov             | Public          | Louisiana |
+      | Mark Jensen     | mjensen@cdc.gov          | Dungeon Master  | Louisiana |
+      | TLP7 CDC        | tlp7@cdc.gov             | Dungeon Master  | Louisiana |
     And delayed jobs are processed
     And the role "Health Alert and Communications Coordinator" is an alerter
 

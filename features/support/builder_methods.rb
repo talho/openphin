@@ -51,7 +51,7 @@ module FeatureHelpers
             raise "You picked an invalid delivery time"
         end
       end
-      
+
       attributes.each do |key, value|
         if key =~ /alert_response_/
           response = key.split("_").last
@@ -63,6 +63,13 @@ module FeatureHelpers
 
       audience = Audience.new(:jurisdictions => jurisdictions, :roles => roles, :users => users)
       attributes["audiences"] = [audience]
+      if attributes.has_key?('groups')
+        gps = []
+        attributes.delete('groups').each do |g|
+           gps << ( Audience.find( Group.find_by_name(g).id ) )
+        end
+        attributes['audiences'] += gps
+      end
       Factory(:alert, attributes)
     end
   end
