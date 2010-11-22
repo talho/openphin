@@ -6,10 +6,72 @@ class Admin::InvitationsController < ApplicationController
 
   def index
     @invitations = Invitation.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render :json => {:success => true, :invitations => @invitations.map{|i| {:name => i.name, :id => i.id}}}.as_json
+      end
+    end
   end
   
   def show
     @invitation = Invitation.find(params[:id])
+    
+    respond_to do |format|
+      format.html
+      format.json do
+        options = {}
+        params[:reverse] = (params[:dir] && params[:dir] == 'ASC') ? "1" : nil
+        if params[:sort]
+          case params[:sort]
+            when 'email'
+              options[:order] = 'invitees.email'
+            when 'name'
+              options[:order] = 'invitees.name'
+            else
+              params.delete('sort')
+              options[:order] = 'invitees.name'
+          end
+          if params[:dir] && params[:dir] == 'ASC'
+            options[:order] += ' ASC'
+          else
+            options[:order] += ' DESC'
+          end
+        end
+        
+        options[:per_page] = params[:per_page] = params[:limit] || 20
+        options[:page] = params[:page] = (params[:start].to_i / params[:limit].to_i) + 1
+        invitees = case params[:sort]
+          when 'completion_status'
+            inviteeStatus
+          when 'pending_requests'
+            inviteeStatusByPendingRequests
+          when 'organization_membership'
+            @invitation.default_organization ? inviteeStatusByOrganization : @invitation.invitees.paginate(options)
+          when 'profile_updated'
+            inviteeStatusByProfileUpdate
+          else
+            @invitation.invitees.paginate(options)
+        end.map{|i| {
+          :name => i.name,
+          :email => i.email,
+          :completion_status => i.completion_status,
+          :organization_membership => 'N/A',
+          :profile_updated => i.user && i.user.updated_at > @invitation.created_at ? "Yes" : "No"
+        }}
+
+        render :json => {
+          :success => true,
+          :invitation => {
+            :name => @invitation.name,
+            :id => @invitation.id
+          },
+          :total => @invitation.invitees.size,
+          :invitees => invitees
+        }.as_json
+      end
+    end
   end
   
   def new
