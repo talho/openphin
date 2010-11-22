@@ -10,12 +10,22 @@ end
 
 Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
   first_name, last_name = name.split
-  jur_obj = Jurisdiction.find_by_name(jurisdiction.to_s)
-  role_obj = Role.find_by_name(role.to_s)
+  jur_obj = Jurisdiction.find_or_create_by_name(jurisdiction.to_s)
+  role_obj = Role.find_or_create_by_name(role.to_s)
   unless (user = User.find_by_email(email))
+    #create the user.  this results in a Public role in the requested jurisdiction, and a role request for 'role'
     user = Factory(:user, :first_name => first_name, :last_name => last_name, :email => email, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )
   end
-  Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
+  unless role == "Public"
+    unless RoleMembership.already_exists?(user, role_obj, jur_obj)
+      #force creation of the role membership.  this leaves the request dangling.
+      Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
+      if (r_request = user.role_requests.find_by_role_id_and_jurisdiction_id(role_obj.id,jur_obj.id))
+        #remove the request.
+        r_request.delete
+      end
+    end
+  end
 end
 
 Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
@@ -115,7 +125,8 @@ end
 
 Given "a user in a non-public role" do
   role = Factory(:role, :approval_required => true)
-  Factory(:user, :role_memberships => [Factory(:role_membership, :role => role)])
+  # the role membership factory also builds a user
+  Factory(:role_membership, :role => role ).user
 end
 
 Given /^"([^\"]*)" is not public in "([^\"]*)"$/ do |user_email, jurisdiction_name|

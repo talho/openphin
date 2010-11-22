@@ -383,7 +383,7 @@ private
         rr = role_requests
         rr.each do |request|
           role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-          RoleRequest.find_by_id(request.id).destroy
+          request.destroy if request.role == public_role
         end unless role_requests.nil? || role_memberships.public_roles.count != 0
         role_memberships.each do |request|
           role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)

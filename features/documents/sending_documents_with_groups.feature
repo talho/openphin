@@ -5,20 +5,23 @@ Feature: Sending documents using groups
 
 Background:
   Given the following entities exist:
-  	| Approval Role | Epidemiologist |
-  	| Approval Role | Health Officer |
-  	| Approval Role | BT Coordinator |
+    | Approval Role | Epidemiologist |
+    | Approval Role | Health Officer |
+    | Approval Role | BT Coordinator |
     | Jurisdiction  | Potter County  |
-	And the following users exist:
-		| John Smith | john.smith@example.com | Admin          | Tarrant County |
-		| Jane Smith | jane.smith@example.com | Health Officer | Tarrant County |
-		| Bob Smith  | bob.smith@example.com  | Epidemiologist | Texas          |
-	And "john.smith@example.com" is not public in "Texas"
-  And "jane.smith@example.com" is not public in "Texas"
+    | Jurisdiction  | Tarrant County |
+    | Jurisdiction  | Texas          |
+    | Role          | Terrorist      |
+  And Texas is the parent jurisdiction of:
+    | Potter County | Tarrant County |
+  And the following users exist:
+    | John Smith | john.smith@example.com | BT Coordinator | Tarrant County |
+    | Jane Smith | jane.smith@example.com | Health Officer | Tarrant County |
+    | Bob Smith  | bob.smith@example.com  | Epidemiologist | Texas          |
   And the following groups for "john.smith@example.com" exist:
-	  | G1 | Tarrant County | Health Officer |  | Personal     |                |
-	  | G2 | Texas          | Epidemiologist |  | Global       |                |
-	  | G3 | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |
+    | G1 | Tarrant County | Health Officer |  | Personal     |                |
+    | G2 | Texas          | Epidemiologist |  | Global       |                |
+    | G3 | Tarrant County | Terrorist      |  | Jurisdiction | Tarrant County |
 
   Scenario: Owner should see all his groups
     Given I am logged in as "john.smith@example.com"

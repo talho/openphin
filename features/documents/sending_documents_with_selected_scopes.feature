@@ -16,6 +16,7 @@ Feature: Sending documents with selected scopes
       | Approval Role | Immunization Director |
       | Approval Role | Epidemiologist        |
       | Approval Role | WMD Coordinator       |
+      | Role          | Health Alert and Communications Coordinator |
     And Federal is the parent jurisdiction of:
       | Texas |
     And Texas is the parent jurisdiction of:
@@ -29,14 +30,6 @@ Feature: Sending documents with selected scopes
       | Jason Phipps    | jason.phipps@example.com    | WMD Coordinator                             | Potter County  |
       | Dan Morrison    | dan.morrison@example.com    | Health Alert and Communications Coordinator | Ottawa County  |
       | Brian Ryckbost  | brian.ryckbost@example.com  | Health Alert and Communications Coordinator | Tarrant County |
-    And "john.smith@example.com" is not public in "Texas"
-    And "brian.simms@example.com" is not public in "Texas"
-    And "ed.mcguyver@example.com" is not public in "Texas"
-    And "ethan.waldo@example.com" is not public in "Texas"
-    And "brandon.keepers@example.com" is not public in "Texas"
-    And "jason.phipps@example.com" is not public in "Texas"
-    And "dan.morrison@example.com" is not public in "Texas"
-    And "brian.ryckbost@example.com" is not public in "Texas"
 
     And the role "Health Alert and Communications Coordinator" is an alerter
     When delayed jobs are processed
