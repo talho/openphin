@@ -13,6 +13,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
           {name: 'fax', mapping: 'user.fax'},
           {name: 'phone', mapping: 'user.phone'},
           {name: 'email', mapping: 'user.email'},
+          {name: 'id', mapping: 'user.id'},
           {name: 'state'}
         ]
       }),
@@ -21,7 +22,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
 
     var editor = new Ext.ux.grid.RowEditor({
       saveText: 'Update',
-      listeners: {scope: this, 'afterEdit': this.handle_row_modification, 'cancelEdit': this.set_savebutton_state}
+      listeners: {scope: this, 'afterEdit': this.handle_row_modification}
     });
 
     this.grid = new Ext.grid.GridPanel({
@@ -40,7 +41,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         handler: function(){
           if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
             editor.stopEditing();
-            this.store.insert(0, new this.store.recordType({state: "new"}));
+            this.store.insert(0, new this.store.recordType({id: -1, state: "new"}));
             this.grid.getView().refresh();
             this.grid.getSelectionModel().selectRow(0);
             editor.startEditing(0);
@@ -55,10 +56,10 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         handler: function(){
           jQuery.each(this.grid.getSelectionModel().getSelections(), function(i,e){ e.set("state", "deleted"); });
           this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
-          this.set_savebutton_state();
         }
       }],
       columns: [
+        {header: 'Id', dataIndex: 'id', sortable: true},
         {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
         {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
         {header: 'Display Name', dataIndex: 'display_name', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
@@ -98,13 +99,8 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   is_dirty: function(){ return this.store.getModifiedRecords().length > 0; },
 
   handle_row_modification: function(re, changes, record, row_index){
-    record.set("state", "changed");
-    this.set_savebutton_state();
-  },
-  set_savebutton_state: function(){
-    var b = this.getPanel().find("name", "save_button")[0];
-    if (b == null) return;
-    (this.store.getCount() == 0) ?  b.disable() : b.enable();
+    var state = record.get("state");
+    if (state != "new" && state != "deleted") record.set("state", "changed");
   }
 });
 
