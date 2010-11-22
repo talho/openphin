@@ -4,11 +4,11 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
     this.store = new Ext.data.GroupingStore({
       reader: new Ext.data.JsonReader({
-        fields: ['lastname', 'firstname', 'displayname', 'jurisdiction', 'mobile', 'fax', 'phone', 'email'],
+        fields: ['last_name', 'first_name', 'display_name', 'jurisdiction', 'mobile', 'fax', 'phone', 'email'],
         root: 'users_attributes'
       }),
       data: {'users_attributes': []},
-      sortInfo: {field: 'lastname', direction: 'ASC'}
+      sortInfo: {field: 'last_name', direction: 'ASC'}
     });
 
     var editor = new Ext.ux.grid.RowEditor({
@@ -92,9 +92,9 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         submitValue: false
       }],
       columns: [
-        {header: 'Last Name', dataIndex: 'lastname', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
-        {header: 'First Name', dataIndex: 'firstname', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
-        {header: 'Display Name', dataIndex: 'displayname', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
+        {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
+        {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
+        {header: 'Display Name', dataIndex: 'display_name', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
         {header: 'Jurisdiction', dataIndex: 'jurisdiction', sortable: true, editor: {xtype:'textfield',id:'n_jurisdiction',allowBlank:true}},
         {header: 'Mobile', dataIndex: 'mobile', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
@@ -127,7 +127,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         ]}
       ],
       save_url: "admin_user_batch/create_from_json.json",
-      save_method: "POST"
+      save_method: "PUT"
     };
 
     Talho.BatchUsers.superclass.constructor.call(this, config);
@@ -137,7 +137,9 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   load_data: function(json){ },
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
-    this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
+    var options = {};
+    options.params = {"batch[users]": Ext.encode(users)};
+    this.getPanel().getForm().submit(options);
   },
 
   set_savebutton_state: function(){

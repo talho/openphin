@@ -6,9 +6,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     this.form_config = {
       load_url: config.url + "/edit.json",
       form_width: 440,
-      item_list: [this.devices_control],
-      save_url: config.url + ".json",
-      save_method: "PUT"
+      item_list: [this.devices_control]
     };
 
     Talho.EditDevices.superclass.constructor.call(this, config);

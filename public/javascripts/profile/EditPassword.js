@@ -9,7 +9,6 @@ Talho.EditPassword = Ext.extend(Talho.ProfileBase, {
       ]}
     ];
     this.form_config = {
-      load_url: null,
       form_width: 400,
       item_list: item_list,
       save_url: config.url + ".json",

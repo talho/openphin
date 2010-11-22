@@ -17,18 +17,12 @@ class Admin::UserBatchController < ApplicationController
 
     user_list = ActiveSupport::JSON.decode(params[:batch][:users])
     user_list.each { |u|
-      #next unless User.find_by_email(u["email"]).nil?
       if User.find_by_email(u["email"]).nil?
-        puts "#{u["email"]} #{u["lastname"]} #{u["firstname"]}"
-        new_user = User.new(:email => u["email"])
+        j = Jurisdiction.find_by_name(u["jurisdiction"])
+        j = Jurisdiction.find_by_name(params[:batch][:default_jurisdiction]) if j.blank?
+        u[:role_requests_attributes] = {0 => {:jurisdiction => j, :role => Role.public}}
+        new_user = User.new(u)
         new_user.update_password("Password1", "Password1")
-        new_user.update_attributes(:first_name => u["firstname"], :last_name => u["lastname"], :display_name => u["displayname"])
-
-        if u["jurisdiction"] != "Texas"
-          j = Jurisdiction.find_by_name(u["jurisdiction"])
-          j = params[:batch][:default_jurisdiction] if j.blank?
-          new_user.role_memberships.create(:jurisdiction => j, :role => Role.public) if !j.blank?
-        end
 
         if new_user.valid?
           new_user.save
@@ -37,8 +31,6 @@ class Admin::UserBatchController < ApplicationController
           success = false
           error_messages.concat(new_user.errors.full_messages)
         end
-      else
-        puts "#{u["email"]} already exists"
       end
     }
 
@@ -77,7 +69,7 @@ class Admin::UserBatchController < ApplicationController
   end
 
   def import
-    fields = [ :lastname, :firstname, :displayname, :jurisdiction, :mobile, :fax, :phone, :email ]
+    fields = [ :last_name, :first_name, :display_name, :jurisdiction, :mobile, :fax, :phone, :email ]
 
     csvfile = params[:users][:csvfile]
     users = []
@@ -91,7 +83,6 @@ class Admin::UserBatchController < ApplicationController
     rescue FasterCSV::MalformedCSVError => detail
       error = "CSV file was malformed or corrupted.<br/><br/>Error:<br/>#{detail.message}"
     rescue => e
-      puts "#{e.class}: #{e.message}\n  #{e.backtrace[0..5].join("\n  ")}"
       error = "This does not appear to be a CSV file."
     end
 

@@ -59,7 +59,6 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
       ]}
     ];
     this.form_config = {
-      load_url: null,
       form_width: 850,
       item_list: item_list,
       save_url: "admin_users.json",
