@@ -6,10 +6,12 @@ Feature: Application layout should have communications, portal & application too
   So that I can navigate the OpenPHIN portal with ease
 
   Background:
-    Given the following users exist:
+    Given the following entities exist:
+      | Jurisdiction   | Texas           |
+      | Jurisdiction   | Dallas County   |
+      | Role           | Health Official |
+    And the following users exist:
       | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
-    And the following entities exist:
-      | Jurisdiction   | Texas |
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com    |
     And an article exists
