@@ -73,7 +73,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
   },
   ajax_save_success_cb: function(response, opts) {
-    this.load_json();
+    if (this.form_config.load_url != null) this.load_json();
     this.show_message(Ext.decode(response.responseText));
   },
   ajax_save_err_cb: function(response, opts) {

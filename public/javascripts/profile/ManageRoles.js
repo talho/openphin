@@ -6,9 +6,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     this.form_config = {
       load_url: config.url + "/edit.json",
       form_width: 440,
-      item_list: [this.roles_control],
-      save_url: config.url + ".json",
-      save_method: "PUT"
+      item_list: [this.roles_control]
     };
 
     Talho.ManageRoles.superclass.constructor.call(this, config);

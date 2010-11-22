@@ -81,9 +81,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.form_config = {
       load_url: "admin_edit_users/admin_users",
       form_width: 900,
-      item_list: [ this.grid ],
-      save_url: "admin_edit_users/update.json",
-      save_method: "PUT"
+      item_list: [ this.grid ]
     };
 
     Talho.EditUsers.superclass.constructor.call(this, config);
@@ -95,7 +93,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     this.store.clearFilter();
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
-    this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
+    this.save_json("admin_edit_users/update.json", {"batch[users]": Ext.encode(users)});
   },
   is_dirty: function(){ return this.store.getModifiedRecords().length > 0; },
 

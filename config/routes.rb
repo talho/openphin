@@ -72,8 +72,7 @@ ActionController::Routing::Routes.draw do |map|
   #map.approve_admin_organization "/admin_organizations/:id/approve", :controller => "admin/organizations", :action => "approve"
   #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
   map.resources :admin_users, :controller => "admin/users"
-  map.resources :admin_user_batch, :controller => "admin/user_batch", :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get]}
-  map.connect "/admin_user_batch/create_from_json.:format", :controller => "admin/user_batch", :action => "create_from_json"
+  map.resources :admin_user_batch, :controller => "admin/user_batch", :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
   map.resources :admin_edit_users, :controller => "admin/edit_users", :collection => {:admin_users => [:get]}
 
   map.resources :users do |user|

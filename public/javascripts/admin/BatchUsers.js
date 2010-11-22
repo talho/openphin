@@ -125,9 +125,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
             store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
           this.grid
         ]}
-      ],
-      save_url: "admin_user_batch/create_from_json.json",
-      save_method: "POST"
+      ]
     };
 
     Talho.BatchUsers.superclass.constructor.call(this, config);
@@ -137,7 +135,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   load_data: function(json){ },
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
-    this.save_json(this.form_config.save_url, {"batch[users]": Ext.encode(users)});
+    this.save_json("admin_user_batch/create_from_json.json", {"batch[users]": Ext.encode(users)});
   },
 
   set_savebutton_state: function(){
