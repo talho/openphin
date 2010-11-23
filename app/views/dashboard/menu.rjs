@@ -64,7 +64,7 @@ if current_user.has_non_public_role?
                           {name: 'Edit Users', tab: {id: 'edit_user', title:'Edit Users', url:'#{ new_users_delete_path }', initializer: 'Talho.EditUsers'}}]},
                       {name: 'Manage Invitations', items:[
                           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
-                          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }'}}]}]},"
+                          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]}]},"
     end
 
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
