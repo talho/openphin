@@ -22,7 +22,7 @@ Feature: Approving users for roles
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Roles > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
-      | john@example.com | Health Officer | Dallas |
+      | john@example.com | Health Officer | Dallas | Deny | Approve |
     When I click approve_link "Approve" within "tr.pending_role_requests"
     Then "john@example.com" should have 1 email
     And "john@example.com" should receive the email:
@@ -34,8 +34,11 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    Then I should see "john@example.com" is awaiting approval for "Health Officer"
-    When I approve "john@example.com" in the role "Health Officer"
+    And I go to the ext dashboard page
+    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    Then I should see the following within ".pending_role_requests":
+      | john@example.com | Health Officer | Dallas | Deny | Approve |
+    When I click approve_link "Approve" within "tr.pending_role_requests"
     Then "john@example.com" should have 1 email
     And "john@example.com" should receive the email:
       | subject       | Role assigned    |
@@ -46,18 +49,23 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin approving role requests outside their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@potter.gov"
-    Then I should not see that "john@example.com" is awaiting approval
+    And I go to the ext dashboard page
+    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    Then I should not see "john@example.com"
 
   Scenario: Jurisdiction Admin denying role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    Then I should see "john@example.com" is awaiting approval for "Health Officer"
-    When I deny "john@example.com" in the role "Health Officer"
+    And I go to the ext dashboard page
+    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    Then I should see the following within ".pending_role_requests":
+      | john@example.com | Health Officer | Dallas | Deny | Approve |
+    When I click deny_link "Deny" within "tr.pending_role_requests"
     Then "john@example.com" should receive the email:
       | subject       | Request denied    |
       | body contains | You have been denied for the assignment of Health Officer in Dallas County |
     And I should see "John Smith has been denied for the role Health Officer in Dallas County"
-    And I should not see that "john@example.com" is awaiting approval
+    And I should not see "john@example.com"
     And "john@example.com" should not have the "Health Officer" role in "Dallas County"
 
   Scenario: Malicious admin cannot remove role requests the user is not an admin of
@@ -67,12 +75,11 @@ Feature: Approving users for roles
     When I maliciously post a delete for a role request for "john@example.com"
     Then I should see "This resource does not exist or is not available."
     And I should see "Assign Roles"
-    And I log in as "admin@dallas.gov"
-    And I go to the pending requests page
-    Then I should see "john@example.com"
-    And I should see "Health Officer"
-    And I should see "Approve"
-
+    When I log in as "admin@dallas.gov"
+    And I go to the ext dashboard page
+    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    Then I should see the following within ".pending_role_requests":
+      | john@example.com | Health Officer | Dallas | Deny | Approve |
 
   Scenario: Malicious admin cannot approve role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
