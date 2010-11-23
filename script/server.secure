@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/../config/boot'
+require 'webrick'
+#require 'commands/server'
+require 'webrick/https'
+
+ENV["HTTPS"] = "true"
+require RAILS_ROOT + "/config/environment"
+require 'webrick_server'
+
+OPTIONS = {
+  :port           => 3000,
+  :ip             => "127.0.0.1",
+  :environment    => (ENV['RAILS_ENV'] || "development").dup,
+  :server_root    => File.expand_path(RAILS_ROOT + "/public/"),
+  :ssl_verify     => OpenSSL::SSL::VERIFY_NONE,
+  :ssl_pkey       => OpenSSL::PKey::RSA.new(File.open("features/fixtures/ssl-cert/dev.cert.key").read),
+  :ssl_cert       => OpenSSL::X509::Certificate.new(File.open("features/fixtures/ssl-cert/dev.cert.crt").read),
+  :ssl_cert_name  => [ ["C","US"], ["O","localhost"], ["CN", "WWW"] ],
+}
+
+ENV["RAILS_ENV"] = OPTIONS[:environment]
+puts "=> Switching to self-signed certificate"
+OPTIONS['working_directory'] = File.expand_path(RAILS_ROOT)
+
+class SSLDispatchServlet < DispatchServlet
+  def self.dispatch(options)
+    Socket.do_not_reverse_lookup = true
+    server = WEBrick::HTTPServer.new(
+      :Port              => options[:port].to_i,
+      :ServerType        => options[:server_type],
+      :BindAddress       => options[:ip],
+      :SSLEnable         => true,              
+      :SSLVerifyClient   => options[:ssl_verify],
+      :SSLCertificate    => options[:ssl_cert],
+      :SSLPrivateKey     => options[:ssl_pkey],
+      :SSLCertName       => options[:ssl_cert_name]
+    )
+    server.mount('/', DispatchServlet, options)
+    trap("INT") { server.shutdown }
+    server.start
+  end
+end
+
+puts "=> Rails application started on http://#{OPTIONS[:ip]}:#{OPTIONS[:port]}"
+puts "=> Ctrl-c to shutdown"
+
+SSLDispatchServlet.dispatch(OPTIONS)
+
+# script adapted from Zayne Knight and Ali Qureshi
