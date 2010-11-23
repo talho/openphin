@@ -43,7 +43,7 @@
 
       <p>
         <% unless alert.acknowledged_by_user? %>
-          <% if alert.expired? %>
+          <% if alert.expired? && alert.acknowledge?  %>
             Acknowledgement is no longer allowed for this Alert.
           <% else %>
             <% if alert.original_alert.nil? && alert.has_alert_response_messages? %>
