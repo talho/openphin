@@ -75,25 +75,30 @@ end
 pdf.move_down 10
 pdf.text "# of Recipients", :style => :bold
 pdf.text @alert.alert_attempts.count.to_s
-pdf.move_down 20
-pdf.text "Contacted Users Acknowledgement Status", :size => 14, :style => :bold, :align => :center
-pdf.move_down 10
-attempts = @alert.alert_attempts.map do |attempt|
-  [
-    attempt.user.display_name,
-    attempt.user.email,
-    attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name,
-    attempt.call_down_response.nil? ? "" : attempt.call_down_response 
-  ]
-end
 
-unless attempts.empty?
-  pdf.table attempts, :border_style => :grid,
-    :row_colors => ["FFFFFF","DDDDDD"],
-    :headers => ["Name", "Email Address", "Acknowledged with Device", "Alert Response"]
-else
+if @alert.acknowledge?
+  pdf.move_down 20
+  pdf.text "Contacted Users Acknowledgement Status", :size => 14, :style => :bold, :align => :center
   pdf.move_down 10
-  pdf.text "No Acknowledgees Found"
+  attempts = @alert.alert_attempts.map do |attempt|
+    [
+      attempt.user.display_name,
+      attempt.user.email,
+      attempt.acknowledged_alert_device_type.nil? ? "" : attempt.acknowledged_alert_device_type.device.constantize.display_name,
+      unless attempt.call_down_response.nil?
+        attempt.call_down_response > 0 ? @alert.call_down_messages[attempt.call_down_response.to_s] : "Acknowledged"
+      end
+    ]
+  end
+
+  unless attempts.empty?
+    pdf.table attempts, :border_style => :grid,
+      :row_colors => ["FFFFFF","DDDDDD"],
+      :headers => ["Name", "Email Address", "Acknowledged with Device", "Alert Response"]
+  else
+    pdf.move_down 10
+    pdf.text "No Acknowledgees Found"
+  end
 end
 
 
