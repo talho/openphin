@@ -1,0 +1,63 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            89:30:4f:f4:b1:a8:73:84
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=US, ST=Texas, O=TALHO, OU=Developers, CN=localhost/emailAddress=developers@talho.org
+        Validity
+            Not Before: Nov 23 15:23:03 2010 GMT
+            Not After : Nov 23 15:23:03 2011 GMT
+        Subject: C=US, ST=Texas, L=Austin, O=TALHO, OU=Developers, CN=localhost/emailAddress=developers@talho.org
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:ef:c0:bd:d9:f1:78:ff:50:89:6a:3e:4f:18:02:
+                    5e:03:02:c7:fd:c7:0d:61:ee:45:57:a6:77:5c:67:
+                    79:12:52:d7:da:ce:ad:81:42:ca:3a:4a:d6:34:d2:
+                    51:8d:08:db:9a:d3:26:48:0e:d3:f1:f1:6e:64:e9:
+                    cb:dc:5b:11:b9:9c:c2:1e:2c:3f:11:5e:59:4d:72:
+                    e8:dd:28:e0:8b:60:8f:96:8c:37:ff:87:be:1f:4a:
+                    c5:01:99:58:22:ad:d3:66:d5:7f:04:b0:dd:48:43:
+                    28:3f:e2:d9:e7:e8:e4:af:6e:cb:f9:fc:89:64:60:
+                    af:72:9c:d0:b0:89:81:7a:71
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                95:16:D6:75:66:AD:7D:E5:D5:06:71:22:EC:D1:94:12:E5:1A:66:57
+            X509v3 Authority Key Identifier: 
+                keyid:AF:E8:B4:8F:BE:E3:A8:6B:C7:5F:D7:B5:37:30:0F:BB:DB:E5:5B:50
+
+    Signature Algorithm: sha1WithRSAEncryption
+        3b:ae:b1:2e:43:3c:6f:9f:30:c2:32:59:8d:85:52:4c:8f:15:
+        b3:f0:85:a3:e5:c9:d8:22:97:c3:75:31:fa:8f:4e:7b:e7:b3:
+        a9:be:4b:32:91:31:13:e1:fd:fc:8d:8e:97:79:3a:5b:a6:7b:
+        fe:b7:f8:7d:58:79:61:9f:d7:c1:c0:e5:5a:01:16:ae:3c:70:
+        9b:2b:75:be:b7:77:b0:90:97:79:7d:53:fa:a0:78:cf:e8:bf:
+        4c:01:a5:c0:43:88:3b:04:35:ba:a3:51:ed:05:3b:9e:f2:51:
+        fe:3a:e6:4e:09:16:49:7c:80:ea:b8:d7:48:92:b8:0f:d9:5d:
+        58:b5
+-----BEGIN CERTIFICATE-----
+MIIDATCCAmqgAwIBAgIJAIkwT/SxqHOEMA0GCSqGSIb3DQEBBQUAMHsxCzAJBgNV
+BAYTAlVTMQ4wDAYDVQQIEwVUZXhhczEOMAwGA1UEChMFVEFMSE8xEzARBgNVBAsT
+CkRldmVsb3BlcnMxEjAQBgNVBAMTCWxvY2FsaG9zdDEjMCEGCSqGSIb3DQEJARYU
+ZGV2ZWxvcGVyc0B0YWxoby5vcmcwHhcNMTAxMTIzMTUyMzAzWhcNMTExMTIzMTUy
+MzAzWjCBjDELMAkGA1UEBhMCVVMxDjAMBgNVBAgTBVRleGFzMQ8wDQYDVQQHEwZB
+dXN0aW4xDjAMBgNVBAoTBVRBTEhPMRMwEQYDVQQLEwpEZXZlbG9wZXJzMRIwEAYD
+VQQDEwlsb2NhbGhvc3QxIzAhBgkqhkiG9w0BCQEWFGRldmVsb3BlcnNAdGFsaG8u
+b3JnMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDvwL3Z8Xj/UIlqPk8YAl4D
+Asf9xw1h7kVXpndcZ3kSUtfazq2BQso6StY00lGNCNua0yZIDtPx8W5k6cvcWxG5
+nMIeLD8RXllNcujdKOCLYI+WjDf/h74fSsUBmVgirdNm1X8EsN1IQyg/4tnn6OSv
+bsv5/IlkYK9ynNCwiYF6cQIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIB
+DQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUlRbW
+dWatfeXVBnEi7NGUEuUaZlcwHwYDVR0jBBgwFoAUr+i0j77jqGvHX9e1NzAPu9vl
+W1AwDQYJKoZIhvcNAQEFBQADgYEAO66xLkM8b58wwjJZjYVSTI8Vs/CFo+XJ2CKX
+w3Ux+o9Oe+ezqb5LMpExE+H9/I2Ol3k6W6Z7/rf4fVh5YZ/XwcDlWgEWrjxwmyt1
+vrd3sJCXeX1T+qB4z+i/TAGlwEOIOwQ1uqNR7QU7nvJR/jrmTgkWSXyA6rjXSJK4
+D9ldWLU=
+-----END CERTIFICATE-----
