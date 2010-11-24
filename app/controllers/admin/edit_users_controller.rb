@@ -3,9 +3,14 @@ class Admin::EditUsersController < ApplicationController
   app_toolbar "admin"
 
   def admin_users
+    start = (params[:start] || 0).to_i
+    limit = (params[:limit] || 50).to_i
+    sort = params[:sort]
+    asc = (params[:dir] != "DESC")
     jurs = current_user.jurisdictions.admin
-    users = jurs.collect { |j| j.users }.flatten.uniq
-    render :json => users
+    users = jurs.collect { |j| j.users }.flatten.uniq.sort { |a,b| (asc ? 1 : -1) * (a[sort] <=> b[sort]) }
+    page = (start / limit).floor + 1
+    render :json => {:total => users.length, :rows => users.paginate(:per_page => limit, :page => page) }
   end
 
   def update
