@@ -1,4 +1,5 @@
 class Admin::InvitationsController < ApplicationController
+  
   require 'fastercsv'
   before_filter :admin_required
   before_filter :force_json_as_html, :only => :import
@@ -58,7 +59,19 @@ class Admin::InvitationsController < ApplicationController
           :email => i.email,
           :completion_status => i.completion_status,
           :organization_membership => 'N/A',
-          :profile_updated => i.user && i.user.updated_at > @invitation.created_at ? "Yes" : "No"
+          :profile_updated => i.user && i.user.updated_at > @invitation.created_at ? "Yes" : "No",
+          :pending_requests => i.user ? i.user.role_requests.unapproved.map do |rr|
+             if current_user.is_admin_for?(rr.jurisdiction)
+               {
+                 :role => rr.role.name,
+                 :jurisdiction => rr.jurisdiction.name,
+                 :approve_url => "#{url_for(:controller => 'admin/role_requests', :action => 'approve', :id => rr.id, :only_path => true)}.json",
+                 :deny_url => "#{url_for(:controller => 'admin/role_requests', :action => 'deny', :id => rr.id, :only_path => true)}.json"
+               }
+             else
+               nil
+             end
+            end.compact : []
         }}
 
         render :json => {

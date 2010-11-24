@@ -69,26 +69,42 @@ class Admin::RoleRequestsController < ApplicationController
     if role_req
       if current_user.is_admin_for?(role_req.jurisdiction)
         role_req.approve!(current_user)
-        link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
-        flash[:notice]="#{link} has been approved for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
+        respond_to do |format|
+          format.html do
+            link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
+            flash[:notice]="#{link} has been approved for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
 
-        # Set referer for redirect when testing
-        request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
-        if request.xhr?
-          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
-        else
-          if params[:postback].blank?
-            redirect_to :back
-          else
-            redirect_to params[:postback]
+            # Set referer for redirect when testing
+            request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
+            if request.xhr?
+              redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+            else
+              if params[:postback].blank?
+                redirect_to :back
+              else
+                redirect_to params[:postback]
+              end
+            end
+          end
+
+          format.json do
+            render :json => {:success => true}.as_json
           end
         end
       else
-        flash[:error]="This resource does not exist or is not available."
-        if request.xhr?
-          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
-        else
-          redirect_to root_path
+        respond_to do |format|
+          format.html do
+            flash[:error]="This resource does not exist or is not available."
+            if request.xhr?
+              redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+            else
+              redirect_to root_path
+            end
+          end
+
+          format.json do
+            render :json => {:success => false}.as_json
+          end
         end
       end
     end
@@ -100,27 +116,43 @@ class Admin::RoleRequestsController < ApplicationController
       if current_user.is_admin_for?(role_req.jurisdiction)
         role_req.deny!
         ApprovalMailer.deliver_denial(role_req, current_user)
-        link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
-        flash[:notice]="#{link} has been denied for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
+        respond_to do |format|
+          format.html do
+            link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
+            flash[:notice]="#{link} has been denied for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
 
-        # Set referer for redirect when testing
-        request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
+            # Set referer for redirect when testing
+            request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
 
-        if request.xhr?
-          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
-        else
-          if params[:postback].blank?
-            redirect_to :back
-          else
-            redirect_to params[:postback]
+            if request.xhr?
+              redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+            else
+              if params[:postback].blank?
+                redirect_to :back
+              else
+                redirect_to params[:postback]
+              end
+            end
+          end
+
+          format.json do
+            render :json => {:success => true}.as_json
           end
         end
       else
-        flash[:error]="This resource does not exist or is not available."
-        if request.xhr?
-          redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
-        else
-          redirect_to root_path
+        respond_to do |format|
+          format.html do
+            flash[:error]="This resource does not exist or is not available."
+            if request.xhr?
+              redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
+            else
+              redirect_to root_path
+            end
+          end
+
+          format.json do
+            render :json => {:success => false}.as_json
+          end
         end
       end
     end

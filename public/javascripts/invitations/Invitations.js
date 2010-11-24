@@ -40,10 +40,11 @@ Talho.Invitations = Ext.extend(function(){}, {
                     method: 'GET'
                   }),
                   root: 'invitees',
-                  fields: ['name','email','completion_status','organization_membership','profile_updated']
+                  fields: ['name','email','completion_status','organization_membership','profile_updated','pending_requests']
                 });
                 invitationGrid.reconfigure(newstore,invitationGrid.colModel);
                 invitationToolbar.bind(newstore);
+                invitationStore = newstore;
                 content.show();
               }
             }
@@ -66,7 +67,7 @@ Talho.Invitations = Ext.extend(function(){}, {
 
     var invitationStore = new Ext.data.ArrayStore({
       autoDestroy: true,
-      fields: ['name','email','completion_status','organization_membership'],
+      fields: ['name','email','completion_status','organization_membership','profile_updated','pending_requests'],
       totalProperty: 'totalCount',
       remoteSort: true
     });
@@ -82,7 +83,7 @@ Talho.Invitations = Ext.extend(function(){}, {
       });
 
     var invitationGrid = new Ext.grid.GridPanel({
-      width: 600,
+      width: 700,
       height: 500,
       store: invitationStore,
       viewConfig: {
@@ -110,6 +111,104 @@ Talho.Invitations = Ext.extend(function(){}, {
         },{
           header: 'Profile Updated',
           dataIndex: 'profile_updated'
+        },{
+          header: 'Pending Role Requests',
+          dataIndex: 'pending_requests',
+          renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+            return value.length > 0 ? 'Click here to see<br/>pending role requests' : ''
+          },
+          listeners: {
+            click: function(column, grid, rowIndex, e){
+              if(grid.store.getAt(rowIndex).data['pending_requests'].length == 0) return;
+              var i = [{
+                html: 'Role'
+              },{
+                html: 'Jurisdiction'
+              },{
+                html: 'Approve'
+              },{
+                html: 'Deny'
+              }];
+
+              Ext.each(grid.store.getAt(rowIndex).data['pending_requests'], function() {
+                i.push({html: this['role']});
+                i.push({html: this['jurisdiction']});
+                var c = {
+                  xtype: 'button',
+                  text: 'Approve',
+                  scope: this,
+                  handler: function(b, e) {
+                    Ext.Ajax.request({
+                      url: this['approve_url'],
+                      scope: b,
+                      success: function() {
+                        el4 = this.nextSibling();
+                        el2 = this.previousSibling();
+                        el1 = el2.previousSibling();
+                        owner = this.ownerCt;
+                        el4.destroy();
+                        el2.destroy();
+                        el1.destroy();
+                        this.destroy();
+                        owner.doLayout();
+                      },
+                      failure: function() {
+                        Ext.Msg.alert('Error', 'Error when attempting to approve role request.')
+                      }
+                    });
+                  }
+                };
+                i.push(c);
+                c = {
+                  xtype: 'button',
+                  text: 'Deny',
+                  scope: this,
+                  handler: function(b, e) {
+                    Ext.Ajax.request({
+                      url: this['deny_url'],
+                      scope: b,
+                      success: function() {
+                        el3 = this.previousSibling();
+                        el2 = el3.previousSibling();
+                        el1 = el2.previousSibling();
+                        owner = this.ownerCt;
+                        this.destroy();
+                        el3.destroy();
+                        el2.destroy();
+                        el1.destroy();
+                        owner.doLayout();
+                      },
+                      failure: function() {
+                        Ext.Msg.alert('Error', 'Error when attempting to deny role request.')
+                      }
+                    });
+                  }
+                };
+                i.push(c);
+              });
+
+              win = new Ext.Window({
+                layout: 'table',
+                layoutConfig: {
+                  columns: 4
+                },
+                width: 300,
+                height: 200,
+                closeAction: 'close',
+                constrain: true,
+                modal: true,
+                title: 'Pending Role Requests',
+                items: i,
+                listeners: {
+                  scope: this,
+                  close: function(e) {
+                    invitationStore.reload();
+                  }
+                }
+              });
+              win.show(invitationGrid);
+            }
+          }
         }]
       }),
       bbar: invitationToolbar
