@@ -40,7 +40,7 @@ Talho.Invitations = Ext.extend(function(){}, {
                     method: 'GET'
                   }),
                   root: 'invitees',
-                  fields: ['name','email','completion_status','organization_membership','profile_updated','pending_requests']
+                  fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests']
                 });
                 invitationGrid.reconfigure(newstore,invitationGrid.colModel);
                 invitationToolbar.bind(newstore);
@@ -67,7 +67,7 @@ Talho.Invitations = Ext.extend(function(){}, {
 
     var invitationStore = new Ext.data.ArrayStore({
       autoDestroy: true,
-      fields: ['name','email','completion_status','organization_membership','profile_updated','pending_requests'],
+      fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests'],
       totalProperty: 'totalCount',
       remoteSort: true
     });
@@ -75,17 +75,18 @@ Talho.Invitations = Ext.extend(function(){}, {
     var currentInvitationId = 0;
 
     var invitationToolbar = new Ext.PagingToolbar({
-        pageSize: 20,
-        store: invitationStore,
-        displayInfo: true,
-        displayMsg: 'Displaying invitees {0} - {1} of {2}',
-        emptyMsg: 'No invitees to display'
-      });
+      pageSize: 20,
+      store: invitationStore,
+      displayInfo: true,
+      displayMsg: 'Displaying invitees {0} - {1} of {2}',
+      emptyMsg: 'No invitees to display'
+    });
 
     var invitationGrid = new Ext.grid.GridPanel({
       width: 700,
       height: 500,
       store: invitationStore,
+      id: 'invitationGrid',
       viewConfig: {
         autoFill: true
       },
@@ -104,16 +105,16 @@ Talho.Invitations = Ext.extend(function(){}, {
           dataIndex: 'email'
         },{
           header: 'Completion Status',
-          dataIndex: 'completion_status'
+          dataIndex: 'completionStatus'
         },{
           header: 'Organization Membership',
-          dataIndex: 'organization_membership'
+          dataIndex: 'organizationMembership'
         },{
           header: 'Profile Updated',
-          dataIndex: 'profile_updated'
+          dataIndex: 'profileUpdated'
         },{
           header: 'Pending Role Requests',
-          dataIndex: 'pending_requests',
+          dataIndex: 'pendingRequests',
           renderer: function(value, metaData, record, rowIndex, colIndex, store) {
             return value.length > 0 ? 'Click here to see<br/>pending role requests' : ''
           },
@@ -130,6 +131,22 @@ Talho.Invitations = Ext.extend(function(){}, {
                 html: 'Deny'
               }];
 
+              updateGridOnTableRemoval = function(storeItems, responseResults) {
+                Ext.each(storeItems,function(storeItem, storeIndex, storeAllItems) {
+                  if(storeItem.data['email'] == responseResults['email']) {
+                    if(storeItem.data['pending_requests'].length > 0) {
+                      Ext.each(storeItem.data['pending_requests'], function(item, index, allItems) {
+                        if(item['jurisdiction'] == responseResults['jurisdiction'] && item['role'] == responseResults['role']) {
+                          storeItem.data['pending_requests'].remove(item);
+                          return false;
+                        }
+                      });
+                    }
+                  }
+                });
+                Ext.getCmp('invitationGrid').getView().refresh();
+              };
+
               Ext.each(grid.store.getAt(rowIndex).data['pending_requests'], function() {
                 i.push({html: this['role']});
                 i.push({html: this['jurisdiction']});
@@ -141,16 +158,31 @@ Talho.Invitations = Ext.extend(function(){}, {
                     Ext.Ajax.request({
                       url: this['approve_url'],
                       scope: b,
-                      success: function() {
-                        el4 = this.nextSibling();
-                        el2 = this.previousSibling();
-                        el1 = el2.previousSibling();
+                      success: function(response, opts) {
                         owner = this.ownerCt;
-                        el4.destroy();
-                        el2.destroy();
-                        el1.destroy();
-                        this.destroy();
-                        owner.doLayout();
+
+                        td3 = this.el.parent();
+                        td4 = this.nextSibling().el.parent();
+                        td2 = this.previousSibling().el.parent();
+                        td1 = this.previousSibling().previousSibling().el.parent();
+                        tr1 = td3.parent();
+
+                        ind = owner.items.indexOf(this);
+                        var i = ind - (ind % 4) - 1;
+                        for(var x = i + 4; x > i; x--) {
+                          owner.items.items[x].destroy();
+                        }
+
+                        td4.remove();
+                        td3.remove();
+                        td2.remove();
+                        td1.remove();
+                        tr1.remove();
+
+                        owner.layout.currentRow -= 1;
+                        storeItems = Ext.getCmp('invitationGrid').store.data.items;
+                        responseResults = Ext.decode(response.responseText);
+                        updateGridOnTableRemoval(storeItems, responseResults);
                       },
                       failure: function() {
                         Ext.Msg.alert('Error', 'Error when attempting to approve role request.')
@@ -167,16 +199,31 @@ Talho.Invitations = Ext.extend(function(){}, {
                     Ext.Ajax.request({
                       url: this['deny_url'],
                       scope: b,
-                      success: function() {
-                        el3 = this.previousSibling();
-                        el2 = el3.previousSibling();
-                        el1 = el2.previousSibling();
+                      success: function(response, opts) {
                         owner = this.ownerCt;
-                        this.destroy();
-                        el3.destroy();
-                        el2.destroy();
-                        el1.destroy();
-                        owner.doLayout();
+
+                        td4 = this.el.parent();
+                        td3 = this.previousSibling().el.parent();
+                        td2 = this.previousSibling().previousSibling().el.parent();
+                        td1 = this.previousSibling().previousSibling().previousSibling().el.parent();
+                        tr1 = td4.parent();
+
+                        ind = owner.items.indexOf(this);
+                        var i = ind - (ind % 4) - 1;
+                        for(var x = i + 4; x > i; x--) {
+                          owner.items.items[x].destroy();
+                        }
+
+                        td4.remove();
+                        td3.remove();
+                        td2.remove();
+                        td1.remove();
+                        tr1.remove();
+
+                        owner.layout.currentRow -= 1;
+                        storeItems = Ext.getCmp('invitationGrid').store.data.items;
+                        responseResults = Ext.decode(response.responseText);
+                        updateGridOnTableRemoval(storeItems, responseResults);
                       },
                       failure: function() {
                         Ext.Msg.alert('Error', 'Error when attempting to deny role request.')
@@ -198,13 +245,7 @@ Talho.Invitations = Ext.extend(function(){}, {
                 constrain: true,
                 modal: true,
                 title: 'Pending Role Requests',
-                items: i,
-                listeners: {
-                  scope: this,
-                  close: function(e) {
-                    invitationStore.reload();
-                  }
-                }
+                items: i
               });
               win.show(invitationGrid);
             }
