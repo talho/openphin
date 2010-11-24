@@ -3,8 +3,13 @@ Ext.ns("Talho");
 Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
     this.store = new Ext.data.GroupingStore({
-      autoLoad: false, autoSave: false,
+      autoLoad: {params: {start: 0, limit: 10}}, autoSave: false,
+      restful: true,
+      pruneModifiedRecords: true,
+      url: "admin_edit_users/admin_users",
       reader: new Ext.data.JsonReader({
+        totalProperty: 'total',
+        root: 'rows',
         fields: [
           {name: 'last_name', mapping: 'user.last_name'},
           {name: 'first_name', mapping: 'user.first_name'},
@@ -17,7 +22,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
           {name: 'state'}
         ]
       }),
-      sortInfo: {field: 'last_name', direction: 'ASC'}
+      remoteSort: true, sortInfo: {field: 'last_name', direction: 'ASC'}
     });
 
     var editor = new Ext.ux.grid.RowEditor({
@@ -34,30 +39,32 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       stripeRows: true,
       title: 'Edit users',
       view: new Ext.grid.GroupingView({markDirty: false, forceFit: true}),
-      tbar: [{
-        iconCls: 'icon-user-add',
-        text: 'Add User',
-        scope: this,
-        handler: function(){
-          if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
-            editor.stopEditing();
-            this.store.insert(0, new this.store.recordType({id: -1, state: "new"}));
-            this.grid.getView().refresh();
-            this.grid.getSelectionModel().selectRow(0);
-            editor.startEditing(0);
+      tbar: new Ext.PagingToolbar({
+        store: this.store, displayInfo: true, pageSize: 10,
+        items: [{
+          iconCls: 'icon-user-add',
+          text: 'Add User',
+          scope: this,
+          handler: function(){
+            if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
+              editor.stopEditing();
+              this.store.insert(0, new this.store.recordType({id: -1, state: "new"}));
+              this.grid.getView().refresh();
+              this.grid.getSelectionModel().selectRow(0);
+              editor.startEditing(0);
+            }
+          }
+        },{
+          ref: '../../../removeBtn',
+          iconCls: 'icon-user-delete',
+          text: 'Remove User',
+          scope: this,
+          handler: function(){
+            jQuery.each(this.grid.getSelectionModel().getSelections(), function(i,e){ e.set("state", "deleted"); });
+            this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
           }
         }
-      },{
-        ref: '../removeBtn',
-        iconCls: 'icon-user-delete',
-        text: 'Remove User',
-        disabled: true,
-        scope: this,
-        handler: function(){
-          jQuery.each(this.grid.getSelectionModel().getSelections(), function(i,e){ e.set("state", "deleted"); });
-          this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
-        }
-      }],
+      ]}),
       columns: [
         {header: 'Id', dataIndex: 'id', sortable: true},
         {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
@@ -75,12 +82,8 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       ]
     });
 
-    this.grid.getSelectionModel().on('selectionchange', function(sm){
-      this.grid.removeBtn.setDisabled(sm.getCount() < 1);
-    });
-
     this.form_config = {
-      load_url: "admin_edit_users/admin_users",
+      //load_url: "admin_edit_users/admin_users",
       form_width: 900,
       item_list: [ this.grid ]
     };
@@ -89,7 +92,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   },
 
   // AJAX load and save methods
-  load_data: function(json){ this.store.loadData(json); },
+  //load_data: function(json){ this.store.loadData(json); },
   save_data: function(){
     this.store.clearFilter();
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });

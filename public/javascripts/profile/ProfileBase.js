@@ -28,7 +28,10 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
       trackResetOnLoad: true,
-      listeners: {scope: this, 'actioncomplete': this.form_submit_success, 'actionfailed': this.form_submit_failure},
+      listeners: {scope: this,
+        'beforeaction': function(){ panel.loadMask.show() },
+        'actioncomplete': this.form_submit_success,
+        'actionfailed': this.form_submit_failure},
       items: panel_items
     });
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
@@ -69,23 +72,27 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Save via AJAX callbacks
   save_json: function(url, json){
+    this.getPanel().loadMask.show();
     Ext.Ajax.request({ url: url, method: "PUT", params: json,
       success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
   },
   ajax_save_success_cb: function(response, opts) {
-    if (this.form_config.load_url != null) this.load_json();
+    (this.form_config.load_url != null) ? this.load_json() : this.getPanel().loadMask.hide();
     this.show_message(Ext.decode(response.responseText));
   },
   ajax_save_err_cb: function(response, opts) {
+    this.getPanel().loadMask.hide();
     this.show_ajax_error(response);
   },
 
   // Save form callbacks
   form_submit_success: function(form, action){
+    (this.form_config.load_url != null) ? this.load_json() : this.getPanel().loadMask.hide();
     var json = action.result;
     this.show_message(json);
   },
   form_submit_failure: function(form, action){
+    this.getPanel().loadMask.hide();
     Ext.Msg.maxWidth = 1000;
     if (action.failureType === Ext.form.Action.CONNECT_FAILURE)
       this.show_ajax_error(action.response);

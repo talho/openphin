@@ -131,10 +131,11 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     };
 
     Talho.BatchUsers.superclass.constructor.call(this, config);
+
+    this.getPanel().addListener('actioncomplete', function(p){ this.store.removeAll(); }, this);
   },
 
   // AJAX load and save methods
-  load_data: function(json){ },
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     var options = {};
