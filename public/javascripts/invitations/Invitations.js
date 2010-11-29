@@ -40,7 +40,26 @@ Talho.Invitations = Ext.extend(function(){}, {
                     method: 'GET'
                   }),
                   root: 'invitees',
-                  fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests']
+                  fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests'],
+                  listeners: {
+                    load: function() {
+                      bodyContainer = content.getComponent('invitationBodyContainer');
+                      if(bodyContainer.items.items.length == 0) {
+                        subjectContainer = content.getComponent('invitationSubjectContainer');
+                        subject = subjectContainer.getComponent('invitationSubject');
+                        subject.update("<b>Subject:</b>&nbsp;" + newstore.reader.jsonData["invitation"]["subject"]);
+
+                        organizationContainer = content.getComponent('invitationOrganizationContainer');
+                        organization = organizationContainer.getComponent('invitationOrganization');
+                        org = newstore.reader.jsonData["invitation"]["organization"];
+                        if(org) organization.update("<b>Default Organization:</b>&nbsp;" + org);
+                        
+                        bodyContainer.add(new Ext.form.HtmlEditor({width: 550, height: 300, html: newstore.reader.jsonData["invitation"]["body"], enableSourceEdit: false}));
+                        centerPanel.doLayout();
+                      }
+                      return true;
+                    }
+                  }
                 });
                 invitationGrid.reconfigure(newstore,invitationGrid.colModel);
                 invitationToolbar.bind(newstore);
@@ -276,6 +295,47 @@ Talho.Invitations = Ext.extend(function(){}, {
           align: 'middle',
           pack: 'center'
         },
+        itemId: 'invitationSubjectContainer',
+        items: [{
+          xtype: 'box',
+          itemId: 'invitationSubject'
+        }]
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
+        itemId: 'invitationOrganizationContainer',
+        items: [{
+          xtype: 'box',
+          itemId: 'invitationOrganization'
+        }]
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
+        itemId: 'invitationBodyContainer'
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
         items: [invitationGrid]
       }]
     });
@@ -297,6 +357,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     var centerPanel = new Ext.Panel({
       layout: 'fit',
       region: 'center',
+      autoScroll: true,
       items: panel_items
     })
 

@@ -4,6 +4,17 @@ class OrganizationsController < ApplicationController
   protect_from_forgery :except => [:confirmation]
   app_toolbar "han"
 
+  def index
+    @organizations = Organization.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render :json => {:success => true, :organizations => @organizations.map{|org| {:id => org.id, :name => org.name}}}.as_json
+      end
+    end
+  end
+
   def new
     @organization = Organization.new(:contact => User.new)
   end

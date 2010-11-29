@@ -81,7 +81,10 @@ class Admin::InvitationsController < ApplicationController
           :success => true,
           :invitation => {
             :name => @invitation.name,
-            :id => @invitation.id
+            :id => @invitation.id,
+            :subject => h(@invitation.subject),
+            :body => @invitation.body,
+            :organization => @invitation.default_organization ? @invitation.default_organization.name : nil
           },                                                                               
           :total => @invitation.invitees.size,
           :invitees => invitees

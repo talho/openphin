@@ -49,26 +49,27 @@ Feature: Invitation System
     And "jane.smith@example.com" clicks the confirmation link in the email
     And I am logged in as "joe.smith@example.com"
     And I navigate to the invitations page
-    And I follow "View"
+    And I select the "DSHS" grid cell
 
     Then I should see "Invitation: DSHS"
-    And I should see "Jane Smith" within "#invitee1"
-    And I should see "jane.smith@example.com" within "#invitee1"
-    And I should explictly see "Yes" within "#invitee1 td.status"
+    And I should see "Jane Smith"
+    And I should see "jane.smith@example.com"
+    And I should see "Yes"
 
   Scenario: Create and Send an invite to an existing user
-    When I follow "Admin"
-    And I show dropdown menus
-    And I follow "Invite Users"
-    And I should see "Invite New People"
-    And I fill in "Name" with "DSHS"
-    And I fill in "Subject" with "Please Join DSHS"
-    And I fill in "Body" with "Please click the link below to join DSHS."
-    And I select "DSHS" from "Default Organization"
-    And I fill in "Invitee Name" with "Joe Smith"
-    And I fill in "Invitee Email" with "joe.smith@example.com"
-    When I press "Submit"
-    Then I should see "Invitation was successfully sent."
+    And I fill in "Invitation Name:" with "DSHS"
+    And I fill in "Email Subject:" with "Please Join DSHS"
+    And I fill in the htmleditor "Email Body:" with "Please click the link below to join DSHS."
+    And I select "DSHS" from ext combo "Default Organization:"
+    And I press "Next"
+    And I press "Add User"
+    And I fill in "invitee_name" with "Joe Smith"
+    And I fill in "invitee_email" with "joe.smith@example.com"
+    And I sleep 1
+    When I press "Update"
+    And I sleep 1
+    And I press "Send Invitation"
+    Then I should see "Invitation was successfully sent"
     And "joe.smith@example.com" is an invitee of "DSHS"
     When delayed jobs are processed
     Then the following Emails should be broadcasted:
@@ -76,17 +77,14 @@ Feature: Invitation System
       | joe.smith@example.com | You have been made a member of the organization DSHS. |
 
   Scenario: Create and Send an invite via a CSV file with invitees
-    When I follow "Admin"
-    And I show dropdown menus
-    And I follow "Invite Users"
-    And I should see "Invite New People"
-    And I fill in "Name" with "DSHS"
-    And I fill in "Subject" with "Please Join DSHS"
-    And I fill in "Body" with "Please click the link below to join DSHS."
-    And I select "DSHS" from "Default Organization"
-    When I attach the file "spec/fixtures/invitees.csv" to "CSV File"
-    When I press "Submit"
-    Then I should see "Invitation was successfully sent."
+    And I fill in "Invitation Name:" with "DSHS"
+    And I fill in "Email Subject:" with "Please Join DSHS"
+    And I fill in the htmleditor "Email Body:" with "Please click the link below to join DSHS."
+    And I select "DSHS" from ext combo "Default Organization:"
+    And I press "Next"
+    When I attach the file "spec/fixtures/invitees.csv" with button "Import Users"
+    When I press "Send Invitation"
+    Then I should see "Invitation was successfully sent"
     And "bob@example.com" is an invitee of "DSHS"
     And "john@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
@@ -112,20 +110,19 @@ Feature: Invitation System
     And invitation "TORCH" has the following invitees:
       | Joe | joe.smith@example.com |
       
-    When I follow "Admin"
-    And I show dropdown menus
-    And I follow "View Invitations"
-    Then I should see "Existing Invitations"
-    And I should see "DSHS"
-    And I should see "TORCH"
+    When I navigate to the invitations page
+    Then I should see "DSHS" in grid row 1  
+    And I should see "TORCH" in grid row 2
     
-    When I follow "DSHS"
-    Then I should see "DSHS Invitation"
-    And I should see "Please Join DSHS" within "#subject"
-    And I should see "Please click the link below to join DSHS" within "#body"
-    And I should see "DSHS" within "#default_organization"
-    And I should see "Jane <jane.smith@example.com>" within "#invitees"
-    And I should see "Bob <bob.smith@example.com>" within "#invitees"
+    When I select the "DSHS" grid cell
+    Then I should see "Invitation: DSHS"
+    And I should see "Subject: Please Join DSHS" with html stripped
+    And I should see "Please click the link below to join DSHS" in an htmleditor
+    And I should see "Default Organization: DSHS" with html stripped
+    And I should see "Jane" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "Bob" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
   
   Scenario: Viewing invitation completion status by email
     Given an Invitation "DSHS" exists with:
