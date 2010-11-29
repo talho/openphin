@@ -80,4 +80,8 @@ module ApplicationHelper
     result = strip_tags(rss_item) while result.length != strip_tags(rss_item).length
     result
   end
+
+  def javascript_include_domino(sources)
+    expand_javascript_sources(sources).map{|e| javascript_path(e) }.join(' ')
+  end
 end

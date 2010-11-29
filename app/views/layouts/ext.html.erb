@@ -25,9 +25,9 @@
     dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/xtheme-gray.css) )) /javascripts/ext/adapter/jquery/ext-jquery-adapter-debug.js > /javascripts/ext/ext-all-debug.js');
     dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/han.css) $css(/stylesheets/redesign/admin.css) $css(/stylesheets/redesign/forum.css) $css(/stylesheets/redesign/documents.css)');
     dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/Application.js /javascripts/dashboard/ScriptManager.js /javascripts/dashboard/index.js /dashboard/menu.js');
-    dominoes.rule('phinPlugins', '<%=  (defined?($expansion_list)) ? $expansion_list.dup.map {|p| javascript_path(p.to_s) }.join(' ') : '' %>');
+    dominoes.rule('phinPlugins', '<%=  javascript_include_domino( defined?($expansion_list) ? $expansion_list.dup : [] ) %>');
     dominoes({
-        chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad >| initView',
+        chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad > phinPlugins >| initView',
         preExtMessage: function(){
             $('#loading-message').html('Loading Ext...');
         },
