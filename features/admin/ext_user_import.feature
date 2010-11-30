@@ -29,7 +29,7 @@ Feature: Online importing users from a uploaded CSV file
     Then I should see "Ector"
     When I press "Save"
     Then I should not see any errors
-    And I should see "Users created"
+    And I should see "The user batch has been successfully submitted"
 
 # add the following 3 scenarios to fulfill story# 4991718
 # this is not 100% for all of the columns but if it can track for several, it should for all
@@ -60,32 +60,33 @@ Feature: Online importing users from a uploaded CSV file
     When delayed jobs are processed
     # add this step to the existing scenario to fulfill story 5144920 
     Then "john@example.com" should receive the email:
-      | subject       | TxPhin: Welecome & Password setting |
-      | body contains | you have been signed up             |
-      | body contains | set your password                   |
-    And "john@example.com" should receive the email:
-      | subject       | TxPhin:  Role assigned             |
-      | body contains | You have been assigned the role of |
+      | subject       | TxPhin: Welcome & Password setting                |
+      | body contains | You have been signed up by an admin               |
+      | body contains | Please follow the link below to set your password |
+    #And "john@example.com" should receive the email:
+    #  | subject       | TxPhin:  Role assigned             |
+    #  | body contains | You have been assigned the role of |
 
     # add this step to the existing scenario to fulfill story 5144920 
     When delayed jobs are processed
     # add this step to the existing scenario to fulfill story 5144920 
     Then "bob@example.com" should receive the email:
-      | subject       | TxPhin: Welecome & Password setting |
-      | body contains | you have been signed up             |
-      | body contains | set your password                   |
-    And "bob@example.com" should receive the email:
-      | subject       | TxPhin:  Role assigned             |
-      | body contains | You have been assigned the role of |
+      | subject       | TxPhin: Welcome & Password setting                |
+      | body contains | You have been signed up by an admin               |
+      | body contains | Please follow the link below to set your password |
+    #And "bob@example.com" should receive the email:
+    #  | subject       | TxPhin:  Role assigned             |
+    #  | body contains | You have been assigned the role of |
 
     # add this step to the existing scenario to fulfill story 5144993 
-    When I go to the sign in page
+    When I sign out
+    And I go to the sign in page
     And I sign in as "bob@example.com/Password1"
     Then I should not see "Your account is unconfirmed"
     And I should see "Bad email or password"
     And I should be signed out
 
-    When I follow the password set link sent to "bob@example.com"
+    When I follow the password reset link sent to "bob@example.com"
     And I update my password with "Newpassword1/Newpassword1"
     Then I should be signed in
 

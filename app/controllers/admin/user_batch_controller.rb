@@ -58,6 +58,7 @@ class Admin::UserBatchController < ApplicationController
           params[:user_batch][:file_data] = csv_str
         end
       end
+      params[:user_batch].delete(:jurisdiction) if params[:user_batch][:jurisdiction].blank?
       @user_batch = UserBatch.new params[:user_batch]
       @user_batch.email = current_user.email
       success = false

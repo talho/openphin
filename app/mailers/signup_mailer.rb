@@ -10,6 +10,17 @@ class SignupMailer < ActionMailer::Base
       body :confirm_link => user_confirmation_url(user, user.token)
     end
   end
+
+  def signup_notification(user)
+    if user.email.blank?
+      logger.info "Tried to send an email signup notification for a user with no email address"
+    else
+      recipients user.email
+      from DO_NOT_REPLY
+      subject "TxPhin: Welcome & Password setting"
+      body :set_pw_link => edit_user_password_url(user, :token => user.token, :escape => false)
+    end
+  end
   
   def org_confirmation(organization)
     if organization.nil? || organization.contact_email.blank?

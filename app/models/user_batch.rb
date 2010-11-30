@@ -24,10 +24,10 @@ class UserBatch
   end
   
   def valid
-    unless (submitter = User.find_by_email(@email))
+    unless User.find_by_email(@email)
       return "bad-email"
     end
-    unless (jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction))
+    unless @jurisdiction.blank? || submitter.jurisdictions.find_by_name(@jurisdiction)
       return "bad-jurisdiction"
     end
     if binary?
@@ -60,13 +60,7 @@ class UserBatch
       f = File.open path
       f.close
       $stderr = StringIO.new
-      UserImporter.import_users(
-        path,
-        :default_jurisdiction => jurisdiction,
-        :create => true,
-        :update => false,
-        :default_password => "Password1"
-        )
+      UserImporter.import_users(path, :default_jurisdiction => jurisdiction, :create => true, :update => false)
       unless $stderr.string.empty?
         # error created during import, send email to submitter
         AppMailer.deliver_user_batch_error(@email, "during import", $stderr.string) 

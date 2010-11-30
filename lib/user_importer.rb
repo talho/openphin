@@ -24,7 +24,8 @@ class UserImporter
   FIELDS = [ :email, :first_name, :last_name, :display_name, :jurisdiction, :mobile, :fax, :phone ].freeze
 
   def self.import_users(filename, options={})
-    options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true,
+               :default_jurisdiction => nil, :default_password => self.generate_random_password}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
@@ -79,6 +80,8 @@ class UserImporter
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)
         user.save
+        user.confirm_email!
+        SignupMailer.deliver_signup_notification(user)
       end
     end
   end
@@ -98,5 +101,10 @@ class UserImporter
         puts rec.values_at.join(",") if jurisdiction == options[:default_jurisdiction]
       end
     end
+  end
+
+  def self.generate_random_password(length=16)
+    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
+    (1..length).collect { |n| chars[rand(chars.length)] }.to_s
   end
 end

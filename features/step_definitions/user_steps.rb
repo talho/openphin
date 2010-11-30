@@ -180,8 +180,7 @@ When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename,
   UserImporter.import_users(File.join(Rails.root, 'tmp', filename),
                             :default_jurisdiction => Jurisdiction.find_by_name("Texas"),
                             :create => create,
-                            :update => update,
-                            :default_password => "Password1"
+                            :update => update
       )
 end
 
