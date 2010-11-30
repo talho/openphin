@@ -88,7 +88,7 @@ class Admin::RoleRequestsController < ApplicationController
           end
 
           format.json do
-            render :json => {:success => true}.as_json
+            render :json => {:success => true, :jurisdiction => role_req.jurisdiction.name, :role => role_req.role.name, :email => role_req.user.email}.as_json
           end
         end
       else
@@ -103,7 +103,7 @@ class Admin::RoleRequestsController < ApplicationController
           end
 
           format.json do
-            render :json => {:success => false}.as_json
+            render :json => {:success => false, :jurisdiction => role_req.jurisdiction.name, :role => role_req.role.name, :email => role_req.user.email}.as_json
           end
         end
       end
@@ -136,7 +136,7 @@ class Admin::RoleRequestsController < ApplicationController
           end
 
           format.json do
-            render :json => {:success => true}.as_json
+            render :json => {:success => true, :jurisdiction => role_req.jurisdiction.name, :role => role_req.role.name, :email => role_req.user.email}.as_json
           end
         end
       else
@@ -151,7 +151,7 @@ class Admin::RoleRequestsController < ApplicationController
           end
 
           format.json do
-            render :json => {:success => false}.as_json
+            render :json => {:success => false, :jurisdiction => role_req.jurisdiction.name, :role => role_req.role.name, :email => role_req.user.email}.as_json
           end
         end
       end
