@@ -21,11 +21,13 @@
 require 'fastercsv'
 
 class UserImporter
+  FIELDS = [ :email, :first_name, :last_name, :display_name, :jurisdiction, :mobile, :fax, :phone ].freeze
+
   def self.import_users(filename, options={})
     options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
-        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at 
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
         if email.blank?
           $stderr.puts "CSV File did not contain an email address for the user: \n" + 
             rec.values_at.join(",")  + 
@@ -49,11 +51,10 @@ class UserImporter
         user.update_attributes(:first_name => first_name,
                                :last_name => last_name,
                                :display_name => display_name) if user.new_record?
-        if user.valid?
-          user.save
-        else
+        unless user.save && user.valid?
           $stderr.puts "CSV format appears invalid for the user: \n" + 
             rec.values_at.join(",") + 
+            user.errors.full_messages.join(", ") +
             "\n This user was NOT created.\n\n"
           next
         end
@@ -93,7 +94,7 @@ class UserImporter
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       puts records.first.headers.join(",")
       records.each do |rec|
-        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
         puts rec.values_at.join(",") if jurisdiction == options[:default_jurisdiction]
       end
     end

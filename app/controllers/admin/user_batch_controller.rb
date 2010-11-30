@@ -15,11 +15,11 @@ class Admin::UserBatchController < ApplicationController
     success = true
     error_messages = []
 
-    user_list = ActiveSupport::JSON.decode(params[:batch][:users])
+    user_list = ActiveSupport::JSON.decode(params[:user_batch][:users])
     user_list.each { |u|
       if User.find_by_email(u["email"]).nil?
         j = Jurisdiction.find_by_name(u["jurisdiction"])
-        j = Jurisdiction.find_by_name(params[:batch][:default_jurisdiction]) if j.blank?
+        j = Jurisdiction.find_by_name(params[:user_batch][:jurisdiction]) if j.blank?
         u[:role_requests_attributes] = {0 => {:jurisdiction => j, :role => Role.public}}
         new_user = User.new(u)
         new_user.update_password("Password1", "Password1")
@@ -47,8 +47,20 @@ class Admin::UserBatchController < ApplicationController
 
   def create
     if request.post?
+      if request.xhr?
+        user_list = ActiveSupport::JSON.decode(params[:user_batch][:users])
+        params[:user_batch].delete(:users)
+        if !user_list.empty?
+          csv_str = StringIO.new
+          csv_str << user_list[0].keys.join(",") << "\n"
+          user_list.each { |u| csv_str << u.values.join(",") << "\n" }
+          csv_str.rewind
+          params[:user_batch][:file_data] = csv_str
+        end
+      end
       @user_batch = UserBatch.new params[:user_batch]
       @user_batch.email = current_user.email
+      success = false
       case @user_batch.valid
         when "bad-email"
           flash[:error] = "Authentication error, please contact your administrator."
@@ -58,13 +70,24 @@ class Admin::UserBatchController < ApplicationController
           flash[:error] = "Problem with file.  Please check that it is valid CSV."
         else        
           if @user_batch.save
+            success = true
             flash[:notice] = 'The user batch has been successfully submitted.' + 
             '<br /> You will receive an E-Mail if there is a problem processing your request.'
           else
             flash[:error] = 'There was an error. No users were created.'
           end
       end
-      redirect_to new_user_batch_path
+
+      respond_to do |format|
+        format.html { redirect_to new_user_batch_path }
+        format.json {
+          if success
+            render :json => {:flash => flash[:notice], :type => :completed, :success => true}
+          else
+            render :json => {:flash => flash[:error], :type => :error, :errors => nil}
+          end
+        }
+      end
     end
   end
 

@@ -89,6 +89,7 @@ class UserBatch
   end
   
   def binary?
+    return false if self.file_data.is_a?(StringIO)
     # uses unix utility 'file' will not work on windows
     %x(file --mime-type #{self.file_data.path}) !~ /text/
   end
