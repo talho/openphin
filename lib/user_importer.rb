@@ -79,8 +79,8 @@ class UserImporter
         j=Jurisdiction.find_by_name(jurisdiction) unless jurisdiction.blank?
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)
+        user.email_confirmed = true  # instead of user.confirm_email!() so the token is not cleared
         user.save
-        user.confirm_email!
         SignupMailer.deliver_signup_notification(user)
       end
     end
