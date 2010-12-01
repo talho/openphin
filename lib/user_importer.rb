@@ -76,7 +76,7 @@ class UserImporter
           user.devices << fax_device if fax_device.valid?
         end
 
-        j=Jurisdiction.find_by_name(jurisdiction)
+        j=Jurisdiction.find_by_name(jurisdiction) unless jurisdiction.blank?
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)
         user.save

@@ -24,7 +24,7 @@ class UserBatch
   end
   
   def valid
-    unless User.find_by_email(@email)
+    unless (submitter = User.find_by_email(@email))
       return "bad-email"
     end
     unless @jurisdiction.blank? || submitter.jurisdictions.find_by_name(@jurisdiction)
@@ -42,7 +42,7 @@ class UserBatch
         create_directory
         save_file
         pre_verify_csv(path)
-        self.send_later(:create_users,path)
+        self.send_later(:create_users,path)  # queue in delayed_job
         @file_data = nil
         true
       rescue FasterCSV::MalformedCSVError => msg
@@ -56,7 +56,7 @@ class UserBatch
   def create_users(path)
     begin
       submitter = User.find_by_email!(@email)
-      jurisdiction = submitter.jurisdictions.find_by_name!(@jurisdiction)
+      jurisdiction = submitter.jurisdictions.find_by_name!(@jurisdiction) unless @jurisdiction.blank?
       f = File.open path
       f.close
       $stderr = StringIO.new
