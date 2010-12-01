@@ -27,9 +27,10 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
 
     var editor = new Ext.ux.grid.RowEditor({
       saveText: 'Update',
-      listeners: {scope: this, 'afterEdit': this.handle_row_modification}
+      listeners: {scope: this, 'afterEdit': this.handle_row_modification, 'cancelEdit': this.cancel_row_modification}
     });
 
+    this.new_edit_in_progress = false;
     this.grid = new Ext.grid.GridPanel({
       store: this.store,
       margins: '0 5 5 5',
@@ -48,6 +49,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
           handler: function(){
             if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
               editor.stopEditing();
+              this.new_edit_in_progress = true;
               this.store.insert(0, new this.store.recordType({id: -1, state: "new"}));
               this.grid.getView().refresh();
               this.grid.getSelectionModel().selectRow(0);
@@ -104,6 +106,13 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   handle_row_modification: function(re, changes, record, row_index){
     var state = record.get("state");
     if (state != "new" && state != "deleted") record.set("state", "changed");
+  },
+  cancel_row_modification: function(editor){
+    var record = this.grid.getStore().getAt(editor.rowIndex);
+    if (this.new_edit_in_progress)
+      this.grid.getStore().remove(record);
+    this.new_edit_in_progress = false;
+    return false;
   }
 });
 
