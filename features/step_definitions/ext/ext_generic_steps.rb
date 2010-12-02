@@ -28,13 +28,13 @@ When /^(?:|I )fill in this hidden field "([^"]*)" for "([^"]*)"(?: within "([^"]
   end
 end
 
-When /^(?:|I )fill in the htmleditor "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
+When /^(?:|I )fill in the (?:|html)editor "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
   with_scope(selector) do
     fill_in(field, :with => value, :hidden => true, :htmleditor => true)
   end
 end
 
-When /^(?:|I )fill in this htmleditor "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+When /^(?:|I )fill in this (?:|html)editor "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
   with_scope(selector) do
     fill_in(field, :with => value, :hidden => true, :htmleditor => true)
   end

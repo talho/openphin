@@ -250,9 +250,9 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
           {xtype: 'textfield', fieldLabel: 'Invitation Name', name: 'invitation[name]', maxLength: '46', width: 550, allowBlank: false},
           {xtype: 'textfield', fieldLabel: 'Email Subject', name: 'invitation[subject]', maxLength: '46', width: 550, allowBlank: false},
           {xtype: 'htmleditor', fieldLabel: 'Email Body', name: 'invitation[body]', allowBlank: false, width: 550, height: 300, enableSourceEdit: false},
-          {xtype: 'combo', fieldLabel: 'Default Organization', emptyText: 'Select an Organization...', typeAhead: false, triggerAction: 'all', lazyRender: true,
-            name: 'invitation[organization_id]', allowBlank: true, editable: false, mode: 'local', valueField: 'organization_id', displayField: 'name',
-            forceSelection: true, store: new Ext.data.ArrayStore({fields: ['organization_id','name'],data: [[1, 'TALHO'], [2, 'DSHS']]})},
+          {xtype: 'combo', mode: 'local', fieldLabel: 'Default Organization', emptyText: 'Select an Organization...', typeAhead: false, triggerAction: 'all',
+            lazyRender: true, hiddenName: 'invitation[organization_id]', allowBlank: true, editable: false, mode: 'local', valueField: 'id',
+            displayField: 'name', forceSelection: true, store: new Ext.data.JsonStore({autoLoad: true, autoDestroy: true, url: '/organizations.json', root: 'organizations', fields: ['id','name']})},
         ]
       },{
         id: 'card-1',

@@ -12,10 +12,9 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     });
 
     var editor = new Ext.ux.grid.RowEditor({
-      saveText: 'Update'
+      saveText: 'Update',
+      listeners: {scope: this, 'afterEdit': this.set_savebutton_state, 'cancelEdit': this.cancel_row_modification}
     });
-    editor.on('afterEdit', this.set_savebutton_state, this, {delay: 10});
-    editor.on('cancelEdit', this.set_savebutton_state, this, {delay: 10});
 
     this.uploadButton = new Ext.ux.form.FileUploadField({
       name: 'users[csvfile]',
@@ -45,6 +44,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       }
     });
 
+    this.new_edit_in_progress = false;
     this.grid = new Ext.grid.GridPanel({
       store: this.store,
       margins: '0 5 5 5',
@@ -61,6 +61,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         handler: function(){
           if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
             editor.stopEditing();
+            this.new_edit_in_progress = true;
             this.store.insert(0, new this.store.recordType());
             this.grid.getView().refresh();
             this.grid.getSelectionModel().selectRow(0);
@@ -150,6 +151,14 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       this.getPanel().find("name", "save_button")[0].disable();
     else
       this.getPanel().find("name", "save_button")[0].enable();
+  },
+  cancel_row_modification: function(editor){
+    var record = this.grid.getStore().getAt(editor.rowIndex);
+    if (this.new_edit_in_progress)
+      this.grid.getStore().remove(record);
+    this.new_edit_in_progress = false;
+    this.set_savebutton_state();
+    return false;
   }
 });
 
