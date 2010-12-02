@@ -578,17 +578,33 @@ Talho.Documents = Ext.extend(function(){}, {
 
     _downloadFile: function(){
         // create a hidden iframe, open the file
-        if(!this._downloadFrame){
-            this._downloadFrame = Ext.DomHelper.append(this.getPanel().getEl().dom, {tag: 'iframe', style: 'width:0;height:0;'});
-            Ext.EventManager.on(this._downloadFrame, 'load', function(){
-                // in a very strange bit of convenience, the frame load event will only fire here IF there is an error
-                // need to test the convenience on IE.
-                Ext.Msg.alert('Could Not Load File', 'There was an error downloading the file you have requested. Please contact an administrator');
-            }, this);
+        if(Application.rails_environment === 'cucumber')
+        {
+            Ext.Ajax.request({
+                url: this._current_selections[0].get('doc_url'),
+                method: 'GET',
+                success: function(){
+                    alert("Success");
+                },
+                failure: function(){
+                    alert("File Download Failed");
+                }
+            })
         }
+        else
+        {
+            if(!this._downloadFrame){
+                this._downloadFrame = Ext.DomHelper.append(this.getPanel().getEl().dom, {tag: 'iframe', style: 'width:0;height:0;'});
+                Ext.EventManager.on(this._downloadFrame, 'load', function(){
+                    // in a very strange bit of convenience, the frame load event will only fire here IF there is an error
+                    // need to test the convenience on IE.
+                    Ext.Msg.alert('Could Not Load File', 'There was an error downloading the file you have requested. Please contact an administrator');
+                }, this);
+            }
 
-        if(this._current_selections.length > 0){
-            this._downloadFrame.src = this._current_selections[0].get('doc_url');
+            if(this._current_selections.length > 0){
+                this._downloadFrame.src = this._current_selections[0].get('doc_url');
+            }
         }
     },
 

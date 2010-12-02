@@ -1,5 +1,5 @@
 
-When /^I create a folder outline with "([^"]*)"$/ do |outline|
+Given /^I create a folder outline with "([^"]*)"$/ do |outline|
   folders = outline.split
   folders.each do |folder|
     components = folder.split(">")
@@ -46,4 +46,14 @@ When /^I double\-click the "([^\"]*)" folder?$/ do |button|
     var index = cmp.getStore().find('name', '#{button}');
     cmp.fireEvent('dblclick', cmp, index);
   "
+end
+
+Given /^I have uploaded "([^\"]*)" to "([^\"]*)"$/ do |file, destination|
+  file = File.new (file)
+  folder = current_user.folders.find_by_name(destination)
+  share = nil
+  if folder.nil?
+    share = current_user.shares.find_by_name(destination)
+  end
+  Document.create :owner_id => share.nil? ? current_user.id : share.owner.id, :file => file, :folder_id => (folder || share) ? (folder || share).id : nil 
 end

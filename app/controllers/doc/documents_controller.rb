@@ -10,21 +10,21 @@ class Doc::DocumentsController < ApplicationController
 
   def create
     begin
-      params[:document][:folder_id] = nil if params[:document][:folder_id] == 'null' || params[:document][:folder_id] == ''
+      params[:document][:folder_id] = nil if params[:document][:folder_id] == 'null' || params[:document][:folder_id] == '' || params[:document][:folder_id] == '0'
 
-      @parent_folder = Folder.find(params[:document][:folder_id].to_i)
+      @parent_folder = params[:document][:folder_id] ?  Folder.find(params[:document][:folder_id].to_i) : nil
 
       #check to make sure the user can write to this folder here
-      unless @parent_folder.author?(current_user)
+      unless @parent_folder.nil? || @parent_folder.author?(current_user)
         respond_to do |format|
           format.json { render :json => {:success => false, :msg => "Current user does not have permission to create this file."}, :content_type => 'text/html', :status => 401 }
         end
         return
       end
 
-      unless @parent_folder.documents.detect{|x| x.file_file_name == params[:document][:file].original_filename}
-        @document = @parent_folder.owner.documents.build(params[:document])
-        @document.owner_id = @parent_folder.owner.id
+      unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == params[:document][:file].original_filename}
+        @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(params[:document])
+        @document.owner_id = (@parent_folder ? @parent_folder.owner.id : current_user.id)
         if @document.valid?
           @document.save!
           respond_to do |format|
@@ -70,7 +70,7 @@ class Doc::DocumentsController < ApplicationController
         return
       end
 
-      if @document.folder.documents.detect {|x| x != @document && params[:document][:file] && x.file_file_name == params[:document][:file].original_filename }
+      if (@document.folder ? @document.folder.documents : current_user.documents.inbox).detect {|x| x != @document && params[:document][:file] && x.file_file_name == params[:document][:file].original_filename }
         # render that the user needs to select a different file because this already exists
         format.json {render :json => {:msg => 'A file with this name already exists in the folder, please select a file with a unique name.', :success => false }, :content_type => 'text/html', :status => 400 }
       end

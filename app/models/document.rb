@@ -53,7 +53,7 @@ class Document < ActiveRecord::Base
   end
 
   def viewable_by? (user)
-    if user_id == user.id || audience.recipients.with_no_hacc.include?(user)
+    if owner_id == user.id || audience.recipients.with_no_hacc.include?(user)
       true
     else
       false
@@ -65,7 +65,7 @@ class Document < ActiveRecord::Base
   end
 
   def editable_by? (user)
-    if user_id == user.id || authors.include?(user) || admins.include?(user)
+    if owner_id == user.id || authors.include?(user) || admins.include?(user)
       true
     else
       false
