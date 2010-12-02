@@ -7,11 +7,11 @@ class DocumentMailer < ActionMailer::Base
     body :document => document, :target => target
   end
   
-  def share_invitation(share, target)
+  def share_invitation(folder, target)
     bcc target[:users].reject{|user| user.roles.length == 1 && user.roles.include?(Role.public)}.map(&:formatted_email)
     from DO_NOT_REPLY
     subject "#{target[:creator].name} invited you to a share"
-    body :share => share, :target => target
+    body :folder => folder, :target => target
   end
   
   def document_addition(share, document)

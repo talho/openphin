@@ -105,4 +105,27 @@
             return arr.concat(desc);
         }
     });
+
+    var original_gridview_dorender = Ext.ux.maximgb.tg.GridView.prototype.doRender;
+    Ext.override(Ext.ux.maximgb.tg.GridView, {
+        doRender: function(){
+            var ret = original_gridview_dorender.apply(this, arguments);
+
+            var sel = this.grid.getSelectionModel().getSelections();
+
+            if(sel.length > 0)
+            {
+                setTimeout(function(){
+                        var store = this.grid.getStore();
+                        Ext.each(sel, function(sel){
+                            var row = store.indexOf(sel);
+                            if(row === -1) row = store.indexOfId(sel.id);
+                            if(row >= -1) this.onRowSelect(row);
+                        }, this);
+                }.createDelegate(this), 1);
+            }
+
+            return ret;
+        }
+    });
 })();

@@ -30,7 +30,7 @@ Ext.ns("Talho");
         'Talho.EditDevices': {js:'ProfileBase /javascripts/profile/DevicesControl.js > /javascripts/profile/EditDevices.js'},
         'Talho.ManageRoles': {js:'ProfileBase /javascripts/profile/RolesControl.js > /javascripts/profile/ManageRoles.js'},
         'Talho.ManageOrganizations': {js:'/javascripts/profile/ProfileBase.js > /javascripts/profile/ManageOrganizations.js'},
-        'Talho.Documents': {js: 'TreeGrid $(ext_extensions)/xActionColumn.js AudiencePanel /javascripts/documents/AddEditFolderWindow.js /javascripts/documents/Documents.js'},
+        'Talho.Documents': {js: 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/SubmitFalse.js AudiencePanel /javascripts/documents/AddEditFolderWindow.js /javascripts/documents/Documents.js'},
         'Talho.NewInvitation': {js:'NewInvitation /javascripts/ext/src/widgets/grid/EditorGrid.js > /javascripts/invitations/NewInvitation.js'},
         'Talho.Invitations': {js:'/javascripts/invitations/Invitations.js'},
         'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/admin/AddUser.js'},

@@ -90,7 +90,7 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([0-9]*))?(
     if not_exists.nil?
       rows[rownum.to_i - 1].node.text.should =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     else
-      rows[rownum.to_i - 1].node.text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
+      rows[num.to_i - 1].nil? || rows[num.to_i - 1].node.text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     end
   end
 end
@@ -112,5 +112,17 @@ When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ d
     end
   rescue Selenium::WebDriver::Error::ObsoleteElementError
     When %Q{the "#{content}" grid row should have the #{icon_name} icon}
+  end
+end
+
+Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$/ do |content, within_selector, not_exists|
+  with_scope(within_selector) do
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row-selected') and .//*[contains(text(), '#{content}')] ]")
+
+    if not_exists.nil?
+      row.should_not be_nil
+    else
+      row.should be_nil
+    end
   end
 end
