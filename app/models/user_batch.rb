@@ -27,7 +27,7 @@ class UserBatch
     unless (submitter = User.find_by_email(@email))
       return "bad-email"
     end
-    unless (jurisdiction = submitter.jurisdictions.find_by_name(@jurisdiction))
+    unless @jurisdiction.blank? || submitter.jurisdictions.find_by_name(@jurisdiction)
       return "bad-jurisdiction"
     end
     if binary?
@@ -42,7 +42,7 @@ class UserBatch
         create_directory
         save_file
         pre_verify_csv(path)
-        self.send_later(:create_users,path)
+        self.send_later(:create_users,path)  # queue in delayed_job
         @file_data = nil
         true
       rescue FasterCSV::MalformedCSVError => msg
@@ -56,17 +56,11 @@ class UserBatch
   def create_users(path)
     begin
       submitter = User.find_by_email!(@email)
-      jurisdiction = submitter.jurisdictions.find_by_name!(@jurisdiction)
+      jurisdiction = submitter.jurisdictions.find_by_name!(@jurisdiction) unless @jurisdiction.blank?
       f = File.open path
       f.close
       $stderr = StringIO.new
-      UserImporter.import_users(
-        path,
-        :default_jurisdiction => jurisdiction,
-        :create => true,
-        :update => false,
-        :default_password => "Password1"
-        )
+      UserImporter.import_users(path, :default_jurisdiction => jurisdiction, :create => true, :update => false)
       unless $stderr.string.empty?
         # error created during import, send email to submitter
         AppMailer.deliver_user_batch_error(@email, "during import", $stderr.string) 
@@ -89,6 +83,7 @@ class UserBatch
   end
   
   def binary?
+    return false if self.file_data.is_a?(StringIO)
     # uses unix utility 'file' will not work on windows
     %x(file --mime-type #{self.file_data.path}) !~ /text/
   end

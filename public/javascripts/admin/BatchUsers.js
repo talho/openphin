@@ -12,10 +12,9 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     });
 
     var editor = new Ext.ux.grid.RowEditor({
-      saveText: 'Update'
+      saveText: 'Update',
+      listeners: {scope: this, 'afterEdit': this.set_savebutton_state, 'cancelEdit': this.cancel_row_modification}
     });
-    editor.on('afterEdit', this.set_savebutton_state, this, {delay: 10});
-    editor.on('cancelEdit', this.set_savebutton_state, this, {delay: 10});
 
     this.uploadButton = new Ext.ux.form.FileUploadField({
       name: 'users[csvfile]',
@@ -45,6 +44,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       }
     });
 
+    this.new_edit_in_progress = false;
     this.grid = new Ext.grid.GridPanel({
       store: this.store,
       margins: '0 5 5 5',
@@ -61,6 +61,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         handler: function(){
           if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
             editor.stopEditing();
+            this.new_edit_in_progress = true;
             this.store.insert(0, new this.store.recordType());
             this.grid.getView().refresh();
             this.grid.getSelectionModel().selectRow(0);
@@ -121,13 +122,15 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       form_width: 900,
       item_list: [
         {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
-          {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'batch[default_jurisdiction]', editable: false, triggerAction: 'all',
+          {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
             store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
           this.grid
         ]}
       ],
-      save_url: "admin_user_batch/create_from_json.json",
-      save_method: "PUT"
+      //save_url: "admin_user_batch/create_from_json.json",
+      //save_method: "PUT"
+      save_url: "admin_user_batch.json",
+      save_method: "POST"
     };
 
     Talho.BatchUsers.superclass.constructor.call(this, config);
@@ -139,7 +142,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     var options = {};
-    options.params = {"batch[users]": Ext.encode(users)};
+    options.params = {"user_batch[users]": Ext.encode(users)};
     this.getPanel().getForm().submit(options);
   },
 
@@ -148,6 +151,14 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       this.getPanel().find("name", "save_button")[0].disable();
     else
       this.getPanel().find("name", "save_button")[0].enable();
+  },
+  cancel_row_modification: function(editor){
+    var record = this.grid.getStore().getAt(editor.rowIndex);
+    if (this.new_edit_in_progress)
+      this.grid.getStore().remove(record);
+    this.new_edit_in_progress = false;
+    this.set_savebutton_state();
+    return false;
   }
 });
 

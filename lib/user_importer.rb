@@ -21,11 +21,14 @@
 require 'fastercsv'
 
 class UserImporter
+  FIELDS = [ :email, :first_name, :last_name, :display_name, :jurisdiction, :mobile, :fax, :phone ].freeze
+
   def self.import_users(filename, options={})
-    options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true, :default_jurisdiction => nil, :default_password => "Password1"}.merge(options)
+    options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true,
+               :default_jurisdiction => nil, :default_password => self.generate_random_password}.merge(options)
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
-        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at 
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
         if email.blank?
           $stderr.puts "CSV File did not contain an email address for the user: \n" + 
             rec.values_at.join(",")  + 
@@ -49,11 +52,10 @@ class UserImporter
         user.update_attributes(:first_name => first_name,
                                :last_name => last_name,
                                :display_name => display_name) if user.new_record?
-        if user.valid?
-          user.save
-        else
+        unless user.save && user.valid?
           $stderr.puts "CSV format appears invalid for the user: \n" + 
             rec.values_at.join(",") + 
+            user.errors.full_messages.join(", ") +
             "\n This user was NOT created.\n\n"
           next
         end
@@ -74,10 +76,12 @@ class UserImporter
           user.devices << fax_device if fax_device.valid?
         end
 
-        j=Jurisdiction.find_by_name(jurisdiction)
+        j=Jurisdiction.find_by_name(jurisdiction) unless jurisdiction.blank?
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)
+        user.email_confirmed = true  # instead of user.confirm_email!() so the token is not cleared
         user.save
+        SignupMailer.deliver_signup_notification(user)
       end
     end
   end
@@ -93,9 +97,14 @@ class UserImporter
     FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       puts records.first.headers.join(",")
       records.each do |rec|
-        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = rec.values_at
+        email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
         puts rec.values_at.join(",") if jurisdiction == options[:default_jurisdiction]
       end
     end
+  end
+
+  def self.generate_random_password(length=16)
+    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
+    (1..length).collect { |n| chars[rand(chars.length)] }.to_s
   end
 end

@@ -33,6 +33,10 @@ class Admin::UsersController < ApplicationController
         params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
       end
     end
+    if params[:user].has_key?(:jurisdiction) && !params[:user][:jurisdiction].blank?
+      j = Jurisdiction.find_by_name(params[:user][:jurisdiction])
+      params[:user][:role_requests_attributes] = {0 => {:jurisdiction => j, :role => Role.public}}
+    end
 
     @user = User.new params[:user]
     @user.role_requests.each { |role_request|
