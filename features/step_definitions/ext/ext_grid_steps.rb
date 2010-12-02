@@ -13,6 +13,20 @@ When /^I click ([a-zA-Z0-9\-_]*) on the "([^\"]*)" grid row(?: within "([^"]*)")
   end
 end
 
+When /^I select the "([^"]*)" grid header(?: within "([^"]*)")?$/ do |content, within_selector|
+  # we want to find the row with the content, and get the div that's a few levels up
+  with_scope(within_selector) do
+    header = page.find(:xpath, "//td[contains(concat(' ', @class, ' '), 'x-grid3-hd') and .//*[contains(text(), '#{content}')] ]")
+
+    if header.nil?
+      sleep(1)
+      header = page.find(:xpath, "//td[contains(concat(' ', @class, ' '), 'x-grid3-hd') and .//*[contains(text(), '#{content}')] ]")
+    end
+
+    header.click
+  end
+end
+
 When /^I select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
@@ -22,7 +36,6 @@ When /^I select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, with
       sleep(1)
       row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
     end
-    debugger
 
     row.click
   end

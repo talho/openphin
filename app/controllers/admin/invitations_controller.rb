@@ -47,8 +47,8 @@ class Admin::InvitationsController < ApplicationController
             inviteeStatus
           when 'pendingRequests'
             options[:select] = "DISTINCT `invitees`.*"
-            options[:order] = "`role_requests`.jurisdiction_id"
-            options[:joins] = "LEFT JOIN users ON `invitees`.email = `users`.email LEFT JOIN role_requests ON `users`.id = `role_requests`.user_id" #[:user => :role_requests]
+            options[:order] = "`role_requests`.id IS#{params[:dir] == 'DESC' ? 'NOT ' : ' '}NULL, `users`.email"
+            options[:joins] = "LEFT JOIN users ON `invitees`.email = `users`.email LEFT JOIN role_requests ON `users`.id = `role_requests`.user_id AND `role_requests`.jurisdiction_id IN (#{current_user.role_memberships.admin_roles.map(&:jurisdiction_id).join(',')})" #[:user => :role_requests]
             @invitation.invitees.paginate(options)
             #inviteeStatusByPendingRequests
           when 'organizationMembership'
@@ -61,7 +61,7 @@ class Admin::InvitationsController < ApplicationController
           :name => i.name,
           :email => i.email,
           :completionStatus => i.completion_status,
-          :organizationMembership => 'N/A',
+          :organizationMembership => @invitation.default_organization ? i.is_member? : 'N/A',
           :profileUpdated => i.user && i.user.updated_at > @invitation.created_at ? "Yes" : "No",
           :pendingRequests => i.user ? i.user.role_requests.unapproved.map do |rr|
              if current_user.is_admin_for?(rr.jurisdiction)
@@ -84,7 +84,11 @@ class Admin::InvitationsController < ApplicationController
             :id => @invitation.id,
             :subject => h(@invitation.subject),
             :body => @invitation.body,
-            :organization => @invitation.default_organization ? @invitation.default_organization.name : nil
+            :organization => @invitation.default_organization ? @invitation.default_organization.name : nil,
+            :complete_percentage => @invitation.registrations_complete_percentage,
+            :incomplete_percentage => @invitation.registrations_incomplete_percentage,
+            :complete_total => @invitation.registrations_complete_total,
+            :incomplete_total => @invitation.registrations_incomplete_total
           },                                                                               
           :total => @invitation.invitees.size,
           :invitees => invitees
@@ -336,8 +340,24 @@ class Admin::InvitationsController < ApplicationController
   
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil ? params[:sort] : 'email'
-    Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]], :include => [:user, :invitation]
+    order_by = params[:sort] != nil && params[:sort] != 'organizationMembership' ? params[:sort] : 'email'
+    invitation = Invitation.find(params[:id])
+    invitees = invitation.invitees.sort{|x,y|
+      if x.is_member? != y.is_member?
+        if order_in == 'DESC'
+          y.is_member? <=> x.is_member?
+        else
+          x.is_member? <=> y.is_member?
+        end
+      else
+        if order_in == 'DESC'
+          x.email <=> y.email
+        else
+          y.email <=> x.email
+        end
+      end
+    }
+    invitees.paginate :page => params[:page] || 1, :include => [:user, :invitation]
   end
 
   def inviteeStatusByPendingRequests
@@ -350,7 +370,7 @@ class Admin::InvitationsController < ApplicationController
     order_by = params[:sort] != nil && params[:sort] != 'profileUpdated' ? params[:sort] : 'email'
     order_by = "display_name" if order_by == "name"
     invitation_time = Invitation.find(params[:id]).updated_at
-    Invitee.paginate_all_by_invitation_id params[:id], 
+    Invitee.paginate_all_by_invitation_id params[:id],
       :page=>params[:page] || 1, :order=> "users.updated_at AND users.#{order_by} " + order_in, :include=> [:user, :invitation] #, :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
   end
   

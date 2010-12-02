@@ -62,9 +62,8 @@ class Organization < ActiveRecord::Base
 
   validates_inclusion_of :foreign, :in => [true, false]
 
-  attr_accessor :members
-  def members
-    group.users
+  def members(options={})
+    group.users.scoped options
   end
   
   def <<(user)

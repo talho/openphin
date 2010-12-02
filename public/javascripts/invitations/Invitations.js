@@ -54,7 +54,17 @@ Talho.Invitations = Ext.extend(function(){}, {
                         org = newstore.reader.jsonData["invitation"]["organization"];
                         if(org) organization.update("<b>Default Organization:</b>&nbsp;" + org);
                         
-                        bodyContainer.add(new Ext.form.HtmlEditor({width: 550, height: 300, html: newstore.reader.jsonData["invitation"]["body"], enableSourceEdit: false}));
+                        bodyContainer.add(new Ext.form.HtmlEditor({width: 550, height: 300, html: newstore.reader.jsonData["invitation"]["body"], enableSourceEdit: false, readOnly: true}));
+
+                        complete_percentage = newstore.reader.jsonData["invitation"]["complete_percentage"];
+                        complete_total = newstore.reader.jsonData["invitation"]["complete_total"];
+                        incomplete_percentage = newstore.reader.jsonData["invitation"]["incomplete_percentage"];
+                        incomplete_total = newstore.reader.jsonData["invitation"]["incomplete_total"];
+
+                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations complete:</b>&nbsp;" + complete_percentage + "% (" + complete_total + ")"});
+                        invitationTopToolbar.add({xtype: 'tbfill'});
+                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations incomplete:</b>&nbsp;" + incomplete_percentage + "% (" + incomplete_total + ")"});
+                        invitationTopToolbar.doLayout();
                         centerPanel.doLayout();
                       }
                       return true;
@@ -100,6 +110,8 @@ Talho.Invitations = Ext.extend(function(){}, {
       displayMsg: 'Displaying invitees {0} - {1} of {2}',
       emptyMsg: 'No invitees to display'
     });
+
+    var invitationTopToolbar = new Ext.Toolbar();
 
     var invitationGrid = new Ext.grid.GridPanel({
       width: 700,
@@ -271,6 +283,7 @@ Talho.Invitations = Ext.extend(function(){}, {
           }
         }]
       }),
+      tbar: invitationTopToolbar,
       bbar: invitationToolbar
     });
 
