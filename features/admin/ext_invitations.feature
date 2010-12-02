@@ -116,7 +116,7 @@ Feature: Invitation System
     
     When I select the "DSHS" grid cell
     Then I should see "Invitation: DSHS"
-    And I should see "Subject: Please Join DSHS" with html stripped
+    And I should see "Please Join DSHS"
     And I should see "Please click the link below to join DSHS" in an htmleditor
     And I should see "Default Organization: DSHS" with html stripped
     And I should see "Jane" in grid row 1 column 1 within "#invitationGrid"
@@ -164,6 +164,24 @@ Feature: Invitation System
     And I should see "john.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
     And I should see "Registered" in grid row 5 column 3 within "#invitationGrid"
 
+    When I select the "Email" grid header
+
+    Then I should see "John Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 1 column 3 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 2 column 3 within "#invitationGrid"
+    And I should see "Jane Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 3 column 3 within "#invitationGrid"
+    And I should see "Bob Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "Not Registered" in grid row 4 column 3 within "#invitationGrid"
+    And I should see "Bill Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "bill.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "Not Registered" in grid row 5 column 3 within "#invitationGrid"
+
   Scenario: Viewing invitation completion status by registrations
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |
@@ -188,20 +206,38 @@ Feature: Invitation System
 
     Then I should see "Registrations complete: 40% (2)" with html stripped
     And I should see "Registrations incomplete: 60% (3)" with html stripped
-    And I should see "John Smith" in grid row 1 column 1 within "#invitationGrid"
-    And I should see "john.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
-    And I should see "Not Email Confirmed" in grid row 1 column 3 within "#invitationGrid"
+    And I should see "Bill Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "bill.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "Not Registered" in grid row 1 column 3 within "#invitationGrid"
+    And I should see "Bob Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 2 column 3 within "#invitationGrid"
+    And I should see "John Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Not Email Confirmed" in grid row 3 column 3 within "#invitationGrid"
+    And I should see "Jane Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 4 column 3 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 5 column 3 within "#invitationGrid"
+
+    When I select the "Completion Status" grid header
+
+    Then I should see "Jim Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "Registered" in grid row 1 column 3 within "#invitationGrid"
     And I should see "Jane Smith" in grid row 2 column 1 within "#invitationGrid"
     And I should see "jane.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
     And I should see "Registered" in grid row 2 column 3 within "#invitationGrid"
-    And I should see "Jim Smith" in grid row 3 column 1 within "#invitationGrid"
-    And I should see "jim.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
-    And I should see "Registered" in grid row 3 column 3 within "#invitationGrid"
-    And I should see "Bill Smith" in grid row 4 column 1 within "#invitationGrid"
-    And I should see "bill.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "John Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Not Email Confirmed" in grid row 3 column 3 within "#invitationGrid"
+    And I should see "Bob Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
     And I should see "Not Registered" in grid row 4 column 3 within "#invitationGrid"
-    And I should see "Bob Smith" in grid row 5 column 1 within "#invitationGrid"
-    And I should see "bob.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "Bill Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "bill.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
     And I should see "Not Registered" in grid row 5 column 3 within "#invitationGrid"
 
   Scenario: Viewing invitation completion status by organization membership
@@ -232,6 +268,18 @@ Feature: Invitation System
     And I should see "bob.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
     And I should see "No" in grid row 3 column 3 within "#invitationGrid"
 
+    When I select the "Organization Members" grid header
+
+    Then I should see "Bob Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "No" in grid row 1 column 3 within "#invitationGrid"
+    And I should see "Joe Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "joe.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 2 column 4 within "#invitationGrid"
+    And I should see "Jane Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 3 column 4 within "#invitationGrid"
+
   Scenario: Viewing invitation completion status by pending role requests
     Given the following entities exist:
       | Jurisdiction | Potter County   |
@@ -254,6 +302,7 @@ Feature: Invitation System
       | Jane Smith | jane.smith@example.com |
       | Joe Smith  | joe.smith@example.com  |
       | John Smith | john.smith@example.com |
+      | Jim Smith  | jim.smith@example.com |
     And "john.smith@example.com" is an unconfirmed user
     And "john.smith@example.com" has requested to be a "Health Official" for "Texas"
 
@@ -263,8 +312,7 @@ Feature: Invitation System
     When I select the "DSHS" grid cell
     And I select the "Pending Role Requests" grid header
 
-    Then I should see "John Smith"
-    And I should see "Bob Smith" in grid row 1 column 1 within "#invitationGrid"
+    Then I should see "Bob Smith" in grid row 1 column 1 within "#invitationGrid"
     And I should see "bob.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
     And I should see "Click here to see" in grid row 1 column 6 within "#invitationGrid"
     And I should see "John Smith" in grid row 2 column 1 within "#invitationGrid"
@@ -273,9 +321,30 @@ Feature: Invitation System
     And I should see "Jane Smith" in grid row 3 column 1 within "#invitationGrid"
     And I should see "jane.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
     And I should not see "Click here to see" in grid row 3 column 6 within "#invitationGrid"
-    And I should see "Joe Smith" in grid row 4 column 1 within "#invitationGrid"
-    And I should see "joe.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
     And I should not see "Click here to see" in grid row 4 column 6 within "#invitationGrid"
+    And I should see "Joe Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "joe.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should not see "Click here to see" in grid row 5 column 6 within "#invitationGrid"
+
+    When I select the "Pending Role Requests" grid header
+
+    Then I should see "Joe Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "joe.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should not see "Click here to see" in grid row 1 column 6 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should not see "Click here to see" in grid row 2 column 6 within "#invitationGrid"
+    And I should see "Jane Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should not see "Click here to see" in grid row 3 column 6 within "#invitationGrid"
+    And I should see "John Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "Click here to see" in grid row 4 column 6 within "#invitationGrid"
+    And I should see "Bob Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "Click here to see" in grid row 5 column 6 within "#invitationGrid"
 
   Scenario: Viewing invitation completion status by profile update
     Given an Invitation "DSHS" exists with:
@@ -288,26 +357,52 @@ Feature: Invitation System
       | John Smith | john.smith@example.com |
       | Bill Smith | bill.smith@example.com |
       | Jim Smith  | jim.smith@example.com  |
+    And I sleep 1
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
     And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
     And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
     And "john.smith@example.com" is an unconfirmed user
 
-    When I follow "Admin"
-    And I show dropdown menus
-    And I follow "View Invitations"
-    Then I should see "DSHS"
+    When I navigate to the invitations page
+    Then I should see "DSHS" in grid row 1
 
-    When I follow "View Reports"
-    And I select "By Profile Update" from "Report type"
+    When I select the "DSHS" grid cell
+    And I select the "Profile Updated" grid header
 
-    Then I should see "Invitation report for DSHS by Profile Update"
-    And I should see "Registrations complete: 40% (2)"
-    And I should see "Registrations incomplete: 60% (3)"
-    
-    And I should see "Jane Smith" within "#invitee1"
-    And I should see "jane.smith@example.com" within "#invitee1"
-    And I should see "No" within "tr#invitee1 td.status"
-    And I should see "Jim Smith" within "#invitee2"
-    And I should see "jim.smith@example.com" within "#invitee2"
-    And I should see "No" within "tr#invitee1 td.status"
+    Then I should see "Invitation: DSHS"
+    And I should see "Registrations complete: 40% (2)" with html stripped
+    And I should see "Registrations incomplete: 60% (3)" with html stripped
+
+    Then I should see "Jane Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 1 column 5 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 2 column 5 within "#invitationGrid"
+    And I should see "John Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 3 column 5 within "#invitationGrid"
+    And I should see "Bill Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "bill.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "No" in grid row 4 column 5 within "#invitationGrid"
+    And I should see "Bob Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "No" in grid row 5 column 5 within "#invitationGrid"
+
+    When I select the "Profile Updated" grid header
+
+    And I should see "Bob Smith" in grid row 1 column 1 within "#invitationGrid"
+    And I should see "bob.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
+    And I should see "No" in grid row 1 column 5 within "#invitationGrid"
+    And I should see "Bill Smith" in grid row 2 column 1 within "#invitationGrid"
+    And I should see "bill.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And I should see "No" in grid row 2 column 5 within "#invitationGrid"
+    And I should see "John Smith" in grid row 3 column 1 within "#invitationGrid"
+    And I should see "john.smith@example.com" in grid row 3 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 3 column 5 within "#invitationGrid"
+    And I should see "Jim Smith" in grid row 4 column 1 within "#invitationGrid"
+    And I should see "jim.smith@example.com" in grid row 4 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 4 column 5 within "#invitationGrid"
+    And I should see "Jane Smith" in grid row 5 column 1 within "#invitationGrid"
+    And I should see "jane.smith@example.com" in grid row 5 column 2 within "#invitationGrid"
+    And I should see "Yes" in grid row 5 column 5 within "#invitationGrid"

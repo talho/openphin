@@ -4,7 +4,7 @@ invitees = results.map do |invitee|
   [
     invitee.name,
     invitee.email,
-    invitee.user.role_requests.collect{|rr| rr.role.name}.join("\n")
+    invitee.user ? invitee.user.role_requests.collect{|rr| rr.role.name}.join("\n") : ''
   ]
 end
 
