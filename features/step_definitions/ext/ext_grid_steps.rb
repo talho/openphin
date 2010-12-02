@@ -90,7 +90,7 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([0-9]*))?(
     if not_exists.nil?
       rows[rownum.to_i - 1].node.text.should =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     else
-      rows[num.to_i - 1].nil? || rows[num.to_i - 1].node.text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
+      rows[rownum.to_i - 1].nil? || rows[rownum.to_i - 1].node.text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     end
   end
 end
