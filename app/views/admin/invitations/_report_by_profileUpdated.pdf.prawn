@@ -9,7 +9,7 @@ invitees = results.map do |invitee|
   [
     invitee.name,
     invitee.email,
-    invitee.user.updated_at > invitation.created_at ? "Yes" : "No"
+    invitee.user && invitee.user.updated_at > invitation.created_at ? "Yes" : "No"
   ]
 end
 

@@ -169,7 +169,7 @@ Feature: Invitation System
     And I should see "john.smith@example.com" within "#invitee5"
     And I should explictly see "Registered" within "#invitee5 td.status"
 
-  Scenario: Viewing invitation completion status by email
+  Scenario: Viewing invitation completion status by registrations
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |
       | Body         | Please click the link below to join DSHS |
@@ -233,15 +233,15 @@ Feature: Invitation System
 
     Then I should see "Invitation report for DSHS by organization"
     And I should see "Organization: DSHS"
-    And I should see "Bob Smith" within "#invitee1"
-    And I should see "bob.smith@example.com" within "#invitee1"
-    And I should explictly see "No" within "#invitee1 td.status"
-    And I should see "Jane Smith" within "#invitee2"
-    And I should see "jane.smith@example.com" within "#invitee2"
+    And I should see "Jane Smith" within "#invitee1"
+    And I should see "jane.smith@example.com" within "#invitee1"
+    And I should explictly see "Yes" within "#invitee1 td.status"
+    And I should see "Joe Smith" within "#invitee2"
+    And I should see "joe.smith@example.com" within "#invitee2"
     And I should explictly see "Yes" within "#invitee2 td.status"
-    And I should see "Joe Smith" within "#invitee3"
-    And I should see "joe.smith@example.com" within "#invitee3"
-    And I should explictly see "Yes" within "#invitee3 td.status"
+    And I should see "Bob Smith" within "#invitee3"
+    And I should see "bob.smith@example.com" within "#invitee3"
+    And I should explictly see "No" within "#invitee3 td.status"
 
   Scenario: Viewing invitation completion status by pending role requests
     Given the following entities exist:
@@ -281,9 +281,9 @@ Feature: Invitation System
     And I should see "bob.smith@example.com" within "#invitee1"
     And I should see "Health Official" within "#invitee1"
     And I should see "Texas" within "#invitee1"
-    And I should not see "Jane Smith"
-    And I should not see "Joe Smith"
-    And I should not see "John Smith"
+    #And I should not see "Jane Smith"
+    #And I should not see "Joe Smith"
+    #And I should not see "John Smith"
     
   Scenario: Viewing invitation completion status by profile update
     Given an Invitation "DSHS" exists with:
@@ -296,6 +296,7 @@ Feature: Invitation System
       | John Smith | john.smith@example.com |
       | Bill Smith | bill.smith@example.com |
       | Jim Smith  | jim.smith@example.com  |
+    And I sleep 1
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
     And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
     And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"
@@ -312,10 +313,10 @@ Feature: Invitation System
     Then I should see "Invitation report for DSHS by Profile Update"
     And I should see "Registrations complete: 40% (2)"
     And I should see "Registrations incomplete: 60% (3)"
-    
+
     And I should see "Jane Smith" within "#invitee1"
     And I should see "jane.smith@example.com" within "#invitee1"
-    And I should see "No" within "tr#invitee1 td.status"
+    And I should see "Yes" within "tr#invitee1 td.status"
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
-    And I should see "No" within "tr#invitee1 td.status"
+    And I should see "Yes" within "tr#invitee1 td.status"
