@@ -5,58 +5,11 @@ ActionController::Routing::Routes.draw do |map|
 
 #  map.resources :user_profiles, :as => "profile"
   map.connect "/jurisdictions.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.resources :devices, :folders
+  map.resources :devices
   map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
 
-  map.resources :documents, :collection => [:mock_folder_list], :has_many => :shares2 do |documents|
-    documents.resource :copy, :controller => 'copy_documents'
-  end
-
-  map.mock_file_list 'documents/mock_file_list/:folder_id', :controller => 'documents', :action => 'mock_file_list'
-
-  map.documents_panel 'documents_panel',
-    :controller => 'documents', :action => 'panel_index',
-    :conditions => {:method => :get}
-
-  map.media_list 'media_list',
-    :controller => 'documents', :action => 'media_list',
-    :conditions => {:method => :get}
-
-  map.share_documents 'shares/:share_id/documents',
-    :controller => 'documents', :action => 'index',
-    :conditions => {:method => :get}
-
-  map.share_document 'shares/:share_id/documents/:id',
-    :controller => 'documents', :action => 'remove_from_share',
-    :conditions => {:method => :delete}
-
-  map.folder_documents "folders/:folder_id/documents",
-    :controller=>"documents", :action=>"index",
-    :conditions => {:method => :get}
-
-  map.folder_document "folders/:folder_id/documents/:id",
-    :controller=>"documents", :action=>"remove_from_folder",
-    :conditions => {:method => :delete}
-
-  map.folder_inbox "inbox",
-    :controller => "documents", :action => "inbox",
-    :conditions => {:method => :get}
-
-  map.show_destroy_share 'shares/:id/show_destroy',
-    :controller => 'shares', :action => 'show_destroy',
-    :conditions => {:method => :get}
-
-  map.popup_share 'shares/:id/popup_share',
-    :controller => 'shares', :action => 'popup_share',
-    :conditions => {:method => :get}
-
-  map.popup_documents 'popup_inbox',
-    :controller => 'documents', :action => 'popup_documents',
-    :conditions => {:method => :get}
-
-  map.delete_folder "folders/:id",
-    :controller=>"folders", :action=>"destroy",
-    :conditions => {:method => :delete}
+  map.resources :documents, :controller => 'doc/documents', :except => [:index], :member => {:move => [:post, :put], :copy => [:post, :put]}
+  map.resources :folders, :controller => 'doc/folders', :collection => [:target_folders], :member => {:move => [:post, :put] }
 
   map.resources :role_requests, :controller => "role_requests"
   map.resources :organization_requests, :controller => "organization_requests"

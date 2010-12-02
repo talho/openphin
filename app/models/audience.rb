@@ -16,7 +16,7 @@ class Audience < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
 
-  has_many :shares
+  has_many :folders
 
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true
