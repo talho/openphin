@@ -47,9 +47,10 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     panel.loadMask.show();
     this.load_json();
   },
-  load_json: function(){
-    Ext.Ajax.request({ url: this.form_config.load_url, method: 'GET',
-      success: this.load_complete_cb, failure: this.load_fail_cb, scope: this });
+  load_json: function(options){
+    var defaults = {url: this.form_config.load_url, method: 'GET', success: this.load_complete_cb, failure: this.load_fail_cb, scope: this};
+    var args = Ext.apply(defaults, options);
+    Ext.Ajax.request(args);
   },
   load_complete_cb: function(response, options){
     this.getPanel().loadMask.hide();

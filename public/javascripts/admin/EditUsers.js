@@ -13,12 +13,12 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         fields: [
           {name: 'last_name', mapping: 'user.last_name'},
           {name: 'first_name', mapping: 'user.first_name'},
-          {name: 'display_name', mapping: 'user.display_name'},
           {name: 'mobile_phone', mapping: 'user.mobile_phone'},
           {name: 'fax', mapping: 'user.fax'},
           {name: 'phone', mapping: 'user.phone'},
           {name: 'email', mapping: 'user.email'},
           {name: 'id', mapping: 'user.id'},
+          {name: 'roles', mapping: 'roles'},
           {name: 'state'}
         ]
       }),
@@ -29,11 +29,22 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       saveText: 'Update',
       listeners: {scope: this, 'afterEdit': this.handle_row_modification, 'cancelEdit': this.cancel_row_modification}
     });
+    var roles_tpl = new Ext.XTemplate(
+      '<ul>',
+      '<tpl for="roles">',
+        '<li>',
+            '<tpl if="state==' + "'pending'" + '"><i></tpl>',
+            '{jname}&nbsp;&ndash;&nbsp;{rname}',
+            '<tpl if="state==' + "'pending'" + '"></i></tpl>',
+        '</li>',
+      '</tpl>',
+      '</ul>'
+    );
 
     this.new_edit_in_progress = false;
     this.grid = new Ext.grid.GridPanel({
       store: this.store,
-      margins: '0 5 5 5',
+      margins: '0 0 0 0',
       width: 880,
       height: 400,
       plugins: [editor],
@@ -68,19 +79,23 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         }
       ]}),
       columns: [
-        {header: 'Id', dataIndex: 'id', sortable: true},
+        //{header: 'Id', dataIndex: 'id', sortable: true},
         {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
         {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
-        {header: 'Display Name', dataIndex: 'display_name', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
         {header: 'Mobile', dataIndex: 'mobile_phone', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
         {header: 'Phone', dataIndex: 'phone', sortable: true, editor: {xtype:'textfield',id:'n_phone',allowBlank:true}},
         {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}},
-        {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', scope: this, handler: function(grid, row){
-          var record = grid.getStore().getAt(row);
-          record.set("state", "deleted");
-          grid.getStore().filterBy(function(e){ return e.get("state")!="deleted"; });
-        }}
+        {xtype: 'templatecolumn', width: 250, header: 'Roles', dataIndex: 'roles', sortable: false, tpl: roles_tpl},
+        {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
+          handler: function(grid, row){ this.manage_user_roles(grid.getStore().getAt(row)); }},
+        {xtype: 'xactioncolumn', header: 'X', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
+          handler: function(grid, row){
+            var record = grid.getStore().getAt(row);
+            record.set("state", "deleted");
+            grid.getStore().filterBy(function(e){ return e.get("state")!="deleted"; });
+          }
+        }
       ]
     });
 
@@ -103,6 +118,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   },
   is_dirty: function(){ return this.store.getModifiedRecords().length > 0; },
 
+  // Row editor callbacks
   handle_row_modification: function(re, changes, record, row_index){
     var state = record.get("state");
     if (state != "new" && state != "deleted") record.set("state", "changed");
@@ -113,6 +129,33 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       this.grid.getStore().remove(record);
     this.new_edit_in_progress = false;
     return false;
+  },
+
+  // manage roles popup window
+  manage_user_roles: function(record){
+    var user_id = record.get("id");
+    var user_name = record.get("first_name") + " " + record.get("last_name");
+    var load_user_roles_url = "users/" + user_id + "/profile/edit.json";
+    var save_url = "users/" + user_id + "/profile.json";
+    var roles_control = new Talho.ux.RolesControl(save_url, this);
+    roles_control.load_data(record.get("roles"));
+    var win = new Ext.Window({
+      title: "Manage Roles for '" + user_name + "'",
+      layout: 'form',
+      autoScroll: true,
+      padding: '10',
+      width: 440, height: 400,
+      items: [roles_control]
+    });
+    win.addButton({xtype: 'button', text: 'Save', handler: function(){ roles_control.save_data(); win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
+    //win.addListener('render',
+    //  function(p){ this.load_json({url: load_user_roles_url, success: this.load_user_roles_cb, rc: roles_control}); }, this);
+    win.show();
+  },
+  load_user_roles_cb: function(response, options){
+    var json = Ext.decode(response.responseText, true);
+    options.rc.load_data(json.extra.role_desc);
   }
 });
 
