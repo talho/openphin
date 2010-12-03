@@ -15,7 +15,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   Phin::Application.eval_if_plugin_present(:rollcall) do
     menu_config += "{name: 'Rollcall', items:[
                     {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'', initializer: 'Talho.Rollcall'}},
-                    {name: 'Search', tab:{id: 'rollcall_search', title:'Rollcall Search', url:'', initializer: 'Talho.RollcallQuery'}},
+                    {name: 'Attendance and Disease Surveillance Tool', tab:{id: 'rollcall_adst', title:'Attendance and Disease Surveillance Tool', url:'', initializer: 'Talho.Rollcall.ADST'}},
                     {name: 'Nurse Assistant', tab:{id: 'rollcall_nurse', title:'Nurse Assistant', url:'', initializer: 'Talho.NurseAssistant'}},
                     {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'', initializer: 'Talho.Rollcall'}},
                     {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:''}}]},"
