@@ -28,8 +28,8 @@ Feature: Create a folder tree in documents
     And I should see "Folder 1" in grid row 2 within ".document-folder-tree-grid"
 
   Scenario Outline: Check different folder creation scenarios
-    When I create a folder outline with "<outline>"
-    And I press "Refresh"
+    Given I create a folder outline with "<outline>"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
     And I expand the folders "<expand>"
     Then I should see folders in the order "<order>"
@@ -42,8 +42,8 @@ Feature: Create a folder tree in documents
     | Folder1>Sub1 Folder1>Sub2 Folder1>Sub3 Sub2>SubSub1 | Folder1 Sub2    | Folder1 Sub1 Sub2 SubSub1 Sub3  |
 
   Scenario: Edit a folder
-    When I create a folder outline with "Folder1"
-    And I press "Refresh"
+    Given I create a folder outline with "Folder1"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
@@ -57,8 +57,8 @@ Feature: Create a folder tree in documents
     And I should not see "Folder1" in grid row 2 within ".document-folder-tree-grid"
 
   Scenario: Move folders around the folder tree
-    When I create a folder outline with "Folder1 Folder2>Sub1"
-    And I press "Refresh"
+    Given I create a folder outline with "Folder1 Folder2>Sub1"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
     And I expand the folders "Folder2"
     And I select the "Sub1" grid row
@@ -77,8 +77,8 @@ Feature: Create a folder tree in documents
     Then I should see folders in the order "Folder1 Folder2 Sub1"
 
   Scenario: Delete folders
-    When I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub2>SubSub1"
-    And I press "Refresh"
+    Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub2>SubSub1"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
     And I expand the folders "Folder1"
     And I select the "Sub1" grid row
@@ -96,8 +96,8 @@ Feature: Create a folder tree in documents
     And folder "SubSub1" should not exist
 
   Scenario: Navigate folder structure using the icon view
-    When I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub1>SubSub1"
-    And I press "Refresh"
+    Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub1>SubSub1"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -110,8 +110,8 @@ Feature: Create a folder tree in documents
     Then the "Sub2" grid row within ".document-folder-tree-grid" should be selected
 
   Scenario: Launch action windows from the various locations
-    When I create a folder outline with "Folder1>Sub1 Folder1>Sub2"
-    And I press "Refresh"
+    Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2"
+    When I press "Refresh"
     And I wait for the "Loading" mask to go away
 
     And I press "Add Folder"
