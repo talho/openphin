@@ -249,3 +249,11 @@ end
 When /^(?:I )?sleep (\d+)/ do |sec|
   sleep(sec.to_f)
 end
+
+Then /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be hidden$/ do |class_name, content|
+  page.find(".#{class_name}", :text => content).should be_nil
+end
+
+When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, content|
+  page.find(".#{class_name}", :text => content).should_not be_nil
+end

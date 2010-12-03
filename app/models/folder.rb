@@ -64,7 +64,7 @@ class Folder < ActiveRecord::Base
     end
   end
 
-  def self.new( attributes = {} ) 
+  def self.new( attributes = {} )
     shared_attr = attributes[:shared]
     attributes.delete(:shared)
     audience_attr = attributes[:audience]

@@ -78,12 +78,21 @@ module Capybara
     
     def check(locator)
       field = find_field(locator)
-      old_check(locator) unless field[:checked]
+      begin
+        old_check(locator) unless field[:checked]
+      rescue
+        #if we have problems with the old check, let's go ahead and attempt to just click it.
+        field.click
+      end
     end
 
     def uncheck(locator)
       field = find_field(locator)
-      old_uncheck(locator) if field[:checked]
+      begin
+        old_uncheck(locator) if field[:checked]
+      rescue
+        field.click
+      end
     end
   end
 end
