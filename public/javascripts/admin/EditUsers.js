@@ -1,9 +1,25 @@
 Ext.ns("Talho");
 
+Talho.EditRolesButton = Ext.extend(Ext.Button, {
+  constructor: function(config, ancestor){
+    this.ancestor = ancestor;
+    Talho.EditRolesButton.superclass.constructor.call(this, config);
+  },
+  text: 'Edit Roles',
+  handler: function(b,e){
+    this.ancestor.editor.stopEditing();
+    this.ancestor.manage_user_roles(b.record);
+  },
+  isValid: function(){ return true; },
+  getValue: function(){ return 0; },
+  setValue: function(v,record){ this.record = record; }
+});
+
 Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
+    this.pageSize = 10;
     this.store = new Ext.data.GroupingStore({
-      autoLoad: {params: {start: 0, limit: 10}}, autoSave: false,
+      autoLoad: {params: {start: 0, limit: this.pageSize}}, autoSave: false,
       restful: true,
       pruneModifiedRecords: true,
       url: "admin_edit_users/admin_users",
@@ -25,7 +41,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       remoteSort: true, sortInfo: {field: 'last_name', direction: 'ASC'}
     });
 
-    var editor = new Ext.ux.grid.RowEditor({
+    this.editor = new Ext.ux.grid.RowEditor({
       saveText: 'Update',
       listeners: {scope: this, 'afterEdit': this.handle_row_modification, 'cancelEdit': this.cancel_row_modification}
     });
@@ -47,24 +63,24 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       margins: '0 0 0 0',
       width: 880,
       height: 400,
-      plugins: [editor],
+      plugins: [this.editor],
       stripeRows: true,
       title: 'Edit users',
       view: new Ext.grid.GroupingView({markDirty: false, forceFit: true}),
       tbar: new Ext.PagingToolbar({
-        store: this.store, displayInfo: true, pageSize: 10,
+        store: this.store, displayInfo: true, pageSize: this.pageSize,
         items: [{
           iconCls: 'icon-user-add',
           text: 'Add User',
           scope: this,
           handler: function(){
-            if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
-              editor.stopEditing();
+            if(this.store.getCount() == 0 || (this.store.getCount() > 0 && this.editor.isValid())) {
+              this.editor.stopEditing();
               this.new_edit_in_progress = true;
               this.store.insert(0, new this.store.recordType({id: -1, state: "new"}));
               this.grid.getView().refresh();
               this.grid.getSelectionModel().selectRow(0);
-              editor.startEditing(0);
+              this.editor.startEditing(0);
             }
           }
         },{
@@ -85,10 +101,11 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         {header: 'Mobile', dataIndex: 'mobile_phone', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
         {header: 'Fax', dataIndex: 'fax', sortable: true, editor: {xtype:'textfield',id:'n_fax',allowBlank:true}},
         {header: 'Phone', dataIndex: 'phone', sortable: true, editor: {xtype:'textfield',id:'n_phone',allowBlank:true}},
-        {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}},
-        {xtype: 'templatecolumn', width: 250, header: 'Roles', dataIndex: 'roles', sortable: false, tpl: roles_tpl},
+        {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}, width: 150},
+        {xtype: 'templatecolumn', header: 'Roles', dataIndex: 'roles', sortable: false, tpl: roles_tpl, width: 250,
+          editor: new Talho.EditRolesButton({}, this)},
         {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
-          handler: function(grid, row){ this.manage_user_roles(grid.getStore().getAt(row)); }},
+          handler: function(grid, row){ this.editor.stopEditing(); this.manage_user_roles(grid.getStore().getAt(row)); }},
         {xtype: 'xactioncolumn', header: 'X', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
           handler: function(grid, row){
             var record = grid.getStore().getAt(row);

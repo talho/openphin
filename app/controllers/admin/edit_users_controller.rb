@@ -16,16 +16,16 @@ class Admin::EditUsersController < ApplicationController
       rm_list = u.is_admin? ? u.role_memberships.all_roles : u.role_memberships.user_roles
       role_desc = rm_list.collect { |rm|
         {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
-        :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
+        :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s}
       }
       u.role_requests.unapproved.each { |rq|
         rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
-              :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
+              :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s}
         role_desc.push(rq)
       }
-      { :user => u, :roles => role_desc }
+      {:user => u, :roles => role_desc}
     }
-    render :json => {:total => all_users.length, :rows => rows }
+    render :json => {:total => all_users.length, :rows => rows}
   end
 
   def update
