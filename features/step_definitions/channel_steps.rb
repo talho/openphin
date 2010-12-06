@@ -26,7 +26,7 @@ Given '"$email" has been added as owner to the share "$share_name"' do |email,sh
   share.save!
   share.audience.recipients.with_refresh(:force => true)
 
-  user.permissions << Permission.new(:share => share, :permission => 1)
+  user.permissions << FolderPermission.new(:share => share, :permission => 1)
   user.save!
 
   true

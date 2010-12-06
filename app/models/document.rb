@@ -22,16 +22,16 @@ class Document < ActiveRecord::Base
   validate_on_create :validate_extension
   validate_on_create :validate_virus
 
-  has_and_belongs_to_many :shares, :after_add => :share_with_share
-  has_many :targets, :as => :item, :after_add => :share
-  has_many :audiences, :through => :targets
-  accepts_nested_attributes_for :audiences
+  #has_and_belongs_to_many :shares, :after_add => :share_with_share
+  #has_many :targets, :as => :item, :after_add => :share
+  has_one :audience, :through => :folder
+  #accepts_nested_attributes_for :audiences
     
   belongs_to :user
   belongs_to :folder
   belongs_to :owner, :class_name => 'User'
 
-  after_post_process :notify_shares_of_update
+  #after_post_process :notify_shares_of_update
 
   # having to move away from a named scope here, for now, because we're using audience direct instead of these other tables
   #named_scope :viewable_by, lambda{|user|
@@ -44,8 +44,16 @@ class Document < ActiveRecord::Base
   #  :include => {:shares => :subscriptions}}
   #}
 
+  def authors
+    folder.authors.scoped
+  end
+
+  def admins
+    folder.admins.scoped
+  end
+
   def viewable_by? (user)
-    if user_id == user.id || !(shares & user.owned_shares).empty? || !(shares & user.shares).empty?
+    if owner_id == user.id || audience.recipients.with_no_hacc.include?(user)
       true
     else
       false
@@ -57,7 +65,7 @@ class Document < ActiveRecord::Base
   end
 
   def editable_by? (user)
-    if user_id == user.id || !(shares & user.owned_shares).empty? || !(shares & user.authoring_shares).empty?
+    if owner_id == user.id || authors.include?(user) || admins.include?(user)
       true
     else
       false
@@ -69,7 +77,7 @@ class Document < ActiveRecord::Base
   end
 
   def self.editable_by(user)
-    user.documents | user.owned_shares.map(&:documents).flatten | user.authoring_shares.map(&:documents).flatten
+    user.documents | user.authoring_folders.map(&:documents).flatten | user.admin_shares.map(&:documents).flatten
   end
 
 
@@ -134,8 +142,23 @@ class Document < ActiveRecord::Base
     end
   end
   
-  def copy(user)
-    user.documents.create! :file => self.file, :owner => user
+  def copy(user, folder = nil)
+    doc = Document.new :file => self.file, :owner => user, :folder => folder
+    doc.save!
+  end
+
+  def ftype
+    file_content_type
+  end
+
+  def name
+    file_file_name
+  end
+
+  def as_json(options = {})
+    options[:methods] = [] if options[:methods].nil?
+    options[:methods] |= [:ftype, :name]
+    super( options )
   end
 
 private

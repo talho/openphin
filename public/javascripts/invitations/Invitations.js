@@ -40,7 +40,36 @@ Talho.Invitations = Ext.extend(function(){}, {
                     method: 'GET'
                   }),
                   root: 'invitees',
-                  fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests']
+                  fields: ['name','email','completionStatus','organizationMembership','profileUpdated','pendingRequests'],
+                  listeners: {
+                    load: function() {
+                      bodyContainer = content.getComponent('invitationBodyContainer');
+                      if(bodyContainer.items.items.length == 0) {
+                        subjectContainer = content.getComponent('invitationSubjectContainer');
+                        subject = subjectContainer.getComponent('invitationSubject');
+                        subject.update("<b>Subject:</b>&nbsp;" + newstore.reader.jsonData["invitation"]["subject"]);
+
+                        organizationContainer = content.getComponent('invitationOrganizationContainer');
+                        organization = organizationContainer.getComponent('invitationOrganization');
+                        org = newstore.reader.jsonData["invitation"]["organization"];
+                        if(org) organization.update("<b>Default Organization:</b>&nbsp;" + org);
+                        
+                        bodyContainer.add(new Ext.form.HtmlEditor({width: 550, height: 300, html: newstore.reader.jsonData["invitation"]["body"], enableSourceEdit: false, readOnly: true}));
+
+                        complete_percentage = newstore.reader.jsonData["invitation"]["complete_percentage"];
+                        complete_total = newstore.reader.jsonData["invitation"]["complete_total"];
+                        incomplete_percentage = newstore.reader.jsonData["invitation"]["incomplete_percentage"];
+                        incomplete_total = newstore.reader.jsonData["invitation"]["incomplete_total"];
+
+                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations complete:</b>&nbsp;" + complete_percentage + "% (" + complete_total + ")"});
+                        invitationTopToolbar.add({xtype: 'tbfill'});
+                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations incomplete:</b>&nbsp;" + incomplete_percentage + "% (" + incomplete_total + ")"});
+                        invitationTopToolbar.doLayout();
+                        centerPanel.doLayout();
+                      }
+                      return true;
+                    }
+                  }
                 });
                 invitationGrid.reconfigure(newstore,invitationGrid.colModel);
                 invitationToolbar.bind(newstore);
@@ -81,6 +110,8 @@ Talho.Invitations = Ext.extend(function(){}, {
       displayMsg: 'Displaying invitees {0} - {1} of {2}',
       emptyMsg: 'No invitees to display'
     });
+
+    var invitationTopToolbar = new Ext.Toolbar();
 
     var invitationGrid = new Ext.grid.GridPanel({
       width: 700,
@@ -252,6 +283,7 @@ Talho.Invitations = Ext.extend(function(){}, {
           }
         }]
       }),
+      tbar: invitationTopToolbar,
       bbar: invitationToolbar
     });
 
@@ -266,6 +298,47 @@ Talho.Invitations = Ext.extend(function(){}, {
           pack: 'center'
         },
         items: [header]
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
+        itemId: 'invitationSubjectContainer',
+        items: [{
+          xtype: 'box',
+          itemId: 'invitationSubject'
+        }]
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
+        itemId: 'invitationOrganizationContainer',
+        items: [{
+          xtype: 'box',
+          itemId: 'invitationOrganization'
+        }]
+      },{
+        xtype: 'box',
+        html: '<br/>'
+      },{
+        xtype: 'container',
+        layout: 'hbox',
+        layoutConfig: {
+          align: 'middle',
+          pack: 'center'
+        },
+        itemId: 'invitationBodyContainer'
       },{
         xtype: 'box',
         html: '<br/>'
@@ -297,6 +370,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     var centerPanel = new Ext.Panel({
       layout: 'fit',
       region: 'center',
+      autoScroll: true,
       items: panel_items
     })
 

@@ -28,13 +28,13 @@ When /^(?:|I )fill in this hidden field "([^"]*)" for "([^"]*)"(?: within "([^"]
   end
 end
 
-When /^(?:|I )fill in the htmleditor "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
+When /^(?:|I )fill in the (?:|html)editor "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
   with_scope(selector) do
     fill_in(field, :with => value, :hidden => true, :htmleditor => true)
   end
 end
 
-When /^(?:|I )fill in this htmleditor "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+When /^(?:|I )fill in this (?:|html)editor "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
   with_scope(selector) do
     fill_in(field, :with => value, :hidden => true, :htmleditor => true)
   end
@@ -66,7 +66,7 @@ end
 When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   path_lookup = {
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
-    "the rollcall search page".to_sym => "Rollcall > Search",
+    "the rollcall ADST page".to_sym => "Rollcall > ADST",
     "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
     "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations"
   }
@@ -248,4 +248,12 @@ end
 
 When /^(?:I )?sleep (\d+)/ do |sec|
   sleep(sec.to_f)
+end
+
+Then /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be hidden$/ do |class_name, content|
+  page.find(".#{class_name}", :text => content).should be_nil
+end
+
+When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, content|
+  page.find(".#{class_name}", :text => content).should_not be_nil
 end

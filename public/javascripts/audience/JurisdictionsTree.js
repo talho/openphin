@@ -32,6 +32,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
                 idProperty: 'id',
                 fields: ['name', 'id', 'left', 'right', 'leaf', 'level', 'parent_id']
             }),
+            viewConfig: {hi: 'there'},
             listeners:{
                 scope:this,
                 'load': function(store){

@@ -23,7 +23,7 @@ class Admin::InvitationsController < ApplicationController
       format.html
       format.json do
         options = {}
-        params[:reverse] = (params[:dir] && params[:dir] == 'ASC') ? "1" : nil
+        params[:reverse] = (params[:dir] && params[:dir] == 'DESC') ? "1" : nil
         if params[:sort]
           case params[:sort]
             when 'email'
@@ -40,17 +40,13 @@ class Admin::InvitationsController < ApplicationController
           end
         end
         
-        options[:per_page] = params[:per_page] = params[:limit] || 20
+        options[:per_page] = params[:per_page] = (params[:limit] || 20).to_i
         options[:page] = params[:page] = (params[:start].to_i / params[:limit].to_i) + 1
         invitees = case params[:sort]
           when 'completionStatus'
             inviteeStatus
           when 'pendingRequests'
-            options[:select] = "DISTINCT `invitees`.*"
-            options[:order] = "`role_requests`.jurisdiction_id"
-            options[:joins] = "LEFT JOIN users ON `invitees`.email = `users`.email LEFT JOIN role_requests ON `users`.id = `role_requests`.user_id" #[:user => :role_requests]
-            @invitation.invitees.paginate(options)
-            #inviteeStatusByPendingRequests
+            inviteeStatusByPendingRequests
           when 'organizationMembership'
             @invitation.default_organization ? inviteeStatusByOrganization : @invitation.invitees.paginate(options)
           when 'profileUpdated'
@@ -61,7 +57,7 @@ class Admin::InvitationsController < ApplicationController
           :name => i.name,
           :email => i.email,
           :completionStatus => i.completion_status,
-          :organizationMembership => 'N/A',
+          :organizationMembership => @invitation.default_organization ? i.is_member? : 'N/A',
           :profileUpdated => i.user && i.user.updated_at > @invitation.created_at ? "Yes" : "No",
           :pendingRequests => i.user ? i.user.role_requests.unapproved.map do |rr|
              if current_user.is_admin_for?(rr.jurisdiction)
@@ -81,7 +77,14 @@ class Admin::InvitationsController < ApplicationController
           :success => true,
           :invitation => {
             :name => @invitation.name,
-            :id => @invitation.id
+            :id => @invitation.id,
+            :subject => h(@invitation.subject),
+            :body => @invitation.body,
+            :organization => @invitation.default_organization ? @invitation.default_organization.name : nil,
+            :complete_percentage => @invitation.registrations_complete_percentage,
+            :incomplete_percentage => @invitation.registrations_incomplete_percentage,
+            :complete_total => @invitation.registrations_complete_total,
+            :incomplete_total => @invitation.registrations_incomplete_total
           },                                                                               
           :total => @invitation.invitees.size,
           :invitees => invitees
@@ -168,8 +171,8 @@ class Admin::InvitationsController < ApplicationController
     invitation = Invitation.find(params[:id])
     report_options = [["By Email","by_email"], ["By Registrations","by_registrations"]]
     report_options << ["By Organization","by_organization"] unless invitation.default_organization.nil?
-    report_options << ["By Pending Requests","by_pending_requests"]
-    report_options << ["By Profile Update","by_profile_update"]
+    report_options << ["By Pending Requests","by_pendingRequests"]
+    report_options << ["By Profile Update","by_profileUpdated"]
 
     @reverse = params[:reverse] == "1" ? nil : "1"
 
@@ -179,7 +182,7 @@ class Admin::InvitationsController < ApplicationController
     respond_to do |format|
       
       case params[:report_type]
-      when "by_profile_update"
+      when "by_profileUpdated"
         results = inviteeStatusByProfileUpdate
         format.html do
           render :partial => "report_#{params[:report_type]}", 
@@ -230,7 +233,7 @@ class Admin::InvitationsController < ApplicationController
             render :partial => "report_#{params[:report_type]}", 
                    :locals => {:results => results, :invitation => invitation}
           end
-        when "by_pending_requests"
+        when "by_pendingRequests"
           results = inviteeStatusByPendingRequests
           format.html do
             render :partial => "report_#{params[:report_type]}", 
@@ -248,7 +251,26 @@ class Admin::InvitationsController < ApplicationController
                    :locals => {:results => results, :invitation => invitation}
           end
         else # Also by email
-          results = inviteeStatus
+          options = {}
+          case params[:sort]
+            when 'email'
+              options[:order] = 'invitees.email'
+            when 'name'
+              options[:order] = 'invitees.name'
+            else
+              options[:order] = 'invitees.name'
+          end
+          if params[:reverse]
+            options[:order] += ' DESC'
+          else
+            options[:order] += ' ASC'
+          end
+
+          options[:per_page] = params[:per_page] || 20
+          options[:page] = params[:page] || 1
+
+          results = invitation.invitees.paginate(options)
+
           format.html do
             render :partial => "report_by_email", 
                    :locals => {:results => results, :report_type => params[:report_type],
@@ -303,43 +325,27 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def inviteeStatus
-    order_in = params[:reverse] != nil ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil ? params[:sort] : 'email'
-    #Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]]
-    db = ActiveRecord::Base.connection();
-    table = ""
-    if params[:sort] != nil && (params[:sort] == 'completionStatus' && params[:reverse] == '1')
-      db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration#{params[:id]} TYPE=HEAP " +
-        "(SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
-      db.execute "INSERT INTO inviteeStatusByRegistration#{params[:id]} (SELECT DISTINCT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email NOT IN (SELECT users.email FROM users) ORDER BY invitees.email ASC)"
-    else
-      db.execute "CREATE TEMPORARY TABLE inviteeStatusByRegistration#{params[:id]} TYPE=HEAP " +
-        "(SELECT DISTINCT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email NOT IN (SELECT users.email FROM users) ORDER BY invitees.email ASC)"
-      db.execute "INSERT INTO inviteeStatusByRegistration#{params[:id]} (SELECT invitees.* FROM invitees, users WHERE invitees.invitation_id = #{params[:id]} AND invitees.email=users.email ORDER BY users.email_confirmed, invitees.email ASC)"
-    end
-
-    if params[:sort] != nil && params[:sort] != 'completionStatus'
-      sql = "SELECT * FROM inviteeStatusByRegistration#{params[:id]} ORDER BY #{order_by} #{order_in}"
-    else
-      sql = "SELECT * FROM inviteeStatusByRegistration#{params[:id]}"
-    end
-    params[:per_page] = params[:per_page] ? params[:per_page].to_i : 25
-    params[:page] = params[:page] ? params[:page].to_i : 1
-    sql += " LIMIT #{(params[:per_page] * params[:page]) - params[:per_page]},#{params[:per_page]}"
-    invitees = Invitee.find_by_sql([sql])
-    db.execute "DROP TABLE inviteeStatusByRegistration#{params[:id]}"
-    invitees
+    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
+    order_by = params[:sort] != nil && params[:sort] != 'completionStatus' ? params[:sort] : 'email'
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT `invitees`.*", 
+                                          :joins => "LEFT JOIN users ON `invitees`.email = `users`.email",
+                                          :order => "`users`.email_confirmed #{order_in}, `invitees`.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
   
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil ? params[:sort] : 'email'
-    Invitee.paginate :page => params[:page] || 1, :order => order_by + " " + order_in, :conditions => ["invitation_id = ?", params[:id]], :include => [:user, :invitation]
+    order_by = params[:sort] != nil && params[:sort] != 'organizationMembership' ? params[:sort] : 'email'
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT `invitees`.*",
+                                          :joins => "LEFT JOIN users ON `invitees`.email = `users`.email LEFT JOIN (audiences_users INNER JOIN audiences) ON (`users`.id = `audiences_users`.user_id AND `audiences_users`.audience_id = `audiences`.id AND `audiences`.scope='Organization')",
+                                          :order => "`audiences`.id #{order_in == 'ASC' ? 'DESC' : 'ASC'}, `invitees`.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
 
   def inviteeStatusByPendingRequests
-    Invitee.paginate :page => params[:page] || 1, :order => "invitees.email ASC", :joins => [:user => :role_requests], :include => :user,
-                     :conditions => ["invitation_id = ? AND users.email_confirmed = ? AND role_requests.id IS NOT ? AND role_requests.approver_id IS ? AND role_requests.jurisdiction_id IN (?)", params[:id], true, nil, nil, current_user.role_memberships.admin_roles.map{|rm| rm.jurisdiction.id}.join(",")]
+    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
+    order_by = params[:sort] != nil && params[:sort] != 'pendingRequests' ? params[:sort] : 'email'
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT `invitees`.*",
+                                         :joins => "LEFT JOIN users ON `invitees`.email = `users`.email LEFT JOIN role_requests ON `users`.id = `role_requests`.user_id AND `role_requests`.jurisdiction_id IN (#{current_user.role_memberships.admin_roles.map(&:jurisdiction_id).join(',')})",
+                                         :order => "`role_requests`.id IS#{order_in == 'DESC' ? ' NOT ' : ' '}NULL, `invitees`.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
 
   def inviteeStatusByProfileUpdate
@@ -347,8 +353,8 @@ class Admin::InvitationsController < ApplicationController
     order_by = params[:sort] != nil && params[:sort] != 'profileUpdated' ? params[:sort] : 'email'
     order_by = "display_name" if order_by == "name"
     invitation_time = Invitation.find(params[:id]).updated_at
-    Invitee.paginate_all_by_invitation_id params[:id], 
-      :page=>params[:page] || 1, :order=> "users.updated_at AND users.#{order_by} " + order_in, :include=> [:user, :invitation] #, :conditions => ["users.updated_at >= ? AND users.email_confirmed = ?", invitation_time, true]
+    Invitee.paginate_by_invitation_id params[:id], :select => "DISTINCT `invitees`.*", :joins => "LEFT JOIN users ON `invitees`.email = `users`.email",
+                                      :order => "`users`.updated_at > '#{invitation_time}' #{order_in == 'ASC' ? 'DESC' : 'ASC'}, `invitees`.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
   
   def csv_download
