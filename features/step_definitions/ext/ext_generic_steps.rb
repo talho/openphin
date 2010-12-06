@@ -66,7 +66,7 @@ end
 When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   path_lookup = {
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
-    "the rollcall search page".to_sym => "Rollcall > Search",
+    "the rollcall ADST page".to_sym => "Rollcall > ADST",
     "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
     "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations"
   }
