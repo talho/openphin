@@ -98,18 +98,7 @@ end
 When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ do |content, not_exists, icon_name|
   # we want to find the row with the content, and get the div that's a few levels up
   begin
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
-
-    if row.nil?
-      sleep(1)
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
-    end
-
-    if not_exists.nil?
-      row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{icon_name} ')]").should_not be_nil
-    else
-      row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{icon_name} ')]").should be_nil
-    end
+    row_button_exists?(icon_name, content).should not_exists.nil? ? be_true : be_false
   rescue Selenium::WebDriver::Error::ObsoleteElementError
     When %Q{the "#{content}" grid row should have the #{icon_name} icon}
   end
@@ -124,5 +113,24 @@ Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$
     else
       row.should be_nil
     end
+  end
+end
+
+def row_button_exists?(icon_name, content)
+  row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
+
+  if row.nil?
+    sleep(1)
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
+  end
+
+  !row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{icon_name} ')]").nil?
+end
+
+Then /^I should see the grid items in this order "([^\"]*)"$/ do |orders|
+  orders = orders.split
+  orders.each do |order|
+    cmp = order.split(">")
+    Then %Q{I should see "#{cmp[0]}" in grid row #{cmp[1]}}
   end
 end
