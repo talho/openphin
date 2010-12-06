@@ -88,19 +88,21 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             })
         });
 
-        var rowActions = new Ext.ux.grid.RowActions({
-           actions: [
-               {iconCls: 'editBtn', qtip: 'edit', cb: function(grid, record){
+        var rowActions = new Ext.ux.grid.xActionColumn({
+           items: [
+               {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', handler: function(grid, row){
+                   var record = grid.getStore().getAt(row);
                    this.showNewGroup(record.id);
-               }.createDelegate(this)},
-               {iconCls: 'removeBtn', qtip: 'delete', cb: function(grid, record, action, index, colIndex){
+               }, scope: this},
+               {icon: '/images/cross-circle.png', tooltip: 'Delete Group', handler: function(grid, row, action, index, colIndex){
+                   var store = grid.getStore();
+                   var record = store.getAt(row);
                    if(confirm("Are you sure you wish to delete " + record.get('name') + "?"))
                    {
-                       var store = grid.getStore();
                        store.remove(record);
                        store.save();
                    }
-               }}
+               }, scope: this}
            ]
         });
 
@@ -113,13 +115,12 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                 {header: 'Name', id: 'name_column', dataIndex: 'name'},
                 {header: 'Owner', dataIndex: 'owner', renderer: function(value, metaData){ metaData.css = 'inlineLink'; return value;}},
                 {header: 'Scope', dataIndex: 'scope'},
-                    rowActions
+                rowActions
 
             ],
             sm: false,
             autoExpandColumn: 'name_column',
             loadMask: true,
-            plugins: [rowActions],
             listeners:{
                 scope: this,
                 'cellclick': function(grid, row, column, e){
@@ -171,8 +172,8 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         var jurisdiction_store = new Ext.data.JsonStore({
             restful: true,
             url: '/jurisdictions/user_alerting',
-            idProperty: 'jurisdiction.id',
-            fields: [{name: 'name', mapping: 'jurisdiction.name'}, {name: 'id', mapping: 'jurisdiction.id'}]
+            idProperty: 'id',
+            fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}]
         });
 
         jurisdiction_store.load();

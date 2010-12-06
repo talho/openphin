@@ -19,8 +19,9 @@ Ext.ns("Talho");
     var regList = {
         'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
         'Talho.AlertDetail': {js:'AlertDetail'},
-        'Talho.AdvancedSearch': {js:'AjaxPanel > /javascripts/searches/AdvancedSearch.js'},
-        'Talho.ManageGroups': {js:'/javascripts/audience/AudienceDisplayPanel.js RowActions AudiencePanel > /javascripts/groups/ManageGroups.js'},
+
+        'Talho.FindPeople': {js:'/javascripts/search/FindPeople.js'},
+        'Talho.ManageGroups': {js:'/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/xActionColumn.js AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},

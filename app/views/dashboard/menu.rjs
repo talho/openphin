@@ -40,7 +40,7 @@ if current_user.has_non_public_role?
     menu_config +="{name: 'My Dashboard', handler: 'go_to_dashboard'},"
 
     if current_user.has_non_public_role?
-      menu_config += "{name: 'Find People', tab: {id: 'advanced_search', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.AdvancedSearch'}},"
+      menu_config += "{name: 'Find People', tab: {id: 'find_people', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.FindPeople'}},"
     end
 
     menu_config += "{name: 'My Account', items:[

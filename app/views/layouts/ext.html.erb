@@ -14,12 +14,12 @@
 
   <%# begin include stylesheets for openphin plugins %>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
-  <% css_list.push({:cache => true}) %>
+  <% css_list.push({:cache => 'plugins'}) %>
   <%= stylesheet_link_tag(*css_list) %>
   <%# end include stylesheets for openphin plugins %>
   
   <%# Experimental loading of resources, on the fly %>
-  <%#%><%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => true  %>
+  <%#%><%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => 'preloadMask' %>
   <%#%><script>
     dominoes.rule('jquery', '/javascripts/jquery.js');
     dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/xtheme-gray.css) )) /javascripts/ext/adapter/jquery/ext-jquery-adapter-debug.js > /javascripts/ext/ext-all-debug.js');
