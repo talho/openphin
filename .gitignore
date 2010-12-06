@@ -54,3 +54,5 @@ config/email.yml
 Gemfile.lock
 vendor/cache
 config/hydra.yml
+public/rrd
+config/rrdtool.yml
