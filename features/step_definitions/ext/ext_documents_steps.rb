@@ -84,3 +84,9 @@ When /^I set "([^\"]*)" as "([^\"]*)"(?: with "([^"]*)")?$/ do |folder, sharing,
     folder.update_attributes :shared => 'not_shared'
   end
 end
+
+Given /^"([^\"]*)" is an? "([^\"]*)" for "([^\"]*)"$/ do |user, permission, folder|
+  folder = Folder.find_by_name(folder)
+
+  folder.folder_permissions.create :user_id => User.find_by_email(user).id, :permission => FolderPermission::PERMISSION_TYPES[permission.downcase.to_sym]
+end
