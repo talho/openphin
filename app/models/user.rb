@@ -109,10 +109,10 @@ class User < ActiveRecord::Base
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
     :home_phone, :mobile_phone, :phone, :fax, :lock_version
     
-  has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
-	
-	def editable_by?(other_user)
-	  self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
+  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
+
+  def editable_by?(other_user)
+    self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
   end
     
   before_create :generate_oid
@@ -375,11 +375,19 @@ class User < ActiveRecord::Base
     is_super_admin? || ( object.respond_to?('poster_id') && (self.id == object.poster_id) )
   end
 
-  def to_people_results
+  def to_iphone_results
     rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort[0..1]
     {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
-      'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}] 
+      'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}]
+    }
+  end
+
+  def to_json_results
+    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
+    {
+      'user_id' => id, 'first_name'=>first_name, 'last_name'=>last_name,
+      'email'=>email, 'role_memberships'=>rm, 'photo' => photo.url(:tiny)
     }
   end
 
