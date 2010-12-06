@@ -33,6 +33,8 @@ public/javascripts/all.js
 public/javascripts/none.js
 public/stylesheets/all.css
 public/stylesheets/none.css
+public/stylesheets/plugins.css
+public/stylesheets/preloadMask.css
 config/swn.yml
 config/phone.yml
 config/system.yml
