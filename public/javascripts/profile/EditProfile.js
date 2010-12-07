@@ -121,7 +121,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
 
   load_data: function(json){
     var p = this.getPanel();
-    this.set_field_values(p, json.model.user);
+    this.set_field_values(p, json.user);
     this.set_field_values(p, json.extra);
   },
   save_data: function(){ this.getPanel().getForm().submit(); },

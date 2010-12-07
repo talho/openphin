@@ -15,7 +15,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.jurisdictionsStore = new Ext.data.JsonStore({
-      url: '/jurisdictions.json',
+      url: '/jurisdictions.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
       restful: true,
       root: 'jurisdictions',
       storeId: 'phinjuris',
@@ -156,7 +156,13 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         scope: this,
         'cellclick': function(grid, row, column, e){
           var record = grid.getStore().getAt(row);  // Get the Record
-          Application.fireEvent('opentab', {title: 'Profile: ' + record.get('first_name') + ' ' + record.get('last_name'), url: '/users/' + record.get('user_id') + '/profile' , id: 'user_profile_for_' + record.get('user_id') });
+          var name = record.get('first_name') + ' ' + record.get('last_name');
+          var url = '/users/' + record.get('user_id') + '/profile';
+          if (this.admin_mode) {
+            Application.fireEvent('opentab', {title: 'Edit User: ' + name, url: url, id: 'edit_user_for_' + record.get('user_id'), initializer: 'Talho.EditProfile'});
+          } else {
+            Application.fireEvent('opentab', {title: 'Profile: ' + name, url: url, id: 'user_profile_for_' + record.get('user_id')});
+          }
         }
       },
       tbar: new Ext.PagingToolbar({
@@ -190,7 +196,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         this.searchSidebar,
         this.searchResultsContainer
       ],
-      title: "Find People"
+      title: this.title
     });
 
     this.getPanel = function(){
@@ -208,7 +214,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       if (l == 0) { l = 'none'}
       this.jurisSelector.setTitle('Jurisdictions: <i>('+l+' selected)</i>');
     }, this );
-
   },
 
   handleResults: function(store){

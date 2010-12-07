@@ -2,6 +2,8 @@ class UserProfilesController < ApplicationController
   before_filter(:except => [:show]) do |controller|
     controller.admin_or_self_required(:user_id)
   end
+  before_filter :change_include_root, :only => [:edit]
+  after_filter :change_include_root_back, :only => [:edit]
 
   # GET /users
   # GET /users.xml
@@ -61,7 +63,7 @@ class UserProfilesController < ApplicationController
           type, value = d.to_s.split(": ")
           {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
-        render :json => {:model => @user, :extra => {:photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}}
+        render :json => {:user => @user, :extra => {:photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}}
       }
     end
   end
