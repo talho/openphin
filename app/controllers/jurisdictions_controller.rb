@@ -1,7 +1,7 @@
 class JurisdictionsController < ApplicationController
   before_filter :admin_required, :except => [:mapping, :user_alerter]
-  before_filter :change_include_root, :only => [:user_alerter, :user_alerting]
-  after_filter :change_include_root_back, :only => [:user_alerter, :user_alerting]
+  before_filter :change_include_root, :only => [:index, :mapping, :user_alerter, :user_alerting]
+  after_filter :change_include_root_back, :only => [:index, :mapping, :user_alerter, :user_alerting]
   app_toolbar "han"
 
 
@@ -10,7 +10,6 @@ class JurisdictionsController < ApplicationController
     respond_to do |format|
       # this header is a must for CORS
       headers["Access-Control-Allow-Origin"] = "*"
-      ActiveRecord::Base.include_root_in_json = false
       json = "{\"jurisdictions\": #{jurisdictions.to_json(params[:request])},\"latest_in_secs\": #{Jurisdiction.latest_in_secs} }"
       format.json {render :json => json }
     end
@@ -25,8 +24,11 @@ class JurisdictionsController < ApplicationController
       format.json do
         # this header is a must for CORS
         headers["Access-Control-Allow-Origin"] = "*"
-        @jurisdictions = Jurisdiction.find(:all,:select=>'id,name')
-        ActiveRecord::Base.include_root_in_json = false
+        if params[:admin_mode] == "1"
+          @jurisdictions = current_user.jurisdictions.admin.find(:all,:select=>'jurisdictions.id,name')
+        else
+          @jurisdictions = Jurisdiction.find(:all,:select=>'id,name')
+        end
         render :json => {"jurisdictions"=>@jurisdictions,"expires_on"=>1.day.since.to_i*1000}
       end
     end
@@ -34,7 +36,6 @@ class JurisdictionsController < ApplicationController
 
   def user_alerting
     jurisdictions = current_user.alerting_jurisdictions
-
     render :json => jurisdictions.to_json(:only => ['id', 'name'])
   end
 
