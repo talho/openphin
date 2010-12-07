@@ -9,7 +9,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       url: '/roles.json',
       restful: true,
       root: 'roles',
-      storeId: 'phinroles',
       fields: ['name', 'id'],
       autoLoad: true
     });
@@ -18,7 +17,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       url: '/jurisdictions.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
       restful: true,
       root: 'jurisdictions',
-      storeId: 'phinjuris',
       fields: ['name', 'id'],
       autoLoad: true
     });
@@ -43,7 +41,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
     this.rolesList = new Ext.list.ListView({
       store: this.rolesStore,
-      id: 'with_role_ids',
       multiSelect: true,
       simpleSelect: true,
       columnSort: false,
@@ -56,7 +53,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
     this.jurisList = new Ext.list.ListView({
       store: this.jurisdictionsStore,
-      id: 'with_jurisdiction_ids',
       multiSelect: true,
       simpleSelect: true,
       columnSort: false,
@@ -85,7 +81,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.searchSidebar = new Ext.FormPanel({
-      id: 'advanced_search_panel',
       labelAlign: 'top',
       frame: true,
       region: 'west',
@@ -128,22 +123,28 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     );
 
     this.startScreen = new Ext.Panel ({
-      id: 'search_welcome',
       html: '<div style=" padding: 20px;"><span style="font-size: 200%;">TxPHIN Search</span><br >Use the form at left to get started.</div>'
     });
 
     this.noResultsScreen = new Ext.Panel ({
-      id: 'search_no_results',
       html: '<div style=" padding: 20px;"><span style="font-size: 200%;">No Results</span><br >No users match your search request</div>'
     });
 
     this.serverError = new Ext.Panel ({
-      id: 'search_error',
       html: '<div style="padding: 20px;"><span style="font-size: 200%;">Server Error</span><br >There was an error communicating with the server.<br/ >If the problem persists, please contact an administrator.</div>'
     });
 
+    var admin_mode_buttons = [
+      {text: 'Add User', scope: this, handler: function(){
+        Application.fireEvent('opentab', {title: 'Add User', id: 'add_new_user', initializer: 'Talho.AddUser'});
+      }},
+      {text: 'Edit User', scope: this, handler: function(){
+        var selected_records = this.searchResults.getSelectionModel().getSelections();
+        Ext.each(selected_records, function(e,i){ this.openEditUserTab(e) }, this);
+      }},
+      {text: 'Delete User', scope: this, handler: function(){ }}
+    ];
     this.searchResults = new Ext.grid.GridPanel({
-      id: 'search_results',
       layout: 'hbox',
       store: this.resultsStore,
       colModel: new Ext.grid.ColumnModel({
@@ -155,14 +156,17 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       listeners: {
         scope: this,
         'cellclick': function(grid, row, column, e){
+          if (this.admin_mode) return true;
           var record = grid.getStore().getAt(row);  // Get the Record
+          var user_id = record.get('user_id');
           var name = record.get('first_name') + ' ' + record.get('last_name');
-          var url = '/users/' + record.get('user_id') + '/profile';
-          if (this.admin_mode) {
-            Application.fireEvent('opentab', {title: 'Edit User: ' + name, url: url, id: 'edit_user_for_' + record.get('user_id'), initializer: 'Talho.EditProfile'});
-          } else {
-            Application.fireEvent('opentab', {title: 'Profile: ' + name, url: url, id: 'user_profile_for_' + record.get('user_id')});
-          }
+          var url = '/users/' + user_id + '/profile';
+          Application.fireEvent('opentab', {title: 'Profile: ' + name, url: url, id: 'user_profile_for_' + user_id});
+        },
+        'celldblclick': function(grid, row, column, e){
+          if (!this.admin_mode) return true;
+          var record = grid.getStore().getAt(row);  // Get the Record
+          this.openEditUserTab(record);
         }
       },
       tbar: new Ext.PagingToolbar({
@@ -170,15 +174,15 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         store: this.resultsStore,
         displayInfo: true,
         displayMsg: 'Displaying results {0} - {1} of {2}',
-        emptyMsg: "No results"
+        emptyMsg: "No results",
+        items: (this.admin_mode) ? admin_mode_buttons : []
       })
     });
 
     this.searchResultsContainer = new Ext.Panel({
       region: 'center',
       layout: 'card',
-      activeItem: 'search_welcome',
-      id: 'SPONG',
+      activeItem: 0,
       items: [
         this.startScreen,
         this.searchResults,
@@ -191,7 +195,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       layout:'border',
       itemId: config.id,
       closable: true,
-      id: "fatty arbuckle",
       items: [
         this.searchSidebar,
         this.searchResultsContainer
@@ -218,14 +221,15 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
   handleResults: function(store){
     if (store.getCount() < 1){
-      this.searchResultsContainer.layout.setActiveItem('search_no_results');
+      this.searchResultsContainer.layout.setActiveItem(2); // no_results
     } else {
-      this.searchResultsContainer.layout.setActiveItem('search_results');
+      this.searchResultsContainer.layout.setActiveItem(1); // show_results
     }
   },
 
-  handleError: function(){
-    this.searchResultsContainer.layout.setActiveItem('search_error');
+  handleError: function(misc){
+    alert(misc.toSource());
+    this.searchResultsContainer.layout.setActiveItem(3); // search_error
   },
 
   applyFilters: function(params){     //add selected role and juri IDs, because they are not part of the form
@@ -253,6 +257,14 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     }
     this.searchResults.store.setBaseParam('limit', this.RESULTS_PAGE_SIZE);
     this.searchResults.store.load();
+  },
+
+  openEditUserTab: function(record){
+    var user_id = record.get('user_id');
+    var name = record.get('first_name') + ' ' + record.get('last_name');
+    var url = '/users/' + user_id + '/profile';
+    Application.fireEvent('opentab',
+      {title: 'Edit User: ' + name, url: url, user_id: user_id, id: 'edit_user_for_' + user_id, initializer: 'Talho.EditProfile'});
   }
 });
 
