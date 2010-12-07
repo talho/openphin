@@ -248,10 +248,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     }
     this.searchResults.store.setBaseParam('limit', this.RESULTS_PAGE_SIZE);
     this.searchResults.store.load();
-  },
-
-  searchError: function() {
-    alert("oops");
   }
 });
 
