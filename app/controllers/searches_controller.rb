@@ -64,8 +64,11 @@ class SearchesController < ApplicationController
          render :json => @results.map(&:to_iphone_results)
      end
      format.json do
+       for_admin = current_user.is_admin?
        @results ||= []
-         render :json => { 'success' => true, 'results' => @results.map(&:to_json_results), 'total' => @results.total_entries}
+         render :json => { 'success' => true,
+                           'results' => @results.collect {|u| u.to_json_results(for_admin)},
+                           'total' => @results.total_entries}
      end
    end
   end

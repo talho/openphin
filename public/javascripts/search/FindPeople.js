@@ -21,21 +21,21 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       autoLoad: true
     });
 
+    this.RESULTS_PAGE_SIZE = 10;
     this.resultsStore = new Ext.data.JsonStore({
       url: 'search/show_advanced.json',
       method: 'POST',
       root: 'results',
-      fields: [ 'user_id', 'first_name', 'last_name', 'email', 'role_memberships', 'photo' ],
+      fields: [ 'user_id', 'first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
       autoLoad: false,
       remoteSort: true,
+      baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
       listeners: {
         scope: this,
         'load': this.handleResults,
         'exception': this.handleError
       }
     });
-
-    this.RESULTS_PAGE_SIZE = 10;
 
     this.resultsStore.setDefaultSort('last_name', 'asc');    // tell ext what the initial dataset will look like
 
@@ -119,7 +119,9 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     );
 
     this.rolesColTemplate = new Ext.XTemplate(
-      '<tpl for="role_memberships"><p>{.}</p></tpl>'
+      '<tpl for="role_memberships"><p>{.}</p></tpl>',
+      '<tpl if="role_requests.length &gt; 0"><br>Pending:<br></tpl>',
+      '<tpl for="role_requests"><p><i>{.}</i></p></tpl>'
     );
 
     this.startScreen = new Ext.Panel ({
@@ -135,6 +137,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     var admin_mode_buttons = [
+      {xtype: 'tbspacer', width: 25},
       {text: 'Add User', scope: this, handler: function(){
         Application.fireEvent('opentab', {title: 'Add User', id: 'add_new_user', initializer: 'Talho.AddUser'});
       }},
@@ -150,7 +153,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       colModel: new Ext.grid.ColumnModel({
         columns: [
           { id: 'user', dataIndex: 'last_name', header: 'Search Results', sortable: true, width: 300, xtype: 'templatecolumn', tpl: this.nameColTemplate },
-          { id: 'roles', dataIndex: 'role_memberships', header: 'Roles', sortable: false, width: 300, xtype: 'templatecolumn', tpl: this.rolesColTemplate }
+          { id: 'roles', dataIndex: 'role_memberships', header: 'Roles', sortable: false, width: 350, xtype: 'templatecolumn', tpl: this.rolesColTemplate }
         ]
       }),       
       listeners: {
@@ -217,6 +220,8 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       if (l == 0) { l = 'none'}
       this.jurisSelector.setTitle('Jurisdictions: <i>('+l+' selected)</i>');
     }, this );
+    if (this.admin_mode)
+      this.primary_panel.on('afterrender', function(){ this.searchResults.store.load(); }, this);
   },
 
   handleResults: function(store){
@@ -250,12 +255,11 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   },
 
   displaySearchResults: function(form, action) {
-    var searchData =  this.searchSidebar.getForm().getValues();
+    var searchData = this.searchSidebar.getForm().getValues();
     this.applyFilters(searchData);
     for (var derp in searchData ){
       this.searchResults.store.setBaseParam( derp, searchData[derp] );
     }
-    this.searchResults.store.setBaseParam('limit', this.RESULTS_PAGE_SIZE);
     this.searchResults.store.load();
   },
 

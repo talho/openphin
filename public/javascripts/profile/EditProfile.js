@@ -84,9 +84,9 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:300},
         margins: '0 0 0 10', items:[
-        {xtype: 'container', name: 'user[photo]', html: '<img id=photo src="images/missing.jpg" width=200 height=200>'},
+        {xtype: 'container', name: 'user[current_photo]', html: '<img id=current_photo src="images/missing.jpg">'},
         {xtype: 'spacer', height: '10'},
-        {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[name]', maxLength: '15', width: 'auto'},
+        {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[photo]', maxLength: '1024', width: 'auto'},
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true},
         {xtype: 'spacer', height: '10'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -100,6 +100,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
           new Ext.Button({text: 'edit', handler: function(){ this.manage_user_roles(); }, scope: this})
         ]},
         new Ext.DataView({name: 'user[role_desc]', store: this.roles_store, tpl: roles_tpl, emptyText: 'No roles', deferEmptyText: false}),
+        {xtype: 'hidden', name: '_method', value: 'PUT'},
         {xtype: 'hidden', name: 'user[lock_version]', value: ''}
       ]}
     ];
@@ -114,7 +115,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     Talho.EditProfile.superclass.constructor.call(this, config);
 
     // Override the setValue() method where necessary
-    this.getPanel().find("name", "user[photo]")[0].setValue = function(val){ Ext.getDom("photo").src = val; };
+    this.getPanel().find("name", "user[current_photo]")[0].setValue = function(val){ Ext.getDom("current_photo").src = val; };
     this.getPanel().find("name", "user[devices]")[0].setValue = function(val){ this.getStore().loadData(val); };
     this.getPanel().find("name", "user[role_desc]")[0].setValue = function(val){ this.getStore().loadData(val); };
   },
@@ -123,15 +124,20 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var p = this.getPanel();
     this.set_field_values(p, json.user);
     this.set_field_values(p, json.extra);
+    this.getPanel().find("name", "user[photo]")[0].setValue("");  // clear file path on reload
   },
-  save_data: function(){ this.getPanel().getForm().submit(); },
+  save_data: function(){
+    this.getPanel().getForm().fileUpload = true;
+    this.getPanel().getForm().submit();
+  },
 
   set_field_values: function(p, obj){
     for (var prop in obj) {
       var elem_list = p.find("name", "user[" + prop + "]");
       if (elem_list.length > 0) {
         elem_list[0].setValue(obj[prop]);
-        elem_list[0].originalValue = obj[prop]; // necessary for isDirty() on the form to work
+        // the following is necessary for isDirty() on the form to work
+        elem_list[0].originalValue = (elem_list[0].getValue) ? elem_list[0].getValue() : obj[prop];
       }
     }
   },

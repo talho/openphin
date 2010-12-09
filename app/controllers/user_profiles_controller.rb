@@ -63,7 +63,8 @@ class UserProfilesController < ApplicationController
           type, value = d.to_s.split(": ")
           {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
-        render :json => {:user => @user, :extra => {:photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}}
+        extra = {:current_photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}
+        render :json => {:user => @user, :extra => extra}
       }
     end
   end
@@ -198,24 +199,36 @@ class UserProfilesController < ApplicationController
 
           flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : '<br/><br/>Profile information saved.'
           format.html { redirect_to user_profile_path(@user) }
-          format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
+          format.json {
+            json = {:flash => flash[:notice], :type => :completed, :success => true}
+            (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
+          }
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
-          format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages} }
+          format.json {
+            json = {:flash => nil, :type => :error, :errors => @user.errors.full_messages}
+            (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
+          }
           format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError
         flash[:error] = "Another user has recently updated this profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit"}
-        format.json { render :json => {:flash => flash[:error], :type => :error, :errors => @user.errors.full_messages} }
+        format.json {
+          json = {:flash => flash[:error], :type => :error, :errors => @user.errors.full_messages}
+          (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
+        }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       rescue StandardError => e
         flash[:error] = "An error has occurred saving your profile, please try again."
         find_user_and_profile
         format.html { render :action => "edit" }
-        format.json { render :json => {:flash => flash[:error] + "\n" + e.message, :type => :error, :errors => @user.errors.full_messages, :success => true} }
+        format.json {
+          json = {:flash => flash[:error] + "\n" + e.message, :type => :error, :errors => @user.errors.full_messages, :success => true}
+          (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
+        }
         format.xml { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end

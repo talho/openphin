@@ -383,11 +383,12 @@ class User < ActiveRecord::Base
     }
   end
 
-  def to_json_results
+  def to_json_results(for_admin=false)
     rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
+    rq = role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} if for_admin
     {
       'user_id' => id, 'first_name'=>first_name, 'last_name'=>last_name,
-      'email'=>email, 'role_memberships'=>rm, 'photo' => photo.url(:tiny)
+      'email'=>email, 'role_memberships'=>rm, 'role_requests'=>rq, 'photo' => photo.url(:tiny)
     }
   end
 

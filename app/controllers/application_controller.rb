@@ -291,10 +291,12 @@ private
     notify_hoptoad(exception)
     if request.format.to_sym == :json
       if Rails.env.downcase == "production"
-        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support."}.as_json
+        json = {:success => false, :error => "There was an error processing your request.  Please contact technical support."}
       else
-        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}.as_json
+        json = {:success => false, :error => "There was an error processing your request.  Please contact technical support.",
+                :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}
       end
+      (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
     else
       local_request? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
     end
