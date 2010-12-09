@@ -145,7 +145,19 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         var selected_records = this.searchResults.getSelectionModel().getSelections();
         Ext.each(selected_records, function(e,i){ this.openEditUserTab(e) }, this);
       }},
-      {text: 'Delete User', scope: this, handler: function(){ }}
+      {text: 'Delete User', scope: this, handler: function(){
+        var selected_records = this.searchResults.getSelectionModel().getSelections();
+        if (selected_records.length == 0) return;
+        Ext.Msg.confirm("Confirm User Deletion", "Are you sure you wish to delete " + selected_records.length + " users?",
+          function(id){
+            if (id != "yes") return;
+            var delete_params = new Object;
+            Ext.each(selected_records, function(record,i){ delete_params["users[user_ids][]"] = record.get('user_id'); });
+            var json_auth = Ext.apply({'authenticity_token': FORM_AUTH_TOKEN}, delete_params);
+            Ext.Ajax.request({ url: "/users_delete.json", method: "POST", params: json_auth,
+              success: this.ajax_success_cb, failure: this.ajax_err_cb, scope: this });
+          }, this);
+      }}
     ];
     this.searchResults = new Ext.grid.GridPanel({
       layout: 'hbox',
@@ -233,19 +245,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   },
 
   handleError: function(proxy, type, action, options, response, arg){
-    var json = Ext.decode(response.responseText);
-    var w = 300;
-    var msg = '<b>Server Error:</b> ' + json.error + '<br>';
-    if (json.exception != null) {
-      w = 900;
-      msg += '<b>Exception:</b> ' + json.exception + '<br><br>';
-      msg += '<div style="height:400px;overflow:scroll;">';
-      for (var i = 0; i < json.backtrace.length; i++)
-        msg += '&nbsp;&nbsp;' + json.backtrace[i] + '<br>';
-      msg += '<\div>';
-    }
-    Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-
+    this.show_err_message(Ext.decode(response.responseText));
     this.searchResultsContainer.layout.setActiveItem(3); // search_error
   },
 
@@ -281,6 +281,34 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     var url = '/users/' + user_id + '/profile';
     Application.fireEvent('opentab',
       {title: 'Edit User: ' + name, url: url, user_id: user_id, id: 'edit_user_for_' + user_id, initializer: 'Talho.EditProfile'});
+  },
+
+  ajax_success_cb: function(response, opts) {
+    var json = Ext.decode(response.responseText);
+    if (json.delete_result) {
+      var selected_records = this.searchResults.getSelectionModel().getSelections();
+      this.resultsStore.remove(selected_records);
+    } else {
+      this.show_err_message(json);
+    }
+  },
+  ajax_err_cb: function(response, opts) {
+    var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
+      '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+  },
+  show_err_message: function(json) {
+    var w = 300;
+    var msg = '<b>Server Error:</b> ' + json.error + '<br>';
+    if (json.exception != null) {
+      w = 900;
+      msg += '<b>Exception:</b> ' + json.exception + '<br><br>';
+      msg += '<div style="height:400px;overflow:scroll;">';
+      for (var i = 0; i < json.backtrace.length; i++)
+        msg += '&nbsp;&nbsp;' + json.backtrace[i] + '<br>';
+      msg += '<\div>';
+    }
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
   }
 });
 
