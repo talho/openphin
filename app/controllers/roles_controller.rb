@@ -1,7 +1,8 @@
 class RolesController < ApplicationController
 	app_toolbar "han"
 	
-  before_filter :admin_required, :except => [:mapping]
+  before_filter :non_public_role_required
+  before_filter :admin_required, :except => [:mapping, :index]
   before_filter :change_include_root, :only => [:index, :mapping]
   after_filter :change_include_root_back, :only => [:index, :mapping]
 

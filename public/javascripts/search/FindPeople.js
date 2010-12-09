@@ -232,8 +232,20 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     }
   },
 
-  handleError: function(misc){
-    alert(misc.toSource());
+  handleError: function(proxy, type, action, options, response, arg){
+    var json = Ext.decode(response.responseText);
+    var w = 300;
+    var msg = '<b>Server Error:</b> ' + json.error + '<br>';
+    if (json.exception != null) {
+      w = 900;
+      msg += '<b>Exception:</b> ' + json.exception + '<br><br>';
+      msg += '<div style="height:400px;overflow:scroll;">';
+      for (var i = 0; i < json.backtrace.length; i++)
+        msg += '&nbsp;&nbsp;' + json.backtrace[i] + '<br>';
+      msg += '<\div>';
+    }
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+
     this.searchResultsContainer.layout.setActiveItem(3); // search_error
   },
 

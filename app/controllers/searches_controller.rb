@@ -66,9 +66,10 @@ class SearchesController < ApplicationController
      format.json do
        for_admin = current_user.is_admin?
        @results ||= []
-         render :json => { 'success' => true,
-                           'results' => @results.collect {|u| u.to_json_results(for_admin)},
-                           'total' => @results.total_entries}
+       @results.compact!  # it is possible for shinx to return nil elements in this array
+       render :json => { 'success' => true,
+                         'results' => @results.collect {|u| u.to_json_results(for_admin)},
+                         'total' => @results.total_entries}
      end
    end
   end

@@ -1,5 +1,6 @@
 class JurisdictionsController < ApplicationController
-  before_filter :admin_required, :except => [:mapping, :user_alerter]
+  before_filter :non_public_role_required
+  before_filter :admin_required, :except => [:mapping, :index, :user_alerter]
   before_filter :change_include_root, :only => [:index, :mapping, :user_alerter, :user_alerting]
   after_filter :change_include_root_back, :only => [:index, :mapping, :user_alerter, :user_alerting]
   app_toolbar "han"
