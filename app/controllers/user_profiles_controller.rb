@@ -2,8 +2,8 @@ class UserProfilesController < ApplicationController
   before_filter(:except => [:show]) do |controller|
     controller.admin_or_self_required(:user_id)
   end
-  before_filter :change_include_root, :only => [:edit]
-  after_filter :change_include_root_back, :only => [:edit]
+  before_filter :change_include_root, :only => [:edit, :show]
+  after_filter :change_include_root_back, :only => [:edit, :show]
 
   # GET /users
   # GET /users.xml
@@ -12,7 +12,7 @@ class UserProfilesController < ApplicationController
     @users = User.all
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # index.html.erb
       format.xml { render :xml => @users }
     end
   end
@@ -22,10 +22,18 @@ class UserProfilesController < ApplicationController
   def show
     set_toolbar
     @user = User.find(params[:user_id])
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml { render :xml => @user }
+      format.json {
+        if @user.public? || current_user == @user || current_user.is_admin_for?(@user.jurisdictions) || current_user.is_org_member_of?(@user.organizations)
+          can_edit = current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
+          render :json => {'success' => true, 'userdata' => (@user.to_json_profile).merge({'can_edit' => can_edit})}
+        else
+          render :json => {'success' => true, 'userdata' => {'privateProfile' => true}}
+        end
+      }
     end
   end
 

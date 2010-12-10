@@ -388,8 +388,28 @@ class User < ActiveRecord::Base
     rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
     rq = (for_admin) ? role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} : []
     {
-      'user_id' => id, 'first_name'=>first_name, 'last_name'=>last_name,
+      'user_id' => id, 'display_name' => display_name, 'first_name'=>first_name, 'last_name'=>last_name,
       'email'=>email, 'role_memberships'=>rm, 'role_requests'=>rq, 'photo' => photo.url(:tiny)
+    }
+  end
+
+  def to_json_profile
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
+    device_defuddler = {"Device::EmailDevice" => "email", "Device::BlackberryDevice" => "blackberry", "Device::PhoneDevice" => "phone", "Device::SMSDevice" => "sms"}
+  # devs = devices.collect{ |d| {"type" => device_defuddler[d].type], "address" => d.options.values.first} }
+    {
+      'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
+      'contacts' => [{"type" => "email", 'address' => email},
+                     {"type" => "office_phone", 'address'  => phone},
+                     {"type" => "home_phone", 'address' =>  home_phone},
+                     {"type" => "mobile_phone", 'address' => mobile_phone},
+                     {"type" => "fax", 'address' => fax }],
+      'occupation' => title, 'bio' => bio, 'credentials' => credentials, 'experience' => experience,
+      'employer' => employer, 'job_description' => description,
+      'role_memberships'=>roles, 'organizations' => orgs,
+  #   'devices' => devs, 
+      'photo' => photo.url(:medium)
     }
   end
 

@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   def admin_or_self_required(var = :id)
     ensure_admin_or_self(params[var])
   end
-  
+
   def ensure_admin_or_self(user_id)
     unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
       flash[:error] = "That resource does not exist or you do not have access to it."
@@ -109,7 +109,7 @@ class ApplicationController < ActionController::Base
       if request.xhr?
         respond_to do |format|
             format.html {render :text => "You are not authorized to view this page", :status => 401}
-            format.json {render :json => {:message => "You are not authorized to view this page"}, :status => 401}
+            format.json {render :json => {:success => false, :message => "You are not authorized to view this page"}, :status => 401}
         end
       else
         flash[:error] = "You are not authorized to view this page."

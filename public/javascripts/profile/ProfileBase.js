@@ -26,6 +26,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       closable: true,
       autoWidth: true,
       autoScroll: true,
+      itemId: config.id,
       url: this.form_config.save_url, method: this.form_config.save_method,
       baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
       trackResetOnLoad: true,

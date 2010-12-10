@@ -26,7 +26,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       url: 'search/show_advanced.json',
       method: 'POST',
       root: 'results',
-      fields: [ 'user_id', 'first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
+      fields: [ 'user_id', 'display_name','first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
       autoLoad: false,
       remoteSort: true,
       baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
@@ -114,7 +114,8 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     this.nameColTemplate = new Ext.XTemplate(
       '<div style="float: left; height: 60px; width: 60px;"><img src="{photo}"></div>',
       '<div style="float: left; margin-left: 15px;">',
-        '<div style="font-weight: bold; font-size: 150%;">{last_name}, {first_name}</div><br />',
+        '<div style="font-weight: bold; font-size: 150%;">{display_name}</div><br />',
+        '<div>({first_name} {last_name})</div>',
         '<div>{email}</div></div>'
     );
 
@@ -173,10 +174,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         'cellclick': function(grid, row, column, e){
           if (this.admin_mode) return true;
           var record = grid.getStore().getAt(row);  // Get the Record
-          var user_id = record.get('user_id');
-          var name = record.get('first_name') + ' ' + record.get('last_name');
-          var url = '/users/' + user_id + '/profile';
-          Application.fireEvent('opentab', {title: 'Profile: ' + name, url: url, id: 'user_profile_for_' + user_id});
+          this.openUserProfileTab(record);
         },
         'celldblclick': function(grid, row, column, e){
           if (!this.admin_mode) return true;
@@ -273,6 +271,12 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       this.searchResults.store.setBaseParam( derp, searchData[derp] );
     }
     this.searchResults.store.load();
+  },
+
+  openUserProfileTab: function(record){
+    var user_id = record.get('user_id');
+    Application.fireEvent('opentab',
+      {title: 'Profile: ' + record.get('display_name'), user_id: user_id, id: 'user_profile_for_' + user_id, initializer: 'Talho.ShowProfile'});
   },
 
   openEditUserTab: function(record){

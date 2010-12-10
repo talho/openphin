@@ -27,6 +27,7 @@ Ext.ns("Talho");
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
         'Talho.Topic': {js: "/javascripts/forums/topic.js"},
         'Talho.EditProfile': {js:'ProfileBase /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/profile/EditProfile.js'},
+        'Talho.ShowProfile': {js:'/javascripts/profile/ShowProfile.js'},
         'Talho.EditPassword': {js:'ProfileBase > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'ProfileBase /javascripts/profile/DevicesControl.js > /javascripts/profile/EditDevices.js'},
         'Talho.ManageRoles': {js:'ProfileBase /javascripts/profile/RolesControl.js > /javascripts/profile/ManageRoles.js'},
