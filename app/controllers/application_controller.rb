@@ -229,7 +229,7 @@ class ApplicationController < ActionController::Base
         role_request = RoleRequest.new
         role_request.jurisdiction_id = rq["jurisdiction_id"]
         role_request.role_id = rq["role_id"]
-        role_request.requester = @user
+        role_request.requester = current_user
         role_request.user = @user
         if role_request.save && role_request.valid?
           RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
