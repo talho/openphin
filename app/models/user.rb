@@ -159,6 +159,7 @@ class User < ActiveRecord::Base
     indexes title,          :sortable => true
     has roles(:id),         :as => :role_ids
     has jurisdictions(:id), :as => :jurisdiction_ids
+    where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}

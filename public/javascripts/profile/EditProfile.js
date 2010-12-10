@@ -146,7 +146,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
   manage_user_devices: function(){
     var devices_control = new Talho.ux.DevicesControl(this.form_config.save_url, this);
     devices_control.load_data(Ext.pluck(this.devices_store.getRange(), "data"));
-    var win = new Ext.Window({title: "Manage Devices", layout: 'form', autoScroll: true, padding: '10', width: 440, height: 400,
+    var win = new Ext.Window({title: "Manage Devices", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [devices_control]});
     win.addButton({xtype: 'button', text: 'Save', handler: function(){ devices_control.save_data(); win.close(); }, scope: this, width:'auto'});
     win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
@@ -155,7 +155,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
   manage_user_roles: function(){
     var roles_control = new Talho.ux.RolesControl(this.form_config.save_url, this);
     roles_control.load_data(Ext.pluck(this.roles_store.getRange(), "data"));
-    var win = new Ext.Window({title: "Manage Roles", layout: 'form', autoScroll: true, padding: '10', width: 440, height: 400,
+    var win = new Ext.Window({title: "Manage Roles", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [roles_control]});
     win.addButton({xtype: 'button', text: 'Save', handler: function(){ roles_control.save_data(); win.close(); }, scope: this, width:'auto'});
     win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
