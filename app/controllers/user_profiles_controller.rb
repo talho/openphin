@@ -71,7 +71,14 @@ class UserProfilesController < ApplicationController
           type, value = d.to_s.split(": ")
           {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
-        extra = {:current_photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc}
+        org_desc = @user.organizations.collect { |o|
+          {:id => o.id, :org_id => o.id, :name => o.name, :type => "org", :state => "unchanged"}
+        }
+        @user.organization_membership_requests.unapproved.each { |o|
+          org_desc.push({:id => o.id, :org_id => o.organization_id, :name => Organization.find(o.organization_id).name, :type => "req",
+            :state => "pending"})
+        }
+        extra = {:current_photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc, :org_desc => org_desc}
         render :json => {:user => @user, :extra => extra}
       }
     end
@@ -140,6 +147,21 @@ class UserProfilesController < ApplicationController
             render :json => {:flash => nil, :type => :rollback, :errors => rq_errors}
           else # failure
             render :json => {:flash => nil, :type => :error, :errors => rq_errors}
+          end
+        }
+      end
+      return
+    end
+
+    # Handle manage organizations submission (ext only)
+    if params[:user].has_key?(:orgs)
+      success,org_errors = handle_org_requests(params[:user][:orgs])
+      respond_to do |format|
+        format.json {
+          if success
+            render :json => {:flash => "Organization requests sent.", :type => :completed, :success => true}
+          else
+            render :json => {:flash => nil, :type => :error, :errors => org_errors}
           end
         }
       end

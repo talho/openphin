@@ -179,6 +179,7 @@ class ApplicationController < ActionController::Base
   end
 
   def update_devices(device_list_json)
+    return [ false, [ "Permission denied" ] ] unless current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
     device_list = ActiveSupport::JSON.decode(device_list_json)
     success = true
     device_errors = []
@@ -193,7 +194,7 @@ class ApplicationController < ActionController::Base
     }
     device_list.find_all{|d| d["state"]=="deleted" && d["id"] > 0}.each { |d|
       device_to_delete = Device.find(d["id"])
-      device_to_delete.destroy if @user == device_to_delete.user
+      device_to_delete.destroy
     }
     device_list.find_all{|d| d["state"]=="new"}.each { |d|
       attr_name = deviceOptionMap[d["rbclass"]]
@@ -209,6 +210,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_role_requests(req_json)
+    return [ false, [ "Permission denied" ] ] unless current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
     rq_list = ActiveSupport::JSON.decode(req_json)
     result = "success"
     rq_errors = []
@@ -224,7 +226,6 @@ class ApplicationController < ActionController::Base
         end
       }
       rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
-        jurisdiction = Jurisdiction.find(rq["jurisdiction_id"])
         role = Role.find(rq["role_id"])
         role_request = RoleRequest.new
         role_request.jurisdiction_id = rq["jurisdiction_id"]
@@ -244,6 +245,47 @@ class ApplicationController < ActionController::Base
         rq_errors.push("You must have at least one public role.  Please add a public role and re-save.")
         raise ActiveRecord::Rollback
       end
+    }
+
+    [ result, rq_errors ]
+  end
+
+  def handle_org_requests(req_json)
+    return [ false, [ "Permission denied" ] ] unless current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
+    rq_list = ActiveSupport::JSON.decode(req_json)
+    result = "success"
+    rq_errors = []
+
+    ActiveRecord::Base.transaction {
+      rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
+        if rq["type"]=="req"
+          rq_to_delete = OrganizationMembershipRequest.find(rq["id"])
+          if rq_to_delete && @user == rq_to_delete.user
+            rq_to_delete.destroy
+          else
+            rq_errors.concat(rq_to_delete.errors.full_messages)
+          end
+        else
+          org = Organization.find(rq["id"])
+          org.delete(@user)
+          if !org.save
+            result = "failure"
+            rq_errors.concat(org.errors.full_messages)
+          end
+        end
+      }
+      rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
+        org_request = OrganizationMembershipRequest.new
+        org_request.organization_id = rq["org_id"]
+        org_request.requester = current_user
+        org_request.user = @user
+        if org_request.save && org_request.valid?
+          OrganizationMembershipRequestMailer.deliver_user_notification_of_org_request(org_request) if !org_request.approved?
+        else
+          result = "failure"
+          rq_errors.concat(org_request.errors.full_messages)
+        end
+      }
     }
 
     [ result, rq_errors ]

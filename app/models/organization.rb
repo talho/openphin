@@ -70,6 +70,10 @@ class Organization < ActiveRecord::Base
     group.users << user unless group.users.include?(user)
   end
 
+  def delete(user)
+    group.users.delete(user)
+  end
+
   def approved?
     organization_requests.any?(&:approved)
   end

@@ -21,6 +21,8 @@ class OrganizationMembershipRequest < ActiveRecord::Base
 
   before_create :set_requester_if_nil
   after_create :auto_approve_if_admin
+
+  named_scope :unapproved, :conditions => ["approver_id is null"]
   
   def approved?
     true if approver

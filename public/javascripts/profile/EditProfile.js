@@ -35,6 +35,24 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
       '</ul>'
     );
 
+    this.orgs_store = new Ext.data.Store({
+      listeners: {scope: this, 'load': {fn: function(){ this.getPanel().doLayout(); }, delay: 10}},
+      reader: new Ext.data.JsonReader({
+        fields: [{name:'id'}, {name:'org_id'}, {name:'name'}, {name:'type'}, {name:'state'}]
+      })
+    });
+    var orgs_tpl = new Ext.XTemplate(
+      '<ul>',
+      '<tpl for=".">',
+        '<li>',
+            '<tpl if="state==' + "'pending'" + '"><i></tpl>',
+            '{name}',
+            '<tpl if="state==' + "'pending'" + '"></i></tpl>',
+        '</li>',
+      '</tpl>',
+      '</ul>'
+    );
+
     var item_list = [
       {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -100,6 +118,12 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
           new Ext.Button({text: 'edit', handler: function(){ this.manage_user_roles(); }, scope: this})
         ]},
         new Ext.DataView({name: 'user[role_desc]', store: this.roles_store, tpl: roles_tpl, emptyText: 'No roles', deferEmptyText: false}),
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', html: '<b>Organizations</b>&nbsp;'},
+          new Ext.Button({text: 'edit', handler: function(){ this.manage_organizations(); }, scope: this})
+        ]},
+        new Ext.DataView({name: 'user[org_desc]', store: this.orgs_store, tpl: orgs_tpl, emptyText: 'No organizations', deferEmptyText: false}),
         {xtype: 'hidden', name: '_method', value: 'PUT'},
         {xtype: 'hidden', name: 'user[lock_version]', value: ''}
       ]}
@@ -118,6 +142,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     this.getPanel().find("name", "user[current_photo]")[0].setValue = function(val){ Ext.getDom("current_photo").src = val; };
     this.getPanel().find("name", "user[devices]")[0].setValue = function(val){ this.getStore().loadData(val); };
     this.getPanel().find("name", "user[role_desc]")[0].setValue = function(val){ this.getStore().loadData(val); };
+    this.getPanel().find("name", "user[org_desc]")[0].setValue = function(val){ this.getStore().loadData(val); };
   },
 
   load_data: function(json){
@@ -158,6 +183,15 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var win = new Ext.Window({title: "Manage Roles", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [roles_control]});
     win.addButton({xtype: 'button', text: 'Save', handler: function(){ roles_control.save_data(); win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
+    win.show();
+  },
+  manage_organizations: function(){
+    var orgs_control = new Talho.ux.OrganizationsControl(this.form_config.save_url, this);
+    orgs_control.load_data(Ext.pluck(this.orgs_store.getRange(), "data"));
+    var win = new Ext.Window({title: "Manage Organizations", layout: 'form', autoScroll: true, padding: '10', width: 440,
+      items: [orgs_control]});
+    win.addButton({xtype: 'button', text: 'Save', handler: function(){ orgs_control.save_data(); win.close(); }, scope: this, width:'auto'});
     win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
     win.show();
   }
