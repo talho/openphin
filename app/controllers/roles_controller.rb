@@ -1,14 +1,17 @@
 class RolesController < ApplicationController
 	app_toolbar "han"
 	
-  before_filter :admin_required, :except => [:mapping]
+  before_filter :non_public_role_required
+  before_filter :admin_required, :except => [:mapping, :index]
+  before_filter :change_include_root, :only => [:index, :mapping]
+  after_filter :change_include_root_back, :only => [:index, :mapping]
+
   
   def mapping
     roles = fetch_roles(params[:request])
     respond_to do |format|
       # this header is a must for CORS
       headers["Access-Control-Allow-Origin"] = "*"
-      ActiveRecord::Base.include_root_in_json = false
       json = "{\"roles\": #{roles.to_json(params[:request])},\"latest_in_secs\": #{Role.latest_in_secs} }"
       format.json {render :json => json }
     end
@@ -25,7 +28,6 @@ class RolesController < ApplicationController
         headers["Access-Control-Allow-Origin"] = "*"
         is_admin = current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
         @alerts = is_admin ? Role.find(:all,:select=>'id,name') : Role.user_roles.find(:all,:select=>'id,name')
-        ActiveRecord::Base.include_root_in_json = false
         render :json => {"roles"=>@alerts,"expires_on"=>1.day.since.to_i*1000}
       end
     end

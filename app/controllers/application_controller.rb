@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   def admin_or_self_required(var = :id)
     ensure_admin_or_self(params[var])
   end
-  
+
   def ensure_admin_or_self(user_id)
     unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
       flash[:error] = "That resource does not exist or you do not have access to it."
@@ -109,7 +109,7 @@ class ApplicationController < ActionController::Base
       if request.xhr?
         respond_to do |format|
             format.html {render :text => "You are not authorized to view this page", :status => 401}
-            format.json {render :json => {:message => "You are not authorized to view this page"}, :status => 401}
+            format.json {render :json => {:success => false, :message => "You are not authorized to view this page"}, :status => 401}
         end
       else
         flash[:error] = "You are not authorized to view this page."
@@ -229,7 +229,7 @@ class ApplicationController < ActionController::Base
         role_request = RoleRequest.new
         role_request.jurisdiction_id = rq["jurisdiction_id"]
         role_request.role_id = rq["role_id"]
-        role_request.requester = @user
+        role_request.requester = current_user
         role_request.user = @user
         if role_request.save && role_request.valid?
           RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
@@ -291,10 +291,12 @@ private
     notify_hoptoad(exception)
     if request.format.to_sym == :json
       if Rails.env.downcase == "production"
-        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support."}.as_json
+        json = {:success => false, :error => "There was an error processing your request.  Please contact technical support."}
       else
-        render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}.as_json
+        json = {:success => false, :error => "There was an error processing your request.  Please contact technical support.",
+                :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}
       end
+      (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
     else
       local_request? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
     end

@@ -44,14 +44,9 @@ class SearchesController < ApplicationController
       strip_blank_elements(params[:conditions])
       strip_blank_arrays(params[:with])
       prevent_email_in_name(params)
-      if params[:name].blank?
-        sanitize(params[:conditions])
-        params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
-        params.delete(:name)
-        @results = User.search(params.merge(build_options(params)))
-      else
-        @results = User.search( params[:name], build_options(params).merge({:match_mode=>:any}) )
-      end
+      sanitize(params[:conditions])
+      params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
+      @results = User.search(params.merge(build_options(params)))
     end
     
     respond_to do |format|
@@ -62,12 +57,19 @@ class SearchesController < ApplicationController
         @filename = "user_search_.csv"
         @output_encoding = 'UTF-8'
       end
-      # for iPhone
-     format.json do
+     format.iphone do
        @results ||= []
          # this header is a must for CORS
          headers["Access-Control-Allow-Origin"] = "*"
-         render :json => @results.map(&:to_people_results)
+         render :json => @results.map(&:to_iphone_results)
+     end
+     format.json do
+       for_admin = current_user.is_admin?
+       @results ||= []
+       #@results.compact!  # it is possible for shinx to return nil elements in this array
+       render :json => { 'success' => true,
+                         'results' => @results.collect {|u| u.to_json_results(for_admin)},
+                         'total' => @results.total_entries}
      end
    end
   end
@@ -103,9 +105,23 @@ protected
   end
   
   def build_options(params)
+    #  map EXT params to Sphinx params
+    unless params[:limit].blank?
+        params[:per_page] =  params.delete(:limit)
+    end
+    unless params[:start].blank?
+      params[:page] = (params.delete(:start).to_i / params[:per_page].to_i).floor + 1
+    end
+    unless params[:dir].blank?
+      params[:sort_mode] = params.delete(:dir).downcase.to_sym
+    else
+      params[:sort_mode] = :asc
+    end
+
     options = {
       :retry_stale => true,                                        # avoid nil results
-      :order => :name,                                             # ascending order on name
+      :order => :last_name,                                        # ascending order on name
+      :sort_mode => params[:sort_mode],
       :page => params[:page] ? params[:page].to_i : 1,             # paginate pages
       :per_page => params[:per_page] ? params[:per_page].to_i : 8, # paginate entries per page
       :star => true                                                # auto wildcard

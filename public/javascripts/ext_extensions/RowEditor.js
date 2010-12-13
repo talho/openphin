@@ -186,7 +186,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
             for(var i = 0, len = cm.getColumnCount(); i < len; i++){
                 val = this.preEditValue(record, cm.getDataIndex(i));
                 f = fields[i];
-                f.setValue(val);
+                f.setValue(val, record);
                 this.values[f.id] = Ext.isEmpty(val) ? '' : val;
             }
             this.verifyLayout(true);

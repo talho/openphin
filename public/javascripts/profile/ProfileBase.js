@@ -26,7 +26,9 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       closable: true,
       autoWidth: true,
       autoScroll: true,
+      itemId: config.id,
       url: this.form_config.save_url, method: this.form_config.save_method,
+      baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
       trackResetOnLoad: true,
       listeners: {scope: this,
         'beforeaction': function(){ panel.loadMask.show() },
@@ -47,9 +49,10 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     panel.loadMask.show();
     this.load_json();
   },
-  load_json: function(){
-    Ext.Ajax.request({ url: this.form_config.load_url, method: 'GET',
-      success: this.load_complete_cb, failure: this.load_fail_cb, scope: this });
+  load_json: function(options){
+    var defaults = {url: this.form_config.load_url, method: 'GET', success: this.load_complete_cb, failure: this.load_fail_cb, scope: this};
+    var args = Ext.apply(defaults, options);
+    Ext.Ajax.request(args);
   },
   load_complete_cb: function(response, options){
     this.getPanel().loadMask.hide();
@@ -73,7 +76,8 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   // Save via AJAX callbacks
   save_json: function(url, json){
     this.getPanel().loadMask.show();
-    Ext.Ajax.request({ url: url, method: "PUT", params: json,
+    var json_auth = Ext.apply({'authenticity_token': FORM_AUTH_TOKEN}, json);
+    Ext.Ajax.request({ url: url, method: "PUT", params: json_auth,
       success: this.ajax_save_success_cb, failure: this.ajax_save_err_cb, scope: this });
   },
   ajax_save_success_cb: function(response, opts) {

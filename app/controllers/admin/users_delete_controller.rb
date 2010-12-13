@@ -17,10 +17,13 @@ class Admin::UsersDeleteController < ApplicationController
         user.delayed_delete_by(current_user.email,request.remote_ip)
       end
     end
-    if flash[:errors].blank?
-      flash[:notice] = "Users have been successfully deleted."
+    respond_to do |format|
+      format.html {
+        flash[:notice] = "Users have been successfully deleted." if flash[:errors].blank?
+        redirect_to admin_role_requests_path
+      }
+      format.json { render :json => {:delete_result => flash[:errors].blank?, :success => true} }
     end
-    redirect_to admin_role_requests_path 
   end
   
 end

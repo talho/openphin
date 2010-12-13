@@ -19,13 +19,15 @@ Ext.ns("Talho");
     var regList = {
         'Talho.SendAlert': {js:'$(ext_extensions)/CenterLayout.js $(ext_extensions)/BreadCrumb.js AlertDetail AudiencePanel > /javascripts/han/SendAlert.js'},
         'Talho.AlertDetail': {js:'AlertDetail'},
-        'Talho.AdvancedSearch': {js:'AjaxPanel > /javascripts/searches/AdvancedSearch.js'},
+
+        'Talho.FindPeople': {js:'/javascripts/search/FindPeople.js'},
         'Talho.ManageGroups': {js:'/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/xActionColumn.js AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
         'Talho.Topic': {js: "/javascripts/forums/topic.js"},
-        'Talho.EditProfile': {js:'ProfileBase > /javascripts/profile/EditProfile.js'},
+        'Talho.EditProfile': {js:'ProfileBase /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/profile/EditProfile.js'},
+        'Talho.ShowProfile': {js:'/javascripts/profile/ShowProfile.js'},
         'Talho.EditPassword': {js:'ProfileBase > /javascripts/profile/EditPassword.js'},
         'Talho.EditDevices': {js:'ProfileBase /javascripts/profile/DevicesControl.js > /javascripts/profile/EditDevices.js'},
         'Talho.ManageRoles': {js:'ProfileBase /javascripts/profile/RolesControl.js > /javascripts/profile/ManageRoles.js'},
@@ -36,7 +38,7 @@ Ext.ns("Talho");
         'Talho.Invitations': {js:'/javascripts/invitations/Invitations.js'},
         'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js > /javascripts/admin/AddUser.js'},
         'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'},
-        'Talho.EditUsers': {js:'EditUsers ProfileBase > /javascripts/admin/EditUsers.js'}
+        'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

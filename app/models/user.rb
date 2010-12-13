@@ -113,10 +113,10 @@ class User < ActiveRecord::Base
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
     :home_phone, :mobile_phone, :phone, :fax, :lock_version
     
-  has_attached_file :photo, :default_url => '/images/missing.jpg', :styles => { :medium => "200x200>" }
-	
-	def editable_by?(other_user)
-	  self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
+  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
+
+  def editable_by?(other_user)
+    self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
   end
     
   before_create :generate_oid
@@ -163,6 +163,7 @@ class User < ActiveRecord::Base
     indexes title,          :sortable => true
     has roles(:id),         :as => :role_ids
     has jurisdictions(:id), :as => :jurisdiction_ids
+    where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
@@ -379,11 +380,40 @@ class User < ActiveRecord::Base
     is_super_admin? || ( object.respond_to?('poster_id') && (self.id == object.poster_id) )
   end
 
-  def to_people_results
+  def to_iphone_results
     rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort[0..1]
     {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
-      'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}] 
+      'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}]
+    }
+  end
+
+  def to_json_results(for_admin=false)
+    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
+    rq = (for_admin) ? role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} : []
+    {
+      'user_id' => id, 'display_name' => display_name, 'first_name'=>first_name, 'last_name'=>last_name,
+      'email'=>email, 'role_memberships'=>rm, 'role_requests'=>rq, 'photo' => photo.url(:tiny)
+    }
+  end
+
+  def to_json_profile
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
+    device_defuddler = {"Device::EmailDevice" => "email", "Device::BlackberryDevice" => "blackberry", "Device::PhoneDevice" => "phone", "Device::SMSDevice" => "sms"}
+  # devs = devices.collect{ |d| {"type" => device_defuddler[d].type], "address" => d.options.values.first} }
+    {
+      'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
+      'contacts' => [{"type" => "email", 'address' => email},
+                     {"type" => "office_phone", 'address'  => phone},
+                     {"type" => "home_phone", 'address' =>  home_phone},
+                     {"type" => "mobile_phone", 'address' => mobile_phone},
+                     {"type" => "fax", 'address' => fax }],
+      'occupation' => title, 'bio' => bio, 'credentials' => credentials, 'experience' => experience,
+      'employer' => employer, 'job_description' => description,
+      'role_memberships'=>roles, 'organizations' => orgs,
+  #   'devices' => devs, 
+      'photo' => photo.url(:medium)
     }
   end
 

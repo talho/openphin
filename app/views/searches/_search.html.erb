@@ -10,8 +10,8 @@ Please fill in part of the name or email address of the person you would like to
 <% form_for :conditions, :url => {:controller => "searches", :action => "show_advanced"},:method => "post" do |f| %>
   <div class="quick_search_user">
     <p>
-      <%= label_tag(:name, "Search for:") %>
-      <%= text_field_tag(:name) %>
+      <%= f.label(:name, "Search for:") %>
+      <%= f.text_field(:name) %>
     </p>
   </div>
   <div class="advance_search_user">
