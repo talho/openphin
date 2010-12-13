@@ -110,7 +110,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     );
 
     this.dv = new Ext.DataView(
-      {name: 'user[org_desc]', store: this.store, tpl: template, emptyText: 'No organizations to display',
+      {name: 'user[org_desc]', store: this.store, tpl: template, emptyText: 'No organizations to display', deferEmptyText: false,
         multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
     );
 

@@ -132,7 +132,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     );
 
     this.dv = new Ext.DataView(
-      {name: 'user[role_desc]', store: this.store, tpl: template, emptyText: 'No roles to display',
+      {name: 'user[role_desc]', store: this.store, tpl: template, emptyText: 'No roles to display', deferEmptyText: false,
         multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
     );
 
