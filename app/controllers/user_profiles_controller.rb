@@ -72,11 +72,11 @@ class UserProfilesController < ApplicationController
           {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
         }
         org_desc = @user.organizations.collect { |o|
-          {:id => o.id, :org_id => o.id, :name => o.name, :type => "org", :state => "unchanged"}
+          {:id => o.id, :org_id => o.id, :name => o.name, :desc => o.description, :type => "org", :state => "unchanged"}
         }
         @user.organization_membership_requests.unapproved.each { |o|
-          org_desc.push({:id => o.id, :org_id => o.organization_id, :name => Organization.find(o.organization_id).name, :type => "req",
-            :state => "pending"})
+          org_desc.push({:id => o.id, :org_id => o.organization_id, :name => Organization.find(o.organization_id).name, :desc => o.description,
+            :type => "req", :state => "pending"})
         }
         extra = {:current_photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc, :org_desc => org_desc}
         render :json => {:user => @user, :extra => extra}

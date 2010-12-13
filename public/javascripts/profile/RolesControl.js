@@ -61,7 +61,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
               anchor: '100%', store: this.roles_store, mode: 'local', displayField: 'name'}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Role Description', anchor: '100% -50',
+        {xtype: 'textarea', fieldLabel: 'Role Description', anchor: '100% -50', readOnly: true,
           html: 'Role description per CDC bureaucratic explanation process'}
       ]
     });

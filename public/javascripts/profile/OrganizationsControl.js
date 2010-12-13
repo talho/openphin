@@ -30,7 +30,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
   },
 
   add_organization: function(){
-    var template = new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item">{name}</div></tpl>');
+    var template = new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item">{name} - {desc}</div></tpl>');
 
     var win = new Ext.Window({
       title: "Add Organization",
@@ -40,15 +40,13 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       width: 600, height: 250,
       items: [
         {xtype: 'container', layout: 'hbox', anchor: '100%', items: [
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.4, items: [
+          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 1, items: [
             {xtype: 'combo', fieldLabel: 'Organization', name: 'rq[org]', editable: false, triggerAction: 'all',
-              anchor: '100%', store: this.organizations_store, mode: 'local', tpl: template, displayField: 'name'}
-          ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.6, margins: '0 0 0 10', items: [
+              anchor: '100%', store: this.organizations_store, mode: 'local', tpl: template, displayField: 'name',
+              listeners: {select: function(combo,record,index){ win.find("name", "rq[desc]")[0].setValue(record.get("long_desc")); }}}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Organization Description', anchor: '100% -50',
-          html: 'Organization description'}
+        {xtype: 'textarea', fieldLabel: 'Organization Description', name: 'rq[desc]', anchor: '100% -50', readOnly: true, html: ''}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -94,7 +92,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
         'add': {fn: function(){ this.ancestor.getPanel().doLayout(); }, delay: 10}
       },
       reader: new Ext.data.JsonReader({
-        fields: [{name:'id'}, {name:'org_id'}, {name:'name'}, {name:'type'}, {name:'state'}]
+        fields: [{name:'id'}, {name:'org_id'}, {name:'name'}, {name:'desc'}, {name:'type'}, {name:'state'}]
       })
     });
 
@@ -102,7 +100,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{name}</span><br>&nbsp;',
+          '<p><span class="role-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<br>&nbsp;',
             '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
           '</p>',
@@ -123,7 +121,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     this.organizations_store = new Ext.data.JsonStore({
       url: '/organizations.json', autoLoad: true, autoSave: false,
       root: 'organizations',
-      fields: [{name: 'name'}, {name: 'id'}]
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'desc'}, {name: 'long_desc'}]
     });
   }
 });
