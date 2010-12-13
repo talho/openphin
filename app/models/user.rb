@@ -202,12 +202,14 @@ class User < ActiveRecord::Base
   end
 
   def is_org_admin_for?(other)
-    if other.class == User
-      return true if !(organizations & other.organizations).empty? && is_admin_for?(other.jurisdictions)
-    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
-      other.each do |user|
-        return true if !(organizations & user.organizations).empty? && is_admin_for?(user.jurisdictions)
-      end
+    unless other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+      other = [ other ]
+    end
+    other.each do |user|
+      return true if !(organizations & user.organizations).empty? && is_admin_for?(user.jurisdictions)
+      user.organization_membership_requests.each { |org_mem_request|
+        return true if org_mem_request.organization.members.include?(self) && is_admin_for?(user.jurisdictions)
+      }
     end
     false
   end

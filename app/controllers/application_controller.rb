@@ -256,36 +256,34 @@ class ApplicationController < ActionController::Base
     result = "success"
     rq_errors = []
 
-    ActiveRecord::Base.transaction {
-      rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
-        if rq["type"]=="req"
-          rq_to_delete = OrganizationMembershipRequest.find(rq["id"])
-          if rq_to_delete && @user == rq_to_delete.user
-            rq_to_delete.destroy
-          else
-            rq_errors.concat(rq_to_delete.errors.full_messages)
-          end
+    rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
+      if rq["type"]=="req"
+        rq_to_delete = OrganizationMembershipRequest.find(rq["id"])
+        if rq_to_delete && @user == rq_to_delete.user
+          rq_to_delete.destroy
         else
-          org = Organization.find(rq["id"])
-          org.delete(@user)
-          if !org.save
-            result = "failure"
-            rq_errors.concat(org.errors.full_messages)
-          end
+          rq_errors.concat(rq_to_delete.errors.full_messages)
         end
-      }
-      rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
-        org_request = OrganizationMembershipRequest.new
-        org_request.organization_id = rq["org_id"]
-        org_request.requester = current_user
-        org_request.user = @user
-        if org_request.save && org_request.valid?
-          OrganizationMembershipRequestMailer.deliver_user_notification_of_org_request(org_request) if !org_request.approved?
-        else
+      else
+        org = Organization.find(rq["id"])
+        org.delete(@user)
+        orig_request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(org.id, @user.id)
+        orig_request.destroy if orig_request
+        if !org.save
           result = "failure"
-          rq_errors.concat(org_request.errors.full_messages)
+          rq_errors.concat(org.errors.full_messages)
         end
-      }
+      end
+    }
+    rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
+      org_request = OrganizationMembershipRequest.new
+      org_request.organization_id = rq["org_id"]
+      org_request.requester = current_user
+      org_request.user = @user
+      unless org_request.save && org_request.valid?
+        result = "failure"
+        rq_errors.concat(org_request.errors.full_messages)
+      end
     }
 
     [ result, rq_errors ]

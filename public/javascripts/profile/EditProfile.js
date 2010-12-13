@@ -73,8 +73,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
             {xtype: 'textfield', fieldLabel: 'Employer', name: 'user[employer]', maxLength: '46', allowBlank: true}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Job description', name: 'user[description]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
+        {xtype: 'textarea', fieldLabel: 'Job description', name: 'user[description]', height: 150, allowBlank: true},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true}
@@ -93,12 +92,9 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         ]},
         {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all',
           store: ['English', 'Spanish'], value: 'English'},
-        {xtype: 'textarea', fieldLabel: 'Bio', name: 'user[bio]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
-        {xtype: 'textarea', fieldLabel: 'Credentials', name: 'user[credentials]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
-        {xtype: 'textarea', fieldLabel: 'Experience', name: 'user[experience]', height: 150, enableKeyEvents: true,
-          listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}}
+        {xtype: 'textarea', fieldLabel: 'Bio', name: 'user[bio]', height: 150, allowBlank: true},
+        {xtype: 'textarea', fieldLabel: 'Credentials', name: 'user[credentials]', height: 150, allowBlank: true},
+        {xtype: 'textarea', fieldLabel: 'Experience', name: 'user[experience]', height: 150, allowBlank: true}
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:300},
         margins: '0 0 0 10', items:[
