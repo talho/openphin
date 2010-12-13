@@ -20,7 +20,7 @@ Feature: Document Search
     And I navigate to "Documents"
     And I press "Search"
     Then the "Search for Files" tab should be open
-    When I fill in "Search Text" with "inv"
+    When I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv"
     When I click documents-folder-item "invitees.csv"
@@ -35,7 +35,7 @@ Feature: Document Search
     And I go to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
-    And I fill in "Search Text" with "inv"
+    And I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv"
     When I click documents-folder-item "invitees.csv"
@@ -51,7 +51,7 @@ Feature: Document Search
     When I go to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
-    And I fill in "Search Text" with "inv"
+    And I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv"
     When I click documents-folder-item "invitees.csv"
@@ -72,7 +72,7 @@ Feature: Document Search
     When I go to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
-    When I fill in "Search Text" with "inv"
+    When I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv"
     When I click documents-folder-item "invitees.csv"
@@ -90,7 +90,7 @@ Feature: Document Search
     When I go to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
-    And I fill in "Search Text" with "inv"
+    And I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv"
     When I click documents-folder-item "invitees.csv"
