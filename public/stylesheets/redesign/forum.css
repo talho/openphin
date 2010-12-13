@@ -72,11 +72,15 @@
 
 .topic-content{
     margin: 5px;
+    cursor: text;
 }
 
 .topic-result-grid .x-grid3-td-post_content_column{
     border: #666 solid;
     border-width: 1px 0 0 0;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .topic-result-grid .x-grid3-td-post_content_column > div{

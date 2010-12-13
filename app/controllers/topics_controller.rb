@@ -147,7 +147,7 @@ class TopicsController < ApplicationController
         end
         return
       end
-      params[:topic][:comment_attributes][:poster_id] = current_user.id if params[:topic][:comment_attributes][:poster_id].nil?
+      params[:topic][:comment_attributes][:poster_id] = current_user.id if params[:topic][:comment_attributes][:id].nil?
     end
 
     respond_to do |format|

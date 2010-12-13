@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :devices
   map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
 
-  map.resources :documents, :controller => 'doc/documents', :except => [:index], :member => {:move => [:post, :put], :copy => [:post, :put]}
+  map.resources :documents, :controller => 'doc/documents', :except => [:index], :collection => [:search], :member => {:move => [:post, :put], :copy => [:post, :put]}
   map.resources :folders, :controller => 'doc/folders', :collection => [:target_folders], :member => {:move => [:post, :put] }
 
   map.resources :role_requests, :controller => "role_requests"

@@ -34,7 +34,7 @@ class Audience < ActiveRecord::Base
     options.delete(:force)
     recipients_default.scoped(options)
   end
-  
+
   belongs_to :forum
   named_scope :with_forum, :conditions => "forum_id is not NULL"
   named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"

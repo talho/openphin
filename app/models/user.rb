@@ -87,6 +87,10 @@ class User < ActiveRecord::Base
     Folder.scoped :joins => ', audiences_recipients', :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder_permissions]
   end
 
+  def shared_documents
+    Document.scoped :joins => ', folders, audiences_recipients', :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ? and documents.folder_id = folders.id', self.id, self.id], :include => [:owner]
+  end
+
   has_many :favorites
 
 

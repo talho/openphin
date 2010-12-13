@@ -142,4 +142,21 @@ class Doc::DocumentsController < ApplicationController
       false
     end
   end
+
+  def search
+    results = []
+    results << Document.search(params[:text], :star => true, :with => {:owner_id => current_user.id }).to_a if (params[:own] == 'true')
+    results << Document.search(params[:text], :star => true, :with => {:shared_with_ids => current_user.id }, :without => {:owner_id => current_user.id }).to_a if (params[:shared] == 'true')
+    results.flatten!.sort! {|x, y| x[:file_file_name] <=> y[:file_file_name] }
+
+    respond_to do |format|
+      format.json {render :json => {:files => results.map do |result|
+            result[:is_author] = result.editable_by?(current_user)
+            result[:is_owner] = result.owner_id == current_user.id
+            result[:doc_url] = document_url(result)
+            result.as_json(:include => {:owner => {:only => [:display_name]}} )
+        end 
+      } }
+    end
+  end
 end

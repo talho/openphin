@@ -44,12 +44,19 @@ class Document < ActiveRecord::Base
   #  :include => {:shares => :subscriptions}}
   #}
 
+  named_scope :shared_with_user, lambda{|user|
+    {:joins => ', folders, audiences_recipients',
+     :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ? and documents.folder_id = folders.id', user.id, user.id],
+     :include => [:owner]
+    }
+  }
+
   def authors
-    folder.authors.scoped
+    folder.authors
   end
 
   def admins
-    folder.admins.scoped
+    folder.admins
   end
 
   def viewable_by? (user)
@@ -159,6 +166,17 @@ class Document < ActiveRecord::Base
     options[:methods] = [] if options[:methods].nil?
     options[:methods] |= [:ftype, :name]
     super( options )
+  end
+
+  define_index do
+    indexes file_file_name, :as => :name, :sortable => true
+
+    has owner_id
+    has folder(:id), :as => :folder_id
+    has folder.audience(:id), :as => :audience_id
+    has folder.audience.recipients_default(:id), :as => :shared_with_ids
+
+    set_property :delta => :delayed
   end
 
 private

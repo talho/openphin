@@ -228,7 +228,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                     };
                     if(edit_mode){
                         params['forum[audience_attributes][id]'] = create_forum_win.audience_id;
-                        params['forum[audience_attributes][lock_version]'] = create_forum_win.lock_version;
+                        params['forum[lock_version]'] = create_forum_win.lock_version;
                     }
 
                     Ext.Ajax.request({
