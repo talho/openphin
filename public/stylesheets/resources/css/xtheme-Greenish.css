@@ -1282,6 +1282,9 @@ border-right-color:#bababa;
 border-bottom-color:#bababa;
 border-left-color:#9c9c9c;
 }
+.x-window .x-window-handle {
+    opacity: 0;
+}
 body.x-body-masked *.x-window-plain *.x-window-mc{
 background-color:#e4e4e4;
 }

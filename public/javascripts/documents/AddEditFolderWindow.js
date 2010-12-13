@@ -21,6 +21,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
             items: {
                 xtype: 'tabpanel',
                 itemId: 'tp',
+                border: false,
                 activeTab: 0,
                 items:[
                     {itemId: 'form', title: 'General Options', xtype:'form', padding: '5', items:[
