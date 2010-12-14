@@ -36,10 +36,8 @@ class Admin::OrganizationMembershipRequestsController < ApplicationController
       redirect_to root_path
       #redirect_to :action => :index
     end
-
   end
 
   def deny
-    
   end
 end

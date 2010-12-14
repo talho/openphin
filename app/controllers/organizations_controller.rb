@@ -10,7 +10,11 @@ class OrganizationsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        render :json => {:success => true, :organizations => @organizations.map{|org| {:id => org.id, :name => org.name}}}.as_json
+        orgs = @organizations.map{|org|
+          long_desc = "#{org.description}\n#{org.street}\n#{org.locality} #{org.state}, #{org.postal_code}\n#{org.phone}"
+          {:id => org.id, :name => org.name, :desc => org.description, :long_desc => long_desc}
+        }
+        render :json => {:success => true, :organizations => orgs}.as_json
       end
     end
   end
