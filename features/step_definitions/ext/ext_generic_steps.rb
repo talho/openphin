@@ -77,10 +77,10 @@ end
 
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|
   within(:css, "##{name}") do
-	 	table.rows.each do |row|
-           value = row[0]
-           within(:css, ".x-toolbar-cell") { page.should have_content(value) }
-	 	end
+    table.rows.each do |row|
+      value = row[0]
+      within(:css, ".x-toolbar-cell") { page.should have_content(value) }
+    end
     false
   end
 end
@@ -97,7 +97,6 @@ Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |se
         items.length.should <= 1 # We either found 1 item or 0 items. There may be different menus in the system with the same name, but not until a single menu
         items.each {|item| found.push(item)}
       end
-
       menu_lists.push(found)
     end
     # find a menu that matches exactly what we're looking for
@@ -121,7 +120,6 @@ end
 
 Then /^the "([^\"]*)" tab should be open(?: and (active|inactive))?$/ do |tab_name, activity|
   active = activity.nil? ? true : activity == 'active'
-
   begin
     check_for_tab_strip_item(active, tab_name) # this first time may fail because of an element in the tab panel being removed. if so, try again
   rescue Selenium::WebDriver::Error::ObsoleteElementError # only rescue if it's this specific error
@@ -150,6 +148,10 @@ end
 
 When /^I close the active ext window$/ do
   page.execute_script("Ext.WindowMgr.getActive().close();")
+end
+
+When /^I close the active tab$/ do
+ find('.x-tab-strip-active .x-tab-strip-close').click
 end
 
 When /^I open ext combo "([^\"]*)"$/ do |select_box|
@@ -199,7 +201,6 @@ When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
     while !mask.nil? and Time.now < end_time
       mask = page.find('.x-mask-loading', :text => mask_text)
     end
-
     mask.should be_nil
   rescue Selenium::WebDriver::Error::ObsoleteElementError
     # this is perfect, the element has gone from the dom.

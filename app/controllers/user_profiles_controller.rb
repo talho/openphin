@@ -31,7 +31,7 @@ class UserProfilesController < ApplicationController
           can_edit = current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
           render :json => {'success' => true, 'userdata' => (@user.to_json_profile).merge({'can_edit' => can_edit})}
         else
-          render :json => {'success' => true, 'userdata' => {'privateProfile' => true}}
+          render :json => {'success' => true, 'userdata' => (@user.to_json_private_profile)}
         end
       }
     end

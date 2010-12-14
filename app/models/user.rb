@@ -419,38 +419,49 @@ class User < ActiveRecord::Base
     }
   end
 
+  def to_json_private_profile
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
+    { 'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
+      'contacts' => [{"type" => "email", 'address' => email}],
+      'role_memberships'=>roles, 'organizations' => orgs, 'photo' => photo.url(:medium)
+    }
+  end
+
 private
 
   def assign_public_role
     public_role = Role.public
     if (role_requests.nil? && role_memberships.nil?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-      role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
-    else
-      rr = role_requests
-      rr.each do |request|
-        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-        RoleRequest.find_by_id(request.id).destroy
-      end unless role_requests.nil? || role_memberships.public_roles.count != 0
-      role_memberships.each do |request|
-        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-      end if role_memberships.public_roles.count == 0
-    end
+      if(role_requests.nil? && role_memberships.nil?)
+        role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
+      else
+        rr = role_requests
+        rr.each do |request|
+          role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+          request.destroy if request.role == public_role
+        end unless role_requests.nil? || role_memberships.public_roles.count != 0
+        role_memberships.each do |request|
+          role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+        end if role_memberships.public_roles.count == 0
+      end
 
-    role_requests.find_all_by_role_id(public_role).each do |request|
-      if request.approver.nil?
-        role_memberships.create!(
-          :role => public_role, 
-          :jurisdiction => request.jurisdiction
+      role_requests.find_all_by_role_id(public_role).each do |request|
+        if request.approver.nil?
+          role_memberships.create!(
+            :role => public_role,
+            :jurisdiction => request.jurisdiction
+          )
+        end
+        request.destroy
+      end
+
+      if self.role_requests.any?
+        self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
+          public_role.id,
+          self.role_requests.first.jurisdiction.id
         )
       end
-      request.destroy
-    end
-        
-    if self.role_requests.any?
-      self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
-        public_role.id, 
-        self.role_requests.first.jurisdiction.id
-      )
     end
   end
 
