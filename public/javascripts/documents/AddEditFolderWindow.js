@@ -29,7 +29,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                             {xtype: 'field', fieldLabel: 'Folder Name', name: 'folder[name]', anchor: '100%'},
                             new cb({boxLabel: 'Notify users when files are added to this folder.', name: 'folder[notify_of_document_addition]'}),
                             new cb({boxLabel: 'Notify users when they have been invited to share this folder.', name: 'folder[notify_of_audience_addition]'}),
-                            new cb({boxLabel: 'Notify the uploader the first user downloads a file within this folder.', name: 'folder[notify_of_file_download]'}),
+                            new cb({boxLabel: 'Notify the uploader the first time a user downloads a file within this folder.', name: 'folder[notify_of_file_download]'}),
                             new cb({boxLabel: 'Expire documents in this folder after 30 days.', name: 'folder[expire_documents]', checked: true}),
                             new cb({boxLabel: 'Notify the uploader 5 days before files expire.', name: 'folder[notify_before_document_expiry]', checked: true})
                         ],
