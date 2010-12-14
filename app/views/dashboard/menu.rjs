@@ -59,7 +59,6 @@ if current_user.has_non_public_role?
                       {name: 'Manage Users', items: [
                           {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},
                           {name: 'Batch Add Users', tab: {id: 'batch_new_users', title:'Batch Add Users', url:'#{ new_user_batch_path }', initializer: 'Talho.BatchUsers'}},
-                          {name: 'Edit Users (old)', tab: {id: 'edit_user', title:'Edit Users', url:'#{ new_users_delete_path }', initializer: 'Talho.EditUsers'}},
                           {name: 'Edit Users', tab: {id: 'edit_users', title:'Edit Users', url:'#{ show_advanced_search_path }', admin_mode: true, initializer: 'Talho.FindPeople'}}]},
                       {name: 'Manage Invitations', items:[
                           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
