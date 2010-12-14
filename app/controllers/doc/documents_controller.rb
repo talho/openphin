@@ -27,6 +27,8 @@ class Doc::DocumentsController < ApplicationController
         @document.owner_id = (@parent_folder ? @parent_folder.owner.id : current_user.id)
         if @document.valid?
           @document.save!
+
+          #file creation was successful, let's notify users that 
           respond_to do |format|
             format.json {render :json => {:success => true }, :content_type => 'text/html' }
           end
