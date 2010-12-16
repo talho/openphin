@@ -97,10 +97,10 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     });
 
     var template = new Ext.XTemplate(
-      '<ul class="roles">',
+      '<ul class="orgs">',
       '<tpl for=".">',
-        '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<br>&nbsp;',
+        '<li class="org-item ' + '<tpl if="state==' + "'pending'" + '">org-pending</tpl>' + '">',
+          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<br>&nbsp;',
             '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
           '</p>',
@@ -111,7 +111,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
 
     this.dv = new Ext.DataView(
       {name: 'user[org_desc]', store: this.store, tpl: template, emptyText: 'No organizations to display', deferEmptyText: false,
-        multiSelect: false, singleSelect: true, itemSelector: 'li.role-item', selectedClass: 'device-selected'}
+        multiSelect: false, singleSelect: true, itemSelector: 'li.org-item', selectedClass: 'device-selected'}
     );
 
     return this.dv;

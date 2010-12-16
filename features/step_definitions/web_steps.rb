@@ -135,8 +135,8 @@ end
 
 Then /^(?:|I )should see JSON:$/ do |expected_json|
   require 'json'
-  expected = JSON.pretty_generate(JSON.parse(expected_json))
-  actual   = JSON.pretty_generate(JSON.parse(response.body))
+  expected = JSON.pretty_generate([ JSON.parse(expected_json.raw[0][0]) ])
+  actual   = JSON.pretty_generate([ JSON.parse(response.body) ])
   expected.should == actual
 end
 
@@ -150,7 +150,7 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
-Then /^(?:|I )should (not )?see the following within "([^"]*)":$/ do |selector, flavor, table|
+Then /^(?:|I )should see the following within "([^"]*)":$/ do |selector, table|
   with_scope(selector) do
     table.raw.each { |row|
       row.each { |e|

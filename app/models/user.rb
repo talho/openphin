@@ -437,9 +437,9 @@ class User < ActiveRecord::Base
     org_desc = organizations.collect { |o|
       {:id => o.id, :org_id => o.id, :name => o.name, :desc => o.description, :type => "org", :state => "unchanged"}
     }
-    organization_membership_requests.unapproved.each { |o|
-      org_desc.push({:id => o.id, :org_id => o.organization_id, :name => Organization.find(o.organization_id).name, :desc => o.description,
-        :type => "req", :state => "pending"})
+    organization_membership_requests.unapproved.each { |rq|
+      o = Organization.find(rq.organization_id)
+      org_desc.push({:id => rq.id, :org_id => rq.organization_id, :name => o.name, :desc => o.description, :type => "req", :state => "pending"})
     }
     extra = {:current_photo => photo.url(:medium), :devices => device_desc, :role_desc => role_desc, :org_desc => org_desc}
      {:user => self, :extra => extra}
