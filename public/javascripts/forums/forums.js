@@ -162,7 +162,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                         Application.fireEvent('opentab', {title: record.get('name'), topic_id: record.id, forum_id: grid.getStore().forumId, initializer: "Talho.Topic", id: 'forum_topic_' + record.id});
                     }
                     else if(target.hasClass('inlineLink') && fieldName == 'poster_name'){
-                        Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('poster_name'), url: 'users/' + record.get('poster_id') + '/profile', id: 'user_profile_for_' + record.get('poster_id') });
+                      Application.fireEvent('opentab', {title: 'Profile: ' + record.get('poster_name'), user_id: record.get('poster_id'), id: 'user_profile_for_' + record.get('poster_id'), initializer: 'Talho.ShowProfile'});
                     }
                 }
             },
@@ -294,7 +294,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
     },
 
     render_user_avatar: function(value, metaData, record, rowIndex, colIndex, store) {
-        return '<img style="width:65px;height:65px" src="' + value + '" />';
+        return '<img src="' + value + '" />';
     },
 
     getForumData: function(sm, rowindex, record) {

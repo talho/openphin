@@ -89,7 +89,10 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     frame: true,
                     bodyCssClass: 'topic_grid',
                     columns: [
-                        {xtype:'templatecolumn', width: 165, tpl: '<div class="topic-user-info-column"><div class="topic-user-name">{user_name}</div><div><img height="100" width="100" src="{user_avatar}"</div><div>Posted: {created_at:date("n/j/y g:i:s A")}</div></div>'},
+                        {xtype:'templatecolumn', width: 165,
+                          tpl: '<div class="topic-user-info-column"><div class="topic-user-name">{user_name}</div>' +
+                               '<div><img class="profileLink" style="cursor: pointer;" height="100" src="{user_avatar}"</div>' +
+                               '<div>Posted: {created_at:date("n/j/y g:i:s A")}</div></div>'},
                         {id: 'post_content_column', xtype: 'templatecolumn', tpl: '<div class="topic-content">{formatted_content}</div>'}
                     ],
                     autoExpandColumn: 'post_content_column',
@@ -144,8 +147,8 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                         }
                     },
                     listeners:{
-                        scope: this,
-                        'rowbodyclick': this.topic_row_click
+                      scope: this,
+                      'rowclick': this.topic_row_click
                     }
                 }
             ],
@@ -223,6 +226,10 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     }
                 });
             }
+        } else if(elem.hasClass('profileLink')){
+          var user_id = grid.getStore().getAt(rowIndex).data.user_id;
+          var user_name = grid.getStore().getAt(rowIndex).data.user_name;
+          Application.fireEvent('opentab', {title: 'Profile: ' + user_name, user_id: user_id, id: 'user_profile_for_' + user_id, initializer: 'Talho.ShowProfile'});
         }
     },
 

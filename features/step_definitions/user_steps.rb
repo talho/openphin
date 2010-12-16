@@ -29,6 +29,13 @@ Given /^the following users exist:$/ do |table|
   end
 end
 
+Given /^([^"]*) has the following information:$/ do |email, table|
+  u=User.find_by_email(email)
+  table.raw.each do |row|
+    u.update_attribute(row[0],row[1])
+  end
+end
+
 Given /^"([^\"]*)" has the title "([^\"]*)"$/ do |email, value|
   u=User.find_by_email(email)
   u.update_attribute(:title,value)

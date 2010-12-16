@@ -282,6 +282,12 @@ Then /^I should see:$/ do |table|
   end
 end
 
+Then /^I should not see:$/ do |table|
+  table.raw.each do |row|
+    page.should_not have_content(row.join)
+  end
+end
+
 Then /^I should be redirected to (.+)$/ do |page_name|
   URI.parse(current_url).path.should == path_to(page_name)
 end

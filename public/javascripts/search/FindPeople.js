@@ -113,10 +113,10 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
     this.nameColTemplate = new Ext.XTemplate(
       '<div style="float: left; height: 60px; width: 60px;"><img src="{photo}"></div>',
-      '<div style="float: left; margin-left: 15px;">',
-        '<div style="font-weight: bold; font-size: 150%;">{display_name}</div><br />',
-        '<div>({first_name} {last_name})</div>',
-        '<div>{email}</div></div>'
+      '<div style="float: left; margin-left: 15px; width: 205px;">',
+        '<span style="white-space:normal; font-weight: bold; font-size: 150%;">{display_name}</span><br/ >',
+        '<tpl if="(first_name +\' \' + last_name) != display_name">({first_name} {last_name})<br /></tpl>',
+      '{email}</div>'
     );
 
     this.rolesColTemplate = new Ext.XTemplate(
