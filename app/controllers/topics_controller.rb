@@ -23,7 +23,7 @@ class TopicsController < ApplicationController
         topic[:is_super_admin] = true
       end
       topic[:posts] = topic.comments.length
-      topic[:user_avatar] = User.find_by_id(topic.poster_id).photo.url(:medium)
+      topic[:user_avatar] = User.find_by_id(topic.poster_id).photo.url(:tiny)
     end
     original_included_root = ActiveRecord::Base.include_root_in_json
     ActiveRecord::Base.include_root_in_json = false
@@ -59,7 +59,7 @@ class TopicsController < ApplicationController
         original_included_root = ActiveRecord::Base.include_root_in_json
         ActiveRecord::Base.include_root_in_json = false
         render :json => {:comments => @comments.map do |x|
-                            x[:user_avatar] = x.poster.photo.url(:medium)
+                            x[:user_avatar] = x.poster.photo.url(:thumb)
                             x[:is_moderator] = current_user.moderator_of?(x)
                             x[:formatted_content] = RedCloth.new(h(x.content)).to_html
                             x.as_json(:include => {:poster => {:only => [:display_name, :id, :photo] }})

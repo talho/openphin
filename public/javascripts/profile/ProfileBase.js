@@ -57,6 +57,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
   load_complete_cb: function(response, options){
     this.getPanel().loadMask.hide();
     var json = Ext.decode(response.responseText, true);
+    if (json.type == "error" || json.exception != null) { this.show_message(json); return; }
     this.load_data(json);  // derived class must have load_data method defined
     this.getPanel().doLayout();
   },

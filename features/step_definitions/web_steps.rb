@@ -135,8 +135,8 @@ end
 
 Then /^(?:|I )should see JSON:$/ do |expected_json|
   require 'json'
-  expected = JSON.pretty_generate(JSON.parse(expected_json))
-  actual   = JSON.pretty_generate(JSON.parse(response.body))
+  expected = JSON.pretty_generate([ JSON.parse(expected_json.raw[0][0]) ])
+  actual   = JSON.pretty_generate([ JSON.parse(response.body) ])
   expected.should == actual
 end
 
@@ -150,7 +150,7 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
-Then /^(?:|I )should (not )?see the following within "([^"]*)":$/ do |selector, flavor, table|
+Then /^(?:|I )should see the following within "([^"]*)":$/ do |selector, table|
   with_scope(selector) do
     table.raw.each { |row|
       row.each { |e|
@@ -282,6 +282,12 @@ Then /^I should see:$/ do |table|
   end
 end
 
+Then /^I should not see:$/ do |table|
+  table.raw.each do |row|
+    page.should_not have_content(row.join)
+  end
+end
+
 Then /^I should be redirected to (.+)$/ do |page_name|
   URI.parse(current_url).path.should == path_to(page_name)
 end
@@ -296,4 +302,9 @@ end
 
 When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
   attach_file(field, path, mime)
+end
+
+When /^I suspend cucumber/ do
+  print "Cucumber suspended: press Return to continue"
+  STDIN.getc  
 end

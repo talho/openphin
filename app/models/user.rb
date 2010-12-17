@@ -423,38 +423,186 @@ class User < ActiveRecord::Base
     }
   end
 
+  def to_json_private_profile
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
+    { 'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
+      'contacts' => [{"type" => "email", 'address' => email}],
+      'role_memberships'=>roles, 'organizations' => orgs, 'photo' => photo.url(:medium)
+    }
+  end
+
+  def to_json_edit_profile
+    rm_list = is_admin? ? role_memberships.all_roles : role_memberships.user_roles
+    role_desc = rm_list.collect { |rm|
+      {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
+      :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
+    }
+    role_requests.unapproved.each { |rq|
+      rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
+            :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
+      role_desc.push(rq)
+    }
+    device_desc = devices.collect { |d|
+      type, value = d.to_s.split(": ")
+      {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
+    }
+    org_desc = organizations.collect { |o|
+      {:id => o.id, :org_id => o.id, :name => o.name, :desc => o.description, :type => "org", :state => "unchanged"}
+    }
+    organization_membership_requests.unapproved.each { |rq|
+      o = Organization.find(rq.organization_id)
+      org_desc.push({:id => rq.id, :org_id => rq.organization_id, :name => o.name, :desc => o.description, :type => "req", :state => "pending"})
+    }
+    extra = {:current_photo => photo.url(:medium), :devices => device_desc, :role_desc => role_desc, :org_desc => org_desc}
+     {:user => self, :extra => extra}
+  end
+
+  def update_devices(device_list_json, current_user)
+    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    device_list = ActiveSupport::JSON.decode(device_list_json)
+    success = true
+    device_errors = []
+
+    # Device: class to attr_name map
+    deviceOptionMap = {
+      'Device::EmailDevice' =>      'email_address',
+      'Device::PhoneDevice' =>      'phone',
+      'Device::SMSDevice' =>        'sms',
+      'Device::FaxDevice' =>        'fax',
+      'Device::BlackberryDevice' => 'blackberry'
+    }
+    device_list.find_all{|d| d["state"]=="deleted" && d["id"] > 0}.each { |d|
+      device_to_delete = Device.find(d["id"])
+      device_to_delete.destroy
+    }
+    device_list.find_all{|d| d["state"]=="new"}.each { |d|
+      attr_name = deviceOptionMap[d["rbclass"]]
+      new_device = d["rbclass"].constantize.new({attr_name => d["value"]})
+      new_device.user = self
+      if !new_device.save
+        success = false
+        device_errors.concat(new_device.errors.full_messages)
+      end
+    }
+
+    [ success, device_errors ]
+  end
+
+  def handle_role_requests(req_json, current_user)
+    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    rq_list = ActiveSupport::JSON.decode(req_json)
+    result = "success"
+    rq_errors = []
+
+    ActiveRecord::Base.transaction {
+      rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
+        rqType = (rq["type"]=="req") ? RoleRequest : RoleMembership
+        rq_to_delete = rqType.find(rq["id"])
+        if rq_to_delete && self == rq_to_delete.user
+          rq_to_delete.destroy
+        else
+          rq_errors.concat(rq_to_delete.errors.full_messages)
+        end
+      }
+      rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
+        role = Role.find(rq["role_id"])
+        role_request = RoleRequest.new
+        role_request.jurisdiction_id = rq["jurisdiction_id"]
+        role_request.role_id = rq["role_id"]
+        role_request.requester = current_user
+        role_request.user = self
+        if role_request.save && role_request.valid?
+          RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+        else
+          result = "failure"
+          rq_errors.concat(role_request.errors.full_messages)
+        end
+      }
+
+      if self.role_memberships.public_roles.empty?
+        result = "rollback"
+        rq_errors.push("You must have at least one public role.  Please add a public role and re-save.")
+        raise ActiveRecord::Rollback
+      end
+    }
+
+    [ result, rq_errors ]
+  end
+
+  def handle_org_requests(req_json, current_user)
+    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    rq_list = ActiveSupport::JSON.decode(req_json)
+    result = "success"
+    rq_errors = []
+
+    rq_list.find_all{|rq| rq["state"]=="deleted" && rq["id"] > 0}.each { |rq|
+      if rq["type"]=="req"
+        rq_to_delete = OrganizationMembershipRequest.find(rq["id"])
+        if rq_to_delete && self == rq_to_delete.user
+          rq_to_delete.destroy
+        else
+          rq_errors.concat(rq_to_delete.errors.full_messages)
+        end
+      else
+        org = Organization.find(rq["id"])
+        org.delete(self)
+        orig_request = OrganizationMembershipRequest.find_by_organization_id_and_user_id(org.id, self.id)
+        orig_request.destroy if orig_request
+        if !org.save
+          result = "failure"
+          rq_errors.concat(org.errors.full_messages)
+        end
+      end
+    }
+    rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
+      org_request = OrganizationMembershipRequest.new
+      org_request.organization_id = rq["org_id"]
+      org_request.requester = current_user
+      org_request.user = self
+      unless org_request.save && org_request.valid?
+        result = "failure"
+        rq_errors.concat(org_request.errors.full_messages)
+      end
+    }
+
+    [ result, rq_errors ]
+  end
+
 private
 
   def assign_public_role
     public_role = Role.public
     if (role_requests.nil? && role_memberships.nil?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-      role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
-    else
-      rr = role_requests
-      rr.each do |request|
-        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-        RoleRequest.find_by_id(request.id).destroy
-      end unless role_requests.nil? || role_memberships.public_roles.count != 0
-      role_memberships.each do |request|
-        role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-      end if role_memberships.public_roles.count == 0
-    end
+      if(role_requests.nil? && role_memberships.nil?)
+        role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
+      else
+        rr = role_requests
+        rr.each do |request|
+          role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+          request.destroy if request.role == public_role
+        end unless role_requests.nil? || role_memberships.public_roles.count != 0
+        role_memberships.each do |request|
+          role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
+        end if role_memberships.public_roles.count == 0
+      end
 
-    role_requests.find_all_by_role_id(public_role).each do |request|
-      if request.approver.nil?
-        role_memberships.create!(
-          :role => public_role, 
-          :jurisdiction => request.jurisdiction
+      role_requests.find_all_by_role_id(public_role).each do |request|
+        if request.approver.nil?
+          role_memberships.create!(
+            :role => public_role,
+            :jurisdiction => request.jurisdiction
+          )
+        end
+        request.destroy
+      end
+
+      if self.role_requests.any?
+        self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
+          public_role.id,
+          self.role_requests.first.jurisdiction.id
         )
       end
-      request.destroy
-    end
-        
-    if self.role_requests.any?
-      self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
-        public_role.id, 
-        self.role_requests.first.jurisdiction.id
-      )
     end
   end
 

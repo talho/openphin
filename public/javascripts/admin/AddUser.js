@@ -8,6 +8,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     });
     this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
     this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
+    this.orgs_control = new Talho.ux.OrganizationsControl(config.url + ".json", this);
     var item_list = [
       {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -59,10 +60,9 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         margins: '0 0 0 10', items:[
         {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all',
           store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
-        {xtype: 'spacer', height: '10'},
-        this.roles_control,
-        {xtype: 'spacer', height: '10'},
-        this.devices_control
+        {xtype: 'spacer', height: '10'}, this.roles_control,
+        {xtype: 'spacer', height: '10'}, this.devices_control,
+        {xtype: 'spacer', height: '10'}, this.orgs_control
       ]}
     ];
     this.form_config = {
@@ -83,10 +83,12 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     options.params = {};
     options.params["user[new_devices]"] = this.devices_control.grab_data();
     options.params["user[new_roles]"] = this.roles_control.grab_data();
+    options.params["user[new_orgs]"] = this.orgs_control.grab_data();
     this.getPanel().getForm().submit(options);
   },
   is_dirty: function(p){
-    return Talho.AddUser.superclass.is_dirty.call(this, p) || this.devices_control.is_dirty() || this.roles_control.is_dirty();
+    return Talho.AddUser.superclass.is_dirty.call(this, p) || this.devices_control.is_dirty() || this.roles_control.is_dirty()
+      || this.orgs_control.is_dirty();
   }
 });
 

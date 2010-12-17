@@ -28,13 +28,13 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
         this.stormPulsePanel = new Ext.Panel({
             flex: 1,
             autoHeight:true,
-            html: stormPulseHTML
+            html: window.Application.rails_environment == "cucumber" ? "" : stormPulseHTML
         });
 
         this.newsFeedPanel = new Ext.Panel({
             flex: 1,
             autoHeight:true,
-            items: new Ext.DataView({
+            items: window.Application.rails_environment == "cucumber" ? [] : new Ext.DataView({
                 store: this.create_feed_store(),
                 singleSelect: false,
                 autoHeight: true,
@@ -59,7 +59,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             bodyCssClass:'news_articles',
             listeners:{
                 'render':function(cpt){
-                     cpt.getUpdater().update({url:'dashboard/news_articles'});
+                     if(window.Application.rails_environment != "cucumber") cpt.getUpdater().update({url:'dashboard/news_articles'});
                 }
             }
         });

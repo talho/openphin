@@ -109,7 +109,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
     );
 
     this.dv = new Ext.DataView(
-      {name: 'user[devices]', store: this.store, tpl: template, emptyText: 'No devices to display',
+      {name: 'user[devices]', store: this.store, tpl: template, emptyText: 'No devices to display', deferEmptyText: false,
         multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected'}
     );
   

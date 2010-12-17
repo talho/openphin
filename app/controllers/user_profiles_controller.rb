@@ -31,7 +31,7 @@ class UserProfilesController < ApplicationController
           can_edit = current_user == @user || current_user.is_admin_for?(@user.jurisdictions)
           render :json => {'success' => true, 'userdata' => (@user.to_json_profile).merge({'can_edit' => can_edit})}
         else
-          render :json => {'success' => true, 'userdata' => {'privateProfile' => true}}
+          render :json => {'success' => true, 'userdata' => (@user.to_json_private_profile)}
         end
       }
     end
@@ -56,31 +56,7 @@ class UserProfilesController < ApplicationController
     find_user_and_profile
     respond_to do |format|
       format.html
-      format.json {
-        rm_list = @user.is_admin? ? @user.role_memberships.all_roles : @user.role_memberships.user_roles
-        role_desc = rm_list.collect { |rm|
-          {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
-          :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
-        }
-        @user.role_requests.unapproved.each { |rq|
-          rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
-                :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
-          role_desc.push(rq)
-        }
-        device_desc = @user.devices.collect { |d|
-          type, value = d.to_s.split(": ")
-          {:id => d.id, :type => type, :rbclass => d.class.to_s, :value => value, :state => "unchanged"}
-        }
-        org_desc = @user.organizations.collect { |o|
-          {:id => o.id, :org_id => o.id, :name => o.name, :desc => o.description, :type => "org", :state => "unchanged"}
-        }
-        @user.organization_membership_requests.unapproved.each { |o|
-          org_desc.push({:id => o.id, :org_id => o.organization_id, :name => Organization.find(o.organization_id).name, :desc => o.description,
-            :type => "req", :state => "pending"})
-        }
-        extra = {:current_photo => @user.photo.url(:medium), :devices => device_desc, :role_desc => role_desc, :org_desc => org_desc}
-        render :json => {:user => @user, :extra => extra}
-      }
+      format.json { render :json => @user.to_json_edit_profile }
     end
   end
 
@@ -122,7 +98,7 @@ class UserProfilesController < ApplicationController
 
     # Handle manage devices submission (ext only)
     if params[:user].has_key?(:devices)
-      success,device_errors = update_devices(params[:user][:devices])
+      success,device_errors = @user.update_devices(params[:user][:devices], current_user)
       respond_to do |format|
         format.json {
           if success
@@ -137,7 +113,7 @@ class UserProfilesController < ApplicationController
 
     # Handle role requests (ext only)
     if params[:user].has_key?(:rq)
-      result,rq_errors = handle_role_requests(params[:user][:rq])
+      result,rq_errors = @user.handle_role_requests(params[:user][:rq], current_user)
       respond_to do |format|
         format.json {
           case result
@@ -155,7 +131,7 @@ class UserProfilesController < ApplicationController
 
     # Handle manage organizations submission (ext only)
     if params[:user].has_key?(:orgs)
-      success,org_errors = handle_org_requests(params[:user][:orgs])
+      success,org_errors = @user.handle_org_requests(params[:user][:orgs], current_user)
       respond_to do |format|
         format.json {
           if success

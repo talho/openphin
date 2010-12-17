@@ -11,7 +11,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var devices_tpl = new Ext.XTemplate(
       '<ul>',
       '<tpl for=".">',
-        '<li>{value} ({type})</li>',
+        '<li class="device-item">{value} ({type})</li>',
       '</tpl>',
       '</ul>'
     );
@@ -26,7 +26,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var roles_tpl = new Ext.XTemplate(
       '<ul>',
       '<tpl for=".">',
-        '<li>',
+        '<li class="role-item">',
             '<tpl if="state==' + "'pending'" + '"><i></tpl>',
             '{rname} in {jname}',
             '<tpl if="state==' + "'pending'" + '"></i></tpl>',
@@ -44,7 +44,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var orgs_tpl = new Ext.XTemplate(
       '<ul>',
       '<tpl for=".">',
-        '<li>',
+        '<li class="org-item">',
             '<tpl if="state==' + "'pending'" + '"><i></tpl>',
             '{name}',
             '<tpl if="state==' + "'pending'" + '"></i></tpl>',
@@ -105,19 +105,19 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'spacer', height: '10'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', html: '<b>Devices</b>&nbsp;'},
-          new Ext.Button({text: 'edit', handler: function(){ this.manage_user_devices(); }, scope: this})
+          new Ext.Button({text: 'edit', id: 'edit_dev', handler: function(){ this.manage_user_devices(); }, scope: this})
         ]},
         new Ext.DataView({name: 'user[devices]', store: this.devices_store, tpl: devices_tpl, emptyText: 'No devices', deferEmptyText: false}),
         {xtype: 'spacer', height: '10'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', html: '<b>Roles</b>&nbsp;'},
-          new Ext.Button({text: 'edit', handler: function(){ this.manage_user_roles(); }, scope: this})
+          new Ext.Button({text: 'edit', id: 'edit_role', handler: function(){ this.manage_user_roles(); }, scope: this})
         ]},
         new Ext.DataView({name: 'user[role_desc]', store: this.roles_store, tpl: roles_tpl, emptyText: 'No roles', deferEmptyText: false}),
         {xtype: 'spacer', height: '10'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', html: '<b>Organizations</b>&nbsp;'},
-          new Ext.Button({text: 'edit', handler: function(){ this.manage_organizations(); }, scope: this})
+          new Ext.Button({text: 'edit', id: 'edit_org', handler: function(){ this.manage_organizations(); }, scope: this})
         ]},
         new Ext.DataView({name: 'user[org_desc]', store: this.orgs_store, tpl: orgs_tpl, emptyText: 'No organizations', deferEmptyText: false}),
         {xtype: 'hidden', name: '_method', value: 'PUT'},
