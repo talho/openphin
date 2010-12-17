@@ -303,3 +303,8 @@ end
 When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
   attach_file(field, path, mime)
 end
+
+When /^I suspend cucumber/ do
+  print "Cucumber suspended: press Return to continue"
+  STDIN.getc  
+end
