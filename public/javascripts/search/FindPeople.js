@@ -48,7 +48,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       emptyText: 'Error:  Could not retrieve Roles',
       deferEmptyText: true,
       hideHeaders: true,
-      columns: [{ dataIndex: 'name' }]
+      columns: [{dataIndex: 'name', cls: 'rol-list-item' }]
     });
 
     this.jurisList = new Ext.list.ListView({
@@ -60,7 +60,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       emptyText: 'Error:  Could not retrieve Jurisdictions',
       deferEmptyText: true,
       hideHeaders: true,
-      columns: [{ dataIndex: 'name' }]
+      columns: [{ dataIndex: 'name', cls: 'jur-list-item'}]
     });
 
     this.rolesSelector = new Ext.Panel ({
