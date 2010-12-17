@@ -1,0 +1,5 @@
+Please do not reply to this email.  Replies to this message will not be read or responded to.
+
+The following documents will expire in 5 days time:
+<% @user.documents.expiring_soon.each do |document|%>"<%= document.file_file_name %>" in folder "<%= document.folder.name %>"
+<% end %>

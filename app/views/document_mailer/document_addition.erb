@@ -1,7 +1,5 @@
 Please do not reply to this email.  Replies to this message will not be read or responded to.
 
-A document "<%= @document.file_file_name %>" has been added to the share "<%= @share.name %>".  Shares allow you to access common documents from other users.
+A document "<%= @document.file_file_name %>" has been added to the shared folder "<%= @share.name %>" by <%= @current_user.display_name %>.  Shared folders allow you to access common documents from other users.
 
-To view this document, go to:
-  
-  <%= popup_share_url(@share) %>
+To view this document, visit <%= root_url %> and navigate to "Documents".

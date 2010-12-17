@@ -68,6 +68,10 @@ class User < ActiveRecord::Base
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'
+    end      
+    def expiring_soon(options = {})
+      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
+      scoped(options)
     end
   end
   has_many :folders  do

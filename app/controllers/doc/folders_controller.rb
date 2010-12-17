@@ -46,9 +46,8 @@ class Doc::FoldersController < ApplicationController
       return
     end
 
-    folder.audience.recipients.length if folder.audience
     if(folder.notify_of_audience_addition)
-      #DocumentMailer.deliver_share_invitation(@folder, {:creator => current_user, :users => (@folder.audience.recipients) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => (folder.audience.recipients(:force => true).with_no_hacc) } )
     end
 
     respond_to do |format|
@@ -83,7 +82,7 @@ class Doc::FoldersController < ApplicationController
   def update
     folder = Folder.find(params[:id])
 
-    original_recipients = folder.audience ? Array.new(folder.audience.recipients) : []
+    original_recipients = folder.audience ? Array.new(folder.audience.recipients(:force => true).with_no_hacc) : []
 
     folder.attributes = params[:folder]
 
@@ -94,9 +93,8 @@ class Doc::FoldersController < ApplicationController
       return
     end
 
-    folder.audience.recipients.length if folder.audience
     if(folder.notify_of_audience_addition)
-      #DocumentMailer.deliver_share_invitation(@folder, {:creator => current_user, :users => (@folder.audience.recipients - original_recipients) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => (folder.audience.recipients(:force => true).with_no_hacc - original_recipients) } )
     end
 
     respond_to do |format|

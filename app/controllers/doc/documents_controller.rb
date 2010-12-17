@@ -5,6 +5,9 @@ class Doc::DocumentsController < ApplicationController
 
   def show
     @document = Document.find(params[:id]).viewable_by(current_user)
+
+    DocumentMailer.deliver_document_viewed(@document, current_user) if @document.folder.notify_of_file_download && @document.owner != current_user
+
     send_file @document.file.path, :type => @document.file_content_type, :disposition => 'attachment', :x_sendfile => request.env["SERVER_SOFTWARE"].downcase.match(/apache/) ? true : false
   end
 
@@ -24,11 +27,12 @@ class Doc::DocumentsController < ApplicationController
 
       unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == params[:document][:file].original_filename}
         @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(params[:document])
-        @document.owner_id = (@parent_folder ? @parent_folder.owner.id : current_user.id)
+        @document.owner_id = current_user.id
         if @document.valid?
           @document.save!
 
-          #file creation was successful, let's notify users that 
+          #file creation was successful, let's notify users that a file was uploaded
+          DocumentMailer.deliver_document_addition(@document, current_user) if @document.folder.notify_of_document_addition
           respond_to do |format|
             format.json {render :json => {:success => true }, :content_type => 'text/html' }
           end
@@ -78,6 +82,8 @@ class Doc::DocumentsController < ApplicationController
       end
 
       if @document.update_attributes(params[:document])
+         DocumentMailer.deliver_document_update(@document, current_user) if @document.folder.notify_of_document_addition
+
          format.json {render :json => {:success => true}, :content_type => 'text/html' }
       else
         #render that there was some sort of error

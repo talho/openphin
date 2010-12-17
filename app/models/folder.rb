@@ -2,18 +2,36 @@
 #
 # Table name: folders
 #
-#  id         :integer(4)      not null, primary key
-#  name       :string(255)
-#  user_id    :integer(4)
-#  parent_id  :integer(4)
-#  lft        :integer(4)
-#  rgt        :integer(4)
-#  created_at :datetime
-#  updated_at :datetime
+#  create_table "folders", :force => true do |t|
+#   t.string   "name"
+#   t.integer  "user_id"
+#   t.integer  "parent_id"
+#   t.integer  "lft"
+#   t.integer  "rgt"
+#   t.datetime "created_at"
+#   t.datetime "updated_at"
+#   t.integer  "lock_version",                  :default => 0,    :null => false
+#   t.integer  "audience_id"
+#   t.boolean  "notify_of_audience_addition"
+#   t.boolean  "notify_of_document_addition"
+#   t.boolean  "notify_of_file_download"
+#   t.boolean  "expire_documents",              :default => true
+#   t.boolean  "notify_before_document_expiry", :default => true
+# end
 #
 
 class Folder < ActiveRecord::Base
-  has_many :documents, :dependent => :destroy
+  has_many :documents, :dependent => :destroy do
+    def expired(options = {})
+      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ?", 30.days.ago])
+      scoped(options)
+    end
+    def expiring_soon(options = {})
+      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
+      scoped(options)
+    end
+  end
+
   validates_length_of :name, :in => 1..32, :allow_blank => false, :message => "Folder name cannot exceed 32 characters in length."
 
   belongs_to :owner, :class_name => 'User', :foreign_key => 'user_id'

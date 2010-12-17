@@ -16,3 +16,6 @@
   :phinms_pickup_worker:
     :check:
       :trigger_args: 0 */1 * * * *
+  :document_daily_cleanup_worker:
+    :clean:
+      :trigger_args: 0 0 0 * * * *

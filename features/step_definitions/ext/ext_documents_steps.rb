@@ -62,14 +62,14 @@ When /^I double\-click the "([^\"]*)" folder$/ do |button|
   "
 end
 
-Given /^I have uploaded "([^\"]*)" to "([^\"]*)"$/ do |file, destination|
+Given /^I(?: have)? uploaded "([^\"]*)" to "([^\"]*)"(?: (\d+) days ago)?$/ do |file, destination, days_past|
   file = File.new(file)
   folder = current_user.folders.find_by_name(destination)
   share = nil
   if folder.nil?
     share = current_user.shares.find_by_name(destination)
   end
-  Document.create :owner_id => share.nil? ? current_user.id : share.owner.id, :file => file, :folder_id => (folder || share) ? (folder || share).id : nil 
+  Document.create :owner_id => share.nil? ? current_user.id : share.owner.id, :file => file, :folder_id => (folder || share) ? (folder || share).id : nil, :created_at => days_past.nil? ? Time.now : days_past.to_i.days.ago
 end
 
 When /^I set "([^\"]*)" as "([^\"]*)"(?: with "([^"]*)")?$/ do |folder, sharing, user|
@@ -89,4 +89,27 @@ Given /^"([^\"]*)" is an? "([^\"]*)" for "([^\"]*)"$/ do |user, permission, fold
   folder = Folder.find_by_name(folder)
 
   folder.folder_permissions.create :user_id => User.find_by_email(user).id, :permission => FolderPermission::PERMISSION_TYPES[permission.downcase.to_sym]
+end
+
+When /^"([^\"]*)" performs all notifications$/ do |fname|
+  folder = Folder.find_by_name(fname)
+  folder.update_attributes({:notify_of_audience_addition => true, :notify_of_document_addition => true, :notify_of_file_download => true, :expire_documents => true, :notify_before_document_expiry => true})
+end
+
+When /^backgroundrb has processed the nightly documents$/ do
+  require 'vendor/plugins/backgroundrb/server/lib/bdrb_server_helper.rb'
+  require 'vendor/plugins/backgroundrb/server/lib/meta_worker.rb'
+  require 'lib/workers/document_daily_cleanup_worker.rb'
+  DocumentDailyCleanupWorker.new.clean
+end
+
+Then /^"([^\"]*)" (should not|should)? exist in folder "([^\"]*)"$/ do |file, should, folder|
+  folder = Folder.find_by_name(folder)
+
+  file = folder.documents.find_by_file_file_name(file)
+  if(should == "should")
+    file.should_not be_nil
+  else
+    file.should be_nil
+  end
 end
