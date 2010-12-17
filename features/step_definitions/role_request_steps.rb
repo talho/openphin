@@ -83,7 +83,7 @@ end
 
 Then /^I should not see that "([^\"]*)" is awaiting approval$/ do |user_email|
   visit admin_role_requests_path
-	page.should_not have_css( ".pending_role_requests")
+	page.should have_css( ".pending_role_requests")
   page.should_not have_css(".requester_email", :content => user_email)
 end
 
