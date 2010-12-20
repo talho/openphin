@@ -21,9 +21,12 @@ class Admin::GroupsController < ApplicationController
     if request.xhr?
       respond_to do |format|
         format.html
-        format.json {render :json => { :groups => @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT 
-                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)} },
-                            :count => groups.length, :page => page, :per_page => 10 } }
+        format.json {
+          @groups = @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT
+                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)} unless @groups.empty?
+          render :json => { :groups =>  @groups},
+                            :count => groups.length, :page => page, :per_page => 10 }
+        }
       end
     end
   end
@@ -31,7 +34,7 @@ class Admin::GroupsController < ApplicationController
   def show
     group = Group.find_by_id(params[:id])
     @group = current_user.viewable_groups.include?(group) ? group : nil
-    @recipients = @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
+    @recipients = @group ? @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") : []
 
     respond_to do |format|
       format.html do
