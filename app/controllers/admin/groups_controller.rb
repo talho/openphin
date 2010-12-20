@@ -23,9 +23,8 @@ class Admin::GroupsController < ApplicationController
         format.html
         format.json {
           @groups = @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT
-                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)} unless @groups.empty?
-          render :json => { :groups =>  @groups},
-                            :count => groups.length, :page => page, :per_page => 10 }
+                                                                     :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)}} unless @groups.empty?
+          render :json => { :groups =>  @groups, :count => groups.length, :page => page, :per_page => 10 }
         }
       end
     end
@@ -37,20 +36,20 @@ class Admin::GroupsController < ApplicationController
     @recipients = @group ? @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") : []
 
     respond_to do |format|
-      format.html do
-        if @group
+      if @group
+        format.html do
         end
-      end
-      format.pdf do
-        prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
-      end
-      format.csv do
-        @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
-        @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
-        @output_encoding = 'UTF-8'
-      end
-      format.json do
-        render :json => group_hash_for_display(@group, @recipients)
+        format.pdf do
+          prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
+        end
+        format.csv do
+          @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
+          @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
+          @output_encoding = 'UTF-8'
+        end
+        format.json do
+          render :json => group_hash_for_display(@group, @recipients)
+        end
       end
     end
   end
