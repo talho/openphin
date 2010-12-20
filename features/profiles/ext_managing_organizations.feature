@@ -110,15 +110,12 @@ I should be able to edit my profile
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"
     When I press "edit" within "#edit_org"
-    And I click org-item "DSHS"
+    And I click org-title "DSHS"
     And I press "Remove organization"
-    And I press "Save"
-    Then I should see "Organizations"
+    And I press "Apply Changes"
     When delayed jobs are processed
-    #Then "jane.smith@example.com" should receive the email:
-    #  | subject       | You have been removed from the organization DSHS |
-    #  | body contains | You have been removed from the organization DSHS |
-    And I should not see "DSHS" within ".org-item"
+    Then I should see "Organizations"
+    And I should not see "DSHS"
 
   Scenario: Removing a user from an organization as that user
     Given the following entities exist:

@@ -17,11 +17,12 @@ Feature: Managing devices when editing user profiles
       | Dallas County | Potter County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
+      | Potter Pub      | pot.pub@example.com      | Public | Potter County |
     And the following administrators exist:
       | admin@potter.gov | Potter County |
-    And I am logged in as "john.smith@example.com"
-		
+
   Scenario: Adding a device
+    Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
@@ -40,6 +41,7 @@ Feature: Managing devices when editing user profiles
   Scenario: Removing a device
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
+    And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     When I click device-item "5552345678"
@@ -52,6 +54,7 @@ Feature: Managing devices when editing user profiles
     And I should not see "5552345678"
 
   Scenario: Adding an invalid device
+    Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
@@ -64,6 +67,7 @@ Feature: Managing devices when editing user profiles
       | Email |  |
 
   Scenario: Adding a phone device with an extension is invalid
+    Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
@@ -78,6 +82,7 @@ Feature: Managing devices when editing user profiles
   Scenario: Adding a duplicate device
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
+    And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
@@ -88,6 +93,7 @@ Feature: Managing devices when editing user profiles
     Then I should see "Device already exists"
 
   Scenario: Add and remove a device then save
+    Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
@@ -109,5 +115,6 @@ Feature: Managing devices when editing user profiles
     And I navigate to "My Account > Manage Devices"
     And I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"
-    Then I should see "This resource does not exist or is not available."
-    And I should be on the dashboard page
+    And delayed jobs are processed
+    Then "john.smith@example.com" should have the communication devices
+      | Email | john.smith@example.com |

@@ -5,27 +5,19 @@ Feature: Sending alerts to BlackBerry devices
   I want people to be able to send me alerts on my BlackBerry device
 
   Background:
+    Given the following entities exist:
+      | Jurisdiction | Dallas County                               |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Public                                      |
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Dallas County  |
-      | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist                               | Wise County    |
+      | Bill Smith      | bill.smith@example.com   | Public                                       | Dallas County  |
+    And "bill.smith@example.com" has the following devices:
+      | blackberry | 12345678 |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
 
-  Scenario: Sending alerts to SMS devices
-    # Start legacy code: we don't have the profile working in EXT yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Blackberry PIN" from "Device Type"
-    And I fill in "Blackberry" with "12345678"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "12345678"
-    And I should have a Blackberry device with the Blackberry number "12345678"
-    And I sign out
-    # End legacy code. replace when profile is in EXT
-
+  Scenario: Sending alerts to Blackberry devices
     Given I log in as "john.smith@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -38,7 +30,7 @@ Feature: Sending alerts to BlackBerry devices
 
     And I select the following alert audience:
       | name         | type |
-      | Keith Gaddis | User |
+      | Bill Smith   | User |
 
     And I send the alert
 

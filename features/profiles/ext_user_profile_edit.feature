@@ -45,21 +45,18 @@ I should be able to edit my profile
 
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
-    When I access the profile json for "john.smith@example.com"
-    Then I should see JSON:
-      | {"type":"error","flash":"Permission denied."} |
+      And I go to the ext dashboard page
+      And I should see "My Dashboard"
+      And I view the ext profile page for "john.smith@example.com"
+      Then I should not see "Edit This Profile"
     
   Scenario: editing user account information for another user as another jurisdictional admin
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
     And I am logged in as "jane.smith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "Admin > Manage Users > Edit Users"
-    And I fill in "Name" with "John"
-    And I press "Search"
-    When I click x-grid3-row "John Smith"
-    And I press "Edit User"
-    Then I should see "Edit User:"
-    And I should see "Permission denied."
+    And I should see "My Dashboard"
+    And I view the ext profile page for "john.smith@example.com"
+    And I should not see "Edit This Profile"
 
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"

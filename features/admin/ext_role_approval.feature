@@ -20,7 +20,7 @@ Feature: Approving users for roles
     When I log in as "admin@dallas.gov"
     Then I should see "john@example.com" is awaiting approval for "Health Officer"
     When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
     When I click approve_link "Approve" within "tr.pending_role_requests"
@@ -35,7 +35,7 @@ Feature: Approving users for roles
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
     And I go to the ext dashboard page
-    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
     When I click approve_link "Approve" within "tr.pending_role_requests"
@@ -50,14 +50,14 @@ Feature: Approving users for roles
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@potter.gov"
     And I go to the ext dashboard page
-    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    And I navigate to "Admin > Pending Role Requests"
     Then I should not see "john@example.com"
 
   Scenario: Jurisdiction Admin denying role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
     And I go to the ext dashboard page
-    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
     When I click deny_link "Deny" within "tr.pending_role_requests"
@@ -77,7 +77,7 @@ Feature: Approving users for roles
     And I should see "Assign Roles"
     When I log in as "admin@dallas.gov"
     And I go to the ext dashboard page
-    And I navigate to "Admin > Manage Roles > Pending Role Requests"
+    And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
 

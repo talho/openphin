@@ -98,7 +98,7 @@ Feature: Sending alerts to phones
     And delayed jobs are processed
     And I go to the alert log
     And I follow "More"
-    Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 100%
+    Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 50%
     #end legacy code
 
   Scenario: Sending alerts to users with multiple phone devices
