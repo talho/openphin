@@ -82,7 +82,7 @@ class Doc::DocumentsController < ApplicationController
       end
 
       if @document.update_attributes(params[:document])
-         DocumentMailer.deliver_document_update(@document, current_user) if @document.folder.notify_of_document_addition
+         DocumentMailer.deliver_document_update(@document, current_user) if @document.folder && @document.folder.notify_of_document_addition
 
          format.json {render :json => {:success => true}, :content_type => 'text/html' }
       else

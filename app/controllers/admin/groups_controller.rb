@@ -103,13 +103,17 @@ class Admin::GroupsController < ApplicationController
             @group.role_ids.map{|r| r.to_s} == params[:group][:role_ids].sort &&
             @group.user_ids.map{|u| u.to_s} == params[:group][:user_ids].sort
 
-            Group.update_counters @group.id, :lock_version => 1
+            @group.update_attributes! ids
+            Group.update_counters @group.id, :lock_version => 0
           end
 
-          @group.update_attributes! ids
-
-          flash[:notice] = "Successfully updated the group <b>#{group.name}</b>."
-          format.html { redirect_to admin_group_path(@group)}
+          @group = Group.find(@group.id)
+          @group.recipients(:force => true)
+          
+          format.html do
+            flash[:notice] = "Successfully updated the group <b>#{group.name}</b>."
+            redirect_to admin_group_path(@group)
+          end
           format.xml  { render :xml => @group, :status => :created, :location => @group }
           format.json  { render :json => {:group => group_hash_for_display(@group), :success => true}, :status => :created, :location => admin_group_path(@group) }
         rescue ActiveRecord::StaleObjectError
@@ -126,7 +130,7 @@ class Admin::GroupsController < ApplicationController
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
           format.json  { render :text => "The group <b>#{group.name}</b> has been recently modified by another user.  Please try again.", :status => :unprocessable_entity }
-        rescue StandardError
+        rescue StandardError => ex
           format.html {
             flash[:error] = "Could not save group <b>#{group.name}</b>.  Please try again."
             redirect_to edit_admin_group_path(@group)

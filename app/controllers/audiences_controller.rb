@@ -32,7 +32,7 @@ class AudiencesController < ApplicationController
   def determine_recipients
     recipients = []
     params[:group_ids].compact.each do |id|
-      #recipients << Group.find(id).prepare_recipients(:include_public => true, :recreate => true).find(:all) unless id.blank?
+      recipients << Group.find(id).recipients(:force => true)
     end
     params[:jurisdiction_ids].compact.each do |id|
       recipients << Jurisdiction.find(id).users unless id.blank?

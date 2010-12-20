@@ -165,14 +165,12 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
-    When I click x-accordion-hd "Users"
-    And I fill in the following:
-      | Group Name         | User list Group |
-    And I fill in "User" with "Jane Smith"
-    And I click x-combo-list-item "Jane Smith - jane.smith@example.com"
+    And I select the following in the audience panel:
+      | name       | type | email                  |
+      | Jane Smith | User | jane.smith@example.com |
     Then I press "Save"
     Then I should see the following group summary:
-      | group_name               | User list Group |
+      | group_name               | Dallas County Health Officer Group |
     And I should see the following audience breakdown
       | name       | type      |
       | Jane Smith | Recipient |
@@ -194,8 +192,7 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
-    And I fill in the following:
-      | Scope | Global |
+    And I select "Global" from ext combo "Scope"
     Then I press "Save"
     Then I should see the following group summary:
       | group_name  | Dallas County Health Officer Group       |
@@ -206,10 +203,9 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
-    And I fill in the following:
-      | Scope              | Jurisdiction |
-      | Owner Jurisdiction | Wise County  |
-    Then I press "Save"
+    And I select "Jurisdiction" from ext combo "Scope"
+    And I select "Wise County" from ext combo "Owner Jurisdiction"
+    And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Group  |
       | group_scope              | Jurisdiction                        |
@@ -220,10 +216,9 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
-    When I fill in the following:
-      | Scope              | Jurisdiction   |
-      | Owner Jurisdiction | Dallas County  |
-    Then I press "Save"
+    And I select "Jurisdiction" from ext combo "Scope"
+    And I select "Dallas County" from ext combo "Owner Jurisdiction"
+    And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Jurisdiction Group  |
       | group_scope              | Jurisdiction                                     |
@@ -239,10 +234,9 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
-    When I fill in the following:
-      | Scope              | Jurisdiction   |
-      | Owner Jurisdiction | Dallas County  |
-    Then I press "Save"
+    And I select "Jurisdiction" from ext combo "Scope"
+    And I select "Dallas County" from ext combo "Owner Jurisdiction"
+    And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Jurisdiction Group  |
       | group_scope              | Jurisdiction                                     |
@@ -271,9 +265,9 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
-    And I click x-accordion-hd "Users"
-    And I fill in "User" with "Jane Smith"
-    And I click x-combo-list-item "Jane Smith - jane.smith@example.com"
+    And I select the following in the audience panel:
+      | name       | type | email                  |
+      | Jane Smith | User | jane.smith@example.com |
     And I press "Save"
     Then I should see the following group summary:
       | group_name | Dallas County Health Officer Jurisdiction Group |

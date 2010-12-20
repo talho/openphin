@@ -62,10 +62,9 @@ Feature: Creating groups
     Then I should see the following jurisdictions:
       | Dallas County |
       | Potter County |
-    When I fill in the following:
-      | Group Name         | Dallas County Group |
-      | Scope              | Personal            |
-      | Owner Jurisdiction | Potter County       |
+    When I fill in "Group Name" with "Dallas County Group"
+    And I select "Personal" from ext combo "Scope"
+    And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
       | name          | type         |
       | Dallas County | Jurisdiction |
@@ -90,11 +89,10 @@ Feature: Creating groups
       | Health Officer |
       | Epidemiologist |
       | Public         |
-    When I fill in the following:
-      | Group Name         | Health Officer Group |
-      | Scope              | Personal             |
-      | Owner Jurisdiction | Potter County        |
-      And I select the following in the audience panel:
+    When I fill in "Group Name" with "Health Officer Group"
+    And I select "Personal" from ext combo "Scope"
+    And I select "Potter County" from ext combo "Owner Jurisdiction"
+    And I select the following in the audience panel:
       | name           | type |
       | Health Officer | Role |
     And I press "Save"
@@ -120,10 +118,9 @@ Feature: Creating groups
       | Health Officer |
       | Epidemiologist |
       | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Personal                           |
-      | Owner Jurisdiction | Potter County                      |
+    When I fill in "Group Name" with "Dallas County Health Officer Group"
+    And I select "Personal" from ext combo "Scope"
+    And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -144,10 +141,9 @@ Feature: Creating groups
     And I press "Create New Group"
     Then I should see the ext add group form
     When I click x-accordion-hd "Users"
-    And I fill in the following:
-      | Group Name         | User list Group |
-      | Scope              | Personal        |
-      | Owner Jurisdiction | Potter County   |
+    When I fill in "Group Name" with "User list Group"
+    And I select "Personal" from ext combo "Scope"
+    And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I fill in "User" with "Jane Smith"
     #we need to wait for the search to complete and select an item in order to fire off the result
     And I click x-combo-list-item "Jane Smith - jane.smith@example.com"
@@ -177,10 +173,9 @@ Feature: Creating groups
       | Health Officer |
       | Epidemiologist |
       | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Jurisdiction                       |
-      | Owner Jurisdiction | Wise County                        |
+    When I fill in "Group Name" with "Dallas County Health Officer Group"
+    And I select "Jurisdiction" from ext combo "Scope"
+    And I select "Wise County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -195,7 +190,7 @@ Feature: Creating groups
       | Dallas County   | Jurisdiction |
       | Health Officer  | Role         |
 
-  Scenario: adding a personal scoped group should not be viewable by others
+  Scenario Outline: adding a personal scoped group should not be viewable by others
     When I go to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
@@ -208,10 +203,9 @@ Feature: Creating groups
       | Health Officer |
       | Epidemiologist |
       | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Personal                           |
-      | Owner Jurisdiction | Potter County                      |
+    When I fill in "Group Name" with "Dallas County Health Officer Group"
+    And I select "<scope>" from ext combo "Scope"
+    And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -220,131 +214,25 @@ Feature: Creating groups
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Group |
       | group_owner_jurisdiction | Potter County                      |
-      | group_scope              | Personal                           |
+      | group_scope              | <scope>                            |
     And I should see the following audience breakdown
       | name            | type         |
       | Dallas County   | Jurisdiction |
       | Health Officer  | Role         |
     #get around sign-in page redirection
     Given I am on the ext dashboard page
-    And I am logged in as "will.smith@example.com"
+    And I am logged in as "<other_login>"
     When I go to the ext dashboard page
     When I navigate to "Admin > Manage Groups"
-    Then I should not see "Dallas County Health Officer Group"
+    Then I <should> see "Dallas County Health Officer Group"
     When I sign out
 
-  Scenario: adding a jurisdiction scoped group should be viewable by other alerters in the same jurisdiction
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    And I press "Create New Group"
-    Then I should see the ext add group form
-    And I should see the following jurisdictions:
-      | Dallas County |
-      | Potter County |
-    When I click x-accordion-hd "Roles"
-    Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Jurisdiction                       |
-      | Owner Jurisdiction | Potter County                      |
-    And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
-    And I press "Save"
-    Then I should see the following group summary:
-      | group_name               | Dallas County Health Officer Group |
-      | group_owner_jurisdiction | Potter County                      |
-      | group_scope              | Jurisdiction                       |
-    And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
-    Given I am on the ext dashboard page
-    And I am logged in as "will.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    Then I should see "Dallas County Health Officer Group"
-    When I sign out
-
-  Scenario: adding a jurisdiction scoped group should not be viewable by other alerts in other jurisdictions
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    And I press "Create New Group"
-    Then I should see the ext add group form
-    Then I should see the following jurisdictions:
-      | Dallas County |
-      | Potter County |
-    When I click x-accordion-hd "Roles"
-    Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Jurisdiction                       |
-      | Owner Jurisdiction | Potter County                      |
-    And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
-    And I press "Save"
-    Then I should see the following group summary:
-      | group_name               | Dallas County Health Officer Group |
-      | group_owner_jurisdiction | Potter County                      |
-      | group_scope              | Jurisdiction                       |
-    And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
-    Given I am on the ext dashboard page
-    When I sign out
-    And I am logged in as "jim.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    Then I should not see "Dallas County Health Officer Group"
-    When I sign out
-
-  Scenario: adding a global scoped group should be viewable by alerters in the same or other jurisdictions
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    And I press "Create New Group"
-    Then I should see the ext add group form
-    Then I should see the following jurisdictions:
-      | Dallas County |
-      | Potter County |
-    When I click x-accordion-hd "Roles"
-    Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
-    When I fill in the following:
-      | Group Name         | Dallas County Health Officer Group |
-      | Scope              | Global                             |
-      | Owner Jurisdiction | Potter County                      |
-    And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
-    And I press "Save"
-    Then I should see the following group summary:
-      | group_name               | Dallas County Health Officer Group |
-      | group_owner_jurisdiction | Potter County                      |
-      | group_scope              | Global                             |
-    And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
-    Given I am on the ext dashboard page
-    When I sign out
-    And I am logged in as "jim.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "Admin > Manage Groups"
-    Then I should see "Dallas County Health Officer Group"
-    When I sign out
+    Examples:
+      | scope        | other_login            | should     |
+      | Personal     | will.smith@example.com | should not |
+      | Jurisdiction | will.smith@example.com | should     |
+      | Jurisdiction | jim.smith@example.com  | should not |
+      | Global       | jim.smith@example.com  | should     |
 
   Scenario: adding a scoped group without all data to see error
     When I go to the ext dashboard page

@@ -205,6 +205,8 @@ Feature: Sending alerts form
     Given the following entities exist:
       | Jurisdiction | Texas          |
       | Organization | DSHS           |
+    And Federal is the parent jurisdiction of:
+      | Texas |
     And the following users exist:
     # since we're doing this in the texas space and aren't selecting a jurisdiction, I'm going to use the default han coordinator role here.
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |

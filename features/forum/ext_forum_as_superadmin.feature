@@ -301,7 +301,6 @@ Feature: Creating a forum (room)
     When I press "Save"
     Then I should see "This forum was recently changed by another user. Please try again."
 
-
   Scenario: Editing forum topics concurrently to another admin editing the same forum topic
     Given I am logged in as "joe.smith@example.com"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"

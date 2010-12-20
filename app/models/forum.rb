@@ -1,5 +1,6 @@
 class Forum < ActiveRecord::Base
-    
+  after_save :update_lock_version
+
   has_many  :topics, 
             :conditions => {:comment_id => nil}, 
             :order => "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc", 
@@ -90,7 +91,7 @@ class Forum < ActiveRecord::Base
     unless (audience = result.audience)
       forum = result
     else
-      forum = ( user.is_super_admin? || audience.recipients(:conditions => ["id = ?", user.id]).first ) ? result : nil
+      forum = ( user.is_super_admin? || audience.recipients(:conditions => ["user_id = ?", user.id]).first ) ? result : nil
     end
   end
   
@@ -101,6 +102,13 @@ class Forum < ActiveRecord::Base
   def self.per_page
     # for paginate
     10
+  end
+
+  private
+
+  def update_lock_version
+    # necessary in order to increment the lock_version for this forum
+    Forum.update_counters self.id, {}
   end
   
 end

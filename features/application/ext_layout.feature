@@ -35,6 +35,7 @@ Feature: Application layout should have communications, portal & application too
       | FAQs                 |
       | Forums               |
       | Tutorials            |
+      | Bookmarks            |
       | My Dashboard         |
       | My Account           |
       | About TXPHIN         |
@@ -76,26 +77,20 @@ Feature: Application layout should have communications, portal & application too
     And I press "Admin" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                  |
-      | Manage Roles          |
+      | Pending Role Requests |
       | Manage Groups         |
       | Manage Users          |
       | Manage Invitations    |
     # Need to look for the other admin menu options here
-    When I click x-menu-item "Manage Roles" within ".x-menu"
+    When I click x-menu-item "Manage Users" within ".x-menu"
     And I wait until I have 2 ext menus
     Then I should see the following ext menu items:
-      | name                  |
-      | Pending Role Requests |
-      | Assign Roles          |
-    When I click x-menu-item "Manage Users" within ".x-menu"
-    And I wait until I have 3 ext menus
-    Then I should see the following ext menu items:
-      | name          |
-      | Add a User    |
-      | Batch Users   |
-      | Delete a User |
+      | name            |
+      | Add a User      |
+      | Batch Add Users |
+      | Edit Users      |
     When I click x-menu-item "Manage Invitations" within ".x-menu"
-    And I wait until I have 4 ext menus
+    And I wait until I have 3 ext menus
     Then I should see the following ext menu items:
       | name             |
       | Invite Users     |

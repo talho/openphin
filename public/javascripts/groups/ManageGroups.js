@@ -90,11 +90,11 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
         var rowActions = new Ext.ux.grid.xActionColumn({
            items: [
-               {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', handler: function(grid, row){
+               {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: function(grid, row){
                    var record = grid.getStore().getAt(row);
                    this.showNewGroup(record.id);
                }, scope: this},
-               {icon: '/images/cross-circle.png', tooltip: 'Delete Group', handler: function(grid, row, action, index, colIndex){
+               {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row, action, index, colIndex){
                    var store = grid.getStore();
                    var record = store.getAt(row);
                    if(confirm("Are you sure you wish to delete " + record.get('name') + "?"))
@@ -190,8 +190,8 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             editing: false,
             items:[
                 {fieldLabel: 'Group Name', itemId: 'group_name', xtype:'textfield', name: 'group[name]'},
-                {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, typeAhead: true, typeAheadDelay: 0, mode: 'local', triggerAction: 'all'},
-                {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, typeAhead: true, typeAheadDelay: 0, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
+                {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, editable:false, mode: 'local', triggerAction: 'all'},
+                {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, editable:false, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
                 {items: this.audience_panel, border: false},
                 {xtype: 'button', text: 'Save', scope: this, handler: function(){
                     var options = {};
