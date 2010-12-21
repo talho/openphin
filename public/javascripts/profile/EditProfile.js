@@ -169,8 +169,8 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     devices_control.load_data(Ext.pluck(this.devices_store.getRange(), "data"));
     var win = new Ext.Window({title: "Manage Devices", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [devices_control]});
-    win.addButton({xtype: 'button', text: 'Save', handler: function(){ devices_control.save_data(); win.close(); }, scope: this, width:'auto'});
-    win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Apply Changes', handler: function(){ devices_control.save_data(); win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Cancel and Discard Changes', handler: function(){ win.close(); }, scope: this, width:'auto'});
     win.show();
   },
   manage_user_roles: function(){
@@ -178,8 +178,8 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     roles_control.load_data(Ext.pluck(this.roles_store.getRange(), "data"));
     var win = new Ext.Window({title: "Manage Roles", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [roles_control]});
-    win.addButton({xtype: 'button', text: 'Save', handler: function(){ roles_control.save_data(); win.close(); }, scope: this, width:'auto'});
-    win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Apply Changes', handler: function(){ roles_control.save_data(); win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Cancel and Discard Changes', handler: function(){ win.close(); }, scope: this, width:'auto'});
     win.show();
   },
   manage_organizations: function(){
@@ -187,8 +187,8 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     orgs_control.load_data(Ext.pluck(this.orgs_store.getRange(), "data"));
     var win = new Ext.Window({title: "Manage Organizations", layout: 'form', autoScroll: true, padding: '10', width: 440,
       items: [orgs_control]});
-    win.addButton({xtype: 'button', text: 'Save', handler: function(){ orgs_control.save_data(); win.close(); }, scope: this, width:'auto'});
-    win.addButton({xtype: 'button', text: 'Cancel', handler: function(){ win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Apply Changes', handler: function(){ orgs_control.save_data(); win.close(); }, scope: this, width:'auto'});
+    win.addButton({xtype: 'button', text: 'Cancel and Discard Changes', handler: function(){ win.close(); }, scope: this, width:'auto'});
     win.show();
   }
 });
