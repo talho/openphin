@@ -9,10 +9,12 @@ I should be able to remove all but one public role from my profile
       | Jurisdiction  | Potter County            |
       | Jurisdiction  | Texas                    |
       | approval role | BioTerrorism Coordinator |
+    And Federal is a foreign jurisdiction
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County  |
     And the following users exist:
       | John Smith    | john.smith@example.com   | Public | Dallas County |
+      | John Smith    | john.smith@example.com   | Public | Texas         |
     And I am logged in as "john.smith@example.com"
 
   Scenario: Adding and removing public roles from user profile
