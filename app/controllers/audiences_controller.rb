@@ -31,7 +31,7 @@ class AudiencesController < ApplicationController
 
   def determine_recipients
     recipients = []
-    params[:group_ids].compact.each do |id|
+    params[:group_ids].compact.reject{|x| x.empty?}.each do |id|
       recipients << Group.find(id).recipients(:force => true)
     end
     params[:jurisdiction_ids].compact.each do |id|

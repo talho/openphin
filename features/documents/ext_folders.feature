@@ -29,7 +29,7 @@ Feature: Create a folder tree in documents
 
   Scenario Outline: Check different folder creation scenarios
     Given I create a folder outline with "<outline>"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
     And I expand the folders "<expand>"
     Then I should see folders in the order "<order>"
@@ -43,7 +43,7 @@ Feature: Create a folder tree in documents
 
   Scenario: Edit a folder
     Given I create a folder outline with "Folder1"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
@@ -58,7 +58,7 @@ Feature: Create a folder tree in documents
 
   Scenario: Move folders around the folder tree
     Given I create a folder outline with "Folder1 Folder2>Sub1"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
     And I expand the folders "Folder2"
     And I select the "Sub1" grid row
@@ -78,7 +78,7 @@ Feature: Create a folder tree in documents
 
   Scenario: Delete folders
     Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub2>SubSub1"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
     And I expand the folders "Folder1"
     And I select the "Sub1" grid row
@@ -97,7 +97,7 @@ Feature: Create a folder tree in documents
 
   Scenario: Navigate folder structure using the icon view
     Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2 Sub1>SubSub1"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -111,7 +111,7 @@ Feature: Create a folder tree in documents
 
   Scenario: Launch action windows from the various locations
     Given I create a folder outline with "Folder1>Sub1 Folder1>Sub2"
-    When I press "Refresh"
+    When I click ux-refresh-button ""
     And I wait for the "Loading" mask to go away
 
     And I press "Add Folder"
