@@ -21,12 +21,14 @@ Ext.ux.BreadCrumb = Ext.extend(Ext.Container, {
         var itemList = Ext.DomHelper.createDom({tag:'ol', cls:'breadCrumbList'});
         var itemTemplate = Ext.DomHelper.createTemplate({tag: 'li', cls: 'breadCrumbItem', html: '{0}', index: '{1}'});
         itemTemplate.compile();
-        Ext.each(items, function(item, index){
-           if(Ext.isString(item) || Ext.isString(item.html) || Ext.isString(item.title))
-           {
-               itemTemplate.append(itemList, [item.html || item.title || item, index]);
-           }
-        });
+        for(var i = items.length-1; i >= 0; i--)
+        {
+            var item = items[i];
+            if(Ext.isString(item) || Ext.isString(item.html) || Ext.isString(item.title))
+            {
+               itemTemplate.append(itemList, [item.html || item.title || item, i]);
+            }
+        }
 
         var extItemList = Ext.get(itemList);
         extItemList.down('[index=0]').addClass('selected');

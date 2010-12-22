@@ -53,7 +53,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     body: function(){
-        this.tabPanel = new Ext.TabPanel({
+        this.tabPanel = new Ext.ux.NavigableTabPanel({
             id: 'tabpanel',
             border:false,
             region: 'center', // a center region is ALWAYS required for border layout
@@ -67,42 +67,6 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             ),
             items: [Talho.Article3Panel.initialize({itemId:'dashboard_home'})],
             plugins: [Ext.plugin.DragDropTabs, new Ext.ux.plugin.TabPanelNav()],
-            bbar:{
-                id: 'tab_toolbar',
-                plugins: [new Ext.ux.plugin.ToolBarNav],
-                items:[
-                    {
-                        text: 'Back',
-                        id: 'tab_back',
-                        handler: function(){
-                            var comp = this.tabPanel.getActiveTab();
-                            if(comp.back)
-                                comp.back();
-                        },
-                        scope:this
-                    },
-                    {
-                        text: 'Forward',
-                        id: 'tab_forward',
-                        handler: function(){
-                            var comp = this.tabPanel.getActiveTab();
-                            if(comp.forward)
-                                comp.forward();
-                        },
-                        scope:this
-                    },
-                    {
-                        text: 'Refresh',
-                        id: 'tab_reset',
-                        handler: function(){
-                            var comp = this.tabPanel.getActiveTab();
-                            if(comp.reset)
-                                comp.reset(true);
-                        },
-                        scope:this
-                    }
-                ]
-            },
             listeners:{
                 'beforetabchange': function(tab_panel, new_tab, old_tab){
                     if(old_tab)
@@ -110,6 +74,21 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                     new_tab.on('afternavigation', this.setTabControls, this);
                     this.setTabControls(new_tab);
                     return true;
+                },
+                'back': function(){
+                    var comp = this.tabPanel.getActiveTab();
+                    if(comp.back)
+                        comp.back();
+                },
+                'forward': function(){
+                    var comp = this.tabPanel.getActiveTab();
+                    if(comp.forward)
+                        comp.forward();
+                },
+                'refresh': function(){
+                    var comp = this.tabPanel.getActiveTab();
+                    if(comp.reset)
+                        comp.reset(true);
                 },
                 scope: this
             }
@@ -320,9 +299,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     setTabControls: function(panel){
-        this.tabPanel.getBottomToolbar().getComponent('tab_back').setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
-        this.tabPanel.getBottomToolbar().getComponent('tab_forward').setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
-        this.tabPanel.getBottomToolbar().getComponent('tab_reset').setDisabled(panel.reset ? false : true);
+        this.tabPanel.backButton.setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
+        this.tabPanel.forwardButton.setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
+        this.tabPanel.refreshButton.setDisabled(panel.reset ? false : true);
     },
 
     manage_favorites: function(){

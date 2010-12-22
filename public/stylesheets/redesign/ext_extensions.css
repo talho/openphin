@@ -20,18 +20,30 @@
 /* --------- Wizard Header control -------------- */
 
 ol.breadCrumbList{
-    list-style: decimal inside none;
+    list-style: none inside none;
 }
 
 ol.breadCrumbList li{
-    float: left;
-    margin: 0 10px;
+    float: right;
     cursor: pointer;
+    color: bisque;
+    text-decoration: underline;
+    -moz-background-clip: border;
+    -moz-background-origin: padding;
+    -moz-background-size: auto auto;
+    background-color: transparent;
+    background-image: url("../../images/redesign/breadcrumb-bg1.gif");
+    background-position: right center;
+    background-repeat: no-repeat;
+    margin: 0 0 0 -15px;
+    padding: 5px 10px 5px 25px;
+    text-decoration: underline;
 }
 
 ol.breadCrumbList li.selected{
-    background-color: #84B1CC;
     cursor:default;
+    color: white;
+    text-decoration: none;
 }
 
 /* --------- End Wizard Header ---------------- */
@@ -47,3 +59,64 @@ ol.breadCrumbList li.selected{
 } */
 
 /* -------- End ux.center ----------------------*/
+
+/* -------- Ext.ux.NavigableTabPanel -----------*/
+
+.ux-navigable-tab-panel-header .x-tab-scroller-left {
+    left: 80px;
+}
+
+.ux-strip-wrap-for-navigation{
+    float: left;
+}
+
+ul.ux-navigation-wrap{
+    background: #E9E9E9;
+    display: block;
+    float: left;
+    list-style: none outside none;
+    padding: 1px 10px;
+}
+
+ul.ux-navigation-wrap li{
+    float: left;
+}
+
+li.ux-navigation-button span{
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    display: block;
+    background: no-repeat center center;
+    margin: 2px;
+}
+
+li.ux-navigation-disabled span{
+    cursor: default;
+}
+
+li.ux-navigation-button span.ux-back-button{
+    background-image:url(/images/redesign/ux-back-button.png);
+}
+
+li.ux-navigation-disabled span.ux-back-button{
+    background-image:url(/images/redesign/ux-back-button-disabled.png);
+}
+
+li.ux-navigation-button span.ux-forward-button{
+    background-image:url(/images/redesign/ux-forward-button.png);
+}
+
+li.ux-navigation-disabled span.ux-forward-button{
+    background-image:url(/images/redesign/ux-forward-button-disabled.png);
+}
+
+li.ux-navigation-button span.ux-refresh-button{
+    background-image:url(/images/redesign/ux-refresh-button.png);
+}
+
+li.ux-navigation-disabled span.ux-refresh-button{
+    background-image:url(/images/redesign/ux-refresh-button-disabled.png);
+}
+
+/* -------- End ux.NavigableTabPanel -----------*/
