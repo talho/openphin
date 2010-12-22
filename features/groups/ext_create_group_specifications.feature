@@ -140,13 +140,12 @@ Feature: Creating groups
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
-    When I click x-accordion-hd "Users"
     When I fill in "Group Name" with "User list Group"
     And I select "Personal" from ext combo "Scope"
     And I select "Potter County" from ext combo "Owner Jurisdiction"
-    And I fill in "User" with "Jane Smith"
-    #we need to wait for the search to complete and select an item in order to fire off the result
-    And I click x-combo-list-item "Jane Smith - jane.smith@example.com"
+    And I select the following in the audience panel:
+      | name       | type | email                  |
+      | Jane Smith | User | jane.smith@example.com |
     Then I press "Save"
     Then I should see the following group summary:
       | group_name               | User list Group |

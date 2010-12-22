@@ -13,6 +13,11 @@ class Doc::FoldersController < ApplicationController
 
   def show
     folder = params[:id].nil? || params[:id] == 'null' ? nil : Folder.find(params[:id])
+    if !folder.nil? && !(folder.owner == current_user || folder.users.include?(current_user))
+      render :json => { :files => [] }
+      return
+    end
+
     docs = folder.nil? ? current_user.documents.inbox : folder.documents
     folders = folder.nil? ? current_user.folders.rootsm : folder.children
     docs.each {|doc| doc[:doc_url] = document_url(doc) }
