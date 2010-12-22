@@ -38,7 +38,7 @@ class SearchesController < ApplicationController
   end
   
   def show_advanced
-    if request.get? && params.count == 2 
+    if request.get? && params.count == 2
       @results = []
     else
       strip_blank_elements(params[:conditions])
@@ -46,7 +46,7 @@ class SearchesController < ApplicationController
       prevent_email_in_name(params)
       sanitize(params[:conditions])
       params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
-      @results = User.search(params.merge(build_options(params)))
+      @results = User.search(params.merge!(build_options(params)))
     end
     
     respond_to do |format|
@@ -118,14 +118,14 @@ protected
       params[:sort_mode] = :asc
     end
 
-    options = {
+    options = HashWithIndifferentAccess.new(
       :retry_stale => true,                                        # avoid nil results
       :order => :last_name,                                        # ascending order on name
       :sort_mode => params[:sort_mode],
       :page => params[:page] ? params[:page].to_i : 1,             # paginate pages
       :per_page => params[:per_page] ? params[:per_page].to_i : 8, # paginate entries per page
       :star => true                                                # auto wildcard
-    }
+    )
     if %w(pdf csv).include?(params[:format])
       options[:per_page] = 30000
       options[:max_matches] = 30000

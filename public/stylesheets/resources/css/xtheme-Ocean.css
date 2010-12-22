@@ -1400,7 +1400,8 @@ font-family:arial,tahoma,helvetica,sans-serif ;
 background-color:#ededed;
 }
 *.x-list-selected{
-background-color:#efefef;
+background-color:#444444;
+color: #FFFFFF;
 }
 *.x-list-resizer{
 border-left-color:#555555;
