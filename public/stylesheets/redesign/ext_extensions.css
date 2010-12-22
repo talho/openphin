@@ -70,12 +70,16 @@ ol.breadCrumbList li.selected{
     float: left;
 }
 
+.ux-strip-wrap-for-navigation ul.x-tab-strip{
+    padding-left: 8px;
+}
+
 ul.ux-navigation-wrap{
     background: #E9E9E9;
     display: block;
     float: left;
     list-style: none outside none;
-    padding: 1px 10px;
+    padding: 2px 10px 1px;
 }
 
 ul.ux-navigation-wrap li{
