@@ -23,7 +23,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         });
 
         Talho.ScriptManager.loadOtherLibrary('Favorites PhinLayout Dashboard', function(){
-            this.favoritesToolbar = new Ext.ux.FavoritesPanel({
+            this.favoritesToolbar = new Talho.ux.FavoritesPanel({
                 parent: this,
                 listeners:{
                     scope:this,

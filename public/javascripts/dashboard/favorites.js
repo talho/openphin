@@ -1,17 +1,17 @@
-Ext.ns('Ext.ux.FavoritesPanel');
+Ext.ns('Talho.ux');
 
-Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
+Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
     constructor: function(config){
         config = config || {};
 
         Ext.applyIf(config, {
             region:'north',
-            height: 44,
+            height: 27,
             collapseMode: 'mini',
             id: 'favoritestoolbar',
             layout: 'hbox',
             successProperty: 'success',
-            layoutConfig: {defaultMargins:'5 0 5 5'},
+            layoutConfig: {defaultMargins:'1 0 1 3'},
             listeners: {}
         });
 
@@ -44,7 +44,7 @@ Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
            'favoriteloadcomplete'
         );
 
-        Ext.ux.FavoritesPanel.superclass.constructor.call(this, config);
+        Talho.ux.FavoritesPanel.superclass.constructor.call(this, config);
     },
 
     initComponent: function(){         
@@ -56,7 +56,7 @@ Ext.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
 
         this.getStore();
 
-        Ext.ux.FavoritesPanel.superclass.initComponent.call(this);
+        Talho.ux.FavoritesPanel.superclass.initComponent.call(this);
     },
 
     getStore: function(){

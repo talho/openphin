@@ -21,7 +21,7 @@
     -moz-border-radius:5px; border-radius:5px; border: 1px solid black;
     -moz-user-select:none;
     -webkit-user-select:none;
-    padding:8px 5px;
+    padding:1px 3px;
     background: #3d3d3d;
     background: -moz-linear-gradient(center bottom,rgb(46,46,46) 24%,rgb(61,61,61) 55%,rgb(91,99,91) 87%);
     background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0.24, rgb(46,46,46)),color-stop(0.55, rgb(61,61,61)),color-stop(0.87, rgb(91,99,91)));
