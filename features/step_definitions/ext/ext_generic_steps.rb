@@ -85,6 +85,16 @@ Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table
   end
 end
 
+Then /^I should not see the following toolbar items in "([^\"]*)":$/ do |name, table|
+  within(:css, "##{name}") do
+    table.rows.each do |row|
+      value = row[0]
+      within(:css, ".x-toolbar-cell") { page.should_not have_content(value) }
+    end
+    false
+  end
+end
+
 Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
   with_scope(selector) do
     menus = page.all('.x-menu')
@@ -257,4 +267,8 @@ end
 
 When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, content|
   page.find(".#{class_name}", :text => content).should_not be_nil
+end
+
+Then /^I should see the image "([^\"]*)"$/ do |file_name|
+  page.should have_xpath("//*/img[contains(@src, '#{file_name}')]")
 end
