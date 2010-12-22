@@ -79,6 +79,7 @@ Scenario: Search for a users from subordinate jurisdictions
   Then I should see "People Search"
   And the "Find People" tab should be open
 
+  # search for user by partial first name
   When I search for a user with the following:
    | Name         | Pott                   |
    | Email        |                        |
@@ -90,8 +91,9 @@ Scenario: Search for a users from subordinate jurisdictions
   And I should see "Potter Public"
   And I should see "Potter MD"
 
+  # search for user by partial last name
   When I search for a user with the following:
-    | Name         | Admin                  |
+    | Name         | Adm                    |
     | Email        |                        |
     | Phone        |                        |
     | Title        |                        |
@@ -101,8 +103,9 @@ Scenario: Search for a users from subordinate jurisdictions
   And I should see "Dallas Admin"
   And I should see "Texas Admin"
 
+  #search for user by partial first and last name
   When I search for a user with the following:
-    | Name         | Potter Adm             |
+    | Name         | Pott Adm               |
     | Email        |                        |
     | Phone        |                        |
     | Title        |                        |
@@ -110,15 +113,27 @@ Scenario: Search for a users from subordinate jurisdictions
     |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
+  #search for user by display name
+  When I search for a user with the following:
+    | Name         | Potter Admin           |
+    | Email        |                        |
+    | Phone        |                        |
+    | Title        |                        |
+    | Roles        |                        |
+    |Jurisdictions |                        |
+  Then I should see "Potter Admin"
+
+  #search for user by partial email address
   When I search for a user with the following:
    | Name         |                        |
-   | Email        | pott.admin@example.com |
+   | Email        | pott.ad                |
    | Phone        |                        |
    | Title        |                        |
    | Roles        |                        |
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
+  #search for user by partial phone number
   When I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
@@ -128,16 +143,19 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
+
+  #search for user by partial job title
   When I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
    | Phone        |                        |
-   | Title        | Supervisor             |
+   | Title        | Super                  |
    | Roles        |                        |
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
   And I should see "Dallas Admin"
 
+  #search for user by role
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
@@ -152,6 +170,7 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
@@ -166,11 +185,12 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by partial first name and partial title
   And I search for a user with the following:
    | Name         | Pott                   |
    | Email        |                        |
    | Phone        |                        |
-   | Title        | Supervisor             |
+   | Title        | Super                  |
    | Roles        |                        |
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
@@ -178,6 +198,7 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
@@ -190,6 +211,7 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by partial first name and a role
   And I search for a user with the following:
    | Name         | Pott                   |
    | Email        |                        |
@@ -202,11 +224,12 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by partial title and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
    | Phone        |                        |
-   | Title        | Supervisor             |
+   | Title        | Super                  |
    | Roles        |                        |
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
@@ -214,11 +237,12 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by partial title, a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
    | Phone        |                        |
-   | Title        | Supervisor             |
+   | Title        | Super                  |
    | Roles        | Admin                  |
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
@@ -228,11 +252,12 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for user by partial title, a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
    | Phone        |                        |
-   | Title        | Supervisor             |
+   | Title        | Supervis               |
    | Roles        | Public                 |
    |Jurisdictions | Potter County          |
   Then I should not see "Potter Admin"
@@ -240,6 +265,7 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for users by several roles within a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
    | Email        |                        |
@@ -253,6 +279,7 @@ Scenario: Search for a users from subordinate jurisdictions
   # first release list choices
   When I close the active tab
   And I navigate to "Find People"
+  #search for users by a role and several jurisdictions
   And I search for a user with the following:
    | Name         |                             |
    | Email        |                             |
@@ -338,3 +365,20 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
 
   When I click x-grid3-cell "Dallas MD"
   Then the "Profile: Dallas MD" tab should be open
+
+Scenario: Search for a non-existent user in a jurisdiction
+  Given I am logged in as "pott.md@example.com"
+  When I go to the ext dashboard page
+  And I navigate to "Find People"
+  Then I should see "People Search"
+  And the "Find People" tab should be open
+
+  When I search for a user with the following:
+   | Name         | Harry                  |
+   | Email        |                        |
+   | Phone        |                        |
+   | Title        |                        |
+   | Roles        |                        |
+   |Jurisdictions | Potter County          |
+  Then I should see "No users match your search request"
+
