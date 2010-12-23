@@ -193,17 +193,20 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                 {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, editable:false, mode: 'local', triggerAction: 'all'},
                 {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, editable:false, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
                 {items: this.audience_panel, border: false},
-                {xtype: 'button', text: 'Save', scope: this, handler: function(){
-                    var options = {};
+                {xtype: 'container', layout: 'hbox', items: [
+                    {xtype: 'button', text: 'Save', scope: this, handler: function(){
+                        var options = {};
 
-                    if(this.create_group_form_panel.editing)
-                    {
-                        options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
-                        options.method = 'PUT';
-                    }
+                        if(this.create_group_form_panel.editing)
+                        {
+                            options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
+                            options.method = 'PUT';
+                        }
 
-                    this.create_group_form_panel.getForm().submit(options);
-                }}
+                        this.create_group_form_panel.getForm().submit(options);
+                    }},
+                    {xtype: 'button', text: 'Cancel', scope: this, handler: this.back}]
+                }
             ],
             listeners:{
                 scope: this,
@@ -268,7 +271,8 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'}
                 ]},
                 new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel'}),
-                {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'}
+                {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'},
+                {xtype: 'button', text: 'Back to Groups', scope: this, handler: this.back}
             ]
         });
 
