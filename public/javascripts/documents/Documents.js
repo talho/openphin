@@ -104,7 +104,7 @@ Talho.Documents = Ext.extend(function(){}, {
             }),
             loadMask: true,
             autoExpandColumn: 'name_column',
-            bbar: ['->', {text: 'Add Folder', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}]
+            bbar: ['->', {text: 'Refresh', iconCls: '', scope: this, handler: this._refresh}, {text: 'Add Folder', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}]
         });
     },
 

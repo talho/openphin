@@ -53,7 +53,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     body: function(){
-        this.tabPanel = new Ext.ux.NavigableTabPanel({
+        this.tabPanel = new Ext.TabPanel({
             id: 'tabpanel',
             border:false,
             region: 'center', // a center region is ALWAYS required for border layout
@@ -299,9 +299,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     setTabControls: function(panel){
-        this.tabPanel.backButton.setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
-        this.tabPanel.forwardButton.setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
-        this.tabPanel.refreshButton.setDisabled(panel.reset ? false : true);
+        //this.tabPanel.backButton.setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
+        //this.tabPanel.forwardButton.setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
+        //this.tabPanel.refreshButton.setDisabled(panel.reset ? false : true);
     },
 
     manage_favorites: function(){
