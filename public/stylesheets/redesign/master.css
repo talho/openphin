@@ -106,10 +106,11 @@ body{
   cursor:pointer;
 }
 .phinlogo span{
-  background-image: url(../images/app_header_logo.png);
+  background-image: url(../images/app_header_logo2.png);
+  background-repeat: no-repeat;
   display:block;
   height:32px;
-  width:57px;
+  width:80px;
 }
 .contextDownArrow{
   background-image: url(/images/arrow_down.png) !important;

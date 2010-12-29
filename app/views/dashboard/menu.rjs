@@ -83,6 +83,6 @@ if current_user.has_non_public_role?
                                          {name: 'Chat'},
                                          {name: 'Links'},
                                          '->',
-                                         'Need help? Email <a href=\"mailto:phinadmin@dshs.state.tx.us\">phinadmin@dshs.state.tx.us</a>'];"
+                                         'Need help? Email <a style=\"color: white\" href=\"mailto:phinadmin@dshs.state.tx.us\">phinadmin@dshs.state.tx.us</a>'];"
 
   page << bbar_config

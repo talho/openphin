@@ -1922,6 +1922,7 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
 
 .x-toolbar .x-toolbar-cell {
     vertical-align:middle;
+    padding-right: 10px;
 }
 
 .x-toolbar .x-btn-tl, .x-toolbar .x-btn-tr, .x-toolbar .x-btn-tc, .x-toolbar .x-btn-ml, .x-toolbar .x-btn-mr,
@@ -2007,6 +2008,8 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
     padding:2px 2px 0;
     line-height:16px;
     display:block;
+    color: white;
+    font-weight: bold;
 }
 
 .x-toolbar .xtb-sep {
