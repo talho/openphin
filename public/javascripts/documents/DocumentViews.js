@@ -41,16 +41,8 @@ Ext.ns('Talho.ux.Documents');
         }
     };
 
-    var tpl = new Ext.XTemplate(
-        '<tpl for=".">',
-            '<div class="documents-folder-item">',
-                '<div class="documents-folder-item-icon {[this.icon_class(values.type)]}"></div>',
-                '<div unselectable="on">{name}</div>',
-            '</div>',
-        '</tpl>',
-        { compiled: true,
-          icon_class: function(type){
-            switch(Talho.ux.Documents.translateMimeType(type)){
+    Talho.ux.Documents.mimeToImageClass = function(type){
+       switch(Talho.ux.Documents.translateMimeType(type)){
                 case 'image': return 'documents-folder-item-image-icon';
                 case 'video': return 'documents-folder-item-video-icon';
                 case 'audio': return 'documents-folder-item-audio-icon';
@@ -60,6 +52,18 @@ Ext.ns('Talho.ux.Documents');
                 case 'presentation': return 'documents-folder-item-presentation-icon';
                 default: return 'documents-folder-item-file-icon';
             }
+    };
+
+    var tpl = new Ext.XTemplate(
+        '<tpl for=".">',
+            '<div class="documents-folder-item">',
+                '<div class="documents-folder-item-icon {[this.icon_class(values.type)]}"></div>',
+                '<div unselectable="on">{name}</div>',
+            '</div>',
+        '</tpl>',
+        { compiled: true,
+          icon_class: function(type){
+            return Talho.ux.Documents.mimeToImageClass(type);
           }
         }
     );
@@ -278,55 +282,56 @@ Ext.ns('Talho.ux.Documents');
         }
     });
 
-    Talho.ux.Documents.FileControls = Ext.extend(Ext.Panel, {frame: true, title: 'Controls', width: 200, split: true, defaultType: 'container',
+    Talho.ux.Documents.FileControls = Ext.extend(Ext.Panel, {width: 200, split: true, defaultType: 'container',
         file_actions: null,
 
         initComponent: function(){
             this.items = [
+                { xtype: 'panel', defaultType: 'container', cls:'document-file-controls-sub-panel', items:[
+                    { itemId: 'file_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
+                        {itemId: 'image', xtype:'imagedisplayfield', value: ''},
+                        {itemId: 'name', hideLabel: true, cls: 'document-detail-name-field', value: 'name'},
+                        {itemId: 'size', fieldLabel: 'File Size', value: '150 kb'},
+                        {itemId: 'created_at', fieldLabel: 'Created At', value: '10/10/2020'},
+                        {itemId: 'updated_at', fieldLabel: 'Modified At', value: '10/10/2021'}
+                    ]},
+                    { itemId: 'folder_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
+                        {itemId: 'image', xtype:'imagedisplayfield', value: ''},
+                        {itemId: 'name', hideLabel: true, cls: 'document-detail-name-field', value: 'name'},
+                        {itemId: 'created_at', fieldLabel: 'Created At', value: '10/10/2020'},
+                        {itemId: 'updated_at', fieldLabel: 'Modified At', value: '10/10/2021'}
+                    ]},
+                    { itemId: 'file_search_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
+                        {itemId: 'owner', fieldLabel: 'Owner', value: 'text/css'}
+                    ]},
+                    { itemId: 'file_reader_action_container', hidden: true, items:[
+                            new file_control_button({text: 'Download File', iconCls: 'documents-download-icon', handler: this.file_actions.downloadFile, scope: this.file_actions}),
+                            new Ext.menu.Separator({})
+                    ]},
+                    { itemId: 'file_action_container', hidden: true, items:[
+                            new file_control_button({text: 'Download File', iconCls: 'documents-download-icon', handler: this.file_actions.downloadFile, scope: this.file_actions}),
+                            new file_control_button({text: 'Replace File', iconCls: 'documents-replace-icon', handler: this.file_actions.uploadFile.createDelegate(this.file_actions, ['replace'])}),
+                            new file_control_button({text: 'Delete File', iconCls: 'documents-delete-file-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
+                            new Ext.menu.Separator({})
+                    ]},
+                    { itemId: 'folder_action_container', hidden: true, items:[
+                            new file_control_button({text: 'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.createDelegate(this.file_actions, ['edit'])}),
+                            new file_control_button({text: 'Delete Folder', iconCls: 'documents-delete-folder-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
+                            new Ext.menu.Separator({})
+                    ]},
+                    { itemId: 'move_action_container', hidden: true, items: [
+                        new file_control_button({itemId: 'move_selection', text: 'Move Selection', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem, scope: this.file_actions})
+                    ]},
+                    { itemId: 'copy_action_container', hidden: true, items: [
+                        new file_control_button({itemId: 'copy_file', text: 'Copy to My Folders', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem.createDelegate(this.file_actions, ['copy'])})
+                    ]}
+                ]},
                 { itemId: 'base_actions', hidden: true, items: [
                     new file_control_button({text: 'Create New Folder', iconCls: 'documents-add-folder-icon', handler: this.file_actions.createNewFolder, scope: this.file_actions}),
-                    new file_control_button({text: 'Upload New File', iconCls: 'documents-add-icon', handler: this.file_actions.uploadFile, scope: this.file_actions}),
-                    new Ext.menu.Separator({})
+                    new file_control_button({text: 'Upload New File', iconCls: 'documents-add-icon', handler: this.file_actions.uploadFile, scope: this.file_actions})
                 ]},
                 { itemId: 'author_actions', hidden: true, items: [
-                    new file_control_button({text: 'Upload New File', iconCls: 'documents-add-icon', handler: this.file_actions.uploadFile, scope: this.file_actions}),
-                    new Ext.menu.Separator({})
-                ]},
-                { itemId: 'move_action_container', hidden: true, items: [
-                    new file_control_button({itemId: 'move_selection', text: 'Move Selection', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem, scope: this.file_actions}),
-                    new Ext.menu.Separator({})
-                ]},
-                { itemId: 'copy_action_container', hidden: true, items: [
-                    new file_control_button({itemId: 'copy_file', text: 'Copy to My Folders', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem.createDelegate(this.file_actions, ['copy'])}),
-                    new Ext.menu.Separator({})
-                ]},
-                { itemId: 'file_reader_action_container', hidden: true, items:[
-                        new file_control_button({text: 'Download File', iconCls: 'documents-download-icon', handler: this.file_actions.downloadFile, scope: this.file_actions}),
-                        new Ext.menu.Separator({})
-                ]},
-                { itemId: 'file_action_container', hidden: true, items:[
-                        new file_control_button({text: 'Download File', iconCls: 'documents-download-icon', handler: this.file_actions.downloadFile, scope: this.file_actions}),
-                        new file_control_button({text: 'Replace File', iconCls: 'documents-replace-icon', handler: this.file_actions.uploadFile.createDelegate(this.file_actions, ['replace'])}),
-                        new file_control_button({text: 'Delete File', iconCls: 'documents-delete-file-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
-                        new Ext.menu.Separator({})
-                ]},
-                { itemId: 'folder_action_container', hidden: true, items:[
-                        new file_control_button({text: 'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.createDelegate(this.file_actions, ['edit'])}),
-                        new file_control_button({text: 'Delete Folder', iconCls: 'documents-delete-folder-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
-                        new Ext.menu.Separator({})
-                ]},
-                { itemId: 'file_search_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
-                    {itemId: 'owner', fieldLabel: 'Owner', value: 'text/css'}
-                ]},
-                { itemId: 'file_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
-                    {itemId: 'type', fieldLabel: 'File Type', value: 'text/css'},
-                    {itemId: 'size', fieldLabel: 'File Size', value: '150 kb'},
-                    {itemId: 'created_at', fieldLabel: 'Created At', value: '10/10/2020'},
-                    {itemId: 'updated_at', fieldLabel: 'Modified At', value: '10/10/2021'}
-                ]},
-                { itemId: 'folder_detail_container', hidden: true, layout: 'form', defaultType: 'displayfield', defaults:{style:{'padding-top': '3px'}}, labelWidth: 65, items:[
-                    {itemId: 'created_at', fieldLabel: 'Created At', value: '10/10/2020'},
-                    {itemId: 'updated_at', fieldLabel: 'Modified At', value: '10/10/2021'}
+                    new file_control_button({text: 'Upload New File', iconCls: 'documents-add-icon', handler: this.file_actions.uploadFile, scope: this.file_actions})
                 ]}
             ];
 
@@ -336,19 +341,48 @@ Ext.ns('Talho.ux.Documents');
         setSectionVisibilities: function(show, hide){
             if(!hide){
                 var allItems = new Ext.util.MixedCollection();
-                allItems.addAll(Ext.clean(Ext.pluck(this.items.getRange(), 'itemId')));
+                allItems.addAll(Ext.clean(this._findAllChildrenItemIds(this.items.getRange())));
                 Ext.each(show, function(s){allItems.remove(s);});
                 hide = allItems.getRange();
             }
-            Ext.each(show, function(s){this.getComponent(s).show();}, this);
-            Ext.each(hide, function(h){this.getComponent(h).hide();}, this);
+            Ext.each(show, function(s){this.findComponent(s).show();}, this);
+            Ext.each(hide, function(h){this.findComponent(h).hide();}, this);
+        },
+
+        _findAllChildrenItemIds: function(items){
+            var itemIds = [];
+            Ext.each(items, function(item){
+                if(item.isXType('panel', true)){
+                    itemIds = itemIds.concat(this._findAllChildrenItemIds(item.items.getRange()));
+                }
+                else{
+                    itemIds.push(item.itemId);
+                }
+            }, this);
+            return itemIds;
+        },
+
+        findComponent: function(cstring){
+            var c = this.getComponent(cstring);
+            if(!c){
+                ps = this.findByType('container', false); // find any containers, panels, etc
+                Ext.each(ps, function(p){
+                    var ct = p.getComponent(cstring);
+                    if(ct){
+                        c = ct;
+                        return false;
+                    }
+                })
+            }
+            return c;
         },
 
         applySectionDetails: function(container, values){
-            if(Ext.isString)
-                container = this.getComponent(container);
+            if(Ext.isString(container)){
+                var container = this.findComponent(container);
+            }
             for(var val in values){
-                container.getComponent(val).setValue(values[val]).show();
+                if(container.getComponent(val)) container.getComponent(val).setValue(values[val]).show();
             }
         }
     });

@@ -26,35 +26,35 @@
     height: 48px;
 }
 
-.documents-folder-item-folder-icon{
+.documents-folder-item-icon.documents-folder-item-folder-icon{
     background: no-repeat center url(/images/documents/folder.png);
 }
 
-.documents-folder-item-file-icon{
+.documents-folder-item-icon.documents-folder-item-file-icon{
     background: no-repeat center url(/images/documents/text-x-generic.png);
 }
 
-.documents-folder-item-audio-icon{
+.documents-folder-item-icon.documents-folder-item-audio-icon{
     background: no-repeat center url(/images/documents/audio-x-generic.png);
 }
 
-.documents-folder-item-image-icon{
+.documents-folder-item-icon.documents-folder-item-image-icon{
     background: no-repeat center url(/images/documents/image-x-generic.png);
 }
 
-.documents-folder-item-video-icon{
+.documents-folder-item-icon.documents-folder-item-video-icon{
     background: no-repeat center url(/images/documents/video-x-generic.png);
 }
 
-.documents-folder-item-doc-icon{
+.documents-folder-item-icon.documents-folder-item-doc-icon{
     background: no-repeat center url(/images/documents/x-office-document.png);
 }
 
-.documents-folder-item-presentation-icon{
+.documents-folder-item-icon.documents-folder-item-presentation-icon{
     background: no-repeat center url(/images/documents/x-office-presentation.png);
 }
 
-.documents-folder-item-spreadsheet-icon{
+.documents-folder-item-icon.documents-folder-item-spreadsheet-icon{
     background: no-repeat center url(/images/documents/x-office-spreadsheet.png);
 }
 
@@ -149,4 +149,61 @@
 
 .documents-detail-row.x-grid3-row-selected .x-grid3-row-body-tr{
     display: block;
+}
+
+.document-icon-view-wrap .x-layout-split-east{
+    border-left: 1px solid #89A;
+}
+
+.document-file-controls-sub-panel{
+    background: white;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: 1px solid #89A;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.ux-image-display-field{
+    display: block;
+    float: left;
+    height: 16px;
+    width: 16px;
+    margin: 3px 4px 0 0;
+}
+
+.ux-image-display-field.documents-folder-item-folder-icon{
+    background: no-repeat center url(/images/documents/folder-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-file-icon{
+    background: no-repeat center url(/images/documents/text-x-generic-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-audio-icon{
+    background: no-repeat center url(/images/documents/audio-x-generic-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-image-icon{
+    background: no-repeat center url(/images/documents/image-x-generic-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-video-icon{
+    background: no-repeat center url(/images/documents/video-x-generic-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-doc-icon{
+    background: no-repeat center url(/images/documents/x-office-document-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-presentation-icon{
+    background: no-repeat center url(/images/documents/x-office-presentation-small.png);
+}
+
+.ux-image-display-field.documents-folder-item-spreadsheet-icon{
+    background: no-repeat center url(/images/documents/x-office-spreadsheet-small.png);
+}
+
+.document-detail-name-field{
+    font-size: 130%;
 }

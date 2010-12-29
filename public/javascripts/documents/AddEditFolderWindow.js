@@ -104,7 +104,8 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                         {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true}
                     ]},
                     {title: 'Permissions', itemId: 'per', padding: '5', items:[
-                        {itemId: 'perlabel', xtype: 'box', html: 'Permissions are only availible when this folder is explicitly shared.'},
+                        {itemId: 'perlabel', xtype: 'box', html: 'Permissions are only available when this folder is explicitly shared.'},
+                        {itemId: 'perempty', xtype: 'box', hidden: true, html: 'You must select a user in order to apply a specific permission to this folder.'},
                         {itemId: 'perholder', xtype: 'form', border: false, hidden: true, autoScroll: true}
                     ], listeners:{
                         scope: this,
@@ -230,15 +231,23 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
         // clear form
         per_form.removeAll(true);
 
-        // write new form rows, include already selected values
-        Ext.each(audience.users, function(user, index){
-            var v_index = vals.findIndex('user_id', user.id);
-            var val = v_index != -1 ? vals.get(v_index).permission : 0;
-            per_form.add([
-                {xtype: 'combo', mode: 'local', triggerAction: 'all', editable: false, fieldLabel: user.display_name || user.name, hiddenName: 'folder[permissions][' + index + '][permission]', store: [[0, 'Reader'], [1, 'Author'], [2, 'Admin']], value: val},
-                {xtype: 'hidden', name: 'folder[permissions][' + index + '][user_id]', value: user.id}
-            ]);
-        }, this);
+        this.getComponent('tp').getComponent('per').getComponent('perempty').hide();
+
+        if(audience && this.getComponent('tp').getComponent('sh').getComponent('rh').getComponent('rg').getValue().getRawValue() === 'shared' && audience.users.length < 1){
+            this.getComponent('tp').getComponent('per').getComponent('perempty').show();
+        }
+        else if(audience)
+        {
+            // write new form rows, include already selected values
+            Ext.each(audience.users, function(user, index){
+                var v_index = vals.findIndex('user_id', user.id);
+                var val = v_index != -1 ? vals.get(v_index).permission : 0;
+                per_form.add([
+                    {xtype: 'combo', mode: 'local', triggerAction: 'all', editable: false, fieldLabel: user.display_name || user.name, hiddenName: 'folder[permissions][' + index + '][permission]', store: [[0, 'Reader'], [1, 'Author'], [2, 'Admin']], value: val},
+                    {xtype: 'hidden', name: 'folder[permissions][' + index + '][user_id]', value: user.id}
+                ]);
+            }, this);
+        }
 
         // make sure it lays out
         this.doLayout();

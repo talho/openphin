@@ -19,10 +19,10 @@ Talho.Documents = Ext.extend(function(){}, {
             layout: 'border',
             items:[
                 {region: 'west', itemId: 'folder_tree_holder', xtype:'panel', layout: 'border', margins: '5 0 5 5', width: 300, border: false, split: true, items:[
-                    {xtype: 'button', text: 'Search', region: 'north', handler: function(){
+                    this._folderTreeGrid,
+                    {xtype: 'button', text: 'Search', region: 'south', handler: function(){
                         Application.fireEvent('opentab', {title: 'Search for Files', initializer: 'Talho.DocumentSearch'});
-                    }},
-                        this._folderTreeGrid
+                    }}
                 ]},
                 {xtype: 'container', itemId: 'file_grid_holder', region: 'center', layout: 'card', margins: '5 5 5 0', activeItem: 0, items: [this._createFileIconView(blank_store), this._createFileGrid(blank_store)] }
             ],
@@ -51,7 +51,8 @@ Talho.Documents = Ext.extend(function(){}, {
             region: 'center',
             itemId: 'folder_grid',
             bodyCssClass: 'document-folder-tree-grid',
-            margins: '5 0 0 0',
+            margins: '0 0 5 0',
+            hideHeaders: true,
             store: new Ext.ux.maximgb.tg.AdjacencyListStore({
                 url: '/folders.json',
                 restful: true,
@@ -62,7 +63,16 @@ Talho.Documents = Ext.extend(function(){}, {
                 }),
                 parent_id_field_name: 'safe_parent_id',
                 leaf_field_name: 'leaf',
-                autoLoad: true
+                autoLoad: true,
+                listeners: {
+                    scope: this,
+                    'load': {
+                        single: true,
+                        fn: function(store){
+                            this._folderTreeGrid.getSelectionModel().selectFirstRow();
+                        }
+                    }
+                }
             }),
             master_column_id: 'name_column',
             columns: [
@@ -79,9 +89,12 @@ Talho.Documents = Ext.extend(function(){}, {
                             this._fileGrid = this.getPanel().getComponent('file_grid_holder').getComponent('file_grid');
                         }
                         if(!this._iconView){
-                            this._iconView = this.getPanel().getComponent('file_grid_holder').getComponent('icon_outer').getComponent('file_icon_holder').getComponent('file_icon_view');
+                            this._iconView = this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').getComponent('file_icon_view');
                         }
-                        
+
+                        this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').setTitle(record.get('name'));
+                        this._fileGrid.setTitle(record.get('name'));
+
                         if(record.get('type') == 'share' && record.get('id') == null){
                             if(this._fileGrid){
                                 var store = this._fileGrid.getStore();
@@ -193,42 +206,41 @@ Talho.Documents = Ext.extend(function(){}, {
 
     _createFileIconView: function(store){
 
-        return { xtype: 'container', layout: 'border', itemId: 'icon_outer',
-            items:[{
-                xtype: 'panel',
-                title: 'Files',
-                layout: 'fit',
+        return {
+            xtype: 'panel',
+            title: 'Files',
+            layout: 'border',
+            cls: 'document-icon-view-wrap',
+            itemId: 'file_icon_holder',
+            frame: true,
+            items: [{
+                xtype: 'document-fileiconview',
+                store: store,
                 region: 'center',
-                itemId: 'file_icon_holder',
-                frame: true,
-                items: [{
-                    xtype: 'document-fileiconview',
-                    store: store,
-                    listeners:{
-                        scope: this,
-                        'selectionchange': this._setFileControlsState,
-                        'dblclick': function(gv, index){
-                            var store = gv.getStore();
-                            var rec = store.getAt(index);
-                            if(rec.get('type') == 'folder'){
-                                // open this folder in the view by selecting it in the folder list
-                                var ftstore = this._folderTreeGrid.getStore();
-                                var folder = ftstore.getAt( ftstore.findExact('id', rec.get('id') ) );
-                                var ancestors = ftstore.getNodeAncestors(folder);
-                                Ext.each(ancestors, function(ancestor){
-                                    ftstore.expandNode(ancestor);
-                                });
-                                this._folderTreeGrid.getSelectionModel().selectRecords([folder]);
-                            }
+                listeners:{
+                    scope: this,
+                    'selectionchange': this._setFileControlsState,
+                    'dblclick': function(gv, index){
+                        var store = gv.getStore();
+                        var rec = store.getAt(index);
+                        if(rec.get('type') == 'folder'){
+                            // open this folder in the view by selecting it in the folder list
+                            var ftstore = this._folderTreeGrid.getStore();
+                            var folder = ftstore.getAt( ftstore.findExact('id', rec.get('id') ) );
+                            var ancestors = ftstore.getNodeAncestors(folder);
+                            Ext.each(ancestors, function(ancestor){
+                                ftstore.expandNode(ancestor);
+                            });
+                            this._folderTreeGrid.getSelectionModel().selectRecords([folder]);
                         }
-                    }}],
-                tools: [
-                    {id: 'detail-view', scope: this, qtip: 'Detail View', handler: function(){
-                        this.getPanel().getComponent('file_grid_holder').layout.setActiveItem(1);
-                        this.getPanel().doLayout();
-                    }}]
-                },
-                {region: 'east', xtype: 'document-filecontrols', itemId: 'file_controls', hidden: true, file_actions: this.file_actions }
+                    }
+                }},
+                {region: 'east', xtype: 'document-filecontrols', itemId: 'file_controls', hidden: true, file_actions: this.file_actions }],
+            tools: [
+                {id: 'detail-view', scope: this, qtip: 'Detail View', handler: function(){
+                    this.getPanel().getComponent('file_grid_holder').layout.setActiveItem(1);
+                    this.getPanel().doLayout();
+                }}
             ]
         }
     },
@@ -283,7 +295,7 @@ Talho.Documents = Ext.extend(function(){}, {
 
     _setFileControlsState: function(control){
         if(!this._fileControls){
-            this._fileControls = this.getPanel().getComponent('file_grid_holder').getComponent('icon_outer').getComponent('file_controls');
+            this._fileControls = this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').getComponent('file_controls');
         }
 
         var selections = (control.getSelectedRecords || control.getSelections).apply(control);
@@ -301,7 +313,7 @@ Talho.Documents = Ext.extend(function(){}, {
             this._fileControls.show();
 
             if(selections.length > 1){ // we have more than one selection: display the actions you can perform on more than one doc/file. Currently we're set to be single select on everything so this shouldn't be a worry.
-                this._fileControls.setTitle("Multiple Items");
+
             }
             else if(selections.length == 1){ // we have exactly one selection. Let's work with it.
                 var sel = selections[0];
@@ -319,10 +331,11 @@ Talho.Documents = Ext.extend(function(){}, {
                 }
 
                 var type = sel.get('type');
-                this._fileControls.setTitle(sel.get('name'));
                 if(type == 'folder'){
                     show.push('folder_detail_container', 'folder_action_container', 'move_action_container');
                     this._fileControls.applySectionDetails('folder_detail_container', {
+                        'name': sel.get('name'),
+                        'image': Talho.ux.Documents.mimeToImageClass('folder'),
                         'created_at': Ext.util.Format.date(sel.get('created_at'), 'n/j/y h:i A'),
                         'updated_at': Ext.util.Format.date(sel.get('updated_at'), 'n/j/y h:i A')
                     });
@@ -333,6 +346,8 @@ Talho.Documents = Ext.extend(function(){}, {
                         show.push('folder_action_container');
                     }
                     this._fileControls.applySectionDetails('folder_detail_container', {
+                        'name': sel.get('name'),
+                        'image': Talho.ux.Documents.mimeToImageClass('folder'),
                         'created_at': Ext.util.Format.date(sel.get('created_at'), 'n/j/y h:i A'),
                         'updated_at': Ext.util.Format.date(sel.get('updated_at'), 'n/j/y h:i A')
                     });
@@ -352,6 +367,8 @@ Talho.Documents = Ext.extend(function(){}, {
                     }
 
                     this._fileControls.applySectionDetails('file_detail_container', {
+                        'name': sel.get('name'),
+                        'image': Talho.ux.Documents.mimeToImageClass(sel.get('type')),
                         'type': Talho.ux.Documents.translateMimeType(sel.get('type')),
                         'size': Ext.util.Format.fileSize(sel.get('size')),
                         'created_at': Ext.util.Format.date(sel.get('created_at'), 'n/j/y h:i A'),

@@ -13,11 +13,6 @@ Talho.DocumentSearch = Ext.extend(Ext.Panel, {
 
         this.on('afterrender', function(){this.file_actions.download_frame_target = this.getEl();}, this, {delay: 1});
 
-        this.file_store = new Talho.ux.Documents.FileStore({
-            url: '/documents/search.json',
-            autoLoad: false
-        });
-
         var check_fn = function(){
             this.run_search(this.getComponent('search_form').getComponent('search_box').getValue());
         };
@@ -46,29 +41,30 @@ Talho.DocumentSearch = Ext.extend(Ext.Panel, {
                 {boxLabel: 'My Files', xtype: 'checkbox', itemId: 'my_files', checked: true, hideLabel: true, scope: this, handler: check_fn },
                 {boxLabel: 'Shared Files', xtype: 'checkbox', itemId: 'shared_files', checked: true, hideLabel: true, scope: this, handler: check_fn }
             ]
-        },{
-            xtype: 'container',
-            itemId: 'center_container',
-            region: 'center',
-            margins: '5 5 5 5',
-            layout: 'border',
-            items:[{ region:'center',
+        }, { region:'center',
                 itemId: 'result_container',
                 title: 'Results',
                 frame: true,
-                layout: 'fit',
-                items: {
+                layout: 'border',
+                margins: '5',
+                cls: 'document-icon-view-wrap',
+                items: [{
+                    region: 'center',
                     xtype: 'document-fileiconview',
-                    store: this.file_store,
+                    itemId: 'icon-view',
+                    store: new Talho.ux.Documents.FileStore({
+                        url: '/documents/search.json',
+                        autoLoad: false
+                    }),
                     listeners: {
                         scope: this,
                         'selectionchange': this.show_selection_detail
                     }
-                }
-            }, {
-                region: 'east', xtype: 'document-filecontrols', itemId: 'file_controls', file_actions: this.file_actions
+                }, {
+                region: 'east', xtype: 'document-filecontrols', itemId: 'file_controls', file_actions: this.file_actions, hidden: true
             }]
-        }];
+            }
+        ];
 
         Talho.DocumentSearch.superclass.initComponent.call(this);
     },
@@ -78,13 +74,24 @@ Talho.DocumentSearch = Ext.extend(Ext.Panel, {
             var own = this.getComponent('search_form').getComponent('my_files').checked;
             var shared = this.getComponent('search_form').getComponent('shared_files').checked;
             if(own || shared){ // We only want to do this if the file is either owned or shared.
-                this.file_store.load({
-                    params: {
-                        text: val,
-                        own: own,
-                        shared: shared
-                    }
-                });
+              if(this._fileControls)
+                this._fileControls.hide();
+                
+              var iconView = this.getComponent('result_container').getComponent('icon-view');
+              iconView.getStore().proxy.destroy();
+              iconView.getStore().destroy();              
+              var file_store = new Talho.ux.Documents.FileStore({
+                url: '/documents/search.json',
+                autoLoad: false
+              });
+              iconView.bindStore(file_store);
+              
+              file_store.load({ params: {
+                    text: val,
+                    own: own,
+                    shared: shared
+                }
+              });
             }
         }
     },
@@ -105,14 +112,16 @@ Talho.DocumentSearch = Ext.extend(Ext.Panel, {
         }
 
         if(!this._fileControls)
-            this._fileControls = this.getComponent('center_container').getComponent('file_controls');
+            this._fileControls = this.getComponent('result_container').getComponent('file_controls');
+        this._fileControls.show();
 
         this._fileControls.applySectionDetails('file_search_detail_container', {
             'owner': sel.json.owner ? sel.json.owner.display_name : ''
         });
 
         this._fileControls.applySectionDetails('file_detail_container', {
-            'type': Talho.ux.Documents.translateMimeType(sel.get('type')),
+            'name': sel.get('name'),
+            'image': Talho.ux.Documents.mimeToImageClass(sel.get('type')),
             'size': Ext.util.Format.fileSize(sel.get('size')),
             'created_at': Ext.util.Format.date(sel.get('created_at'), 'n/j/y h:i A'),
             'updated_at': Ext.util.Format.date(sel.get('updated_at'), 'n/j/y h:i A')
