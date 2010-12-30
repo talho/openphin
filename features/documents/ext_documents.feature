@@ -75,10 +75,10 @@ Feature: Document upload, download, and view
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    Then I should not see "invitees.csv"
+    Then I should not see "invitees.csv" within ".document-file-icon-view"
     When I select the "Folder2" grid row
     And I wait for the "Loading" mask to go away
-    Then I should see "invitees.csv"
+    Then I should see "invitees.csv" within ".document-file-icon-view"
 
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Move Selection"
@@ -86,10 +86,10 @@ Feature: Document upload, download, and view
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    Then I should not see "invitees.csv"
+    Then I should not see "invitees.csv" within ".document-file-icon-view"
     When I select the "My Documents" grid row
     And I wait for the "Loading" mask to go away
-    Then I should see "invitees.csv"
+    Then I should see "invitees.csv" within ".document-file-icon-view"
 
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Move Selection"
@@ -97,10 +97,10 @@ Feature: Document upload, download, and view
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    Then I should not see "invitees.csv"
+    Then I should not see "invitees.csv" within ".document-file-icon-view"
     And I select the "Folder1" grid row
     And I wait for the "Loading" mask to go away
-    Then I should see "invitees.csv"
+    Then I should see "invitees.csv" within ".document-file-icon-view"
 
   Scenario Outline: Delete a document
     Given I have uploaded "spec/fixtures/invitees.csv" to "<destination>"
@@ -114,7 +114,7 @@ Feature: Document upload, download, and view
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
     And I select the "<destination>" grid row
-    Then I should not see "invitees.csv"
+    Then I should not see "invitees.csv" within ".document-file-icon-view"
 
     Examples:
       | destination  |

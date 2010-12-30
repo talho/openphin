@@ -33,10 +33,10 @@ def create_folder(folder, sub)
 end
 
 When /^I expand the folders "([^\"]*)"$/ do |expand|
-  When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents")
+  When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents") && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", "My Documents") || row_button_exists?("ux-maximgb-tg-elbow-plus", "My Documents"))
   folders = expand.split
   folders.each do |folder|
-    When %Q{I click ux-maximgb-tg-elbow-active on the "#{folder}" grid row}
+    When %Q{I click ux-maximgb-tg-elbow-active on the "#{folder}" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", folder) && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", folder) || row_button_exists?("ux-maximgb-tg-elbow-plus", folder))
   end
 end
 

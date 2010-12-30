@@ -105,8 +105,8 @@ Feature: User documents managed through shares
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    Then I should see "sample.wav"
-    And I should not see "invitees.csv"
+    Then I should see "sample.wav" within ".document-file-icon-view"
+    And I should not see "invitees.csv" within ".document-file-icon-view"
 
     When I sign out
     And I log in as "bartleby@example.com"
@@ -135,7 +135,7 @@ Feature: User documents managed through shares
     And I press "Yes"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    And I should not see "invitees.csv"
+    And I should not see "invitees.csv" within ".document-file-icon-view"
 
     When I sign out
     And I log in as "bartleby@example.com"
@@ -144,7 +144,7 @@ Feature: User documents managed through shares
     And I expand the folders ""
     And I select the "Folder1" grid row
     And I wait for the "Loading" mask to go away
-    And I should not see "invitees.csv"
+    And I should not see "invitees.csv" within ".document-file-icon-view"
 
   Scenario: Copy a document from a share to a local folder
     Given "atticus@example.com" is an "author" for "Folder1"

@@ -233,7 +233,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
 
         this.getComponent('tp').getComponent('per').getComponent('perempty').hide();
 
-        if(audience && this.getComponent('tp').getComponent('sh').getComponent('rh').getComponent('rg').getValue().getRawValue() === 'shared' && audience.users.length < 1){
+        if(audience && ap.rendered && this.getComponent('tp').getComponent('sh').getComponent('rh').getComponent('rg').getValue().getRawValue() === 'shared' && audience.users.length < 1){
             this.getComponent('tp').getComponent('per').getComponent('perempty').show();
         }
         else if(audience)
