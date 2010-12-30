@@ -27,6 +27,7 @@ Talho.ux.RoleSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {
             sm: this.sm,
             border:false,
             loadMask: true,
+            hideHeaders: true,
             listeners:{
                 scope: this,
                 'afterrender': {

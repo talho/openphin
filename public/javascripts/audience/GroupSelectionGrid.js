@@ -35,6 +35,7 @@ Talho.ux.GroupSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {
             sm: this.sm,
             border:false,
             loadMask: true,
+            hideHeaders: true,
             view: new Ext.grid.GroupingView({
                 groupTextTpl: '{group}s',
                 enableGroupingMenu: false

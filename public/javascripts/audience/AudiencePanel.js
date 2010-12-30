@@ -257,6 +257,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
             bodyCssClass: 'selectedItems',
             flex: 2,
             store: this.selectedItemsStore,
+            hideHeaders: true,
             colModel: new Ext.grid.ColumnModel({
                 columns: [
                     {header: "Name", dataIndex: 'name', sortable:true, id: 'name_column',

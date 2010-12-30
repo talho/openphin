@@ -48,6 +48,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       emptyText: 'Error:  Could not retrieve Roles',
       deferEmptyText: true,
       hideHeaders: true,
+      style: { 'background-color': 'white'},
       columns: [{dataIndex: 'name', cls: 'rol-list-item' }]
     });
 
@@ -60,6 +61,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       emptyText: 'Error:  Could not retrieve Jurisdictions',
       deferEmptyText: true,
       hideHeaders: true,
+      style: { 'background-color': 'white'},
       columns: [{ dataIndex: 'name', cls: 'jur-list-item'}]
     });
 
@@ -68,6 +70,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       flex: 1,
       width: '100%',
       title: 'Roles: <i>(none selected)</i>',
+      border: false,
       items: [this.rolesList],
       style: { 'padding-bottom': '10px', 'padding-top': '5px'}
     });
@@ -86,6 +89,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       region: 'west',
       width: 300,
       fill: true,
+       margins: '5 5 5 5',
       layout: 'vbox',
       title: 'People Search',
       autoScroll: true,
@@ -196,6 +200,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       region: 'center',
       layout: 'card',
       activeItem: 0,
+      margins: '5 5 5 0',
       items: [
         this.startScreen,
         this.searchResults,
