@@ -6,12 +6,13 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
 
         Ext.applyIf(config, {
             region:'north',
-            height: 27,
+            height: 29,
             collapseMode: 'mini',
             id: 'favoritestoolbar',
             layout: 'hbox',
+            cls: 'favorites_bar',
             successProperty: 'success',
-            layoutConfig: {defaultMargins:'1 0 1 3'},
+            layoutConfig: {defaultMargins:'3 2 1 3'},
             listeners: {}
         });
 

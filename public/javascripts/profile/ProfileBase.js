@@ -19,14 +19,11 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     ];
 
     // Create the ext form panel
-    var panel = new Ext.form.FormPanel({
-      title: this.title,
+    var inner_panel = new Ext.form.FormPanel({
+
       border: false,
-      layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
-      closable: true,
-      autoWidth: true,
-      autoScroll: true,
-      itemId: config.id,
+      layout: 'hbox', layoutConfig: {defaultMargins:'10', pack:'center'},
+
       url: this.form_config.save_url, method: this.form_config.save_method,
       baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
       trackResetOnLoad: true,
@@ -36,10 +33,20 @@ Talho.ProfileBase = Ext.extend(function(){}, {
         'actionfailed': this.form_submit_failure},
       items: panel_items
     });
-    panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
-    panel.addListener("beforeclose", this.closeOrPrompt, this);
 
-    this.getPanel = function(){ return panel; }
+    var primary_panel = new Ext.Panel({
+      title: this.title,
+      closable: true,
+      autoWidth: true,
+      autoScroll: true,
+      itemId: config.id,
+      items: inner_panel
+    });
+
+    primary_panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
+    primary_panel.addListener("beforeclose", this.closeOrPrompt, this);
+
+    this.getPanel = function(){ return primary_panel; }
   },
 
   // Load form values via ajax

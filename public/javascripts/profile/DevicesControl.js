@@ -17,8 +17,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     this.layout = 'form';
-    this.frame = true;
-    this.title = 'Devices';
+    this.frame = false;
     this.labelAlign = 'top';
     this.padding = 10;
     this.defaults = {boxMinWidth:400};

@@ -1480,9 +1480,10 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
 }
 
 .x-btn-text {
-    cursor:pointer;
-	white-space: nowrap;
-    padding:0;
+    cursor:        pointer;
+    white-space:   nowrap;
+    padding-left:  4px;
+    padding-right: 4px;
 }
 
 /* icon placement and sizing styles */

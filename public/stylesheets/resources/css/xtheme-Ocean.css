@@ -89,7 +89,7 @@ background-color:#cbcbcb;
 }
 *.x-tab-panel-header, *.x-tab-panel-footer{
 background-color:#e9e9e9;
-border-color:#d0d0d0;
+border: 0px;
 overflow:hidden ;
 zoom:1 ;
 }
@@ -1156,21 +1156,21 @@ color:#ffffff;
 font-weight:bold ;
 font-size:11.0 ;
 font-family:tahoma,arial,verdana,sans-serif ;
-border-color:#d0d0d0;
+border-color:#999999;
 background-image:url(../images/Ocean/panel/white-top-bottom.gif);
 }
 *.x-panel-body{
-border-color:#d0d0d0;
+border-color:#999999;
 background-color:#ffffff;
 }
 *.x-panel-bbar *.x-toolbar, *.x-panel-tbar *.x-toolbar{
-border-color:#d0d0d0;
+border-color:#999999;
 }
 *.x-panel-tbar-noheader *.x-toolbar, *.x-panel-mc *.x-panel-tbar *.x-toolbar{
-border-top-color:#d0d0d0;
+border-top-color:#999999;
 }
 *.x-panel-body-noheader, *.x-panel-mc *.x-panel-body{
-border-top-color:#d0d0d0;
+border-top-color:#999999;
 }
 *.x-panel-tl *.x-panel-header{
 color:#ffffff;
@@ -1300,7 +1300,7 @@ border-color:#bcbcbc;
 background-color:#fefefe;
 }
 *.x-html-editor-tb *.x-btn-text{
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-panel-noborder *.x-panel-header-noborder{
 border-bottom-color:#d0d0d0;
@@ -1319,7 +1319,9 @@ border-top-color:#d0d0d0;
 border-bottom-color:#d0d0d0;
 }
 *.x-border-layout-ct{
-background-color:#efefef;
+background-color:#CCCCCC;
+background-image:url(../images/Ocean/panel/panel_bg.gif);
+background-repeat: repeat-x;
 }
 *.x-accordion-hd{
 color:#ffffff;
@@ -1644,43 +1646,43 @@ background-position:-14.0 0 ;
 }
 *.x-html-editor-tb *.x-edit-bold, *.x-menu-item img.x-edit-bold{
 background-position:0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-italic, *.x-menu-item img.x-edit-italic{
 background-position:-16.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-underline, *.x-menu-item img.x-edit-underline{
 background-position:-32.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-justifyleft, *.x-menu-item img.x-edit-justifyleft{
 background-position:-112.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-justifycenter, *.x-menu-item img.x-edit-justifycenter{
 background-position:-128.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-justifyright, *.x-menu-item img.x-edit-justifyright{
 background-position:-144.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-insertorderedlist, *.x-menu-item img.x-edit-insertorderedlist{
 background-position:-80.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-insertunorderedlist, *.x-menu-item img.x-edit-insertunorderedlist{
 background-position:-96.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-increasefontsize, *.x-menu-item img.x-edit-increasefontsize{
 background-position:-48.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-html-editor-tb *.x-edit-decreasefontsize, *.x-menu-item img.x-edit-decreasefontsize{
 background-position:-64.0 0 ;
-background-image:url(../images/Ocean/editor/tb-sprite.gif);
+background-image:url(../images/Ocean/editor/tb-sprite.png);
 }
 *.x-window-header *.x-tool{
 background:transparent no-repeat ;
@@ -1868,4 +1870,17 @@ margin-right:3.0 ;
 }
 *.x-window-header *.x-tool-print-over{
 background-position:-63.0 -378.0 ;
+}
+*.favorites_bar *.x-panel-body{
+background-color: #788aa2;
+border: 0px none;
+}
+*.primary-panel *.x-panel-body{
+background-color: #CCCCCC;
+background-image: url("../images/Ocean/panel/panel_bg.gif");
+background-repeat: repeat-x;
+}
+*.inner-panel *.x-panel-body{
+background-color: #FFFFFF;
+background-image: none;
 }

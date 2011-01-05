@@ -17,25 +17,28 @@
 .article p, .feed_article p, .news_articles p {color:#666; font-size:13px;}
 
 /* Favorites styles */
-.favorite_button {font-size: 11px; color: #EEE;
-    -moz-border-radius:5px; border-radius:5px; border: 1px solid black;
+
+.favorites_bar {
+  background-color: #788AA2;
+  border: 0 none;
+}
+
+.favorite_button {font-size: 11px; color: #444;
+    -moz-border-radius:5px; border-radius:5px; border: 1px solid #666;
     -moz-user-select:none;
     -webkit-user-select:none;
     padding:1px 3px;
-    background: #3d3d3d;
-    background: -moz-linear-gradient(center bottom,rgb(46,46,46) 24%,rgb(61,61,61) 55%,rgb(91,99,91) 87%);
-    background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0.24, rgb(46,46,46)),color-stop(0.55, rgb(61,61,61)),color-stop(0.87, rgb(91,99,91)));
+    background: #eee;
+    background: -moz-linear-gradient(center bottom,rgb(233,233,233) 24%,rgb(243,243,243) 55%,rgb(253,253,253) 87%);
+    background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0.24, rgb(233,233,233)),color-stop(0.55, rgb(243,243,243)),color-stop(0.87, rgb(253,253,253)));
 }
 
 .favorite_button.x-btn-over{
-    background: #5b635b;
-    background: -moz-linear-gradient(center bottom,rgb(79,79,79) 14%,rgb(61,61,61) 34%,rgb(128,143,128) 74%);
-    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.14, rgb(79,79,79)),color-stop(0.34, rgb(61,61,61)),color-stop(0.74, rgb(128,143,128)));
+    background: #fff;
+    background: -moz-linear-gradient(center bottom,rgb(233,233,233) 14%,rgb(255,255,255) 34%,rgb(255,255,255) 74%);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.14, rgb(233,233,233)),color-stop(0.34, rgb(255,255,255)),color-stop(0.74, rgb(255,255,255)));
 }
 
 .favorite_button.x-btn-over.x-btn-click{
-    background: #4f4f4f;
-    background: -moz-linear-gradient(center bottom,rgb(89,94,92) 91%,rgb(66,65,66) 63%,rgb(128,143,128) 1%);
-    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.91, rgb(89,94,92)),color-stop(0.45, rgb(66,65,66)),color-stop(0, rgb(128,143,128)));
-
+    background: #bbb;
 }

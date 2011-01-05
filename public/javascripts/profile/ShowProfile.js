@@ -12,18 +12,24 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
         var record = Ext.decode(response.responseText);
         this.userdata = record.userdata;
         this.renderProfile();
-        this.primary_panel.doLayout();
       }
     });
 
-    this.primary_panel = new Ext.Panel({
-      layout:'hbox',
-      padding: 5,
-      layoutConfig: {defaultMargins:'10', pack:'center'},
-      itemId: config.id,
-      closable: true,
-      title: this.title
+    this.inner_panel  = new Ext.Panel({
+      layout: 'hbox',
+      cls: 'inner-panel',
+      layoutConfig: {defaultMargins:'5', pack: 'center'}
     });
+
+    this.primary_panel = new Ext.Panel({
+      padding: 5,
+      itemId: config.id,
+      cls: 'primary-panel',
+      id: 'snuffalupagus',
+      closable: true,
+      title: this.title,
+      items: this.inner_panel
+    });  
 
     this.getPanel = function(){
         return this.primary_panel;
@@ -106,10 +112,11 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
         border: false,
         items: this.buildRightColumn()
       });
-      this.primary_panel.add(
+      this.inner_panel.add(
         leftColumn,
         rightColumn
       );
+      this.primary_panel.doLayout();
     },
 
     openEditUserTab: function(){

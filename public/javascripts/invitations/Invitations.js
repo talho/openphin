@@ -14,6 +14,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     var item_list = [{
       xtype: 'grid',
       store: store,
+      hideHeaders: true,
       viewConfig: {
         autoFill: true
       },
@@ -81,7 +82,7 @@ Talho.Invitations = Ext.extend(function(){}, {
         }]
       }),
       //sm: new Ext.grid.CellSelectionModel(),
-      frame: true,
+      //frame: true,
       title: 'Invitations',
       iconCls: 'icon-grid'
     }];
@@ -360,9 +361,9 @@ Talho.Invitations = Ext.extend(function(){}, {
 
     var sidePanel = new Ext.Panel({
       layout: 'fit',
-      layoutConfig: {defaultMargins:'10',pack:'center'},
       region: 'west',
       width: 240,
+      margins: '5 5 5 5',
       autoScroll: true,
       items: item_list
     });
@@ -370,9 +371,10 @@ Talho.Invitations = Ext.extend(function(){}, {
     var centerPanel = new Ext.Panel({
       layout: 'fit',
       region: 'center',
+      margins: '5 5 5 0',
       autoScroll: true,
       items: panel_items
-    })
+    });
 
     var panel = new Ext.Panel({
       layout: 'border',
