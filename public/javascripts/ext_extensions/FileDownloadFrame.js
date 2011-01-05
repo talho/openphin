@@ -1,6 +1,6 @@
-(function(){ // wrapped in a function to not pollute the global scope
-  var origConfig = window.DownloadFrame || {};
+Ext.ns("Talho.ux");
 
+(function(){ // wrapped in a function to not pollute the global scope
   var appClass = Ext.extend(Ext.util.Observable,{
     constructor: function(){
       if(!this._downloadFrame){
@@ -30,6 +30,5 @@
       }
     }
   });
-  window.DownloadFrame = new appClass();
-  Ext.apply(DownloadFrame, origConfig);
+  Talho.ux.FileDownloadFrame = new appClass();
 })();
