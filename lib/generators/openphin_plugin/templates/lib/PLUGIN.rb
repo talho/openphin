@@ -14,15 +14,15 @@ end
 
 # Register the plugin expansion in the $expansion_list global variable
 $expansion_list = [] unless defined?($expansion_list)
-$expansion_list.push(:PLUGIN_NAME) unless $expansion_list.index(:PLUGIN_NAME)
+$expansion_list.push(:<%= singular_name %>) unless $expansion_list.index(:<%= singular_name %>)
 
 # Register any required javascript or stylesheet files with the appropriate
 # rails expansion helper
 ActionView::Helpers::AssetTagHelper.register_javascript_expansion(
-  :PLUGIN_NAME => [
-    # add any necessary javascripts like "PLUGIN_NAME/cool_js_stuff.js"
+  :<%= singular_name %> => [
+    # add any necessary javascripts like "<%= file_name %>/cool_js_stuff.js"
   ])
 ActionView::Helpers::AssetTagHelper.register_stylesheet_expansion(
-  :PLUGIN_NAME => [
-    # add any necessary stylesheets like "PLUGIN_NAME/cool_css_stuff.css"
+  :<%= singular_name %> => [
+    # add any necessary stylesheets like "<%= file_name %>/cool_css_stuff.css"
   ])

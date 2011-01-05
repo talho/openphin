@@ -1,22 +1,11 @@
 require 'pp'
 
-class OpenphinPluginGenerator < Rails::Generator::Base
+class OpenphinPluginGenerator < Rails::Generator::NamedBase
   def manifest
     @project_root = @destination_root
-    @destination_root += "/vendor/plugins/#{args[0]}"
+    @destination_root += "/vendor/plugins/#{file_name}"
 
     record do |m|
-      m.instance_variable_set(:@pname, args[0]) 
-      def m.install_with_expand(rel_src, rel_dest = rel_src, file_options = {})
-        file(rel_src, rel_dest, file_options) {|f|
-          contents = f.read
-          contents.gsub!("PLUGIN_NAME", @pname)
-          contents.gsub!(/class\s+#{@pname}/, @pname.camelize)
-          contents.gsub!(/module\s+#{@pname}/, @pname.camelize)
-          contents
-        }
-      end
-
       m.directory "app"
       m.directory "app/controllers"
       m.directory "app/helpers"
@@ -37,24 +26,25 @@ class OpenphinPluginGenerator < Rails::Generator::Base
       m.directory "tasks"
       m.directory "vendor/plugins"
 
-      m.readme "README"
-      m.install_with_expand("README")
-      m.install_with_expand("MIT-LICENSE")
-      m.install_with_expand("Rakefile")
-      m.install_with_expand("init.rb")
-      m.install_with_expand("install.rb")
-      m.install_with_expand("uninstall.rb")
-      m.install_with_expand("config/routes.rb")
-      m.install_with_expand("gitignore", ".gitignore")
-      m.install_with_expand("lib/PLUGIN.rb", "lib/#{args[0]}.rb")
-      m.install_with_expand("spec/factories.rb")
-      m.install_with_expand("tasks/PLUGIN_tasks.rake", "tasks/#{args[0]}_tasks.rake")
-      m.install_with_expand("tasks/cucumber.rake")
-      m.install_with_expand("tasks/rspec.rake")
+      m.template "README", "README"
+      m.template "MIT-LICENSE", "MIT-LICENSE"
+      m.template "Rakefile", "Rakefile"
+      m.template "init.rb", "init.rb"
+      m.template "install.rb", "install.rb"
+      m.template "uninstall.rb", "uninstall.rb"
+      m.template "config/routes.rb", "config/routes.rb"
+      m.template "gitignore", ".gitignore"
+      m.template "lib/PLUGIN.rb", "lib/#{file_name}.rb"
+      m.template "spec/factories.rb", "spec/factories.rb"
+      m.template "tasks/PLUGIN_tasks.rake", "tasks/#{file_name}_tasks.rake"
+      m.template "tasks/cucumber.rake", "tasks/cucumber.rake"
+      m.template "tasks/rspec.rake", "tasks/rspec.rake"
+      m.readme "../../../../vendor/plugins/#{file_name}/README"
+
     end
   end
 
   def after_generate
-    require destination_path('install.rb')
+    require destination_path("install.rb")
   end
 end

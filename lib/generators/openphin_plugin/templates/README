@@ -1,4 +1,4 @@
-PLUGIN_NAME
+<%= class_name %>
 ===========
 
 This is a plugin for OpenPHIN.
@@ -9,20 +9,20 @@ This is a plugin for OpenPHIN.
   - the paths must be relative to Rails.root/public
   - the plugin install.rb must make links to the plugin js/css dirs in
     Rails.root/public
-3) run cucumber tests for this plugin with 'rake cucumber:PLUGIN_NAME'
-4) run spec tests for this plugin with 'rake spec:PLUGIN_NAME'
+3) run cucumber tests for this plugin with 'rake cucumber:<%= class_name %>'
+4) run spec tests for this plugin with 'rake spec:<%= class_name %>'
 
 The following was done initially to setup the plugin:
 1) edited Rails.root/spec/spec_helper.rb to
-  - set fixture path to PLUGIN/spec/fixtures/
-  - load PLUGIN/spec/factories.rb
-2) Edited PLUGIN/install.rb to create
-  - link in Rails.root/public to vendor/plugins/PLUGIN_NAME/public/javascripts
-  - link in Rails.root/public to vendor/plugins/PLUGIN_NAME/public/stylesheets
-  - link in PLUGIN/spec/spec_helper.rb -> Rails.root/spec/spec_helper.rb
-3) Necessary factories were defined in PLUGIN/spec/factories.rb
-4) Defined tasks in PLUGIN/tasks/cucumber.rake & PLUGIN/tasks/rspec.rake
-5) Defined migrations in PLUGIN/tasks/PLUGIN_NAME_tasks.rake
+  - set fixture path to <%= file_name %>/spec/fixtures/
+  - load <%= file_name %>/spec/factories.rb
+2) Edited <%= file_name %>/install.rb to create
+  - link in Rails.root/public to vendor/plugins/<%= file_name %>/public/javascripts
+  - link in Rails.root/public to vendor/plugins/<%= file_name %>/public/stylesheets
+  - link in <%= file_name %>/spec/spec_helper.rb -> Rails.root/spec/spec_helper.rb
+3) Necessary factories were defined in <%= file_name %>/spec/factories.rb
+4) Defined tasks in <%= file_name %>/tasks/cucumber.rake & <%= file_name %>/tasks/rspec.rake
+5) Defined migrations in <%= file_name %>/tasks/<%= file_name %>_tasks.rake
 
 
 Example
