@@ -2,6 +2,8 @@ Ext.ns("Talho");
 
 Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
+    var user_id = config.user_id;
+
     this.devices_store = new Ext.data.Store({
       listeners: {scope: this, 'load': {fn: function(){ this.getPanel().doLayout(); }, delay: 10}},
       reader: new Ext.data.JsonReader({
@@ -98,7 +100,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:300},
         margins: '0 0 0 10', items:[
-        {xtype: 'container', name: 'user[current_photo]', html: '<img id=current_photo src="images/missing.jpg">'},
+        {xtype: 'container', name: 'user[current_photo]', html: '<img id=current_photo' + user_id + ' src="images/missing.jpg">'},
         {xtype: 'spacer', height: '10'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[photo]', maxLength: '1024', width: 'auto'},
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true},
@@ -135,7 +137,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     Talho.EditProfile.superclass.constructor.call(this, config);
 
     // Override the setValue() method where necessary
-    this.getPanel().find("name", "user[current_photo]")[0].setValue = function(val){ Ext.getDom("current_photo").src = val; };
+    this.getPanel().find("name", "user[current_photo]")[0].setValue = function(val){ Ext.getDom("current_photo"+user_id).src = val; };
     this.getPanel().find("name", "user[devices]")[0].setValue = function(val){ this.getStore().loadData(val); };
     this.getPanel().find("name", "user[role_desc]")[0].setValue = function(val){ this.getStore().loadData(val); };
     this.getPanel().find("name", "user[org_desc]")[0].setValue = function(val){ this.getStore().loadData(val); };

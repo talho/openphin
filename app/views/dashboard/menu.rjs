@@ -50,7 +50,7 @@ if current_user.has_non_public_role?
 
     menu_config += "{name: 'My Account', items:[
                       {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
-                      {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditProfile'}},
+                      {name:'Edit Profile', tab:{id: 'edit_profile', title:'Edit Profile', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
                       {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
                       {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
                       {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
