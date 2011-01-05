@@ -27,7 +27,7 @@ class Admin::GroupsController < ApplicationController
       format.html do
         if @group
           @group.refresh_recipients
-          @recipients = @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
+          @recipients = @group.recipients.with_no_hacc.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
         end
       end
       format.pdf do
