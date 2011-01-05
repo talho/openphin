@@ -5,7 +5,7 @@ require 'rake/rdoctask'
 desc 'Default: run unit tests.'
 task :default => :test
 
-desc 'Test the PLUGIN_NAME plugin.'
+desc 'Test the <%= class_name %> plugin.'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.libs << 'test'
@@ -13,10 +13,10 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentation for the PLUGIN_NAME plugin.'
+desc 'Generate documentation for the <%= class_name %> plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'PLUGIN_NAME'
+  rdoc.title    = '<%= class_name %>'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')

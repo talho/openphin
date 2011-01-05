@@ -1,2 +1,2 @@
 # Include hook code here
-require 'PLUGIN_NAME'
+require '<%= file_name %>'

@@ -20,6 +20,11 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                     {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'', initializer: 'Talho.Rollcall'}},
                     {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:''}}]},"
   end
+  
+  Phin::Application.eval_if_plugin_present(:vms) do
+    menu_config += "{name: 'VMS', items:[
+                    {name: 'Command Center', tab:{id: 'vms_main', title:'VMS Command Center', url:'', initializer: 'Talho.VMS.CommandCenter'}}]},"
+  end
 
   menu_config += "{name: 'FAQs', items:[
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
