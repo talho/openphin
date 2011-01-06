@@ -1319,9 +1319,7 @@ border-top-color:#d0d0d0;
 border-bottom-color:#d0d0d0;
 }
 *.x-border-layout-ct{
-background-color:#CCCCCC;
-background-image:url(../images/Ocean/panel/panel_bg.gif);
-background-repeat: repeat-x;
+background-color:#E9E9E9;
 }
 *.x-accordion-hd{
 color:#ffffff;
@@ -1876,9 +1874,7 @@ background-color: #788aa2;
 border: 0px none;
 }
 *.primary-panel *.x-panel-body{
-background-color: #CCCCCC;
-background-image: url("../images/Ocean/panel/panel_bg.gif");
-background-repeat: repeat-x;
+background-color: #E9E9E9;
 }
 *.inner-panel *.x-panel-body{
 background-color: #FFFFFF;
