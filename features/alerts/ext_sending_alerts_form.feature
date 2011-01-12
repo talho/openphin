@@ -249,7 +249,6 @@ Feature: Sending alerts form
     And I click breadCrumbItem "Preview"
 
     And I expand ext panel "Audience"
-    And I suspend cucumber
     Then I should see the following audience breakdown
       | name       | type         |
       | DSHS       | Organization |
