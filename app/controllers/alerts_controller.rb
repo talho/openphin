@@ -103,15 +103,23 @@ class AlertsController < ApplicationController
 
   def edit
     alert = Alert.find params[:id]
-    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
-    # TODO : Remove when devices refactored
-    @device_types = []
-    alert.device_types.each do |device_type|
-      @device_types << device_type
-    end
 
     error = false
     msg = nil
+
+    if alert.nil?
+      msg = "You do not have permission to update or cancel this alert."
+      error = true
+    end
+
+    unless error
+      @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
+      # TODO : Remove when devices refactored
+      @device_types = []
+      alert.device_types.each do |device_type|
+        @device_types << device_type
+      end
+    end
 
     unless alert.is_updateable_by?(current_user)
       msg = "You do not have permission to update or cancel this alert."

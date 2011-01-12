@@ -12,6 +12,7 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
   first_name, last_name = name.split
   jur_obj = Jurisdiction.find_or_create_by_name(jurisdiction.to_s)
   role_obj = Role.find_or_create_by_name(role.to_s)
+  role_obj.update_attribute('approval_required', true) unless role.to_s == "Public"
   unless (user = User.find_by_email(email))
     #create the user.  this results in a Public role in the requested jurisdiction, and a role request for 'role'
     user = Factory(:user, :first_name => first_name, :last_name => last_name, :email => email, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )

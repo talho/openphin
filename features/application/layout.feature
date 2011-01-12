@@ -26,7 +26,6 @@ Feature: Application layout should have communications, portal & application too
     Then I should see the following menu:
       | name | portal_toolbar       |
       | item | HAN                  |
-      | item | Rollcall             |
       | item | FAQs                 |
       | item | Tutorials            |
     And I should see the following menu:

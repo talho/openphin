@@ -321,7 +321,7 @@ Feature: Invitation System
     And I should see "Yes" within "tr#invitee1 td.status"
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
-    And I should see "No" within "tr#invitee1 td.status"
+    And I should see "Yes" within "tr#invitee1 td.status"
     
   Scenario: Create and Send an invite via a malformed CSV file with a line of commas
     When I follow "Admin"

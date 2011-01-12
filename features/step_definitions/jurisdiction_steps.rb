@@ -12,6 +12,11 @@ Given /^the following FIPS codes exist\:$/ do |table |
   end
 end
 
+Given /^([^\"]*) is a state$/ do |name|
+  j = Jurisdiction.find_by_name name
+  j.update_attribute "state", true
+end
+
 Then /^I should see "(.*)" as a jurisdictions option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
   assert page.find("input.audience_jurisdiction[@value=\"#{jurisdiction.id.to_s}\"]").nil? == false
@@ -40,3 +45,4 @@ Given /^(\d*) jurisdictions that are children of (.*)$/ do |count, parent|
     j.move_to_child_of(pj)
   end
 end
+

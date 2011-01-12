@@ -23,7 +23,10 @@ Feature: Viewing recent alerts on dashboard
 
   Scenario: User should see the 20 most recent alerts sent to them
     Given the following users exist:
-      | Martin Fowler      | martin@example.com   | Public | Dallas County |
+      | Martin Fowler | martin@example.com    | Public                                      | Dallas County |
+      | John Ford     | john.ford@example.com | Health Alert and Communications Coordinator | Dallas County |
+    And the role "Health Alert and Communications Coordinator" is an alerter
+    And I am logged in as "john.ford@example.com"
     And a sent alert with:
       | title       | rolling pig pox |
       | message     | the world is on fie |

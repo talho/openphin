@@ -7,6 +7,9 @@ Feature: Sending alerts form
   Scenario: Send alert form should perform client side validation
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+    And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
@@ -56,6 +59,9 @@ Feature: Sending alerts form
     Given there is an system only Admin role
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+    And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
@@ -80,6 +86,10 @@ Feature: Sending alerts form
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
@@ -112,6 +122,9 @@ Feature: Sending alerts form
   Scenario: Sending alerts should display Federal jurisdiction as an option
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+    And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
@@ -130,6 +143,7 @@ Feature: Sending alerts form
       | Jurisdiction | Dallas County |
     And Texas is the parent jurisdiction of:
       | Dallas County |
+    And Texas is a state
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
     And the role "Health Alert and Communications Coordinator" is an alerter
@@ -146,8 +160,6 @@ Feature: Sending alerts form
     Then I should see "Select All Sub-jurisdictions"
     Then I should see "Select No Sub-jurisdictions"
 
-
-
   Scenario: Sending alerts with call down
     Given the following entities exists:
       | Jurisdiction | Dallas County  |
@@ -156,6 +168,10 @@ Feature: Sending alerts form
     And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Potter County |
+    And Texas is the parent jurisdiction of:
+      | Dallas County |
+      | Potter County |
+    And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
@@ -207,6 +223,7 @@ Feature: Sending alerts form
       | Organization | DSHS           |
     And Federal is the parent jurisdiction of:
       | Texas |
+    And Texas is a state
     And the following users exist:
     # since we're doing this in the texas space and aren't selecting a jurisdiction, I'm going to use the default han coordinator role here.
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Texas         |
@@ -232,12 +249,13 @@ Feature: Sending alerts form
     And I click breadCrumbItem "Preview"
 
     And I expand ext panel "Audience"
-    And I should see the following audience breakdown
+    And I suspend cucumber
+    Then I should see the following audience breakdown
       | name       | type         |
       | DSHS       | Organization |
       | Jane Smith | Recipient    |
 
-    And I press "Send Alert"
+    When I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
     

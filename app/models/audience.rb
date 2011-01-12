@@ -158,16 +158,23 @@ class Audience < ActiveRecord::Base
 
   def update_users_recipients
     # force the author to receive the alert
-    Target.find_by_audience_id(self.id).item.author_id
-    db = ActiveRecord::Base.connection();
-    sql = "INSERT INTO audiences_recipients (audience_id, user_id) VALUES (#{id}, #{Target.find_by_audience_id(self.id).item.author_id}) "
-    begin
-      db.execute sql
-    rescue
-      return false
+    db = ActiveRecord::Base.connection()
+    target = Target.find_by_audience_id(self.id)
+    unless target.nil?
+      alert = target.item
+      unless alert.nil?
+        author_id = alert.author_id
+        if author_id
+          sql = "INSERT INTO audiences_recipients (audience_id, user_id) VALUES (#{id}, #{author_id}) "
+          begin
+            db.execute sql
+          rescue
+            return false
+          end
+        end
+      end
     end
 
-    db = ActiveRecord::Base.connection()
     sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
     sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
     sql += " WHERE au.audience_id = #{id} AND ar.user_id IS NULL"

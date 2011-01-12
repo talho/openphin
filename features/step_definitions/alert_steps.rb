@@ -410,7 +410,6 @@ Then /^the backgroundRB worker has queried and processed the SWN XML data "([^\"
   require 'vendor/plugins/backgroundrb/server/lib/meta_worker.rb'
   require 'lib/workers/query_swn_for_acknowledgments_worker.rb'
   QuerySwnForAcknowledgmentsWorker.new.query :filename => filename
-<<<<<<< HEAD
 end
 
 Given /^(?:|I )am using (.+)$/ do |browser|
@@ -422,7 +421,3 @@ Given /^(?:|I )am using (.+)$/ do |browser|
     # don't set a special User-Agent header
   end
 end
-
-=======
-end
->>>>>>> Changed SWN acknowledgment to reflect SWN timestamp

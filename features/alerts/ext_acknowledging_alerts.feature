@@ -2,9 +2,12 @@
 Feature: Acknowledging an alert
 
   Background:
-   Given the following users exist:
+    Given the following users exist:
       | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
+    And "Texas" is the parent jurisdiction of:
+      | Dallas County |
+      | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
     And I am logged in as "john.smith@example.com"

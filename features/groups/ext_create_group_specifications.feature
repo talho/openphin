@@ -158,7 +158,8 @@ Feature: Creating groups
       | Jane Smith | Recipient |
       | Jane Smith | User      |
     And I click inlineLink "Jane Smith"
-    Then I should see the profile tab for "jane.smith@example.com"
+    Then I should see "Jane Smith"
+    And I should see the profile tab for "jane.smith@example.com"
 
   Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
