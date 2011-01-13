@@ -30,13 +30,11 @@ Feature: Acknowledging an alert
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
-    # legacy code because we haven't converted the acknowledgement stuff to ext
     When I sign out
     And I log in as "keith.gaddis@example.com"
     And I follow the acknowledge alert link
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
-    # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through an email without signing in
     When I fill in the ext alert defaults
@@ -53,12 +51,10 @@ Feature: Acknowledging an alert
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
-    # legacy code because we haven't converted the acknoledgement stuff to ext
     When I sign out
     And I follow the acknowledge alert link
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
     And the alert should be acknowledged
-    # end legacy code: replace when acknowledgement is implemented
 
   Scenario: A user cannot acknowledge an sensitive alert through an email without signing in
     When I fill in the ext alert defaults
@@ -77,12 +73,10 @@ Feature: Acknowledging an alert
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body does not contain alert acknowledgment link | |
 
-    # legacy code because we haven't converted the acknowledgement stuff to ext
     When I sign out
     And I follow the acknowledge alert link
     Then I should see "You are not authorized"
     And the alert should not be acknowledged
-    # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through phone
     When I sign out
@@ -125,13 +119,14 @@ Feature: Acknowledging an alert
       | phone      | message                                                                                           |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
-    # legacy code because we haven't converted the acknowledgement stuff to ext
+    And I log in as "keith.gaddis@example.com"
     When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
     And delayed jobs are processed
-    And I log in as "keith.gaddis@example.com"
 
-    When I am on the HAN
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Home"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
+    And I click inlineBtn "More"
     And I should not see an "Acknowledge" button
     But I should see "Acknowledge: Yes"
     # end legacy code: replace when acknowledgement is implemented
@@ -156,7 +151,6 @@ Feature: Acknowledging an alert
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
 
-    # legacy code because we haven't converted the acknowledgement stuff to ext
     And I am logged in as "keith.gaddis@example.com"
     And I follow the acknowledge alert link "if you can call back within 30 minutes"
     Then I should see "Successfully acknowledged alert: H1N1 SNS push packs to be delivered tomorrow"
@@ -211,11 +205,10 @@ Feature: Acknowledging an alert
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
-    
-    # legacy code because we haven't converted the acknoledgement stuff to ext
+
+    And I log in as "keith.gaddis@example.com"
     When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
     And delayed jobs are processed
-    And I log in as "keith.gaddis@example.com"
     When I go to the ext dashboard page
     And I navigate to "HAN > Home"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
