@@ -35,11 +35,11 @@ Feature: Creating groups
     When I go to the ext dashboard page
     Then I should not see "Home"
     Then I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Create New Group" for "/admin_groups/new"
+    And I force open the new group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Create New Group" tab should not be open
 
@@ -48,11 +48,11 @@ Feature: Creating groups
     When I go to the ext dashboard page
     Then I should not see "Home"
     Then I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Create New Group" for "/admin_groups/new"
+    And I force open the new group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Create New Group" tab should not be open
 
