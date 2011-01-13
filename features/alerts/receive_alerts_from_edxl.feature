@@ -2,20 +2,21 @@ Feature: Alerts from EDXL
 
   Background:
     Given the following entities exists:
-      | approval role | Health Officer |
-      | approval role | Emergency Preparedness Coordinator |
-      | approval role | Chief Epidemiologist |
+      | approval role | Health Officer                               |
+      | approval role | Emergency Preparedness Coordinator           |
+      | approval role | Chief Epidemiologist                         |
       | approval role | Communicable/Infectious Disease Coordinators |
-      | approval role | Health Alert and Communications Coordinator |
-      | approval role | HAN Coordinator  |
-      | organization | CDC                   |
-      | jurisdiction | Federal               |
-      | jurisdiction | Texas                 |
-      | jurisdiction | Potter County         |
-      | jurisdiction | Wise County           |
-      | jurisdiction | Louisiana             |
-      | jurisdiction | Calcasieu             |
-      | user | John Smith |
+      | approval role | Health Alert and Communications Coordinator  |
+      | approval role | HAN Coordinator                              |
+      | approval role | Truck Driver                                 |
+      | organization  | CDC                                          |
+      | jurisdiction  | Federal                                      |
+      | jurisdiction  | Texas                                        |
+      | jurisdiction  | Potter County                                |
+      | jurisdiction  | Wise County                                  |
+      | jurisdiction  | Louisiana                                    |
+      | jurisdiction  | Calcasieu                                    |
+      | user          | John Smith                                   |
     And "CDC" has the OID "2.16.840.1.114222.4.20.1.1"
     And "Texas" has the FIPS code "48"
     And "Potter County" has the FIPS code "01003"
@@ -31,15 +32,15 @@ Feature: Alerts from EDXL
     And Louisiana is the parent jurisdiction of:
       | Calcasieu |
     And the following users exist:
-    | Keith Gaddis | keith@example.com  | Health Alert and Communications Coordinator | Texas |
-    | Bob Dole     | bob@example.com  | Health Alert and Communications Coordinator | Potter County |
-    | Jason Phipps | jphipps@example.com | Chief Epidemiologist | Potter County |
-    | Wise Coordinator | wisecoordinator@example.com | Health Alert and Communications Coordinator | Wise County |
-    | Daniel Morrison | daniel@example.com | Health Officer | Wise County |
-    | Brandon Keepers | brandon@example.com | Health Officer | Texas |
-    | Zach Dennis | zach@example.com | Health Officer | Texas |
-    | Mark Jensen | mjensen@cdc.gov  | Public | Texas |
-    | Ethan Waldo | ethan@example.com | Public | Potter County |
+    | Keith Gaddis     | keith@example.com           | Health Alert and Communications Coordinator | Texas         |
+    | Bob Dole         | bob@example.com             | Health Alert and Communications Coordinator | Potter County |
+    | Jason Phipps     | jphipps@example.com         | Chief Epidemiologist                        | Potter County |
+    | Wise Coordinator | wisecoordinator@example.com | Health Alert and Communications Coordinator | Wise County   |
+    | Daniel Morrison  | daniel@example.com          | Health Officer                              | Wise County   |
+    | Brandon Keepers  | brandon@example.com         | Health Officer                              | Texas         |
+    | Zach Dennis      | zach@example.com            | Health Officer                              | Texas         |
+    | Mark Jensen      | mjensen@cdc.gov             | Truck Driver                                | Texas         |
+    | Ethan Waldo      | ethan@example.com           | Truck Driver                                | Potter County |
     And "bob@example.com" is not public in "Texas"
     And "jphipps@example.com" is not public in "Texas"
     And "daniel@example.com" is not public in "Texas"
@@ -48,29 +49,29 @@ Feature: Alerts from EDXL
   Scenario: Receiving an alert through EDXL
     When PhinMS delivers the message: PCAMessageAlert.xml
     Then an alert exists with:
-      | identifier | CDC-2009-183 |
-      | from_organization | CDC |
-      | from_organization_name | Centers for Disease Control and Prevention |
-      | from_organization_oid  | 2.16.840.1.114222.4.20.1.1 |
-      | sent_at | 2009-11-07T21:25:16.5127Z |
-      | status  | Test |
-      | message_type | Alert |
-      | scope | Restricted |
-      | category | Health |
-      | urgency | Expected |
-      | severity | Severe |
-      | certainty | Very Likely |
-      | program | HAN |
-      | title | Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
-      | message | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
-      | acknowledge | Yes |
-      | delivery_time | 1440 |
-      | program_type | Notification |
-      | jurisdiction | Potter County |
-      | role | Health Officer |
-      | role | Emergency Preparedness Coordinator |
-      | role | Chief Epidemiologist |
-      | role | Communicable/Infectious Disease Coordinators |
+      | identifier             | CDC-2009-183                                 |
+      | from_organization      | CDC                                          |
+      | from_organization_name | Centers for Disease Control and Prevention   |
+      | from_organization_oid  | 2.16.840.1.114222.4.20.1.1                   |
+      | sent_at                | 2009-11-07T21:25:16.5127Z                    |
+      | status                 | Test                                         |
+      | message_type           | Alert                                        |
+      | scope                  | Restricted                                   |
+      | category               | Health                                       |
+      | urgency                | Expected                                     |
+      | severity               | Severe                                       |
+      | certainty              | Very Likely                                  |
+      | program                | HAN                                          |
+      | title                  | Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees |
+      | message                | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
+      | acknowledge            | Yes                                          |
+      | delivery_time          | 1440                                         |
+      | program_type           | Notification                                 |
+      | jurisdiction           | Potter County                                |
+      | role                   | Health Officer                               |
+      | role                   | Emergency Preparedness Coordinator           |
+      | role                   | Chief Epidemiologist                         |
+      | role                   | Communicable/Infectious Disease Coordinators |
     And the following users should receive the alert email:
       | People        | keith@example.com, bob@example.com, daniel@example.com, jphipps@example.com, zach@example.com |
       | subject       | Health Alert "Cases of Vibrio vulnificus identified among Hurrican Katrina evacuees" |

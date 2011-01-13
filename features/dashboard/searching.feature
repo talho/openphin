@@ -43,11 +43,12 @@ Feature: Searching for users
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page
     And I follow "Find People"
-    And I fill in "Search" with "example"
+    And I follow "Advanced Search"
+    And I fill in "Email" with "example"
     And I press "Search"
     Then I see the following users in the search results
       | John Smith, Jane Smith, Amy Body, Sam Body |
-      
+
   Scenario: Searching for a user by email address
     Given I am logged in as "amy@example.com"
     When I go to the dashboard page

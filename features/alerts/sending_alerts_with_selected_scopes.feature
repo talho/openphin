@@ -11,6 +11,7 @@ Feature: Creating and sending alerts
       | Jurisdiction | Wise County                                 |
       | Jurisdiction | Potter County                               |
       | Jurisdiction | Texas                                       |
+      | Jurisdiction | Ottawa County                               |
       | Role         | Health Alert and Communications Coordinator |
       | Role         | Immunization Director                       |
       | Role         | Epidemiologist                              |
@@ -18,7 +19,7 @@ Feature: Creating and sending alerts
     And the following users exist:
       | John Smith     | john.smith@example.com     | Health Alert and Communications Coordinator | Dallas County  |
       | Brian Simms    | brian.simms@example.com    | Epidemiologist                              | Dallas County  |
-      | Ed McGuyver    | ed.mcguyver@example.com    | Public                                      | Dallas County  |
+      | Ed McGuyver    | ed.mcguyver@example.com    | Immunization Director                       | Dallas County  |
       | Ethan Waldo    | ethan.waldo@example.com    | Health Alert and Communications Coordinator | Tarrant County |
       | Keith Gaddis   | keith.gaddis@example.com   | Epidemiologist                              | Wise County    |
       | Jason Phipps   | jason.phipps@example.com   | WMD Coordinator                             | Potter County  |
@@ -34,7 +35,7 @@ Feature: Creating and sending alerts
     And "brian.ryckbost@example.com" is not public in "Texas"
 
     And Texas is the parent jurisdiction of:
-      | Dallas County | Tarrant County | Wise County | Potter County |  
+      | Dallas County | Tarrant County | Wise County | Potter County | Ottawa County |
 
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
@@ -68,7 +69,7 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County                                       |
       | body contains | Sender: John Smith                                          |
       | body contains | For more details, keep on reading...                        |
-    And "fix the above step to include an alert id" should be implemented
+   # And "fix the above step to include an alert id" should be implemented
 
   Scenario: Previewing an alert
     When I fill out the alert form with:
@@ -137,7 +138,7 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County                                       |
       | body contains | Sender: John Smith                                          |
       | body contains | For more details, keep on reading...                        |
-    And "fix the above step to include an alert id" should be implemented
+   # And "fix the above step to include an alert id" should be implemented
 
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
@@ -164,7 +165,7 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County                                                    |
       | body contains | Sender: John Smith                                                       |
       | body contains | For more details, keep on reading...                                     |
-    And "fix the above step to include an alert id" should be implemented
+ #   And "fix the above step to include an alert id" should be implemented
 
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
@@ -192,7 +193,7 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County                                       |
       | body contains | Sender: John Smith                                          |
       | body contains | For more details, keep on reading...                        |
-    And "fix the above step to include an alert id" should be implemented
+ #   And "fix the above step to include an alert id" should be implemented
 
             
 Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
@@ -219,6 +220,6 @@ Scenario: Sending an alert with specified Roles scopes who the alerts are sent t
       | body contains | Agency: Dallas County                                                                                 |
       | body contains | Sender: John Smith                                                                                    |
       | body contains | For more details, keep on reading...                                                                  |
-    And "fix the above step to include an alert id" should be implemented
+  #  And "fix the above step to include an alert id" should be implemented
 
 

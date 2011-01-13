@@ -47,6 +47,21 @@ Given "\"$email_address\" has acknowledged the alert \"$title\"" do |email_addre
   aa.acknowledge!
 end
 
+When /I acknowledge the phone message for "([^"]*)"(?: with "([^"]*)")?$/ do |title, ack|
+  u = current_user
+  al = Alert.find_by_title(title)
+  aa = al.alert_attempts.find_by_user_id(u)
+  if aa.nil?
+    aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u, :acknowledged_at => nil, :acknowledged_alert_device_type_id => AlertDeviceType.find_by_device("Device::PhoneDevice"))
+    del = Factory(:delivery, :alert_attempt => aa, :device => u.devices.phone.first)
+  end
+  unless ack.nil?
+    aa.acknowledge! :ack_response => aa.alert.call_down_messages.index(ack)
+  else
+    aa.acknowledge!
+  end
+end
+
 Given "\"$email_address\" has not acknowledged the alert \"$title\"" do |email_address, title|
   u = User.find_by_email(email_address)
   aa = Factory(:alert_attempt, :alert => Alert.find_by_title(title), :user => u)
@@ -58,7 +73,9 @@ Given /^"([^\"]*)" has acknowledged the alert "([^\"]*)" with "([^\"]*)" (\d+) (
   alert = Alert.find_by_title(title)
   delta = units == "hour" ? num.to_i.hours.to_i : num.to_i.minutes.to_i
   aa = alert.alert_attempts.find_by_user_id(u.id)
-  aa.acknowledge! :ack_response => alert.call_down_messages.index(message).to_i, :acknowledged_at => (Time.now + delta)
+  aa.created_at += (delta)
+  aa.save
+  aa.acknowledge! :ack_response => alert.call_down_messages.index(message)
 end
 
 Given /^(\d*) random alerts$/ do |count|
@@ -324,6 +341,10 @@ Then /^the alert should be acknowledged$/ do
   attempt.acknowledged_at.to_i.should be_close(Time.zone.now.to_i, 5000)
 end
 
+Then /^the latest alert should be acknowledged$/ do    # Same as above, but without the should_be_close
+  attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+end
+
 Then /^the alert should be acknowledged with response number "([^\"]*)"$/ do |alert_response|
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
   attempt.call_down_response.should == alert_response.to_i
@@ -415,4 +436,3 @@ Given /^(?:|I )am using (.+)$/ do |browser|
     # don't set a special User-Agent header
   end
 end
-

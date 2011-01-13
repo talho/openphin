@@ -27,16 +27,16 @@ Feature: Viewing groups
     Given I am logged in as "jill.smith@example.com"
     And delayed jobs are processed
 
-    Scenario: going to view a user group as an admin
-      When I go to the dashboard page
-      And I follow "Admin"
-      Then I should see "Manage Groups"
-      When I follow "Manage Groups"
-      Then I should see "Dallas County Health Officer Group"
-      And I follow "Dallas County Health Officer Group"
-      Then I should be specifically on the group page for "Dallas County Health Officer Group"
-      And I should see that the group includes:
-        | Health Officer1, Health Officer2 |
+  Scenario: going to view a user group as an admin
+    When I go to the dashboard page
+    And I follow "Admin"
+    Then I should see "Manage Groups"
+    When I follow "Manage Groups"
+    Then I should see "Dallas County Health Officer Group"
+    And I follow "Dallas County Health Officer Group"
+    Then I should be specifically on the group page for "Dallas County Health Officer Group"
+    And I should see that the group includes:
+      | Health Officer1, Health Officer2 |
 
   Scenario: going to view a user group ordering as an admin 
     When I go to the dashboard page
@@ -210,10 +210,11 @@ Feature: Viewing groups
     Then I press "Save"
     Then I should see the following group summary:
       | name               | Dallas County Health Officer Jurisdiction Group  |
-      | group_scope              | Jurisdiction                                     |
+      | group_scope              | Jurisdiction                               |
       | owner_jurisdiction | Dallas County                                    |
-    Given I am logged in as "will.smith@example.com"
-    When I go to the groups page
+    When I go to the dashboard page
+    And I am logged in as "will.smith@example.com"
+    And I go to the groups page
     Then I should not see "Dallas County Health Officer Jurisdiction Group"
 
   Scenario: updating a user group currently to another admin updating the same group

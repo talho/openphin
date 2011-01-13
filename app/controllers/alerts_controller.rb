@@ -59,6 +59,7 @@ class AlertsController < ApplicationController
   def create
     remove_blank_call_downs unless params[:alert][:call_down_messages].nil?
     set_acknowledge
+    params[:alert][:author_id] = current_user.id
     @alert = present current_user.alerts.build(params[:alert])
     @acknowledge = if @alert.acknowledge && !(@alert.call_down_messages.blank? || @alert.call_down_messages.empty?)
       'Advanced'
@@ -71,7 +72,7 @@ class AlertsController < ApplicationController
     
     if params[:send]
       if @alert.valid?
-        params[:alert][:author_id]=current_user.id
+
         @alert.save
         @alert.integrate_voice
         @alert.batch_deliver
@@ -102,15 +103,23 @@ class AlertsController < ApplicationController
 
   def edit
     alert = Alert.find params[:id]
-    @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
-    # TODO : Remove when devices refactored
-    @device_types = []
-    alert.device_types.each do |device_type|
-      @device_types << device_type
-    end
 
     error = false
     msg = nil
+
+    if alert.nil?
+      msg = "You do not have permission to update or cancel this alert."
+      error = true
+    end
+
+    unless error
+      @acknowledge_options = Alert::Acknowledgement.reject{|x| x=="Advanced"}
+      # TODO : Remove when devices refactored
+      @device_types = []
+      alert.device_types.each do |device_type|
+        @device_types << device_type
+      end
+    end
 
     unless alert.is_updateable_by?(current_user)
       msg = "You do not have permission to update or cancel this alert."
@@ -377,5 +386,5 @@ private
     end
     params[:alert].delete("responders")
   end
-  
+
 end

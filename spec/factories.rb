@@ -28,6 +28,7 @@ Factory.define :user do |pp|
   pp.password              { "Password1" }
   pp.password_confirmation { "Password1" }
   pp.email_confirmed { true }
+  pp.role_requests_attributes { [] }
 end
 
 Factory.sequence(:jurisdiction_name) {|jn| "Jurisdiction #{jn}"}
@@ -91,7 +92,7 @@ end
 
 Factory.define :role_request do |m|
   m.association :user
-  m.association :requester
+  m.association :requester, :factory => :user
   m.association :jurisdiction
   m.association :role
 end
@@ -150,16 +151,6 @@ end
 
 Factory.define :share do |m|
   m.sequence(:name){|t| "share ##{t}"}
-end
-
-Factory.define :document do |m|
-  m.association :user
-  m.file {|f| File.open(__FILE__)}
-end
-
-Factory.define :target do |m|
-  m.association :audience, :factory => :group
-  m.association :item, :factory => :alert
 end
 
 Factory.define :document do |m|

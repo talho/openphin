@@ -62,7 +62,7 @@
 
     <p class="people"><strong>People:</strong> <%=h audience.users.blank? ? 'No additional people selected' : audience.users.map(&:name).to_sentence %></p>
   <% end %>
-  <p class="num_of_recipients"><strong># of Recipients: </strong><%= @alert.alert_attempts.count %></p>
+  <p class="num_of_recipients"><strong># of Recipients: </strong><%= @alert.new_record? ? @alert.preview_recipients_size(params) : @alert.alert_attempts.count %></p>
 </div>
 
 <div class="contacted_users" >
@@ -78,27 +78,31 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
-      <th>Acknowledged with Device</th>
-      <th>Alert Response</th>
-      <th>Acknowledgement Time</th>
-    </tr>
-    <% attempts.each do |attempt| %>
-      <tr class="user" style="border-top: 1px lightgray solid;">
+      <% if @alert.acknowledge  %>
+        <th>Acknowledged with Device</th>
+        <th>Alert Response</th>
+        <th>Acknowledgement Time</th>
+      <% end %>
+      </tr>
+      <% attempts.each do |attempt| %>
+        <tr class="user" style="border-top: 1px lightgray solid;" >
         <td class="name"><%= attempt.user.display_name %> </td>
         <td class="email"><%= attempt.user.email %> </td>
-        <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
-        <td class="alert_response"><%=
+        <% if @alert.acknowledge  %>
+          <td class="device_type"><%= attempt.acknowledged_alert_device_type.device.constantize.display_name unless attempt.acknowledged_alert_device_type.nil? %></td>
+          <td class="alert_response"><%=
             unless attempt.call_down_response.nil?
-                if (attempt.call_down_response == 0)                                                              #invisible span to make this easy to test
-                    "<span class='alert_response_ack'  style='font-size: 180%; font-weight: bold;'>&#x2713</span><span style='display: none;'>user_acknowledged_alert</span>"
-                else
-                    @alert.call_down_messages[attempt.call_down_response.to_s]
-                end
-            else
-                "<span class='alert_response_ack' style='color: #880000; text-align: middle;'> - </span>"
+              if (attempt.call_down_response == 0)
+                "<span style='font-size: 180%; font-weight: bold;'>&#x2713</span>"
+   	          else
+  	            @alert.call_down_messages[attempt.call_down_response.to_s]
+  	          end
+  	        else
+  	          "<span style='color: #880000; text-align: middle;'> - </span>"
             end
-        %></td>
-        <td class="alert_ack_time"><%= attempt.acknowledged_at.strftime("%B %d, %Y %I:%M %p %Z") unless attempt.acknowledged_at.nil? %></td>
+          %></td>
+         <td class="alert_ack_time"><%= attempt.acknowledged_at.strftime("%B %d, %Y %I:%M %p %Z") unless attempt.acknowledged_at.nil? %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>  

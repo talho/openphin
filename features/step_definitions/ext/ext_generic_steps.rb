@@ -150,7 +150,7 @@ When /^the "([^\"]*)" tab should not be open$/ do |tab_name|
   page.should_not have_css(".x-tab-strip li", :text => tab_name)
 end
 
-When /^I force open the tab "([^\"]*)" for "([^\"]*)"(?: with config "([^\"]*)")?$/ do |tab_name, tab_url, config|
+def force_open_tab(tab_name, tab_url, config = nil)
   tab_config = "{title:'#{tab_name}', url:'#{tab_url}'}"
   tab_config = config unless config.nil?
   page.execute_script("window.Application.phin.open_tab(#{tab_config})")
@@ -271,4 +271,12 @@ end
 
 Then /^I should see the image "([^\"]*)"$/ do |file_name|
   page.should have_xpath("//*/img[contains(@src, '#{file_name}')]")
+end
+
+When /^I force open the manage groups tab$/ do
+  force_open_tab("Manage Groups", "/admin_groups")
+end
+
+When /^I force open the new group tab$/ do
+  force_open_tab( "Create New Group", "/admin_groups/new")
 end

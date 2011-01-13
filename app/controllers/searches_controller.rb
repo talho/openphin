@@ -95,12 +95,12 @@ protected
   end
   
   def strip_blank_elements(hsh)
-    return unless hsh
+    return if hsh.blank?
     hsh.delete_if{|k,v| v.blank?} if hsh
   end
   
   def strip_blank_arrays(hsh)
-    return unless hsh
+    return if hsh.blank?
     hsh.delete_if{|k,v| v.to_s.blank?} if hsh
   end
   

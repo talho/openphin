@@ -143,3 +143,109 @@ Feature: Creating document shares
      Then I press "Delete"
      And I wait for the "#document_progress_panel" element to finish
      And I should not see "Avian Flu"
+
+   Scenario: User attempts to share a document located in his shared folder that is not his
+     Given I have the document "sample.wav" in my inbox
+     Given I created the share "Discover"
+     Given "brandon.keepers@example.com" has been added to the share "Discover"
+
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Inbox"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I check "sample.wav"
+     And I select "#add_to_share" from the documents toolbar
+     Then I wait for the "div#share div#edit" element to load
+     When I check "Discover"
+     And I press "Share"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     And I wait for the "#documents_progress_panel" element to finish
+     Then I should see "sample.wav"
+     And "brandon.keepers@example.com" should receive the email:
+      | subject       | A document has been added to the share "Discover" |
+      | body contains | To view this document |
+
+     Given I am logged in as "brandon.keepers@example.com"
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     Then I wait for the "#document_progress_panel" element to finish
+     And I should see "Contents of Discover"
+     And I should see "sample.wav"
+     And I check "sample.wav"
+     And I select "#add_to_share" from the documents toolbar
+     Then I should see "Sorry, you don't have access to this file"
+
+  Scenario: User attempts to Move/Edit a document located in his shared folder that is not his
+     Given I have the document "sample.wav" in my inbox
+     Given I created the share "Discover"
+     Given "brandon.keepers@example.com" has been added to the share "Discover"
+
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Inbox"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I check "sample.wav"
+     And I select "#add_to_share" from the documents toolbar
+     Then I wait for the "div#share div#edit" element to load
+     When I check "Discover"
+     And I press "Share"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     And I wait for the "#documents_progress_panel" element to finish
+     Then I should see "sample.wav"
+     And "brandon.keepers@example.com" should receive the email:
+      | subject       | A document has been added to the share "Discover" |
+      | body contains | To view this document |
+
+     Given I am logged in as "brandon.keepers@example.com"
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     Then I wait for the "#document_progress_panel" element to finish
+     And I should see "Contents of Discover"
+     And I should see "sample.wav"
+     And I check "sample.wav"
+     And I select "#move_edit" from the documents toolbar
+     Then I should see "Sorry, you don't have access to this file"
+
+    Scenario: User attempts to delete a document located in his shared folder that is not his
+     Given I have the document "sample.wav" in my inbox
+     Given I created the share "Discover"
+     Given "brandon.keepers@example.com" has been added to the share "Discover"
+
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Inbox"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I check "sample.wav"
+     And I select "#add_to_share" from the documents toolbar
+     Then I wait for the "div#share div#edit" element to load
+     When I check "Discover"
+     And I press "Share"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     And I wait for the "#documents_progress_panel" element to finish
+     Then I should see "sample.wav"
+     And "brandon.keepers@example.com" should receive the email:
+      | subject       | A document has been added to the share "Discover" |
+      | body contains | To view this document |
+
+     Given I am logged in as "brandon.keepers@example.com"
+     When I go to the dashboard page
+     And I follow "Documents"
+     Then I wait for the "#documents_progress_panel" element to finish
+     When I follow "Discover"
+     Then I wait for the "#document_progress_panel" element to finish
+     And I should see "Contents of Discover"
+     And I should see "sample.wav"
+     And I check "sample.wav"
+     And I will confirm on next step
+     And I select "#delete_file" from the documents toolbar
+     Then I should see "Sorry, you don't have access to this file"

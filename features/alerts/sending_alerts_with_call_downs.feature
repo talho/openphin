@@ -6,15 +6,15 @@ Feature: Sending alerts with call downs
 
   Background:
     Given the following entities exists:
-      | Role | Health Alert and Communications Coordinator |
+      | Role                  | Health Alert and Communications Coordinator |
+      | Role                  | Health Officer                              |
+      | Jurisdiction          | Potter County                               |
+      | Jurisdiction          | Dallas County                               |
+      | Jurisdiction          | Tarrant County                              |
     And the role "Health Alert and Communications Coordinator" is an alerter
   
   Scenario: Sending alert updates with call down
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
+    Given the following users exist:
       | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Potter County |
     And I am logged in as "john.smith@example.com"
@@ -61,11 +61,7 @@ Feature: Sending alerts with call downs
       | call_down_messages | if you cannot respond                                   |
 
   Scenario: Sending alert updates with call down and responses
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
+    Given the following users exist:
       | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith  | jane.smith@example.com  | Health Officer                              | Potter County |
       | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
@@ -100,10 +96,10 @@ Feature: Sending alerts with call downs
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery time"
     And I select "if you can respond within 15 minutes" from "Responders"
-		And I unselect option "if you can respond within 30 minutes"
-		And I unselect option "if you can respond within 1 hour"
-		And I unselect option "if you can respond within 4 hours"
-		And I unselect option "if you cannot respond"
+    And I unselect option "if you can respond within 30 minutes"
+    And I unselect option "if you can respond within 1 hour"
+    And I unselect option "if you can respond within 4 hours"
+    And I unselect option "if you cannot respond"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -119,11 +115,11 @@ Feature: Sending alerts with call downs
     And I select "Minor" from "Severity"
     And I select "72 hours" from "Delivery time"
     And I select "Normal" from "Acknowledge"
-		And I unselect option "if you can respond within 15 minutes"
-		And I select "if you can respond within 30 minutes" from "Responders"
-		And I unselect option "if you can respond within 1 hour"
-		And I unselect option "if you can respond within 4 hours"
-		And I unselect option "if you cannot respond"
+    And I unselect option "if you can respond within 15 minutes"
+    And I select "if you can respond within 30 minutes" from "Responders"
+    And I unselect option "if you can respond within 1 hour"
+    And I unselect option "if you can respond within 4 hours"
+    And I unselect option "if you cannot respond"
     And I press "Preview Message"
     Then I should see a preview of the message
 
@@ -155,11 +151,7 @@ Feature: Sending alerts with call downs
       | targets | john.wayne@example.com,jackie.sue@example.com,frank.chung@example.com |
 
   Scenario: Sending alert cancellation with call down and responses
-    Given the following entities exists:
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
-      | Jurisdiction | Tarrant County |
-    And the following users exist:
+    Given the following users exist:
       | John Smith  | john.smith@example.com  | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith  | jane.smith@example.com  | Health Officer                              | Potter County |
       | Jackie Sue  | jackie.sue@example.com  | Health Officer                              | Potter County |
@@ -220,11 +212,7 @@ Feature: Sending alerts with call downs
       | targets | john.smith@example,jackie.sue@example.com,frank.chung@example.com |
   
     Scenario: Reviewing Alert Log for Alert with Alert Responses
-      Given the following entities exists:
-        | Jurisdiction | Dallas County  |
-        | Jurisdiction | Potter County  |
-        | Jurisdiction | Tarrant County |
-      And the following users exist:
+      Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Health Officer                              | Potter County |
       | Jackie Sue      | jackie.sue@example.com   | Health Officer                              | Potter County |

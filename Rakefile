@@ -8,6 +8,12 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
+require 'hydra'
+require 'hydra/tasks'
 
 task :build => %w(db:migrate spec cucumber)
 task :db => %w(db:migrate db:test:prepare)
+
+Hydra::TestTask.new('hydra:cucumber') do |t|
+  t.add_files 'features/**/*.feature'
+end

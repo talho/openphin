@@ -71,6 +71,7 @@ group :cucumber do
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
   #gem "clamav", "0.4.1"
+  gem "hydra", "0.22.2"
 end
 
 group :tools do

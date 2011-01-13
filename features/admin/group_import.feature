@@ -17,14 +17,13 @@ Feature: Importing users from a CSV
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the following users exist:
       | Boss User      | boss@example.com | Health Alert and Communications Coordinator | Texas            |
+      | Boss User      | boss@example.com | Health Alert and Communications Coordinator | Ector            |
       | Andy User      | andy@example.com | Health Alert and Communications Coordinator | Region 6/5 South |
       | Jane User      | jane@example.com | Epidemiologist                              | Region 6/5 South |
       | Jay User       | jay@example.com  | Epidemiologist                              | Tarrant          |
       | John User      | john@example.com | Epidemiologist                              | Ector            |
       | Bob User       | bob@example.com  | Health Officer                              | Ector            |
-      | Greg User      | greg@example.com | Epidemiologist                              |                  |
-    And the user "Boss User" with the email "boss@example.com" has the role "Health Alert and Communications Coordinator" in "Texas"
-    And the user "Boss User" with the email "boss@example.com" has the role "Health Alert and Communications Coordinator" in "Ector"
+      | Greg User      | greg@example.com | Epidemiologist                              | Ector            |
 
   Scenario: Importing a well-formatted file
     Given the following file "groups.csv":

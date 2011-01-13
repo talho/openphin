@@ -35,11 +35,11 @@ Feature: Creating groups
     When I go to the ext dashboard page
     Then I should not see "Home"
     Then I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Create New Group" for "/admin_groups/new"
+    And I force open the new group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Create New Group" tab should not be open
 
@@ -48,11 +48,11 @@ Feature: Creating groups
     When I go to the ext dashboard page
     Then I should not see "Home"
     Then I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Create New Group" for "/admin_groups/new"
+    And I force open the new group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Create New Group" tab should not be open
 
@@ -158,7 +158,8 @@ Feature: Creating groups
       | Jane Smith | Recipient |
       | Jane Smith | User      |
     And I click inlineLink "Jane Smith"
-    Then I should see the profile tab for "jane.smith@example.com"
+    Then I should see "Jane Smith"
+    And I should see the profile tab for "jane.smith@example.com"
 
   Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
