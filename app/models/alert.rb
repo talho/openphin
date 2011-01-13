@@ -25,7 +25,7 @@
 #  program                        :string(255)
 #  urgency                        :string(255)
 #  certainty                      :string(255)
-#  jurisdictional_level           :string(255)
+#  jurisdiction_level             :string(255)
 #  references                     :string(255)
 #  from_jurisdiction_id           :integer(4)
 #  original_alert_id              :integer(4)
@@ -98,7 +98,7 @@ class Alert < ActiveRecord::Base
   before_create :set_message_type
   before_create :set_sent_at
   after_create :create_console_alert_device_type
-  before_save :set_jurisdictional_level
+  before_save :set_jurisdiction_level
   after_save :set_identifier
   after_save :set_distribution_id
   after_save :set_sender_id
@@ -315,14 +315,15 @@ class Alert < ActiveRecord::Base
     Alert.new(:title => title, :message => message, :severity => "Minor", :created_at => Time.zone.now, :status => "Test", :acknowledge => false, :sensitive => false)
   end
 
-  def set_jurisdictional_level
+  # cascade alerting
+  def set_jurisdiction_level
     if !Jurisdiction.find_by_name(sender).nil?
       jurs = Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', audiences.map(&:jurisdiction_ids).flatten.uniq])
       level=[]
       level << "Federal" if jurs.detect{|j| j.root?}
       level << "State" if jurs.detect{|j| !j.root? && !j.leaf?}
       level << "Local" if jurs.detect{|j| j.leaf?}
-      write_attribute("jurisdictional_level",  level.join(","))
+      write_attribute("jurisdiction_level",  level.join(","))
     end
   end
 
@@ -454,6 +455,22 @@ class Alert < ActiveRecord::Base
     return temp_recipients_size
   end
 
+  # cascade alerting
+  def jurisdictions_per_level
+    audiences.each do |audience|
+      if audience.users.empty?      
+       if audience.jurisdictions.empty?
+          if jurisdiction_level =~ /local/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+          end
+          if jurisdiction_level =~ /state/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign
+          end
+        end
+        audience.roles = Role.all if audience.roles.empty?
+      end
+    end
+  end
 
   private
   def set_message_type
