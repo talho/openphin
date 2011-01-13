@@ -25,7 +25,7 @@
 #  program                        :string(255)
 #  urgency                        :string(255)
 #  certainty                      :string(255)
-#  jurisdictional_level           :string(255)
+#  jurisdiction_level             :string(255)
 #  references                     :string(255)
 #  from_jurisdiction_id           :integer(4)
 #  original_alert_id              :integer(4)
@@ -87,9 +87,9 @@ module EDXL
       parameter.value if parameter
     end
 
-    def jurisdictional_level
+    def jurisdiction_level
       parameter = parameters.detect {|p| p.key == 'Level' }
-      parameter = parameters.detect {|p| p.key == 'JurisdictionalLevel' } if parameter.blank?
+      parameter = parameters.detect {|p| p.key == 'JurisdictionLevel' } if parameter.blank?
       parameter.value if parameter
     end
 
@@ -97,5 +97,6 @@ module EDXL
       parameter = parameters.detect {|p| p.key == 'Acknowledge' }
       !parameter.nil? && parameter.value == "Yes"
     end
+    
   end
 end
