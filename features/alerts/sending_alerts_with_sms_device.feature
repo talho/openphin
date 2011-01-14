@@ -4,10 +4,18 @@ Feature: Sending alerts to SMS devices
   As a user
   I want people to be able to send me alerts on my SMS device
   
-  Background: 
+  Background:
+    Given the following entities exists:
+      | Role          | Health Alert and Communications Coordinator |
+      | Role          | Epidemiologist                              |
+      | Jurisdiction  | Dallas County                               |
+      | Jurisdiction  | Wise County                                 |
     Given the following users exist:
       | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
+    And "Texas" is the parent jurisdiction of:
+      | Dallas County |
+      | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
   

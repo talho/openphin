@@ -38,7 +38,7 @@
       <legend>Organizations</legend>
       <p>
           <%= render 'users/organizations', :user => form.object %>
-          <%- if current_user.is_super_admin? || current_user == @user -%>
+          <%- if current_user == @user || current_user.is_super_admin? -%>
           <%- form.object.organization_membership_requests.build if form.object.organization_membership_requests.last.nil? || !form.object.organization_membership_requests.last.new_record? -%>
             <%- form.fields_for :organization_membership_requests do |omr_form| -%>
             <%- if omr_form.object.new_record? %>

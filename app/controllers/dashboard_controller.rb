@@ -8,10 +8,11 @@ class DashboardController < ApplicationController
   def index
     DashboardController.app_toolbar "application"
 	  @articles = Article.recent
-    feed_urls = [
+    feed_urls = Rails.env == "production" ? [
       "http://www.nhc.noaa.gov/gtwo.xml",
-      "http://www.nhc.noaa.gov/nhc_at2.xml"
-     ]
+      "http://www.nhc.noaa.gov/nhc_at2.xml",
+      "http://www.weather.gov/alerts-beta/tx.php?x=1"
+     ] : []
     @entries = []
     begin   
       feed_urls.each do |url|

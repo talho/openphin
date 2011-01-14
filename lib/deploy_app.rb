@@ -13,7 +13,7 @@ namespace :app do
     run "ln -fs #{shared_path}/phin_ms_queues #{release_path}/tmp/phin_ms_queues"
     run "ln -fs #{shared_path}/rollcall #{release_path}/tmp/rollcall"
     run "ln -fs #{shared_path}/sphinx.yml #{release_path}/config/sphinx.yml"
-    run "ln -fs #{shared_path}/testjour.yml #{release_path}/config/testjour.yml"
+    run "ln -fs #{shared_path}/hydra.yml #{release_path}/config/hydra.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     # for the rollcall plugin
@@ -35,7 +35,11 @@ namespace :app do
   end
 
   desc "run bundle install for gem dependencies"
-  task :bundle_install, :roles => [:app, :web, :jobs] do 
-    run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
+  task :bundle_install, :roles => [:app, :web, :jobs] do
+    if rails_env == "test"
+      run "cd #{release_path}; bundle install --without=tools"
+    else
+      run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
+    end
   end
 end

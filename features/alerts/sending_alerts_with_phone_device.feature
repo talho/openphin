@@ -4,8 +4,13 @@ Feature: Sending alerts to phones
   As a user
   I want people to be able to send me alerts on my phone
   
-  Background: 
-    Given the following users exist:
+  Background:
+     Given the following entities exists:
+      | Role                  | Health Alert and Communications Coordinator |
+      | Role                  | Epidemiologist                              |
+      | Jurisdiction          | Dallas County                               |
+      | Jurisdiction          | Wise County                                 |
+    And the following users exist:
       | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter

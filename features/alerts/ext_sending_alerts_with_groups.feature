@@ -11,15 +11,19 @@ Feature: Sending alerts using groups
       | Role          | Health Alert and Communications Coordinator |
       | Role          | BT Coordinator |
       | Jurisdiction  | Potter County  |
+    And "Texas" is the parent jurisdiction of:
+      | Tarrant County |
+      | Potter County  |
     And the role "Admin" is an alerter
     And the role "Health Alert and Communications Coordinator" is an alerter
     And the role "Epidemiologist" is an alerter
     And the following users exist:
-      | John Smith | john.smith@example.com | Admin                                       | Tarrant County |
-      | John Smith | john.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
-      | Jane Smith | jane.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
-      | Bob Smith  | bob.smith@example.com  | Health Alert and Communications Coordinator | Texas          |
-      | Leroy Smith| leroy@example.com      | Epidemiologist                              | Potter County  |
+      | John Smith  | john.smith@example.com | Admin                                       | Tarrant County |
+      | John Smith  | john.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | Jane Smith  | jane.smith@example.com | Health Alert and Communications Coordinator | Tarrant County |
+      | Bob Smith   | bob.smith@example.com  | Health Alert and Communications Coordinator | Texas          |
+      | Jim Smith   | jim.smith@example.com  | Epidemiologist                              | Texas          |
+      | Leroy Smith | leroy@example.com      | Epidemiologist                              | Potter County  |
     And the following groups for "john.smith@example.com" exist:
       | G1 | Tarrant County | Health Officer |  | Personal     |                |
       | G2 | Texas          | Epidemiologist |  | Global       |                |
@@ -82,8 +86,8 @@ Feature: Sending alerts using groups
 
     And I send the alert
 
-    And the following users should receive the alert email:
-      | People | bob.smith@example.com, leroy@example.com |
+    Then the following users should receive the alert email:
+      | People | john.smith@example.com, jane.smith@example.com, bob.smith@example.com, jim.smith@example.com, leroy@example.com |
 
   Scenario: Sending an alert to only a group with no other audience specified
     Given I am logged in as "john.smith@example.com"
@@ -100,4 +104,5 @@ Feature: Sending alerts using groups
     And I send the alert
 
     And the following users should receive the alert email:
-      | People | bob.smith@example.com |
+      | People | john.smith@example.com, jane.smith@example.com, bob.smith@example.com, jim.smith@example.com |
+    And "leroy@example.com" should not receive an email

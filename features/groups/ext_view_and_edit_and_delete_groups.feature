@@ -22,10 +22,10 @@ Feature: Viewing groups
       | Jill Smith      | jill.smith@example.com   | Admin          | Potter County |
       | Jim Smith       | jim.smith@example.com    | Admin          | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin          | Potter County |
+    Given I am logged in as "jill.smith@example.com"
     And the following groups for "jill.smith@example.com" exist:
       | Dallas County Health Officer Group              | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
       | Dallas County Health Officer Jurisdiction Group | Dallas County | Health Officer | john.smith@example.com | Jurisdiction | Potter County |
-    Given I am logged in as "jill.smith@example.com"
     When delayed jobs are processed
 
     Scenario: going to view a user group as an admin

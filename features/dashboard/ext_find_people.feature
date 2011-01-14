@@ -260,7 +260,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Title        | Supervis               |
    | Roles        | Public                 |
    |Jurisdictions | Potter County          |
-  Then I should not see "Potter Admin"
+  Then I should see "Potter Admin"
 
   # first release list choices
   When I close the active tab

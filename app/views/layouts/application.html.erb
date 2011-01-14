@@ -35,15 +35,17 @@
       <ul class="apps">
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
         <% Phin::Application.eval_if_plugin_present(:rollcall) do %>
-          <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
+          <% unless current_user.role_memberships.with_rollcall.empty? %>
+            <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
+          <% end %>
         <% end %>
-  			<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
-  			<% if current_user.has_non_public_role? %>
+  	<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
+  	<% if current_user.has_non_public_role? %>
           <li<%= ' class="current"' if toolbar == 'forums' %>><%= link_to s("Forums"), forums_path %></li>
         <% end -%>
         <li<%= ' class="current"' if toolbar == 'tutorials' %>><%= link_to s("Tutorials"), tutorials_path %></li>
-  		</ul>
-  		<ul class="actions">
+      </ul>
+      <ul class="actions">
       <%- if signed_in? -%>
           <li<%= tab_me root_path %>><%= link_to s('My Dashboard'), root_path %></li><li>&nbsp;|&nbsp;</li>
           <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), show_advanced_search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>

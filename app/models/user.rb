@@ -609,7 +609,7 @@ private
       end
     end
   end
-
+  
   def generate_oid
     self[:phin_oid] = email.to_phin_oid
   end

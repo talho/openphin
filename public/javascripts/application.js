@@ -807,8 +807,15 @@ function setDocumentAddToShareEvents() {
       link = file.closest("li").children("a.add_share");
       site = link.attr("href");
       dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
+        if(XMLHttpRequest.status == 404){
+					$('#documentsFlashMessage').text("Sorry, you don't have access to this file.");
+					$('#documentsFlash').show();
+          dp.remove();
+					return false;
+        }
         if(textStatus != "success") {
           alert("Error loading, please try again.");
+          dp.remove();
           return false;
         }
         $("form.edit_document").ajaxForm({
@@ -873,9 +880,16 @@ function setDocumentMoveEditEvents() {
       file = $("ul.documents input:checked:first");
       link = file.closest("li").children("a.move_edit");
       site = link.attr("href");
+      if(site == undefined){
+					$('#documentsFlashMessage').text("Sorry, you don't have access to this file.");
+					$('#documentsFlash').show();
+          dp.remove();
+					return false;
+      }
       dp.load(site,"",function(responseText, textStatus, XMLHttpRequest){
         if(textStatus != "success") {
           alert("Error loading, please try again.");
+          dp.remove();
           return false;
         }
 
@@ -938,7 +952,13 @@ function setDocumentDeleteItemEvents() {
         var item = $("ul.documents input:checked:first");
         link = item.closest("li").children("a.destroy");
         action = link.attr("href");
-        $("span.documents").load(action,{_method: "delete"},function(data, textStatus) {
+        $("span.documents").load(action,{_method: "delete"},function(data, textStatus, XMLHttpRequest) {
+          if(XMLHttpRequest.status == 404){
+            $('#documentsFlashMessage').text("Sorry, you don't have access to this file.");
+            $('#documentsFlash').show();
+            $("#documents_progress_panel").hide();
+            return false;
+          }
           if(textStatus.toLowerCase() != "success") {
             alert("Failed to delete item, please try again.");
             return false;

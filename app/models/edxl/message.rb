@@ -30,7 +30,6 @@ module EDXL
     element :datetime_sent, String, :tag => "dateTimeSent"
     element :distribution_status, String, :tag => "distributionStatus"
     element :distribution_type, String, :tag => "distributionType"
-    element :distribution_reference, String, :tag => "distributionReference"
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
   end
 
@@ -93,22 +92,6 @@ module EDXL
       parameter.value if parameter
     end
 
-    def self.set_jurisdictions_for_level(alert)
-      alert.audiences.each do |audience|
-        if audience.users.empty?
-          if audience.jurisdictions.empty?
-            if alert.jurisdictional_level =~ /local/i
-              audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
-            end
-            if alert.jurisdictional_level =~ /state/i
-              audience.jurisdictions << Jurisdiction.root.children.nonforeign
-            end
-          end
-          audience.roles = Role.all if audience.roles.empty?
-        end
-      end
-    end
-
     def self.parse(xml, options = {})
       returning super do |message|
         message.alerts.each do |alert|
@@ -130,7 +113,7 @@ module EDXL
             :scope => alert.scope,
             :program_type => alert.program_type,
             :sent_at => alert.sent_at,
-            :jurisdictional_level => alert.jurisdictional_level,
+            :jurisdiction_level => alert.jurisdiction_level,
             :acknowledge => alert.acknowledge,
             :certainty => alert.certainty,
             :program => alert.program,
@@ -156,7 +139,7 @@ module EDXL
             audience.users << user if user
           end
           
-          set_jurisdictions_for_level(a)
+          a.jurisdictions_per_level
           a.save!
 
           original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?

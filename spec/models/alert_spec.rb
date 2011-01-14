@@ -25,7 +25,7 @@
 #  program                        :string(255)
 #  urgency                        :string(255)
 #  certainty                      :string(255)
-#  jurisdictional_level           :string(255)
+#  jurisdiction_level             :string(255)
 #  references                     :string(255)
 #  from_jurisdiction_id           :integer(4)
 #  original_alert_id              :integer(4)
@@ -271,7 +271,7 @@ describe Alert do
     end
   end
 
-  describe "jurisdictional level" do
+  describe "jurisdiction level" do
     before(:each) do
       @federal=Factory(:jurisdiction,  :foreign => true)
       @state = Factory(:jurisdiction, :foreign => true)
@@ -281,19 +281,19 @@ describe Alert do
     end
     it "should have 'Federal' with a foreign root" do
       alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@federal])])
-      alert.jurisdictional_level.should == "Federal"
+      alert.jurisdiction_level.should == "Federal"
     end
     it "should have 'State' with a foreign intermediate node" do
       alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@state])])
-      alert.jurisdictional_level.should == "State"
+      alert.jurisdiction_level.should == "State"
     end
     it "should have 'Local' with a foreign terminal leaf node" do
       alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@local])])
-      alert.jurisdictional_level.should == "Local"
+      alert.jurisdiction_level.should == "Local"
     end
     it "should have comma-separated list with multiple levels" do
       alert=Factory(:alert, :audiences => [Factory(:audience, :jurisdictions => [@federal, @state, @local])])
-      alert.jurisdictional_level.should == "Federal,State,Local"
+      alert.jurisdiction_level.should == "Federal,State,Local"
     end
   end
 

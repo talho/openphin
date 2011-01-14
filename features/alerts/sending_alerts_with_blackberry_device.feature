@@ -5,7 +5,12 @@ Feature: Sending alerts to BlackBerry devices
   I want people to be able to send me alerts on my BlackBerry device
   
   Background: 
-    Given the following users exist:
+    Given the following entities exist:
+      | Jurisdiction | Dallas County                               |
+      | Jurisdiction | Wise County                                 |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Epidemiologist                              |
+    And the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist                              | Wise County    |
     And the role "Health Alert and Communications Coordinator" is an alerter
@@ -30,15 +35,15 @@ Feature: Sending alerts to BlackBerry devices
     And I follow "Send an Alert"
 
     And I fill out the alert form with:
-      | Title                 | H1N1 SNS push packs to be delivered tomorrow         |
-      | Message               | Chicken pox outbreak long Message          |
-      | Short Message         | Chicken pox outbreak short message          |
-      | Severity | Moderate |
-      | Status | Actual |
-      | Acknowledge | None |
-      | Communication methods | Blackberry |
-      | Sensitive | <unchecked> |
-      | People         | Keith Gaddis      |
+      | Title                 | H1N1 SNS push packs to be delivered tomorrow  |
+      | Message               | Chicken pox outbreak long Message             |
+      | Short Message         | Chicken pox outbreak short message            |
+      | Severity              | Moderate                                      |
+      | Status                | Actual                                        |
+      | Acknowledge           | None                                          |
+      | Communication methods | Blackberry                                    |
+      | Sensitive             | <unchecked>                                   |
+      | People                | Keith Gaddis                                  |
     And I press "Preview Message"
     Then I should see a preview of the message
     
@@ -47,5 +52,5 @@ Feature: Sending alerts to BlackBerry devices
     
     When delayed jobs are processed
     Then the following Blackberry calls should be made:
-      | blackberry   | message              |
-      | 12345678 | Chicken pox outbreak short message |
+      | blackberry   | message                            |
+      | 12345678     | Chicken pox outbreak short message |

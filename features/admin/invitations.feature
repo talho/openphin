@@ -9,8 +9,8 @@ Feature: Invitation System
       | Jurisdiction | Texas         |
       | Organization | DSHS          |
       | Organization | TORCH         |
-    And Texas has the following administrators:
-      | Joe Smith      | joe.smith@example.com      |
+    And the following users exist:
+      | Joe Smith      |  joe.smith@example.com  | Admin                      | Texas      |
     And I am logged in as "joe.smith@example.com"
     And I am on the dashboard page
     
@@ -90,6 +90,8 @@ Feature: Invitation System
     And "bob@example.com" is an invitee of "DSHS"
     And "john@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
+    And I should see "Bob User <bob@example.com>"
+    And I should see "John User <john@example.com>"
     When delayed jobs are processed
     Then the following Emails should be broadcasted:
       | email            | message                                   |
@@ -254,10 +256,10 @@ Feature: Invitation System
       | Subject      | Please Join DSHS                         |
       | Body         | Please click the link below to join DSHS |
       | Organization | DSHS                                     |
-    And the user "Bob Smith" with the email "bob.smith@example.com" has the role "Public" in "Texas"
-    And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Official" in "Texas"
-    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Public" in "Potter County"
-    And the user "John Smith" with the email "john.smith@example.com" has the role "Public" in "Texas"
+    And the following users exist:
+      | Bob Smith       | bob.smith@example.com  | Public                      | Texas      |
+      | Jane Smith      | jane.smith@example.com | Health Official             | Texas      |
+      | John Smith      | john.smith@example.com | Public                      | Texas      |
     And "bob.smith@example.com" has requested to be a "Health Official" for "Texas"
     And "joe.smith@example.com" has requested to be a "Health Officer" for "Potter County"
     And invitation "DSHS" has the following invitees:
@@ -320,3 +322,16 @@ Feature: Invitation System
     And I should see "Jim Smith" within "#invitee2"
     And I should see "jim.smith@example.com" within "#invitee2"
     And I should see "Yes" within "tr#invitee1 td.status"
+    
+  Scenario: Create and Send an invite via a malformed CSV file with a line of commas
+    When I follow "Admin"
+    And I show dropdown menus
+    And I follow "Invite Users"
+    And I should see "Invite New People"
+    And I fill in "Name" with "DSHS"
+    And I fill in "Subject" with "Please Join DSHS"
+    And I fill in "Body" with "Please click the link below to join DSHS."
+    And I select "DSHS" from "Default Organization"
+    When I attach the file "features/fixtures/invitees-comma-line.csv" to "CSV File"
+    When I press "Submit"
+    Then I should see "Invitees CSV import failed"

@@ -6,8 +6,10 @@ Feature: An admin managing users
   Background:
     Given an organization named Red Cross
     And the following entities exist:
-      | Jurisdiction | Texas         |
-      | Jurisdiction | Dallas County |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Public                                      |
+      | Jurisdiction | Texas                                       |
+      | Jurisdiction | Dallas County                               |
     And Texas is the parent jurisdiction of:
       | Dallas County |
     And the following users exist:
@@ -19,24 +21,23 @@ Feature: An admin managing users
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
     And "jonas.brothers@example.com" is not public in "Texas"
-    And a role named Public
     And jonas.brothers@example.com has a public profile
     And an approval role named Health Alert and Communications Coordinator
     And I am logged in as "bob.jones@example.com"
   
   Scenario: Creating a user
     When I create a user account with the following info:
-      | Email          | john.smith@example.com |
-      | Password       | Password1        |
-      | Password Confirmation | Password1 |
-      | First Name     | John             |
-      | Last Name      | Smith            |
-      | Preferred name | Jonathan Smith   |
-      | Are you with any of these organizations | Red Cross        |
-      | Home Jurisdiction  | Dallas County    |
-      | What is your primary role | Health Alert and Communications Coordinator |
-      | Preferred language | English      |
-      | Are you a public health professional? | <checked> |
+      | Email                                   | john.smith@example.com                      |
+      | Password                                | Password1                                   |
+      | Password Confirmation                   | Password1                                   |
+      | First Name                              | John                                        |
+      | Last Name                               | Smith                                       |
+      | Preferred name                          | Jonathan Smith                              |
+      | Are you with any of these organizations | Red Cross                                   |
+      | Home Jurisdiction                       | Dallas County                               |
+      | What is your primary role               | Health Alert and Communications Coordinator |
+      | Preferred language                      | English                                     |
+      | Are you a public health professional?   | <checked>                                   |
     Then "john.smith@example.com" should have the "Public" role for "Dallas County"
     And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
     When delayed jobs are processed
@@ -52,9 +53,9 @@ Feature: An admin managing users
    
   Scenario: Creating a user with invalid data
     When I create a user account with the following info:
-      | Email          | invalidemail    |
-      | Password       | Password1       |
-      | Password Confirmation | <blank>  |
+      | Email          | invalidemail     |
+      | Password       | Password1        |
+      | Password Confirmation | <blank>   |
       | Home Jurisdiction | Dallas County |
     Then I should see error messages
     
@@ -88,14 +89,14 @@ Feature: An admin managing users
       Then I should see the profile edit form
 
       When I fill in the form with the following info:
-        | Job description                   | A developer |
-        | Preferred name to be displayed    | Keith G. |
-        | Preferred language                | English |
-        | Job title                         | Developer |
+        | Job description                   | A developer                                    |
+        | Preferred name to be displayed    | Keith G.                                       |
+        | Preferred language                | English                                        |
+        | Job title                         | Developer                                      |
         | Bio                               | Maybe the austin powers reference was too much |
-        | Credentials                       | Rock star, Certified |
-        | Experience                        | Summer camp director  |
-        | Employer                          | State of Texas |
+        | Credentials                       | Rock star, Certified                           |
+        | Experience                        | Summer camp director                           |
+        | Employer                          | State of Texas                                 |
       And I attach the file "spec/fixtures/keith.jpg" to "user_photo"
       And I press "Save"
       Then I should see the profile page
@@ -118,17 +119,17 @@ Feature: An admin managing users
 
     Scenario: Add user as admin should not occur if no home jurisdictation is specified
     When I create a user account with the following info:
-      | Email          | john@example.com |
-      | Password       | Password1        |
-      | Password Confirmation | Password1 |
-      | First Name     | John             |
-      | Last Name      | Smith            |
-      | Preferred name | Jonathan Smith   |
-      | Home Jurisdiction |               |
-      | Are you with any of these organizations | Red Cross        |
-      | What is your primary role | Health Alert and Communications Coordinator |
-      | Preferred language | English      |
-      | Are you a public health professional? | <checked> |
+      | Email                                   | john@example.com                            |
+      | Password                                | Password1                                   |
+      | Password Confirmation                   | Password1                                   |
+      | First Name                              | John                                        |
+      | Last Name                               | Smith                                       |
+      | Preferred name                          | Jonathan Smith                              |
+      | Home Jurisdiction                       |                                             |
+      | Are you with any of these organizations | Red Cross                                   |
+      | What is your primary role               | Health Alert and Communications Coordinator |
+      | Preferred language                      | English                                     |
+      | Are you a public health professional?   | <checked>                                   |
     Then "john@example.com" should not receive an email
     And I should not see "Thanks for signing up"
     And "john@example.com" should not exist
@@ -158,17 +159,17 @@ Feature: An admin managing users
         
     Scenario: Not permitting a second user to be created with the same case-folded e-mail
       When I create a user account with the following info:
-        | Email          | john.smith@example.com |
-        | Password       | Password1        |
-        | Password Confirmation | Password1 |
-        | First Name     | John             |
-        | Last Name      | Smith            |
-        | Preferred name | Jonathan Smith   |
-        | Are you with any of these organizations | Red Cross        |
-        | Home Jurisdiction  | Dallas County    |
-        | What is your primary role | Health Alert and Communications Coordinator |
-        | Preferred language | English      |
-        | Are you a public health professional? | <checked> |
+        | Email                                   | john.smith@example.com                      |
+        | Password                                | Password1                                   |
+        | Password Confirmation                   | Password1                                   |
+        | First Name                              | John                                        |
+        | Last Name                               | Smith                                       |
+        | Preferred name                          | Jonathan Smith                              |
+        | Are you with any of these organizations | Red Cross                                   |
+        | Home Jurisdiction                       | Dallas County                               |
+        | What is your primary role               | Health Alert and Communications Coordinator |
+        | Preferred language                      | English                                     |
+        | Are you a public health professional?   | <checked>                                   |
       And delayed jobs are processed
       Then "john.smith@example.com" should have the "Public" role for "Dallas County"
       

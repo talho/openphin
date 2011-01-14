@@ -25,7 +25,7 @@
 #  program                        :string(255)
 #  urgency                        :string(255)
 #  certainty                      :string(255)
-#  jurisdictional_level           :string(255)
+#  jurisdiction_level             :string(255)
 #  references                     :string(255)
 #  from_jurisdiction_id           :integer(4)
 #  original_alert_id              :integer(4)
@@ -81,6 +81,7 @@ class Alert < ActiveRecord::Base
   MessageTypes = { :alert => "Alert", :cancel => "Cancel", :update => "Update" }
   Acknowledgement = ['None', 'Normal', 'Advanced']
   DeliveryTimes = [15, 30, 45, 60, 75, 90, 1440, 4320]
+  ExpirationGracePeriod = 240 # in minutes
 
   serialize :call_down_messages, Hash
 
@@ -97,7 +98,7 @@ class Alert < ActiveRecord::Base
   before_create :set_message_type
   before_create :set_sent_at
   after_create :create_console_alert_device_type
-  before_save :set_jurisdictional_level
+  before_save :set_jurisdiction_level
   after_save :set_identifier
   after_save :set_distribution_id
   after_save :set_sender_id
@@ -110,6 +111,8 @@ class Alert < ActiveRecord::Base
       :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
       :conditions => "alerts.id=#{object_id}"
   }
+  named_scope :active, :conditions => ["UNIX_TIMESTAMP(created_at) + ((delivery_time + #{ExpirationGracePeriod}) * 60) > UNIX_TIMESTAMP(UTC_TIMESTAMP())"]
+  named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
 
   def self.new_with_defaults(options={})
     defaults = {:delivery_time => 4320, :severity => 'Minor'}
@@ -121,6 +124,14 @@ class Alert < ActiveRecord::Base
       return false
     end
     true
+  end
+
+  def expired?
+    if created_at.blank? || delivery_time.blank?
+      return true
+    else
+      Time.now.to_i > (created_at.to_i + ((delivery_time + ExpirationGracePeriod) * 60) )
+    end
   end
 
   def audiences_attributes=(attrs={})
@@ -304,14 +315,15 @@ class Alert < ActiveRecord::Base
     Alert.new(:title => title, :message => message, :severity => "Minor", :created_at => Time.zone.now, :status => "Test", :acknowledge => false, :sensitive => false)
   end
 
-  def set_jurisdictional_level
+  # cascade alerting
+  def set_jurisdiction_level
     if !Jurisdiction.find_by_name(sender).nil?
       jurs = Jurisdiction.foreign.find(:all, :conditions => ['id in (?)', audiences.map(&:jurisdiction_ids).flatten.uniq])
       level=[]
       level << "Federal" if jurs.detect{|j| j.root?}
       level << "State" if jurs.detect{|j| !j.root? && !j.leaf?}
       level << "Local" if jurs.detect{|j| j.leaf?}
-      write_attribute("jurisdictional_level",  level.join(","))
+      write_attribute("jurisdiction_level",  level.join(","))
     end
   end
 
@@ -359,8 +371,8 @@ class Alert < ActiveRecord::Base
     end
 
     if options[:response] && options[:response].to_i > 0
-      response = options[:response].to_s
-      ack = ack_logs.find_by_item_type_and_item("alert_response", call_down_messages[response])
+      response = options[:response]
+      ack = ack_logs.find_by_item_type_and_item("alert_response", call_down_messages[options[:response]])
       ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
     end
 
@@ -391,15 +403,9 @@ class Alert < ActiveRecord::Base
 
   end
 
-  def recipients
-    @recips ||= targets.map(&:users).flatten
-    @recips += User.find(required_han_coordinators).uniq if is_cross_jurisdictional?
-    @recips.flatten.uniq
-  end
-
   def total_jurisdictions
     total_jurisdictions = audiences.map(&:jurisdictions).flatten
-    
+
     total_jurisdictions += User.find(required_han_coordinators).map(&:jurisdictions) if is_cross_jurisdictional?
 
     total_users = audiences.map(&:users).flatten.uniq.reject do |user|
@@ -432,8 +438,39 @@ class Alert < ActiveRecord::Base
   def responders(responder_categories=[1,2,3,4,5])
     alert_attempts.find_all_by_call_down_response(responder_categories).map(&:user).uniq
   end
-   
+  
+  # cascade alerting
+  def jurisdictions_per_level
+    audiences.each do |audience|
+      if audience.users.empty?      
+       if audience.jurisdictions.empty?
+          if jurisdiction_level =~ /local/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+          end
+          if jurisdiction_level =~ /state/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign
+          end
+        end
+        audience.roles = Role.all if audience.roles.empty?
+      end
+    end
+  end
 
+  def preview_recipients_size(params)
+    temp_recipients_size = nil
+    if ( params["action"] == "update" || params["action"] == "cancel")
+      original_alert = Alert.find_by_id(params[:id])
+      temp_recipients_size = original_alert.targets.first.users.size
+    else
+      ActiveRecord::Base.transaction do
+        temp_alert = Alert.new(params[:alert])
+        temp_alert.save!
+        temp_recipients_size = temp_alert.recipients({:force => true}).size
+        raise ActiveRecord::Rollback
+      end
+    end
+    return temp_recipients_size
+  end
 
   private
   def set_message_type

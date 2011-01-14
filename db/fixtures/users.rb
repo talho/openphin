@@ -31,20 +31,22 @@ u = User.find_or_create_by_email(:email => "bob@example.com") { |m|
   m.password_confirmation = 'Password1'
 }
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
-                                                                             :role_id => Role.org_admin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
-                                                                             :role_id => Role.admin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
-                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+#TODO: For some strange reason Bob get's a weird RoleMembership where the role_id is nil after a deployment to production
+#TODO: commenting out to see if it happens on the next deployment
+#r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
+#                                                                             :role_id => Role.org_admin.id,
+#                                                                             :user_id => u.id)
+#u.role_memberships << r
+#
+#r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
+#                                                                             :role_id => Role.admin.id,
+#                                                                             :user_id => u.id)
+#u.role_memberships << r
+#
+#r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id,
+#                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
+#                                                                             :user_id => u.id)
+#u.role_memberships << r
 
 u = User.find_or_create_by_email(:email => "ethan@example.com") { |m|
   m.first_name = 'Ethan'

@@ -5,7 +5,12 @@ Feature: Sending sensitive alerts
   I want to be able to keep sensitive alerts private
   
   Background: 
-    Given the following users exist:
+    Given the following entities exist:
+      | Jurisdiction | Dallas County                               |
+      | Jurisdiction | Wise County                                 |
+      | Role         | Health Alert and Communications Coordinator |
+      | Role         | Epidemiologist                              |
+    And the following users exist:
       | John Smith   | john.smith@example.com   | Health Alert and Communications Coordinator | Dallas County |
       | Keith Gaddis | keith.gaddis@example.com | Epidemiologist                              | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
