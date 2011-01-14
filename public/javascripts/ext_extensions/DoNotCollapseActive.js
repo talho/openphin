@@ -21,6 +21,7 @@ Ext.ux.plugins.DoNotCollapseActive = Ext.extend(Object, {
             this.component.items.itemAt(this.component.activeItem).canCollapse = false; // make sure the initial active item cannot collapse
         }
 
+        if(!Ext.isDefined(this.component.layoutConfig)) this.component.layoutConfig = {};
         Ext.apply(this.component.layoutConfig, {
            beforeExpandOriginal: Ext.layout.AccordionLayout.prototype.beforeExpand,
            beforeExpand : function(p, anim){

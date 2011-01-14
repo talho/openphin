@@ -1,4 +1,4 @@
-# Require PLUGIN_NAME models
+# Require <%= class_name %> models
 Dir[File.join(File.dirname(__FILE__), 'models', '*.rb')].each do |f|
   require f
 end

@@ -45,7 +45,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             }
         });
 
-        this.user_store.on(config.store_listeners);
+        if(!Ext.isEmpty(config.store_listeners) ) this.user_store.on(config.store_listeners);
     },
 
     _createUserSearchStore: function(){
