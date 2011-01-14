@@ -15931,7 +15931,7 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                 
         var shortfall = desiredWidth - width,
             tooNarrow = minimumWidth > width;
-            
+
         
         var availableWidth = Math.max(0, width - nonFlexWidth - paddingHoriz);
         
