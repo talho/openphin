@@ -18,7 +18,8 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     this.items = [
       {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
         {xtype: 'button', text: 'Add organization', handler: this.add_organization, scope: this, width:'auto'},
-        {xtype: 'button', text: 'Remove organization', handler: this.remove_organization, scope: this, width:'auto'}
+        {xtype: 'button', text: 'Remove organization', handler: this.remove_organization, scope: this, width:'auto',
+         name: 'remove_btn', disabled: true}
       ]},
       {xtype: 'spacer', height: '10'},
       this._createStoreAndDataView()
@@ -111,7 +112,8 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
 
     this.dv = new Ext.DataView(
       {name: 'user[org_desc]', store: this.store, tpl: template, emptyText: 'No organizations to display', deferEmptyText: false,
-        multiSelect: false, singleSelect: true, itemSelector: 'li.org-item', selectedClass: 'device-selected'}
+        multiSelect: false, singleSelect: true, itemSelector: 'li.org-item', selectedClass: 'device-selected',
+        listeners: {scope: this, 'selectionchange': function(dv,s){ this.find("name", "remove_btn")[0].setDisabled(s.length == 0); }}}
     );
 
     return this.dv;

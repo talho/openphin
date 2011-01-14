@@ -25,7 +25,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
     this.items = [
       {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
         {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
-        {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
+        {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto', name: 'remove_btn', disabled: true}
       ]},
       {xtype: 'spacer', height: '10'},
       this._createStoreAndDataView()
@@ -110,7 +110,8 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
 
     this.dv = new Ext.DataView(
       {name: 'user[devices]', store: this.store, tpl: template, emptyText: 'No devices to display', deferEmptyText: false,
-        multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected'}
+        multiSelect: false, singleSelect: true, itemSelector: 'li.device-item', selectedClass: 'device-selected',
+        listeners: {scope: this, 'selectionchange': function(dv,s){ this.find("name", "remove_btn")[0].setDisabled(s.length == 0); }}}
     );
   
     return this.dv;
