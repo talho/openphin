@@ -506,17 +506,21 @@ class User < ActiveRecord::Base
         end
       }
       rq_list.find_all{|rq| rq["state"]=="new"}.each { |rq|
-        role = Role.find(rq["role_id"])
-        role_request = RoleRequest.new
-        role_request.jurisdiction_id = rq["jurisdiction_id"]
-        role_request.role_id = rq["role_id"]
-        role_request.requester = current_user
-        role_request.user = self
-        if role_request.save && role_request.valid?
-          RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+        existing_rq = RoleRequest.find_by_role_id_and_jurisdiction_id(rq["role_id"], rq["jurisdiction_id"])
+        if existing_rq && current_user.is_admin_for?(self.jurisdictions)
+          existing_rq.approve!(current_user)
         else
-          result = "failure"
-          rq_errors.concat(role_request.errors.full_messages)
+          role_request = RoleRequest.new
+          role_request.jurisdiction_id = rq["jurisdiction_id"]
+          role_request.role_id = rq["role_id"]
+          role_request.requester = current_user
+          role_request.user = self
+          if role_request.save && role_request.valid?
+            RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+          else
+            result = "failure"
+            rq_errors.concat(role_request.errors.full_messages)
+          end
         end
       }
 

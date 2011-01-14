@@ -17,12 +17,13 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     this.layout = 'form';
+    this.cls = 'devices-control',
     this.frame = false;
     this.labelAlign = 'top';
     this.padding = 10;
     this.defaults = {boxMinWidth:400};
     this.items = [
-      {xtype: 'container', layout: 'hbox', items:[
+      {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
         {xtype: 'button', text: 'Add device', handler: this.add_device, scope: this, width:'auto'},
         {xtype: 'button', text: 'Remove device', handler: this.remove_device, scope: this, width:'auto'}
       ]},

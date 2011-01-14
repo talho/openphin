@@ -10,12 +10,13 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     this.layout = 'form';
+    this.cls = 'roles-control',
     this.frame = false;
     this.labelAlign = 'top';
     this.padding = 10;
     this.defaults = {boxMinWidth:400};
     this.items = [
-      {xtype: 'container', layout: 'hbox', items:[
+      {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
         {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'},
         {xtype: 'button', text: 'Remove role', handler: this.remove_role, scope: this, width:'auto'}
       ]},
@@ -121,9 +122,9 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<br>&nbsp;',
-            '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
-            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}',
+            '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
+            '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',
         '</li>',
       '</tpl>',

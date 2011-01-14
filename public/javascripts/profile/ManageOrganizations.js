@@ -5,8 +5,14 @@ Talho.ManageOrganizations = Ext.extend(Talho.ProfileBase, {
     this.orgs_control = new Talho.ux.OrganizationsControl(config.url + ".json", this);
     this.form_config = {
       load_url: config.url + "/edit.json",
-      form_width: 440,
-      item_list: [this.orgs_control]
+      form_width: 422,
+      item_list: [
+        {xtype: 'container', items: [
+          {xtype: 'container', html: 'Organizations', cls: 'orgs-label'},
+          {xtype: 'spacer', height: '10'},
+          this.orgs_control
+        ]}
+      ]
     };
 
     Talho.ManageOrganizations.superclass.constructor.call(this, config);

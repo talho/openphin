@@ -21,10 +21,7 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "Public" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "Public" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | Public | needs to be saved |
     When I press "Save"
@@ -70,10 +67,7 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
     When I press "Save"
@@ -84,10 +78,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Add and remove a role then save
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
-    And I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
     When I click role-item "BioTerrorism Coordinator"
@@ -102,10 +93,7 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
     When I press "Save"
@@ -117,10 +105,7 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
     When I press "Save"
@@ -132,14 +117,8 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
-    When I press "Add role"
-    And I select "BioTerrorism Coordinator" from ext combo "rq[role]"
-    And I select "Potter County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
+    When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     And I press "Save"
     Then I should see "Role has already been requested for this jurisdiction"
 
@@ -147,10 +126,7 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    When I press "Add role"
-    And I select "Public" from ext combo "rq[role]"
-    And I select "Dallas County" from ext combo "Jurisdiction"
-    And I press "Add"
+    When I add the role "Public" for "Dallas County" in the RolesControl
     And I press "Save"
     Then I should see "User is already a member of this role and jurisdiction"
   

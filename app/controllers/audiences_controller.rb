@@ -22,7 +22,8 @@ class AudiencesController < ApplicationController
   end
 
   def roles
-    render :json => current_user.is_admin? ? Role.all : Role.user_roles
+    roles = current_user.is_admin? ? Role.all : Role.user_roles
+    render :json => roles.collect {|r| {:id => r.id, :name => r.display_name}}
   end
 
   def groups

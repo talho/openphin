@@ -16,19 +16,21 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
     });
 
     this.inner_panel  = new Ext.Panel({
-      layout: 'hbox',
+      layout: 'column',
       cls: 'inner-panel',
-      layoutConfig: {defaultMargins:'5', pack: 'center'}
+      id: 'snuffalupagus-inner',
+      layoutConfig: {defaultMargins:'5'}
     });
 
     this.primary_panel = new Ext.Panel({
+      layout: 'column',
       padding: 5,
       itemId: config.id,
       cls: 'primary-panel',
       id: 'snuffalupagus',
       closable: true,
       title: this.title,
-      items: this.inner_panel
+      items: [{xtype: 'container', html: '&nbsp;', columnWidth:0.5}, this.inner_panel, {xtype: 'container', html: '&nbsp;', columnWidth:0.5}]
     });  
 
     this.getPanel = function(){
@@ -103,6 +105,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
     renderProfile: function(){
       var leftColumn = new Ext.Panel({
         width: 500,
+        padding: 5,
         border: false,
         items: this.buildLeftColumn()
       });
@@ -116,6 +119,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
         leftColumn,
         rightColumn
       );
+      this.inner_panel.doLayout();
       this.primary_panel.doLayout();
     },
 

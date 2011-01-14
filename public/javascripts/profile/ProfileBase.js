@@ -6,14 +6,13 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
     // Add flash msg at top and buttons at the bottom
     var panel_items = [
-      {xtype: 'container', defaults:{width:this.form_config.form_width,padding:'10'}, items:[
+      {xtype: 'container', defaults:{width:this.form_config.form_width}, items:[
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: this.form_config.item_list},
         {xtype: 'spacer', height: '15'},
-        {xtype: 'container', layout: 'hbox', items:[
-          {xtype: 'button', text: 'Save', name: 'save_button', handler: this.save, scope: this, width:'auto'},
-          //{xtype: 'button', text: 'Save & Close', handler: this.save_close, scope: this, width:'auto'},
-          {xtype: 'button', text: 'Cancel', handler: this.close, scope: this, width:'auto'}
+        {xtype: 'container', layout: 'hbox', layoutConfig:{pack:'end',defaultMargins:'0 0 0 10'}, items:[
+          {xtype: 'button', text: 'Apply Changes', name: 'save_button', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', text: 'Cancel and Discard Changes', handler: this.close, scope: this, width:'auto'}
         ]}
       ]}
     ];
@@ -23,6 +22,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       title: this.title,
       border: false,
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
+      cls: 'primary-panel',
       closable: true,
       autoWidth: true,
       autoScroll: true,
@@ -71,7 +71,6 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     this.save_data();  // derived class must have save_data method defined
   },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
-  save_close: function(){ this.save(); this.close(); },
   is_dirty: function(p){ return p.getForm().isDirty(); },
 
   // Save via AJAX callbacks

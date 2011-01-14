@@ -5,8 +5,14 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
     this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
     this.form_config = {
       load_url: config.url + "/edit.json",
-      form_width: 440,
-      item_list: [this.devices_control]
+      form_width: 422,
+      item_list: [
+        {xtype: 'container', items: [
+          {xtype: 'container', html: 'Alerting Devices', cls: 'devices-label'},
+          {xtype: 'spacer', height: '10'},
+          this.devices_control
+        ]}
+      ]
     };
 
     Talho.EditDevices.superclass.constructor.call(this, config);
