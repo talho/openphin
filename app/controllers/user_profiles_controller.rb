@@ -83,6 +83,8 @@ class UserProfilesController < ApplicationController
   def update
     set_toolbar
     find_user_and_profile
+    success = true
+    errors = Array.new
 
     # Profile form will return blank devices due to hidden fields used to add devices via ajax
     Device::Types.map(&:name).map(&:demodulize).each do |device_type|
@@ -98,50 +100,23 @@ class UserProfilesController < ApplicationController
 
     # Handle manage devices submission (ext only)
     if params[:user].has_key?(:devices)
-      success,device_errors = @user.update_devices(params[:user][:devices], current_user)
-      respond_to do |format|
-        format.json {
-          if success
-            render :json => {:flash => "Devices saved.", :type => :completed, :success => true}
-          else
-            render :json => {:flash => nil, :type => :error, :errors => device_errors}
-          end
-        }
-      end
-      return
+      dev_success,dev_errors = @user.update_devices(params[:user][:devices], current_user)
+      success &&= dev_success
+      errors.concat(dev_errors)
     end
 
     # Handle role requests (ext only)
     if params[:user].has_key?(:rq)
       result,rq_errors = @user.handle_role_requests(params[:user][:rq], current_user)
-      respond_to do |format|
-        format.json {
-          case result
-          when "success"
-            render :json => {:flash => "Requests sent.", :type => :completed, :success => true}
-          when "rollback"
-            render :json => {:flash => nil, :type => :rollback, :errors => rq_errors}
-          else # failure
-            render :json => {:flash => nil, :type => :error, :errors => rq_errors}
-          end
-        }
-      end
-      return
+      success &&= (result == "success")
+      errors.concat(rq_errors)
     end
 
     # Handle manage organizations submission (ext only)
     if params[:user].has_key?(:orgs)
-      success,org_errors = @user.handle_org_requests(params[:user][:orgs], current_user)
-      respond_to do |format|
-        format.json {
-          if success
-            render :json => {:flash => "Organization requests sent.", :type => :completed, :success => true}
-          else
-            render :json => {:flash => nil, :type => :error, :errors => org_errors}
-          end
-        }
-      end
-      return
+      org_success,org_errors = @user.handle_org_requests(params[:user][:orgs], current_user)
+      success &&= org_success
+      errors.concat(org_errors)
     end
 
     if params[:user].has_key?(:role_requests_attributes)
@@ -206,14 +181,18 @@ class UserProfilesController < ApplicationController
           flash[:notice] += flash[:notice].blank? ? 'Profile information saved.' : '<br/><br/>Profile information saved.'
           format.html { redirect_to user_profile_path(@user) }
           format.json {
-            json = {:flash => flash[:notice], :type => :completed, :success => true}
+            if success
+              json = {:flash => "Profile information saved.", :type => :completed, :success => true}
+            else
+              json = {:flash => nil, :type => :error, :errors => @user.errors.full_messages + errors}
+            end
             (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
           }
           format.xml { head :ok }
         else
           format.html { render :action => "edit" }
           format.json {
-            json = {:flash => nil, :type => :error, :errors => @user.errors.full_messages}
+            json = {:flash => nil, :type => :error, :errors => @user.errors.full_messages + errors}
             (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
           }
           format.xml { render :xml => @user.errors, :status => :unprocessable_entity }

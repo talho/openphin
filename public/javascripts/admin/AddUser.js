@@ -87,8 +87,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     this.getPanel().getForm().submit(options);
   },
   is_dirty: function(p){
-    return Talho.AddUser.superclass.is_dirty.call(this, p) || this.devices_control.is_dirty() || this.roles_control.is_dirty()
-      || this.orgs_control.is_dirty();
+    return p.getForm().isDirty() || this.devices_control.is_dirty() || this.roles_control.is_dirty() || this.orgs_control.is_dirty();
   }
 });
 

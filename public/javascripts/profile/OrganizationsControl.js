@@ -10,12 +10,13 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     this.layout = 'form';
+    this.cls = 'orgs-control',
     this.frame = false;
     this.labelAlign = 'top';
     this.padding = 10;
     this.defaults = {boxMinWidth:400};
     this.items = [
-      {xtype: 'container', layout: 'hbox', items:[
+      {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
         {xtype: 'button', text: 'Add organization', handler: this.add_organization, scope: this, width:'auto'},
         {xtype: 'button', text: 'Remove organization', handler: this.remove_organization, scope: this, width:'auto'}
       ]},
@@ -99,9 +100,9 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       '<ul class="orgs">',
       '<tpl for=".">',
         '<li class="org-item ' + '<tpl if="state==' + "'pending'" + '">org-pending</tpl>' + '">',
-          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<br>&nbsp;',
-            '<tpl if="state==' + "'pending'" + '"><small><i>waiting for approval</i></small></tpl>',
-            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}',
+            '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
+            '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',
         '</li>',
       '</tpl>',

@@ -5,8 +5,14 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
     this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
     this.form_config = {
       load_url: config.url + "/edit.json",
-      form_width: 440,
-      item_list: [this.roles_control]
+      form_width: 422,
+      item_list: [
+        {xtype: 'container', items: [
+          {xtype: 'container', html: 'Roles', cls: 'roles-label'},
+          {xtype: 'spacer', height: '10'},
+          this.roles_control
+        ]}
+      ]
     };
 
     Talho.ManageRoles.superclass.constructor.call(this, config);
