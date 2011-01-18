@@ -91,14 +91,14 @@ Feature: Viewing groups
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
     Then I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Group Detail" for "/admin_groups/1"
+    When I force open the group detail tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Group Detail" tab should not be open
-    And I force open the tab "Edit Group" for "/admin_groups/1/edit"
+    When I force open the edit group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Edit Group" tab should not be open
 
@@ -107,14 +107,14 @@ Feature: Viewing groups
     When I go to the ext dashboard page
     Then I should not see "Home"
     And I should not see "Admin"
-    When I force open the tab "Manage Groups" for "/admin_groups"
+    When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Manage Groups" tab should not be open
     When I close the active ext window
-    And I force open the tab "Group Detail" for "/admin_groups/1"
+    When I force open the group detail tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Group Detail" tab should not be open
-    And I force open the tab "Edit Group" for "/admin_groups/1/edit"
+    When I force open the edit group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Edit Group" tab should not be open
 
@@ -186,6 +186,7 @@ Feature: Viewing groups
     And I should see "Dallas County Health Officer Group"
     And  I will confirm on next step
     When I click removeBtn on the "Dallas County Health Officer Group" grid row
+    And I wait for the "Loading" mask to go away
     Then I should not see "Dallas County Health Officer Group"
     And the group "Dallas County Health Officer Group" should not exist
 

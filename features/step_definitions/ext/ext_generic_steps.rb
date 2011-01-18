@@ -280,3 +280,11 @@ end
 When /^I force open the new group tab$/ do
   force_open_tab( "Create New Group", "/admin_groups/new")
 end
+
+When /^I force open the group detail tab$/ do
+  force_open_tab("Group Detail","/admin_groups/#{Group.find(:all).first[:id]}")
+end
+
+When /^I force open the edit group tab$/ do
+  force_open_tab("Edit Group","/admin_groups/#{Group.find(:all).first[:id]}/edit")
+end
