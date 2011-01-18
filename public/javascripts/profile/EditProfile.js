@@ -94,7 +94,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     var options = {};
     options.params = {
       "user[devices]": this.devices_control.grab_data(),
-      "user[roles]": this.roles_control.grab_data(),
+      "user[rq]": this.roles_control.grab_data(),
       "user[orgs]": this.orgs_control.grab_data()
     };
     this.getPanel().getForm().fileUpload = true;

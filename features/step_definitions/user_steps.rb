@@ -124,6 +124,7 @@ Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
   table.raw.each do |row|
     first_name, last_name = row.first.split(/\s+/)
     user = Factory(:user, :first_name => first_name, :last_name => last_name, :email => row.last)
+    user.role_memberships.create :role => Role.public, :jurisdiction => jurisdiction, :user => user
     membership = user.role_memberships.create :role => role, :jurisdiction => jurisdiction, :user => user
     user.reload.role_memberships.should include(membership)
   end
