@@ -60,9 +60,12 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         margins: '0 0 0 10', items:[
         {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all',
           store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
-        {xtype: 'spacer', height: '10'}, this.roles_control,
-        {xtype: 'spacer', height: '10'}, this.devices_control,
-        {xtype: 'spacer', height: '10'}, this.orgs_control
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Roles:'}, this.roles_control,
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Alerting Devices:'}, this.devices_control,
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Organizations:'},  this.orgs_control,
       ]}
     ];
     this.form_config = {
