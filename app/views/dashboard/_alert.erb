@@ -2,10 +2,6 @@
   <div class="summary">
     <p class="title">
       <span class="title <%=h alert.severity.downcase %>"><%=h alert.title %></span>
-      <span class="actions">
-        <%= link_to 'More', '#', :class => 'view_more' %>
-        <%= link_to 'Less', '#', :class => 'view_less' %>
-      </span>
     </p>
     <p class="meta">
       <span class="created_at">Posted at <%= alert.created_at.strftime("%B %d, %Y %I:%M %p %Z") %> <%= 'by '+link_to(h(alert.author.display_name), user_profile_path(alert.author)) unless alert.author.blank? || alert.author.display_name.blank? %></span>
