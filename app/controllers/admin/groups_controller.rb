@@ -50,6 +50,11 @@ class Admin::GroupsController < ApplicationController
         format.json do
           render :json => group_hash_for_display(@group, @recipients)
         end
+      else
+        format.html
+        format.json do
+          render :json => {}, :status => :unprocessable_entity
+        end
       end
     end
   end
