@@ -24,6 +24,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
 
     this.primary_panel = new Ext.Panel({
       layout: 'column',
+      autoScroll: true,
       padding: 5,
       itemId: config.id,
       cls: 'primary-panel',

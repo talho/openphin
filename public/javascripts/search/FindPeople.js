@@ -146,11 +146,11 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       {text: 'Add User', scope: this, handler: function(){
         Application.fireEvent('opentab', {title: 'Add User', id: 'add_new_user', initializer: 'Talho.AddUser'});
       }},
-      {text: 'Edit User', scope: this, handler: function(){
+      {text: 'Edit User', name: 'edit_btn', disabled: true, scope: this, handler: function(){
         var selected_records = this.searchResults.getSelectionModel().getSelections();
         Ext.each(selected_records, function(e,i){ this.openEditUserTab(e) }, this);
       }},
-      {text: 'Delete User', scope: this, handler: function(){
+      {text: 'Delete User', name: 'delete_btn', disabled: true, scope: this, handler: function(){
         var selected_records = this.searchResults.getSelectionModel().getSelections();
         if (selected_records.length == 0) return;
         Ext.Msg.confirm("Confirm User Deletion", "Are you sure you wish to delete " + selected_records.length + " users?",
@@ -173,6 +173,9 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
           { id: 'roles', dataIndex: 'role_memberships', header: 'Roles', sortable: false, width: 350, xtype: 'templatecolumn', tpl: this.rolesColTemplate }
         ]
       }),       
+      selModel: new Ext.grid.RowSelectionModel({
+        listeners: {scope:this, 'selectionchange': this.set_edit_delete_state}
+      }),
       listeners: {
         scope: this,
         'cellclick': function(grid, row, column, e){
@@ -294,6 +297,13 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     var url = '/users/' + user_id + '/profile';
     Application.fireEvent('opentab',
       {title: 'Edit User: ' + name, url: url, user_id: user_id, id: 'edit_user_for_' + user_id, initializer: 'Talho.EditProfile'});
+  },
+
+  set_edit_delete_state: function(selModel){
+    var selected_records = selModel.getSelections();
+    var tbar = this.searchResults.getTopToolbar();
+    tbar.find("name", "edit_btn")[0].setDisabled(selected_records.length == 0);
+    tbar.find("name", "delete_btn")[0].setDisabled(selected_records.length == 0);
   },
 
   ajax_success_cb: function(response, opts) {
