@@ -25,7 +25,7 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
 
     panelLoaded: function(panel){
         var panelEl = panel.getEl();
-        var els = panelEl.select('a.view_more, a.view_less');
+        var els = panelEl.select('li.alert');
         els.addListener('click', function(evt){
             var elem = Ext.get(evt.getTarget('li.alert'));
             elem.toggleClass('more');
