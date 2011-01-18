@@ -73,7 +73,7 @@ Feature: An admin managing users
       | Experience                        | Summer camp director  |
       | Employer                          | State of Texas |
     And I attach the file "spec/fixtures/keith.jpg" to "user[photo]"
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should not see any errors
     And I should see "Profile information saved"
     
@@ -90,7 +90,7 @@ Feature: An admin managing users
       | Experience                        | Summer camp director  |
       | Employer                          | State of Texas |
     And I attach the file "spec/fixtures/keith.jpg" to "user[photo]"
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should not see any errors
     And I should see "Profile information saved"
 
@@ -134,7 +134,7 @@ Feature: An admin managing users
     And I fill in "Office fax" with "888-456-1212"
     And I fill in "Home phone" with "888-555-1212"
     And I fill in "Mobile phone" with "888-432-1212"
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should see "Profile information saved"
 
   #Scenario: Not permitting a second user to be created with the same case-folded e-mail
