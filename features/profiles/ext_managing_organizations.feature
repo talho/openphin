@@ -34,13 +34,12 @@ I should be able to edit my profile
     When I click x-grid3-row "Jane Smith"
     And I press "Edit User"
     Then I should see "Organizations"
-    And I press "edit" within "#edit_org"
-    And I press "Add organization"
+    When I press "Add organization"
     And I select "DSHS" from ext combo "rq[org]"
     And I press "Add"
     Then I should see the following within ".org-item":
       | DSHS |
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should see the following within ".org-item":
       | DSHS |
 
@@ -56,10 +55,10 @@ I should be able to edit my profile
     And I press "Add"
     Then I should see the following within ".org-item":
       | DSHS | needs to be saved |
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should see the following within ".org-item":
       | DSHS | waiting for approval |
-    And I should see "Organization requests sent"
+    And I should see "Profile information saved"
     And "bob.smith@example.com" should receive the email:
       | subject       | Request submitted for organization membership in DSHS |
       | body contains | DSHS |
@@ -109,8 +108,7 @@ I should be able to edit my profile
     And I press "Edit User"
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"
-    When I press "edit" within "#edit_org"
-    And I click org-title "DSHS"
+    When I click org-title "DSHS"
     And I press "Remove organization"
     And I press "Apply Changes"
     When delayed jobs are processed
