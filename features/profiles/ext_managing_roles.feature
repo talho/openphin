@@ -24,7 +24,7 @@ I should be able to remove all but one public role from my profile
     When I add the role "Public" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | Public | needs to be saved |
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
     And I should see the following within ".role-item":
       | Dallas County | Public |
@@ -39,7 +39,7 @@ I should be able to remove all but one public role from my profile
     When I click role-item "Dallas County"
     And I press "Remove role"
     Then I should not see "Dallas County"
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should see "You must have at least one public role"
     And I should see the following within ".role-item":
       | Dallas County | Public |
@@ -56,8 +56,8 @@ I should be able to remove all but one public role from my profile
     And I select "Public" from ext combo "rq[role]"
     And I select "Potter County" from ext combo "Jurisdiction"
     And I press "Add"
-    And I press "Save"
-    Then I should see "Requests sent"
+    And I press "Apply Changes"
+    Then I should see "Profile information saved"
     And I should see the following within ".role-item":
       | Potter County | Public |
     And I should not see "Texas" within ".role-item"
@@ -70,7 +70,7 @@ I should be able to remove all but one public role from my profile
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
@@ -84,9 +84,9 @@ I should be able to remove all but one public role from my profile
     When I click role-item "BioTerrorism Coordinator"
     And I press "Remove role"
     Then I should not see "BioTerrorism Coordinator"
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
-    And I should see "Requests sent"
+    And I should see "Profile information saved"
 
   Scenario: Adding a duplicate role
     BioTerrorism Coordinator
@@ -96,7 +96,7 @@ I should be able to remove all but one public role from my profile
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
@@ -108,7 +108,7 @@ I should be able to remove all but one public role from my profile
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
@@ -119,7 +119,7 @@ I should be able to remove all but one public role from my profile
     Then the "Manage Roles" tab should be open
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should see "Role has already been requested for this jurisdiction"
 
   Scenario: Adding a role request duplicating an existing role membership
@@ -127,7 +127,7 @@ I should be able to remove all but one public role from my profile
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I add the role "Public" for "Dallas County" in the RolesControl
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should see "User is already a member of this role and jurisdiction"
   
   Scenario: As a user the add role window should not display system-roles or foreign jurisdictions
