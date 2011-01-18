@@ -27,7 +27,7 @@ Feature: Online importing users from a uploaded CSV file
     And a jurisdiction named "Ector"
     And I attach the tmp file at "users.csv" to "users[csvfile]"
     Then I should see "Ector"
-    When I press "Save"
+    When I press "Apply Changes"
     Then I should not see any errors
     And I should see "The user batch has been successfully submitted"
 
