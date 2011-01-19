@@ -62,7 +62,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
                   new Ext.Container({
                     layout: 'hbox',
                     layoutConfig: { pack: 'end' },
-                    items: [ new Ext.Button({ scope: this, handler: this.openEditUserTab, text: "Edit This Profile" }) ]
+                    items: [ new Ext.Button({ scope: this, handler: this.openEditUserTab, text: "Edit This Account" }) ]
                   })
                 ]
               })
