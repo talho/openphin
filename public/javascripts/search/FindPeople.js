@@ -23,7 +23,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
     this.RESULTS_PAGE_SIZE = 10;
     this.resultsStore = new Ext.data.JsonStore({
-      url: 'search/show_advanced.json',
+      url: 'search/show_advanced.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
       method: 'POST',
       root: 'results',
       fields: [ 'user_id', 'display_name','first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
