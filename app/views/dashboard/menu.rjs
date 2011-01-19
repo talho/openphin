@@ -22,8 +22,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   end
   
   Phin::Application.eval_if_plugin_present(:vms) do
-    menu_config += "{name: 'VMS', items:[
-                    {name: 'Command Center', tab:{id: 'vms_main', title:'VMS Command Center', url:'', initializer: 'Talho.VMS.CommandCenter'}}]},"
+    menu_config += $menu_config[:vms] + ","
   end
 
   menu_config += "{name: 'FAQs', items:[
