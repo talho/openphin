@@ -26,7 +26,11 @@ class JurisdictionsController < ApplicationController
         # this header is a must for CORS
         headers["Access-Control-Allow-Origin"] = "*"
         if params[:admin_mode] == "1"
-          @jurisdictions = current_user.jurisdictions.admin.find(:all,:select=>'jurisdictions.id,name')
+          #@jurisdictions = current_user.jurisdictions.admin.find(:all,:select=>'jurisdictions.id,name')
+          @jurisdictions = []
+          current_user.jurisdictions.each { |j|
+            @jurisdictions.concat(j.self_and_descendants.admin.find(:all,:select=>'jurisdictions.id,name'))
+          }
         else
           @jurisdictions = Jurisdiction.find(:all,:select=>'id,name')
         end

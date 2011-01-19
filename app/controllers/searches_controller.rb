@@ -46,7 +46,10 @@ class SearchesController < ApplicationController
       if params[:admin_mode] == "1"
         params[:with] = Hash.new if !params.has_key?(:with)
         if !params[:with].has_key?(:jurisdiction_ids)
-          params[:with][:jurisdiction_ids] = current_user.jurisdictions.admin.collect { |j| j.id }
+          params[:with][:jurisdiction_ids] = Array.new
+          current_user.jurisdictions.each { |j|
+            j.self_and_descendants.admin.each { |j| params[:with][:jurisdiction_ids].push(j.id) }
+          }
         end
       end
       params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
