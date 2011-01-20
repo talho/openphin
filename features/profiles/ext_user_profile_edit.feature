@@ -23,7 +23,7 @@ I should be able to edit my profile
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "My Account > Edit Profile"
+    And I navigate to "My Account > Edit My Account"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |
       | Display name                      | Keith G. |
@@ -62,7 +62,7 @@ I should be able to edit my profile
     Given I am logged in as "john.smith@example.com"
     And I have an IM device
     When I go to the ext dashboard page
-    And I navigate to "My Account > Edit Profile"
+    And I navigate to "My Account > Edit My Account"
     Then I should see "Edit Profile"
     And I should see "Last name"
     And I should see "Email"
@@ -70,7 +70,7 @@ I should be able to edit my profile
   Scenario: Editing profile concurrently to an admin editing the user's profile
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
-    And I navigate to "My Account > Edit Profile"
+    And I navigate to "My Account > Edit My Account"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |
       | Display name                      | Keith G. |
@@ -100,7 +100,7 @@ I should be able to edit my profile
     #Then I should see the profile edit form
     And I should see "Another user has recently updated this profile, please try again."
     And I press "Cancel"
-    And I navigate to "My Account > Edit Profile"
+    And I navigate to "My Account > Edit My Account"
     And the "Display name" field should contain "John Smith"
     When I fill in the ext form with the following info:
       | Job description                   | A developer |
