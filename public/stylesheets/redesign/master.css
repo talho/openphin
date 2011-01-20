@@ -110,7 +110,7 @@ body{
   background-repeat: no-repeat;
   display:block;
   height:32px;
-  width:80px;
+  width:40px;
 }
 .contextDownArrow{
   background-image: url(/images/arrow_down.png) !important;
