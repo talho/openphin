@@ -40,9 +40,11 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
     render_layout: function(){
         var viewport = new Ext.Viewport({
+          autoScroll: true,
 		    layout: 'fit',
             renderTo: Ext.getBody(),
             items:[{
+          boxMinWidth: 1024,
                 layout: 'border',
                 border: false,
                 items: [this.body()],
