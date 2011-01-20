@@ -8,6 +8,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
         this.breadCrumb = new Ext.ux.BreadCrumb({
             itemId: 'bread_crumb_control',
+            width: 400,
             items:['Details', 'Audience', 'Preview'],
             listeners:{
                 scope: this,
@@ -15,6 +16,11 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 'toindex': this.bread_crumb_toindex
             }
         });
+        
+        this.breadCrumb.on('afterrender', function(){
+          this.breadCrumb.setWidth(this.breadCrumb.getEl().down('*').getWidth());
+          this.getPanel().doLayout();
+        }, this, {delay: 1});
 
         var panel = new Ext.Panel({
             title: this.title,
@@ -82,7 +88,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 'actionfailed': this.save_failure
             },
             items: [
-                {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+                {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', width: 400, defaults:{width:400}, items:[
                     {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', allowBlank: false, blankText: 'You must enter a title'},
                     {xtype: 'box', itemId: 'alert_title_label', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
                     {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
@@ -92,7 +98,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN. <br/><b>Maximum length: 160 characters.</b>'},
                     {xtype: 'button', itemId: 'alert_next_btn', text: 'Enter Audiences >', handler: function(){this.breadCrumb.next();}, scope: this, width:'auto'}
                 ]},
-                {xtype: 'container', itemId:'right_side_form', layout: 'form', items:[
+                {xtype: 'container', itemId:'right_side_form', layout: 'form', width: 400, items:[
                     {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
                     {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
                     {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},

@@ -143,7 +143,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         });
 
         this.group_display_panel = new Ext.Panel({
-            layout:'vbox',
+            layout:'vbox',            
             layoutConfig: {
                 padding: '30 0',
                 align: 'center'
@@ -151,8 +151,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             autoScroll: true,
             defaults:{border:false},
             items:[
-                    {xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this},
-                    {xtype:'panel', border:true, items:[this.group_list]},
+                    {xtype:'panel', width: 500, border:true, items:[this.group_list]},
                     {xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this}
                 ],
             listeners:{

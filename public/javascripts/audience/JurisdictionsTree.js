@@ -2,7 +2,16 @@ Ext.ns('Talho.ux');
 
 Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
     title: 'Jurisdictions',
-
+    
+    constructor: function(){
+      Talho.ux.JurisdictionsTree.superclass.constructor.apply(this, arguments);
+      this.on('afterrender', function(){
+        this.jurisdictionTreeGrid.setWidth(1)
+        this.setWidth(1);
+        this.ownerCt.doLayout();
+      }, this, {delay: 1});
+    },
+    
     destroy: function(){
         this.jurisdictionContextMenu.destroy();
     },
@@ -45,7 +54,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
                         {
                             store.expandNode(store.getAt(tex));
                         }
-                    }
+                    }                   
                 }
             }
         });
