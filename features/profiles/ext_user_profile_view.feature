@@ -54,7 +54,7 @@ Scenario: User can view their own profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
 
-  When I press "Edit This Profile"
+  When I press "Edit This Account"
   Then the "Edit Profile: Potter Public" tab should be open
 
 
@@ -77,7 +77,7 @@ Scenario: Public user viewing a public profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
 
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: Public user viewing a private profile
@@ -100,7 +100,7 @@ Scenario: Public user viewing a private profile
      | I've been washing genes               |
      | Born in Japan and Educated in Germany |
 
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: User with a non-public, non-admin role viewing a public profile
@@ -122,7 +122,7 @@ Scenario: User with a non-public, non-admin role viewing a public profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
  
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: User with a non-public, non-admin role viewing a private profile
@@ -145,7 +145,7 @@ Scenario: User with a non-public, non-admin role viewing a private profile
      | I've been washing genes               |
      | Born in Japan and Educated in Germany |
 
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: Admin viewing a subordinate public profile
@@ -167,7 +167,7 @@ Scenario: Admin viewing a subordinate public profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
 
-  When I press "Edit This Profile"
+  When I press "Edit This Account"
   Then the "Edit Profile: Potter Public" tab should be open
 
 
@@ -190,7 +190,7 @@ Scenario: Admin viewing a non-subordinate public profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
 
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: Admin viewing a subordinate private profile
@@ -212,7 +212,7 @@ Scenario: Admin viewing a subordinate private profile
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
 
-  When I press "Edit This Profile"
+  When I press "Edit This Account"
   Then the "Edit Profile: Potter Public" tab should be open
 
 
@@ -237,7 +237,7 @@ Scenario: Admin viewing a non-subordinate private profile
      | I've been washing genes               |
      | Born in Japan and Educated in Germany |
 
-  And I should not see "Edit This Profile"
+  And I should not see "Edit This Account"
 
 
 Scenario: Fields should not be visible if they do not have data

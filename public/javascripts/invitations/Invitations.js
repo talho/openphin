@@ -380,7 +380,7 @@ Talho.Invitations = Ext.extend(function(){}, {
       layout: 'border',
       title: 'View Invitations',
       items: [centerPanel, sidePanel],
-      closeable: true
+      closable: true
     });
 
     this.getPanel = function(){ return panel; }

@@ -7,28 +7,25 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 
         Talho.Article3Panel.superclass.constructor.call(this, config);
 
-        var stormPulseHTML = '<div class="article">\
-        <h2>2010 Hurricane Season Tracking Map</h2>\
-        <p class="date">July 08, 2010</p>\
-        <div class="lede">\
-          <p>'
-        if(Application.rails_environment == "development")
-            stormPulseHTML += '<embed width="100%" height="590" flashvars="host=www.txphin.org&amp;key=2h9xhxuiksqthv5kaql5p84qmhz3gjygi6n70002" allowscriptaccess="always" quality="high" bgcolor="#000000" name="stormpulse" id="stormpulse" src="http://www.stormpulse.com/swf/stormpulse.swf?v=223&amp;env=API&amp;region=10" type="application/x-shockwave-flash">'
-        else if(Application.rails_environment == "test" || Application.rails_environment == "cucumber")
-            stormPulseHTML += '<b>do not include stormpulse when testing</b>'
-        else
-            stormPulseHTML +=  '<script src="http://www.stormpulse.com/api/maps/current/?key=2h9xhxuiksqthv5kaql5p84qmhz3gjygi6n70002" type="text/javascript"></script>'
-
-        stormPulseHTML +='</p>\
-          <br/>\
-          <p class="article_link"><a href="http://www.stormpulse.com" target="_blank" title="Via: www.stormpulse.com.  Click here for original.">Via: www.stormpulse.com. Click here for original.</a></p>\
-        </div>\
-      </div>'
-
-        this.stormPulsePanel = new Ext.Panel({
+        this.linksPanel = new Ext.Panel({
             flex: 1,
             autoHeight:true,
-            html: window.Application.rails_environment == "cucumber" ? "" : stormPulseHTML
+            html: "  <div class='article'>\
+    <h2>Flu Awareness</h2>\
+    <p class='date'>January 9, 2011</p>\
+    <div class='lede'>\
+      <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
+      <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
+    </div>\
+  </div>\
+    <div class='article'>\
+    <h2>Disaster Preparedness</h2>\
+    <p class='date'>January 9, 2011</p>\
+    <div class='lede'>\
+      <p class='article_link'><a href='http://www.dshs.state.tx.us/preparedness/' target='_blank' title='Public Health Preparedness'>Public Health Preparedness</a></p>\
+      <p class='article_link'><a href='http://www.dhs.gov/files/prepresprecovery.shtm' target='_blank' title='Preparedness, Response & Recovery'>Preparedness, Response & Recovery</a></p>\
+    </div>\
+  </div>"
         });
 
         this.newsFeedPanel = new Ext.Panel({
@@ -39,6 +36,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
                 singleSelect: false,
                 autoHeight: true,
                 tpl: this.create_feed_template(),
+                itemSelector: 'div.feedArticle',
                 listeners: {
                     scope:this,
                     'click': function(view, index, node, evt){
@@ -70,7 +68,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             itemId: this.itemId,
             layout:'hbox',
             layoutConfig: {defaultMargins:'15'},
-            items: [this.stormPulsePanel, this.newsFeedPanel, this.staticNewsPanel],
+            items: [this.linksPanel, this.newsFeedPanel, this.staticNewsPanel],
             autoScroll: true,
             hideBorders: true,
             listeners:{
@@ -102,7 +100,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
                     '<div class="feed_article">',
                         '<h2><a href="{url}" target="_blank">{title}</a></h2>',
                         '<h4>{author}</h4>',
-                        '<p class="date">{[values.published.toLocaleString()]}</p>',
+                        '<p class="date">{[values.published == null ? "" : values.published.toLocaleString()]}</p>',
                         '<p class="partArticle">{[this.shortSummary(values.summary)]} <tpl if="this.shortSummary(summary).length &gt;= 300"> <a class="more_btn inlineLink">(more)</a></tpl></p>',
                         '<p class="fullArticle">{summary} <a class="less_btn inlineLink">(less)</a></p>',
                     '</div>',

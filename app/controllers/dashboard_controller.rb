@@ -61,7 +61,8 @@ class DashboardController < ApplicationController
   def feed_articles
     feed_urls = [
       "http://www.nhc.noaa.gov/gtwo.xml",
-      "http://www.nhc.noaa.gov/nhc_at2.xml"
+      "http://www.nhc.noaa.gov/nhc_at2.xml",
+      "http://www.weather.gov/alerts-beta/tx.php?x=1"
      ]
     @entries = []
     begin
