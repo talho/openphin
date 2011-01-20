@@ -110,7 +110,7 @@ Feature: Alerts from EDXL
       | emails        | ethan@example.com |
     When I log in as "mjensen@cdc.gov"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
@@ -136,7 +136,7 @@ Feature: Alerts from EDXL
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 2 alerts
 
   Scenario: Receiving an EDXL alert cancel
@@ -161,7 +161,7 @@ Feature: Alerts from EDXL
       | body contains | To date, seven people in the area effected by Hurricane Katrina have been reported ill from the bacterial disease Vibrio vulnificus. |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 2 alerts
 
   Scenario: Receiving an EDXL Acknowledgment that was originally sent via an organization
@@ -205,21 +205,21 @@ Feature: Alerts from EDXL
       | emails        | ethan@example.com, jphipps@example.com, daniel@example.com |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
     When I sign out
     And I log in as "bob@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should see "Example Health Alert"
 
     When I sign out
     And I log in as "mjensen@cdc.gov"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
@@ -231,14 +231,14 @@ Feature: Alerts from EDXL
      | body contains | Message Body Message Body Message Body Message Body Message Body Message Body |
     When I log in as "bob@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
     When I sign out
     And I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
@@ -255,21 +255,21 @@ Feature: Alerts from EDXL
     And "mark@cdc.gov" should not receive an email with the subject "Cascade alert sent from Federal jurisdiction to TX"
     When I log in as "bob@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
     When I sign out
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 
     When I sign out
     When I log in as "brandon@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should see "Example Health Alert"
 
@@ -285,7 +285,7 @@ Feature: Alerts from EDXL
       | emails        | ethan@example.com, jphipps@example.com |
     When I log in as "keith@example.com"
     And I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 1 alert
     And I should not see "Example Health Alert"
 

@@ -108,8 +108,8 @@ Feature: Viewing the alert log
 
     And I am logged in as "jane.smith@example.com"
     When I am on the ext dashboard page
-    And I navigate to "HAN > HAN Home"
-    And I click "More" within alert "Hello World"
+    And I navigate to "HAN > HAN Alerts"
+    And I click alert "Hello World"
     And I press "Acknowledge"
     And I wait for the "Saving" mask to go away
     And I sign out
@@ -119,7 +119,7 @@ Feature: Viewing the alert log
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
-    And I click "More" within alert "Hello World"
+    And I click alert "Hello World"
     And I can see the alert for "Hello World" is 33% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 33%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
@@ -129,12 +129,12 @@ Feature: Viewing the alert log
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Phone"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
-    And I navigate to "HAN > HAN Home"
-    And I click "More" within alert "Hello World"
+    And I navigate to "HAN > HAN Alerts"
+    And I click alert "Hello World"
     And I press "Acknowledge"
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
-    And I click "More" within alert "Hello World"
+    And I click alert "Hello World"
     And I should see "Acknowledge: Normal"
     And I can see the alert for "Hello World" is 67% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 67%
@@ -199,9 +199,9 @@ Feature: Viewing the alert log
     And I navigate to "HAN > Alert Log and Reporting"
     Then I can see the alert summary for "Hello World"
     And I should see "Acknowledge: Advanced"
-    When I click "More" within alert "Hello World" 
-    And I navigate to "HAN > HAN Home"
-    And I click "More" within alert "Hello World"
+    When I click alert "Hello World"
+    And I navigate to "HAN > HAN Alerts"
+    And I click alert "Hello World"
     And I should see "Alert Response"
 
   Scenario: Viewing acknowledged advanced alerts with alert responses from view
@@ -230,9 +230,9 @@ Feature: Viewing the alert log
     And "john.smith@example.com" has not acknowledged the alert "Hello World"
     And "daniel@example.com" has not acknowledged the alert "Hello World"
     When I am on the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see "Alert Response"
-    When I click "More" within alert "Hello World"
+    When I click alert "Hello World"
     And I select "if you can respond within 15 minutes" from "Alert Response"
     And I press "Acknowledge"
     And I navigate to "HAN > Alert Log and Reporting"

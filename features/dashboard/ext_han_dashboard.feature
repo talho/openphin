@@ -31,7 +31,7 @@ Feature: Viewing the dashboard
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name |
-      | HAN Home |
+      | HAN Alerts |
     And I should not see the following ext menu items:
       | name                    |
       | Send an Alert           |
@@ -46,7 +46,7 @@ Feature: Viewing the dashboard
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                    |
-      | HAN Home                |
+      | HAN Alerts                |
       | Send an Alert           |
       | Alert Log and Reporting |
 
@@ -56,7 +56,7 @@ Feature: Viewing the dashboard
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name |
-      | HAN Home |
+      | HAN Alerts |
     And I should not see the following ext menu items:
       | name                    |
       | Send an Alert           |
@@ -69,7 +69,7 @@ Feature: Viewing the dashboard
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                    |
-      | HAN Home                |
+      | HAN Alerts                |
       | Send an Alert           |
       | Alert Log and Reporting |
     

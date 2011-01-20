@@ -185,9 +185,11 @@
       })
     });
 
-    $('ul#alerts a.view_more, ul#alerts a.view_less').click(function() {
-      $(this).closest('li').toggleClass('more');
-      return false;
+    $('ul#alerts li.alert').click(function(event) {
+     if ( !( $(event.target).hasClass("submit") || (event.target.nodeName=="A") ) ) {
+       $(this).closest('li').toggleClass('more');
+       return false;
+     }
     });
 
     //select all child jurisdictions of the jur. for this link

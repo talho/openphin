@@ -14,16 +14,16 @@ Feature: User should be able to set values as favorites
     And I am on the ext dashboard page
 
   Scenario: User Creates Favorite
-    When I navigate to "HAN > HAN Home"
-    Then the "HAN Home" tab should be open
-    When I drag the "HAN Home" tab to "#favoritestoolbar"
+    When I navigate to "HAN > HAN Alerts"
+    Then the "HAN Alerts" tab should be open
+    When I drag the "HAN Alerts" tab to "#favoritestoolbar"
     And I wait for the "Saving" mask to go away
-    And I should see "HAN Home" within "#favoritestoolbar"
+    And I should see "HAN Alerts" within "#favoritestoolbar"
     When I press "Bookmarks"
     Then I should see the following ext menu items:
       | name                       |
       | Test Favorite              |
-      | HAN Home                   |
+      | HAN Alerts                   |
       | Hide the Bookmarks Toolbar |
       | Manage Bookmarks           |
 
@@ -59,10 +59,10 @@ Feature: User should be able to set values as favorites
     Then I should not see "Test Favorite"
 
   Scenario: User cannot create duplicate favorite
-    When I navigate to "HAN > HAN Home"
-    Then the "HAN Home" tab should be open
-    When I drag the "HAN Home" tab to "#favoritestoolbar"
+    When I navigate to "HAN > HAN Alerts"
+    Then the "HAN Alerts" tab should be open
+    When I drag the "HAN Alerts" tab to "#favoritestoolbar"
     And I wait for the "Saving" mask to go away
-    And I drag the "HAN Home" tab to "#favoritestoolbar"
+    And I drag the "HAN Alerts" tab to "#favoritestoolbar"
     Then I should not see "Saving"
-    And I should see "HAN Home" 1 time within "#favoritestoolbar"
+    And I should see "HAN Alerts" 1 time within "#favoritestoolbar"

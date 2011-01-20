@@ -82,8 +82,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
     And I go to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    And I should see "TxPhin Scheduled test alert"
-    And I follow "More"
+    And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on July 4 2015 at 1:00 pm"
     When I follow "Reschedule/Cancel"
     Then I should see "Alert Scheduling"
@@ -113,8 +112,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
     And I go to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    And I should see "TxPhin Scheduled test alert"
-    And I follow "More"
+    And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on April 26 2014 at 2:00 am"
     When I follow "Reschedule/Cancel"
     Then I should see "Alert Scheduling"
@@ -124,8 +122,7 @@ Feature: Schedule an alert to be sent sometime in the future
     And I navigate to "HAN > HAN Home"
     And I should see "TxPhin Scheduled test alert"
     When I navigate to "HAN > Alert Log and Reporting"
-    And I should see "TxPhin Scheduled test alert"
-    And I follow "More"
+    And I click alert "TxPhin Scheduled test alert"
     Then I should not see "Scheduled to be sent"
 
   Scenario: Cancel a scheduled alert before it is sent and notify alerter.
@@ -143,8 +140,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
     And I go to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
-    And I should see "TxPhin Scheduled test alert"
-    And I follow "More"
+    And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on July 4 2015 at 1:00 pm"
     When I follow "Reschedule/Cancel"
     Then I should see "Alert Scheduling"
