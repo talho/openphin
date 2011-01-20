@@ -438,6 +438,23 @@ class Alert < ActiveRecord::Base
   def responders(responder_categories=[1,2,3,4,5])
     alert_attempts.find_all_by_call_down_response(responder_categories).map(&:user).uniq
   end
+  
+  # cascade alerting
+  def jurisdictions_per_level
+    audiences.each do |audience|
+      if audience.users.empty?      
+       if audience.jurisdictions.empty?
+          if jurisdiction_level =~ /local/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+          end
+          if jurisdiction_level =~ /state/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign
+          end
+        end
+        audience.roles = Role.all if audience.roles.empty?
+      end
+    end
+  end
 
   def preview_recipients_size(params)
     temp_recipients_size = nil
