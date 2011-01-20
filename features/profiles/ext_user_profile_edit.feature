@@ -48,7 +48,7 @@ I should be able to edit my profile
       And I go to the ext dashboard page
       And I should see "My Dashboard"
       And I view the ext profile page for "john.smith@example.com"
-      Then I should not see "Edit This Profile"
+      Then I should not see "Edit This Account"
     
   Scenario: editing user account information for another user as another jurisdictional admin
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
@@ -56,7 +56,7 @@ I should be able to edit my profile
     And I go to the ext dashboard page
     And I should see "My Dashboard"
     And I view the ext profile page for "john.smith@example.com"
-    And I should not see "Edit This Profile"
+    And I should not see "Edit This Account"
 
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"
