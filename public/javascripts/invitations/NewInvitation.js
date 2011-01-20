@@ -252,7 +252,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
           {xtype: 'htmleditor', fieldLabel: 'Email Body', name: 'invitation[body]', allowBlank: false, width: 550, height: 300, enableSourceEdit: false},
           {xtype: 'combo', mode: 'local', fieldLabel: 'Default Organization', emptyText: 'Select an Organization...', typeAhead: false, triggerAction: 'all',
             lazyRender: true, hiddenName: 'invitation[organization_id]', allowBlank: true, editable: false, mode: 'local', valueField: 'id',
-            displayField: 'name', forceSelection: true, store: new Ext.data.JsonStore({autoLoad: true, autoDestroy: true, url: '/organizations.json', root: 'organizations', fields: ['id','name']})},
+            displayField: 'name', forceSelection: true, store: new Ext.data.JsonStore({autoLoad: true, autoDestroy: true, url: '/organizations.json', root: 'organizations', fields: ['id','name']})}
         ]
       },{
         id: 'card-1',
