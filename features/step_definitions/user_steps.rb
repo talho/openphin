@@ -202,6 +202,7 @@ When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename,
                             :create => create,
                             :update => update
       )
+  When(%Q{delayed jobs are processed})
 end
 
 When /^I fill out the delete user form with "([^\"]*)"$/ do |user_ids|
