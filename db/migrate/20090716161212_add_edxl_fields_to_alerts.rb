@@ -4,7 +4,7 @@ class AddEdxlFieldsToAlerts < ActiveRecord::Migration
       t.integer :from_organization_id
       t.string :from_organization_name, :from_organization_oid
       t.string :identifier, :scope, :category, :program, :urgency,
-        :certainty, :jurisdiction_level
+        :certainty, :jurisdictional_level
     end
   end
 
@@ -12,7 +12,7 @@ class AddEdxlFieldsToAlerts < ActiveRecord::Migration
     change_table :alerts do |t|
       t.remove :from_organization_id, :from_organization_name, :from_organization_oid,
         :identifier, :scope, :category, :program, :urgency,
-        :certainty, :jurisdiction_level
+        :certainty, :jurisdictional_level
     end
   end
 end

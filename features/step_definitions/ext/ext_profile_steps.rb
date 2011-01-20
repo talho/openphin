@@ -18,9 +18,10 @@ When /^I add the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jur
 end
 
 When /^I add the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisdiction|
-  When %Q{I press "edit" within "#edit_role"}
+  #When %Q{I press "edit" within "#edit_role"}
   When %Q{I add the role "#{role}" for "#{jurisdiction}" in the RolesControl}
   When %Q{I press "Apply Changes"}
+  Then %Q{I should see "Profile information saved"}
   When %Q{delayed jobs are processed}
 end
 
@@ -30,8 +31,9 @@ When /^I remove the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,
 end
 
 When /^I remove the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisdiction|
-  When %Q{I press "edit" within "#edit_role"}
+  #When %Q{I press "edit" within "#edit_role"}
   When %Q{I remove the role "#{role}" for "#{jurisdiction}" in the RolesControl}
   When %Q{I press "Apply Changes"}
+  Then %Q{I should see "Profile information saved"}
   When %Q{delayed jobs are processed}
 end

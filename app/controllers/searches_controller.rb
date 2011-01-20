@@ -33,10 +33,8 @@ class SearchesController < ApplicationController
     @results = [] if @results.blank?
     render :json => @results.map{|u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
                                       :extra => render_to_string(:partial => 'extra.json', :locals => {:user => u})}}
-
-
   end
-  
+
   def show_advanced
     if request.get? && params.count == 2
       @results = []
@@ -45,10 +43,19 @@ class SearchesController < ApplicationController
       strip_blank_arrays(params[:with])
       prevent_email_in_name(params)
       sanitize(params[:conditions])
+      if params[:admin_mode] == "1"
+        params[:with] = Hash.new if !params.has_key?(:with)
+        if !params[:with].has_key?(:jurisdiction_ids)
+          params[:with][:jurisdiction_ids] = Array.new
+          current_user.jurisdictions.each { |j|
+            j.self_and_descendants.admin.each { |j| params[:with][:jurisdiction_ids].push(j.id) }
+          }
+        end
+      end
       params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
       @results = User.search(params.merge!(build_options(params)))
     end
-    
+
     respond_to do |format|
       format.html
       format.pdf { prawnto :inline => false }
@@ -73,7 +80,7 @@ class SearchesController < ApplicationController
      end
    end
   end
-  
+
 protected
 
   # this method is to prevent an inadverent denial-of-service

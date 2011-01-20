@@ -34,7 +34,7 @@ I should be able to edit my profile
       | Credentials                       | Rock star, Certified |
       | Experience                        | Summer camp director  |
     And I attach the file "spec/fixtures/keith.jpg" to "Picture to upload"
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should not see any errors
     And I should see "Profile information saved"
     
@@ -96,7 +96,7 @@ I should be able to edit my profile
 
     Given I am logged in as "john.smith@example.com"
     And session name is "default"
-    And I press "Save"
+    And I press "Apply Changes"
     #Then I should see the profile edit form
     And I should see "Another user has recently updated this profile, please try again."
     And I press "Cancel"
@@ -111,7 +111,7 @@ I should be able to edit my profile
       | Credentials                       | Rock star, Certified |
       | Experience                        | Summer camp director  |
       | Employer                          | State of Texas |
-    And I press "Save"
+    And I press "Apply Changes"
     Then I should not see any errors
     And I should see "Profile information saved"
     And quit session name "admin session"

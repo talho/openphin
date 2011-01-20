@@ -90,6 +90,7 @@ Feature: Viewing groups
   Scenario: going to edit a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
     When I go to the ext dashboard page
+    Then I should see "My Account"
     Then I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."

@@ -472,6 +472,23 @@ class Alert < ActiveRecord::Base
     return temp_recipients_size
   end
 
+  # cascade alerting
+  def jurisdictions_per_level
+    audiences.each do |audience|
+      if audience.users.empty?      
+       if audience.jurisdictions.empty?
+          if jurisdiction_level =~ /local/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign.first.descendants
+          end
+          if jurisdiction_level =~ /state/i
+            audience.jurisdictions << Jurisdiction.root.children.nonforeign
+          end
+        end
+        audience.roles = Role.all if audience.roles.empty?
+      end
+    end
+  end
+
   private
   def set_message_type
     self.message_type = MessageTypes[:alert] if self.message_type.blank?
