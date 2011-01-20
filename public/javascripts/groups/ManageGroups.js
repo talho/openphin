@@ -152,7 +152,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             defaults:{border:false},
             items:[
                     {xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this},
-                    {xtype:'panel', border:true, items:[this.group_list]},
+                    {xtype:'panel', border:true, width: 400, items:[this.group_list]},
                     {xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this}
                 ],
             listeners:{
