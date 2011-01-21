@@ -23,7 +23,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
     end
     
     Phin::Application.eval_if_plugin_present(:vms) do
-      menu_config += $menu_config[:vms] + ","
+      menu_config += $menu_config[:vms]
     end
   menu_config += "]},"
 
