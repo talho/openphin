@@ -94,13 +94,13 @@ Feature: Sending alerts to phones
 
     # legacy code since we haven't converted the alert log to EXT yet
     When I go to the alert log
-    And I follow "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
 
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
     And I go to the alert log
-    And I follow "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 50%
     #end legacy code
 
@@ -251,11 +251,11 @@ Feature: Sending alerts to phones
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
     And I go to the alert log
-    And I follow "More"
+    And I click alert "Title for Chicken pox outbreak"
     Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
 
     And I am logged in as "keith.gaddis@example.com"
     When I go to the ext dashboard page
-    And I navigate to "HAN > Home" 
+    And I navigate to "HAN > HAN Alerts" 
     Then I can see the alert summary for "Title for Chicken pox outbreak"
     And the alert should not be acknowledged

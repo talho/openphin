@@ -96,13 +96,13 @@ Feature: Sending alerts to phones
       | phone      | message                                                                                           |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
     When I go to the alert log
-    And I follow "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 0%
     
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
     And I go to the alert log
-    And I follow "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I can see the device alert acknowledgement rate for "H1N1 SNS push packs to be delivered tomorrow" in "Phone" is 50%
 
   Scenario: Sending alerts to users with multiple phone devices

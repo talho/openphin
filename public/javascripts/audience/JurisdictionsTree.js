@@ -54,7 +54,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
                         {
                             store.expandNode(store.getAt(tex));
                         }
-                    }
+                    }                   
                 }
             }
         });

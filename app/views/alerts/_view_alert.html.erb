@@ -3,8 +3,6 @@
       <p class="title">
         <span class="title <%= alert.severity.downcase %>"><%=h alert.title %></span>
         <span class="actions">
-          <%= link_to 'More', '#', :class => 'view_more' %>
-          <%= link_to 'Less', '#', :class => 'view_less' %>
           <%= link_to 'View', alert %>
           <%= link_to 'Update', edit_alert_path(alert, :_action => 'update') if alert.original_alert.nil? && !alert.cancelled? %>
           <%= link_to 'Cancel', edit_alert_path(alert, :_action => 'cancel') if alert.original_alert.nil? && !alert.cancelled? %>

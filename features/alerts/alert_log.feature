@@ -112,14 +112,14 @@ Feature: Viewing the alert log
 
     And I am logged in as "jane.smith@example.com"
     And I go to the HAN
-    And I follow "More"
+    And I click alert "Hello World"
     And I press "Acknowledge"
 
     And I am logged in as "john.smith@example.com"
     And delayed jobs are processed
     When I am on the alert log
     Then I can see the alert summary for "Hello World"
-    And I follow "More"
+    And I click alert "Hello World"
     And I can see the alert for "Hello World" is 33% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 33%
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Dallas County" is 0%
@@ -130,11 +130,11 @@ Feature: Viewing the alert log
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Fax"
     And I cannot see the device alert acknowledgement rate for "Hello World" in "Blackberry"
     When I go to the HAN
-    And I follow "More"
+    And I click alert "Hello World"
     And I press "Acknowledge"
     And I am on the alert log
     Then I can see the alert summary for "Hello World"
-    And I follow "More"
+    And I click alert "Hello World"
     And I should see "Acknowledge: Normal"
     And I can see the alert for "Hello World" is 67% acknowledged
     And I can see the jurisdiction alert acknowledgement rate for "Hello World" in "Texas" is 67%
@@ -193,7 +193,7 @@ Feature: Viewing the alert log
     Then I should see "Acknowledge: Advanced"
     When I go to the HAN
     And I should see "Alert Response"
-    And I follow "More"
+    And I click alert "Hello World"
     And I select "if you can respond within 15 minutes" from "Alert Response"
     And I press "Acknowledge"
 
@@ -220,7 +220,7 @@ Feature: Viewing the alert log
     And "daniel@example.com" has not acknowledged the alert "Hello World"
     When I go to the HAN
     Then I should see "Alert Response"
-    And I follow "More"
+    And I click alert "Hello World"
     When I select "if you can respond within 15 minutes" from "Alert Response"
     And I press "Acknowledge"
     When I am on the alert log

@@ -90,7 +90,7 @@ Scenario: Acknowledging an alert through phone with alert responses
     When "keith.gaddis@example.com" acknowledges the phone alert
     And delayed jobs are processed
     And I go to the alert log
-    And I follow "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
 
     When I am logged in as "keith.gaddis@example.com"

@@ -11,7 +11,7 @@ Feature: Viewing recent alerts on dashboard
     And I am logged in as "martin@example.com"
 
     When I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see an alert with the summary:
       | title       | Example Health Alert - please click More to see the alert contents |
       | severity    | Minor |
@@ -37,7 +37,7 @@ Feature: Viewing recent alerts on dashboard
     And I am logged in as "martin@example.com"
 
     When I go to the ext dashboard page
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see an alert with the summary:
       | title       | rolling pig pox |
       | severity    | Moderate |
@@ -47,7 +47,7 @@ Feature: Viewing recent alerts on dashboard
 
     Given 19 more alerts are sent to me
     When delayed jobs are processed
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 10 alerts
     When I click inlineLink "Next"
     Then I should see 10 alerts
@@ -60,7 +60,7 @@ Feature: Viewing recent alerts on dashboard
 
     Given 1 more alert is sent to me
     When delayed jobs are processed
-    And I navigate to "HAN > HAN Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I should see 10 alerts
     And I should not see an alert titled "rolling pig pox"
     When I click inlineLink "Next"

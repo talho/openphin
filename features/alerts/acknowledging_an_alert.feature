@@ -24,12 +24,12 @@ Feature: Acknowledging an alert
       | jurisdictions     | Dallas County        |
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
-    And I follow "More"
+    And I click alert "Piggy Pox"
     When I press "Acknowledge"
     Then I have acknowledged the alert for "Piggy Pox"
 
     When I go to the HAN
-    And I follow "More"
+    And I click alert "Piggy Pox"
     Then I should not see an "Acknowledge" button
     But I should see "Acknowledge: Yes"
 
@@ -49,13 +49,13 @@ Feature: Acknowledging an alert
       | alert_response_5 | if you cannot respond                |
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
-    And I follow "More"
+    And I click alert "Piggy Pox"
     And I select "if you can respond within 30 minutes" from "Alert Response"
     When I press "Acknowledge"
     Then I have acknowledged the alert for "Piggy Pox"
 
     When I go to the HAN
-    And I follow "More"
+    And I click alert "Piggy Pox"
     Then I should not see an "Acknowledge" button
     And I should not see "Alert Response"
     But I should see "Acknowledge: if you can respond within 30 minutes"
@@ -77,7 +77,7 @@ Feature: Acknowledging an alert
       | alert_response_5 | if you cannot respond                |
     When I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
-    And I follow "More"
+     And I click alert "Piggy Pox"
     When I will confirm on next step
     Then I press "Acknowledge"
     Then I should see "You must select a response" within the alert box
@@ -97,7 +97,7 @@ Feature: Acknowledging an alert
     And 26 hours pass
     And I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
-    When I follow "More"
+    And I click alert "Piggy Pox"
     And I press "Acknowledge"
     And the latest alert should be acknowledged
 
@@ -114,5 +114,5 @@ Feature: Acknowledging an alert
     And 30 hours pass
     And I am on the HAN
     Then I can see the alert summary for "Piggy Pox"
-    When I follow "More"
+    And I click alert "Piggy Pox"
     Then I should see "Acknowledgement is no longer allowed for this Alert"

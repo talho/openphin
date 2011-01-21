@@ -19,6 +19,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             'opentab':{
                 fn: this.open_tab,
                 scope: this
+            },
+            'openwindow':{
+              fn: this.open_window,
+              scope: this
             }
         });
 
@@ -119,7 +123,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
+        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
 
         Ext.each(Application.menuConfig, function(item, index){
             if(item === '->')
@@ -155,7 +159,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab, redirect: this.redirect_to});
+        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
 
         Ext.each(Application.bbarConfig, function(item, index){
             tb.add(builder.buildMenu(item));
@@ -248,12 +252,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 }
             }
 
-            panel.tab_config = config;
-            panel.addListener({
-                'show':function(panel){panel.doLayout();},// This is necessary for when a panel is loading without being shown. Layout is never being refired, but it is now.
-                'fatalerror': function(panel){ this.tabPanel.remove(panel, true); },
-                scope: this
-            }); 
+            this.newTabPropertiesAndEvents(panel, config);
         }
         else
         {
@@ -265,6 +264,19 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         }
     },
 
+    open_window: function(config){
+      if(Talho.ScriptManager.exists(config.initializer))
+      {
+        var initializer_callback = function(initializer, config){
+          var win = initializer(config);
+          win.show();
+        };
+        
+        Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.createDelegate(this, [config], true));
+        return;
+      }
+    },
+    
     loadOtherLibrary_callback: function(name, config, tempPanel){
         this.tabPanel.remove(tempPanel);
 

@@ -124,9 +124,9 @@ Feature: Acknowledging an alert
     And delayed jobs are processed
 
     When I go to the ext dashboard page
-    And I navigate to "HAN > Home"
+    And I navigate to "HAN > HAN Alerts"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
-    And I click inlineBtn "More"
+    And I click alert "H1N1 SNS push packs to be delivered tomorrow"
     And I should not see an "Acknowledge" button
     But I should see "Acknowledge: Yes"
     # end legacy code: replace when acknowledgement is implemented
@@ -210,9 +210,8 @@ Feature: Acknowledging an alert
     When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
     And delayed jobs are processed
     When I go to the ext dashboard page
-    And I navigate to "HAN > Home"
-    Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
-    And I click inlineBtn "More"
+    And I navigate to "HAN > HAN Alerts"
+    Then I click alert "H1N1 SNS push packs to be delivered tomorrow"
     And I should not see an "Acknowledge" button
     But I should see "Acknowledge: if you can call back within 15 minutes"
 

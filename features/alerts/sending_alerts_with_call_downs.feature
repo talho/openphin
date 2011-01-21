@@ -242,5 +242,5 @@ Feature: Sending alerts with call downs
       When I go to the HAN
       And I follow "Alert Log and Reporting"
       And I should see "Acknowledge: Advanced"
-      And I follow "More"
+      And I click alert "H1N1 SNS push packs to be delivered tomorrow"
       And I can see the alert acknowledgement response rate for "H1N1 SNS push packs to be delivered tomorrow" in "if you can respond within 15 minutes" is 20%
