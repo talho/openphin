@@ -71,7 +71,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       width: '100%',
       border: false,
       tbar: new Ext.Toolbar({items: [
-        {xtype: 'label', html: 'Roles: <i>(none selected)</i>'}, '->',
+        {xtype: 'tbtext', name: 'hdr', html: 'Roles: <i>(none selected)</i>'}, '->',
         {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.rolesList.clearSelections(); }},
       ]}),
       items: [this.rolesList],
@@ -83,7 +83,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       flex: 1,
       width: '100%',
       tbar: new Ext.Toolbar({items: [
-        {xtype: 'label', html: 'Jurisdictions: <i>(none selected)</i>'}, '->',
+        {xtype: 'tbtext', name: 'hdr', html: 'Jurisdictions: <i>(none selected)</i>'}, '->',
         {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.jurisList.clearSelections(); }},
       ]}),
       items: [this.jurisList]
@@ -240,13 +240,15 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     this.rolesList.on('selectionchange', function(view, nodes){
       var l = nodes.length;
       if (l == 0) { l = 'none'}
-      this.rolesSelector.setTitle('Roles: <i>('+l+' selected)</i>');
+      var hdrText = 'Roles: <i>('+l+' selected)</i>';
+      this.rolesSelector.getTopToolbar().find('name', 'hdr')[0].setText(hdrText);
     }, this );
 
     this.jurisList.on('selectionchange', function(view, nodes){
       var l = nodes.length;
       if (l == 0) { l = 'none'}
-      this.jurisSelector.setTitle('Jurisdictions: <i>('+l+' selected)</i>');
+      var hdrText = 'Jurisdictions: <i>('+l+' selected)</i>';
+      this.jurisSelector.getTopToolbar().find('name', 'hdr')[0].setText(hdrText);
     }, this );
     if (this.admin_mode)
       this.primary_panel.on('afterrender', function(){ this.searchResults.store.load(); }, this);
