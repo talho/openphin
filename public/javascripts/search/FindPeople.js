@@ -69,8 +69,11 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       layout: 'fit',
       flex: 1,
       width: '100%',
-      title: 'Roles: <i>(none selected)</i>',
       border: false,
+      tbar: new Ext.Toolbar({items: [
+        {xtype: 'label', html: 'Roles: <i>(none selected)</i>'}, '->',
+        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.rolesList.clearSelections(); }},
+      ]}),
       items: [this.rolesList],
       style: { 'padding-bottom': '10px', 'padding-top': '5px'}
     });
@@ -79,7 +82,10 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       layout: 'fit',
       flex: 1,
       width: '100%',
-      title: 'Jurisdictions: <i>(none selected)</i>',
+      tbar: new Ext.Toolbar({items: [
+        {xtype: 'label', html: 'Jurisdictions: <i>(none selected)</i>'}, '->',
+        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.jurisList.clearSelections(); }},
+      ]}),
       items: [this.jurisList]
     });
 
