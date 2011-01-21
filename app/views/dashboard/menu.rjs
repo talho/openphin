@@ -12,11 +12,11 @@ page << "Application.rails_environment = '#{ Rails.env }';"
 
   menu_config += "]},"
 
+
   menu_config += "{name: 'Apps', items: ["
   plugin_config_items = []
     Phin::Application.eval_if_plugin_present(:rollcall) do
       plugin_config_items << "{name: 'Rollcall', items:[
-                      {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'', initializer: 'Talho.Rollcall'}},
                       {name: 'ADST', tab:{id: 'rollcall_adst', title:'Rollcall ADST', url:'', initializer: 'Talho.Rollcall.ADST'}},
                       {name: 'Nurse Assistant', tab:{id: 'rollcall_nurse', title:'Nurse Assistant', url:'', initializer: 'Talho.Rollcall.NurseAssistant'}},
                       {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'', initializer: 'Talho.Rollcall'}},
@@ -28,6 +28,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
     end
   menu_config += plugin_config_items.join(',')
   menu_config += "]},"
+
 
   menu_config += "{name: 'FAQs', items:[
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
