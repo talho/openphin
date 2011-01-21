@@ -42,6 +42,8 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
      */
     autoSize: Ext.emptyFn,
 
+    renderButtonTo: null,
+
     // private
     initComponent: function(){
         Ext.ux.form.FileUploadField.superclass.initComponent.call(this);
@@ -65,18 +67,52 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
         this.wrap = this.el.wrap({cls:'x-form-field-wrap x-form-file-wrap'});
         this.el.addClass('x-form-file-text');
         this.el.dom.removeAttribute('name');
-        this.createFileInput();
+        if(this.renderButtonTo != null)
+          this.wrap.setStyle({
+            position: 'fixed'
+          });
 
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
             text: this.buttonText
         });
         this.button = new Ext.Button(Ext.apply(btnCfg, {
-            renderTo: this.wrap,
-            cls: 'x-form-file-btn' + (btnCfg.iconCls ? ' x-btn-icon' : '')
+            wrap: this.wrap,
+            renderedOutside: this.renderButtonTo == null ? false : true,
+            resizeContainer: this.resizeContainer,
+            renderTo: this.renderButtonTo == null ? this.wrap : this.renderButtonTo,
+            cls: 'x-form-file-btn' + (btnCfg.iconCls ? ' x-btn-icon' : ''),
+            listeners: {
+              delay: 10,
+              afterrender: function() {
+                if(this.renderedOutside) {
+                  this.wrap.setX(this.getEl().getX());
+                  this.wrap.setY(this.getEl().getY());
+                }
+                if(this.resizeContainer) {
+                  this.mon(this.resizeContainer,'resize',function(){
+                    if(this.renderedOutside) {
+                      this.wrap.setX(this.getEl().getX());
+                      this.wrap.setY(this.getEl().getY());
+                    }
+                  }, this);
+
+                  if(this.resizeContainer.getLayoutTarget)
+                    this.mon(this.resizeContainer.getLayoutTarget(),'scroll',function(){
+                      if(this.renderedOutside) {
+                        this.wrap.setX(this.getEl().getX());
+                        this.wrap.setY(this.getEl().getY());
+                      }
+                    }, this);
+                }
+              }
+            }
         }));
+
+      this.createFileInput();
 
         if(this.buttonOnly){
             this.el.hide();
+            if(this.renderButtonTo) this.renderButtonTo.setWidth(this.button.getEl().getWidth());
             this.wrap.setWidth(this.button.getEl().getWidth());
         }
 
@@ -116,6 +152,7 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
             type: 'file',
             size: 1
         });
+        this.button.el.child('button').dom.setAttribute('for',this.fileInput.id);
     },
     
     reset : function(){

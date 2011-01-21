@@ -37,34 +37,65 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
       }
     }, this, {delay: 10});
 
-    this.uploadButton = new Ext.ux.form.FileUploadField({
-      name: 'invitation[csvfile]',
-      itemId: 'myfileuploadfield',
-      buttonOnly: true,
-      iconCls: 'icon-file-upload',
-      buttonText: 'Import Users',
+    var testFormButton = new Ext.Container({
+      itemId: 'testFormButton',
       listeners: {
         scope: this,
-        'fileselected': function(fb, v) {
-          grid.myMask.show();
-          this.uploadForm.submit({
-            scope: grid,
-            success: function(form, action) {
-              this.store.loadData(Ext.decode(action.response.responseText), !Ext.getCmp('chk-overwrite').checked);
-              if(this.store.getCount() == 0) {
-                Ext.getCmp('invitation_submit').disable();
-              } else {
-                Ext.getCmp('invitation_submit').enable();
+        afterrender: function() {
+          var uploadButton = new Ext.ux.form.FileUploadField({
+            name: 'invitation[csvfile]',
+            itemId: 'myfileuploadfield',
+            buttonOnly: true,
+            iconCls: 'icon-file-upload',
+            buttonText: 'Import Users',
+            renderButtonTo: testFormButton.getEl(),
+            resizeContainer: this.getPanel(),
+            listeners: {
+              scope: this,
+              'fileselected': function(fb, v) {
+                grid.myMask.show();
+                this.uploadForm.submit({
+                  scope: grid,
+                  success: function(form, action) {
+                    this.store.loadData(Ext.decode(action.response.responseText), !Ext.getCmp('chk-overwrite').checked);
+                    if(this.store.getCount() == 0) {
+                      Ext.getCmp('invitation_submit').disable();
+                    } else {
+                      Ext.getCmp('invitation_submit').enable();
+                    }
+                    form.reset();
+                    this.myMask.hide();
+                  },
+                  failure: function(form, action) {
+                    this.myMask.hide();
+                    data = Ext.decode(action.response.responseText);
+                    Ext.Msg.alert('Import Error', data['error']);
+                  }
+                });
               }
-              form.reset();
-              this.myMask.hide();
-            },
-            failure: function(form, action) {
-              this.myMask.hide();
-              data = Ext.decode(action.response.responseText);
-              Ext.Msg.alert('Import Error', data['error']);
             }
           });
+
+          var importUsersPanel = new Ext.Container({
+            autoEl: 'form',
+            itemId: 'testForm',
+            items: [uploadButton],
+            listeners: {
+              scope: this,
+              delay: 10,
+              afterrender: function() {
+                this.uploadForm = new Ext.form.BasicForm(importUsersPanel.getEl(),{
+                  url: this.url + '/import.html',
+                  baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
+                  fileUpload: true
+                });
+                this.uploadForm.add(importUsersPanel.getComponent('myfileuploadfield'));
+              }
+            }
+          });
+
+          this.getPanel().add(importUsersPanel);
+          this.getPanel().doLayout();
         }
       }
     });
@@ -110,12 +141,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
             Ext.getCmp('invitation_submit').enable();
           }
         }
-      },'->',{
-        itemId: 'testForm',
-        xtype: 'container',
-        autoEl: 'form',
-        items: [this.uploadButton]
-      },{
+      },'->',testFormButton,{
         xtype: 'checkbox',
         id: 'chk-overwrite',
         boxLabel: 'Overwrite?',
@@ -148,15 +174,6 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
       }
     });
 
-    grid.on('afterrender', function(){
-      this.uploadForm = new Ext.form.BasicForm(grid.getTopToolbar().getComponent('testForm').getEl(),{
-        url: this.url + '/import.html',
-        baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
-        fileUpload: true
-      });
-      this.uploadForm.add(grid.getTopToolbar().getComponent('testForm').getComponent('myfileuploadfield'));
-    }, this, {delay: 10});
-
     grid.getSelectionModel().on('selectionchange', function(sm){
       grid.removeBtn.setDisabled(sm.getCount() < 1);
     });
@@ -165,14 +182,14 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
       var l = Ext.getCmp('card-wizard-panel').getLayout();
       var i = l.activeItem.id.split('card-')[1];
       var next = parseInt(i, 10) + incr;
-      if(this.getPanel().form.isValid()) {
+      if(this.getFormPanel().form.isValid()) {
         l.setActiveItem(next);
         Ext.getCmp('top-card-prev').setDisabled(next==0);
         Ext.getCmp('top-card-next').setDisabled(next==1);
         Ext.getCmp('bottom-card-prev').setDisabled(next==0);
         Ext.getCmp('bottom-card-next').setDisabled(next==1);
       } else {
-        this.getPanel().form.items.each(function() {
+        this.getFormPanel().form.items.each(function() {
           this.validate();
         });
       }
@@ -182,14 +199,14 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
       var l = Ext.getCmp('card-wizard-panel').getLayout();
       var i = l.activeItem.id.split('card-')[1];
       var next = parseInt(i, 10) + incr;
-      if(this.getPanel().form.isValid()) {
+      if(this.getFormPanel().form.isValid()) {
         l.setActiveItem(next);
         Ext.getCmp('top-card-prev').setDisabled(next==0);
         Ext.getCmp('top-card-next').setDisabled(next==1);
         Ext.getCmp('bottom-card-prev').setDisabled(next==0);
         Ext.getCmp('bottom-card-next').setDisabled(next==1);
       } else {
-        this.getPanel().form.items.each(function() {
+        this.getFormPanel().form.items.each(function() {
           this.validate();
         });
       }
@@ -261,7 +278,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         items: [grid]
       }]
     }];
-
+    
     this.form_config = {
       form_width: 700,
       item_list: item_list,
@@ -273,7 +290,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
 
     this.getPanel().on('render', grid.set_gridmask, grid, {delay: 1});
 
-    this.getPanel().getForm().on('beforeaction', function(form, action) {
+    this.getFormPanel().getForm().on('beforeaction', function(form, action) {
       action.options.params = {}
       store.each(function(item, index){
         action.options.params['invitation[invitees_attributes][' + index + '][name]'] = item.data['name']

@@ -19,18 +19,25 @@ Talho.NewInvitationBase = Ext.extend(function(){}, {
     ];
 
     // Create the ext form panel
-    var panel = new Ext.form.FormPanel({
-      title: this.title,
-      border: false,
+    var formPanel = new Ext.form.FormPanel({
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
-      closable: true,
-      autoScroll: true,
       url: this.form_config.save_url, method: this.form_config.save_method,
+      border: false,
       listeners: {scope: this, 'actioncomplete': this.submit_success, 'actionfailed': this.submit_failure},
       items: panel_items
     });
+
+    var panel = new Ext.Panel({
+      title: this.title,
+      border: false,
+      closable: true,
+      autoScroll: true,
+      items: [formPanel]
+    })
+
     panel.on('render', this.show_loadmask, this, {single: true, delay: 1});
     this.getPanel = function(){ return panel; }
+    this.getFormPanel = function(){ return formPanel; }
   },
 
   // Load form values via ajax
@@ -68,7 +75,7 @@ Talho.NewInvitationBase = Ext.extend(function(){}, {
     var saveButton = this.getPanel().find("name", "save_button")[0];
     if (saveButton.disabled) return;
     saveButton.disable();
-    this.getPanel().getForm().submit();
+    this.getFormPanel().getForm().submit();
   },
   close: function(){ this.getPanel().ownerCt.remove(this.getPanel()); },
   save_close: function(){ this.save(); this.close(); },

@@ -41,7 +41,7 @@ end
 
 When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
   with_scope(selector) do
-    id = page.find(:xpath, "//button[contains(text(), '#{field}')]/preceding::input[@type='file' and contains(@class,'x-form-file')]")['id']
+    id = page.find(:xpath, "//button[contains(text(), '#{field}')]")['for']
     attach_file(id, File.join(RAILS_ROOT, path))
     sleep 1
   end
