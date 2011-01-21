@@ -52,7 +52,6 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       height: 400,
       plugins: [editor],
       stripeRows: true,
-      title: 'Create the specified users',
       view: new Ext.grid.GroupingView({markDirty: false, forceFit: true}),
       tbar: [{
         iconCls: 'icon-user-add',
@@ -124,6 +123,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
           {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
             store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
+          {xtype: 'spacer', height: '10'},
           this.grid
         ]}
       ],

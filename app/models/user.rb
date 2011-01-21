@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
 
   def editable_by?(other_user)
-    self == other_user || jurisdictions.any?{|j| other_user.is_admin_for?(j) }
+    self == other_user || other_user.is_admin_for?(self.jurisdictions)
   end
     
   before_create :generate_oid
@@ -459,7 +459,7 @@ class User < ActiveRecord::Base
   end
 
   def update_devices(device_list_json, current_user)
-    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    return [ false, [ "Permission denied" ] ] unless editable_by?(current_user)
     device_list = ActiveSupport::JSON.decode(device_list_json)
     success = true
     device_errors = []
@@ -490,7 +490,7 @@ class User < ActiveRecord::Base
   end
 
   def handle_role_requests(req_json, current_user)
-    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    return [ false, [ "Permission denied" ] ] unless editable_by?(current_user)
     rq_list = ActiveSupport::JSON.decode(req_json)
     result = "success"
     rq_errors = []
@@ -535,7 +535,7 @@ class User < ActiveRecord::Base
   end
 
   def handle_org_requests(req_json, current_user)
-    return [ false, [ "Permission denied" ] ] unless current_user == self || current_user.is_admin_for?(self.jurisdictions)
+    return [ false, [ "Permission denied" ] ] unless editable_by?(current_user)
     rq_list = ActiveSupport::JSON.decode(req_json)
     result = "success"
     rq_errors = []

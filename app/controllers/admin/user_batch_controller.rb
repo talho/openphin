@@ -7,7 +7,10 @@ class Admin::UserBatchController < ApplicationController
   end
 
   def admin_jurisdictions
-    jurisdictions = current_user.jurisdictions.admin.find(:all, :select => "DISTINCT name", :order => "name")
+    jurisdictions = []
+    current_user.jurisdictions.each { |j|
+      jurisdictions.concat(j.self_and_descendants.admin.find(:all, :select => "DISTINCT name"))
+    }
     render :json => jurisdictions
   end
   
