@@ -24,7 +24,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
     end
     
     Phin::Application.eval_if_plugin_present(:vms) do
-      menu_config += $menu_config[:vms]
+      plugin_config_items << $menu_config[:vms]
     end
   menu_config += plugin_config_items.join(',')
   menu_config += "]},"
