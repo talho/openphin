@@ -232,6 +232,37 @@ Talho.Documents = Ext.extend(function(){}, {
                                 ftstore.expandNode(ancestor);
                             });
                             this._folderTreeGrid.getSelectionModel().selectRecords([folder]);
+                        } else {
+                          var file = gv.getSelectedRecords()[0].data.doc_url
+                          // create a hidden iframe, open the file
+                          if(Application.rails_environment === 'cucumber')
+                          {
+                              Ext.Ajax.request({
+                                  url: file,
+                                  method: 'GET',
+                                  success: function(){
+                                      alert("Success");
+                                  },
+                                  failure: function(){
+                                      alert("File Download Failed");
+                                  }
+                              })
+                          }
+                          else
+                          {
+                              if(!this._downloadFrame){
+                                  this._downloadFrame = Ext.DomHelper.append(this.file_actions.download_frame_target.dom, {tag: 'iframe', style: 'width:0;height:0;'});
+                                  Ext.EventManager.on(this._downloadFrame, 'load', function(){
+                                      // in a very strange bit of convenience, the frame load event will only fire here IF there is an error
+                                      // need to test the convenience on IE.
+                                      Ext.Msg.alert('Could Not Load File', 'There was an error downloading the file you have requested. Please contact an administrator');
+                                  }, this);
+                              }
+
+                              if(file.length > 0){
+                                  this._downloadFrame.src = file;
+                              }
+                          }
                         }
                     }
                 }},
