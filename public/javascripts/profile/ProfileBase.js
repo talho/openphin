@@ -24,6 +24,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
       layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
       cls: 'primary-panel',
       closable: true,
+      keys: { key: Ext.EventObject.ENTER, shift: false, fn: this.save, scope: this },
       autoWidth: true,
       autoScroll: true,
       itemId: config.id,
