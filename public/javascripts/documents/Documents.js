@@ -117,7 +117,15 @@ Talho.Documents = Ext.extend(function(){}, {
             }),
             loadMask: true,
             autoExpandColumn: 'name_column',
-            bbar: ['->', {text: 'Refresh', iconCls: '', scope: this, handler: this._refresh}, {text: 'Add Folder', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}]
+            bbar: ['->', {text: 'Refresh', iconCls: '', scope: this, handler: this._refresh}, {text: 'Add Folder', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}],
+            listeners: {
+              scope: this,
+              'rowclick': function(grid, rowIndex, e) {
+                if(this._folderTreeGrid.getSelectionModel().isSelected(rowIndex)) {
+                  this._iconView.clearSelections();
+                }
+              }
+            }
         });
     },
 
@@ -363,7 +371,8 @@ Talho.Documents = Ext.extend(function(){}, {
 
                 var type = sel.get('type');
                 if(type == 'folder'){
-                    show.push('folder_detail_container', 'folder_action_container', 'move_action_container');
+                  if(folderSelections[0].data.id === null) show.push('folder_detail_container');
+                  else show.push('folder_detail_container','folder_action_container', 'move_action_container');
                     this._fileControls.applySectionDetails('folder_detail_container', {
                         'name': sel.get('name'),
                         'image': Talho.ux.Documents.mimeToImageClass('folder'),
