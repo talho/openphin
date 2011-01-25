@@ -126,7 +126,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
 
     openEditUserTab: function(){
       Application.fireEvent('opentab', {
-        title: 'Edit Profile: ' + this.userdata.first_name + ' ' + this.userdata.last_name,
+        title: 'Edit Account: ' + this.userdata.first_name + ' ' + this.userdata.last_name,
         url: '/users/' + this.userdata.user_id + '/profile',
         user_id: this.userdata.user_id,
         id: 'edit_user_for_' + this.userdata.user_id, initializer: 'Talho.EditProfile'
