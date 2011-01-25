@@ -77,7 +77,7 @@ When /^I set "([^\"]*)" as "([^\"]*)"(?: with "([^"]*)")?$/ do |folder, sharing,
 
   if sharing == "shared"
     folder.update_attributes :shared => 'shared', :audience => { :user_ids => [User.find_by_email(user).id] }
-    folder.audience.recipients.length
+    folder.audience.recipients.length if folder.audience
   elsif sharing == "inherited"
     folder.update_attributes :shared => 'inherited'
   else

@@ -52,7 +52,7 @@ class RemoveUnusedDocumentsTables < ActiveRecord::Migration
       folder.audience_id = audience_id
       folder.save!
 
-      folder.audience.recipients.length #cause the recipients to calculate, otherwise this won't pick up due to the way documents links to recipients.
+      folder.audience.recipients.length if folder.audience #cause the recipients to calculate, otherwise this won't pick up due to the way documents links to recipients.
 
       #set share owners as admins for the folder
       users.select { |u| u[:owner].to_i == 1 }.each do |user|

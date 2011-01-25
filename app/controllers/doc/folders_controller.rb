@@ -54,7 +54,7 @@ class Doc::FoldersController < ApplicationController
     folder.audience.recipients(:force => true).length if folder.audience # apply the recipients for the audience so that the mapped joins will actually work
 
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => (folder.audience.recipients(:force => true).with_no_hacc) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.nil? ? [] : (folder.audience.recipients(:force => true).with_no_hacc) } )
     end
 
     respond_to do |format|
@@ -103,7 +103,7 @@ class Doc::FoldersController < ApplicationController
     folder.audience.recipients(:force => true).length if folder.audience # apply the recipients for the audience so that the mapped joins will actually work
     
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => (folder.audience.recipients(:force => true).with_no_hacc - original_recipients) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.nil? ? [] : (folder.audience.recipients(:force => true).with_no_hacc - original_recipients) } )
     end
 
     respond_to do |format|
