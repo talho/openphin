@@ -9,6 +9,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
      *    @lends Ext.ux.AudiencePanel.prototype
      */
     showJurisdictions: true,
+    showRoles: true,
     showUsers: true,
     
     initComponent: function() {
@@ -18,7 +19,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
         var items = [];
 
         if( this.showJurisdictions === true) items.push(this._createJurisdictionsTree());
-        items.push(this._createRoleSelectionGrid());
+        if( this.showRoles === true) items.push(this._createRoleSelectionGrid());
         if (this.showGroups === true) items.push(this._createGroupSelectionGrid());
         if (this.showUsers === true) items.push(this._createUserSelectionGrid());
 

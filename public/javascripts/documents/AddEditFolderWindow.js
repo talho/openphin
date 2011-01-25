@@ -101,7 +101,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                                 }
                             }
                         ]},
-                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true}
+                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: false}
                     ]},
                     {title: 'Permissions', itemId: 'per', padding: '5', items:[
                         {itemId: 'perlabel', xtype: 'box', html: 'Permissions are only available when this folder is explicitly shared.'},

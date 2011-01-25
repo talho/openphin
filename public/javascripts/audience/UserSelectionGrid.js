@@ -73,6 +73,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
     _createUserSelectionGrid: function(){
         return {
             xtype: 'grid',
+            viewConfig: {emptyText: "<h2>Enter in the person's name or email address in to the text box below to find and add PHIN users.<br/><br/>Once the user is found, click on the user to add them to your selection.</h2>", deferEmptyText: false},          
             store: this.user_store,
             sm: false,
             columns:[
