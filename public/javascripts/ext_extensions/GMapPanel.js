@@ -111,6 +111,11 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       return marker;
     },
     
+    removeMarker: function(marker){
+      this.markers.remove(marker);
+      marker.setMap(null);
+    },
+    
     showInfoWindow: function(marker, content){
       if(this.open_window){
         this.open_window.close();
