@@ -371,7 +371,8 @@ Talho.Documents = Ext.extend(function(){}, {
 
                 var type = sel.get('type');
                 if(type == 'folder'){
-                  if(folderSelections[0].data.id === null) show.push('folder_detail_container');
+                  // Make sure My Documents isn't selected
+                  if(folderSelections[0].data.id === null && selections[0].id == 0) show.push('folder_detail_container');
                   else show.push('folder_detail_container','folder_action_container', 'move_action_container');
                     this._fileControls.applySectionDetails('folder_detail_container', {
                         'name': sel.get('name'),

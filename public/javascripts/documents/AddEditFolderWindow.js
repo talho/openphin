@@ -81,7 +81,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                     {title: 'Sharing', itemId: 'sh', layout: 'vbox', layoutConfig: {align: 'stretch'}, padding: '5', items:[
                         {xtype:'container', itemId: 'rh', layout: 'form', labelAlign: 'top', items:[
                             {xtype: 'radiogroup', itemId: 'rg', columns: 1, fieldLabel: 'Share As', anchor: '100%', items:[
-                                {itemId: 'in', boxLabel: 'Inherited', name: 'sharing', checked: config.isEdit? false : true, inputValue: 'inherited'},
+                                {itemId: 'in', boxLabel: 'Inherited (Uses the same permissions as the parent folder)', name: 'sharing', checked: config.isEdit? false : true, inputValue: 'inherited'},
                                 {itemId: 'ns', boxLabel: 'Not Shared', name: 'sharing', inputValue: 'not_shared'},
                                 {itemId: 'sh', boxLabel: 'Shared - Accessible to the audience specified below', name: 'sharing', inputValue: 'shared', scope: this, handler: function(cb, checked){
                                     if(checked){
