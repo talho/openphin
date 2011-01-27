@@ -16,13 +16,11 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     this.padding = 10;
     this.defaults = {boxMinWidth:400};
     this.items = [
-      {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
-        {xtype: 'button', text: 'Add organization', handler: this.add_organization, scope: this, width:'auto'},
-        {xtype: 'button', text: 'Remove organization', handler: this.remove_organization, scope: this, width:'auto',
-         name: 'remove_btn', disabled: true}
-      ]},
+      this._createStoreAndDataView(),
       {xtype: 'spacer', height: '10'},
-      this._createStoreAndDataView()
+      {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
+        {xtype: 'button', text: 'Add organization', handler: this.add_organization, scope: this, width:'auto'}
+      ]}
     ];
 
     Talho.ux.OrganizationsControl.superclass.initComponent.call(this);
@@ -64,10 +62,6 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     win.close();
     this.ancestor.getPanel().doLayout();
   },
-  remove_organization: function(){
-    jQuery.each(this.dv.getSelectedRecords(), function(i,e){ e.set("state", "deleted"); });
-    this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
-  },
 
   // AJAX load and save methods
   load_data: function(json){ this.store.loadData(json); },
@@ -101,7 +95,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       '<ul class="orgs">',
       '<tpl for=".">',
         '<li class="org-item ' + '<tpl if="state==' + "'pending'" + '">org-pending</tpl>' + '">',
-          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}',
+          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<a id="{id}" class="destroy">Del</a>',
             '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',
@@ -112,9 +106,9 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
 
     this.dv = new Ext.DataView(
       {name: 'user[org_desc]', store: this.store, tpl: template, emptyText: 'No organizations to display', deferEmptyText: false,
-        multiSelect: false, singleSelect: true, itemSelector: 'li.org-item', selectedClass: 'device-selected',
-        listeners: {scope: this, 'selectionchange': function(dv,s){ this.find("name", "remove_btn")[0].setDisabled(s.length == 0); }}}
+        multiSelect: false, singleSelect: false, itemSelector: 'li.org-item', selectedClass: 'device-selected'}
     );
+    this.dv.addListener('click', this._destroy_handler, this);
 
     return this.dv;
   },
@@ -125,5 +119,13 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       root: 'organizations',
       fields: [{name: 'name'}, {name: 'id'}, {name: 'desc'}, {name: 'long_desc'}]
     });
+  },
+
+  _destroy_handler: function(dv,index,node,e){
+    var elem = Ext.get(e.getTarget());
+    if (elem.hasClass("destroy")) {
+      this.store.getAt(index).set("state", "deleted");
+      this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
+    }
   }
 });

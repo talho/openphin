@@ -23,3 +23,6 @@ li.org-selected {outline:#514721 solid 2px;}
 span.org-title  {font-size:15px; font-weight:bold; color:#333;}
 
 .checkbox-left-margin { margin-left: 2px; }
+
+a.destroy     {width:25px; height:25px; position:absolute; right:0; top:0; text-indent:-9999px; overflow:hidden;
+               background:url(/images/cross-circle.png) no-repeat center; cursor:pointer;}
