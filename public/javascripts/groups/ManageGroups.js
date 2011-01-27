@@ -83,6 +83,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             },
             fields:['name', 'scope', {name: "owner", mapping: "owner.display_name"}, {name: "owner_id", mapping: "owner.id"}, {name: 'owner_path', mapping: 'owner.profile_path'}, 'group_path'],
             autoSave: false,
+            autoLoad: false,
             writer: new Ext.data.JsonWriter({
                 encode: false
             })
@@ -108,7 +109,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
         this.group_list = new Ext.grid.GridPanel({
             store: store,
-            border: false,
+            border: true,
             width: 500,
             height: 300,
             columns: [
@@ -136,26 +137,24 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     }
                 }
             },
+            buttons: [{xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this}],
             bbar: new Ext.PagingToolbar({
                 store: store,       // grid and PagingToolbar using same store
                 pageSize: store.per_page
             })
         });
 
-        this.group_display_panel = new Ext.Panel({
-            layout:'vbox',            
+        this.group_display_panel = new Ext.Container({
+            layout:'hbox',
             layoutConfig: {
                 padding: '30 0',
-                align: 'center'
+                pack: 'center'
             },
             autoScroll: true,
-            defaults:{border:false},
-            items:[
-                    {xtype:'panel', width: 500, border:true, items:[this.group_list]},
-                    {xtype:'button', text:'Create New Group', handler: this.showNewGroup, scope: this}
-                ],
+            items:[this.group_list],
             listeners:{
                 'show': function(){ this.group_list.getStore().load(); },
+                'afterrender': {fn: function(){ this.group_list.loadMask.show(); }, delay: 1 },
                 scope:this
             }
         });
@@ -178,7 +177,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         jurisdiction_store.load();
 
         this.audience_panel = new Ext.ux.AudiencePanel({
-           width: 600, height: 400, showJurisdictions: true
+           anchor: '100%', height: 400, showJurisdictions: true
         });
 
         this.create_group_form_panel = new Ext.form.FormPanel({
@@ -187,25 +186,26 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             method: 'POST',
             url: '/admin_groups.json',
             editing: false,
+            width: 600,
+            padding: '10 0 0 0',
             items:[
                 {fieldLabel: 'Group Name', itemId: 'group_name', xtype:'textfield', name: 'group[name]'},
                 {fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:['Personal', 'Jurisdiction', 'Global', 'Organization'], forceSelection: true, editable:false, mode: 'local', triggerAction: 'all'},
                 {fieldLabel: 'Owner Jurisdiction', itemId: 'group_owner_jurisdiction', xtype: 'combo', hiddenName: 'group[owner_jurisdiction_id]', forceSelection: true, editable:false, store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all'},
-                {items: this.audience_panel, border: false},
-                {xtype: 'container', layout: 'hbox', items: [
-                    {xtype: 'button', text: 'Save', scope: this, handler: function(){
-                        var options = {};
+                {items: this.audience_panel, border: false}
+            ],
+            buttons: [{xtype: 'button', text: 'Save', scope: this, handler: function(){
+                  var options = {};
 
-                        if(this.create_group_form_panel.editing)
-                        {
-                            options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
-                            options.method = 'PUT';
-                        }
+                  if(this.create_group_form_panel.editing)
+                  {
+                      options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
+                      options.method = 'PUT';
+                  }
 
-                        this.create_group_form_panel.getForm().submit(options);
-                    }},
-                    {xtype: 'button', text: 'Cancel', scope: this, handler: this.back}]
-                }
+                  this.create_group_form_panel.getForm().submit(options);
+              }},
+              {xtype: 'button', text: 'Cancel', scope: this, handler: this.back}
             ],
             listeners:{
                 scope: this,
@@ -238,10 +238,11 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         }, this);
 
 
-        var panel = new Ext.Panel({
+        var panel = new Ext.Container({
             itemId: 'create_group_form_holder',
+            layout: 'hbox',
+            layoutConfig: {pack: 'center'},
             items: [this.create_group_form_panel],
-            border:false,
             autoScroll:true
         });
 
@@ -261,15 +262,17 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
          * Create the group detail view which displays the same information as is in the create/edit form except is not editable from this page
          */
     _getGroupDetailView: function(){
-        this.group_detail_panel = new Ext.Container({
-            autoScroll: true,
+        this.group_detail_panel = new Ext.Panel({
+            layout: 'form',
             border: false,
-            items: [{xtype: 'box', cls:'group_name', itemId:'group_name', html: 'NAME'},
-                {border: false, itemId: 'group_form_section', layout: 'form', items:[
-                    {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
-                    {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'}
-                ]},
-                new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel'}),
+            width: 600,
+            padding: '10 0 0',
+            items: [{xtype: 'box', hideLabel: true, cls:'group_name', itemId:'group_name', autoEl: 'h1', html: 'NAME'},
+                {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
+                {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'},
+                new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel', hideLabel: true, anchor: '100%', height: 400})
+            ],
+            buttons: [
                 {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'},
                 {xtype: 'button', text: 'Back to Groups', scope: this, handler: this.back}
             ]
@@ -279,12 +282,12 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             if(panel.mask === true)
                 var showAfter = true;
 
-            panel.mask = new Ext.LoadMask(panel.getEl());
+            panel.mask = new Ext.LoadMask(panel.ownerCt.getEl());
             if(showAfter)
                 panel.mask.show();
         });
 
-        return this.group_detail_panel;
+        return {xtype:'container', layout: 'hbox', layoutConfig: {pack: 'center'}, items: [this.group_detail_panel], autoScroll: true};
     },
 
     /**
@@ -295,9 +298,9 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.group_detail_panel.mask.hide();
 
         this.group_detail_panel.getComponent('group_name').update(group.name);
-        this.group_detail_panel.getComponent('group_form_section').getComponent('group_scope').update(group.scope);
-        this.group_detail_panel.getComponent('group_form_section').getComponent('group_jurisdiction').update(group.owner_jurisdiction.jurisdiction.name);
-        this.group_detail_panel.getComponent('group_csv_link').getEl().select('a').set({href: group.csv_path});
+        this.group_detail_panel.getComponent('group_scope').update(group.scope);
+        this.group_detail_panel.getComponent('group_jurisdiction').update(group.owner_jurisdiction.name);
+        this.group_detail_panel.buttons[0].getEl().select('a').set({href: group.csv_path});
 
         this.group_detail_panel.getComponent('group_audience_panel').load(group);
     },
@@ -328,7 +331,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     this.create_group_form_panel.groupId = group.id;
                     this.create_group_form_panel.getComponent('group_name').setValue(group.name);
                     this.create_group_form_panel.getComponent('group_scope').setValue(group.scope);
-                    this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.jurisdiction.id);
+                    this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.id);
                     var group_lock_version = this.create_group_form_panel.getComponent('group_lock_version');
                     if(!group_lock_version) // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
                     {
@@ -371,7 +374,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         if(Ext.isObject(group))
         {
             // we have the group already to go and just need to load the json here
-            this.group_detail_panel.on('show', function(){this.fillGroupDetail(group.group || group)}, this, {delay: 10})
+            this.group_detail_panel.ownerCt.on('show', function(){this.fillGroupDetail(group.group || group)}, this, {delay: 10})
         }
         else
         {
