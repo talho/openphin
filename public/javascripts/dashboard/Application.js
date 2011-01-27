@@ -13,3 +13,8 @@
     
     Ext.apply(Application, orig_application_config);
 })();
+
+// Override default window configuration to constrain header
+Ext.override(Ext.Window, {
+  constrainHeader: true
+});
