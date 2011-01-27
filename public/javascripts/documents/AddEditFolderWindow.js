@@ -50,7 +50,8 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                                             Ext.apply(action.options.params, {
                                                 'folder[audience][jurisdiction_ids][]': selectedItems.jurisdiction_ids,
                                                 'folder[audience][role_ids][]': selectedItems.role_ids,
-                                                'folder[audience][user_ids][]': selectedItems.user_ids
+                                                'folder[audience][user_ids][]': selectedItems.user_ids,
+                                                'folder[audience][group_ids][]': selectedItems.group_ids
                                             });
 
                                         }
@@ -101,7 +102,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                                 }
                             }
                         ]},
-                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: false}
+                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: false, showGroups: true}
                     ]},
                     {title: 'Permissions', itemId: 'per', padding: '5', items:[
                         {itemId: 'perlabel', xtype: 'box', html: 'Permissions are only available when this folder is explicitly shared.'},

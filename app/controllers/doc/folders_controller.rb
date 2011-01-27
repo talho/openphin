@@ -71,7 +71,8 @@ class Doc::FoldersController < ApplicationController
              'folder[shared]' => @folder.share_status,
              'folder[audience]' => @folder.audience.as_json({:include => {:users => {:only => [:id, :display_name, :email, :title ]},
                                                                   :roles => {:only => [:id, :name]},
-                                                                  :jurisdictions => {:only => [:id, :name]} },
+                                                                  :jurisdictions => {:only => [:id, :name]},
+                                                                  :groups => {:only => [:id, :name]} },
                                                      :only => [:id] })
     }
 

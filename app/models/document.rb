@@ -22,27 +22,11 @@ class Document < ActiveRecord::Base
   validate_on_create :validate_extension
   validate_on_create :validate_virus
 
-  #has_and_belongs_to_many :shares, :after_add => :share_with_share
-  #has_many :targets, :as => :item, :after_add => :share
   has_one :audience, :through => :folder
-  #accepts_nested_attributes_for :audiences
     
   belongs_to :user
   belongs_to :folder
   belongs_to :owner, :class_name => 'User'
-
-  #after_post_process :notify_shares_of_update
-
-  # having to move away from a named scope here, for now, because we're using audience direct instead of these other tables
-  #named_scope :viewable_by, lambda{|user|
-  #  {:conditions => ['documents.user_id = :user OR subscriptions.user_id = :user', {:user => user}],
-  #  :include => [:shares => :subscriptions]}
-  #}
-
-  #named_scope :editable_by, lambda{|user|
-  #  {:conditions => ['documents.user_id = :user OR (subscriptions.user_id = :user AND subscriptions.owner = :true)', {:user => user, :true => true}],
-  #  :include => {:shares => :subscriptions}}
-  #}
 
   named_scope :shared_with_user, lambda{|user|
     {:joins => ', folders, audiences_recipients',

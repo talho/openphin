@@ -376,7 +376,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
         // otherwise the load event handler for the roles and jurisdiction stores should check to see if there are any already
         // selected items
         
-        if(this.roleSelectionGrid.getStore().getCount() > 0)
+        if(this.roleSelectionGrid && this.roleSelectionGrid.getStore().getCount() > 0)
             this.roleSelectionGrid.load(roles);
         else
             this.selectedItemsStore.loadData(roles, true); // append: true

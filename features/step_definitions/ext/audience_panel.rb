@@ -1,6 +1,6 @@
 
 
-When /^I select the following in the audience panel:$/ do |table|
+When /^I (?:click|select) the following in the audience panel:$/ do |table|
   # table is a | Dallas County | Jurisdiction |
   jurisdictions = table.hashes.find_all{|hash| hash['type'] == 'Jurisdiction'}
   roles = table.hashes.find_all{|hash| hash['type'] == 'Role'}

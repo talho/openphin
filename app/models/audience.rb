@@ -16,11 +16,14 @@ class Audience < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :owner_jurisdiction, :class_name => "Jurisdiction"
 
+  validate :doesnt_contain_self_as_group
+  
   has_many :folders
 
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true
   has_and_belongs_to_many :users, :uniq => true, :conditions => {:deleted_at => nil}
+  has_and_belongs_to_many :groups, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true do
     def with_no_hacc(options={})
       options[:conditions] = User.merge_conditions(options[:conditions], ["audiences_recipients.is_hacc = ?", false])
@@ -29,7 +32,7 @@ class Audience < ActiveRecord::Base
   end
 
   def recipients(options={})
-    refresh_recipients if options[:force] || self.recipients_expires.nil? || Time.now > self.recipients_expires
+    refresh_recipients(options)
     options.delete(:force)
     recipients_default.scoped(options)
   end
@@ -71,7 +74,9 @@ class Audience < ActiveRecord::Base
     a
   end
 
-  def refresh_recipients
+  def refresh_recipients(options = {})
+    return true unless options[:force] || self.recipients_expires.nil? || Time.now > self.recipients_expires
+    
     self.update_attribute('recipients_expires', Time.now + 1.minute)
     ActiveRecord::Base.transaction do
       clear_recipients ? true : raise(ActiveRecord::Rollback)
@@ -79,6 +84,7 @@ class Audience < ActiveRecord::Base
       (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
       (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
       (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
+      (update_groups_recipients ? true : raise(ActiveRecord::Rollback)) unless self.groups.empty?
       target = Target.find_by_audience_id(self.id)
       primary_audience_jurisdictions = determine_primary_audience_jurisdictions
       (update_han_coordinators_recipients(primary_audience_jurisdictions) ? true : raise(ActiveRecord::Rollback)) if target && target.item_type == "Alert"
@@ -187,6 +193,21 @@ class Audience < ActiveRecord::Base
     true
   end
 
+  def update_groups_recipients
+    db = ActiveRecord::Base.connection()
+    self.groups.map(&:refresh_recipients)
+    sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
+    sql += " SELECT DISTINCT #{self.id}, audiences_recipients.user_id FROM audiences_sub_audiences JOIN audiences_recipients ON audiences_sub_audiences.sub_audience_id = audiences_recipients.audience_id"
+    sql += " WHERE audiences_sub_audiences.audience_id = #{self.id}"
+    
+    begin
+      db.execute sql
+    rescue
+      return false
+    end
+    true
+  end
+
   def determine_primary_audience_jurisdictions  # returns an array of jurisdiction objects
     target = Target.find_by_audience_id(self.id)
     alert = target ? target.item : nil
@@ -246,5 +267,18 @@ class Audience < ActiveRecord::Base
     else
       return false
     end
+  end
+  
+  private
+  def doesnt_contain_self_as_group
+    def check_recursion(group)
+      if group.id == self.id
+        errors.add_to_base("Group cannot be a member of itself or subgroups")
+      else
+        group.groups.each { |g| check_recursion(g) }
+      end
+    end
+    
+    self.groups.each { |g| check_recursion(g) }
   end
 end

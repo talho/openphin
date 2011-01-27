@@ -13,15 +13,38 @@ Feature: Document Sharing
     And I am logged in as "bartleby@example.com"
 
   Scenario: Create a shared folder
-    And I go to the ext dashboard page
-    When I navigate to "Documents"
+    When I go to the ext dashboard page
+    And I navigate to "Documents"
     And I press "Add Folder"
     And I fill in "Folder Name" with "Shared Folder"
     And I click x-tab-strip-text "Sharing"
     And I check "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
-      | name          | type | 
+      | name          | type |
       | Atticus Finch | User |
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I sign out
+
+    When I log in as "atticus@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    Then I should see "Bartleby Scrivener" in grid row 2
+    When I expand the folders "Bartleby"
+    Then I should see "Shared Folder" in grid row 3
+
+  Scenario: Create a shared folder with a GROUP
+    Given the following groups for "bartleby@example.com" exist:
+      | Test Group ||| atticus@example.com | Global ||
+    When I go to the ext dashboard page
+    And I navigate to "Documents"
+    And I press "Add Folder"
+    And I fill in "Folder Name" with "Shared Folder"
+    And I click x-tab-strip-text "Sharing"
+    And I check "Shared - Accessible to the audience specified below"
+    And I select the following in the audience panel:
+      | name       | type  |
+      | Test Group | Group |
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I sign out
@@ -55,6 +78,95 @@ Feature: Document Sharing
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
     Then I should see "Folder1" in grid row 3
+
+  Scenario: Edit a folder to be shared with a group
+    Given the following groups for "bartleby@example.com" exist:
+      | Test Group ||| atticus@example.com | Global ||
+    When I go to the ext dashboard page
+    And I create a folder outline with "Folder1"
+    And I navigate to "Documents"
+    And I expand the folders ""
+    And I click folder-context-icon on the "Folder1" grid row
+    And I click x-menu-item "Edit Folder"
+    And I click x-tab-strip-text "Sharing"
+    And I check "Shared - Accessible to the audience specified below"
+    And I select the following in the audience panel:
+      | name       | type  |
+      | Test Group | Group |
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I sign out
+
+    When I log in as "atticus@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    Then I should see "Bartleby Scrivener" in grid row 2
+    When I expand the folders "Bartleby"
+    Then I should see "Folder1" in grid row 3
+
+    When I sign out
+    And I log in as "bartleby@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    And I expand the folders ""
+    And I click folder-context-icon on the "Folder1" grid row
+    And I click x-menu-item "Edit Folder"
+    And I click x-tab-strip-text "Sharing"
+    And I click the following in the audience panel:
+      | name       | type  |
+      | Test Group | Group |
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I sign out
+
+    When I log in as "atticus@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    Then I should not see "Bartleby Scrivener"
+
+  Scenario: Edit a folder to be shared with an organization
+    Given "atticus@example.com" is a member of the organization "TALHO"
+    When I go to the ext dashboard page
+    And I create a folder outline with "Folder1"
+    And I navigate to "Documents"
+    And I expand the folders ""
+    And I click folder-context-icon on the "Folder1" grid row
+    And I click x-menu-item "Edit Folder"
+    And I click x-tab-strip-text "Sharing"
+    And I check "Shared - Accessible to the audience specified below"
+    And I select the following in the audience panel:
+      | name  | type         |
+      | TALHO | Organization |
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I sign out
+
+    When I log in as "atticus@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    Then I should see "Bartleby Scrivener" in grid row 2
+    When I expand the folders "Bartleby"
+    Then I should see "Folder1" in grid row 3
+
+    When I sign out
+    And I log in as "bartleby@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    And I expand the folders ""
+    And I click folder-context-icon on the "Folder1" grid row
+    And I click x-menu-item "Edit Folder"
+    And I click x-tab-strip-text "Sharing"
+    And I click the following in the audience panel:
+      | name  | type         |
+      | TALHO | Organization |
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I sign out
+
+    When I log in as "atticus@example.com"
+    And I go to the ext dashboard page
+    And I navigate to "Documents"
+    Then I should not see "Bartleby Scrivener"
 
   Scenario Outline: Create a range of shared folders with inherited sharing
     When I create shares "<shares>" shared with "atticus@example.com"
