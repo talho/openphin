@@ -82,6 +82,7 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
 
         this.recipientGrid = new Ext.grid.GridPanel({xtype: 'grid', itemId: 'recipient_grid', title: 'Recipients',
             flex: 1,
+            hideHeaders: true,
             bodyCssClass: 'recipients',
             store: this.recipientStore,
             margins: '0 20 0 0',
@@ -101,6 +102,7 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
         this.audienceGrid = new Ext.grid.GridPanel({
             xtype: 'grid', itemId: 'audience_grid', title: 'Audiences',
             flex: 1,
+            hideHeaders: true,
             bodyCssClass: 'audiences',
             store:  this.audienceStore,
             cm: new Ext.grid.ColumnModel({

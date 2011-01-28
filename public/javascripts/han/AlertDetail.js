@@ -5,33 +5,26 @@ Ext.ns('Talho');
  * This panel should be able to take a textual, JSON specification of an alert or an alert ID and display the details for said alert. This is not a true
  * extension due to its very specific implementation.
  */
-Talho.AlertDetail = Ext.extend(Ext.Container, {
+Talho.AlertDetail = Ext.extend(Ext.Panel, {
+  border:false,
     constructor: function(config){
-        Ext.applyIf(config, {
-            autoHeight: true,
-            layout: 'ux.center',
-            defaults:{autoHeight: true,
-                style: {
-                    'margin-bottom': '10px'
-                }
-            }
-        });
-
+        
         this.acknowledgement_store = new Ext.data.Store({reader: new Ext.data.JsonReader({fields: ['name', 'email', 'device', 'response', 'acknowledged_at']})});
 
         Ext.apply(config, { // we want to absolutely override the items passed in the constructor.
             items:[
-                {xtype: 'box', itemId: 'alert_title', style: {'text-align': 'center', 'margin-bottom': '10px'}},
-                {xtype: 'container', itemId: 'alert_detail_panel', width: 800, layout: 'hbox', padding: '5', items: [
-                        {xtype: 'container', itemId: 'left_detail', flex: 2, layout: 'form', labelWidth: 175, items:[
-                            {xtype: 'displayfield', itemId: 'alert_message', hideLabel:true},
+                {xtype: 'box', html: 'This is a Preview:  Please review carefully before sending.', style: 'text-align: center;'},
+                {xtype: 'container', itemId: 'alert_detail_panel', layout: 'column',  defaults:{style: 'padding:5px;'}, items: [
+                        {xtype: 'container', itemId: 'left_detail', columnWidth: .66, layout: 'form', labelWidth: 175, items:[
+                            {xtype: 'displayfield', itemId: 'alert_title', fieldLabel: 'Alert Title'},
+                            {xtype: 'displayfield', itemId: 'alert_message', fieldLabel: 'Message'},
                             {xtype: 'displayfield', itemId: 'alert_short_text', fieldLabel: 'Short Text'},
                             {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_author', fieldLabel: 'Author'},
                             {xtype: 'container', layout: 'form', labelWidth: 175, itemId: 'alert_response_container', hideLabel: true},
                             {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_created_at', fieldLabel: 'Created at'},
                             {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', fieldLabel: 'Disable Cross-Jurisdictional alerting?'}
-                        ], margins:'0 15 0 0'},
-                        {xtype: 'container', itemId: 'right_detail', flex: 1, layout: 'form', items: [
+                        ]},
+                        {xtype: 'container', itemId: 'right_detail', columnWidth: .34, layout: 'form', items: [
                             {xtype: 'displayfield', itemId: 'alert_severity', fieldLabel: 'Severity'},
                             {xtype: 'displayfield', itemId: 'alert_status', fieldLabel: 'Status'},
                             {xtype: 'displayfield', itemId: 'alert_acknowledge', fieldLabel: 'Acknowledge'},
@@ -147,11 +140,11 @@ Talho.AlertDetail = Ext.extend(Ext.Container, {
         else
         {
             this.data = data;
-            this.getComponent('alert_title').update(data['alert[title]']);
-            if(!Ext.isEmpty(this.alertId)) this.getComponent('alert_title').getEl().id = this.alertId;
 
             var detail_panel = this.getComponent('alert_detail_panel');
             var leftPane = detail_panel.getComponent('left_detail');
+            if(!Ext.isEmpty(this.alertId)) leftPane.getComponent('alert_title').getEl().id = this.alertId;
+            leftPane.getComponent('alert_title').update(data['alert[title]']);
             leftPane.getComponent('alert_message').update(data['alert[message]']);
             leftPane.getComponent('alert_short_text').update(data['alert[short_message]']);
 

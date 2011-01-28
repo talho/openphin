@@ -36,7 +36,7 @@ Feature: Sending alerts using groups
                                 
     When I fill in the ext alert defaults
 
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click x-accordion-hd "Groups/Organizations"
 
     Then I should see "G1"
@@ -50,7 +50,7 @@ Feature: Sending alerts using groups
 
     When I fill in the ext alert defaults
 
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click x-accordion-hd "Groups/Organizations"
 
     Then I should see "G2"
@@ -64,7 +64,7 @@ Feature: Sending alerts using groups
 
     When I fill in the ext alert defaults
 
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click x-accordion-hd "Groups/Organizations"
 
     Then I should see "G2"

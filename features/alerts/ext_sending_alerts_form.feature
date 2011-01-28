@@ -15,19 +15,18 @@ Feature: Sending alerts form
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
-    When I click breadCrumbItem "Audience"
-    Then I should have the "Details" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Title                 |
-      | Jurisdiction          |
       | Communication Methods |
 
     When I fill in "Title" with "This is a test title to pass validation"
     And I check "E-mail"
     And I check "SMS"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Details" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Message       |
       | Short Message |
@@ -36,17 +35,17 @@ Feature: Sending alerts form
     When I fill in "Message" with "This is a test message to pass validation"
     And I fill in "Short Message" with "This is a test short message to pass validation"
     And I fill in "Caller ID" with "4114114111"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Audience" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Recipients" breadcrumb selected
 
     When I override alert
     And I click breadCrumbItem "Preview"
     Then I should see "Please select at least one user, jurisdiction, role, or group to send this alert to." within the alert box
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I click breadCrumbItem "Preview"
     Then I should see "Please select at least one user, jurisdiction, role, or group to send this alert to." within the alert box
-    And I should have the "Audience" breadcrumb selected
+    And I should have the "Recipients" breadcrumb selected
 
     And I select the following in the audience panel:
       | name           | type         |
@@ -72,8 +71,8 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Audience" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Recipients" breadcrumb selected
     When I click x-accordion-hd "Roles"
     Then I should not see "Admin"
     When I press "Sign Out"
@@ -104,7 +103,7 @@ Feature: Sending alerts form
       | Message      | H1N1 SNS push packs to be delivered tomorrow |
     And I check "E-mail"
     And I select "Potter County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -134,7 +133,7 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should see "Federal"
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
@@ -155,7 +154,7 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Texas" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click contextArrow ""
     Then I should see "Select All Sub-jurisdictions"
     Then I should see "Select No Sub-jurisdictions"
@@ -197,7 +196,7 @@ Feature: Sending alerts form
     And I check "Phone"
     And I fill in "Caller ID" with "4114114111"
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -242,7 +241,7 @@ Feature: Sending alerts form
     And I check "Phone"
     And I fill in "Caller ID" with "4114114111"
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name  | type         |
       | DSHS  | Organization |

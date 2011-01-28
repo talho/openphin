@@ -39,7 +39,7 @@ Feature: Saving alert form data for re-use
     And I select "Moderate" from ext combo "Severity"
     And I select "45 Minutes" from ext combo "Delivery Time"
     And I press "Select Audience"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -85,7 +85,7 @@ Feature: Saving alert form data for re-use
     And I follow "Load From Preset"
     And I select "monthly ack survey" from ext combo "My Alert Presets"
     And I press "OK"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the "Title" field should contain "TxPhin Monthly test alert - Please acknowledge"
     And the "Message" field should contain "This message is sent every month to test alert acknowledgement rates"
     And the "E-mail" checkbox should be checked
@@ -102,7 +102,7 @@ Feature: Saving alert form data for re-use
     And I fill in "Title" with "A different title for this alert"
 
     When I press "Select Audience"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     And the following should be selected in the audience panel
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -155,7 +155,7 @@ Feature: Saving alert form data for re-use
     And the "Title" field should contain "TxPhin Monthly test alert - Please acknowledge"
     And I fill in "Message" with "This message is sent every hour to show off sweet ringtones"
     And I press "Select Audience"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     And I select the following in the audience panel:
       | name           | type         |
       | Ottowa County  | Jurisdiction |

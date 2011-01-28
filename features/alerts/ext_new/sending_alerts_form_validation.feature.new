@@ -23,9 +23,9 @@ Feature: Client-Side Form Validation when Sending Alerts
 
   Scenario: All required initial Detail fields must be filled before advancing to Audience selector
     When I navigate to "Alerts > Send a Custom Alert"
-    Then I should have the "Details" breadcrumb selected
-    When I click breadCrumbItem "Audience"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Alert Type            |
       | Title                 |
@@ -36,84 +36,84 @@ Feature: Client-Side Form Validation when Sending Alerts
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "E-mail"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     
   Scenario: Alerts for Phone and SMS devices must have a CallerID number
     When I navigate to "Han > Send a HAN Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And I fill in "Title" with "This is a test title to pass validation"
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "Phone"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Caller ID     |
     When I fill in "Caller ID" with "1234567890"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
 
   Scenario: Alerts for SMS devices must have a Short Message
     When I navigate to "HAN > Send a HAN Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And I fill in "Title" with "This is a test title to pass validation"
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "SMS"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Short Message  |
     When I fill in "Short Message" with "hey, this is a short message"
     When I fill in "Caller ID" with "1234567890"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
 
   Scenario: Advanced Alerts must have at least one Calldown choice
     When I navigate to "HAN > Send a HAN Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And I fill in "Title" with "This is a test title to pass validation"
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "E-mail"
     And I select "Advanced" from ext combo "Acknowledge"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Alert Response 1 |
     When I fill in "Alert Response 1" with "response one"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
 
   Scenario: Alerts of type "Other" must have a user-defined Type that does not match any existing Alert Categories
     When I navigate to "Alerts > Send a Custom Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And I fill in "Title" with "This is a test title to pass validation"
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "E-mail"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Alert Type |
     When I fill in "Alert Type" with "Health"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Alert Type |
     When I fill in "Alert Type" with "MACC"
     And I press "Next"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Alert Type |
     When I fill in "Alert Type" with "Earthquake"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
 
   Scenario: Audience selection must be valid before advancing to Alert Preview
     When I navigate to "HAN > Send a HAN Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     And I fill in "Title" with "This is a test title to pass validation"
     And I select "Dallas County" from ext combo "Jurisdiction"
     And I check "E-mail"
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     When I override alert
     And I press "Next"
     Then I should see "Please select at least one user, jurisdiction, role, or group to send this alert to." within the alert box

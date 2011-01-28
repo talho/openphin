@@ -254,7 +254,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
 
         this.selectedItemsGridPanel = new Ext.grid.GridPanel({
             sm: false,
-            title: "All Selected Items",
+            title: "Recipient Preview",
             bodyCssClass: 'selectedItems',
             flex: 2,
             store: this.selectedItemsStore,
