@@ -39,7 +39,7 @@ Feature: Sending alert Form
   Scenario: Preview an alert
     When I navigate to "Alerts > Send a Custom Alert"
     And the "Send Custom Alert" tab should be open
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     When I fill in an alert with the following:
       | Alert Type            | Earthquake                                     |
       | Title                 | Watch out for aftershocks                      |
@@ -80,16 +80,16 @@ Feature: Sending alert Form
       | Anne Smith     | User         |
       | Fred Smith     | User         |
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I fill in "Title" with "Something Different"
     And I click breadCrumbItem "Preview"
     Then I should see "Something Different" within "#alert_title"
     And I should not see "Watch out for aftershocks"
 
     When I press "Back"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     When I press "Back"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     When I select "Advanced" from ext combo "Acknowledgment"
     And I fill in an alert with the following:
       | Alert Response 1      | if you can respond within 15 minutes |
@@ -98,7 +98,7 @@ Feature: Sending alert Form
       | Alert Response 4      | if you can respond within 4 hour     |
       | Alert Response 5      | if you cannot respond                |
     And I press "Next"
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     When I press "Next"
     Then I should have the "Preview" breadcrumb selected
     And I should see "if you can respond within 15 minutes" within ".alert_response"
@@ -106,19 +106,19 @@ Feature: Sending alert Form
     And I should see "if you can respond within 1 hour" within ".alert_response"
     And I should see "if you can respond within 4 hour" within ".alert_response"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I check "Phone"
     And I click breadCrumbItem "Preview"
     Then I should see "E-mail" within ".communication_methods"
     And I should see "Phone" within ".communication_methods"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I uncheck "E-mail"
     And I click breadCrumbItem "Preview"
     Then I should not see "E-mail"
     And I should see "Phone" within ".communication_methods"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I uncheck "Phone"
     And I check "SMS"
     And I fill in "Short Message" with "this is a short message."
@@ -127,35 +127,35 @@ Feature: Sending alert Form
     And I should see "SMS" within ".communication_methods"
     And I should see "this is a short message." within ".short_message"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I uncheck "Phone"
     And I check "Blackberry PIN"
     And I click breadCrumbItem "Preview"
     Then I should not see "SMS"
     And I should see "Blackberry PIN" within ".communication_methods"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I select "24 Hours" from ext combo "Delivery Time"
     And I click breadCrumbItem "Preview"
     Then I should see "24 Hours" within ".delivery_time"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I check "Sensitive"
     And I click breadCrumbItem "Preview"
     Then I should see "Yes" within ".sensitive"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I select "Severe" from ext combo "Severity"
     And I click breadCrumbItem "Preview"
     Then I should see "Severe" within ".severity"
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I select "Sender County" from ext combo "Jurisdiction"
     And I click breadCrumbItem "Preview"
     Then I should see "Sender County" within ".from_jurisdiction"
     And I should not see "Dallas County"
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I uncheck ext checkbox "Potter County"
     And I click breadCrumbItem "Preview"
     Then I should not see "Potter County"
@@ -163,7 +163,7 @@ Feature: Sending alert Form
       | name           | type         |
       | Dallas County  | Jurisdiction |
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I uncheck ext checkbox "Health Officer"
     And I click breadCrumbItem "Preview"
     Then I should not see "Health Officer"
@@ -171,7 +171,7 @@ Feature: Sending alert Form
       | name           | type         |
       | Epidemiologist | Role         |
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I uncheck ext checkbox "DSHS"
     And I click breadCrumbItem "Preview"
     Then I should not see "DSHS"
@@ -179,7 +179,7 @@ Feature: Sending alert Form
       | name           | type         |
       | TALHO          | Organization |
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I uncheck ext checkbox "My First Group"
     And I click breadCrumbItem "Preview"
     Then I should not see "My First Group"
@@ -187,7 +187,7 @@ Feature: Sending alert Form
       | name           | type         |
       | hofficers      | Group        |
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I uncheck ext checkbox "Fred Smith"
     And I click breadCrumbItem "Preview"
     Then I should not see "Fred Smith"
@@ -217,7 +217,7 @@ Feature: Sending alert Form
       | From Jurisdiction     | Dallas County          |
       | Communication Methods | E-mail                 |
       | Jurisdictions         | Texas                  |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click x-accordion-hd "Roles"
     Then I should not see "Admin"
 
@@ -234,7 +234,7 @@ Feature: Sending alert Form
       | Message      | Some body text            |
     And I check "E-mail"
     And I select "Potter County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -257,7 +257,7 @@ Feature: Sending alert Form
       | From Jurisdiction     | Dallas County          |
       | Communication Methods | E-mail                 |
       | Jurisdictions         | Texas                  |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click contextDownArrow ""
     Then I should see "Select All Sub-jurisdictions"
     And I should see "Select No Sub-jurisdictions"
@@ -268,7 +268,7 @@ Feature: Sending alert Form
       | Message               | Some body text |
       | From Jurisdiction     | Dallas County  |
       | Communication Methods | E-mail         |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should see "Wisconsin"
 
   # I am hoping that cucumber can support the following repeated scenario in a more compact form
@@ -279,7 +279,7 @@ Feature: Sending alert Form
       | Message               | Some body text  |
       | From Jurisdiction     | Dallas County   |
       | Communication Methods | E-mail          |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should not see "Wisconsin"
     
   Scenario: Sending MACC alerts should not display foreign jurisdiction as an option
@@ -288,7 +288,7 @@ Feature: Sending alert Form
       | Message               | Some body text |
       | From Jurisdiction     | Dallas County  |
       | Communication Methods | E-mail         |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should not see "Wisconsin"
     
   Scenario: Sending GTC alerts should not display foreign jurisdiction as an option
@@ -297,7 +297,7 @@ Feature: Sending alert Form
       | Message               | Some body text |
       | From Jurisdiction     | Dallas County  |
       | Communication Methods | E-mail         |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should not see "Wisconsin"
     
   Scenario: Sending ER alerts should not display foreign jurisdiction as an option
@@ -306,5 +306,5 @@ Feature: Sending alert Form
       | Message               | Some body text |
       | From Jurisdiction     | Dallas County  |
       | Communication Methods | E-mail         |
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should not see "Wisconsin"

@@ -13,8 +13,8 @@ Feature: Sending alerts form
     And I navigate to "HAN > Send an Alert"
     
 # vvvvv new features    
-    When I click breadCrumbItem "Details"
-    Then I should have the "Details" breadcrumb selected
+    When I click breadCrumbItem "Alert Details"
+    Then I should have the "Alert Details" breadcrumb selected
     # following text is in the label field as read-only
     Then I should see "HAN Alert"
     And the "HAN Alert" should be readonly
@@ -23,7 +23,7 @@ Feature: Sending alerts form
     
     When I click breadCrumbItem "Category"
     And I press "Create Health Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     Then I should see "HAN Alert"
     And the "HAN Alert" should be readonly
     And the "Disable Cross-Jurisdictional alerting?" should not be checked
@@ -31,7 +31,7 @@ Feature: Sending alerts form
     
     When I click breadCrumbItem "Category"
     And I press "Create MACC Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     # this following label text will be the label prefix in the actual alert message
     Then I should see "MACC Alert"
     And the "MACC Alert" should be readonly
@@ -40,7 +40,7 @@ Feature: Sending alerts form
     
     When I click breadCrumbItem "Category"
     And I press "Create General Tactical Communication Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     Then I should see "GTC Alert"
     And the "GTC Alert" should be readonly
     And the "Disable Cross-Jurisdictional alerting?" should be checked
@@ -48,7 +48,7 @@ Feature: Sending alerts form
     
     When I click breadCrumbItem "Category"
     And I press "Create Emergency Response Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     Then I should see "ER Alert"
     And the "ER Alert" should be readonly
     And the "Disable Cross-Jurisdictional alerting?" should be checked
@@ -56,7 +56,7 @@ Feature: Sending alerts form
 
     When I click breadCrumbItem "Category"
     And I press "Create Other Alert"
-    Then I should have the "Details" breadcrumb selected
+    Then I should have the "Alert Details" breadcrumb selected
     # the label text field will be empty and write-able
     Then I should not see "Other"
     And the "alert_label" class selector should be writeable
@@ -64,8 +64,8 @@ Feature: Sending alerts form
     And the "Disable Cross-Jurisdictional alerting?" should be writeable
     
 # ^^^^ new features    
-    When I click breadCrumbItem "Audience"
-    Then I should have the "Details" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Title                 |
       | Jurisdiction          |
@@ -75,8 +75,8 @@ Feature: Sending alerts form
     And I check "E-mail"
     And I check "SMS"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Details" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Alert Details" breadcrumb selected
     And the following fields should be invalid:
       | Message       |
       | Short Message |
@@ -85,17 +85,17 @@ Feature: Sending alerts form
     When I fill in "Message" with "This is a test message to pass validation"
     And I fill in "Short Message" with "This is a test short message to pass validation"
     And I fill in "Caller ID" with "4114114111"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Audience" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Recipients" breadcrumb selected
 
     When I override alert
     And I click breadCrumbItem "Preview"
     Then I should see "Please select at least one user, jurisdiction, role, or group to send this alert to." within the alert box
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I click breadCrumbItem "Preview"
     Then I should see "Please select at least one user, jurisdiction, role, or group to send this alert to." within the alert box
-    And I should have the "Audience" breadcrumb selected
+    And I should have the "Recipients" breadcrumb selected
 
     And I select the following in the audience panel:
       | name           | type         |
@@ -118,8 +118,8 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Audience" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Recipients" breadcrumb selected
     When I click x-accordion-hd "Roles"
     Then I should not see "Admin"
     When I press "Sign Out"
@@ -146,7 +146,7 @@ Feature: Sending alerts form
       | Message      | H1N1 SNS push packs to be delivered tomorrow |
     And I check "E-mail"
     And I select "Potter County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -173,7 +173,7 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Dallas County" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     Then I should see "Federal"
 
   Scenario: Sending alerts should show "Select all children" link for parent jurisdictions
@@ -193,7 +193,7 @@ Feature: Sending alerts form
       | Message | This is a test message to pass validation |
     And I check "E-mail"
     And I select "Texas" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click contextDownArrow ""
     Then I should see "Select All Sub-jurisdictions"
     Then I should see "Select No Sub-jurisdictions"
@@ -214,7 +214,7 @@ Feature: Sending alerts form
       | Message      | H1N1 SNS push packs to be delivered tomorrow |
     And I select "Texas" from ext combo "Jurisdiction"
     And I check "E-mail"
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name       | type | email                  |
       | Jane Smith | User | jane.smith@example.com |
@@ -268,7 +268,7 @@ Feature: Sending alerts form
     And I check "Phone"
     And I fill in "Caller ID" with "4114114111"
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -315,7 +315,7 @@ Feature: Sending alerts form
     
      And I check "Disable Cross-Jurisdictional Alerting"
 
-     When I click breadCrumbItem "Audience"
+     When I click breadCrumbItem "Recipients"
      And I select the following in the audience panel:
       | name           | type         |
       | Potter County  | Jurisdiction |
@@ -352,7 +352,7 @@ Feature: Sending alerts form
     And I check "Phone"
     And I fill in "Caller ID" with "4114114111"
 
-    When I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I select the following in the audience panel:
       | name  | type         |
       | DSHS  | Organization |

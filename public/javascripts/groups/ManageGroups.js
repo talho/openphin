@@ -154,7 +154,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             items:[this.group_list],
             listeners:{
                 'show': function(){ this.group_list.getStore().load(); },
-                'afterrender': {fn: function(){ this.group_list.loadMask.show(); }, delay: 1 },
+                'afterrender': {fn: function(){ if(this.group_list.loadMask.show) this.group_list.loadMask.show(); }, delay: 1 },
                 scope:this
             }
         });

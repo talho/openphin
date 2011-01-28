@@ -27,7 +27,7 @@ Feature: Schedule an alert to be sent sometime in the future
     And I select "Moderate" from ext combo "Severity"
     And I press "Select Audience"
 
-    Then I should have the "Audience" breadcrumb selected
+    Then I should have the "Recipients" breadcrumb selected
     And I select the following in the audience panel:
       | name           | type         |
       | Dallas County  | Jurisdiction |

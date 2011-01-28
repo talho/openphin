@@ -9,7 +9,7 @@ Talho.ux.BaseSelectionGrid = Ext.extend(Ext.Panel,{
 
         this.items = this._createSelectionGrid();
 
-        this.bbar = {items: ['->', 'Filter:', this._createFilterField(), {text:'Clear Filter', iconCls:'delete_cell', scope: this, handler: this.clearFilter}]};
+        this.bbar = {items: ['->', 'Search:', this._createFilterField(), {text:'Clear Search', scope: this, handler: this.clearFilter}]};
 
         Talho.ux.BaseSelectionGrid.superclass.constructor.call(this, config);
     },
@@ -87,7 +87,7 @@ Talho.ux.BaseSelectionGrid = Ext.extend(Ext.Panel,{
 
     _createSelectionModel: function(config){
         this.sm = this.sm || new Ext.ux.grid.FilterableCheckboxSelectionModel({
-            checkOnly: true,
+            simple: true,
             sortable: false
         });
         if(config.sm_listeners)

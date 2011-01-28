@@ -25,7 +25,7 @@
       And I select "Dallas County" from ext combo "Jurisdiction"
       And I check "E-mail"
 
-      When I click breadCrumbItem "Audience"
+      When I click breadCrumbItem "Recipients"
       And I select the following in the audience panel:
        | name          | type         |
        | Texas         | Jurisdiction |
@@ -35,7 +35,7 @@
      Then I should see "Caution:  This alert will be sent to everyone in Texas" within the alert box
 
      ### this will deselect Texas and select Federal
-     When I click breadCrumbItem "Audience"
+     When I click breadCrumbItem "Recipients"
      And I select the following in the audience panel:
        | name          | type         |
        | Texas         | Jurisdiction |
@@ -46,7 +46,7 @@
      Then I should see "Caution:  This alert will be sent to everyone in Federal" within the confirmation box
 
      ### this will deselect Federal and select Region 2
-     When I click breadCrumbItem "Audience"
+     When I click breadCrumbItem "Recipients"
      And I select the following in the audience panel:
        | name          | type         |
        | Federal       | Jurisdiction |
@@ -88,7 +88,7 @@
       And I select "Dallas County" from ext combo "Jurisdiction"
       And I check "E-mail"
 
-      When I click breadCrumbItem "Audience"
+      When I click breadCrumbItem "Recipients"
       And I select the following in the audience panel:
        | name              | type         |
        | Dallas County     | Jurisdiction |
@@ -100,7 +100,7 @@
      When I will deny on next step
      And I press "Send Alert"
      Then I should see "Caution:  This alert will be sent to approximately 70 people" within the confirmation box
-     And I click breadCrumbItem "Audience"
+     When I click breadCrumbItem "Recipients"
      # deselect Dallas and Mitchell counties, making audience < 50
      And I select the following in the audience panel:
        | name              | type         |

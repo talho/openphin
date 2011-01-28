@@ -52,8 +52,8 @@ Feature: An admin deleting users
       | Message               | This is a test message to pass validation    |
     And I check "E-mail"
     And I select "Texas" from ext combo "Jurisdiction"
-    And I click breadCrumbItem "Audience"
-    Then I should have the "Audience" breadcrumb selected
+    When I click breadCrumbItem "Recipients"
+    Then I should have the "Recipients" breadcrumb selected
     And I select the following in the audience panel:
       | name        | type |
       | Jane Smith  | User |

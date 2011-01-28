@@ -99,7 +99,7 @@ Feature: Creating and sending alerts
       | Epidemiologist | Role         |
       | Keith Gaddis   | User         |
 
-    When I click breadCrumbItem "Details"
+    When I click breadCrumbItem "Alert Details"
     And I fill in "Title" with "Something Different"
     And I click breadCrumbItem "Preview"
     And I should see "For more details, keep on reading..."
