@@ -69,7 +69,7 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
         this.el.dom.removeAttribute('name');
         if(this.renderButtonTo != null)
           this.wrap.setStyle({
-            position: 'fixed'
+            position: 'absolute'
           });
 
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
