@@ -8,8 +8,8 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
         this.breadCrumb = new Ext.ux.BreadCrumb({
             itemId: 'bread_crumb_control',
-            width: 400,
-            items:['Details', 'Audience', 'Preview'],
+            width: 270,
+            items:['Alert Details', 'Recipients', 'Preview'],
             listeners:{
                 scope: this,
                 'beforenavigation': this.bread_crumb_beforenavigation,
@@ -28,10 +28,9 @@ Talho.SendAlert = Ext.extend(function(){}, {
             closable: true,
             autoScroll:true,
             items:[
-                {xtype: 'container', height: 50, border: false, layout: 'vbox',
+                {xtype: 'container', height: 50, layout: 'vbox',
                     layoutConfig: {align: 'center'},
                     items:[
-                        {xtype: 'box', html:'Create a New Alert Message'},
                         this.breadCrumb
                 ]},
                 this._createFormCard()
@@ -65,20 +64,33 @@ Talho.SendAlert = Ext.extend(function(){}, {
             restful: true,
             url: '/jurisdictions/user_alerter.json',
             idProperty: 'id',
-            fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}]
+            fields: [{name: 'name', mapping: 'name'}, {name: 'id', mapping: 'id'}],
+            listeners: {
+              scope: this,
+              'load': function(store, records){
+                if(records.length == 1){
+                  this.form_card.getComponent('right_side_form').getComponent('alert_jurisdiction').setValue(records[0].get('id'));
+                }
+              }
+            }
         });
 
         jurisdiction_store.load();
 
         this.call_down_message_container = new Ext.Container({layout: 'form', labelAlign: 'top', defaults: {width: 400}});
-        this.alert_preview =  new Talho.AlertDetail({});
+        this.alert_preview =  new Talho.AlertDetail({
+          width: 820,
+          buttons: [          
+            {xtype: 'button', text: 'Back', handler: function(){this.breadCrumb.previous();}, scope: this},
+            {xtype: 'button', text: 'Send Alert', handler: this.submit_alert, scope: this}
+          ]
+        });
 
         this.form_card = new Ext.form.FormPanel({
             border: false,
-            layout: 'hbox',
-            layoutConfig: {defaultMargins: '10', pack: 'center'},
-            autoHeight:true,
-            defaults:{autoHeight: true},
+            layout: 'column',
+            width: '820',
+            defaults:{style: 'padding:5px;', columnWidth: .5},
             url: '/alerts.json',
             method: 'POST',
             listeners:{
@@ -88,17 +100,16 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 'actionfailed': this.save_failure
             },
             items: [
-                {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', width: 400, defaults:{width:400}, items:[
+                {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', defaults:{anchor: '100%'}, items:[
                     {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', allowBlank: false, blankText: 'You must enter a title'},
                     {xtype: 'box', itemId: 'alert_title_label', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
                     {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: '(<span id="message_length">0</span> characters)<br/>Any message larger than 580 characters including whitespace will cause the message to be truncated and recipients will need to visit the TXPhin website to view the entire message contents.'},
                     this.call_down_message_container,
                     {xtype: 'textarea', itemId: 'alert_short_message', fieldLabel: 'Short Message', name: 'alert[short_message]', maxLength: '160', height: 75, validator: this.validateShortMessage.createDelegate(this)},
-                    {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN. <br/><b>Maximum length: 160 characters.</b>'},
-                    {xtype: 'button', itemId: 'alert_next_btn', text: 'Enter Audiences >', handler: function(){this.breadCrumb.next();}, scope: this, width:'auto'}
+                    {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN. <br/><b>Maximum length: 160 characters.</b>'}
                 ]},
-                {xtype: 'container', itemId:'right_side_form', layout: 'form', width: 400, items:[
+                {xtype: 'container', itemId:'right_side_form', layout: 'form', defaults: {anchor: '100%'}, items:[
                     {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
                     {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
                     {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
@@ -121,7 +132,9 @@ Talho.SendAlert = Ext.extend(function(){}, {
                         {xtype: 'hidden', value:'Device::ConsoleDevice'}
                     ]}
                 ]}
-        ]});
+          ],
+          buttons: [{xtype: 'button', itemId: 'alert_next_btn', text: 'Next', handler: function(){this.breadCrumb.next();}, scope: this}]
+        });
 
         this.wizard_panel = new Ext.Container({
             layout: 'card',
@@ -132,14 +145,12 @@ Talho.SendAlert = Ext.extend(function(){}, {
             },
             autoHeight: true,
             items: [
-                this.form_card,
+                {xtype: 'container', layout: 'ux.center', items: this.form_card },
                 {xtype: 'container', itemId: 'audience_container', layout:'ux.center', items:[
-                    this._createAudiencePanel(),
-                    {xtype: 'button', text: 'View Preview >', handler: function(){this.breadCrumb.next();}, scope: this}
+                    this._createAudiencePanel()
                 ]},
                 {xtype: 'container', layout:'ux.center', items:[
-                    this.alert_preview,
-                    {xtype: 'button', text: 'Send Alert', handler: this.submit_alert, scope: this}
+                    this.alert_preview
                 ]}
             ],
             activeItem: 0            
@@ -226,7 +237,12 @@ Talho.SendAlert = Ext.extend(function(){}, {
             height: 400
         });
 
-        return {xtype: 'container', itemId: 'audience_container', items: [this.audiencePanel], width: 600, height: 400};
+        return {xtype: 'panel', border: false, itemId: 'audience_container', items: [this.audiencePanel], width: 600, 
+          buttons: [
+            {xtype: 'button', text: 'Back', handler: function(){this.breadCrumb.previous();}, scope: this},
+            {xtype: 'button', text: 'Next', handler: function(){this.breadCrumb.next();}, scope: this}
+          ]
+        };
     },
 
     bread_crumb_beforenavigation: function(bc, currentIndex, newIndex){
@@ -417,7 +433,6 @@ Talho.SendAlert = Ext.extend(function(){}, {
             leftSide.remove(alertTitle, true);
             leftSide.insert(ix, {xtype: 'displayfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', value: '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alertInfo.title});
             leftSide.getComponent('alert_title_label').destroy();
-            leftSide.getComponent('alert_next_btn').setText('View Preview >');
 
             // remove unneeded fields
             rightSide.getComponent('alert_jurisdiction').destroy();

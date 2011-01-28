@@ -29,7 +29,7 @@ Feature: Sending alerts using groups
     And I navigate to "HAN > Send a HAN Alert"
 
     When I fill in the ext alert defaults
-    And I click breadCrumbItem "Audience"
+    When I click breadCrumbItem "Recipients"
     And I click x-accordion-hd "Groups/Organizations"
     Then I should see "G1"
 

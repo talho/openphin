@@ -20,7 +20,7 @@ Feature: Sending alerts
     When I go to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
-    And I should have the "Details" breadcrumb selected
+    And I should have the "Alert Details" breadcrumb selected
 
     When I fill in an alert with the following:
       | Alert Type            | Earthquake                   |
@@ -58,7 +58,7 @@ Feature: Sending alerts
     When I go to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
-    And I should have the "Details" breadcrumb selected
+    And I should have the "Alert Details" breadcrumb selected
 
     When I fill in an alert with the following:
       | Alert Type            | Earthquake                   |
@@ -96,7 +96,7 @@ Feature: Sending alerts
     When I go to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
-    And I should have the "Details" breadcrumb selected
+    And I should have the "Alert Details" breadcrumb selected
 
     When I fill in an alert with the following:
       | Alert Type            | Earthquake                           |

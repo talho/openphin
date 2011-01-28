@@ -1,7 +1,7 @@
 
 When /^I select the following alert audience:$/ do |table|
   When %{delayed jobs are processed}
-  When %{I click breadCrumbItem "Audience"}
+  When %{I click breadCrumbItem "Recipients"}
   When %{I select the following in the audience panel:}, table
 end
 
