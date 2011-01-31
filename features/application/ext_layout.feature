@@ -31,7 +31,7 @@ Feature: Application layout should have communications, portal & application too
     When I go to the ext dashboard page
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
-      | Rollcall             |
+      | Apps                 |
       | FAQs                 |
       | Forums               |
       | Tutorials            |
@@ -64,7 +64,8 @@ Feature: Application layout should have communications, portal & application too
     When I press "My Account" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                 |
-      | Edit Profile         |
+      | View My Profile      |
+      | Edit My Account      |
       | Change Password      |
       | Manage Devices       |
       | Manage Roles         |
