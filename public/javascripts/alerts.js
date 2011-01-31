@@ -123,6 +123,14 @@
         else $('.maxlen').css('color', '#000000');
         return true;
       });
+      $('.short_message').bind('change',function(event) {
+        var text = $('.short_message').val();
+        if (text.length > 160) {
+          $('.short_message').val(text.substr(0,160));
+          $('.maxlen').css('color', '#FF0000');
+          alert("Short message too long and has been truncated");
+        }
+      });
       return false;
     });
     $('fieldset input:checkbox').click(function() {
