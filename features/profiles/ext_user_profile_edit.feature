@@ -38,11 +38,6 @@ I should be able to edit my profile
     Then I should not see any errors
     And I should see "Profile information saved"
     
-  Scenario: editing user account information
-    Given I am logged in as "john.smith@example.com"
-    When I go to the user edit page
-    Then I should be redirected to the edit profile page
-
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
       And I go to the ext dashboard page
