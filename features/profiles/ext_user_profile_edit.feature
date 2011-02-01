@@ -63,7 +63,7 @@ I should be able to edit my profile
     And I have an IM device
     When I go to the ext dashboard page
     And I navigate to "My Account > Edit My Account"
-    Then I should see "Edit Profile"
+    Then I should see "Edit My Account"
     And I should see "Last name"
     And I should see "Email"
 

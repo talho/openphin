@@ -35,9 +35,8 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    Then I should not see "Texas"
-    When I click role-item "Dallas County"
-    And I press "Remove role"
+    And I should not see "Texas" within ".role-item"
+    When I click destroy "Dallas County"
     Then I should not see "Dallas County"
     When I press "Apply Changes"
     Then I should see "You must have at least one public role"
@@ -48,9 +47,8 @@ I should be able to remove all but one public role from my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
-    Then I should not see "Texas"
-    And I click role-item "Dallas County"
-    And I press "Remove role"
+    Then I should not see "Texas" within ".role-item"
+    And I click destroy "Dallas County"
     Then I should see "No roles to display"
     When I press "Add role"
     And I select "Public" from ext combo "rq[role]"
@@ -81,8 +79,7 @@ I should be able to remove all but one public role from my profile
     When I add the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
-    When I click role-item "BioTerrorism Coordinator"
-    And I press "Remove role"
+    When I click destroy "BioTerrorism Coordinator"
     Then I should not see "BioTerrorism Coordinator"
     When I press "Apply Changes"
     Then I should not see any errors
