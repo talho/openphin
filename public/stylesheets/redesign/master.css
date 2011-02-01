@@ -105,6 +105,11 @@ body{
 .inlineBtn{
   cursor:pointer;
 }
+
+.people-results .x-grid3-row{
+  cursor:pointer;
+}
+
 .phinlogo span{
   background-image: url(../images/app_header_logo2.png);
   background-repeat: no-repeat;

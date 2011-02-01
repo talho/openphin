@@ -53,7 +53,8 @@ class SearchesController < ApplicationController
         end
       end
       params[:conditions][:phone].gsub!(/([^0-9*])/,"") unless params[:conditions].blank? || params[:conditions][:phone].blank?
-      @results = User.search(params.merge!(build_options(params)))
+      params.merge!(build_options(params))
+      @results = User.search(params)
     end
 
     respond_to do |format|

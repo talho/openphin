@@ -66,30 +66,33 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.rolesSelector = new Ext.Panel ({
+      id: 'roles-select',
       layout: 'fit',
       flex: 1,
       width: '100%',
       border: false,
       tbar: new Ext.Toolbar({items: [
         {xtype: 'tbtext', name: 'hdr', html: 'Roles: <i>(none selected)</i>'}, '->',
-        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.rolesList.clearSelections(); }},
+        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.rolesList.clearSelections(); }}
       ]}),
       items: [this.rolesList],
       style: { 'padding-bottom': '10px', 'padding-top': '5px'}
     });
 
     this.jurisSelector = new Ext.Panel ({
+      id: 'jurisdictions-select',
       layout: 'fit',
       flex: 1,
       width: '100%',
       tbar: new Ext.Toolbar({items: [
         {xtype: 'tbtext', name: 'hdr', html: 'Jurisdictions: <i>(none selected)</i>'}, '->',
-        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.jurisList.clearSelections(); }},
+        {xtype: 'button', text: 'Clear All', scope: this, handler: function(){ this.jurisList.clearSelections(); }}
       ]}),
       items: [this.jurisList]
     });
 
     this.searchSidebar = new Ext.FormPanel({
+      id: 'people-search',
       labelAlign: 'top',
       frame: true,
       region: 'west',
@@ -103,14 +106,14 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         layout: 'form',
         width: '100%',
         items: [
-          { fieldLabel: 'Name', name: 'conditions[name]', xtype: 'textfield', anchor: '95%' },
-          { fieldLabel: 'Email Address', name: 'conditions[email]', xtype: 'textfield', anchor: '95%' },
+          { fieldLabel: 'Name', name: 'conditions[name]', xtype: 'textfield', anchor: '95%', id: 'search-name' },
+          { fieldLabel: 'Email Address', name: 'conditions[email]', xtype: 'textfield', anchor: '95%', id: 'search-email' },
           { layout: 'column', items: [
             { columnWidth: .5, layout: 'form',
-              items: [{ fieldLabel: 'Phone', name: 'conditions[phone]', xtype: 'textfield', anchor: '90%' }]
+              items: [{ fieldLabel: 'Phone', name: 'conditions[phone]', xtype: 'textfield', anchor: '90%', id: 'search-phone' }]
             },
             { columnWidth: .5, layout: 'form',
-              items: [{ fieldLabel: 'Job Title', name: 'conditions[title]', xtype: 'textfield', anchor: '90%' }]
+              items: [{ fieldLabel: 'Job Title', name: 'conditions[title]', xtype: 'textfield', anchor: '90%', id: 'search-title' }]
           }]
         }]
       },
@@ -118,10 +121,14 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         this.jurisSelector
       ],
       buttonAlign : 'center',
-      buttons: [{ text: 'Search', scope: this, handler: this.displaySearchResults }]
+      buttons: [
+        {text: 'Reset', scope: this, handler: this.resetSearchSidebar},
+        { text: 'Search', scope: this, handler: this.displaySearchResults }
+      ],
+        keys: [{key: Ext.EventObject.RETURN, shift: false, fn: this.displaySearchResults, scope: this}]
     });
 
-    this.nameColTemplate = new Ext.XTemplate(
+     this.nameColTemplate = new Ext.XTemplate(
       '<div style="float: left; height: 60px; width: 60px;"><img src="{photo}"></div>',
       '<div style="float: left; margin-left: 15px; width: 205px;">',
         '<span style="white-space:normal; font-weight: bold; font-size: 150%;">{display_name}</span><br/ >',
@@ -171,6 +178,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       }}
     ];
     this.searchResults = new Ext.grid.GridPanel({
+      cls: 'people-results',
       layout: 'hbox',
       store: this.resultsStore,
       colModel: new Ext.grid.ColumnModel({
@@ -252,6 +260,12 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     }, this );
     if (this.admin_mode)
       this.primary_panel.on('afterrender', function(){ this.searchResults.store.load(); }, this);
+  },
+
+  resetSearchSidebar: function(btn,evt){
+    this.searchSidebar.getForm().reset();
+    this.rolesList.clearSelections();
+    this.jurisList.clearSelections();
   },
 
   handleResults: function(store){

@@ -122,9 +122,9 @@ Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do
   end
 end
 
-Then /^I should have "([^\"]*)" within "([^\"]*)"$/ do |elem, selector|
+Then /^I should (not )?have "([^\"]*)" within "([^\"]*)"$/ do |not_have, elem, selector|
   with_scope(selector) do
-    page.find(elem).nil?.should == false
+    page.find(elem).nil?.should == (not_have.nil? ? false: true)
   end
 end
 
