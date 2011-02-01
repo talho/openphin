@@ -24,7 +24,100 @@ Background:
     | Potter MD       | pott.md@example.com      | Medical Director | Potter County  |
     | Potter Public   | pott.pub@example.com     | Public           | Potter County  |
 
+  And delayed jobs are processed
+
+
+@people
+Scenario: Public-only user can not navigate to Find People
+  Given I am logged in as "dall.pub@example.com"
+  When I go to the ext dashboard page
+  And I wait for the "Loading PHIN" mask to go away
+  And I sleep 2
+  Then I should see the following toolbar items in "top_toolbar":
+    | My Account |
+  And I should not see the following toolbar items in "top_toolbar":
+    | Find People |
+
+
+@people
+@javascript
+Scenario: Initiate search by using the RETURN key and verify Form ClearAll
+  Given I am logged in as "pott.admin@example.com"
   And pott.admin@example.com has the following information:
+   | title        | Supervisor      |
+  And delayed jobs are processed
+  When I go to the ext dashboard page
+  And I navigate to "Find People"
+  And I fill in "Name" with "Potter"
+  And I send return to "#search-name"
+  Then I should see "Potter Admin"
+  When I press "Reset"
+  Then I should not see "Po" within "#search-name"
+
+  When I fill in "Email Address" with "pott.admin@example.com"
+  And I send return to "#search-email"
+  Then I should see "Potter Admin"
+  When I press "Reset"
+  Then I should not see "pott.admin@example.com" within "#search-email"
+
+  When I fill in "Phone" with "888-123-1111"
+  And I send return to "#search-phone"
+  Then I should see "Potter Admin"
+  When I press "Reset"
+  Then I should not see "888-123-1111" within "#search-phone"
+
+  When I fill in "Job Title" with "Supervisor"
+  And I send return to "#search-title"
+  Then I should see "Potter Admin" in grid row 1
+  When I press "Reset"
+  Then I should not see "Supervisor" within "#search-title"
+
+
+@people
+Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisdictions can be selected/unselected
+  Given I am logged in as "pott.md@example.com"
+  When I go to the ext dashboard page
+  And I navigate to "Find People"
+  Then I should see "People Search"
+  And the "Find People" tab should be open
+
+  When I click rol-list-item "Public"
+  Then I should see "Public" within "#roles-select .x-list-selected"
+
+  When I click rol-list-item "Medical Director"
+  Then I should see "Medical Director" within "#roles-select .x-list-selected"
+
+  When I click x-btn "Clear All" within "#roles-select"
+  Then I should not have ".x-list-selected" within "#roles-select"
+
+  When I click jur-list-item "Potter County"
+  Then I should see "Potter County" within "#jurisdictions-select .x-list-selected"
+
+  When I click jur-list-item "Dallas County"
+  Then I should see "Dallas County" within "#jurisdictions-select .x-list-selected"
+
+  When I click x-btn "Clear All" within "#jurisdictions-select"
+  Then I should not have ".x-list-selected" within "#jurisdictions-select"
+
+  When I click rol-list-item "Public"
+  And I click jur-list-item "Potter County"
+  And I press "Reset"
+  Then I should not have ".x-list-selected" within "#roles-select"
+  And I should not have ".x-list-selected" within "#jurisdictions-select"
+
+  When I search for a user with the following:
+   | Name         | Harry                  |
+   | Email        |                        |
+   | Phone        |                        |
+   | Title        |                        |
+   | Roles        |                        |
+   |Jurisdictions | Potter County          |
+  Then I should see "No users match your search request"
+
+
+@people
+Scenario: Search for a users from subordinate jurisdictions
+  Given pott.admin@example.com has the following information:
     | phone        | 888-123-1111    |
     | mobile_phone | 888-123-3333    |
     | employer     | Potter Genetics |
@@ -61,19 +154,8 @@ Background:
     | title        | Doctor          |
 
   And delayed jobs are processed
+  And I am logged in as "tex.admin@example.com"
 
-Scenario: Public-only user can not navigate to Find People
-  Given I am logged in as "dall.pub@example.com"
-  When I go to the ext dashboard page
-  And I wait for the "Loading PHIN" mask to go away
-  And I sleep 2
-  Then I should see the following toolbar items in "top_toolbar":
-    | My Account |
-  And I should not see the following toolbar items in "top_toolbar":
-    | Find People |
-
-Scenario: Search for a users from subordinate jurisdictions
-  Given I am logged in as "tex.admin@example.com"
   When I go to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
@@ -167,9 +249,6 @@ Scenario: Search for a users from subordinate jurisdictions
   And I should see "Potter Admin"
   And I should see "Dallas Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -182,9 +261,6 @@ Scenario: Search for a users from subordinate jurisdictions
   And I should see "Dallas Public"
   And I should see "Dallas MD"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by partial first name and partial title
   And I search for a user with the following:
    | Name         | Pott                   |
@@ -195,9 +271,6 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -208,9 +281,6 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions | Dallas County          |
   Then I should see "Dallas Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by partial first name and a role
   And I search for a user with the following:
    | Name         | Pott                   |
@@ -221,9 +291,6 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by partial title and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -234,9 +301,6 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by partial title, a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -249,9 +313,6 @@ Scenario: Search for a users from subordinate jurisdictions
   And I should see "Admin in Potter County"
   And I should see "pott.admin@example.com"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for user by partial title, a role and a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -262,9 +323,6 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for users by several roles within a jurisdiction
   And I search for a user with the following:
    | Name         |                        |
@@ -276,9 +334,6 @@ Scenario: Search for a users from subordinate jurisdictions
   Then I should see "Potter Admin"
   Then I should see "Potter Public"
 
-  # first release list choices
-  When I close the active tab
-  And I navigate to "Find People"
   #search for users by a role and several jurisdictions
   And I search for a user with the following:
    | Name         |                             |
@@ -290,7 +345,9 @@ Scenario: Search for a users from subordinate jurisdictions
   Then I should see "Potter Admin"
   Then I should see "Dallas Admin"
 
-  Scenario: Do not display deleted users
+
+@people
+Scenario: Do not display deleted users
   Given "dall.md@example.com" is deleted as a user by "tex.admin@example.com"
   And delayed jobs are processed
 
@@ -318,6 +375,8 @@ Scenario: Search for a users from subordinate jurisdictions
    |Jurisdictions | Dallas County          |
   Then I should not see "Dallas MD"
 
+
+@people
 Scenario: Results pagination
   Given the following users exist:
     | Potter Public1 | pott.pub1@example.com | Public | Potter County |
@@ -326,6 +385,7 @@ Scenario: Results pagination
     | Potter Public4 | pott.pub4@example.com | Public | Potter County |
     | Potter Public5 | pott.pub5@example.com | Public | Potter County |
   And delayed jobs are processed
+
   When I am logged in as "tex.admin@example.com"
   And I go to the ext dashboard page
   And I navigate to "Find People"
@@ -342,6 +402,8 @@ Scenario: Results pagination
   Then I should see "Dallas MD"
   And I should see "Displaying results 1 - 10 of 12"
 
+
+@people
 Scenario: Results can be sorted by name, verify blank photo present and can follow to the display of a user's profile
   Given I am logged in as "tex.admin@example.com"
   And I go to the ext dashboard page
@@ -365,20 +427,3 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
 
   When I click x-grid3-cell "Dallas MD"
   Then the "Profile: Dallas MD" tab should be open
-
-Scenario: Search for a non-existent user in a jurisdiction
-  Given I am logged in as "pott.md@example.com"
-  When I go to the ext dashboard page
-  And I navigate to "Find People"
-  Then I should see "People Search"
-  And the "Find People" tab should be open
-
-  When I search for a user with the following:
-   | Name         | Harry                  |
-   | Email        |                        |
-   | Phone        |                        |
-   | Title        |                        |
-   | Roles        |                        |
-   |Jurisdictions | Potter County          |
-  Then I should see "No users match your search request"
-

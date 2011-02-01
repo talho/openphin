@@ -1,4 +1,5 @@
 When /^I search for a user with the following:$/ do |fields|
+  And %(I press "Reset")
   fields.rows.each do |field|
     key, value = field
     case key
