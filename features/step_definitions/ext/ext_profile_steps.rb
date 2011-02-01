@@ -26,8 +26,9 @@ When /^I add the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisd
 end
 
 When /^I remove the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
-  When %Q{I click role-item "#{jurisdiction} #{role}"}
-  When %Q{I press "Remove role"}
+  #When %Q{I click role-item "#{jurisdiction} #{role}"}
+  #When %Q{I press "Remove role"}
+  When %Q{I click destroy "#{role}"}
 end
 
 When /^I remove the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisdiction|

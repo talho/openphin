@@ -95,7 +95,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
       '<ul class="devices">',
       '<tpl for=".">',
         '<li class="device-item">',
-          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<a id="{id}" class="destroy">Del</a><br>',
+          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<a id="{id}" class="destroy">Del {value}</a><br>',
             '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
           '</p>',
         '</li>',

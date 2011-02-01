@@ -55,7 +55,7 @@ Scenario: User can view their own profile
    | Born in Japan and Educated in Germany |
 
   When I press "Edit This Account"
-  Then the "Edit Profile: Potter Public" tab should be open
+  Then the "Edit Account: Potter Public" tab should be open
 
 
 Scenario: Public user viewing a public profile
@@ -168,7 +168,7 @@ Scenario: Admin viewing a subordinate public profile
    | Born in Japan and Educated in Germany |
 
   When I press "Edit This Account"
-  Then the "Edit Profile: Potter Public" tab should be open
+  Then the "Edit Account: Potter Public" tab should be open
 
 
 Scenario: Admin viewing a non-subordinate public profile
@@ -213,7 +213,7 @@ Scenario: Admin viewing a subordinate private profile
    | Born in Japan and Educated in Germany |
 
   When I press "Edit This Account"
-  Then the "Edit Profile: Potter Public" tab should be open
+  Then the "Edit Account: Potter Public" tab should be open
 
 
 Scenario: Admin viewing a non-subordinate private profile

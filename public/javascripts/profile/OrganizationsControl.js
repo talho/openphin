@@ -95,7 +95,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       '<ul class="orgs">',
       '<tpl for=".">',
         '<li class="org-item ' + '<tpl if="state==' + "'pending'" + '">org-pending</tpl>' + '">',
-          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<a id="{id}" class="destroy">Del</a>',
+          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<a id="{id}" class="destroy">Del {name}</a>',
             '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',

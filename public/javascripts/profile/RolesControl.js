@@ -117,7 +117,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<a id="{id}" class="destroy">Del</a>',
+          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<a id="{id}" class="destroy">Del {jname} {rname}</a>',
             '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',

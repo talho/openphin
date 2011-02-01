@@ -108,8 +108,7 @@ I should be able to edit my profile
     And I press "Edit User"
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"
-    When I click org-title "DSHS"
-    And I press "Remove organization"
+    When I click destroy "DSHS"
     And I press "Apply Changes"
     When delayed jobs are processed
     Then I should see "Organizations"
