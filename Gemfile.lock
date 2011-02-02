@@ -45,6 +45,7 @@ GEM
     culerity (0.2.4)
       cucumber
       rspec
+    daemons (1.1.0)
     database_cleaner (0.5.0)
     diff-lcs (1.1.2)
     fastercsv (1.5.0)
@@ -163,6 +164,7 @@ DEPENDENCIES
   cucumber (= 0.8.5)
   cucumber-rails (= 0.3.2)
   culerity (= 0.2.4)
+  daemons (= 1.1.0)
   database_cleaner (= 0.5.0)
   diff-lcs (= 1.1.2)
   fastercsv (= 1.5.0)

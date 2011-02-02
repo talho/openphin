@@ -41,7 +41,7 @@ group :default do
   gem "mysql", "2.8.1"
   gem "libxml-ruby", "1.1.3"
   #gem "clamav", "0.4.1"
-
+  gem "daemons", "1.1.0"
 end
 
 group :test do
