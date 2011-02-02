@@ -23,7 +23,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       itemId: 'usersuploadfield',
       buttonOnly: true,
       iconCls: 'icon-file-upload',
-      buttonText: 'Import Users',
+      buttonText: 'Import Users from CSV',
       listeners: {
         scope: this,
         'fileselected': function(fb, v) {
@@ -89,7 +89,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       },{
         xtype: 'checkbox',
         id: 'chk-overwrite',
-        boxLabel: 'Overwrite?',
+        boxLabel: 'Overwrite duplicates?',
         checked: true,
         submitValue: false
       }],
@@ -119,6 +119,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       url: 'admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
       fields: [{name: 'name', mapping: 'jurisdiction.name'}]
     });
+
     var panel_items = [
       {xtype: 'container', defaults:{width:900}, items:[
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
@@ -130,17 +131,18 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
               'actioncomplete': function(f,a){ this.form_submit_success(f,a); this.store.removeAll(); },
               'actionfailed': this.form_submit_failure},
              items: [
-              {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
-                store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'}
-            ]},
+            this.grid,
             {xtype: 'spacer', height: '10'},
-            this.grid
+            {xtype: 'combo', fieldLabel: 'Default Jurisdiction for this batch', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
+                store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 90px 0 0'}
+            ]}
           ]}
         ]},
         {xtype: 'spacer', height: '15'},
         {xtype: 'container', layout: 'hbox', layoutConfig:{pack:'end',defaultMargins:'0 0 0 10'},items:[
           {xtype: 'button', text: 'Apply Changes', name: 'save_button', handler: this.save, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel and Discard Changes', handler: this.close, scope: this,width:'auto'}
+
         ]}
       ]}
     ];

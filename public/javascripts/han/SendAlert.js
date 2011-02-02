@@ -8,7 +8,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
         this.breadCrumb = new Ext.ux.BreadCrumb({
             itemId: 'bread_crumb_control',
-            width: 270,
+            width: 500,
             items:['Alert Details', 'Recipients', 'Preview'],
             listeners:{
                 scope: this,

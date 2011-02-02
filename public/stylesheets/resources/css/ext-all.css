@@ -1448,8 +1448,6 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
 .x-btn button{
     border:0 none;
     background-color:transparent;
-    padding-left:3px;
-    padding-right:3px;
     cursor:pointer;
     margin:0;
     overflow:visible;
@@ -1463,8 +1461,6 @@ fieldset.x-panel-collapsed .x-fieldset-bwrap {
 }
 
 .ext-gecko .x-btn button, .ext-webkit .x-btn button {
-    padding-left:0;
-    padding-right:0;
 }
 
 .ext-gecko .x-btn button::-moz-focus-inner {
