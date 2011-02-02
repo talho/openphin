@@ -8,7 +8,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       form_width: 422,
       item_list: [
         {xtype: 'container', items: [
-          {xtype: 'container', html: 'Alerting Devices', cls: 'devices-label'},
+          {xtype: 'container', html: 'My Alerting Devices', cls: 'devices-label'},
           {xtype: 'spacer', height: '10'},
           this.devices_control
         ]}

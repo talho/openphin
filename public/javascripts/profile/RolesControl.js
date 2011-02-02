@@ -19,7 +19,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       this._createStoreAndDataView(),
       {xtype: 'spacer', height: '10'},
       {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
-        {xtype: 'button', text: 'Add role', handler: this.add_role, scope: this, width:'auto'}
+        {xtype: 'button', text: 'Request Role', handler: this.add_role, scope: this, width:'auto'}
       ]}
     ];
 
@@ -44,24 +44,24 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
     );
 
     var win = new Ext.Window({
-      title: "Add Role",
+      title: "Request Role",
       layout: 'form',
       labelAlign: 'top',
       padding: '10',
       width: 600, height: 250,
       items: [
         {xtype: 'container', layout: 'hbox', anchor: '100%', items: [
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.4, items: [
-            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
-              anchor: '100%', store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
-          ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.6, margins: '0 0 0 10', items: [
+          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.6, items: [
             {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
               anchor: '100%', store: this.roles_store, mode: 'local', displayField: 'name'}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.4, margins: '0 0 0 10', items: [
+            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
+              anchor: '100%', store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Role Description', anchor: '100% -50', readOnly: true,
-          html: 'Role description per CDC bureaucratic explanation process'}
+        {xtype: 'displayfield', anchor: '100% -50',
+          html: ''}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});
@@ -117,7 +117,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{jname}</span>&nbsp;&nbsp;&nbsp;{rname}<a id="{id}" class="destroy">Del {jname} {rname}</a>',
+          '<p><span class="role-title">{rname}</span>&nbsp;&nbsp;&nbsp;{jname}<a id="{id}" class="destroy">Del {jname} {rname}</a>',
             '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
             '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
           '</p>',

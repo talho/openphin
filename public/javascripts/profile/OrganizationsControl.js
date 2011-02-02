@@ -19,7 +19,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       this._createStoreAndDataView(),
       {xtype: 'spacer', height: '10'},
       {xtype: 'container', layout: 'hbox', layoutConfig:{defaultMargins:'0 10 0 4'}, items:[
-        {xtype: 'button', text: 'Add organization', handler: this.add_organization, scope: this, width:'auto'}
+        {xtype: 'button', text: 'Request Organization', handler: this.add_organization, scope: this, width:'auto'}
       ]}
     ];
 
