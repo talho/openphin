@@ -510,6 +510,9 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
     },
 
     showTooltip: function(msg){
+        if (this.showToolTips !== true){
+          return;
+        }
         var t = this.tooltip;
         if(!t){
             t = this.tooltip = new Ext.ToolTip({

@@ -12,7 +12,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     });
 
     var editor = new Ext.ux.grid.RowEditor({
-      saveText: 'Update',
+      saveText: 'OK',
       listeners: {scope: this, 'afterEdit': this.set_savebutton_state, 'cancelEdit': this.cancel_row_modification}
     });
 
@@ -92,8 +92,8 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         submitValue: false
       }],
       columns: [
-        {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:true}},
-        {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:true}},
+        {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:false}},
+        {header: 'First Name', dataIndex: 'first_name', sortable: true, editor: {xtype:'textfield',id:'n_firstname',allowBlank:false}},
         {header: 'Display Name', dataIndex: 'display_name', sortable: true, editor: {xtype:'textfield',id:'n_displayname',allowBlank:true}},
         {header: 'Jurisdiction', dataIndex: 'jurisdiction', sortable: true, editor: {xtype:'textfield',id:'n_jurisdiction',allowBlank:true}},
         {header: 'Mobile', dataIndex: 'mobile', sortable: true, editor: {xtype:'textfield',id:'n_mobile',allowBlank:true}},
