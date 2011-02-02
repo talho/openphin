@@ -92,7 +92,10 @@ Talho.ProfileBase = Ext.extend(function(){}, {
 
   // Save form callbacks
   form_submit_success: function(form, action){
-    (this.form_config.load_url != null) ? this.load_json() : this.getPanel().loadMask.hide();
+    if (this.form_config != null && this.form_config.load_url != null)
+      this.load_json();
+    else
+      this.getPanel().loadMask.hide();
     var json = action.result;
     this.show_message(json);
   },
