@@ -10,8 +10,8 @@ When /^I edit the user profile for "([^"]*)"$/ do |user_name|
   When %Q{I press "Edit User"}
 end
 
-When /^I add the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
-  When %Q{I press "Add role"}
+When /^I request the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
+  When %Q{I press "Request Role"}
   When %Q{I select "#{role}" from ext combo "rq[role]"}
   When %Q{I select "#{jurisdiction}" from ext combo "Jurisdiction"}
   When %Q{I press "Add"}
@@ -19,7 +19,7 @@ end
 
 When /^I add the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisdiction|
   #When %Q{I press "edit" within "#edit_role"}
-  When %Q{I add the role "#{role}" for "#{jurisdiction}" in the RolesControl}
+  When %Q{I request the role "#{role}" for "#{jurisdiction}" in the RolesControl}
   When %Q{I press "Apply Changes"}
   Then %Q{I should see "Profile information saved"}
   When %Q{delayed jobs are processed}

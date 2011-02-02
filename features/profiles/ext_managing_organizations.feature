@@ -34,7 +34,7 @@ I should be able to edit my profile
     When I click x-grid3-row "Jane Smith"
     And I press "Edit User"
     Then I should see "Organizations"
-    When I press "Add organization"
+    When I press "Request Organization"
     And I select "DSHS" from ext combo "rq[org]"
     And I press "Add"
     Then I should see the following within ".org-item":
@@ -50,7 +50,7 @@ I should be able to edit my profile
     When I go to the ext dashboard page
     And I navigate to "My Account > Manage Organizations"
     Then I should see "Organizations"
-    When I press "Add organization"
+    When I press "Request Organization"
     And I select "DSHS" from ext combo "rq[org]"
     And I press "Add"
     Then I should see the following within ".org-item":

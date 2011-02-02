@@ -8,7 +8,7 @@ Talho.ManageOrganizations = Ext.extend(Talho.ProfileBase, {
       form_width: 422,
       item_list: [
         {xtype: 'container', items: [
-          {xtype: 'container', html: 'Organizations', cls: 'orgs-label'},
+          {xtype: 'container', html: 'My Organizations', cls: 'orgs-label'},
           {xtype: 'spacer', height: '10'},
           this.orgs_control
         ]}
