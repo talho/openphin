@@ -2,6 +2,8 @@ Ext.ns("Talho");
 
 Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
+    Ext.apply(this, config);
+
     this.store = new Ext.data.GroupingStore({
       reader: new Ext.data.JsonReader({
         fields: ['last_name', 'first_name', 'display_name', 'jurisdiction', 'mobile', 'fax', 'phone', 'email'],
@@ -117,36 +119,60 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       url: 'admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
       fields: [{name: 'name', mapping: 'jurisdiction.name'}]
     });
-    this.form_config = {
-      form_width: 900,
-      item_list: [
-        {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
-          {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
-            store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
-          {xtype: 'spacer', height: '10'},
-          this.grid
+    var panel_items = [
+      {xtype: 'container', defaults:{width:900}, items:[
+        {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
+        {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: [
+          {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
+            {xtype: 'form', name: 'main_form', labelAlign: 'left', url: 'admin_user_batch.json', method: "POST", border: false,
+             baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, listeners: {scope: this,
+              'beforeaction': function(){ panel.loadMask.show() },
+              'actioncomplete': function(f,a){ this.form_submit_success(f,a); this.store.removeAll(); },
+              'actionfailed': this.form_submit_failure},
+             items: [
+              {xtype: 'combo', fieldLabel: 'Default Jurisdiction', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
+                store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'}
+            ]},
+            {xtype: 'spacer', height: '10'},
+            this.grid
+          ]}
+        ]},
+        {xtype: 'spacer', height: '15'},
+        {xtype: 'container', layout: 'hbox', layoutConfig:{pack:'end',defaultMargins:'0 0 0 10'},items:[
+          {xtype: 'button', text: 'Apply Changes', name: 'save_button', handler: this.save, scope: this, width:'auto'},
+          {xtype: 'button', text: 'Cancel and Discard Changes', handler: this.close, scope: this,width:'auto'}
         ]}
-      ],
-      //save_url: "admin_user_batch/create_from_json.json",
-      //save_method: "PUT"
-      save_url: "admin_user_batch.json",
-      save_method: "POST"
-    };
+      ]}
+    ];
+    var panel = new Ext.Panel({
+      title: this.title,
+      border: false,
+      layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
+      cls: 'primary-panel',
+      closable: true,
+      keys: { key: [Ext.EventObject.ENTER, Ext.EventObject.RETURN], shift: false, fn: this.save, scope: this },
+      autoWidth: true,
+      autoScroll: true,
+      itemId: config.id,
+      items: panel_items
+    });
 
-    Talho.BatchUsers.superclass.constructor.call(this, config);
-
-    this.getPanel().addListener('actioncomplete', function(p){ this.store.removeAll(); }, this);
+    this.getPanel = function(){ return panel; }
+    this.getPanel().addListener('render', function(p){
+      p.loadMask =  new Ext.LoadMask(p.getEl(), {msg:"Loading...", removeMask: true});
+    }, this);
   },
-
+  
   // AJAX load and save methods
   save_data: function(){
     var users = jQuery.map(this.store.getRange(), function(e,i){ return e.data; });
     var options = {};
     options.params = {"user_batch[users]": Ext.encode(users)};
-    this.getPanel().getForm().submit(options);
+    this.getPanel().find("name", "main_form")[0].getForm().submit(options);
   },
 
   set_savebutton_state: function(){
+    this.new_edit_in_progress = false;
     if(this.store.getCount() == 0)
       this.getPanel().find("name", "save_button")[0].disable();
     else
