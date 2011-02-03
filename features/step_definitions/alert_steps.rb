@@ -357,6 +357,7 @@ end
 
 Then /^the alert should be acknowledged at time "([^\"]*)"$/ do |time|
   attempt = current_user.nil? ? AlertAttempt.last : current_user.alert_attempts.last
+  attempt.acknowledged_at.should_not be_nil
   attempt.acknowledged_at.to_s(:db).should == time.to_time.to_s(:db)
 end
 
