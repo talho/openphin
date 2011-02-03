@@ -109,6 +109,11 @@ When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ d
   end
 end
 
+When /^the "([^"]*)" grid header is sorted (ascending|descending)$/ do |header, sort|
+  sortcss = sort == "ascending" ? ".sort-asc" : ".sort-desc"
+  Then %Q{I should see "#{header}" within "#{sortcss}"}
+end
+
 Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$/ do |content, within_selector, not_exists|
   with_scope(within_selector) do
     row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row-selected') and .//*[contains(text(), '#{content}')] ]")
