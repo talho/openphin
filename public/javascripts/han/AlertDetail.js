@@ -34,7 +34,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                         ]}
                     ]
                 },
-                {collapsible: true, collapsed: true, itemId: 'audience_holder', title: 'Audience', width: 800, items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
+                {collapsible: true, collapsed: true, titleCollapse: true, itemId: 'audience_holder', title: 'Alert Recipients (Audience)', width: 800, items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
                 {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true, title: 'Acknowledgements', width: 800, store: this.acknowledgement_store, disableSelection: true, autoExpandColumn: 'name_column',
                     columns:[
                         {id: 'name_column', field: 'name', header: 'Name'},

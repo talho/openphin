@@ -44,7 +44,7 @@ class UserImporter
         elsif options[:create]
           user=User.find_by_email(email)
           next unless user.nil?
-          user=User.new(:email => email)
+          user=User.create(:email => email)
           user.update_password(options[:default_password],options[:default_password])
         else
           raise "At least one of :update or :create must be true"
@@ -105,6 +105,6 @@ class UserImporter
 
   def self.generate_random_password(length=16)
     chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
-    (1..length).collect { |n| chars[rand(chars.length)] }.to_s
+    (1..length).collect { |n| chars[rand(chars.length)] }.to_s + 'aZ9'
   end
 end

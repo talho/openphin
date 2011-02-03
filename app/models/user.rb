@@ -577,8 +577,8 @@ private
 
   def assign_public_role
     public_role = Role.public
-    if (role_requests.nil? && role_memberships.nil?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-      if(role_requests.nil? && role_memberships.nil?)
+    if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
+      if(role_requests.blank? && role_memberships.blank?)
         role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
       else
         rr = role_requests
