@@ -23,7 +23,7 @@ class Admin::UserBatchController < ApplicationController
       if User.find_by_email(u["email"]).nil?
         j = Jurisdiction.find_by_name(u["jurisdiction"])
         j = Jurisdiction.find_by_name(params[:user_batch][:jurisdiction]) if j.blank?
-        u[:role_requests_attributes] = {0 => {:jurisdiction => j, :role => Role.public}}
+        u[:role_requests_attributes] = {0 => {:jurisdiction => j, :role => Role.public}} unless j.blank?
         new_user = User.new(u)
         new_user.update_password("Password1", "Password1")
 

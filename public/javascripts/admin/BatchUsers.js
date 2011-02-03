@@ -55,10 +55,23 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       plugins: [editor],
       stripeRows: true,
       view: new Ext.grid.GroupingView({markDirty: false, forceFit: true}),
-      tbar: [{
+      tbar: [
+        {
+        itemId: 'testForm',
+        xtype: 'container',
+        autoEl: 'form',
+        items: [this.uploadButton]
+      },{
+        xtype: 'checkbox',
+        id: 'chk-overwrite',
+        boxLabel: 'Overwrite duplicates?',
+        checked: true,
+        submitValue: false
+      },'->',{
         iconCls: 'icon-user-add',
         text: 'Add User',
         scope: this,
+        buttonOnly: true,
         handler: function(){
           if(this.store.getCount() == 0 || (this.store.getCount() > 0 && editor.isValid())) {
             editor.stopEditing();
@@ -75,23 +88,13 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         text: 'Remove User',
         disabled: true,
         scope: this,
+        buttonOnly: true,
         handler: function(){
           editor.stopEditing();
           var s = this.grid.getSelectionModel().getSelections();
           this.store.remove(s);
           this.set_savebutton_state();
         }
-      },'->',{
-        itemId: 'testForm',
-        xtype: 'container',
-        autoEl: 'form',
-        items: [this.uploadButton]
-      },{
-        xtype: 'checkbox',
-        id: 'chk-overwrite',
-        boxLabel: 'Overwrite duplicates?',
-        checked: true,
-        submitValue: false
       }],
       columns: [
         {header: 'Last Name', dataIndex: 'last_name', sortable: true, editor: {xtype:'textfield',id:'n_lastname',allowBlank:false}},
