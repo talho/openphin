@@ -20,13 +20,13 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
           ]}
         ]},
         {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true},
-        {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false},
+        {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false, vtype: 'email'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
-            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: false}
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', id: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password'}
           ]},
           {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
-            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false}
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false, initialPassword: 'initialPass', vtype: 'password'}
           ]}
         ]},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
@@ -39,7 +39,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         ]},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
-            {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true}
+            {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true, vtype: 'phone'}
           ]},
           {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Office fax', name: 'user[fax]', maxLength: '46', allowBlank: true}
