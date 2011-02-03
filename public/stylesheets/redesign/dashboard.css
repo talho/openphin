@@ -1,5 +1,5 @@
 
-.article h2, .feed_article h2, .news_articles h2 {font-size:27px; color:#333;}
+.article h2, .feed_article h2, .news_articles h2 {font-size:27px; color:#333; line-height:100%;}
 .feed_article h4 {font-size: 100%; color: #999;}
 
 .feed_article h2 a {color:#333; text-decoration:none;}
