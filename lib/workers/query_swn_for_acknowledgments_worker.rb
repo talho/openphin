@@ -5,63 +5,61 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   end
 
   def query(args = nil)
-    result = ''
-    if Rails.env == 'cucumber'
-      result = Crack::XML.parse(File.read("#{args[:filename]}"))
-      alert = Alert.find_by_id(1) # in testing, we should always be looking for alert 1
-    else
-      Alert.active.has_acknowledge.uniq.each do |alert|
-        next if alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0 && alert.alert_attempts.with_device('Device::EmailDevice').not_acknowledged.size == 0
-        devices = {"Device::PhoneDevice" => "PHONE", "Device::EmailDevice" => "EMAIL"}
-        alert.alert_device_types.map(&:device).reject{|type| devices[type].blank?}.each do |type|
-          result = Service::SWN::Alert::NotificationResultsRequest.build("#{alert.distribution_id}-#{devices[type]}", Service::Phone.configuration.options)
-
-          envelope = result['soap:Envelope']
-
-          if envelope.nil?
-            SWN_LOGGER.info "No SOAP Envelope for SWN Notification Response with alert # #{alert.id}"
-            return false
-          end
-          body = envelope['soap:Body']
-          if body.nil?
-            SWN_LOGGER.info "No SOAP Body for SWN Notification Response with alert # #{alert.id}"
-            return false
-          end
-          response = body['getNotificationResultsResponse']
-          if response.nil?
-            SWN_LOGGER.info "Body does not contain a getNotificationResultsResponse element for SWN Notification Response with alert # #{alert.id}"
-            return false
-          end
-          request = response['getNotificationResultsResult']
-          if request.nil?
-            SWN_LOGGER.info "Body does not contain a getNotificationResultsResult element for SWN Notification Response with alert # #{alert.id}"
-            return false
-          end
-            # A bit of a hack to work around the lack of UTC offset information in SWN's acknowledgement data.
-            # The offset *is* provided in the timestamp for the xml file generation, and can be correctly applied to the acknowledgement time ==most of the time==
-            # There will always be unavoidable edge cases in the minutes surrounding the Daylight Savings Time switch, and this is unavoidable until SWN includes an offset in the timestamp
-            # Because this method  two of SWN's own timestamps, local time differences are not important.  The resulting offset is relative to UTC
-            # I chose this process over native timezone methods because both ruby and rails seem to be changing the behavior with each release.
-          request['resultGeneratedTimestamp'] =~ /([+-])(\d\d):\d\d$/
-          time_offset_seconds = ($2.to_i * 3600)
-          time_offset = $1 == '-' ? time_offset_seconds : time_offset_seconds *= -1  # negative or positive?
-
-          rcptsStatus = request['rcptsStatus']
-          if rcptsStatus.nil?
-            SWN_LOGGER.info "Body does not contain a rcptsStatus element for SWN Notification Response with alert # #{alert.id}"
-            return false
-          end
-          rcptStatus = rcptsStatus['rcptStatus']
-          if rcptStatus.nil?
-            SWN_LOGGER.info "Body does not contain a rcptStatus element for SWN Notification Response with alert # #{alert.id}"
-          end
-          rcptStatus = [rcptStatus] if rcptStatus.class == Hash
-          SWN_LOGGER.info "Processing recipient status for SWN Notification Response with alert # #{alert.id}"
-          rcptStatus.each do |status|
-            processAcknowledgmentStatus alert, status, time_offset
-          end
-          SWN_LOGGER.info "Processing recipient status for SWN Notification Response with alert # #{alert.id} completed"
+    Alert.active.has_acknowledge.uniq.each do |alert|
+      next if alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0 && alert.alert_attempts.with_device('Device::EmailDevice').not_acknowledged.size == 0
+      devices = {"Device::PhoneDevice" => "PHONE", "Device::EmailDevice" => "EMAIL"}
+      alert.alert_device_types.map(&:device).reject{|type| devices[type].blank?}.each do |type|
+        result = if Rails.env == 'cucumber'
+          Crack::XML.parse(File.read("#{args[:filename]}"))
+        else
+          Service::SWN::Alert::NotificationResultsRequest.build("#{alert.distribution_id}-#{devices[type]}", Service::Phone.configuration.options)
         end
+
+        envelope = result['soap:Envelope']
+
+        if envelope.nil?
+          SWN_LOGGER.info "No SOAP Envelope for SWN Notification Response with alert # #{alert.id}"
+          return false
+        end
+        body = envelope['soap:Body']
+        if body.nil?
+          SWN_LOGGER.info "No SOAP Body for SWN Notification Response with alert # #{alert.id}"
+          return false
+        end
+        response = body['getNotificationResultsResponse']
+        if response.nil?
+          SWN_LOGGER.info "Body does not contain a getNotificationResultsResponse element for SWN Notification Response with alert # #{alert.id}"
+          return false
+        end
+        request = response['getNotificationResultsResult']
+        if request.nil?
+          SWN_LOGGER.info "Body does not contain a getNotificationResultsResult element for SWN Notification Response with alert # #{alert.id}"
+          return false
+        end
+          # A bit of a hack to work around the lack of UTC offset information in SWN's acknowledgement data.
+          # The offset *is* provided in the timestamp for the xml file generation, and can be correctly applied to the acknowledgement time ==most of the time==
+          # There will always be unavoidable edge cases in the minutes surrounding the Daylight Savings Time switch, and this is unavoidable until SWN includes an offset in the timestamp
+          # Because this method  two of SWN's own timestamps, local time differences are not important.  The resulting offset is relative to UTC
+          # I chose this process over native timezone methods because both ruby and rails seem to be changing the behavior with each release.
+        request['resultGeneratedTimestamp'] =~ /([+-])(\d\d):\d\d$/
+        time_offset_seconds = ($2.to_i * 3600)
+        time_offset = $1 == '-' ? time_offset_seconds : time_offset_seconds *= -1  # negative or positive?
+
+        rcptsStatus = request['rcptsStatus']
+        if rcptsStatus.nil?
+          SWN_LOGGER.info "Body does not contain a rcptsStatus element for SWN Notification Response with alert # #{alert.id}"
+          return false
+        end
+        rcptStatus = rcptsStatus['rcptStatus']
+        if rcptStatus.nil?
+          SWN_LOGGER.info "Body does not contain a rcptStatus element for SWN Notification Response with alert # #{alert.id}"
+        end
+        rcptStatus = [rcptStatus] if rcptStatus.class == Hash
+        SWN_LOGGER.info "Processing recipient status for SWN Notification Response with alert # #{alert.id}"
+        rcptStatus.each do |status|
+          processAcknowledgmentStatus alert, status, time_offset
+        end
+        SWN_LOGGER.info "Processing recipient status for SWN Notification Response with alert # #{alert.id} completed"
       end
     end
   end
