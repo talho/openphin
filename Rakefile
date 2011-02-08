@@ -19,3 +19,7 @@ Hydra::TestTask.new('hydra' => ['environment']) do |t|
   t.verbose = true
   t.environment = 'cucumber'
 end
+
+Hydra::GlobalTask.new('db:migrate:reset')
+
+Hydra::SyncTask.new('hydra:sync')
