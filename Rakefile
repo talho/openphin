@@ -14,6 +14,8 @@ require 'hydra/tasks'
 task :build => %w(db:migrate spec cucumber)
 task :db => %w(db:migrate db:test:prepare)
 
-Hydra::TestTask.new('hydra:cucumber') do |t|
+Hydra::TestTask.new('hydra' => ['environment']) do |t|
   t.add_files 'features/**/*.feature'
+  t.verbose = true
+  t.environment = 'cucumber'
 end

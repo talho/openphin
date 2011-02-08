@@ -53,10 +53,11 @@ group :test do
 end
 
 group :cucumber do
-  gem "cucumber", "0.8.5"
+  gem "cucumber", "0.9.2"
+    gem "json", "1.4.6"
     gem "diff-lcs", "1.1.2"
     gem "trollop", "1.16.2"
-    gem "gherkin", "2.1.5"
+    gem "gherkin", "2.2.9"
     gem "term-ansicolor", "1.0.5"
   gem "cucumber-rails", "0.3.2"
   gem "database_cleaner", "0.5.0"
@@ -71,7 +72,7 @@ group :cucumber do
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
   #gem "clamav", "0.4.1"
-  gem "hydra", "0.22.2"
+  gem "hydra", "0.23.2"
 end
 
 group :tools do
