@@ -17,22 +17,21 @@ task :testing do
   namespace :deploy do
     set :deploy_to, "#{root_path}/#{application}"
     task :migrate do
-      run "cd #{current_path}; rake db:migrate:reset"
-      run "cd #{current_path}; rake db:migrate:rollcall"
-      run "cd #{current_path}; rake db:test:prepare"
-      #run "cd #{current_path}; mysqldump#{TestJour_config["dbusername"] ? " -u " + TestJour_config["dbusername"] : ""}#{TestJour_config["dbpassword"] ? " --password=" + TestJour_config["dbpassword"] : ""} -n -d openphin_development > #{shared_path}/development_structure.sql"
+      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:sync"
+      run "cd #{current_path}; rake hydra:ruby:killall"
+      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:db:migrate:reset"
     end
 
     task :start, :role => :app do
-      #run "/bin/cp #{shared_path}/development_structure.sql #{release_path}/db/development_structure.sql"
-      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:cucumber"
-      #run "cd #{current_path}; testjour #{get_slaves} --max-local-slaves=1 --create-mysql-db --mysql-db-name=openphin_test #{get_features}"
+      run "cd #{current_path}; rake hydra:ruby:killall"
+      run "cd #{current_path}; rake hydra:firefox:killall"
+      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra"
     end
   end
 
   task :seed, :roles => :db, :only => {:primary => true} do
   end
-  
+
   before :deploy, :role => :app do
     `git push testjour #{get_branch} -f`
     run "mkdir #{release_path}"

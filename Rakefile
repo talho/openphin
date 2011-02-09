@@ -22,4 +22,8 @@ end
 
 Hydra::GlobalTask.new('db:migrate:reset')
 
+Hydra::GlobalTask.new('firefox:killall')
+
+Hydra::GlobalTask.new('ruby:killall')
+
 Hydra::SyncTask.new('hydra:sync')

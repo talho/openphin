@@ -119,6 +119,8 @@ Spork.each_run do
 
     After do
       begin
+        visit '/sign_out'
+        unset_current_user
         $rspec_mocks.verify_all
       ensure
         $rspec_mocks.reset_all
