@@ -2,7 +2,7 @@ Ext.ns("Talho");
 
 Talho.SendAlert = Ext.extend(function(){}, {
     mode: 'new',
-
+    audience_warning_size: 100,   // alerts with audiences larger than this will need user confirmation before sending
     constructor: function(config){
         Ext.apply(this, config);
 
@@ -43,9 +43,10 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             case 'new': break; // do nothing
             case 'update':
-            case 'cancel': showLoading = true;
-                    this.loadAlertDetail(this.mode);
-                break; // load values for cancel from server
+            case 'cancel': // load values from server
+              showLoading = true;
+              this.loadAlertDetail(this.mode);
+              break;
         }
 
         if(showLoading)
@@ -82,7 +83,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
           width: 820,
           buttons: [          
             {xtype: 'button', text: 'Back', handler: function(){this.breadCrumb.previous();}, scope: this},
-            {xtype: 'button', text: 'Send Alert', handler: this.submit_alert, scope: this}
+            {xtype: 'button', text: 'Send Alert', disabled: true, handler: this.submit_alert, scope: this}
           ]
         });
 
@@ -95,13 +96,13 @@ Talho.SendAlert = Ext.extend(function(){}, {
             method: 'POST',
             listeners:{
                 scope: this,
-                'beforeaction': this.applyAudiences,
+                'beforeaction': this.beforeSubmit,
                 'actioncomplete': this.submit_success,
                 'actionfailed': this.save_failure
             },
             items: [
                 {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', defaults:{anchor: '100%'}, items:[
-                    {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', allowBlank: false, blankText: 'You must enter a title'},
+                    {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', style: 'font-weight: bold; font-size: 150%; height: 3ex;', allowBlank: false, blankText: 'Alerts must have a title'},
                     {xtype: 'box', itemId: 'alert_title_label', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
                     {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: '(<span id="message_length">0</span> characters)<br/>Any message larger than 580 characters including whitespace will cause the message to be truncated and recipients will need to visit the TXPhin website to view the entire message contents.'},
@@ -194,21 +195,45 @@ Talho.SendAlert = Ext.extend(function(){}, {
         this.getPanel().doLayout();
     },
 
+    beforeSubmit: function(form, action){
+      if (action.options.force === true || this.checkAudienceSize() ){
+        this.applyAudiences(form, action);
+      } else {
+        return false;
+      }
+    },
+
     applyAudiences: function(form, action){
         action.options.params = {};
         action.options.params['send'] = true;
-
         if(this.mode === 'new')
         {
             var audienceIds = this.audiencePanel.getSelectedIds();
-
             action.options.params['alert[audiences_attributes][1][jurisdiction_ids][]'] = audienceIds.jurisdiction_ids;
             action.options.params['alert[audiences_attributes][1][role_ids][]'] = audienceIds.role_ids;
             action.options.params['alert[audiences_attributes][1][user_ids][]'] = audienceIds.user_ids;
             action.options.params['alert[audience_ids][]'] = audienceIds.group_ids;
         }
-
         return true;
+    },
+
+    checkAudienceSize: function(){
+      if (this.alert_preview.data['alert[recipient_count]'] > this.audience_warning_size ){
+        Ext.Msg.show({
+          scope: this,
+          title:'Large Audience',
+          msg: 'ATTENTION: This alert will be sent to <span style="font-size: 120%; font-weight: bold;">' + this.alert_preview.data['alert[recipient_count]'] +
+               '</span> people.  <br> Press OK to send the alert. <br> Press CANCEL to modify the audience.',
+          buttons: Ext.Msg.OKCANCEL,
+          fn: function(buttonId){if (buttonId == 'ok') { this.form_card.getForm().submit({force: true}) } else { this.breadCrumb.previous(); } },
+          animEl: 'elId',
+          closable: false,
+          icon: Ext.MessageBox.WARNING
+        });
+        return false;
+      } else {
+        return true;
+      }
     },
 
     submit_alert: function(){

@@ -1880,3 +1880,17 @@ background-color: #E9E9E9;
 background-color: #FFFFFF;
 background-image: none;
 }
+.working-notice{
+  color: #888888;
+  font-style: italic;
+}
+.large-bold{
+  font-weight: bold;
+  font-size: 150%;
+  color: black;
+}
+.big-red{
+  font-weight: bold;
+  font-size: 200%;
+  color: darkred;
+}

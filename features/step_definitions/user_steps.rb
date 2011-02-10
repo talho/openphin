@@ -40,6 +40,16 @@ Given /^the following users exist:$/ do |table|
   end
 end
 
+Given /^(\d+) users exist like$/ do |mob_count, table|
+  # table format: | role         | [role]         |
+  #               | jurisdiction | [jurisdiction] |
+  mobber = 0
+  while mobber < mob_count.to_i do
+    Given %Q{the user "mobuser #{table.rows_hash["role"]+ mobber.to_s}" with the email "#{table.rows_hash["role"] + mobber.to_s}@example.com" has the role "#{table.rows_hash["role"]}" in "#{table.rows_hash["jurisdiction"]}"}
+    mobber += 1 
+  end
+end
+
 Given /^([^"]*) has the following information:$/ do |email, table|
   u=User.find_by_email(email)
   table.raw.each do |row|

@@ -13,7 +13,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
 
         Ext.apply(config, { // we want to absolutely override the items passed in the constructor.
             items:[
-                {xtype: 'box', html: 'This is a Preview:  Please review carefully before sending.', style: 'text-align: center;'},
+                {xtype: 'box', html: 'This is a Preview:  Please review carefully before sending.', style: 'text-align: center; font-weight: bold;', itemId: 'preview_message'},
                 {xtype: 'container', itemId: 'alert_detail_panel', layout: 'column',  defaults:{style: 'padding:5px;'}, items: [
                         {xtype: 'container', itemId: 'left_detail', columnWidth: .66, layout: 'form', labelWidth: 175, items:[
                             {xtype: 'displayfield', itemId: 'alert_title', fieldLabel: 'Alert Title'},
@@ -22,7 +22,8 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                             {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_author', fieldLabel: 'Author'},
                             {xtype: 'container', layout: 'form', labelWidth: 175, itemId: 'alert_response_container', hideLabel: true},
                             {xtype: 'displayfield', hidden: true, actionMode: 'itemCt',  itemId: 'alert_created_at', fieldLabel: 'Created at'},
-                            {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', fieldLabel: 'Disable Cross-Jurisdictional alerting?'}
+                            {xtype: 'displayfield', itemId: 'alert_disable_cross_jurisdictional', fieldLabel: 'Disable Cross-Jurisdictional alerting?'} ,
+                            {xtype: 'displayfield', itemId: 'alert_recipient_count', actionMode: 'itemCt', fieldLabel: 'Total Recipients', html:'Calculating...', cls: 'working-notice recipient_count'}
                         ]},
                         {xtype: 'container', itemId: 'right_detail', columnWidth: .34, layout: 'form', items: [
                             {xtype: 'displayfield', itemId: 'alert_severity', fieldLabel: 'Severity'},
@@ -34,8 +35,13 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                         ]}
                     ]
                 },
-                {collapsible: true, collapsed: true, titleCollapse: true, itemId: 'audience_holder', title: 'Alert Recipients (Audience)', width: 800, items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
-                {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true, title: 'Acknowledgements', width: 800, store: this.acknowledgement_store, disableSelection: true, autoExpandColumn: 'name_column',
+                {collapsible: true, collapsed: true, titleCollapse: true, itemId: 'audience_holder',
+                    title: 'Alert Recipients (Primary Audience)', width: 800,
+                    items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
+                {xtype: 'spacer', height: 10 },
+                {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true,
+                    title: 'Acknowledgements', width: 800, store: this.acknowledgement_store,
+                    disableSelection: true, autoExpandColumn: 'name_column',
                     columns:[
                         {id: 'name_column', field: 'name', header: 'Name'},
                         {field: 'email', header: 'E-mail'},
@@ -63,8 +69,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
 
         Talho.AlertDetail.superclass.initComponent.call(this);
 
-        if(loadAlert)
-        {
+        if(loadAlert) {
             // perform load from AJAX
             Ext.Ajax.request({
                 url: '/alerts/' + this.alertId + '.json',
@@ -80,12 +85,12 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
 
             // show the acknowledgement grid
             this.getComponent('acknowledgement_grid').show();
+            this.getComponent('preview_message').hide();
         }
     },
 
     getAlertDetailFromServer_complete: function(options, success, response){
         var alert_json = Ext.decode(response.responseText);
-
         var call_downs = [];
         var i = 1;
         while(alert_json.alert.call_down_messages && !Ext.isEmpty(alert_json.alert.call_down_messages[i.toString()])){
@@ -106,7 +111,8 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
             'alert[call_down_messages][]': call_downs,
             'alert[created_at]': new Date(alert_json.alert.created_at),
             'alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device'),
-            'alert[author]': alert_json.alert.author.display_name
+            'alert[author]': alert_json.alert.author.display_name,
+            'alert[recipient_count]': alert_json.recipient_count
         };
 
         Ext.apply(data, alert_json.audiences);
@@ -165,6 +171,30 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                 leftPane.getComponent('alert_author').update(data['alert[author]']);
                 leftPane.getComponent('alert_author').show();
             }
+            if(data['alert[recipient_count]']){
+               this.updateRecipientCount(data['alert[recipient_count]'], leftPane.getComponent('alert_recipient_count'));
+            } else {
+              this.buttons[1].disable();
+              leftPane.getComponent('alert_recipient_count').removeClass('large-bold');
+              leftPane.getComponent('alert_recipient_count').removeClass('big-red');
+              leftPane.getComponent('alert_recipient_count').addClass('working-notice');
+              leftPane.getComponent('alert_recipient_count').update('Calculating...');
+              Ext.Ajax.request({
+                url: 'alerts/calculate_recipient_count.json',
+                method: 'POST',
+                params: this.buildAudienceParams(),
+                scope: this,
+                success: function(result){
+                    this.data[ 'alert[recipient_count]'] = result.responseText * 1;
+                    this.updateRecipientCount(result.responseText, leftPane.getComponent('alert_recipient_count'));
+                    this.buttons[1].enable(); //Send Alert button
+                },
+                failure: function(){
+                  leftPane.getComponent('alert_recipient_count').update('Server Error.');
+                  this.buttons[1].enable(); //Send Alert button
+                }
+              });
+            }
 
             leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
             var rightPane = this.getComponent('alert_detail_panel').getComponent('right_detail');
@@ -206,13 +236,27 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
         }
     },
 
+    updateRecipientCount: function(value, recipientField){
+      var warning_level = 100;
+      recipientField.removeClass('working-notice');
+      if (value > warning_level){ recipientField.addClass('big-red'); } else { recipientField.addClass('large-bold');  }
+      recipientField.update(value);
+    },
+
+    buildAudienceParams: function(){
+      var params = {'user_ids[]': [], 'group_ids[]': [], 'jurisdiction_ids[]': [], 'role_ids[]': []};
+      Ext.each(this.data.users, function(user){params['user_ids[]'].push(user.id)});
+      Ext.each(this.data.groups, function(group){params['group_ids[]'].push(group.id)});
+      Ext.each(this.data.jurisdictions, function(jurisdiction){params['jurisdiction_ids[]'].push(jurisdiction.id)});
+      Ext.each(this.data.roles, function(role){params['role_ids[]'].push(role.id)});
+      if ( this.data["alert[not_cross_jurisdictional]"]) { params['not_cross_jurisdictional'] = 1; }
+      params['from_jurisdiction_id'] = this.data["alert[from_jurisdiction_id]"]  ;
+      return params;
+    },
+
     triggerRecipientStoreLoad: function(panel){
-        var params = {'user_ids[]': [], 'group_ids[]': [], 'jurisdiction_ids[]': [], 'role_ids[]': []};
-        Ext.each(this.data.users, function(user){params['user_ids[]'].push(user.id)});
-        Ext.each(this.data.groups, function(group){params['group_ids[]'].push(group.id)});
-        Ext.each(this.data.jurisdictions, function(jurisdiction){params['jurisdiction_ids[]'].push(jurisdiction.id)});
-        Ext.each(this.data.roles, function(role){params['role_ids[]'].push(role.id)});
-        panel.getComponent('audience_panel').loadRecipientStoreFromAjax('/audiences/determine_recipients.json', params);
+      var params = this.buildAudienceParams();
+      panel.getComponent('audience_panel').loadRecipientStoreFromAjax('/audiences/determine_recipients.json', params);
     }
 });
 

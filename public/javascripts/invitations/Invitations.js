@@ -31,7 +31,7 @@ Talho.Invitations = Ext.extend(function(){}, {
             click: function(column, grid, rowIndex, e) {
               if(currentInvitationId != store.getAt(rowIndex).data['id']) {
                 currentInvitationId = store.getAt(rowIndex).data['id'];
-                header.setText('Invitation: ' + store.getAt(rowIndex).data['name']);
+                header.setText(store.getAt(rowIndex).data['name']);
                 newstore = new Ext.data.JsonStore({
                   autoDestroy: true,
                   autoLoad: {params:{start: 0, limit: 20}},
@@ -55,16 +55,16 @@ Talho.Invitations = Ext.extend(function(){}, {
                         org = newstore.reader.jsonData["invitation"]["organization"];
                         if(org) organization.update("<b>Default Organization:</b>&nbsp;" + org);
                         
-                        bodyContainer.add(new Ext.form.HtmlEditor({width: 550, height: 300, html: newstore.reader.jsonData["invitation"]["body"], enableSourceEdit: false, readOnly: true}));
+                        bodyContainer.add(new Ext.form.DisplayField({width: 550, html: newstore.reader.jsonData["invitation"]["body"]}));
 
                         complete_percentage = newstore.reader.jsonData["invitation"]["complete_percentage"];
                         complete_total = newstore.reader.jsonData["invitation"]["complete_total"];
                         incomplete_percentage = newstore.reader.jsonData["invitation"]["incomplete_percentage"];
                         incomplete_total = newstore.reader.jsonData["invitation"]["incomplete_total"];
 
-                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations complete:</b>&nbsp;" + complete_percentage + "% (" + complete_total + ")"});
+                        invitationTopToolbar.add({xtype: 'box', style: 'color: white;', html: "<b>Registrations complete:</b>&nbsp;" + complete_percentage + "% (" + complete_total + ")"});
                         invitationTopToolbar.add({xtype: 'tbfill'});
-                        invitationTopToolbar.add({xtype: 'box', html: "<b>Registrations incomplete:</b>&nbsp;" + incomplete_percentage + "% (" + incomplete_total + ")"});
+                        invitationTopToolbar.add({xtype: 'box', style: 'color: white;', html: "<b>Registrations incomplete:</b>&nbsp;" + incomplete_percentage + "% (" + incomplete_total + ")"});
                         invitationTopToolbar.doLayout();
                         centerPanel.doLayout();
                       }
@@ -91,7 +91,7 @@ Talho.Invitations = Ext.extend(function(){}, {
       text: '',
       style: {
         fontWeight: 'bold',
-        fontSize: '14'
+        fontSize: '150%'
       }
     });
 
@@ -289,7 +289,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     });
 
     var content = new Ext.Container({
-      defaults:{padding:'10'},
+      style: 'padding:10px; ',
       hidden: true,
       items: [{
         xtype: 'container',
@@ -379,6 +379,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     var panel = new Ext.Panel({
       layout: 'border',
       title: 'View Invitations',
+      itemId: config.id,
       items: [centerPanel, sidePanel],
       closable: true
     });

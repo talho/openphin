@@ -95,6 +95,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                    var record = grid.getStore().getAt(row);
                    this.showNewGroup(record.id);
                }, scope: this},
+               {xtype: 'spacer', width: 10},
                {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row, action, index, colIndex){
                    var store = grid.getStore();
                    var record = store.getAt(row);
@@ -110,14 +111,13 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
         this.group_list = new Ext.grid.GridPanel({
             store: store,
             border: true,
-            width: 500,
-            height: 300,
+            width: 600,
+            height: 400,
             columns: [
                 {header: 'Name', id: 'name_column', dataIndex: 'name'},
-                {header: 'Owner', dataIndex: 'owner', renderer: function(value, metaData){ metaData.css = 'inlineLink'; return value;}},
+                {header: 'Owner', dataIndex: 'owner'},
                 {header: 'Scope', dataIndex: 'scope'},
                 rowActions
-
             ],
             sm: false,
             autoExpandColumn: 'name_column',
@@ -267,13 +267,14 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             border: false,
             width: 600,
             padding: '10 0 0',
-            items: [{xtype: 'box', hideLabel: true, cls:'group_name', itemId:'group_name', autoEl: 'h1', html: 'NAME'},
-                {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', html: 'SCOPE'},
-                {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', html: 'JURISDICTION'},
-                new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel', hideLabel: true, anchor: '100%', height: 400})
+            items: [
+              {xtype: 'box', hideLabel: true, cls:'group_name', itemId:'group_name', style: 'font-size: 200%; padding-bottom: 5px; font-weight: bold;', html: 'NAME'},
+              {xtype: 'box', cls: 'group_scope', itemId: 'group_scope', fieldLabel: 'Scope', style: 'font-size: 150%;', html: 'SCOPE'},
+              {xtype: 'box', cls: 'group_owner_jurisdiction', itemId: 'group_jurisdiction', fieldLabel: 'Jurisdiction', style: 'font-size: 120%;', html: 'JURISDICTION'},
+              new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel', hideLabel: true, anchor: '100%', height: 400})
             ],
             buttons: [
-                {xtype: 'box', itemId: 'group_csv_link', html:'<a href="" target="_blank">Download Report (CSV)</a>'},
+                {xtype: 'box', itemId: 'group_csv_link', style: 'padding-right: 20px;', html:'<a href="" target="_blank">Download Report (CSV)</a>'},
                 {xtype: 'button', text: 'Back to Groups', scope: this, handler: this.back}
             ]
         });
