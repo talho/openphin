@@ -1,7 +1,8 @@
 
 
 When /^I (?:click|select) the following in the audience panel:$/ do |table|
-  # table is a | Dallas County | Jurisdiction |
+  # table is a | name          | type         |  state    |
+  #            | Dallas County | Jurisdiction |  Region 1 |
   jurisdictions = table.hashes.find_all{|hash| hash['type'] == 'Jurisdiction'}
   roles = table.hashes.find_all{|hash| hash['type'] == 'Role'}
   users = table.hashes.find_all{|hash| hash['type'] == 'User'}
@@ -21,7 +22,7 @@ def select_jurisdictions(jurisdictions)
 end
 
 def expand_state(state)
-  page.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' ux-maximgb-tg-elbow-end-plus ') and ../../div/text() = '#{state}']").click
+  page.find(:xpath, ".//*[(contains(concat(' ', @class, ' '),  ' ux-maximgb-tg-elbow-end-plus ') or contains(concat(' ', @class, ' '),  ' ux-maximgb-tg-elbow-plus ') )  and ../../div/text() = '#{state}']").click
 end
 
 def select_roles(roles)

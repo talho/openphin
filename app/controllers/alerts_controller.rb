@@ -1,7 +1,7 @@
 require 'ftools'
 
 class AlertsController < ApplicationController
-  before_filter :alerter_required, :only => [:index, :new, :create, :edit, :update]
+  before_filter :alerter_required, :only => [:index, :new, :create, :edit, :update, :calculate_recipient_count]
   before_filter :can_view_alert, :only => [:show]
   skip_before_filter :login_required, :only => [:token_acknowledge, :upload, :playback]
   protect_from_forgery :except => [:upload, :playback]
@@ -38,7 +38,8 @@ class AlertsController < ApplicationController
         render :json => {:alert => alert.as_json(:include => {:alert_device_types => {:only => ['device']}, :author => {:only => ["display_name"]} },
                                                  :only => ['acknowledge', 'call_down_messages', 'created_at', 'delivery_time', 'message', 'not_cross_jurisdictional', 'severity', 'short_message', 'status', 'sensitive', 'title']),
                          :alert_attempts => alert.alert_attempts,
-                         :audiences => audiences 
+                         :audiences => audiences,
+                         :recipient_count => @alert.recipients.count
         }
         ActiveRecord::Base.include_root_in_json = original_included_root
       end
@@ -312,6 +313,33 @@ class AlertsController < ApplicationController
       end
     end
     redirect_to hud_path
+  end
+
+  def calculate_recipient_count
+    # TODO: is there a smarter way to build up a dummy alert with received data?  This works but it makes me cringe. --Andrew
+    params2 = HashWithIndifferentAccess.new
+    params2[:alert] = HashWithIndifferentAccess.new
+    params2[:alert][:title] = "DUMMY TITLE"
+    params2[:alert][:message] = "DUMMY MESSAGE"
+    params2[:alert][:short_message] = "DUMMY SHORT MESSAGE"
+    params2[:alert][:caller_id] = "0000000000"
+    params2[:alert][:call_down_messages] = {}
+    params2[:alert][:author_id] = current_user.id
+    params2[:alert][:audiences_attributes] = HashWithIndifferentAccess.new
+    params2[:alert][:audiences_attributes][:"0"] = HashWithIndifferentAccess.new
+    params2[:alert][:audiences_attributes][:"0"][:jurisdiction_ids] = params[:jurisdiction_ids]
+    params2[:alert][:audiences_attributes][:"0"][:user_ids] = params[:user_ids]
+    params2[:alert][:audiences_attributes][:"0"][:role_ids] = params[:role_ids]
+    params2[:alert][:audience_ids] = params[:group_ids]
+    params2[:alert][:from_jurisdiction_id] = params[:from_jurisdiction_id]
+    params2[:alert][:not_cross_jurisdictional] = params[:not_cross_jurisdictional]
+    params2[:alert][:severity] = "Minor"
+    params2[:alert][:status] = "Test"
+    params2[:alert][:delivery_time] = 4320
+    @alert = present Alert.new_with_defaults
+    respond_to do |format|
+        format.json { render :json => @alert.preview_recipients_size(params2) }
+    end
   end
 
   def upload
