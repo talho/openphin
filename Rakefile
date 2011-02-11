@@ -26,4 +26,6 @@ Hydra::GlobalTask.new('firefox:killall')
 
 Hydra::GlobalTask.new('ruby:killall')
 
+Hydra::GlobalTask.new('spinx:killall')
+
 Hydra::SyncTask.new('hydra:sync')
