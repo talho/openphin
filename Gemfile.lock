@@ -1,3 +1,8 @@
+PATH
+  remote: /home/ewaldo/gems
+  specs:
+    hydra (0.23.2)
+
 GEM
   remote: http://rubygems.org/
   remote: http://gems.github.com/
@@ -66,7 +71,6 @@ GEM
     hpricot (0.6)
     httparty (0.4.4)
       crack (>= 0.1.1)
-    hydra (0.23.2)
     json (1.4.6)
     json_pure (1.4.6)
     launchy (0.3.7)
@@ -177,7 +181,7 @@ DEPENDENCIES
   hoptoad_notifier (= 2.3.0)
   hpricot (= 0.6)
   httparty (= 0.4.4)
-  hydra (= 0.23.2)
+  hydra (= 0.23.2)!
   json (= 1.4.6)
   json_pure (= 1.4.6)
   launchy
