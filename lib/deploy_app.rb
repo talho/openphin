@@ -16,6 +16,7 @@ namespace :app do
     run "ln -fs #{shared_path}/hydra.yml #{release_path}/config/hydra.yml"
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
+    run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
     # for the rollcall plugin
     run "ln -fs #{release_path}/vendor/plugins/rollcall/lib/workers #{release_path}/lib/workers/rollcall"
     run "ln -fs #{release_path}/spec/spec_helper.rb #{release_path}/vendor/plugins/rollcall/spec/spec_helper.rb"
