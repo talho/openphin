@@ -1,5 +1,6 @@
-PATH
-  remote: /home/ewaldo/gems
+GIT
+  remote: git://github.com/Dishwasha/hydra.git
+  revision: 52e06ccffc25e75c11c27728737c2cf83eda18a9
   specs:
     hydra (0.23.2)
 

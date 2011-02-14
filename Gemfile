@@ -72,7 +72,7 @@ group :cucumber do
   gem "sinatra", "1.0"
   gem "capybara", "0.3.9"
   #gem "clamav", "0.4.1"
-  gem "hydra", "0.23.2", :path => "~/gems"
+  gem "hydra", "0.23.2", :git => "git://github.com/Dishwasha/hydra.git"
 end
 
 group :tools do
