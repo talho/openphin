@@ -6,7 +6,7 @@ class Doc::DocumentsController < ApplicationController
   def show
     @document = Document.find(params[:id]).viewable_by(current_user)
 
-    DocumentMailer.deliver_document_viewed(@document, current_user) if @document.folder.notify_of_file_download && @document.owner != current_user
+    DocumentMailer.deliver_document_viewed(@document, current_user) if @document.folder && @document.folder.notify_of_file_download && @document.owner != current_user
 
     send_file @document.file.path, :type => @document.file_content_type, :disposition => 'attachment', :x_sendfile => request.env["SERVER_SOFTWARE"].downcase.match(/apache/) ? true : false
   end
@@ -32,7 +32,7 @@ class Doc::DocumentsController < ApplicationController
           @document.save!
 
           #file creation was successful, let's notify users that a file was uploaded
-          DocumentMailer.deliver_document_addition(@document, current_user) if @document.folder.notify_of_document_addition
+          DocumentMailer.deliver_document_addition(@document, current_user) if !@document.folder.nil? && @document.folder.notify_of_document_addition
           respond_to do |format|
             format.json {render :json => {:success => true }, :content_type => 'text/html' }
           end
