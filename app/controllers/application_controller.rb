@@ -238,7 +238,7 @@ private
         json = {:success => false, :error => "There was an error processing your request.  Please contact technical support.",
                 :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}
       end
-      (request.xhr?) ? render(:json => json) : render(:json => json, :content_type => 'text/html')
+      (request.xhr?) ? render(:json => json, :status => 400) : render(:json => json, :content_type => 'text/html')
     else
       local_request? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
     end
