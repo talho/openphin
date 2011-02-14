@@ -57,6 +57,8 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             idProperty: 'id',
             bodyCssClass: 'users',
             restful: true,
+            root: 'users',
+            totalProperty: 'total',
             fields: ['name', 'email', 'id', 'title', 'extra'],
             filters: new Ext.util.MixedCollection(),
             addFilters: function(ids){
@@ -101,6 +103,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
                 tpl:'<tpl for="."><div ext:qtip=\'{extra}\' class="x-combo-list-item">{name} - {email}</div></tpl>',
                 minChars: 2,
                 region: 'south',
+                pageSize: 10,
                 listeners:{
                     scope: this,
                     'select': function(combo, record, index){

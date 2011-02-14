@@ -24,15 +24,18 @@ class SearchesController < ApplicationController
 
   def show_clean
     unless params[:tag].blank?
-      search_size = 20
+      search_size = (params[:limit]||20).to_i
+      page = (params[:start]||0).to_i/search_size + 1
       tags = params[:tag].split(/\s/).map{|x| '*' + x + '*'}.join(' ')
-      @results = User.search(tags, :match_mode => :all, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
+      @results = User.search(tags, :match_mode => :all, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
+      total = @results.total_entries
       @results = sort_by_tag(@results, tags)
     end
 
     @results = [] if @results.blank?
-    render :json => @results.map{|u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
-                                      :extra => render_to_string(:partial => 'extra.json', :locals => {:user => u})}}
+    render :json => { :total => total,
+                      :users => @results.map{|u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
+                                      :extra => render_to_string(:partial => 'extra.json', :locals => {:user => u})}}}
   end
 
   def show_advanced
