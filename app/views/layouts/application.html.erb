@@ -122,15 +122,19 @@
 	</ul>
 </div>
 <div id="footer">
-
-  <ul id='comm_toolbar'>
-    <%- if current_user.has_non_public_role? -%>
-    <li class="calendar"><%=  link_to s("<b>Calendar</b>"),  root_path %></li>
-    <li class="documents"><%= link_to s("<b>Documents</b>"), root_path %></li>
-    <li class="chat"><%=      link_to s("<b>Chat</b>"),      root_path %></li>
-    <li class='links'><%=     link_to s("<b>Links</b>"),     root_path %></li>
-    <%- end -%>
-  </ul>
+  <div>
+    <ul id='comm_toolbar'>
+      <%- if current_user.has_non_public_role? -%>
+      <li class="calendar"><%=  link_to s("<b>Calendar</b>"),  root_path %></li>
+      <li class="documents"><%= link_to s("<b>Documents</b>"), root_path %></li>
+      <li class="chat"><%=      link_to s("<b>Chat</b>"),      root_path %></li>
+      <li class='links'><%=     link_to s("<b>Links</b>"),     root_path %></li>
+      <%- end -%>
+    </ul>
+  </div>
+  <div id="newphin" style="padding-top: 2px; margin-left: 42%;">
+    <a href="/ext"><img style="border: none;" src="images/newphin.gif"></a>
+  </div>
   <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %></div>
 	
 </div>
