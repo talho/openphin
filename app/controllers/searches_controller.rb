@@ -7,7 +7,7 @@ class SearchesController < ApplicationController
     if !params[:tag].blank?
       search_size = 20
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')
-      @results = User.search("*" + tags, :match_mode => :any, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
+      @results = User.search("*" + tags, :match_mode => :all, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
       @paginated_results = @results;
       @results = sort_by_tag(@results, tags)
     end
