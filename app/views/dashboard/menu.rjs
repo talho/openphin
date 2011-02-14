@@ -91,6 +91,7 @@ if current_user.has_non_public_role?
                                          {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
                                          {name: 'Chat'},
                                          {name: 'Links'},
+                                         '<a href=\"/\"><img style=\"border: 0; margin-left: 100px; padding-bottom: 2px;\" src=\"/images/oldphin.gif\"></a>',
                                          '->',
                                          'Need help? Email <a style=\"color: white\" href=\"mailto:phinadmin@dshs.state.tx.us\">phinadmin@dshs.state.tx.us</a>'];"
 
