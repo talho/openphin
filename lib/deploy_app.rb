@@ -27,10 +27,8 @@ namespace :app do
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
-      FileUtils.cp("config/backgroundrb.yml.example", "config/backgroundrb.yml") unless File.exist?("config/backgroundrb.yml")
-      FileUtils.cp("config/system.yml.example", "config/system.yml") unless File.exist?("config/system.yml")
-      #FileUtils.cp("config/phone.yml.example", "config/phone.yml") unless File.exist?("config/phone.yml")
-      #FileUtils.cp("config/swn.yml.example", "config/swn.yml") unless File.exist?("config/swn.yml")
+      run "ln -fs #{shared_path}/backgroundrb.yml#{release_path}/config/backgroundrb.yml"
+      run "ln -fs #{shared_path}/system.yml#{release_path}/config/system.yml"
     end
     run "mkdir #{release_path}/tmp/cache"
   end
