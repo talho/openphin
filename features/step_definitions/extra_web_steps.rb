@@ -42,6 +42,7 @@ end
 When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
   with_scope(selector) do
     id = page.find(:xpath, "//button[contains(text(), '#{field}')]")['for']
+    page.execute_script("$('##{id}').css('opacity', '100')")
     attach_file(id, File.join(RAILS_ROOT, path))
     sleep 1
   end
@@ -67,32 +68,6 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")? with html stripped$/ do
       page.all(:xpath, "//*[contains(text(), '#{text.split(' ').last}')]").select{|item| item.text == text}.size.should == 1
     else
       assert page.all(:xpath, "//*[contains(text(), '#{text.split(' ').last}')]").select{|item| item.text == text}.size == 1
-    end
-  end
-end
-
-module Capybara
-  class Session
-    alias_method :old_check, :check
-    alias_method :old_uncheck, :uncheck
-    
-    def check(locator)
-      field = find_field(locator)
-      begin
-        old_check(locator) unless field[:checked]
-      rescue
-        #if we have problems with the old check, let's go ahead and attempt to just click it.
-        field.click
-      end
-    end
-
-    def uncheck(locator)
-      field = find_field(locator)
-      begin
-        old_uncheck(locator) if field[:checked]
-      rescue
-        field.click
-      end
     end
   end
 end

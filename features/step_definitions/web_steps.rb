@@ -150,6 +150,10 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
+Then /^(?:|I )should xpath see "([^"]*)"$/ do |xpath_expression|
+  page.has_xpath?(xpath_expression).should be_true
+end
+
 Then /^(?:|I )should see the following within "([^"]*)":$/ do |selector, table|
   with_scope(selector) do
     table.raw.each { |row|

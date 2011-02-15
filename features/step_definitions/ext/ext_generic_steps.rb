@@ -3,8 +3,8 @@ module Capybara
     def fill_in(locator, options={})
       msg = "cannot fill in, no text field, text area or password field with id, name, or label '#{locator}' found"
       raise "Must pass a hash containing 'with'" if not options.is_a?(Hash) or not options.has_key?(:with)
-      field = locate(:xpath, XPath.fillable_field(locator), msg)
-      id = field.node.attribute('id') if options[:hidden]
+      field = find(:xpath, XPath::HTML.fillable_field(locator))
+      id = field['id'] if options[:hidden]
       execute_script("Ext.getCmp('#{id}').removeClass('x-hidden')") if options[:hidden]
       if options[:htmleditor]
         execute_script("Ext.getCmp('#{id}').setValue('#{options[:with]}')")
@@ -55,7 +55,7 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
   menu_array = menu_navigation_list.split('>').map{|x| x.strip}
 
   tb_button = menu_array.delete_at(0)
-
+  Then %Q{I should see "#{tb_button.strip}"}
   When %Q{I press "#{tb_button}"}
 
   menu_array.each do |menu|
@@ -72,6 +72,7 @@ When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   }
 
   When %Q{I go to the ext dashboard page}
+  Then %Q{I should see "#{path_lookup[path.to_sym].split(">")[0].strip}"}
   When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
 end
 
@@ -206,13 +207,13 @@ end
 
 When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
   begin
-    mask = page.find('.x-mask-loading', :text => mask_text)
+    mask = page.find('.loading-indicator', :text => mask_text)
     end_time = Time.now + 5 # wait a max of 5 seconds for the mask to disappear
     while !mask.nil? and Time.now < end_time
-      mask = page.find('.x-mask-loading', :text => mask_text)
+      mask = page.find('.loading-indicator', :text => mask_text)
     end
     mask.should be_nil
-  rescue Selenium::WebDriver::Error::ObsoleteElementError
+  rescue Selenium::WebDriver::Error::ObsoleteElementError, Capybara::ElementNotFound
     # this is perfect, the element has gone from the dom.
   end
 end

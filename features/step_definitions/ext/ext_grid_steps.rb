@@ -2,14 +2,14 @@
 When /^I click ([a-zA-Z0-9\-_]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
+    row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content.strip}')] ]")
 
     if row.nil?
       sleep(1)
-      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
+      row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content.strip}')] ]")
     end
 
-    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{selector} ')]").click
+    row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{selector.strip} ')]").click
   end
 end
 
@@ -93,9 +93,9 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([0-9]*))?(
     rows = grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-row ')]")
 
     if not_exists.nil?
-      rows[rownum.to_i - 1].node.text.should =~ /#{content}/ #convert 1-indexed to 0-indexed and test
+      rows[rownum.to_i - 1].text.should =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     else
-      rows[rownum.to_i - 1].nil? || rows[rownum.to_i - 1].node.text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
+      rows[rownum.to_i - 1].nil? || rows[rownum.to_i - 1].text.should_not =~ /#{content}/ #convert 1-indexed to 0-indexed and test
     end
   end
 end
@@ -134,7 +134,11 @@ def row_button_exists?(icon_name, content)
     row = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), 'x-grid3-row') and .//*[contains(text(), '#{content}')] ]")
   end
 
-  !row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{icon_name} ')]").nil?
+  begin
+    return !row.find(:xpath, ".//*[contains(concat(' ', @class, ' '), ' #{icon_name} ')]").nil?
+  rescue Capybara::ElementNotFound
+    return false
+  end
 end
 
 Then /^I should see the grid items in this order "([^\"]*)"$/ do |orders|

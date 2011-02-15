@@ -114,8 +114,8 @@ Feature: An admin managing users
       When I will confirm on next step
       And I follow "Remove Role"
 
-      Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
-      And I should not see "Health Officer in Dallas County"
+      Then I should not see "Health Officer in Dallas County"
+      And "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
 
     Scenario: Add user as admin should not occur if no home jurisdictation is specified
     When I create a user account with the following info:

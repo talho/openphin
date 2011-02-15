@@ -68,9 +68,11 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.0"
-  gem "selenium-webdriver", "0.0.27"
+  gem "childprocess", "0.1.7"
+  gem "selenium-webdriver", "0.1.3"
   gem "sinatra", "1.0"
-  gem "capybara", "0.3.9"
+  gem "xpath", "0.1.3"
+  gem "capybara", "0.4.1.2"
   #gem "clamav", "0.4.1"
   gem "hydra", "0.23.2", :git => "git://github.com/Dishwasha/hydra.git"
 end

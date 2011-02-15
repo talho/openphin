@@ -257,6 +257,7 @@ end
 
 When /^I attach the tmp file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
   full_path = "#{File.join(Rails.root,'tmp',path)}"
+  page.execute_script("$(\"input[name='#{field}']\").css('opacity', '100')")
   attach_file(field, full_path)
 end
 

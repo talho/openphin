@@ -14,6 +14,7 @@ end
 require 'spec/autorun'
 require 'spec/rails'
 require "webrat"
+require "capybara/rspec"
 
 if is_plugin
   Dir[File.dirname(__FILE__) + '/../../../../spec/spec_helpers/**/*.rb'].each{ |f| require f }

@@ -51,7 +51,8 @@ Feature: Invitation System
     And I navigate to the invitations page
     And I select the "DSHS" grid cell
 
-    Then I should see "Invitation: DSHS"
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
     And I should see "Jane Smith"
     And I should see "jane.smith@example.com"
     And I should see "Yes"
@@ -109,15 +110,15 @@ Feature: Invitation System
       | Bob  | bob.smith@example.com  |
     And invitation "TORCH" has the following invitees:
       | Joe | joe.smith@example.com |
-      
+
     When I navigate to the invitations page
     Then I should see "DSHS" in grid row 1  
     And I should see "TORCH" in grid row 2
     
     When I select the "DSHS" grid cell
-    Then I should see "Invitation: DSHS"
+    Then I should see "DSHS"
     And I should see "Please Join DSHS"
-    And I should see "Please click the link below to join DSHS" in an htmleditor
+    And I should see "Please click the link below to join DSHS"
     And I should see "Default Organization: DSHS" with html stripped
     And I should see "Jane" in grid row 1 column 1 within "#invitationGrid"
     And I should see "jane.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
@@ -146,7 +147,8 @@ Feature: Invitation System
     And I select the "Email" grid header
     And the "Email" grid header is sorted ascending
 
-    Then I should see "Invitation: DSHS"
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
     And I should see "Registrations complete: 60% (3)" with html stripped
     And I should see "Registrations incomplete: 40% (2)" with html stripped
     And I should see "Bill Smith" in grid row 1 column 1 within "#invitationGrid"
@@ -378,7 +380,8 @@ Feature: Invitation System
     And I select the "Profile Updated" grid header
     And the "Profile Updated" grid header is sorted ascending
 
-    Then I should see "Invitation: DSHS"
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
     And I should see "Registrations complete: 40% (2)" with html stripped
     And I should see "Registrations incomplete: 60% (3)" with html stripped
 

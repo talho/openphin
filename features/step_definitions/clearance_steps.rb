@@ -153,7 +153,10 @@ Capybara::Driver::Selenium.class_eval do
 
     def driver
       unless @driver
-        @driver = Selenium::WebDriver.for :firefox
+        profile = Selenium::WebDriver::Firefox::Profile.new
+        profile['extensions.firebug.currentVersion'] = '100.100.100'
+        profile.add_extension("#{Rails.root}/features/support/firebug.xpi") if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+        @driver = Selenium::WebDriver.for :firefox, :profile => profile
         at_exit do
           # Will receive an error if the default session closes before the other sessions
           if @sessions_by_name

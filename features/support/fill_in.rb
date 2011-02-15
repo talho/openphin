@@ -77,9 +77,9 @@ module FeatureHelpers
         when "Are you a public health professional?"
           id = "health_professional"
           if value == "<unchecked>"
-            page.uncheck(id) if find(:css, "##{id}").node.selected?
+            page.uncheck(id) if find(:css, "##{id}").selected?
           else
-            page.check(id) if !find(:css, "##{id}").node.selected?
+            page.check(id) if !find(:css, "##{id}").selected?
           end
         when "Home Jurisdiction"
           value = "" if value.nil?

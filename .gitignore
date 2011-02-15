@@ -62,3 +62,4 @@ vendor/plugins/vms
 lib/workers/vms
 public/javascripts/vms
 public/stylesheets/vms
+firebug.xpi

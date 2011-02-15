@@ -54,7 +54,7 @@ Then /^folder "([^\"]*)" should not exist$/ do |name|
 end
 
 When /^I double\-click the "([^\"]*)" folder$/ do |button|
-  id = page.find('.document-file-icon-view').node[:id]
+  id = page.find('.document-file-icon-view')['id']
   page.execute_script "
     var cmp = Ext.getCmp('#{id}');
     var index = cmp.getStore().find('name', '#{button}');

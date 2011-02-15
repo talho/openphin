@@ -16,7 +16,7 @@ require 'cucumber/web/tableish'
 require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
-require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+#require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
 require "#{Rails.root}/spec/factories"
 require 'spec/mocks'
@@ -54,7 +54,25 @@ Cucumber::Rails::World.use_transactional_fixtures = false
 # How to clean your database when transactions are turned off. See
 # http://github.com/bmabey/database_cleaner for more info.
 
-Capybara.default_driver = :selenium
+Capybara.register_driver :selenium_with_firebug do |app|
+  Capybara::Driver::Selenium
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+    profile['extensions.firebug.currentVersion'] = '100.100.100'
+    profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
+
+    Capybara::Driver::Selenium.new(app, { :browser => :firefox, :profile => profile })
+  end
+end
+
+Capybara.default_driver = :selenium_with_firebug
+#if File.exists?("#{Rails.root}/firebug.xpi")
+#  profile = Selenium::WebDriver::Firefox::Profile.new
+#  profile['extensions.firebug.currentVersion'] = '100.100.100'
+#  profile.add_extension("#{Rails.root}/firebug.xpi")
+#
+#  Selenium::WebDriver.for :firefox, :profile => profile
+#end
 
 Spork.prefork do
   World ActionController::RecordIdentifier

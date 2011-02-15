@@ -49,7 +49,8 @@ Feature: Document Search
     And I log in as "atticus@example.com"
     Given I create a folder outline with "AtticusFolder"
     When I go to the ext dashboard page
-    And I navigate to "Documents"
+    Then I should see "Documents"
+    When I navigate to "Documents"
     And I press "Search"
     And I fill in "Search Text" with "in"
     And I wait for the "Loading" mask to go away
@@ -57,6 +58,7 @@ Feature: Document Search
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Copy to My Folders"
     And I select "AtticusFolder" from ext combo "Move to"
+    And I press "Save"
     And I wait for the "Saving" mask to go away
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away

@@ -227,19 +227,23 @@ Then 'an alert should not exist with:' do |table|
   conditions += attrs['message'].blank? ? "title = :title" : "(title = :title AND message = :message)"
   alert = Alert.find(:first, :conditions => [conditions,
       {:identifier => attrs['identifier'], :title => attrs['title'], :message => attrs['message']}])
-  attrs.each do |attr, value|
-    case attr
-    when 'people'
-      value.split(",").each do |name|
-        display_name = name.split(" ").join(" ")
-        alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
+  if alert.nil?
+    alert.should be_nil
+  else
+    attrs.each do |attr, value|
+      case attr
+      when 'people'
+        value.split(",").each do |name|
+          display_name = name.split(" ").join(" ")
+          alert.audiences.map(&:users).flatten.collect(&:display_name).should_not include(display_name)
+        end
+          when 'targets'
+        value.split(",").each do |email|
+          alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_false
+        end
+      else
+        alert.send(attr).should == value
       end
-		when 'targets'
-      value.split(",").each do |email|
-        alert.targets.map(&:users).flatten.map(&:email).include?(email.strip).should be_false
-      end
-    else
-      alert.send(attr).should == value
     end
   end
 end
