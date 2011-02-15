@@ -433,8 +433,7 @@ class User < ActiveRecord::Base
   end
 
   def to_json_edit_profile
-    rm_list = is_admin? ? role_memberships.all_roles : role_memberships.user_roles
-    role_desc = rm_list.collect { |rm|
+    role_desc = role_memberships.collect { |rm|
       {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
       :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
     }
