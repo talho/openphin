@@ -21,16 +21,16 @@ Feature: Updating an alert
 
   Scenario: Updating an alert
     Given I am logged in as "john.smith@example.com"
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 72 hours                             |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
@@ -44,7 +44,6 @@ Feature: Updating an alert
 
     When I fill in "Message" with "Flying monkey disease contagion is more widespread"
     And I click breadCrumbItem "Preview"
-
     Then I should see a display form with:
       | Severity      | Moderate       |
       | Status        | Actual         |
@@ -53,13 +52,11 @@ Feature: Updating an alert
       | Delivery Time | 72 hours       |
     And I should see "[Update] - Flying Monkey Disease"
     And I should see "Flying monkey disease contagion is more widespread"
-
-    When I expand ext panel "Audience"
+    When I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name           | type         |
       | Dallas County  | Jurisdiction |
       | Health Officer | Role         |
-
     When I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
@@ -78,16 +75,16 @@ Feature: Updating an alert
   Scenario: Updating an alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 72 hours                             |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
@@ -118,7 +115,7 @@ Feature: Updating an alert
     And I should see "[Update] - Flying Monkey Disease"
     And I should see "Flying monkey disease contagion is more widespread"
 
-    When I expand ext panel "Audience"
+    When I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -142,16 +139,16 @@ Feature: Updating an alert
   Scenario: Make sure re-submitting an update after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 60 minutes                           |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"

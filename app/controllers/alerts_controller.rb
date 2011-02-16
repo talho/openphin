@@ -165,7 +165,7 @@ class AlertsController < ApplicationController
             audiences[:groups].push(audience)
           end
         end
-        render :json => {'alert' => alert, 'devices' => @device_types, 'audiences' => audiences, 'success' => true}
+        render :json => {'alert' => alert, 'devices' => @device_types, 'audiences' => audiences, 'success' => true, 'recipient_count' => alert.recipients.count}
       end
     end
   end

@@ -317,7 +317,9 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 // look for json to handle the rest
                 data['alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.alert.title;
                 data['alert[status]'] = this.alert_json.alert.alert.status;
-
+                if (this.recipient_count) {
+                  data['alert[recipient_count]'] = this.recipient_count;
+                }
                 data['alert[call_down_messages][]'] = [];
                 Ext.each(this.getSelectedResponders(), function(responder, index){
                     responder = responder * 1; // turn this into an int
@@ -458,9 +460,9 @@ Talho.SendAlert = Ext.extend(function(){}, {
             leftSide.remove(alertTitle, true);
             leftSide.insert(ix, {xtype: 'displayfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', value: '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alertInfo.title});
             leftSide.getComponent('alert_title_label').destroy();
+            rightSide.getComponent('alert_jurisdiction').disable();
 
             // remove unneeded fields
-            rightSide.getComponent('alert_jurisdiction').destroy();
             rightSide.getComponent('alert_status').destroy();
             rightSide.getComponent('communication_methods').destroy();
             rightSide.getComponent('acknowledge_combo').getStore().loadData(['None', 'Normal']);
@@ -484,6 +486,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
             }, this);
             leftSide.add({xtype:'hidden', value: this.mode, name: '_action'});
 
+            this.recipient_count = this.alert_json.recipient_count;
             leftSide.doLayout();
             rightSide.doLayout();
             this.getPanel().doLayout();
@@ -492,7 +495,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
             leftSide.getComponent('alert_message').setValue(alertInfo.message);
             leftSide.getComponent('alert_short_message').setValue(alertInfo.short_message);
             rightSide.getComponent('alert_severity').setValue(alertInfo.severity);
-            
+
 
             this.getPanel().loadMask.hide();
         }

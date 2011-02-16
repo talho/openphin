@@ -109,7 +109,7 @@ Feature: Sending alerts form
       | Dallas County  | Jurisdiction |
     And I click breadCrumbItem "Preview"
     Then I should have the "Preview" breadcrumb selected
-
+    And I wait for the audience calculation to finish
     When I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
@@ -201,7 +201,7 @@ Feature: Sending alerts form
       | name           | type         |
       | Dallas County  | Jurisdiction |
     And I click breadCrumbItem "Preview"
-
+    And I wait for the audience calculation to finish
     And I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open
@@ -247,12 +247,12 @@ Feature: Sending alerts form
       | DSHS  | Organization |
     And I click breadCrumbItem "Preview"
 
-    And I expand ext panel "Audience"
+    And I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown
       | name       | type         |
       | DSHS       | Organization |
       | Jane Smith | Recipient    |
-
+    And I wait for the audience calculation to finish
     When I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Send Alert" tab should not be open

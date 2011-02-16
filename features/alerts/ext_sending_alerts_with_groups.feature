@@ -84,7 +84,10 @@ Feature: Sending alerts using groups
       | Potter County | Jurisdiction |
       | G2            | Group        |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     Then the following users should receive the alert email:
       | People | john.smith@example.com, jane.smith@example.com, bob.smith@example.com, jim.smith@example.com, leroy@example.com |
@@ -101,7 +104,10 @@ Feature: Sending alerts using groups
       | name          | type         |
       | G2            | Group        |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People | john.smith@example.com, jane.smith@example.com, bob.smith@example.com, jim.smith@example.com |

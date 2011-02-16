@@ -10,23 +10,22 @@ Feature: Acknowledging an alert
       | Wise County   |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And delayed jobs are processed
-    And I am logged in as "john.smith@example.com"
-    And I am allowed to send alerts
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
 
   Scenario: Acknowledging an alert through an email with signing in
-    When I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
-
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-
-    And I send the alert
-
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    And a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | severity              | Moderate                                     |
+      | status                | Actual                                       |
+      | acknowledge           | Yes                                          |
+      | from_jurisdiction     | Dallas County                                |
+      | communication methods | Email                                        |
+      | people                | Keith Gaddis                                 |
+      | jurisdictions         | Dallas County                                |
     Then the following users should receive the alert email:
-      | People        | keith.gaddis@example.com |
+      | People        | keith.gaddis@example.com                                    |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
@@ -37,17 +36,20 @@ Feature: Acknowledging an alert
     And the alert should be acknowledged
 
   Scenario: Acknowledging an alert through an email without signing in
-    When I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | severity              | Moderate                                     |
+      | status                | Actual                                       |
+      | acknowledge           | Yes                                          |
+      | from_jurisdiction     | Dallas County                                |
+      | communication methods | Email                                        |
+      | people                | Keith Gaddis                                 |
 
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-
-    And I send the alert
-
-    And the following users should receive the alert email:
-      | People        | keith.gaddis@example.com |
+    Then the following users should receive the alert email:
+      | People        | keith.gaddis@example.com                                    |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
       | body contains alert acknowledgment link | |
 
@@ -57,15 +59,18 @@ Feature: Acknowledging an alert
     And the alert should be acknowledged
 
   Scenario: A user cannot acknowledge an sensitive alert through an email without signing in
-    When I fill in the ext alert defaults
-    And I select "Normal" from ext combo "Acknowledge"
-    And I check "Sensitive (confidential)"
-
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-
-    And I send the alert
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    Given a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | For more details, keep on reading...         |
+      | severity              | Moderate                                     |
+      | status                | Actual                                       |
+      | acknowledge           | Yes                                          |
+      | sensitive             | true                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | communication methods | Email                                        |
+      | people                | Keith Gaddis                                 |
 
     When delayed jobs are processed
     And the following users should receive the alert email:
@@ -79,42 +84,24 @@ Feature: Acknowledging an alert
     And the alert should not be acknowledged
 
   Scenario: Acknowledging an alert through phone
-    When I sign out
-    # legacy code because we haven't converted user profile to ext
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "2105551212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    And I should have a phone device with the phone "2105551212"
-    And I sign out
-    # end legacy code
+    Given keith.gaddis@example.com has the following devices:
+      | phone | 2105551212 |
+    And I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    And a sent alert with:
+      | title                 | H1N1 SNS push packs to be delivered tomorrow |
+      | message               | There is a Chicken pox outbreak in the area  |
+      | short_message         | Chicken pox outbreak                         |
+      | severity              | Moderate                                     |
+      | status                | Actual                                       |
+      | acknowledge           | Yes                                          |
+      | sensitive             | true                                         |
+      | from_jurisdiction     | Dallas County                                |
+      | communication methods | Phone                                        |
+      | caller_id             | 4114114111                                   |
+      | people                | Keith Gaddis                                 |
 
-    Given I log in as "john.smith@example.com"
-    When I go to the ext dashboard page
-    And I navigate to "HAN > Send an Alert"
-
-    When I fill in the ext alert defaults
-    And I fill in "Short Message" with "Chicken pox outbreak"
-    And I select "Normal" from ext combo "Acknowledge"
-    And I select "Moderate" from ext combo "Severity"
-    And I check "Phone"
-    And I fill in "Caller ID" with "4114114111"
-    And I uncheck "E-mail"
-
-    And I select the following alert audience:
-      | name         | type |
-      | Keith Gaddis | User |
-
-    And I send the alert
-
-    And I sign out
-
-    When delayed jobs are processed
+    And delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
@@ -132,7 +119,11 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through an email with signing in and call downs
-    When I fill in the ext alert defaults
+    Given I am logged in as "john.smith@example.com"
+    And I am allowed to send alerts
+    When I go to the ext dashboard page
+    And I navigate to "HAN > Send an Alert"
+    And I fill in the ext alert defaults
     And I select "Advanced" from ext combo "Acknowledge"
     # add a 3rd response box
     And I press "+ Add another response"
@@ -146,7 +137,10 @@ Feature: Acknowledging an alert
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
@@ -166,10 +160,9 @@ Feature: Acknowledging an alert
     # end legacy code: replace when acknowledgement is implemented
 
   Scenario: Acknowledging an alert through phone with call downs
-    When I sign out
     # legacy code here because we have not update the user profile
     Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
+    When I go to the edit profile page    
     And I follow "Add Device"
     And I select "Phone" from "Device Type"
     And I fill in "Phone" with "2105551212"
@@ -198,7 +191,10 @@ Feature: Acknowledging an alert
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     And I sign out
 
     When delayed jobs are processed

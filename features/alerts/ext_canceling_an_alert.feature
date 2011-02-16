@@ -21,17 +21,16 @@ Feature: Canceling an alert
   Scenario: Canceling an alert
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Short Message         | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 72 hours                             |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I go to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
@@ -49,7 +48,7 @@ Feature: Canceling an alert
     And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease is not contagious"
 
-    When I expand ext panel "Audience"
+    When I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -73,18 +72,16 @@ Feature: Canceling an alert
   Scenario: Cancelling an alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Short Message         | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 72 hours                             |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I sign out
 
@@ -105,7 +102,7 @@ Feature: Canceling an alert
     And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease is not contagious"
 
-    When I expand ext panel "Audience"
+    When I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -129,17 +126,16 @@ Feature: Canceling an alert
   Scenario: Make sure re-submitting a cancellation after alert is canceled doesn't work
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-
-    And I've sent an alert with:
-      | Jurisdictions         | Dallas County                        |
-      | Roles                 | Health Officer                       |
-      | Title                 | Flying Monkey Disease                |
-      | Message               | For more details, keep on reading... |
-      | Severity              | Moderate                             |
-      | Status                | Actual                               |
-      | Acknowledge           | None                                 |
-      | Communication methods | E-mail                               |
-      | Delivery Time         | 60 minutes                           |
+    And a sent alert with:
+      | title                 | Flying Monkey Disease                  |
+      | message               | For more details, keep on reading...   |
+      | severity              | Moderate                               |
+      | status                | Actual                                 |
+      | acknowledge           | None                                   |
+      | from_jurisdiction     | Dallas County                          |
+      | communication methods | Email                                  |
+      | roles                 | Health Officer                         |
+      | jurisdictions         | Dallas County                          |
 
     When I am on the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"

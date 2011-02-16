@@ -275,7 +275,7 @@ Feature: Viewing the alert log
 
     Then I should see "John Smith" within display field "Author"
     And I should see "Created at:"
-    And I expand ext panel "Audience"
+    And I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name                                        | type         |
       | Texas                                       | Jurisdiction |
@@ -320,7 +320,7 @@ Feature: Viewing the alert log
     Then I should see "John Smith" within display field "Author"
     And I should see "Created at:"
     #      And I should see /\d\d:\d\d/ within ".created_at"
-    And I expand ext panel "Audience"
+    And I expand ext panel "Alert Recipients (Primary Audience)"
     Then I should see the following audience breakdown:
       | name           | type         |
       | Texas          | Jurisdiction |
