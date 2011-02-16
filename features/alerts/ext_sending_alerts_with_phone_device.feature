@@ -9,6 +9,8 @@ Feature: Sending alerts to phones
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator  | Dallas County  |
       | Keith Gaddis    | keith.gaddis@example.com | Epidemiologist                               | Wise County    |
+    And keith.gaddis@example.com has the following devices:
+      | phone | 2105551212 |
     And Texas is the parent jurisdiction of:
       | Dallas County |
       | Wise County   |
@@ -16,20 +18,6 @@ Feature: Sending alerts to phones
     And delayed jobs are processed
 
   Scenario: Sending alerts to phone devices
-    # legacy code because the profile page has not been converted yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "210-555-1212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    And I should have a phone device with the phone "2105551212"
-    And I sign out
-    #end legacy code: replace when we've converted user profiles
-
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the ext dashboard page
@@ -45,29 +33,16 @@ Feature: Sending alerts to phones
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
-    And I send the alert
-
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  |
       | 2105551212 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
   Scenario: Sending alerts to phone devices with acknowledgment
-    # legacy code because the profile page has not been converted yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "2105551212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    And I should have a phone device with the phone "2105551212"
-    And I sign out
-    #end legacy code: replace when we've converted user profiles
-
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the ext dashboard page
@@ -85,8 +60,10 @@ Feature: Sending alerts to phones
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
-
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  |
@@ -105,29 +82,9 @@ Feature: Sending alerts to phones
     #end legacy code
 
   Scenario: Sending alerts to users with multiple phone devices
-    # legacy code because the profile page has not been converted yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "210-555-1212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "210-555-1213"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    Then I should see "2105551213"
-    And I should have a phone device with the phone "2105551212"
-    And I should have a phone device with the phone "2105551213"
-    And I sign out
-    #end legacy code: replace when we've converted user profiles
-
     Given I log in as "john.smith@example.com"
+    And keith.gaddis@example.com has the following devices:
+      | phone | 2105551213 |
     And I am allowed to send alerts
     When I go to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
@@ -143,8 +100,10 @@ Feature: Sending alerts to phones
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
-
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                           |
@@ -152,20 +111,6 @@ Feature: Sending alerts to phones
       | 2105551213 | The following is an alert from the Texas Public Health Information Network.  There is a Chicken pox outbreak in the area |
 
   Scenario: Sending alerts with call down
-    # legacy code because the profile page has not been converted yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "210-555-1212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    And I should have a phone device with the phone "2105551212"
-    And I sign out
-    #end legacy code: replace when we've converted user profiles
-
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the ext dashboard page
@@ -192,8 +137,10 @@ Feature: Sending alerts to phones
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
-        
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  | call_down                            |
@@ -201,20 +148,6 @@ Feature: Sending alerts to phones
     And the phone call should have 5 calldowns
 
  Scenario: A user can *not* acknowledge a phone alert with a call down response *without* selecting a response
-    # legacy code because the profile page has not been converted yet
-    Given I am logged in as "keith.gaddis@example.com"
-    When I go to the edit profile page
-    And I follow "Add Device"
-    And I select "Phone" from "Device Type"
-    And I fill in "Phone" with "210-555-1212"
-    And I press "Save"
-    Then I should see "Profile information saved."
-    When I go to the edit profile page
-    Then I should see "2105551212"
-    And I should have a phone device with the phone "2105551212"
-    And I sign out
-    # end legacy code: replace when we've converted user profiles
-
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
     When I go to the ext dashboard page
@@ -241,7 +174,10 @@ Feature: Sending alerts to phones
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     When delayed jobs are processed
     Then the following phone calls should be made:
       | phone      | message                                                                                                                  | call_down                            |

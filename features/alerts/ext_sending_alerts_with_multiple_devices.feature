@@ -81,7 +81,10 @@ Feature: Sending alerts to multiple devices
       | Martin Gons   | User |
       | George Strait | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     
     When delayed jobs are processed
     Then the following phone calls should be made:

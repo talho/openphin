@@ -55,7 +55,10 @@ Feature: Creating and sending alerts
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
@@ -67,7 +70,7 @@ Feature: Creating and sending alerts
       | body contains | For more details, keep on reading... |
     And "fix the above step to include an alert id" should be implemented
 
-  Scenario: Previewing an alert
+  Scenario: Previewing an alert                              
     When I fill in the ext alert defaults
     And I select "Moderate" from ext combo "Severity"
     And I fill in "Message" with "For more details, keep on reading..."
@@ -90,7 +93,7 @@ Feature: Creating and sending alerts
       | Methods       | Email    |
       | Delivery Time | 72 hours |
 
-    And I expand ext panel "Audience"
+    And I expand ext panel "Alert Recipients (Primary Audience)"
     And I should see the following audience breakdown
       | name           | type         |
       | Dallas County  | Jurisdiction |
@@ -128,7 +131,10 @@ Feature: Creating and sending alerts
       | Keith Gaddis | User |
       | Dan Morrison | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People       | keith.gaddis@example.com, dan.morrison@example.com |
@@ -149,7 +155,10 @@ Feature: Creating and sending alerts
       | name          | type         |
       | Dallas County | Jurisdiction |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | john.smith@example.com, brian.simms@example.com, ed.mcguyver@example.com |
@@ -171,7 +180,10 @@ Feature: Creating and sending alerts
       | Dallas County  | Jurisdiction |
       | Tarrant County | Jurisdiction |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | john.smith@example.com, ethan.waldo@example.com |
@@ -192,7 +204,11 @@ Feature: Creating and sending alerts
       | name           | type |
       | Health Officer | Role |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
+
     And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, dan.morrison@example.com, brian.ryckbost@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |

@@ -48,3 +48,7 @@ When /^I force open the alert update tab$/ do
   al = Alert.find(:all).first
   force_open_tab('Create an Alert Update', '', "{title: 'Create an Alert Update', url: 'alerts/#{al.id}/edit?_action=update', mode: 'update', initializer: 'Talho.SendAlert', alertId: #{al.id}}")
 end
+
+When /^I wait for the audience calculation to finish$/ do
+  wait_until {page.find('.working-notice').nil?}
+end

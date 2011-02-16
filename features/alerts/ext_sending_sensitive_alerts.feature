@@ -24,9 +24,10 @@ Feature: Sending sensitive alerts
     And I select the following alert audience:
       | name         | type |
       | Keith Gaddis | User |
-
-    And I send the alert
-
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     And the following users should receive the alert email:
       | People        | keith.gaddis@example.com |
       | subject       | Health Alert "H1N1 SNS push packs to be delivered tomorrow" |
