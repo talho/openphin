@@ -111,6 +111,7 @@ Feature: Acknowledging an alert
     And delayed jobs are processed
 
     When I go to the ext dashboard page
+    And I wait for the "Loading" mask to go away
     And I navigate to "HAN > HAN Alerts"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
     And I click alert "H1N1 SNS push packs to be delivered tomorrow"

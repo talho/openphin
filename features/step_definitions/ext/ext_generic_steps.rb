@@ -87,6 +87,24 @@ module Capybara
       def has_no_content?(content, options={})
         has_no_xpath?(XPath::HTML.content(content), options)
       end
+
+      def has_button?(locator, options={})
+        has_xpath?(XPath::HTML.button(locator), options)
+      end
+
+      def has_no_button?(locator, options={})
+        has_no_xpath?(XPath::HTML.button(locator), options)
+      end
+
+      def has_checked_field?(locator, options={})
+        options[:checked] = true
+        has_xpath?(XPath::HTML.field(locator), options)
+      end
+
+      def has_unchecked_field?(locator, options={})
+        options[:unchecked] = true
+        has_xpath?(XPath::HTML.field(locator), options)
+      end
     end
   end
 end
