@@ -67,7 +67,7 @@ When /^I click the organization membership request approval link in the email fo
   request = OrganizationMembershipRequest.find_by_user_id(user.id)
   link = admin_organization_membership_request_path(request.id)
   email.body.include?(link).should be_true
-  link = admin_organization_membership_request_path(request.id, :host => "http://localhost:9887")
+  link = admin_organization_membership_request_path(request.id, :host => "http://#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   visit link
 end
 
@@ -76,7 +76,7 @@ When /^"([^\"]*)" clicks the organization confirmation link in the email$/ do |u
   organization = Organization.find_by_contact_email!(user_email)
   link = organization_confirmation_path(organization, organization.token)
   email.body.include?(link).should be_true
-  link = organization_confirmation_path(organization, organization.token, :host => "http://localhost:9887")
+  link = organization_confirmation_path(organization, organization.token, :host => "http://#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   visit link
 end
 

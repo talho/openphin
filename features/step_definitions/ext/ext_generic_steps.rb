@@ -26,10 +26,12 @@ module Capybara
 
     def method_missing(*args)
       if(current_node.class == Array)
-        if args.length == 2
-          args << {:nowait => true}
-        elsif args.length == 3
-          args[2][:nowait] = true
+        if current_node.length > 1
+          if args.length == 2
+            args << {:nowait => true}
+          elsif args.length == 3
+            args[2][:nowait] = true
+          end
         end
         current_node.map do |node|
           if node.send(*args)

@@ -199,7 +199,7 @@ When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   user = User.find_by_email!(user_email)
   link = user_confirmation_url(user, user.token, :host => HOST)
   email.body.include?(link).should be_true
-  link = user_confirmation_url(user, user.token, :host => "localhost:9887")
+  link = user_confirmation_url(user, user.token, :host => "#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   visit link
 end
 

@@ -127,7 +127,7 @@ end
 
 Then /^my session should stay active$/ do
   session = Capybara::Session.new(:selenium)
-  session.visit("http://localhost:9887")
+  session.visit("http://#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   session.should have_content("Sign Out")  
 end
 
