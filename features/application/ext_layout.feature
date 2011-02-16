@@ -29,6 +29,7 @@ Feature: Application layout should have communications, portal & application too
   Scenario: Viewing the portal and comm toolbar as a user
     Given I am logged in as "martin@example.com"
     When I go to the ext dashboard page
+    And I wait for the "Loading" mask to go away
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
       | FAQs                 |

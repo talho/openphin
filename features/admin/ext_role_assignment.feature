@@ -113,7 +113,7 @@ Feature: Assigning roles to users for roles
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should xpath see "//*[contains(text(),'System:Admin') and contains(@class, 'role-title')]"
+    And I should see "System:Admin" within ".role-title"
 
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
@@ -121,7 +121,7 @@ Feature: Assigning roles to users for roles
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should xpath see "//*[contains(text(),'System:Admin') and contains(@class, 'role-title')]"
+    And I should see "System:Admin" within ".role-title"
 
   Scenario: Assigning system roles to a user in a child of my jurisdiction
     Given I am logged in as "admin@state.tx.us"
@@ -129,4 +129,4 @@ Feature: Assigning roles to users for roles
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should xpath see "//*[contains(text(),'System:Admin') and contains(@class, 'role-title')]"
+    And I should see "System:Admin" ".role-title"

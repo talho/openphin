@@ -13,6 +13,79 @@ module Capybara
       end
       execute_script("Ext.getCmp('#{id}').addClass('x-hidden')") if options[:hidden]
     end
+
+    def within(*args)
+      new_scope = all(*args)
+      begin
+        scopes.push(new_scope.length > 1 ? new_scope : new_scope.first)
+        yield
+      ensure
+        scopes.pop
+      end
+    end
+
+    def method_missing(*args)
+      if(current_node.class == Array)
+        if args.length == 2
+          args << {:nowait => true}
+        elsif args.length == 3
+          args[2][:nowait] = true
+        end
+        current_node.map do |node|
+          if node.send(*args)
+            return true
+          end
+        end
+        false
+      else
+        current_node.send(*args)
+      end
+    end
+  end
+end
+
+module Capybara
+  module Node
+    module Matchers
+      def has_selector?(*args)
+        options = if args.last.is_a?(Hash) then args.last else {} end
+        p = lambda do
+          results = all(*args)
+
+          case
+          when results.empty?
+            false
+          when options[:between]
+            options[:between] === results.size
+          when options[:count]
+            options[:count] == results.size
+          when options[:maximum]
+            options[:maximum] >= results.size
+          when options[:minimum]
+            options[:minimum] <= results.size
+          else
+            results.size > 0
+          end
+        end
+        if options[:nowait]
+          p.call
+        else
+          wait_conditionally_until do
+            p.call
+          end
+        end
+      rescue Capybara::TimeoutError
+        return false
+      end
+
+      def has_content?(content, options={})
+        has_xpath?(XPath::HTML.content(content), options)
+      end
+
+      def has_no_content?(content, options={})
+        has_no_xpath?(XPath::HTML.content(content), options)
+      end
+    end
   end
 end
 
@@ -72,15 +145,16 @@ When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   }
 
   When %Q{I go to the ext dashboard page}
-  Then %Q{I should see "#{path_lookup[path.to_sym].split(">")[0].strip}"}
   When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
 end
 
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|
-  within(:css, "##{name}") do
+  within("##{name}") do
     table.rows.each do |row|
       value = row[0]
-      within(:css, ".x-toolbar-cell") { page.should have_content(value) }
+      within(".x-toolbar-cell") do
+        page.should have_content(value)
+      end
     end
     false
   end

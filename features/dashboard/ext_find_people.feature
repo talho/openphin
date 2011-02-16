@@ -32,7 +32,6 @@ Scenario: Public-only user can not navigate to Find People
   Given I am logged in as "dall.pub@example.com"
   When I go to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
-  And I sleep 2
   Then I should see the following toolbar items in "top_toolbar":
     | My Account |
   And I should not see the following toolbar items in "top_toolbar":

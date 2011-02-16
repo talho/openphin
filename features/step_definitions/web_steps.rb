@@ -150,8 +150,14 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
   end
 end
 
-Then /^(?:|I )should xpath see "([^"]*)"$/ do |xpath_expression|
-  page.has_xpath?(xpath_expression).should be_true
+Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")? without waiting$/ do |text, selector|
+  with_scope(selector) do
+    if page.respond_to? :should
+      page.should have_content(text, :nowait => true)
+    else
+      assert page.has_content?(text, :nowait => true)
+    end
+  end
 end
 
 Then /^(?:|I )should see the following within "([^"]*)":$/ do |selector, table|
