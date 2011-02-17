@@ -88,12 +88,10 @@ end
 Then /^I should see in my list of devices$/ do |table|
   table.rows_hash.each do |type, value|
     case type
-      when /Email/
-        within("#devices .device_email_device") do
-          page.should have_content(value)
-        end
-      else
-        raise "The type '#{type}' is not supported, please update this step if you intended to use it"
+    when /Email/
+      waiter do
+        page.find("#devices .device_email_device", :text => value)
+      end.should_not be_nil
     end
   end
 end

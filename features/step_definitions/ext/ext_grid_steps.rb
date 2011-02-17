@@ -2,16 +2,8 @@
 When /^I click ([a-zA-Z0-9\-_]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          @row = page.find(".x-grid3-row", :text => content.strip)
-        rescue Capybara::ElementNotFound
-        end
-      end
-
-      @row.find(".#{selector.strip}").click
-    rescue Capybara::TimeoutError
+    waiter do
+      page.find(".x-grid3-row", :text => content.strip).find(".#{selector.strip}").click
     end
   end
 end
@@ -19,16 +11,8 @@ end
 When /^I select the "([^"]*)" grid header(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          @header = page.find("td.x-grid3-hd", :text => content)
-        rescue Capybara::ElementNotFound
-        end
-      end
-
-      @header.click
-    rescue Capybara::TimeoutError
+    waiter do
+      page.find("td.x-grid3-hd", :text => content).click
     end
   end
 end
@@ -36,16 +20,8 @@ end
 When /^I select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          @row = page.find(".x-grid3-row", :text => content)
-        rescue Capybara::ElementNotFound
-        end
-      end
-
-      @row.click
-    rescue Capybara::TimeoutError
+    waiter do
+      page.find(".x-grid3-row", :text => content).click
     end
   end
 end
@@ -53,15 +29,8 @@ end
 When /^I select the "([^"]*)" grid cell(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          @row = page.find(".x-grid3-cell", :text => content)
-        rescue Capybara::ElementNotFound
-        end
-      end
-      @row.click unless @row.nil?
-    rescue Capybara::TimeoutError
+    waiter do
+      page.find(".x-grid3-cell", :text => content).click
     end
   end
 end
@@ -71,16 +40,9 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([0-9]*))?(
 
   #we're expecting num to be 1-indexed in tests.
   with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          @grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//*[contains(text(), '#{content}')#{column}] ]]")
-        rescue Capybara::ElementNotFound
-        end
-      end
-    rescue Capybara::TimeoutError
-      raise "Could not find the specified row or column in the grid." if not_exists.blank?
-    end
+    waiter do
+      @grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//*[contains(text(), '#{content}')#{column}] ]]")
+    end.should_not be_nil
 
     if @grid
       rows = @grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-row ')]")
@@ -109,32 +71,20 @@ When /^the "([^"]*)" grid header is sorted (ascending|descending)$/ do |header, 
 end
 
 Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$/ do |content, within_selector, not_exists|
-  with_scope(within_selector) do
-    begin
-      wait_until do
-        begin
-          page.find(".x-grid3-row-selected", :text => content)
-        rescue Capybara::ElementNotFound
-        end
-      end
-    rescue Capybara::TimeoutError
-      raise "Element does not exist and it should" if not_exists.nil?
-    end
+  row = waiter do
+    page.find(".x-grid3-row-selected", :text => content)
+  end
+  if not_exists
+    row.should be_nil
+  else
+    row.should_not be_nil
   end
 end
 
 def row_button_exists?(icon_name, content)
-  begin
-    wait_until do
-      begin
-        page.find(".x-grid3-row", :text => /#{content}/).find(".#{icon_name}")
-      rescue Capybara::ElementNotFound
-      end
-    end
-  rescue Capybara::TimeoutError
-    return false
+  waiter do
+    page.find(".x-grid3-row", :text => /#{content}/).find(".#{icon_name}").nil? == false
   end
-  true
 end
 
 Then /^I should see the grid items in this order "([^\"]*)"$/ do |orders|

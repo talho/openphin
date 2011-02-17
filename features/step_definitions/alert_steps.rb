@@ -119,8 +119,8 @@ When "I make changes to the alert form with:" do |table|
 end
 
 When 'I click "$link" on "$title"' do |link, title|
-  within(".alert:contains('#{title}')") do
-    click_link link
+  waiter do
+    page.find(".alert", :text => "title").click_link link
   end
 end
 

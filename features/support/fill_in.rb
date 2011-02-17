@@ -8,18 +8,17 @@ module FeatureHelpers
       else
         name_array = name.split("")
       end
-      wait_until{page.find(".maininput").nil? == false}
-      div_elem = page.find(".maininput")
+      div_elem = waiter do
+        page.find(".maininput")
+      end
+      div_elem.should_not be_nil
       div_elem.click
       name_array.each do |c|
         is_click = false
         div_elem.set(div_elem.value + c)
-        begin
-          wait_until{page.find("li.outer").nil? == false}
-          sleep 0.5
+        waiter do
           page.find("li.outer").click
           is_click = true
-        rescue
         end
         break if is_click
       end

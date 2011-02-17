@@ -13,6 +13,19 @@ module WithinHelpers
   def with_scope(locator)
     locator.blank? ? yield : within(locator) { yield }
   end
+
+  def waiter
+    begin
+      wait_until do
+        begin
+          yield
+        rescue Capybara::ElementNotFound
+        end
+      end
+    rescue Capybara::TimeoutError
+      return nil
+    end
+  end
 end
 World(WithinHelpers)
 

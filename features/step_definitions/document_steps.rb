@@ -104,17 +104,21 @@ When /^I wait and fill in "([^\"]*)" with "([^\"]*)"$/ do |field, value|
 end
 
 When /^I wait for the "([^\"]*)" element to load$/ do |value|
-  wait_until{page.find("#{value}").nil? == false}
-  sleep 0.5
+  waiter do
+    page.find(value)
+  end.should_not be_nil
 end
 
 When /^I wait for the "([^\"]*)" element to finish$/ do |value|
-  wait_until{page.find("#{value}", :visible => true).nil? == true}
-  sleep 0.5
+  waiter do
+    page.find(value, :visible => true)
+  end.should be_nil
 end
 
 When /^I toggle the folder "([^\"]*)"$/ do |value|
-  wait_until{page.find("a#toggle_closed").nil? == false}
+  waiter do
+    page.find("a#toggle_closed")
+  end.should_not be_nil
   elem = page.find("a", :text => value)
   link = URI.parse(elem[:href]).path.split("/")
   toggle_link = page.find("li##{link[1].gsub(/s/, '')}_#{link[2]} a#toggle_closed")

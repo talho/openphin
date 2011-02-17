@@ -5,16 +5,15 @@ When /^I specifically go to ([^\"]*) for "([^\"]*)"$/ do |page_name, arg|
 end
 
 Then /^the "([^\"]*)" class selector should contain "([^\"]*)"$/ do |field, value|
-  within(".#{field}") do
-    page.should have_content(value)
-  end
+  waiter do
+    page.find(".#{field}", :text => value)
+  end.should_not be_nil
 end
 
 Then /^the "([^\"]*)" class selector should not contain "([^\"]*)"$/ do |field, value|
-  within(".#{field}") do
-    page.should_not have_content(value)
-  end
-  #page.should_not have_css(".#{field}", :content => value)
+  wait_time do
+    page.find(".#{field}", :text => value)
+  end.should be_nil
 end
 
 Then /^I should see the link "([^\"]*)" that goes to "([^\"]*)"$/ do |value, link|

@@ -50,13 +50,7 @@ When /^I force open the alert update tab$/ do
 end
 
 When /^I wait for the audience calculation to finish$/ do
-
-  wait_until do
-    begin
-      page.find('.working-notice')
-      false
-    rescue Capybara::ElementNotFound
-      true
-    end
+  waiter do
+    page.find(".working-notice")
   end
 end
