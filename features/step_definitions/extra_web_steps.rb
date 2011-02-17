@@ -41,7 +41,7 @@ end
 
 When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
   with_scope(selector) do
-    id = page.find(:xpath, "//button[contains(text(), '#{field}')]")['for']
+    id = page.find("button", :text => field)['for']
     page.execute_script("$('##{id}').css('opacity', '100')")
     attach_file(id, File.join(RAILS_ROOT, path))
     sleep 1
@@ -54,10 +54,11 @@ end
 
 Then /^I should (not )?see "([^"]*)" in an? (?:|html)editor(?: within "([^"]*)")?$/ do |not_exists, content, selector|
   with_scope(selector) do
-    if not_exists.nil?
-      page.find(:xpath, "//textarea[contains(@class,'x-form-textarea') and contains(@class,'x-form-field') and contains (@class,'x-hidden')]").node.value.should =~ /#{content}/
-    else
-      page.find(:xpath, "").node.value.should_not =~ /#{content}/
+    begin
+      page.find("textarea .x-form-textarea .x-form-field .x-hidden", :text => /#{content}/)
+      assert !not_exists.blank?
+    rescue Capybara::ElementNotFound
+      assert not_exists.blank?
     end
   end
 end

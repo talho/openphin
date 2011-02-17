@@ -74,9 +74,7 @@ Then /^the group "([^\"]*)" in "([^\"]*)" should not exist$/ do |name, jurisdict
 end
 
 Then /^I should see "(.*)" as a groups option$/ do |name|
-  with_scope("#audience") do
-    page.should have_content(name)
-  end
+  page.should have_content("#audience", :text => name)
 end
 
 Then /^I should see that the group includes\:$/ do |table|

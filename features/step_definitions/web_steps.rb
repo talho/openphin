@@ -11,7 +11,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "pat
 
 module WithinHelpers
   def with_scope(locator)
-    locator ? within(locator) { yield } : yield
+    locator.blank? ? yield : within(locator) { yield }
   end
 end
 World(WithinHelpers)
@@ -141,19 +141,10 @@ Then /^(?:|I )should see JSON:$/ do |expected_json|
 end
 
 Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  see = lambda do
-    if page.respond_to? :should
-      page.should have_content(text)
-    else
-      assert page.has_content?(text)
-    end
-  end
-  if selector.blank?
-    see.call
+  if selector
+    page.should have_selector(selector, :text => text)
   else
-    within(selector) do
-      see.call
-    end
+    page.should have_content(text)
   end
 end
 
