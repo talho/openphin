@@ -46,7 +46,10 @@ Feature: Sending alerts to SMS devices
       | name         | type |
       | Keith Gaddis | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     When delayed jobs are processed
     Then the following SMS calls should be made:

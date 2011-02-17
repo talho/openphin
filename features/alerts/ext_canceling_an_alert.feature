@@ -49,12 +49,15 @@ Feature: Canceling an alert
     And I should see "Flying monkey disease is not contagious"
 
     When I expand ext panel "Alert Recipients (Primary Audience)"
+
     Then I should see the following audience breakdown:
       | name           | type         |
       | Dallas County  | Jurisdiction |
       | Health Officer | Role         |
 
-    When I press "Send Alert"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+
     Then the "Alert Log and Reporting" tab should be open
     And the "Create an Alert Cancellation" tab should not be open
 
@@ -142,7 +145,9 @@ Feature: Canceling an alert
     When I click "Cancel" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
 
     Then I should not see button "Cancel" for alert "Flying Monkey Disease"
     When I override alert

@@ -272,9 +272,11 @@ When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
 end
 
 Then /^the "([^\"]*)" field should be invalid$/ do |field_name|
-  field = find_field(field_name)
-  if field.nil?
-    field = page.find(:xpath, "//div[@id=//label[contains(text(), '#{field_name}')]/@for]") # handle the checkbox group case where it is a div and not an input or text area or other form of field
+  begin
+    field = find_field(field_name)
+  rescue Capybara::ElementNotFound
+    # handle the checkbox group case where it is a div and not an input or text area or other form of field
+    field = page.find(:xpath, "//div[@id=//label[contains(text(), '#{field_name}')]/@for]")
   end
   field.find(:xpath, ".[contains(concat(' ', @class, ' '), 'x-form-invalid')]").should_not be_nil
 end
@@ -310,7 +312,7 @@ When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
     end
     mask.should be_nil
   rescue Selenium::WebDriver::Error::ObsoleteElementError, Capybara::ElementNotFound
-    # this is perfect, the element has gone from the dom.
+    # this is perfect, the element has gone from the dom.  Or it hasn't appeared yet.  Then this isn't perfect.
   end
 end
 
@@ -327,8 +329,8 @@ Then /^I should not be able to navigate to "([^\"]*)"$/ do |menu_navigation_list
     end
 
     menu_item_found = true
-  rescue Capybara::TimeoutError
-    menu_item_found = false # if it times out, we know that we were unable to find the error
+  rescue Capybara::TimeoutError, Capybara::ElementNotFound
+    menu_item_found = false # if it times out, we know that we were unable to find the element
   end
 
   menu_item_found.should be_false

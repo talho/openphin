@@ -32,7 +32,11 @@ When /^I click "([^"]*)" within alert "([^"]*)"$/ do |link, title|
 end
 
 Then /^I should not see button "([^\"]*)" for alert "([^\"]*)"$/ do |link, title|
-  page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).should be_nil
+  begin
+    page.find(:xpath, "//a[../../span[text() = '#{title}']]", :text => link).should be_nil
+  rescue
+    true
+  end
 end
 
 When /^I should see "([^\"]*)" for user "([^\"]*)"$/ do |text, user|
@@ -50,7 +54,9 @@ When /^I force open the alert update tab$/ do
 end
 
 When /^I wait for the audience calculation to finish$/ do
-  waiter do
-    page.find(".working-notice")
+  begin
+    wait_until do (!page.find('.working-notice')) end
+  rescue Capybara::ElementNotFound
+    assert true
   end
 end

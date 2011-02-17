@@ -121,7 +121,9 @@ Feature: Updating an alert
       | Dallas County  | Jurisdiction |
       | Health Officer | Role         |
 
-    When I press "Send Alert"
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
     Then the "Alert Log and Reporting" tab should be open
     And the "Create an Alert Update" tab should not be open
     
@@ -155,7 +157,11 @@ Feature: Updating an alert
     When I click "Cancel" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
+    And the "Create an Alert Update" tab should not be open
 
     Then I should not see button "Update" for alert "Flying Monkey Disease"
     When I override alert

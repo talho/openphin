@@ -29,7 +29,17 @@ end
 
 Then /^I should not see "(.*)" as a from jurisdiction option$/ do |name|
   jurisdiction = Jurisdiction.find_by_name!(name)
-  assert page.find("select#alert_from_jurisdiction_id option[@value=\"#{jurisdiction.id.to_s}\"]").nil? == true
+  begin
+    wait_until do
+      begin
+        page.find("select#alert_from_jurisdiction_id option[@value=\"#{jurisdiction.id.to_s}\"]").nil?
+        assert false
+      rescue Capybara::ElementNotFound
+      end
+    end
+  rescue Capybara::TimeoutError
+    assert true
+  end
 end
 
 Then /^I should see the following jurisdictions:$/ do |table|

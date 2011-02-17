@@ -59,26 +59,26 @@ def select_users(users)
       When %Q{I click x-combo-list-item "#{user['name']} - #{user['email']}"}
     end
   end
-
 end
 
 Then /^I should see the following audience breakdown:?$/ do |table|
+  Then %{I wait for the "loading" mask to go away}
   audiences = table.hashes.find_all{|hash| hash['type'] == 'Jurisdiction' || hash['type'] == 'User' || hash['type'] == 'Role' || hash['type'] == 'Group' || hash['type'] == 'Organization'}
   recipients = table.hashes.find_all{|hash| hash['type'] == 'Recipient'}
    
   audiences.each do |audience|
     if page.respond_to? :should
-      page.should have_content(".audiences", :text =>audience['name'])
+      page.should have_content(audience['name'])
     else
-      assert page.has_content?(".audiences", :text => audience['name'])
+      assert page.has_content?(audience['name'])
     end
   end     
 
   recipients.each do |recipient|
     if page.respond_to? :should
-      page.should have_content(".recipients", :text => recipient['name'])
+      page.should have_content(recipient['name'])
     else
-      assert page.has_content?(".recipients", :text => recipient['name'])
+      assert page.has_content?(recipient['name'])
     end
   end
 end

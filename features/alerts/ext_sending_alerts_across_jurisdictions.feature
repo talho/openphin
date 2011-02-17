@@ -44,7 +44,10 @@ Feature: Sending alerts across jurisdictions
       | Wise County                                 | Jurisdiction |
       | Health Alert and Communications Coordinator | Role         |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | ethan.waldo@example.com, keith.gaddis@example.com |
@@ -64,7 +67,10 @@ Feature: Sending alerts across jurisdictions
       | Texas                                       | Jurisdiction |
       | Health Alert and Communications Coordinator | Role         |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     And the following users should receive the alert email:
       | People        | brandon.keepers@example.com |
@@ -85,7 +91,10 @@ Feature: Sending alerts across jurisdictions
       | Ottawa County                               | Jurisdiction | Michigan |
       | Health Alert and Communications Coordinator | Role         |          |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
     
     And the following users should receive the alert email:
       | People        | dan.morrison@example.com, brandon.keepers@example.com |

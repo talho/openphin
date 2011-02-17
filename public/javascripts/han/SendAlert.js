@@ -83,7 +83,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
           width: 820,
           buttons: [          
             {xtype: 'button', text: 'Back', handler: function(){this.breadCrumb.previous();}, scope: this},
-            {xtype: 'button', text: 'Send Alert', disabled: true, handler: this.submit_alert, scope: this}
+            {xtype: 'button', text: 'Send Alert', handler: this.submit_alert, scope: this}
           ]
         });
 

@@ -120,7 +120,7 @@ end
 
 When 'I click "$link" on "$title"' do |link, title|
   waiter do
-    page.find(".alert", :text => "title").click_link link
+    page.find(".alert", :text => /#{title}/).click_link link
   end
 end
 

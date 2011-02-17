@@ -32,7 +32,10 @@ Feature: Sending alerts to BlackBerry devices
       | name         | type |
       | Bill Smith   | User |
 
-    And I send the alert
+    And I click breadCrumbItem "Preview"
+    And I wait for the audience calculation to finish
+    And I press "Send Alert"
+    Then the "Alert Log and Reporting" tab should be open
 
     When delayed jobs are processed
     Then the following Blackberry calls should be made:
