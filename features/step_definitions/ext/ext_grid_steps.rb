@@ -60,10 +60,10 @@ When /^I select the "([^"]*)" grid cell(?: within "([^"]*)")?$/ do |content, wit
   end
 end
 
-Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([0-9]*))?(?: within "([^"]*)")?$/ do |not_exists, content, rownum, colnum, within_selector|
+Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([a-zA-Z0-9_]*))?(?: within "([^"]*)")?$/ do |not_exists, content, rownum, colnum, within_selector|
   column = if(colnum)
-    colnum = colnum.to_i - 1
-    column = " and contains(@class, 'x-grid3-col-#{colnum}')"
+    colnum = colnum.to_i - 1 if colnum =~ /^[0-9]+$/
+    " and contains(@class, 'x-grid3-col-#{colnum}')"
   else
     ""
   end
