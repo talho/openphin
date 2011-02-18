@@ -38,14 +38,13 @@ Feature: Assigning roles to users for roles
       | People | John Smith, Jane Doe |
       | Role | Health Officer |
       | Jurisdiction | Dallas County |
-    
-    Then "john@example.com" should receive the email:
+    Then I should see "john@example.com and jane@example.com have been approved for the role Health Officer in Dallas County"
+    And "john@example.com" should receive the email:
       | subject       | Role assigned    |
       | body contains | You have been assigned the role of Health Officer in Dallas County |
-    Then "jane@example.com" should receive the email:
+    And "jane@example.com" should receive the email:
       | subject       | Role assigned    |
       | body contains | You have been assigned the role of Health Officer in Dallas County |
-    And I should see "john@example.com and jane@example.com have been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
 	  And "admin@dallas.gov" should not receive an email

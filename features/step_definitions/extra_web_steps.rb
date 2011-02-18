@@ -41,7 +41,9 @@ end
 
 When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
   with_scope(selector) do
-    id = page.find("button", :text => field)['for']
+    id = waiter do
+      page.find("button", :text => field)['for']
+    end
     page.execute_script("$('##{id}').css('opacity', '100')")
     attach_file(id, File.join(RAILS_ROOT, path))
     sleep 1
@@ -54,22 +56,23 @@ end
 
 Then /^I should (not )?see "([^"]*)" in an? (?:|html)editor(?: within "([^"]*)")?$/ do |not_exists, content, selector|
   with_scope(selector) do
-    begin
+    result = waiter do
       page.find("textarea .x-form-textarea .x-form-field .x-hidden", :text => /#{content}/)
-      assert !not_exists.blank?
-    rescue Capybara::ElementNotFound
-      assert not_exists.blank?
+    end
+
+    if not_exists
+      result.should be_nil
+    else
+      result.should_not be_nil
     end
   end
 end
 
 Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")? with html stripped$/ do |text, selector|
   with_scope(selector) do
-    if page.respond_to? :should
-      page.all(:xpath, "//*[contains(text(), '#{text.split(' ').last}')]").select{|item| item.text == text}.size.should == 1
-    else
-      assert page.all(:xpath, "//*[contains(text(), '#{text.split(' ').last}')]").select{|item| item.text == text}.size == 1
-    end
+    waiter do
+      page.all(:xpath, "//*[contains(text(), '#{text.split(' ').last}')]")
+    end.select{|item| item.text == text}.size.should == 1
   end
 end
 

@@ -1,4 +1,5 @@
-module FeatureHelpers
+module
+FeatureHelpers
   module FillInMethods
 
     def fill_in_fcbk_control(name, use_email=true)
@@ -14,14 +15,12 @@ module FeatureHelpers
       div_elem.should_not be_nil
       div_elem.click
       name_array.each do |c|
-        is_click = false
         div_elem.set(div_elem.value + c)
         begin
-          #TODO: Use waiter here
-          wait_until{page.find("li.outer").nil? == false}
-          sleep 0.5
-          page.find("li.outer").click
-          is_click = true
+          is_click = waiter do
+            page.find("li.outer").click
+            true
+          end
         rescue
         end
         break if is_click
@@ -216,7 +215,8 @@ module FeatureHelpers
         when "People"
           value.split(',').each { |name| fill_in_fcbk_control(name) }
         when "Role", "Jurisdiction"
-          select value.split(',').map(&:strip), :from => label
+          value = [value] if value.class == Array
+          value.each{|v| v.split(',').map(&:strip).each{|item| select item, :from => label}}
         else
           raise "Unknown field '#{label}'. You may need to update this step."
         end
@@ -235,7 +235,7 @@ module FeatureHelpers
         value.split(',').each { |name| fill_in_fcbk_control(name) }
       when 'Name'
         fill_in "group_#{label.downcase}", :with => value
-      when'Scope'
+      when 'Scope'
         select value, :from => "group_#{label.downcase}"
       when /^Jurisdiction[s]$/, /Role[s]?/
         value.split(',').map(&:strip).each{ |r| check r }
