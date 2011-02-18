@@ -41,35 +41,6 @@ Feature: Sending alerts to multiple devices
     And delayed jobs are processed
 
   Scenario: Sending alerts to users with multiple devices
-    Given I am logged in as "keith.gaddis@example.com"
-      When I go to the edit profile page
-      Then I should have a phone device with the phone "5125551235"
-      Then I should have a SMS device with the SMS number "5125551245"
-      Then I should have a Blackberry device with the Blackberry number "246D6BA3"
-      Then I should have an Email device with the Email address "keith.gaddis@example.com"
-      And I sign out
-     
-    Given I am logged in as "joe.black@example.com"
-      When I go to the edit profile page
-      Then I should have a phone device with the phone "5125551236"
-      And I sign out
-      
-     Given I am logged in as "henry.frank@example.com"
-      When I go to the edit profile page
-      Then I should have a SMS device with the SMS number "5125551247"
-      And I sign out
-
-     Given I am logged in as "martin.gons@example.com"
-      When I go to the edit profile page
-      Then I should have a Blackberry device with the Blackberry number "246D6BA6"
-      And I sign out
-
-     Given I am logged in as "george.strait@example.com"
-       When I go to the edit profile page
-       Then I should have a phone device with the phone "5125551239"
-       Then I should have a Blackberry device with the Blackberry number "246D6BA7"
-       And I sign out
-
     Given I log in as "john.smith@example.com"
      And I am allowed to send alerts
      When I go to the HAN

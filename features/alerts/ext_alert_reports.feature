@@ -34,4 +34,5 @@ Feature: Alert Reports
   Scenario: A non-alerter cannot view a report of an alert
     Given I am logged in as "brian.simms@example.com"
     When I am on the ext dashboard page
+     
     Then I should not be able to navigate to "HAN > Alert Log and Reporting"

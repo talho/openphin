@@ -138,7 +138,11 @@ When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_t
     button = waiter do
       page.find('.' + class_type, :text => button)
     end
-    button.click if button
+    if button.nil?
+      raise Capybara::ElementNotFound
+    else
+      button.click
+    end
   end
 end
 
@@ -318,16 +322,13 @@ end
 
 Then /^I should not be able to navigate to "([^\"]*)"$/ do |menu_navigation_list|
   menu_array = menu_navigation_list.split('>').map{|x| x.strip}
-
   tb_button = menu_array.delete_at(0)
 
   begin
     When %Q{I press "#{tb_button}"}
-
     menu_array.each do |menu|
       When %Q{I click x-menu-item "#{menu}"}
     end
-
     menu_item_found = true
   rescue Capybara::TimeoutError, Capybara::ElementNotFound
     menu_item_found = false # if it times out, we know that we were unable to find the element

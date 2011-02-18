@@ -16,9 +16,13 @@ module FeatureHelpers
       name_array.each do |c|
         is_click = false
         div_elem.set(div_elem.value + c)
-        waiter do
+        begin
+          #TODO: Use waiter here
+          wait_until{page.find("li.outer").nil? == false}
+          sleep 0.5
           page.find("li.outer").click
           is_click = true
+        rescue
         end
         break if is_click
       end
