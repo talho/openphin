@@ -126,9 +126,11 @@ When /^I return next time$/ do
 end
 
 Then /^my session should stay active$/ do
-  session = Capybara::Session.new(:selenium)
+  session = Capybara::Session.new(:selenium_with_firebug)
   session.visit("http://#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
-  session.should have_content("Sign Out")  
+  waiter do
+    session.page.find "*", :text => "Sign Out"
+  end.should_not be_nil
 end
 
 Capybara::Driver::Selenium.class_eval do

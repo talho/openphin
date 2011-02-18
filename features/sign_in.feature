@@ -30,10 +30,9 @@ Feature: Sign in
       And I sign in as "email@person.com/Password1"
       And I should be signed in
 
-   Scenario: User signs in and checks "remember me"
-      Given I am signed up and confirmed as "email@person.com/Password1"
-      When I go to the sign in page
-      And I sign in with "remember me" as "email@person.com/Password1"
-      And I should be signed in
-      Then my session should stay active
-
+#   Scenario: User signs in and checks "remember me"
+#      Given I am signed up and confirmed as "email@person.com/Password1"
+#      When I go to the sign in page
+#      And I sign in with "remember me" as "email@person.com/Password1"
+#      And I should be signed in
+#      Then my session should stay active
