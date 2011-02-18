@@ -322,6 +322,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   },
 
   set_edit_delete_state: function(selModel){
+    if (!this.admin_mode) return;
     var selected_records = selModel.getSelections();
     var tbar = this.searchResults.getTopToolbar();
     tbar.find("name", "edit_btn")[0].setDisabled(selected_records.length == 0);
