@@ -18,7 +18,9 @@ Then /^I should not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
 end
 
 Then /^I should explicitly not see "(.*)" in the "(.*)" dropdown$/ do |text, label|
-  find_field(label).find(:xpath, ".//option[.='#{text}']").should be_nil
+  waiter do
+    find_field(label).find(:xpath, ".//option[.='#{text}']").should be_nil
+  end
 end
 
 Then /^I should see "(.*)" in the "(.*)" dropdown$/ do |text, label|
@@ -85,14 +87,18 @@ end
 
 Then /^I should see the following menu\:$/ do |table|
   name = table.raw[0][1]
-  within(:css, "##{name}") do
+  within("##{name}") do
     table.rows.each do |row|
       key, value = row[0], row[1]
       case key
         when "item"
-          within(:css, "li a") { page.should have_content(value) }
+          waiter do
+            page.find("li a", :text => value)
+          end.should_not be_nil
         when "current item"
-          within(:css, "li.current a") { page.should have_content(value) }
+          waiter do
+            page.find("li.current a", :text => value)
+          end.should_not be_nil
         else
           raise "I don't know what '#{key}' means, please fix the step definition in #{__FILE__}"
         end

@@ -178,9 +178,9 @@ Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table
   within("##{name}") do
     table.rows.each do |row|
       value = row[0]
-      within(".x-toolbar-cell") do
-        page.should have_content(value)
-      end
+      waiter do
+        page.find(".x-toolbar-cell", :text => value)
+      end.should_not be_nil
     end
     false
   end
@@ -352,9 +352,7 @@ Then /^the "([^\"]*)" window should be open$/ do |window_title|
 end
 
 When /^I should see "([^\"]*)" (\d) times? within "([^\"]*)"$/ do |item_name, number, selector|
-   with_scope(selector) do
-     page.all(:xpath, "//*[./text() = '#{item_name}']").length.should == number.to_i
-   end
+   page.all(selector, :text => item_name).length.should == number.to_i
 end
 
 When /^(?:I )?sleep (\d+)/ do |sec|

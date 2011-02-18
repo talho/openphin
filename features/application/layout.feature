@@ -7,13 +7,13 @@ Feature: Application layout should have communications, portal & application too
 
   Background:
     Given the following entities exist:
-      | Jurisdiction   | Texas           |
-      | Jurisdiction   | Dallas County   |
-      | Role           | Health Official |
+      | Jurisdiction  | Texas           |
+      | Jurisdiction  | Dallas County   |
+      | Role          | Health Official |
     And the following users exist:
-      | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
+      | Martin Fowler | martin@example.com | Health Official | Dallas County |
     And Texas has the following administrators:
-      | Joe Smith      | joe.smith@example.com    |
+      | Joe Smith      | joe.smith@example.com |
     And an article exists
     And an article exists
     And an article exists
@@ -24,16 +24,16 @@ Feature: Application layout should have communications, portal & application too
     Given I am logged in as "martin@example.com"
     When I go to the dashboard page
     Then I should see the following menu:
-      | name | portal_toolbar       |
-      | item | HAN                  |
-      | item | FAQs                 |
-      | item | Tutorials            |
+      | name | portal_toolbar |
+      | item | HAN            |
+      | item | FAQs           |
+      | item | Tutorials      |
     And I should see the following menu:
-      | name | comm_toolbar         |
-      | item | Calendar             |
-      | item | Chat                 |
-      | item | Documents            |
-      | item | Links                |
+      | name | comm_toolbar |
+      | item | Calendar     |
+      | item | Chat         |
+      | item | Documents    |
+      | item | Links        |
     #And I should see 4 "article" sections
 
   Scenario: Seeing the Administrator menu as an admin
@@ -41,10 +41,11 @@ Feature: Application layout should have communications, portal & application too
     When I go to the dashboard page
     And I follow "Admin"
     Then I should see the following menu:
-      | name | app_toolbar           |
-      | item | Pending Role Requests |
-      | item | Assign Roles          |
-      | item | Add a User            |
+      | name | app_toolbar        |
+      | item | Manage Roles       |
+      | item | Manage Groups      |
+      | item | Manage Users       |
+      | item | Manage Invitations |
 
   Scenario: Non-admins should not see the Admin link
     Given I am logged in as "martin@example.com"
@@ -55,9 +56,8 @@ Feature: Application layout should have communications, portal & application too
     Given I am logged in as "joe.smith@example.com"
     When I go to the admin add user page
     Then I should see the following menu:
-      | name         | app_toolbar           |
-      | item         | Pending Role Requests |
-      | item         | Assign Roles          |
-      | current item | Add a User            |
-
-    
+      | name         | app_toolbar        |
+      | item         | Manage Roles       |
+      | item         | Manage Groups      |
+      | current item | Manage Users       |
+      | item         | Manage Invitations |

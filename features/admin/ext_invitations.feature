@@ -144,12 +144,12 @@ Feature: Invitation System
     Then I should see "DSHS" in grid row 1
 
     When I select the "DSHS" grid cell
-    And I select the "Email" grid header
-    And the "Email" grid header is sorted ascending
-
     Then I should see "DSHS"
     And I should see "Please Join DSHS"
-    And I should see "Registrations complete: 60% (3)" with html stripped
+    When I select the "Email" grid header
+    And the "Email" grid header is sorted ascending
+
+    Then I should see "Registrations complete: 60% (3)" with html stripped
     And I should see "Registrations incomplete: 40% (2)" with html stripped
     And I should see "Bill Smith" in grid row 1 column 1 within "#invitationGrid"
     And I should see "bill.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
@@ -206,7 +206,9 @@ Feature: Invitation System
     Then I should see "DSHS" in grid row 1
 
     When I select the "DSHS" grid cell
-    And I select the "Completion Status" grid header
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
+    When I select the "Completion Status" grid header
     And the "Completion Status" grid header is sorted ascending
 
     Then I should see "Registrations complete: 40% (2)" with html stripped
@@ -261,7 +263,9 @@ Feature: Invitation System
     Then I should see "DSHS" in grid row 1
 
     When I select the "DSHS" grid cell
-    And I select the "Organization Members" grid header
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
+    When I select the "Organization Members" grid header
     And the "Organization Members" grid header is sorted ascending
 
     Then I should see "Default Organization: DSHS" with html stripped
@@ -318,7 +322,9 @@ Feature: Invitation System
     Then I should see "DSHS" in grid row 1
 
     When I select the "DSHS" grid cell
-    And I select the "Pending Role Requests" grid header
+    Then I should see "DSHS"
+    And I should see "Please Join DSHS"
+    When I select the "Pending Role Requests" grid header
     And the "Pending Role Requests" grid header is sorted ascending
 
     Then I should see "Bob Smith" in grid row 1 column 1 within "#invitationGrid"
@@ -377,12 +383,12 @@ Feature: Invitation System
     Then I should see "DSHS" in grid row 1
 
     When I select the "DSHS" grid cell
-    And I select the "Profile Updated" grid header
-    And the "Profile Updated" grid header is sorted ascending
-
     Then I should see "DSHS"
     And I should see "Please Join DSHS"
-    And I should see "Registrations complete: 40% (2)" with html stripped
+    When I select the "Profile Updated" grid header
+    And the "Profile Updated" grid header is sorted ascending
+
+    Then I should see "Registrations complete: 40% (2)" with html stripped
     And I should see "Registrations incomplete: 60% (3)" with html stripped
 
     Then I should see "Jane Smith" in grid row 1 column 1 within "#invitationGrid"
