@@ -1,4 +1,3 @@
-
 When /^I click ([a-zA-Z0-9\-_]*) on the "([^\"]*)" grid row(?: within "([^"]*)")?$/ do |selector, content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do

@@ -225,7 +225,14 @@ end
 
 Then /^I should (not )?have "([^\"]*)" within "([^\"]*)"$/ do |not_have, elem, selector|
   with_scope(selector) do
-    page.find(elem).nil?.should == (not_have.nil? ? false: true)
+    element = waiter do
+      page.find(elem)
+    end
+    if not_have
+      element.should be_nil
+    else
+      element.should_not be_nil
+    end
   end
 end
 

@@ -366,12 +366,12 @@ Scenario: Do not display deleted users
   Then I should not see "Dallas MD"
 
   When I search for a user with the following:
-   | Name         |                        |
-   | Email        |                        |
-   | Phone        |                        |
-   | Title        |                        |
-   | Roles        |                        |
-   |Jurisdictions | Dallas County          |
+   | Name          |               |
+   | Email         |               |
+   | Phone         |               |
+   | Title         |               |
+   | Roles         |               |
+   | Jurisdictions | Dallas County |
   Then I should not see "Dallas MD"
 
 
@@ -392,12 +392,12 @@ Scenario: Results pagination
   And the "Find People" tab should be open
 
   When I search for a user with the following:
-   | Name         |                        |
-   | Email        | example.com            |
-   | Phone        |                        |
-   | Title        |                        |
-   | Roles        |                        |
-   |Jurisdictions |                        |
+   | Name          |             |
+   | Email         | example.com |
+   | Phone         |             |
+   | Title         |             |
+   | Roles         |             |
+   | Jurisdictions |             |
   Then I should see "Dallas MD"
   And I should see "Displaying results 1 - 10 of 12"
 
@@ -408,18 +408,19 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
   And I go to the ext dashboard page
   And I navigate to "Find People"
   And I search for a user with the following:
-   | Name         |                        |
-   | Email        |                        |
-   | Phone        |                        |
-   | Title        |                        |
-   | Roles        |                        |
-   |Jurisdictions | Dallas County          |
+   | Name          |               |
+   | Email         |               |
+   | Phone         |               |
+   | Title         |               |
+   | Roles         |               |
+   | Jurisdictions | Dallas County |
   And I should see the image "/images/missing_tiny.jpg"
   Then I should see "Dallas Admin" in grid row 1
   And I should see "Dallas MD" in grid row 2
   And I should see "Dallas Public" in grid row 3
 
   When I click x-grid3-hd-inner "Search Results"
+  And the "Search Results" grid header is sorted descending 
   Then I should see "Dallas Admin" in grid row 3
   And I should see "Dallas MD" in grid row 2
   And I should see "Dallas Public" in grid row 1
