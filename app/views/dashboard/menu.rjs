@@ -79,7 +79,7 @@ if current_user.has_non_public_role?
                    {name: 'Sign Out', redirect: '#{sign_out_path}'}"
   else
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
-                   {name  'Sign Up', redirect: '#{new_user_path}'},
+                   {name:  'Sign Up', redirect: '#{new_user_path}'},
                    {name: 'Sign In', redirect: '#{sign_in_path}'}"
   end
 
@@ -87,12 +87,20 @@ if current_user.has_non_public_role?
 
   page << menu_config
 
-  bbar_config = "Application.bbarConfig = [{name: 'Calendar'},
-                                         {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
-                                         {name: 'Chat'},
-                                         {name: 'Links'},
-                                         '<a href=\"/\"><img style=\"border: 0; margin-left: 100px; padding-bottom: 2px;\" src=\"/images/oldphin.gif\"></a>',
-                                         '->',
-                                         'Need help? Email <a style=\"color: white\" href=\"mailto:phinadmin@dshs.state.tx.us\">phinadmin@dshs.state.tx.us</a>'];"
+  # user_has_app_roles will be true if current_user has any of these roles:
+  role_list = ["Rollcall","VMS"]
+  user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_name(item)}.compact.empty?
+
+  bbar_config = "Application.bbarConfig = [
+                     {name: 'Calendar'},
+                     {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
+                     {name: 'Chat'},
+                     {name: 'Links'},
+                     '<a href=\"/\"><img style=\"border: 0; margin-left: 100px; padding-bottom: 2px;\" src=\"/images/oldphin.gif\"></a>',
+                     '->',
+                     '<a href=\"http://www.dshs.state.tx.us\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/dshs-tiny.png\"></a>',
+                     '<a href=\"http://www.talho.org\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/talho-tiny.png\"></a>',
+                     {name: 'Need Help?', win: {id: 'phin_help_button', title: 'TxPhin Help', initializer: 'Talho.HelpWindow', has_app_roles: '#{user_has_app_roles}' } }
+                  ];"
 
   page << bbar_config

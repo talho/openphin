@@ -38,7 +38,8 @@ Ext.ns("Talho");
         'Talho.Invitations': {js:'/javascripts/invitations/Invitations.js'},
         'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js /javascripts/profile/OrganizationsControl.js > /javascripts/admin/AddUser.js'},
         'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'},
-        'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'}
+        'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'},
+        'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

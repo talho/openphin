@@ -2,7 +2,6 @@ Ext.ns('Talho');
 
 Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   constructor: function(config){
-    Ext.apply(this, config);
     Talho.FindPeople.superclass.constructor.call(this, config);
 
     this.rolesStore = new Ext.data.JsonStore({
