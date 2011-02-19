@@ -101,7 +101,9 @@ I should be able to create topics to forums and place comments to these topics
 
     Given session name is "default"
     When I override alert
+    And I should see "Save"
     And I press "Save"
+    And I should see "Saving..."
     And I wait for the "Saving..." mask to go away
     Then I should see "Another user recently updated the same topic.  Please try again." within the alert box
     And I fill in "Topic Title" with "Measuring Reward"

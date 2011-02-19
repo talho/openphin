@@ -148,6 +148,7 @@
     And I fill in "Name" with "Second created but not sticky topic"
     And I fill in "Description" with "Desc for my topic"
     And I press "Add Topic"
+    And Time is back to normal
     Then I should be redirected to the Topics page for Forum "Forum to verify sticky topics"
     And I should see "Topic was successfully created"
 

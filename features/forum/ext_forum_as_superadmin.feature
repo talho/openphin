@@ -35,6 +35,7 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    And I should see "Add Forum"
     And I press "Add Forum"
     Then the "New Forum" window should be open
     When I fill in "Forum Name" with "Funding methodology"
@@ -67,6 +68,7 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    And I should see "Add Forum"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
     And I select the following in the audience panel:
@@ -95,6 +97,7 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    And I should see "Add Forum"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
     And I select the following in the audience panel:
@@ -176,6 +179,7 @@ Feature: Creating a forum (room)
     And I fill in "Topic Content" with "Desc for my topic"
     And I press "Save"
 
+    When Time is back to normal
     And I wait for the "Saving..." mask to go away
     Then I should see "Second created but not sticky topic" in grid row 1
     And I should see "Sticky topic that was created earlier" in grid row 2

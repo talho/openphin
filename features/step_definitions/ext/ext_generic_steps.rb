@@ -328,7 +328,7 @@ end
 When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
   begin
     mask = page.find('.loading-indicator', :text => mask_text)
-    end_time = Time.now + 5 # wait a max of 5 seconds for the mask to disappear
+    end_time = Time.now + 5.seconds # wait a max of 5 seconds for the mask to disappear
     while !mask.nil? and Time.now < end_time
       mask = page.find('.loading-indicator', :text => mask_text)
     end
@@ -378,11 +378,15 @@ When /^(?:I )?sleep (\d+)/ do |sec|
 end
 
 Then /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be hidden$/ do |class_name, content|
-  page.find(".#{class_name}", :text => content).should be_nil
+  waiter do
+    page.find(".#{class_name}", :text => content)
+  end.should be_nil
 end
 
 When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, content|
-  page.find(".#{class_name}", :text => content).should_not be_nil
+  waiter do
+    page.find(".#{class_name}", :text => content)
+  end.should_not be_nil
 end
 
 Then /^I should see the image "([^\"]*)"$/ do |file_name|

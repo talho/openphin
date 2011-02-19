@@ -59,6 +59,9 @@ Capybara.register_driver :selenium_with_firebug do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
   if File.exists?("#{Rails.root}/features/support/firebug.xpi")
     profile['extensions.firebug.currentVersion'] = '100.100.100'
+    profile['extensions.firebug.console.enableSites'] = 'true'
+    profile['extensions.firebug.script.enableSites'] = 'true'
+    profile['extensions.firebug.net.enableSites'] = 'true'
     profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
 
     Capybara::Driver::Selenium.new(app, { :browser => :firefox, :profile => profile })

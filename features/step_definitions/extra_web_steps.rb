@@ -1,13 +1,15 @@
 When /^I will confirm on next step$/ do
   begin
-    evaluate_script("self.alert = function(msg) { self.alert_message = msg; return msg; }")
-    evaluate_script("self.confirm = function(msg) { self.confirmation_message = msg; return msg; }")
+    evaluate_script("self.alert = function(msg) { window.alert_message = msg; return msg; }")
+    evaluate_script("self.confirm = function(msg) { window.confirmation_message = msg; return msg; }")
   rescue Capybara::NotSupportedByDriverError
   end
 end
 
 Then /^I should see "([^\"]*)" within the alert box$/ do |msg|
-  message = evaluate_script("self.alert_message")
+  message = wait_until do
+    evaluate_script("window.alert_message")
+  end
   if message.nil?
     assert false
   else
@@ -16,7 +18,7 @@ Then /^I should see "([^\"]*)" within the alert box$/ do |msg|
 end
 
 Then /^I should see "([^\"]*)" within the confirmation box$/ do |msg|
-  message = evaluate_script("self.confirmation_message")
+  message = evaluate_script("window.confirmation_message")
   if message.nil?
     assert false
   else
@@ -34,7 +36,7 @@ end
 
 When /^I override alert$/ do
   begin
-    evaluate_script("self.alert = function(msg) { self.alert_message = msg; return msg; }")
+    page.execute_script("self.alert = function(msg) { self.alert_message = msg; return msg; }")
   rescue Capybara::NotSupportedByDriverError
   end
 end

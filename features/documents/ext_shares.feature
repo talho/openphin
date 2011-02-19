@@ -18,7 +18,7 @@ Feature: Document Sharing
     And I press "Add Folder"
     And I fill in "Folder Name" with "Shared Folder"
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name          | type |
       | Atticus Finch | User |
@@ -41,7 +41,7 @@ Feature: Document Sharing
     And I press "Add Folder"
     And I fill in "Folder Name" with "Shared Folder"
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name       | type  |
       | Test Group | Group |
@@ -64,7 +64,7 @@ Feature: Document Sharing
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name          | type |
       | Atticus Finch | User |
@@ -89,7 +89,7 @@ Feature: Document Sharing
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name       | type  |
       | Test Group | Group |
@@ -133,7 +133,7 @@ Feature: Document Sharing
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name  | type         |
       | TALHO | Organization |

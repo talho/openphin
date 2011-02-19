@@ -133,67 +133,51 @@ Then /^my session should stay active$/ do
   end.should_not be_nil
 end
 
-Capybara::Driver::Selenium.class_eval do
+Capybara.class_eval do
   class << self
     def switch_session_by_name(name)
       if @sessions_by_name.nil?
-        @sessions_by_name = {:default => @driver}
+        @sessions_by_name = {:default => Capybara.current_driver}
       end
 
       if @sessions_by_name[name.to_sym].nil?
-        @driver = nil
-        @sessions_by_name[name.to_sym] = driver
-      else
-        @driver = @sessions_by_name[name.to_sym]
+        Capybara.register_driver "selenium_with_firebug_#{name}".to_sym do |app|
+          Capybara::Driver::Selenium
+          profile = Selenium::WebDriver::Firefox::Profile.new
+          if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+            profile['extensions.firebug.currentVersion'] = '100.100.100'
+            profile['extensions.firebug.console.enableSites'] = 'true'
+            profile['extensions.firebug.script.enableSites'] = 'true'
+            profile['extensions.firebug.net.enableSites'] = 'true'
+            profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
+
+            Capybara::Driver::Selenium.new(app, { :browser => :firefox, :profile => profile })
+          else
+            Capybara::Driver::Selenium.new(app, { :browser => :firefox })
+          end
+        end
+
+        @sessions_by_name[name.to_sym] = "selenium_with_firebug_#{name}".to_sym
       end
+      
+      @current_driver = @sessions_by_name[name.to_sym]
     end
 
     def quit_session_by_name(name)
-      @sessions_by_name[name.to_sym].quit
+      the_driver = @current_driver
+      @current_driver = @sessions_by_name[name.to_sym]
+      current_session.driver.browser.quit
+      @current_driver = the_driver
+      @drivers.delete(@sessions_by_name[name.to_sym])
       @sessions_by_name.delete(name.to_sym)
-    end
-
-    def driver
-      unless @driver
-        profile = Selenium::WebDriver::Firefox::Profile.new
-        profile['extensions.firebug.currentVersion'] = '100.100.100'
-        profile['extensions.firebug.console.enableSites'] = 'true'
-        profile['extensions.firebug.script.enableSites'] = 'true'
-        profile['extensions.firebug.net.enableSites'] = 'true'
-        profile.add_extension("#{Rails.root}/features/support/firebug.xpi") if File.exists?("#{Rails.root}/features/support/firebug.xpi")
-        @driver = Selenium::WebDriver.for :firefox, :profile => profile
-        at_exit do
-          # Will receive an error if the default session closes before the other sessions
-          if @sessions_by_name
-            if @driver == @sessions_by_name[:default]
-              @sessions_by_name.each do |key, thedriver|
-                sleep 1
-                unless key == :default
-                  thedriver.quit
-                end
-              end
-              @sessions_by_name[:default].quit
-              @sessions_by_name = {}
-            else
-              if index = @sessions_by_name.index(@driver)
-                @sessions_by_name.delete(index)
-                @driver.quit
-              end
-            end
-          else
-            @driver.quit
-          end
-        end
-      end
-      @driver
     end
   end
 end
 
 Given /^session name is "([^\"]*)"$/ do |name|
-  Capybara::Driver::Selenium.switch_session_by_name(name)
+  Capybara.switch_session_by_name(name)
 end
 
 Given /^quit session name "([^\"]*)"$/ do |name|
-  Capybara::Driver::Selenium.quit_session_by_name(name)
+  Capybara.quit_session_by_name(name)
 end
