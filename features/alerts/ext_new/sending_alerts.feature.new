@@ -17,7 +17,7 @@ Feature: Sending alerts
 
   Scenario: Create and send a alert with no acknowledgement
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
     And I should have the "Alert Details" breadcrumb selected
@@ -55,7 +55,7 @@ Feature: Sending alerts
 
   Scenario: Create and send a alert with normal acknowledgement
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
     And I should have the "Alert Details" breadcrumb selected
@@ -93,7 +93,7 @@ Feature: Sending alerts
 
   Scenario: Create and send a alert with Advanced (call down) acknowledgement
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Alerts > Send a Custom Alert"
     Then the "Send Custom Alert" tab should be open
     And I should have the "Alert Details" breadcrumb selected

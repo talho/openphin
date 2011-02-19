@@ -29,7 +29,7 @@ Feature: Viewing groups
     When delayed jobs are processed
 
     Scenario: going to view a user group as an admin
-      When I go to the ext dashboard page
+      When I navigate to the ext dashboard page
       And I navigate to "Admin > Manage Groups"
       Then the "Manage Groups" tab should be open
       And I should see "Dallas County Health Officer Group"
@@ -52,7 +52,7 @@ Feature: Viewing groups
   #  Then I should see the user "Health Officer1" immediately before "Health Officer2"
   
   Scenario: going to edit a user group as an admin
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     And I should see "Dallas County Health Officer Group"
@@ -61,7 +61,7 @@ Feature: Viewing groups
     And the "Group Name" field should contain "Dallas County Health Officer Group"
 
   Scenario: going to edit a user group as an admin with deleting a user member
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     Then I should see "Dallas County Health Officer Group"
@@ -78,7 +78,7 @@ Feature: Viewing groups
       | User  | john.smith@example.com |
 
   Scenario: going to edit a user group as an admin with viewing the user member's profile
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     And I should see "Dallas County Health Officer Group"
@@ -89,7 +89,7 @@ Feature: Viewing groups
 
   Scenario: going to edit a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should see "My Account"
     Then I should not see "Admin"
     When I force open the manage groups tab
@@ -105,7 +105,7 @@ Feature: Viewing groups
 
   Scenario: going to edit a user group as a public user
     Given I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Home"
     And I should not see "Admin"
     When I force open the manage groups tab
@@ -120,7 +120,7 @@ Feature: Viewing groups
     And the "Edit Group" tab should not be open
 
   Scenario: updating a user group with jurisdictions
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
     Then I should see the following jurisdictions:
@@ -140,7 +140,7 @@ Feature: Viewing groups
       | Potter County   | Jurisdiction |
 
   Scenario: updating a user group with roles
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
     When I click x-accordion-hd "Roles"
@@ -164,7 +164,7 @@ Feature: Viewing groups
       | Epidemiologist  | Role |
     
   Scenario: updating a user group with individual users
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
     And I select the following in the audience panel:
@@ -181,7 +181,7 @@ Feature: Viewing groups
     Then I should see the profile tab for "jane.smith@example.com"
 
   Scenario: deleting a user group
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     And I should see "Dallas County Health Officer Group"
@@ -192,7 +192,7 @@ Feature: Viewing groups
     And the group "Dallas County Health Officer Group" should not exist
 
   Scenario: updating changed scope
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
     And I select "Global" from ext combo "Scope"
@@ -203,7 +203,7 @@ Feature: Viewing groups
 
   Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Group" grid row
     And I select "Jurisdiction" from ext combo "Scope"
@@ -216,7 +216,7 @@ Feature: Viewing groups
 
   Scenario: updating a jurisdiction scoped group to another jurisdiction should be viewable by alerters in the new jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Dallas County"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
     And I select "Jurisdiction" from ext combo "Scope"
@@ -228,13 +228,13 @@ Feature: Viewing groups
       | group_owner_jurisdiction | Dallas County                                    |
     Given I am on the ext dashboard page
     And I am logged in as "jim.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then I should see "Dallas County Health Officer Jurisdiction Group"
 
   Scenario: updating a jurisdiction scoped group to another jurisdiction should not be viewable by alerters in the old jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Dallas County"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
     And I select "Jurisdiction" from ext combo "Scope"
@@ -246,12 +246,12 @@ Feature: Viewing groups
       | group_owner_jurisdiction | Dallas County                                    |
     Given I am on the ext dashboard page
     Given I am logged in as "will.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then I should not see "Dallas County Health Officer Jurisdiction Group"
 
   Scenario: updating a user group currently to another admin updating the same group
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
     Then I should see the following jurisdictions:
@@ -265,7 +265,7 @@ Feature: Viewing groups
 
     Given session name is "admin session"
     And I am logged in as "will.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     When I click editBtn on the "Dallas County Health Officer Jurisdiction Group" grid row
     And I select the following in the audience panel:

@@ -19,7 +19,7 @@ Feature: Client-Side Form Validation when Sending Alerts
       | John Smith    | john.smith@example.com | Health Alert and Communications Coordinator | Dallas County |
       | Anne Smith    | anne.smith@example.com | Health Officer                              | Potter County |
     And I am logged in as "john.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
 
   Scenario: All required initial Detail fields must be filled before advancing to Audience selector
     When I navigate to "Alerts > Send a Custom Alert"

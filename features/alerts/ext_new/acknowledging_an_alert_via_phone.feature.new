@@ -57,7 +57,7 @@ Scenario: Acknowledging an alert through phone with alert responses
   When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
   And delayed jobs are processed
   And I log in as "keith.gaddis@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I navigate to "HAN > Home"
   Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
   And I click inlineBtn "More"
@@ -94,7 +94,7 @@ Scenario: Acknowledging an alert through phone with alert responses
     Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
 
     When I am logged in as "keith.gaddis@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Home"
     Then I can see the alert summary for "Title for Chicken pox outbreak"
     And the alert should not be acknowledged

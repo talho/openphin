@@ -31,7 +31,7 @@ Feature: Sending alerts across jurisdictions
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "zach.dennis@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
   Scenario: Sending an alert to sibling jurisdictions

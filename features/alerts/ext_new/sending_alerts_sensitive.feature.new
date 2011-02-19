@@ -11,7 +11,7 @@ Feature: Sending sensitive alerts
       | Anne Smith      | anne.smith@example.com   | Epidemiologist                              | Wise County    |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send a HAN Alert"
 
   Scenario: Sending a sensitive email alert

@@ -33,7 +33,7 @@ Feature: Creating a forum (room)
   # I think that a forum without an audience should show to all users, no matter role
   Scenario: Create and edit a forum
     Given I am logged in as "joe.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I press "Add Forum"
     Then the "New Forum" window should be open
@@ -58,14 +58,14 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Seeking funding"
 
 
   Scenario: Restrict the particular forum audience with jurisdiction & role
     Given I am logged in as "joe.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
@@ -80,20 +80,20 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
     When I navigate to "Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
 
   Scenario: Edit the jurisdiction of an existing forum audience
     Given I am logged in as "joe.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
@@ -108,13 +108,13 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
     When I navigate to "Sign Out"
     When I am logged in as "joe.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     When I click edit_forum on the "Funding methodology" grid row
     And I select the following in the audience panel:
@@ -124,14 +124,14 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     And I am logged in as "joe.black@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
 
   Scenario: Restrict the particular forum audience with jurisdiction only
     Given I am logged in as "joe.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
@@ -145,13 +145,13 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
     When I navigate to "Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
@@ -159,7 +159,7 @@ Feature: Creating a forum (room)
   Scenario: Create a topic to a particular forum
     Given I am logged in as "joe.smith@example.com"
     And I have the forum named "Forum to verify sticky topics"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Forum to verify sticky topics" grid row
     And I press "New Topic"
@@ -194,7 +194,7 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I have the forum named "Saving Money"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     Then I should see "Measuring Fulfillment"
@@ -220,7 +220,7 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
@@ -231,7 +231,7 @@ Feature: Creating a forum (room)
 
     When I navigate to "Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     Then I should not see "Measuring Fulfillment"
@@ -243,7 +243,7 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
@@ -261,7 +261,7 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I will confirm on next step
@@ -276,7 +276,7 @@ Feature: Creating a forum (room)
   Scenario: Editing a forum concurrently to another admin editing the same forum
     Given I am logged in as "joe.smith@example.com"
     And I have the forum named "Forum to verify concurrency"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
 
     And I click edit_forum on the "Forum to verify concurrency" grid row
@@ -286,7 +286,7 @@ Feature: Creating a forum (room)
 
     Given session name is "admin session"
     And I am logged in as "joe.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
 
     And I click edit_forum on the "Forum to verify concurrency" grid row 
@@ -306,7 +306,7 @@ Feature: Creating a forum (room)
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | joe.smith@example.com |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
@@ -314,7 +314,7 @@ Feature: Creating a forum (room)
 
     Given session name is "admin session"
     And I am logged in as "joe.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row

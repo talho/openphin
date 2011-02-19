@@ -30,7 +30,7 @@ Background:
 @people
 Scenario: Public-only user can not navigate to Find People
   Given I am logged in as "dall.pub@example.com"
-  When I go to the ext dashboard page
+  When I navigate to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
   Then I should see the following toolbar items in "top_toolbar":
     | My Account |
@@ -45,7 +45,7 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
   And pott.admin@example.com has the following information:
    | title        | Supervisor      |
   And delayed jobs are processed
-  When I go to the ext dashboard page
+  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   And I fill in "Name" with "Potter"
   And I send return to "#search-name"
@@ -75,7 +75,7 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
 @people
 Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisdictions can be selected/unselected
   Given I am logged in as "pott.md@example.com"
-  When I go to the ext dashboard page
+  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -155,7 +155,7 @@ Scenario: Search for a users from subordinate jurisdictions
   And delayed jobs are processed
   And I am logged in as "tex.admin@example.com"
 
-  When I go to the ext dashboard page
+  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -351,7 +351,7 @@ Scenario: Do not display deleted users
   And delayed jobs are processed
 
   When I am logged in as "tex.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -386,7 +386,7 @@ Scenario: Results pagination
   And delayed jobs are processed
 
   When I am logged in as "tex.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -405,7 +405,7 @@ Scenario: Results pagination
 @people
 Scenario: Results can be sorted by name, verify blank photo present and can follow to the display of a user's profile
   Given I am logged in as "tex.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   And I search for a user with the following:
    | Name          |               |

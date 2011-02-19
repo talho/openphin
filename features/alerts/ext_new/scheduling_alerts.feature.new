@@ -16,7 +16,7 @@ Feature: Schedule an alert to be sent sometime in the future
 
   Scenario: Schedule an alert in the future.
     Given I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     And I fill in "Title" with "TxPhin Scheduled test alert"
@@ -52,7 +52,7 @@ Feature: Schedule an alert to be sent sometime in the future
 
   Scenario: Validate schedule date (at least 15 minutes from now).
     Given I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     And I fill in "Title" with "TxPhin Scheduled test alert"
@@ -80,7 +80,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on July 4 2015 at 1:00 pm"
@@ -110,7 +110,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on April 26 2014 at 2:00 am"
@@ -138,7 +138,7 @@ Feature: Schedule an alert to be sent sometime in the future
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
       | Schedule Date         | 26 Apr 2014 02:00:00                 |
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     And I click alert "TxPhin Scheduled test alert"
     Then I should see "Scheduled to be sent on July 4 2015 at 1:00 pm"
@@ -173,7 +173,7 @@ Feature: Schedule an alert to be sent sometime in the future
     And I sign out
 
     When I am logged in as "gene.garbanzo@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     And I should see "TxPhin Scheduled test alert"
 

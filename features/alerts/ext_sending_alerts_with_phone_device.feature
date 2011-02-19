@@ -20,7 +20,7 @@ Feature: Sending alerts to phones
   Scenario: Sending alerts to phone devices
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -45,7 +45,7 @@ Feature: Sending alerts to phones
   Scenario: Sending alerts to phone devices with acknowledgment
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -86,7 +86,7 @@ Feature: Sending alerts to phones
     And keith.gaddis@example.com has the following devices:
       | phone | 2105551213 |
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -113,7 +113,7 @@ Feature: Sending alerts to phones
   Scenario: Sending alerts with call down
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -150,7 +150,7 @@ Feature: Sending alerts to phones
  Scenario: A user can *not* acknowledge a phone alert with a call down response *without* selecting a response
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     When I fill in the ext alert defaults
     And I uncheck "E-mail"
@@ -191,7 +191,7 @@ Feature: Sending alerts to phones
     Then I can see the device alert acknowledgement rate for "Title for Chicken pox outbreak" in "Phone" is 0%
 
     And I am logged in as "keith.gaddis@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > HAN Alerts" 
     Then I can see the alert summary for "Title for Chicken pox outbreak"
     And the alert should not be acknowledged

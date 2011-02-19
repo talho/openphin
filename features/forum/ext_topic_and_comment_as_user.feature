@@ -27,7 +27,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com, harry.simon@example.com |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -40,7 +40,7 @@ I should be able to create topics to forums and place comments to these topics
 
     When I navigate to "Sign Out"
     And I am logged in as "harry.simon@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -57,7 +57,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -96,7 +96,7 @@ I should be able to create topics to forums and place comments to these topics
       | Users | jane.smith@example.com, harry.simon@example.com |
 
     Given I am logged in as "harry.simon@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -112,7 +112,7 @@ I should be able to create topics to forums and place comments to these topics
 
     When I navigate to "Sign Out"
     And I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -136,7 +136,7 @@ I should be able to create topics to forums and place comments to these topics
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"

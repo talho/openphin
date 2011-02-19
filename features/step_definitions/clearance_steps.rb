@@ -157,6 +157,9 @@ Capybara::Driver::Selenium.class_eval do
       unless @driver
         profile = Selenium::WebDriver::Firefox::Profile.new
         profile['extensions.firebug.currentVersion'] = '100.100.100'
+        profile['extensions.firebug.console.enableSites'] = 'true'
+        profile['extensions.firebug.script.enableSites'] = 'true'
+        profile['extensions.firebug.net.enableSites'] = 'true'
         profile.add_extension("#{Rails.root}/features/support/firebug.xpi") if File.exists?("#{Rails.root}/features/support/firebug.xpi")
         @driver = Selenium::WebDriver.for :firefox, :profile => profile
         at_exit do

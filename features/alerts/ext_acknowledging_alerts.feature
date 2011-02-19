@@ -110,7 +110,7 @@ Feature: Acknowledging an alert
     When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow"
     And delayed jobs are processed
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I wait for the "Loading" mask to go away
     And I navigate to "HAN > HAN Alerts"
     Then I can see the alert summary for "H1N1 SNS push packs to be delivered tomorrow"
@@ -122,7 +122,7 @@ Feature: Acknowledging an alert
   Scenario: Acknowledging an alert through an email with signing in and call downs
     Given I am logged in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     And I fill in the ext alert defaults
     And I select "Advanced" from ext combo "Acknowledge"
@@ -176,7 +176,7 @@ Feature: Acknowledging an alert
     # end legacy code: replace when user profile has been updated to work in ext
 
     Given I log in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -206,7 +206,7 @@ Feature: Acknowledging an alert
     And I log in as "keith.gaddis@example.com"
     When I acknowledge the phone message for "H1N1 SNS push packs to be delivered tomorrow" with "if you can call back within 15 minutes"
     And delayed jobs are processed
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > HAN Alerts"
     Then I click alert "H1N1 SNS push packs to be delivered tomorrow"
     And I should not see an "Acknowledge" button

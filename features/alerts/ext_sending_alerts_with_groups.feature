@@ -31,7 +31,7 @@ Feature: Sending alerts using groups
 
   Scenario: Owner should see all his groups
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
                                 
     When I fill in the ext alert defaults
@@ -45,7 +45,7 @@ Feature: Sending alerts using groups
 
   Scenario: Users in same jurisdiction should see jurisdiction-scoped groups
     Given I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -59,7 +59,7 @@ Feature: Sending alerts using groups
 
   Scenario: Users in another jurisdiction should see only globally-scoped groups
     Given I am logged in as "bob.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -73,7 +73,7 @@ Feature: Sending alerts using groups
 
   Scenario: Saving an alert with a group selected should include group users as recipients
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults
@@ -94,7 +94,7 @@ Feature: Sending alerts using groups
 
   Scenario: Sending an alert to only a group with no other audience specified
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults

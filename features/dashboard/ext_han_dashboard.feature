@@ -27,7 +27,7 @@ Feature: Viewing the dashboard
     Given the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name |
@@ -42,7 +42,7 @@ Feature: Viewing the dashboard
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "john.smith@example.com"
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                    |
@@ -52,7 +52,7 @@ Feature: Viewing the dashboard
 
     Scenario: Dashboard should show the admin navigation
     And I am logged in as "admin1@dallascounty.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name |
@@ -65,7 +65,7 @@ Feature: Viewing the dashboard
     Scenario: Dashboard should show the admin alerter navigation
     And "admin1@texas.com" has approved the "HAN Coordinator" role in "Dallas County" for "admin1@dallascounty.com"
     And I am logged in as "admin1@dallascounty.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                    |

@@ -32,7 +32,7 @@ Feature: Sending alerts to SMS devices
 
     Given I log in as "john.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I fill in the ext alert defaults

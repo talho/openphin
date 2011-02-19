@@ -42,7 +42,7 @@ Feature: Sending alerts using groups and organizations
 
   Scenario: Owner should see all his groups and orgs
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send a HAN Alert"
                                 
     When I fill in the ext alert defaults
@@ -57,7 +57,7 @@ Feature: Sending alerts using groups and organizations
 
   Scenario: Users in same jurisdiction should see jurisdiction-scoped groups
     Given I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send a HAN Alert"
 
     When I fill in the ext alert defaults
@@ -71,7 +71,7 @@ Feature: Sending alerts using groups and organizations
 
   Scenario: Users in another jurisdiction should see only globally-scoped groups
     Given I am logged in as "fred.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send a HAN Alert"
     And I fill in the ext alert defaults
     When I click breadCrumbItem "Recipients"

@@ -16,7 +16,7 @@ I should be able to remove all but one public role from my profile
 
   Scenario: Removing a public role from user profile
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I select "Public" from "Role"

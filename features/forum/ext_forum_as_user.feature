@@ -28,7 +28,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com, harry.simon@example.com  |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
 
@@ -39,7 +39,7 @@ I should be able to create topics to forums and place comments to these topics
 
     When I navigate to "Sign Out"
     And I am logged in as "harry.simon@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
 
@@ -54,7 +54,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the forum named "Funding methodology"
     And the forum "Funding methodology" has the following audience:
       | Users | jane.smith@example.com  |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Funding methodology" grid row
     And I press "New Topic"
@@ -81,7 +81,7 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com |
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
@@ -89,7 +89,7 @@ I should be able to create topics to forums and place comments to these topics
     
     Given session name is "admin session"
     And I am logged in as "joe.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row

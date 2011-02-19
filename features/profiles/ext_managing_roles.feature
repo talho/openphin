@@ -18,7 +18,7 @@ I should be able to remove all but one public role from my profile
     And I am logged in as "john.smith@example.com"
 
   Scenario: Adding and removing public roles from user profile
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "Public" for "Potter County" in the RolesControl
@@ -32,7 +32,7 @@ I should be able to remove all but one public role from my profile
       | Potter County | Public |
 
   Scenario: Removing all public roles from user profile
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     And I should not see "Texas" within ".role-item"
@@ -44,7 +44,7 @@ I should be able to remove all but one public role from my profile
       | Dallas County | Public |
 
   Scenario: Removing the all public roles from user profile and adding a new public role
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     Then I should not see "Texas" within ".role-item"
@@ -62,7 +62,7 @@ I should be able to remove all but one public role from my profile
     And I should not see "Dallas County" within ".role-item"
 
   Scenario: Adding and removing non-public roles from user profile
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -74,7 +74,7 @@ I should be able to remove all but one public role from my profile
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
   Scenario: Add and remove a role then save
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
@@ -87,7 +87,7 @@ I should be able to remove all but one public role from my profile
 
   Scenario: Adding a duplicate role
     BioTerrorism Coordinator
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -99,7 +99,7 @@ I should be able to remove all but one public role from my profile
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
   Scenario: Add and remove a role then save
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -111,7 +111,7 @@ I should be able to remove all but one public role from my profile
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
   Scenario: Adding a duplicate role request
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -120,7 +120,7 @@ I should be able to remove all but one public role from my profile
     Then I should see "Role has already been requested for this jurisdiction"
 
   Scenario: Adding a role request duplicating an existing role membership
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I request the role "Public" for "Dallas County" in the RolesControl
@@ -132,7 +132,7 @@ I should be able to remove all but one public role from my profile
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
     And I am logged in as "john.smith@example.com" 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Roles"
 
     And I press "Request Role"

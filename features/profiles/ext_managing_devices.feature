@@ -23,7 +23,7 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding a device
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
     And I select "E-mail" from ext combo "Device type"
@@ -42,7 +42,7 @@ Feature: Managing devices when editing user profiles
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     When I click destroy "5552345678"
     Then I should not see "5552345678"
@@ -54,7 +54,7 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding an invalid device
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
     And I select "E-mail" from ext combo "Device type"
@@ -67,7 +67,7 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding a phone device with an extension is invalid
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
     And I select "Phone" from ext combo "Device type"
@@ -82,7 +82,7 @@ Feature: Managing devices when editing user profiles
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
     And I select "Phone" from ext combo "Device type"
@@ -93,7 +93,7 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Add and remove a device then save
     Given I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
     And I select "SMS" from ext combo "Device type"
@@ -109,7 +109,7 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"

@@ -30,7 +30,7 @@ Feature: Assigning roles to users for roles
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Doe"
     And I add the role "Health Officer" for "Dallas County" from EditProfile
     Then "jane@example.com" should receive the email:
@@ -43,7 +43,7 @@ Feature: Assigning roles to users for roles
     Given I am logged in as "admin@state.tx.us"
     And "jane@example.com" has requested to be a "Health Officer" for "Dallas County"
     And all email has been delivered
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Doe"
     And I add the role "Health Officer" for "Dallas County" from EditProfile
     Then "jane@example.com" should receive the email:
@@ -109,7 +109,7 @@ Feature: Assigning roles to users for roles
 
   Scenario: Assigning system roles to a user in my jurisdiction
     Given I am logged in as "admin@potter.gov"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
@@ -117,7 +117,7 @@ Feature: Assigning roles to users for roles
 
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
@@ -125,7 +125,7 @@ Feature: Assigning roles to users for roles
 
   Scenario: Assigning system roles to a user in a child of my jurisdiction
     Given I am logged in as "admin@state.tx.us"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"

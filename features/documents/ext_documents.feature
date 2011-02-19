@@ -9,7 +9,7 @@ Feature: Document upload, download, and view
     Given the following administrators exist:
           | admin@dallas.gov | Dallas County |
     And I am logged in as "admin@dallas.gov"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I create a folder outline with "Folder1"
     And I navigate to "Documents"
 

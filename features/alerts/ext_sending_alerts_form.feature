@@ -12,7 +12,7 @@ Feature: Sending alerts form
     And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     When I click breadCrumbItem "Recipients"
@@ -63,7 +63,7 @@ Feature: Sending alerts form
     And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     Then the "Send Alert" tab should be open
     When I fill in the following:
@@ -92,7 +92,7 @@ Feature: Sending alerts form
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     When I open ext combo "Jurisdiction"
     Then I should see "Dallas County"
@@ -126,7 +126,7 @@ Feature: Sending alerts form
     And Texas is a state
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     When I fill in the following:
       | Title   | This is a test title to pass validation   |
@@ -147,7 +147,7 @@ Feature: Sending alerts form
       | John Smith      | john.smith@example.com   | Health Alert and Communications Coordinator | Texas |
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     When I fill in the following:
       | Title   | This is a test title to pass validation   |
@@ -174,7 +174,7 @@ Feature: Sending alerts form
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
     And I select "Potter County" from ext combo "Jurisdiction"
     And I select "Advanced" from ext combo "Acknowledge"
@@ -231,7 +231,7 @@ Feature: Sending alerts form
     And the role "Health Alert and Communications Coordinator" is an alerter
     And I am logged in as "john.smith@example.com"
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Send an Alert"
 
     And I fill in the following:

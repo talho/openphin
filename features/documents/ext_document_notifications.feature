@@ -19,7 +19,7 @@ Feature: Receiving notifications to different events
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
@@ -35,7 +35,7 @@ Feature: Receiving notifications to different events
     Given I create shares "Folder1" shared with "atticus@example.com"
     And "Folder1" performs all notifications
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
@@ -52,7 +52,7 @@ Feature: Receiving notifications to different events
   Scenario: Receive notification when a user uploads a document to a shared folder you are a member of
     Given I create shares "Folder1" shared with "atticus@example.com"
     And "Folder1" performs all notifications
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
@@ -73,7 +73,7 @@ Feature: Receiving notifications to different events
     And "Folder1" performs all notifications
     When I sign out
     And I log in as "atticus@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
@@ -92,7 +92,7 @@ Feature: Receiving notifications to different events
     Given I create shares "Folder1" shared with "atticus@example.com"
     And "Folder1" performs all notifications
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
@@ -115,7 +115,7 @@ Feature: Receiving notifications to different events
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
@@ -132,13 +132,13 @@ Feature: Receiving notifications to different events
     And "atticus@example.com" should not receive an email
 
   Scenario: Receive notification when you have been added to a share
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Add Folder"
     And I fill in "Folder Name" with "Folder1"
     And I check "Notify users when they have been invited to share this folder."
     And I click x-tab-strip-text "Sharing"
-    And I check "Shared - Accessible to the audience specified below"
+    And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
       | name          | type |
       | Atticus Finch | User |
@@ -152,7 +152,7 @@ Feature: Receiving notifications to different events
   Scenario: Don't receive notification when another user has been added to a share that you are already a member of
     Given I create shares "Folder1" shared with "atticus@example.com"
     And "Folder1" performs all notifications
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row

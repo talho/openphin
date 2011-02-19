@@ -21,15 +21,14 @@ Feature: Application layout should have communications, portal & application too
 
   Scenario: Viewing the dashboard as a user
     Given I am logged in as "martin@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should have "#tabpanel" within "#centerpanel"
     And I should have "#favoritestoolbar" within "#centerpanel"
     And the "Home" tab should be open
 
   Scenario: Viewing the portal and comm toolbar as a user
     Given I am logged in as "martin@example.com"
-    When I go to the ext dashboard page
-    And I wait for the "Loading" mask to go away
+    When I navigate to the ext dashboard page
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
       | FAQs                 |
@@ -73,7 +72,7 @@ Feature: Application layout should have communications, portal & application too
 
   Scenario: Seeing the Administrator menu as an admin
     Given I am logged in as "joe.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I press "Admin" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                  |
@@ -99,13 +98,13 @@ Feature: Application layout should have communications, portal & application too
 
   Scenario: Non-admins should not see the Admin link
     Given I am logged in as "martin@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Admin" within "#top_toolbar"
 
   Scenario: Public-only members should not see advanced search
     Given the user "publico publican" with the email "public@example.com" has the role "Public" in "Texas"
     Given I am logged in as "public@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Find People" within "#top_toolbar"
 
 

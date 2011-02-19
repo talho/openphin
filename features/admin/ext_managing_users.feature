@@ -61,7 +61,7 @@ Feature: An admin managing users
     
   Scenario: Editing a user's profile
     Given I am logged in as "bob.jones@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jonas Brothers"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |
@@ -79,7 +79,7 @@ Feature: An admin managing users
     
   Scenario: Editing a user's profile as an administrator of an parent jurisdiction
     Given I am logged in as "joe.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jonas Brothers"
     When I fill in the ext form with the following info:
       | Job description                   | A developer |
@@ -97,7 +97,7 @@ Feature: An admin managing users
   Scenario: Editing a user's profile and deleting roles
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And I am logged in as "bob.jones@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Smith"
     Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
     And I should see "Health Officer in Dallas County"
@@ -127,7 +127,7 @@ Feature: An admin managing users
   Scenario: Editing a user's profile by adding user and organizational contact info
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And I am logged in as "bob.jones@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Smith"
     Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
     When I fill in "Office phone" with "888-123-1212"

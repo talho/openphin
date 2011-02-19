@@ -35,7 +35,7 @@ Feature: Users with appropriate roles can send alerts
 
   Scenario: Cannot send an alert without an alerter role
     Given I am logged in as "fred.officer@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Send a Custom Alert" in the "Alerts" menu
 
   Scenario: Cannot maliciously send an alert without an alerter role
@@ -49,7 +49,7 @@ Feature: Users with appropriate roles can send alerts
 
   Scenario: Cannot send a HAN alert without an alerter role
     Given I am logged in as "fred.officer@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Send a HAN Alert" in the "HAN" menu
 
   Scenario: Cannot maliciously send a HAN alert without an alerter role
@@ -63,7 +63,7 @@ Feature: Users with appropriate roles can send alerts
 
   Scenario: Cannot send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
     Given I am logged in as "bt.alerter@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "Send a HAN Alert" in the "HAN" menu
 
   Scenario: Cannot maliciously send a HAN alert with an alerter role that is not the 'Health and Communications Coordinator' role
@@ -77,7 +77,7 @@ Feature: Users with appropriate roles can send alerts
 
   Scenario: Cannot view the alert log without an alerter role
     Given I am logged in as "bt.alerter@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     Then I should not see "View Alert Logs and Reports" in the "Alerts" menu
 
   Scenario: Can view the alert log but cannot view HAN alerts with an alerter role that is not the 'Health and Communications Coordinator' role
@@ -100,7 +100,7 @@ Feature: Users with appropriate roles can send alerts
       | acknowledge           | None                                 |
       | communication_methods | E-mail                               |
     When I am logged in as "bt.alerter@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > View Alert Logs and Reports"
     Then I should be on the "Alert Logs and Reports" tab
     And I should see "Look Out Behind You"
@@ -126,7 +126,7 @@ Feature: Users with appropriate roles can send alerts
       | acknowledge           | None                                 |
       | communication_methods | E-mail                               |
     When I am logged in as "dall.alerter@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > View Alert Logs and Reports"
     Then I should be on the "Alert Logs and Reports" tab
     And I should see "Flying Monkey Disease"
@@ -143,7 +143,7 @@ Feature: Users with appropriate roles can send alerts
       | acknowledge           | None                                 |
       | communication_methods | E-mail                               |
     When I am logged in as "reg1.alerter@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > View Alert Logs and Reports"
     Then I should be on the "Alert Logs and Reports" tab
     And I should see "Flying Monkey Disease"
@@ -159,7 +159,7 @@ Feature: Users with appropriate roles can send alerts
       | acknowledge           | None                                 |
       | communication_methods | E-mail                               |
     When I am logged in as "tarr.alerter@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > View Alert Logs and Reports"
     Then I should be on the "Alert Logs and Reports" tab
     And I should not see "Flying Monkey Disease"
@@ -175,7 +175,7 @@ Feature: Users with appropriate roles can send alerts
       | acknowledge           | None                                 |
       | communication_methods | E-mail                               |
     When I am logged in as "tarr.alerter@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > View Alert Logs and Reports"
     Then I should be on the "Alert Logs and Reports" tab
     And I should not see "Flying Monkey Disease"

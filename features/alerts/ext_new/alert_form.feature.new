@@ -34,7 +34,7 @@ Feature: Sending alert Form
       | My First Group | Dallas County |                | | Personal | Dallas County |
       | hofficers      |               | Health Officer | | Personal | Dallas County |
     And I am logged in as "john.smith@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
 
   Scenario: Preview an alert
     When I navigate to "Alerts > Send a Custom Alert"

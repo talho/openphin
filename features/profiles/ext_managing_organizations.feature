@@ -24,7 +24,7 @@ I should be able to edit my profile
     Given the following entities exist:
       | Organization | DSHS |
     And I am logged in as "bob.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I fill in "Name" with "Jane"
     And I press "Search"
@@ -47,7 +47,7 @@ I should be able to edit my profile
     Given the following entities exist:
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Organizations"
     Then I should see "Organizations"
     When I press "Request Organization"
@@ -69,7 +69,7 @@ I should be able to edit my profile
     Then I should see "Jane Smith is now a member of DSHS"
 
     And I am logged in as "jane.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Organizations"
     Then I should see "Organizations"
     Then I should see the following within ".org-item":
@@ -98,7 +98,7 @@ I should be able to edit my profile
       | Organization | DSHS |
     And "jane.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "bob.smith@example.com"
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I fill in "Name" with "Jane"
     And I press "Search"

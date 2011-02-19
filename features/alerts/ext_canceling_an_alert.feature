@@ -32,7 +32,7 @@ Feature: Canceling an alert
       | roles                 | Health Officer                         |
       | jurisdictions         | Dallas County                          |
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     When I click "Cancel" within alert "Flying Monkey Disease"
     Then the "Create an Alert Cancellation" tab should be open
@@ -90,7 +90,7 @@ Feature: Canceling an alert
 
     Given I am logged in as "jane.smith@example.com"
     And I am allowed to send alerts
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     When I click "Cancel" within alert "Flying Monkey Disease"
     And fill in "Message" with "Flying monkey disease is not contagious"

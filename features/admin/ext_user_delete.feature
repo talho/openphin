@@ -27,7 +27,7 @@ Feature: An admin deleting users
     And all email has been delivered
 
     When I am logged in as "bob.jones@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I click x-grid3-row "Jane Smith"
     And I press "Delete User"
@@ -57,7 +57,7 @@ Feature: An admin deleting users
     Then I should not see "Thanks for signing up"
 
     When delayed jobs are processed
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I click x-grid3-row "Greg Brown"
     And I press "Delete User"

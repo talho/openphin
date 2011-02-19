@@ -21,7 +21,7 @@ Feature: Saving alert form data for re-use
 
   Scenario: Save an alert template with a user-defined name
     Given I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > Create Alert Preset"
     Then the "Create Alert Preset" tab should be open
 
@@ -80,7 +80,7 @@ Feature: Saving alert form data for re-use
      | Preset Owner          | steve.gravy@example.com |
 
     When I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > Send an Alert"
     And I follow "Load From Preset"
     And I select "monthly ack survey" from ext combo "My Alert Presets"
@@ -147,7 +147,7 @@ Feature: Saving alert form data for re-use
      | Preset Owner          | steve.gravy@example.com |
 
     When I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > Manage Alert Presets"
     And I should see "monthly ack survey"
     And I follow "Edit Preset"
@@ -192,7 +192,7 @@ Feature: Saving alert form data for re-use
       | Preset Owner          | steve.gravy@example.com |
 
     When I am logged in as "steve.gravy@example.com"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Alerts > Manage Alert Presets"
     And I should see "monthly ack survey"
     And I will confirm on next step

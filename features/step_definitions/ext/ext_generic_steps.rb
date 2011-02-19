@@ -154,16 +154,23 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
   menu_array = menu_navigation_list.split('>').map{|x| x.strip}
 
   tb_button = menu_array.delete_at(0)
-  Then %Q{I should see "#{tb_button.strip}"}
-  When %Q{I press "#{tb_button}"}
+  waiter do
+    Then %Q{I should see "#{tb_button.strip}"}
+  end
+  waiter do
+    When %Q{I press "#{tb_button}"}
+  end
 
   menu_array.each do |menu|
-    When %Q{I click x-menu-item "#{menu}"}
+    waiter do
+      When %Q{I click x-menu-item "#{menu}"}
+    end
   end
 end
 
 When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   path_lookup = {
+    "the ext dashboard page".to_sym => "",
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
     "the rollcall ADST page".to_sym => "Rollcall > ADST",
     "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
@@ -171,7 +178,11 @@ When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   }
 
   When %Q{I go to the ext dashboard page}
-  When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
+  if path_lookup[path.to_sym].blank?
+    When %Q{I wait for the "Loading PHIN" mask to go away}
+  else
+    When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
+  end
 end
 
 Then /^I should see the following toolbar items in "([^\"]*)":$/ do |name, table|

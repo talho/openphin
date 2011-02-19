@@ -40,7 +40,7 @@ Background:
 Scenario: User can view their own profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.pub@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I navigate to "My Account > View My Profile"
   Then I should see:
    | Potter Public                         |
@@ -61,7 +61,7 @@ Scenario: User can view their own profile
 Scenario: Public user viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.pub@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -83,7 +83,7 @@ Scenario: Public user viewing a public profile
 Scenario: Public user viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.pub@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -106,7 +106,7 @@ Scenario: Public user viewing a private profile
 Scenario: User with a non-public, non-admin role viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -128,7 +128,7 @@ Scenario: User with a non-public, non-admin role viewing a public profile
 Scenario: User with a non-public, non-admin role viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.md@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -151,7 +151,7 @@ Scenario: User with a non-public, non-admin role viewing a private profile
 Scenario: Admin viewing a subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -174,7 +174,7 @@ Scenario: Admin viewing a subordinate public profile
 Scenario: Admin viewing a non-subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -196,7 +196,7 @@ Scenario: Admin viewing a non-subordinate public profile
 Scenario: Admin viewing a subordinate private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "pott.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -220,7 +220,7 @@ Scenario: Admin viewing a non-subordinate private profile
   # NO edit button
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.admin@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -243,7 +243,7 @@ Scenario: Admin viewing a non-subordinate private profile
 Scenario: Fields should not be visible if they do not have data
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"
@@ -290,7 +290,7 @@ Scenario: First and Last name fields should be visible if different from Display
     | display_name | Potsdam Scrubbing Bubbles Public |
   And pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
-  And I go to the ext dashboard page
+  And I navigate to the ext dashboard page
   And I should see "My Dashboard"
 
   And I view the ext profile page for "pott.pub@example.com"

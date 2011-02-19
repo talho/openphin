@@ -9,7 +9,7 @@ Feature: Create a folder tree in documents
     Given the following administrators exist:
           | admin@dallas.gov | Dallas County |
     And I am logged in as "admin@dallas.gov"
-    And I go to the ext dashboard page
+    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
   Scenario: See "My Documents" as a leaf with no other folders

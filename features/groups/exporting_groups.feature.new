@@ -31,7 +31,7 @@ Feature: Viewing groups
 
 
   Scenario: exporting a user group to CSV and PDF
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     And I should see "Dallas County Health Officer Group"

@@ -39,7 +39,7 @@ Feature: Canceling an han alert
       | Communication methods | E-mail                               |
       | Delivery Time         | 72 hours                             |
 
-    When I go to the ext dashboard page
+    When I navigate to the ext dashboard page
     And I navigate to "HAN > Alert Log and Reporting"
     Then I should see an alert titled "Flying Monkey Disease"
 
