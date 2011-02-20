@@ -34,6 +34,5 @@ Scenario: Password and Confirm Password must match
 
   # password change successful
   When I edit my password to "Andrew5" and confirm with "Andrew5"
-  Then I should have "#flash-msg" within ".x-box-item"
   And I should not see "Password must" within "#flash-msg"
-  And I should see "Profile information saved"
+  And I should see "Profile information saved" within "#flash-msg"

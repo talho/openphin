@@ -33,7 +33,6 @@ Feature: Creating groups
   Scenario: going to add a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
-    Then I should not see "Home"
     Then I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
@@ -46,7 +45,6 @@ Feature: Creating groups
   Scenario: going to add a user group as a public user
     Given I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
-    Then I should not see "Home"
     Then I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."

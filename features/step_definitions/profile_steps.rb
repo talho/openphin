@@ -49,9 +49,9 @@ end
 
 Then /^I can see the following roles:$/ do |table|
   table.rows_hash.each do |role, jurisdiction|
-    within(".roles *") do
-      page.should have_content("#{role} in #{jurisdiction}")
-    end
+    waiter do
+      page.find(".roles", :text => "#{role} in #{jurisdiction}")
+    end.should_not be_nil
   end
 end
 

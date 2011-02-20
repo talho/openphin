@@ -11,7 +11,7 @@ Then /^the "([^\"]*)" class selector should contain "([^\"]*)"$/ do |field, valu
 end
 
 Then /^the "([^\"]*)" class selector should not contain "([^\"]*)"$/ do |field, value|
-  wait_time do
+  waiter do
     page.find(".#{field}", :text => value)
   end.should be_nil
 end

@@ -39,9 +39,9 @@ Feature: Managing devices when editing user profiles
     When I go to the edit profile page
     And I will confirm on next step
     And I follow "Delete Phone"
-    Then "john.smith@example.com" should not have the communication device
+    Then I should not see "5552345678"
+    And "john.smith@example.com" should not have the communication device
       | Phone | 5552345678 |
-    And I should not see "5552345678"
 
   Scenario: Adding an invalid device
   	When I go to the edit profile page

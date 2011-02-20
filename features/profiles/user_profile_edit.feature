@@ -235,4 +235,3 @@ I should be able to edit my profile
     Then I should see the profile page
     And I should not see any errors
     And I should see "Profile information saved."
-    And quit session name "admin session"

@@ -19,7 +19,7 @@ module WithinHelpers
       wait_until do
         begin
           yield
-        rescue Capybara::ElementNotFound
+        rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ObsoleteElementError
         end
       end
     rescue Capybara::TimeoutError
@@ -162,17 +162,13 @@ Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
 end
 
 Then /^(?:|I )should see the following within "([^"]*)":$/ do |selector, table|
-  with_scope(selector) do
-    table.raw.each { |row|
-      row.each { |e|
-        if page.respond_to? :should
-          page.should have_content(e)
-        else
-          assert page.has_content?(e)
-        end
-      }
+  table.raw.each { |row|
+    row.each { |e|
+      waiter do
+        page.find(selector, :text => e)
+      end.should_not be_nil
     }
-  end
+  }
 end
 
 When /I fill in fcbk control with "([^"]*)"/ do |user|
@@ -195,13 +191,17 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, select
 end
 
 Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_no_content(text)
-    else
-      assert page.has_no_content?(text)
+  begin
+    wait_until do
+      begin
+        !find(selector ? selector : "*", :text => text)
+      rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ObsoleteElementError
+        nil
+      end
     end
-  end
+  rescue Capybara::TimeoutError
+    nil
+  end.should be_nil
 end
 
 Then /^(?:|I )should not see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, selector|

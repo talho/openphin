@@ -31,8 +31,9 @@ I should be able to edit my profile
 
     Then I should see the following within ".x-grid3-row":
       | Jane Smith |
-    When I click x-grid3-row "Jane Smith"
-    And I press "Edit User"
+    When I click x-grid3-cell "Jane Smith"
+    Then I should see "Edit This Account"
+    When I press "Edit This Account"
     Then I should see "Organizations"
     When I press "Request Organization"
     And I select "DSHS" from ext combo "rq[org]"
@@ -104,8 +105,9 @@ I should be able to edit my profile
     And I press "Search"
     Then I should see the following within ".x-grid3-row":
       | Jane Smith |
-    When I click x-grid3-row "Jane Smith"
-    And I press "Edit User"
+    When I click x-grid3-cell "Jane Smith"
+    Then I should see "Edit This Account"
+    When I press "Edit This Account"
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"
     When I click destroy "DSHS"
