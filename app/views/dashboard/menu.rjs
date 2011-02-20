@@ -96,7 +96,7 @@ if current_user.has_non_public_role?
                      {name: 'Calendar'},
                      {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
                      {name: 'Chat'},
-                     {name: 'Links'},
+                     {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                      '<a href=\"/\"><img style=\"border: 0; margin-left: 100px; padding-bottom: 2px;\" src=\"/images/oldphin.gif\"></a>',
                      '->',
                      '<a href=\"http://www.dshs.state.tx.us\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/dshs-tiny.png\"></a>',
