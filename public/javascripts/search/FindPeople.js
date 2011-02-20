@@ -237,7 +237,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         this.searchSidebar,
         this.searchResultsContainer
       ],
-      title: this.title
+      title: config.title
     });
 
     this.getPanel = function(){

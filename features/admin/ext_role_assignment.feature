@@ -129,4 +129,4 @@ Feature: Assigning roles to users for roles
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should see "System:Admin" ".role-title"
+    And I should see "System:Admin" within ".role-title"

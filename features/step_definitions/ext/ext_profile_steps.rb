@@ -6,8 +6,12 @@ end
 
 When /^I edit the user profile for "([^"]*)"$/ do |user_name|
   When %Q{I navigate to "Admin > Manage Users > Edit Users"}
-  When %Q{I click x-grid3-row "#{user_name}"}
-  When %Q{I press "Edit User"}
+  When %Q{I fill in "Name:" with "#{user_name}"}
+  When %Q{I press "Search"}
+  When %Q{I should see "#{user_name}" within ".x-grid3-row"}
+  When %Q{I click x-grid3-cell "#{user_name}"}
+  Then %Q{I should see "Edit This Account"}
+  When %Q{I press "Edit This Account"}
 end
 
 When /^I request the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
