@@ -98,6 +98,7 @@ Given /^(\d*) random alerts in (.*)$/ do |count, jurisdiction|
 end
 
 When /^PhinMS delivers the message: (.*)$/ do |filename|
+  require 'edxl/message'
   xml = File.read("#{Rails.root}/spec/fixtures/#{filename}")
   if(EDXL::MessageContainer.parse(xml).distribution_type == "Ack")
     EDXL::AckMessage.parse(xml)
