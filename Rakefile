@@ -29,3 +29,5 @@ Hydra::GlobalTask.new('ruby:killall')
 Hydra::GlobalTask.new('sphinx:killall')
 
 Hydra::SyncTask.new('hydra:sync')
+
+Hydra::GlobalTask.new('ts:in')
