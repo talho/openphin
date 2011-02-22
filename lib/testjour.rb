@@ -26,7 +26,7 @@ task :testing do
       run "cd #{current_path}; rake hydra:ruby:killall"
       run "cd #{current_path}; rake hydra:sphinx:killall"
       run "cd #{current_path}; rake hydra:firefox:killall"
-      run "cd #{current_path}; rake hydra:ts:in"
+      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:ts:in"
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra"
     end
   end
