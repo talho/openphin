@@ -218,6 +218,13 @@ private
 
   def sign_in(user)
     user.update_attribute(:last_signed_in_at, Time.now)
+
+    # send user to ext if they've got the cookie set
+    # TODO: remove after beta period
+    if (request.cookies["phin2beta"] == "true")
+      session[:return_to] = "/ext/"
+    end
+    
     super user
   end
 
