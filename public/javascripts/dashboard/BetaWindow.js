@@ -4,14 +4,21 @@ Talho.BetaWindow = Ext.extend(Ext.Window, {
   modal: true,
   width: 500,
   height: 200,
+  id: 'betaWindow',
   draggable: false,
   constructor: function(config){
 
     var innerItems = [
-      {xtype: 'box', autoEl: 'p', html: 'You are currently using the new TXPhin 2.0 Beta Test.  ', style: 'padding: 5px 0px;'},
-      {xtype: 'button', text: 'Stay with the TXPhin 2.0 Beta', handler: function(){ Talho.BetaWindow.close() }},
+      {xtype: 'box', autoEl: 'p', html: 'You are currently using the new TXPhin 2.0.  ', style: 'padding: 5px 0px;'},
+      {xtype: 'button', text: 'Stay with the TXPhin 2.0 Beta',
+        handler: function(){
+          Ext.getCmp('phin_beta_button').hide();
+        }},
       {xtype: 'box', autoEl: 'h1', html: '<br><br>Return to the old version of TXPhin:', style: 'padding: 5px 0px;'},
-      {xtype: 'button', text: 'Leave the TXPhin 2.0 Beta', handler: function(){document.cookie = 'phin2beta=false;path=/'; window.location = '/' }}
+      {xtype: 'button', text: 'Leave the TXPhin 2.0 Beta',
+        handler: function(){
+          document.cookie = 'phin2beta=false;path=/'; window.location = '/'
+        }}
     ];
 
     //innerItems = Ext.flatten(innerItems);
