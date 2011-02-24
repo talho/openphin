@@ -1,5 +1,8 @@
 
 Ext.onReady(function(evt){
+    //TODO: remove after beta period
+    document.cookie="phin2beta=true;path=/";
+
     if(PhinApplication) window.Application.phin = new PhinApplication();
 });
 
@@ -159,7 +162,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
+        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, tip: this.open_tip, redirect: this.redirect_to});
 
         Ext.each(Application.bbarConfig, function(item, index){
             tb.add(builder.buildMenu(item));
@@ -271,12 +274,11 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
           var win = initializer(config);
           win.show();
         };
-        
         Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.createDelegate(this, [config], true));
         return;
       }
     },
-    
+
     loadOtherLibrary_callback: function(name, config, tempPanel){
         this.tabPanel.remove(tempPanel);
 

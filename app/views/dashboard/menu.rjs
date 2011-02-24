@@ -97,7 +97,7 @@ if current_user.has_non_public_role?
                      {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
                      {name: 'Chat'},
                      {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
-                     '<a href=\"/\"><img style=\"border: 0; margin-left: 100px; padding-bottom: 2px;\" src=\"/images/oldphin.gif\"></a>',
+                     {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
                      '->',
                      '<a href=\"http://www.dshs.state.tx.us\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/dshs-tiny.png\"></a>',
                      '<a href=\"http://www.talho.org\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/talho-tiny.png\"></a>',
