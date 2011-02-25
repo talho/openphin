@@ -101,12 +101,17 @@ Feature: Create a folder tree in documents
     And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
+    And I wait for the "Loading" mask to go away
     And I double-click the "Sub1" folder
+    And I wait for the "Loading" mask to go away
     Then the "Sub1" grid row within ".document-folder-tree-grid" should be selected
     When I double-click the "SubSub1" folder
+    And I wait for the "Loading" mask to go away
     Then the "SubSub1" grid row within ".document-folder-tree-grid" should be selected
     When I select the "Folder1" grid row
+    And I wait for the "Loading" mask to go away
     And I double-click the "Sub2" folder
+    And I wait for the "Loading" mask to go away
     Then the "Sub2" grid row within ".document-folder-tree-grid" should be selected
 
   Scenario: Launch action windows from the various locations
