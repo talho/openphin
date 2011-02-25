@@ -117,7 +117,7 @@ Talho.Documents = Ext.extend(function(){}, {
             }),
             loadMask: true,
             autoExpandColumn: 'name_column',
-            bbar: ['->', {text: 'Refresh', iconCls: '', scope: this, handler: this._refresh}, {text: 'Add Folder', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}],
+            bbar: ['->', {text: 'Refresh', iconCls: '', scope: this, handler: this._refresh}, {text: 'Add Folder', itemId: 'add_folder_button', iconCls: 'documents-add-folder-icon', scope: this.file_actions, handler: this.file_actions.createNewFolder}],
             listeners: {
               scope: this,
               'rowclick': function(grid, rowIndex, e) {
@@ -336,6 +336,10 @@ Talho.Documents = Ext.extend(function(){}, {
         if(!this._fileControls){
             this._fileControls = this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').getComponent('file_controls');
         }
+        if(!this._add_folder_button){
+          this._add_folder_button = this._folderTreeGrid.getBottomToolbar().getComponent('add_folder_button');
+        }
+        this._add_folder_button.hide();
 
         var selections = (control.getSelectedRecords || control.getSelections).apply(control);
 
@@ -360,6 +364,7 @@ Talho.Documents = Ext.extend(function(){}, {
                 if(folderSelections[0] && folderSelections[0].get('type') == 'share'){
                     if(folderSelections[0].get('is_owner')){
                         show.push('base_actions');
+                        this._add_folder_button.show();
                     }
                     else if(folderSelections[0].get('is_author')){
                         show.push('author_actions');
@@ -372,6 +377,7 @@ Talho.Documents = Ext.extend(function(){}, {
                 var type = sel.get('type');
                 if(type == 'folder'){
                   // Make sure My Documents isn't selected
+                  this._add_folder_button.show();
                   if(folderSelections[0].data.id === null && selections[0].id == 0) show.push('folder_detail_container');
                   else show.push('folder_detail_container','folder_action_container', 'move_action_container');
                     this._fileControls.applySectionDetails('folder_detail_container', {
@@ -385,6 +391,7 @@ Talho.Documents = Ext.extend(function(){}, {
                     show.push('folder_detail_container');
                     if(sel.get('is_owner')){
                         show.push('folder_action_container');
+                        this._add_folder_button.show();
                     }
                     this._fileControls.applySectionDetails('folder_detail_container', {
                         'name': sel.get('name'),
@@ -405,6 +412,7 @@ Talho.Documents = Ext.extend(function(){}, {
                     }
                     else{
                         show.push('file_detail_container', 'file_action_container', 'move_action_container');
+                        this._add_folder_button.show();
                     }
 
                     this._fileControls.applySectionDetails('file_detail_container', {
