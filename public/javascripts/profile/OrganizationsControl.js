@@ -45,7 +45,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
               listeners: {select: function(combo,record,index){ win.find("name", "rq[desc]")[0].setValue(record.get("long_desc")); }}}
           ]}
         ]},
-        {xtype: 'textarea', fieldLabel: 'Organization Description', name: 'rq[desc]', anchor: '100% -50', readOnly: true, html: ''}
+        {xtype: 'displayfield', fieldLabel: 'Organization Description', name: 'rq[desc]', anchor: '100% -50', readOnly: true, html: ''}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});

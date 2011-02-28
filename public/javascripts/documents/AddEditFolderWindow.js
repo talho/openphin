@@ -105,8 +105,8 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                         {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: false, showGroups: true}
                     ]},
                     {title: 'Permissions', itemId: 'per', padding: '5', items:[
-                        {itemId: 'perlabel', xtype: 'box', html: 'Permissions are only available when this folder is explicitly shared.'},
-                        {itemId: 'perempty', xtype: 'box', hidden: true, html: 'You must select a user in order to apply a specific permission to this folder.'},
+                        {itemId: 'perlabel', xtype: 'box', html: 'To set per-user permissions, users must be added individually on the Sharing tab.'},
+                        {itemId: 'perempty', xtype: 'box', hidden: true, html: 'This Folder is not shared with any individual users.'},
                         {itemId: 'perholder', xtype: 'form', border: false, hidden: true, autoScroll: true}
                     ], listeners:{
                         scope: this,
@@ -234,11 +234,11 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
 
         this.getComponent('tp').getComponent('per').getComponent('perempty').hide();
 
-        if(audience && ap.rendered && this.getComponent('tp').getComponent('sh').getComponent('rh').getComponent('rg').getValue().getRawValue() === 'shared' && audience.users.length < 1){
-            this.getComponent('tp').getComponent('per').getComponent('perempty').show();
-        }
-        else if(audience)
-        {
+        if(audience && audience.users.length < 1 && (
+                (ap.rendered && this.getComponent('tp').getComponent('sh').getComponent('rh').getComponent('rg').getValue().getRawValue() === 'shared') ||
+                (this.loaded_data && this.loaded_data['folder[shared]'] == 'shared'))){
+          this.getComponent('tp').getComponent('per').getComponent('perempty').show();
+        } else if(audience) {
             // write new form rows, include already selected values
             Ext.each(audience.users, function(user, index){
                 var v_index = vals.findIndex('user_id', user.id);

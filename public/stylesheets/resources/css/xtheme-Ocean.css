@@ -1894,3 +1894,11 @@ background-image: none;
   font-size: 200%;
   color: darkred;
 }
+.infobox{
+  background-color: white;
+  border: 1px solid #999999;
+}
+.infobox-inner{
+  border: 0px solid;
+  padding: 5px;
+}
