@@ -9,11 +9,17 @@
  * @extends Ext.Panel
  * @author Shea Frederick
  */
+ 
+ // use dominoes to load google maps. give a callback to application.js
+ dominoes('http://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
+ 
 Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     markers: [],
     
     constructor: function(){
-      this.addEvents('markerclick');
+      this.addEvents('markerclick', 'mapready');
+      
+      Application.addListener('mapready', this.mapReady, this);
       
       Ext.ux.GMapPanel.superclass.constructor.apply(this, arguments);
     },
@@ -32,8 +38,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         
         Ext.applyIf(this,defConfig);
         
-        Ext.ux.GMapPanel.superclass.initComponent.call(this);        
-        this.geocoder = new google.maps.Geocoder();
+        Ext.ux.GMapPanel.superclass.initComponent.call(this); 
     },
     
     afterRender: function(){
@@ -41,6 +46,16 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       Ext.applyIf(this, wh);
       
       Ext.ux.GMapPanel.superclass.afterRender.call(this);
+      
+      try{
+        if(Ext.isDefined(google) && Ext.isDefined(google.maps) && Ext.isDefined(google.maps.Map))
+          this.mapReady();        
+      }
+      catch(e){}
+    },
+    
+    mapReady: function(){       
+      this.geocoder = new google.maps.Geocoder();
       var opts = {
         zoom: this.zoomLevel,
         center: new google.maps.LatLng(0,0),
@@ -57,7 +72,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         }
       }
       
-      google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.createDelegate(this));
+      google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.createDelegate(this));      
     },
     
     centerMap: function(lat, lng){
@@ -103,12 +118,24 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     },
     
     addMarker: function(latLng, title, data){
-      var marker = new google.maps.Marker({position: latLng, title: title, map: this.gmap, data: data});
-      this.markers.push(marker);
-      google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.createDelegate(this, [marker], true));
-      google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.createDelegate(this, [marker], true));
-      google.maps.event.addListener(marker, 'click', this.onMarkerClick.createDelegate(this, [marker], true));
-      return marker;
+      var add_marker = function(){
+        var marker = new google.maps.Marker({position: latLng, title: title, map: this.gmap, data: data});
+        this.markers.push(marker);
+        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'click', this.onMarkerClick.createDelegate(this, [marker], true));
+        return marker;        
+      }.createDelegate(this);
+      var defined = false;
+      try{
+        defined = Ext.isDefined(google) && Ext.isDefined(google.maps) && Ext.isDefined(google.maps.Map);
+      } catch(e){
+        defined = false
+      }
+      if(!defined)
+        this.on('mapready', add_marker, this);
+      else
+        return add_marker();
     },
     
     removeMarker: function(marker){

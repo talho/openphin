@@ -4,9 +4,15 @@
 
     var appClass = Ext.extend(Ext.util.Observable, {
         constructor: function(config){
-            this.addEvents('opentab');
-            this.addEvents('openwindow');
-            this.addEvents('forumtopicdeleted');
+            this.addEvents('opentab', 
+                           'openwindow', 
+                           'forumtopicdeleted',
+                           'mapready'
+                           );
+        },
+        
+        mapReady: function(){
+          this.fireEvent('mapready');
         }
     });
     window.Application = new appClass();
