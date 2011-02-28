@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 FAILED=0
 FEATURES="\*\* \[out \:\: testmaster\.texashan\.org\] features"
 HYDRA="\*\* \[out \:\: testmaster\.texashan\.org\] Hydra"
