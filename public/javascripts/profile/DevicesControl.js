@@ -40,7 +40,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
       width: 450,
       items: [
         {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
-          {xtype: 'textfield', fieldLabel: 'Device info', name: 'dev[value]', maxLength: '46', allowBlank: false}
+          {xtype: 'textfield', fieldLabel: 'Address / Number', name: 'dev[value]', maxLength: '46', allowBlank: false}
         ]},
         {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
           {xtype: 'combo', fieldLabel: 'Device type', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', triggerAction: 'all',
