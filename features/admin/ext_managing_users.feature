@@ -25,40 +25,31 @@ Feature: An admin managing users
     And the sphinx daemon is running
     And delayed jobs are processed
   
-  #Scenario: Creating a user
-  #  When I create a user account with the following info:
-  #    | Email          | john.smith@example.com |
-  #    | Password       | Password1        |
-  #    | Password Confirmation | Password1 |
-  #    | First Name     | John             |
-  #    | Last Name      | Smith            |
-  #    | Preferred name | Jonathan Smith   |
-  #    | Are you with any of these organizations | Red Cross        |
-  #    | Home Jurisdiction  | Dallas County    |
-  #    | What is your primary role | Health Alert and Communications Coordinator |
-  #    | Preferred language | English      |
-  #    | Are you a public health professional? | <checked> |
-  #  Then "john.smith@example.com" should have the "Public" role for "Dallas County"
-  #  And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
-  #  When delayed jobs are processed
-  #  Then "john.smith@example.com" should receive the email:
-  #    | body contains | You have been made a member of the organization Red Cross. |
-  #  And "john.smith@example.com" should not receive an email with the subject "Request submitted for Health Officer in Dallas County"
-#
-#    And the following users should not receive any emails
-#      | roles         | Dallas County / Admin |
-#    
-#    When I log in as "john.smith@example.com"
-#    Then I should not see "Awaiting Approval"
-   
-  #Scenario: Creating a user with invalid data
-  #  When I create a user account with the following info:
-  #    | Email          | invalidemail    |
-  #    | Password       | Password1       |
-  #    | Password Confirmation | <blank>  |
-  #    | Home Jurisdiction | Dallas County |
-  #  Then I should see error messages
-    
+  Scenario: Creating a user
+    Given I am logged in as "bob.jones@example.com"
+    When I navigate to the ext dashboard page
+    When I fill in the add user form with:
+      | Email address  | john.smith@example.com |
+      | First name     | John                   |
+      | Last name      | Smith                  |
+      | Password       | Password1              |
+      | Confirm password | Password1            |
+      | Display name   | Jonathan Smith         |
+      | Language       | English                |
+      | Home Jurisdiction | Dallas County       |
+    And I request the role "Health Alert and Communications Coordinator" for "Dallas County" in the RolesControl
+    And I request the org "Red Cross" in the OrgsControl
+    And I press "Apply Changes"
+    And delayed jobs are processed
+    Then I should see "The user has been successfully created"
+    And "john.smith@example.com" should have the "Public" role for "Dallas County"
+    And "john.smith@example.com" should have the "Health Alert and Communications Coordinator" role for "Dallas County"
+    And "john.smith@example.com" should receive the email:
+      | body contains | You have been made a member of the organization Red Cross. |
+    And "john.smith@example.com" should not receive an email with the subject "Request submitted for Health Officer in Dallas County"
+    And the following users should not receive any emails
+      | roles         | Dallas County / Admin |
+  
   Scenario: Editing a user's profile
     Given I am logged in as "bob.jones@example.com"
     When I navigate to the ext dashboard page
@@ -104,25 +95,26 @@ Feature: An admin managing users
     When I remove the role "Health Officer" for "Dallas County" from EditProfile
     Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
     And I should not see "Health Officer in Dallas County" within ".role-item"
+    And I should see "Profile information saved"
 
-  #Scenario: Add user as admin should not occur if no home jurisdictation is specified
-  #  When I create a user account with the following info:
-  #    | Email          | john@example.com |
-  #    | Password       | Password1        |
-  #    | Password Confirmation | Password1 |
-  #    | First Name     | John             |
-  #    | Last Name      | Smith            |
-  #    | Preferred name | Jonathan Smith   |
-  #    | Home Jurisdiction |               |
-  #    | Are you with any of these organizations | Red Cross        |
-  #    | What is your primary role | Health Alert and Communications Coordinator |
-  #    | Preferred language | English      |
-  #    | Are you a public health professional? | <checked> |
-  #  Then "john@example.com" should not receive an email
-  #  And I should not see "Thanks for signing up"
-  #  And "john@example.com" should not exist
-	#  And "bob.jones@example.com" should not receive an email
-  #  And I should see "Home Jurisdiction needs to be selected"
+  Scenario: Add user as admin should not occur if no home jurisdictation is specified
+    Given I am logged in as "bob.jones@example.com"
+    When I navigate to the ext dashboard page
+    When I fill in the add user form with:
+      | Email address  | john.smith@example.com |
+      | First name     | John                   |
+      | Last name      | Smith                  |
+      | Password       | Password1              |
+      | Confirm password | Password1            |
+      | Display name   | Jonathan Smith         |
+      | Language       | English                |
+    And I request the role "Health Alert and Communications Coordinator" for "Dallas County" in the RolesControl
+    And I request the org "Red Cross" in the OrgsControl
+    And I press "Apply Changes"
+    And delayed jobs are processed
+    Then "john@example.com" should not receive an email
+    And "john@example.com" should not exist
+	  And "bob.jones@example.com" should not receive an email
     
   Scenario: Editing a user's profile by adding user and organizational contact info
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
@@ -137,28 +129,19 @@ Feature: An admin managing users
     And I press "Apply Changes"
     Then I should see "Profile information saved"
 
-  #Scenario: Not permitting a second user to be created with the same case-folded e-mail
-  #  Given I am logged in as "bob.jones@example.com"
-  #  When I create a user account with the following info:
-  #    | Email          | john.smith@example.com |
-  #    | Password       | Password1        |
-  #    | Password Confirmation | Password1 |
-  #    | First Name     | John             |
-  #    | Last Name      | Smith            |
-  #    | Preferred name | Jonathan Smith   |
-  #    | Are you with any of these organizations | Red Cross        |
-  #    | Home Jurisdiction  | Dallas County    |
-  #    | What is your primary role | Health Alert and Communications Coordinator |
-  #    | Preferred language | English      |
-  #    | Are you a public health professional? | <checked> |
-  #  And delayed jobs are processed
-  #  Then "john.smith@example.com" should have the "Public" role for "Dallas County"
-  #  
-  #  When I go to the the admin add user page
-  #  And I fill in "user_first_name" with "John"
-  #  And I fill in "user_last_name" with "Smith"
-  #  And I fill in "user_email" with "john.SMITH@example.com"
-  #  And I fill in "user_password" with "Password1"
-  #  And I fill in "user_password_confirmation" with "Password1"
-  #  And I press "Save"
-  #  Then I should see "Email address is already being used on another user account"
+  Scenario: Not permitting a second user to be created with the same case-folded e-mail
+    Given I am logged in as "bob.jones@example.com"
+    When I navigate to the ext dashboard page
+    When I fill in the add user form with:
+      | Email address  | jane.smith@example.com |
+      | First name     | Jane                   |
+      | Last name      | Smith                  |
+      | Password       | Password1              |
+      | Confirm password | Password1            |
+      | Language       | English                |
+      | Home Jurisdiction | Dallas County       |
+    And I request the role "Health Alert and Communications Coordinator" for "Dallas County" in the RolesControl
+    And I request the org "Red Cross" in the OrgsControl
+    And I press "Apply Changes"
+    And delayed jobs are processed
+    Then I should see "Email address is already being used on another user account"

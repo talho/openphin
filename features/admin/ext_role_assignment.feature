@@ -23,8 +23,8 @@ Feature: Assigning roles to users for roles
     And the following users exist:
       | John Smith      | john@example.com   | Public | Dallas County |
       | Jane Doe        | jane@example.com   | Public | Dallas County |
-      | Bob  Doe        |  bob@example.com   | Public | Potter County |
-      | Super  Doe      |  super@example.com | Superadmin | Texas     |
+      | Bob Doe         |  bob@example.com   | Public | Potter County |
+      | Super Doe       |  super@example.com | Superadmin | Texas     |
     When the sphinx daemon is running
     And delayed jobs are processed
 
@@ -51,10 +51,6 @@ Feature: Assigning roles to users for roles
       | body contains | You have been assigned the role of Health Officer in Dallas County |
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
 	  And "admin@dallas.gov" should not receive an email
-
-
-
-
 
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
     Given I am logged in as "admin@dallas.gov"
@@ -88,13 +84,6 @@ Feature: Assigning roles to users for roles
     And "john@example.com" should not have the "Health Officer" role in "Potter County"
     And "jane@example.com" should not have the "Health Officer" role in "Potter County"
 
-  #Scenario: Role assignment form should not contain jurisdictions the user is not an admin of
-  #  Given I am logged in as "admin@dallas.gov"
-  #  And I go to the roles requests page for an admin
-  #  And I show dropdown menus
-  #  When I follow "Assign Role"
-  #  Then I should explicitly not see "Potter County" in the "Jurisdiction" dropdown
-
   Scenario: Malicious admin cannot remove role assignments the user is not an admin of
     Given "admin@dallas.gov" has approved the "Health Officer" role in "Dallas County" for "john@example.com"
     And I am logged in as "admin@potter.gov"
@@ -102,10 +91,6 @@ Feature: Assigning roles to users for roles
     And I maliciously post a deny for a role assignment for "john@example.com"
     Then I should see "This resource does not exist or is not available."
     And I should be on the homepage
-
-
-
-
 
   Scenario: Assigning system roles to a user in my jurisdiction
     Given I am logged in as "admin@potter.gov"
@@ -118,6 +103,7 @@ Feature: Assigning roles to users for roles
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
     When I navigate to the ext dashboard page
+    And I suspend cucumber
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
