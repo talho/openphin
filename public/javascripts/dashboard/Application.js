@@ -38,11 +38,13 @@ Ext.override(Ext.Container, {
     var next_level = new Ext.util.MixedCollection();
     while(found === undefined && current_level.length > 0){
       for(var i = 0; i < current_level.length; i++){
-        var found = current_level[i].getComponent(id);
-        if(found !== undefined)
-          break;
-        else
-          next_level.addAll(current_level[i].items.getRange());
+        if(current_level[i].isXType && current_level[i].isXType('container')){
+          var found = current_level[i].getComponent(id);
+          if(found !== undefined)
+            break;
+          else
+            next_level.addAll(current_level[i].items.getRange());
+        }
       }
       current_level = next_level.getRange();
       next_level.clear();
