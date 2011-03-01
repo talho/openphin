@@ -44,7 +44,7 @@ class Doc::FoldersController < ApplicationController
     end
 
     folder = owner.folders.build(params[:folder])
-    unless folder.save!
+    unless folder.save
       respond_to do |format|
         format.json {render :json => {:success => false, :errors => folder.errors.as_json }, :status => 400}
       end
