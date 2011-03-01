@@ -51,7 +51,7 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
   And I send return to "#search-name"
   Then I should see "Potter Admin"
   When I press "Reset"
-  Then I should not see "Po" within "#search-name"
+  Then I should not see "Po" within "conditions[name]"
 
   When I fill in "Email Address" with "pott.admin@example.com"
   And I send return to "#search-email"
@@ -81,28 +81,28 @@ Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisd
   And the "Find People" tab should be open
 
   When I click rol-list-item "Public"
-  Then I should see "Public" within "#roles-select .x-list-selected"
+  Then I should see "Public" within ".find-people-roles-select .x-list-selected"
 
   When I click rol-list-item "Medical Director"
-  Then I should see "Medical Director" within "#roles-select .x-list-selected"
+  Then I should see "Medical Director" within ".find-people-roles-select .x-list-selected"
 
-  When I press "Clear All" within "#roles-select"
-  Then I should not have ".x-list-selected" within "#roles-select"
+  When I press "Clear All" within ".find-people-roles-select"
+  Then I should not have ".x-list-selected" within ".find-people-roles-select"
 
   When I click jur-list-item "Potter County"
-  Then I should see "Potter County" within "#jurisdictions-select .x-list-selected"
+  Then I should see "Potter County" within ".find-people-jurisdictions-select .x-list-selected"
 
   When I click jur-list-item "Dallas County"
-  Then I should see "Dallas County" within "#jurisdictions-select .x-list-selected"
+  Then I should see "Dallas County" within ".find-people-jurisdictions-select .x-list-selected"
 
-  When I press "Clear All" within "#jurisdictions-select"
-  Then I should not have ".x-list-selected" within "#jurisdictions-select"
+  When I press "Clear All" within ".find-people-jurisdictions-select"
+  Then I should not have ".x-list-selected" within ".find-people-jurisdictions-select"
 
   When I click rol-list-item "Public"
   And I click jur-list-item "Potter County"
   And I press "Reset"
-  Then I should not have ".x-list-selected" within "#roles-select"
-  And I should not have ".x-list-selected" within "#jurisdictions-select"
+  Then I should not have ".x-list-selected" within ".find-people-roles-select"
+  And I should not have ".x-list-selected" within ".find-people-jurisdictions-select"
 
   When I search for a user with the following:
    | Name         | Harry                  |

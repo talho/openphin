@@ -20,6 +20,17 @@ When /^I request the org "([^"]*)" in the OrgsControl$/ do |org|
   When %Q{I press "Add"}
 end
 
+When /^I remove the org "([^"]*)" in the OrgsControl$/ do |org|
+  When %Q{I click destroy "#{org}"}
+end
+
+When /^I remove the org "([^"]*)" from EditProfile$/ do |org|
+  When %Q{I remove the org "#{org}" in the OrgsControl}
+  When %Q{I press "Apply Changes"}
+  Then %Q{I should see "Profile information saved"}
+  When %Q{delayed jobs are processed}
+end
+
 When /^I request the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
   When %Q{I press "Request Role"}
   When %Q{I select "#{role}" from ext combo "rq[role]"}

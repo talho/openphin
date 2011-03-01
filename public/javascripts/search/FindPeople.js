@@ -66,6 +66,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.rolesSelector = new Ext.Panel ({
+      cls: 'find-people-roles-select',
       layout: 'fit',
       flex: 1,
       width: '100%',
@@ -79,6 +80,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.jurisSelector = new Ext.Panel ({
+      cls: 'find-people-jurisdictions-select',
       layout: 'fit',
       flex: 1,
       width: '100%',

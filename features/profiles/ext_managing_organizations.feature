@@ -25,19 +25,9 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "bob.smith@example.com"
     When I navigate to the ext dashboard page
-    And I navigate to "Admin > Manage Users > Edit Users"
-    And I fill in "Name" with "Jane"
-    And I press "Search"
-
-    Then I should see the following within ".x-grid3-row":
-      | Jane Smith |
-    When I click x-grid3-cell "Jane Smith"
-    Then I should see "Edit This Account"
-    When I press "Edit This Account"
+    When I edit the user profile for "Jane Smith"
     Then I should see "Organizations"
-    When I press "Request Organization"
-    And I select "DSHS" from ext combo "rq[org]"
-    And I press "Add"
+    When I request the org "DSHS" in the OrgsControl
     Then I should see the following within ".org-item":
       | DSHS |
     And I press "Apply Changes"
@@ -100,19 +90,10 @@ I should be able to edit my profile
     And "jane.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "bob.smith@example.com"
     When I navigate to the ext dashboard page
-    And I navigate to "Admin > Manage Users > Edit Users"
-    And I fill in "Name" with "Jane"
-    And I press "Search"
-    Then I should see the following within ".x-grid3-row":
-      | Jane Smith |
-    When I click x-grid3-cell "Jane Smith"
-    Then I should see "Edit This Account"
-    When I press "Edit This Account"
+    When I edit the user profile for "Jane Smith"
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"
-    When I click destroy "DSHS"
-    And I press "Apply Changes"
-    When delayed jobs are processed
+    When I remove the org "DSHS" from EditProfile
     Then I should see "Organizations"
     And I should not see "DSHS"
 
