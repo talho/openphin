@@ -48,28 +48,28 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
   When I navigate to the ext dashboard page
   And I navigate to "Find People"
   And I fill in "Name" with "Potter"
-  And I send return to "#search-name"
+  And I send return to "conditions[name]"
   Then I should see "Potter Admin"
   When I press "Reset"
   Then I should not see "Po" within "conditions[name]"
 
   When I fill in "Email Address" with "pott.admin@example.com"
-  And I send return to "#search-email"
+  And I send return to "conditions[email]"
   Then I should see "Potter Admin"
   When I press "Reset"
-  Then I should not see "pott.admin@example.com" within "#search-email"
+  Then I should not see "pott.admin@example.com" within "conditions[email]"
 
   When I fill in "Phone" with "888-123-1111"
-  And I send return to "#search-phone"
+  And I send return to "conditions[phone]"
   Then I should see "Potter Admin"
   When I press "Reset"
-  Then I should not see "888-123-1111" within "#search-phone"
+  Then I should not see "888-123-1111" within "conditions[phone]"
 
   When I fill in "Job Title" with "Supervisor"
-  And I send return to "#search-title"
+  And I send return to "conditions[title]"
   Then I should see "Potter Admin" in grid row 1
   When I press "Reset"
-  Then I should not see "Supervisor" within "#search-title"
+  Then I should not see "Supervisor" within "conditions[title]"
 
 
 @people
