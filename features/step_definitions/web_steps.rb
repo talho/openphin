@@ -194,14 +194,18 @@ Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selecto
   begin
     wait_until do
       begin
-        !find(selector ? selector : "*", :text => text)
+        if(selector)
+          !find(selector, :text => text)
+        else
+          !find(:xpath, "//*[text()[contains(., '#{text}')]]")
+        end
       rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ObsoleteElementError
-        nil
+        true
       end
     end
   rescue Capybara::TimeoutError
-    nil
-  end.should be_nil
+    false
+  end.should be_true
 end
 
 Then /^(?:|I )should not see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, selector|
