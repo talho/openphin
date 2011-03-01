@@ -144,19 +144,42 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             })
         });
 
+        this.infobox = new Ext.Container({   
+          layout: 'column',
+          width: 600,
+          cls: 'infobox',
+          items: [
+            {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+            {xtype: 'container', cls:'infobox-inner', items:[
+              {xtype: 'box', html: 'Click on a group to view details.'},
+              {xtype: 'box', html: 'To Edit or Delete a group, use the icons on the left.'}
+            ]}
+          ]
+        });
+
+        this.contentWrapper = new Ext.Container({
+          items:[
+            this.infobox,
+            {xtype: 'spacer', height: '10'},
+            this.group_list
+          ]
+        });
+
         this.group_display_panel = new Ext.Container({
             layout:'hbox',
             layoutConfig: {
-                padding: '30 0',
-                pack: 'center'
+              padding: '30 30 30 30',
+              pack: 'center'
             },
             autoScroll: true,
-            items:[this.group_list],
-            listeners:{
-                'show': function(){ this.group_list.getStore().load(); },
-                'afterrender': {fn: function(){ if(this.group_list.loadMask.show) this.group_list.loadMask.show(); }, delay: 1 },
-                scope:this
-            }
+            items:[ this.contentWrapper ],
+          listeners:{
+            'show': function(){ this.group_list.getStore().load(); },
+            'afterrender': {
+              fn: function(){ if(this.group_list.loadMask.show) this.group_list.loadMask.show(); }, delay: 1
+            },
+            scope:this
+          }
         });
 
         return this.group_display_panel;

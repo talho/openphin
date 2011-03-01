@@ -50,7 +50,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
     this.grid = new Ext.grid.GridPanel({
       store: this.store,
       margins: '0 5 5 5',
-      width: 880,
+      width: 900,
       height: 400,
       plugins: [editor],
       stripeRows: true,
@@ -123,9 +123,25 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       fields: [{name: 'name', mapping: 'jurisdiction.name'}]
     });
 
+    this.infobox = new Ext.Container({
+      layout: 'column',
+      width: 900,
+      cls: 'infobox',
+      items: [
+        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+        {xtype: 'container', cls:'infobox-inner', items:[
+          {xtype: 'box', html: 'Load new user data into the form via CSV Import, or one at a time with the "Add User" button. '},
+          {xtype: 'box', html: 'Users without a specified Jurisdiction will appear in the selected Default Jurisdiction.'},
+          {xtype: 'box', html: 'Click any row in the list to make changes before submission. When you are satisfied with the list, click "Apply Changes".'}
+        ]}
+      ]
+    });
+
     var panel_items = [
       {xtype: 'container', defaults:{width:900}, items:[
         {xtype: 'box', html: '<p id="flash-msg" class="flash">&nbsp;</p>'},
+        this.infobox,
+        {xtype: 'spacer', height: '15'},
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: [
           {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
             {xtype: 'form', name: 'main_form', labelAlign: 'left', url: 'admin_user_batch.json', method: "POST", border: false,
@@ -141,7 +157,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
             ]}
           ]}
         ]},
-        {xtype: 'spacer', height: '15'},
+
         {xtype: 'container', layout: 'hbox', layoutConfig:{pack:'end',defaultMargins:'0 0 0 10'},items:[
           {xtype: 'button', text: 'Apply Changes', name: 'save_button', handler: this.save, scope: this, width:'auto'},
           {xtype: 'button', text: 'Cancel and Discard Changes', handler: this.close, scope: this,width:'auto'}
@@ -162,7 +178,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       items: panel_items
     });
 
-    this.getPanel = function(){ return panel; }
+    this.getPanel = function(){ return panel; };
     this.getPanel().addListener('render', function(p){
       p.loadMask =  new Ext.LoadMask(p.getEl(), {msg:"Loading...", removeMask: true});
     }, this);
