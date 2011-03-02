@@ -335,6 +335,9 @@ Feature: Creating a forum (room)
     And I press "Save"
     And I wait for the "Saving..." mask to go away
     Then I should see "Another user recently updated the same topic.  Please try again." within the alert box
+    When I press "Cancel"
+    Then I should not see "Measuring Reward"
+    When I click edit_topic on the "Measuring Fulfillment" grid row
     And I fill in "Topic Title" with "Measuring Reward"
     And I press "Save"
     And I wait for the "Saving..." mask to go away

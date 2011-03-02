@@ -103,7 +103,6 @@ Feature: Assigning roles to users for roles
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
     When I navigate to the ext dashboard page
-    And I suspend cucumber
     And I edit the user profile for "Bob Doe"
     And I add the role "System:Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"

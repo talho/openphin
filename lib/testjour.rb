@@ -29,6 +29,10 @@ task :testing do
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:ts:in"
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra"
     end
+
+    before :cold, :role => :app do
+      `git push testjour #{get_branch} -f`
+    end
   end
 
   task :seed, :roles => :db, :only => {:primary => true} do

@@ -319,26 +319,39 @@ Then 'the alert "$alert_id" should be acknowledged' do |alert_id|
 end
 
 Then /^I can see the alert for "([^\"]*)" is (\d*)\% acknowledged$/ do |title,percent|
-  assert page.find('.progress', :text => percent).nil? == false
+  waiter do
+    page.find('.progress', :text => percent)
+  end.should_not be_nil
 end
 
 Then /^I can see the jurisdiction alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, jurisdiction_name, percentage|
-  assert page.find(".jur_ackpct .jurisdiction", :text => jurisdiction_name).nil? == false
-  assert page.find(".jur_ackpct .percentage", :text => percentage).nil? == false
+  waiter do
+    page.find(".jur_ackpct .jurisdiction", :text => jurisdiction_name)
+  end.should_not be_nil
+
+  waiter do
+    page.find(".jur_ackpct .percentage", :text => percentage)
+  end.should_not be_nil
 end
 
 Then /^I can see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, device_type, percentage|
-  assert page.find(".dev_ackpct .#{device_type} .percentage", :text => percentage).nil? == false
+  waiter do
+    page.find(".dev_ackpct .#{device_type} .percentage", :text => percentage)
+  end.should_not be_nil
 end
 
 Then /^I can see the alert acknowledgement response rate for "([^\"]*)" in "([^\"]*)" is (\d*)%$/ do |alert_name, alert_response, percentage|
   alert = Alert.find_by_title(alert_name)
   num = alert.call_down_messages.index(alert_response)
-  assert page.find(".response_ackpct #response#{num} .percentage", :text => percentage).nil? == false
+  waiter do
+    page.find(".response_ackpct #response#{num} .percentage", :text => percentage)
+  end.should_not be_nil
 end
 
 Then /^I cannot see the device alert acknowledgement rate for "([^\"]*)" in "([^\"]*)"$/ do |alert_name, device_type|
-  assert page.has_css?(".#{device_type}") == false 
+  waiter do
+    page.has_css?(".#{device_type}")
+  end.should_not be_true
 end
 
 Then /^the alert should be acknowledged$/ do

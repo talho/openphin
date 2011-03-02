@@ -46,8 +46,9 @@ Feature: Receiving notifications to different events
     Then "bartleby@example.com" should not receive an email
 
 
-  Scenario: Don't receive notification when a document is downloaded after the first time
-    Then "Action auditing" should be implemented
+#TODO: To be implemented
+#  Scenario: Don't receive notification when a document is downloaded after the first time
+#    Then "Action auditing" should be implemented
 
   Scenario: Receive notification when a user uploads a document to a shared folder you are a member of
     Given I create shares "Folder1" shared with "atticus@example.com"

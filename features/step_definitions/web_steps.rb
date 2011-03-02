@@ -197,7 +197,7 @@ Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selecto
         if(selector)
           !find(selector, :text => text)
         else
-          !find(:xpath, "//*[text()[contains(., '#{text}')]]")
+          !find(:xpath, "//*[text()[contains(., '#{text.gsub("'", "&apos;")}')]]")
         end
       rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ObsoleteElementError
         true
