@@ -71,6 +71,7 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
     And I fill in "dev[value]" with "5121231234x1234"
     And I press "Add"
@@ -86,6 +87,7 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
     And I fill in "dev[value]" with "5552345678"
     And I press "Add"
@@ -97,6 +99,7 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "SMS" from ext combo "Device type"
     And I fill in "dev[value]" with "5556667788"
     And I press "Add"
