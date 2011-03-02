@@ -240,7 +240,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         if(this.mode === 'new')
             this.form_card.getForm().submit();
         else if(this.mode === 'update' || this.mode === 'cancel')
-            this.form_card.getForm().submit({url:'alerts/' + this.alertId + '.json', method: 'PUT'});
+            this.form_card.getForm().submit({url:'/alerts/' + this.alertId + '.json', method: 'PUT'});
     },
 
     submit_success: function(form, action){

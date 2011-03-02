@@ -180,7 +180,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
               leftPane.getComponent('alert_recipient_count').addClass('working-notice');
               leftPane.getComponent('alert_recipient_count').update('Calculating...');
               Ext.Ajax.request({
-                url: 'alerts/calculate_recipient_count.json',
+                url: '/alerts/calculate_recipient_count.json',
                 method: 'POST',
                 params: this.buildAudienceParams(),
                 scope: this,

@@ -3,7 +3,7 @@ Ext.ns("Talho");
 Talho.AddUser = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
     var jurisdictions_store = new Ext.data.JsonStore({
-      url: 'admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
+      url: '/admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
       fields: [{name: 'name', mapping: 'jurisdiction.name'}]
     });
     this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
@@ -71,7 +71,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     this.form_config = {
       form_width: 850,
       item_list: item_list,
-      save_url: "admin_users.json",
+      save_url: "/admin_users.json",
       save_method: "POST"
     };
 
