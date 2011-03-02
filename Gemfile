@@ -42,6 +42,8 @@ group :default do
   gem "libxml-ruby", "1.1.3"
   #gem "clamav", "0.4.1"
   gem "daemons", "1.1.0"
+  gem "thinking-sphinx", "1.4.3"  #
+  gem 'ts-delayed-delta', '1.1.1', :require => 'thinking_sphinx/deltas/delayed_delta' 
 end
 
 group :test do
@@ -75,7 +77,6 @@ group :cucumber do
   gem "capybara", "0.4.1.2"
   #gem "clamav", "0.4.1"
   gem "hydra", "0.23.2", :git => "git://github.com/Dishwasha/hydra.git"
-  gem "send-keys", "0.1.0", :require => "capybara"
 end
 
 group :tools do

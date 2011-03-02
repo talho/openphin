@@ -20,6 +20,7 @@ require 'capybara/session'
 
 require "#{Rails.root}/spec/factories"
 require 'spec/mocks'
+require 'features/support/patches/send_key'
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd

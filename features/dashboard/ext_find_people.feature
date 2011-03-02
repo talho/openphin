@@ -39,11 +39,11 @@ Scenario: Public-only user can not navigate to Find People
 
 
 @people
-@javascript
 Scenario: Initiate search by using the RETURN key and verify Form ClearAll
   Given I am logged in as "pott.admin@example.com"
   And pott.admin@example.com has the following information:
    | title        | Supervisor      |
+   | phone        | 888-123-1111    |
   And delayed jobs are processed
   When I navigate to the ext dashboard page
   And I navigate to "Find People"
@@ -86,7 +86,7 @@ Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisd
   When I click rol-list-item "Medical Director"
   Then I should see "Medical Director" within "#roles-select .x-list-selected"
 
-  When I click x-btn "Clear All" within "#roles-select"
+  When I press "Clear All" within "#roles-select"
   Then I should not have ".x-list-selected" within "#roles-select"
 
   When I click jur-list-item "Potter County"
@@ -95,7 +95,7 @@ Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisd
   When I click jur-list-item "Dallas County"
   Then I should see "Dallas County" within "#jurisdictions-select .x-list-selected"
 
-  When I click x-btn "Clear All" within "#jurisdictions-select"
+  When I press "Clear All" within "#jurisdictions-select"
   Then I should not have ".x-list-selected" within "#jurisdictions-select"
 
   When I click rol-list-item "Public"
