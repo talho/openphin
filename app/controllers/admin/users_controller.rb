@@ -50,9 +50,9 @@ class Admin::UsersController < ApplicationController
         @user.confirm_email!
 
         # Handle new devices and role requests (ext only)
-        update_devices(params[:user][:new_devices]) if params[:user].has_key?(:new_devices)
-        handle_role_requests(params[:user][:new_roles]) if params[:user].has_key?(:new_roles)
-        handle_org_requests(params[:user][:new_orgs]) if params[:user].has_key?(:new_orgs)
+        @user.update_devices(params[:user][:new_devices]) if params[:user].has_key?(:new_devices)
+        @user.handle_role_requests(params[:user][:new_roles]) if params[:user].has_key?(:new_roles)
+        @user.handle_org_requests(params[:user][:new_orgs]) if params[:user].has_key?(:new_orgs)
 
         flash[:notice] = 'The user has been successfully created.'
         format.html { redirect_to new_admin_user_path }
