@@ -106,7 +106,7 @@ Feature: Viewing groups
   Scenario: going to edit a user group as a public user
     Given I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
-    Then I should not see "Home"
+    Then I should see "Dashboard"
     And I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
