@@ -26,7 +26,8 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
-    And I select "E-mail" from ext combo "Device type"
+    Then I should see "Address / Number:"
+    When I select "E-mail" from ext combo "Device type"
     And I fill in "dev[value]" with "johnny@example.com"
     And I press "Add"
     Then I should see the following within ".device-item":
