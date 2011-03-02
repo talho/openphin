@@ -68,7 +68,8 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
+    #TODO: To be implemented
+    #And "fix the above step to include an alert id" should be implemented
 
   Scenario: Previewing an alert                              
     When I fill in the ext alert defaults
@@ -144,7 +145,8 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
+    #TODO: To be implemented
+    #And "fix the above step to include an alert id" should be implemented
 
   Scenario: Sending an alert with specified Jurisdictions sends to all users within those Jurisdictions
     When I fill in the ext alert defaults
@@ -168,7 +170,8 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
+    #TODO: To be implemented
+    #And "fix the above step to include an alert id" should be implemented
 
   Scenario: Sending an alert with specified Jurisdictions/Roles scopes who the alerts are sent to
     When I fill in the ext alert defaults
@@ -193,7 +196,8 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
+    #TODO: To be implemented
+    #And "fix the above step to include an alert id" should be implemented
 
   Scenario: Sending an alert with specified Roles scopes who the alerts are sent to
     When I fill in the ext alert defaults
@@ -217,6 +221,5 @@ Feature: Creating and sending alerts
       | body contains | Agency: Dallas County |
       | body contains | Sender: John Smith |
       | body contains | For more details, keep on reading... |
-    And "fix the above step to include an alert id" should be implemented
-
-
+    #TODO: To be implemented
+    #And "fix the above step to include an alert id" should be implemented

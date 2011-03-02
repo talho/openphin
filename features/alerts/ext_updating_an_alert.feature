@@ -70,7 +70,8 @@ Feature: Updating an alert
       | body contains | Agency: Dallas County                              |
       | body contains | Sender: John Smith                                 |
       | body contains | Flying monkey disease contagion is more widespread |
-    And "Fix the above step to include Alert ID and Reference ID" should be implemented
+    #TODO: To be implemented
+    #And "Fix the above step to include Alert ID and Reference ID" should be implemented
 
   Scenario: Updating an alert as another alerter within the same jurisdiction
     Given I am logged in as "john.smith@example.com"
