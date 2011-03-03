@@ -27,7 +27,7 @@ Feature: An admin deleting users
   Scenario: Attempt to delete an invalid user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     When I go to the users delete page for an admin
-    And I fill in fcbk control with "Zzzjonah"
+    And I fill in fcbk control with "Yyyjonah"
     And I press "Delete Users"
     Then I should see "A valid user was not selected"
     
