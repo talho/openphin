@@ -18,11 +18,13 @@ page << "Application.rails_environment = '#{ Rails.env }';"
     Phin::Application.eval_if_plugin_present(:rollcall) do
       if current_user.roles.find_by_name("Rollcall")
         plugin_config_items << "{name: 'Rollcall', items:[
-                      {name: 'Main', tab:{id: 'rollcall_main', title:'Rollcall Main', url:'#{rollcall_path}'}},
-                      {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'#{schools_path}'}},
-                      {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:'#{about_rollcall_path}'}}]}"
+          {name: 'ADST', tab:{id: 'rollcall_adst', title:'Rollcall ADST', url:'', initializer: 'Talho.Rollcall.ADST'}},
+          {name: 'Nurse Assistant', tab:{id: 'rollcall_nurse', title:'Nurse Assistant', url:'', initializer: 'Talho.Rollcall.NurseAssistant'}},
+          {name: 'Schools', tab:{id: 'rollcall_schools', title:'Rollcall Schools', url:'', initializer: 'Talho.Rollcall'}},
+          {name: 'About Rollcall', tab:{id: 'about_rollcall', title:'About Rollcall', url:''}}]}"
       end
     end
+
     
     Phin::Application.eval_if_plugin_present(:vms) do
       plugin_config_items << $menu_config[:vms]

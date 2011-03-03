@@ -40,7 +40,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                     items: new Ext.ux.AudienceDisplayPanel({width: 'auto', itemId: 'audience_panel'})},
                 {xtype: 'spacer', height: 10 },
                 {xtype: 'grid', hidden: true, itemId: 'acknowledgement_grid', collapsible: true,
-                    title: 'Acknowledgements', width: 800, store: this.acknowledgement_store,
+                    title: 'Acknowledgements', width: 800, height: 250, store: this.acknowledgement_store,
                     disableSelection: true, autoExpandColumn: 'name_column',
                     columns:[
                         {id: 'name_column', field: 'name', header: 'Name'},
@@ -49,10 +49,10 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                         {field: 'response', header: 'Acknowledgement Response', width: 200},
                         {field: 'acknowledged_at', header: 'Acknowledgement Time', renderer: Ext.util.Format.dateRenderer('F j, Y, g:i a'), width: 200}
                     ],
-                    bbar:new Ext.PagingToolbar({
-                        store: this.acknowledgement_store,
-                        pageSize: 10,
-                        prependButtons: true,
+                    bbar:new Ext.Toolbar({
+                        //store: this.acknowledgement_store,
+                        //pageSize: 10,
+                        //prependButtons: true,
                         items: [{text:'Export as CSV', handler: function(){window.open("/alerts/" + this.alertId + ".csv");}, scope: this},
                             {text:'Export as PDF', handler: function(){window.open("/alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
                         listeners:{'beforechange': function(toolbar, o){return toolbar.cursor != o.start;}}
