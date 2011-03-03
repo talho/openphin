@@ -57,7 +57,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             bodyCssClass:'news_articles',
             listeners:{
                 'render':function(cpt){
-                     if(window.Application.rails_environment != "cucumber") cpt.getUpdater().update({url:'dashboard/news_articles'});
+                     if(window.Application.rails_environment != "cucumber") cpt.getUpdater().update({url:'/dashboard/news_articles'});
                 }
             }
         });

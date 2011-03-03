@@ -22,7 +22,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
       autoLoad: {params: {start: 0, limit: this.pageSize}}, autoSave: false,
       restful: true,
       pruneModifiedRecords: true,
-      url: "admin_edit_users/admin_users",
+      url: "/admin_edit_users/admin_users",
       reader: new Ext.data.JsonReader({
         totalProperty: 'total',
         root: 'rows',
@@ -117,7 +117,7 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
     });
 
     this.form_config = {
-      //load_url: "admin_edit_users/admin_users",
+      //load_url: "/admin_edit_users/admin_users",
       form_width: 900,
       item_list: [ this.grid ]
     };

@@ -11,8 +11,10 @@ Feature: An admin deleting users
       | Role         | Medical Director |
     And Texas is the parent jurisdiction of:
       | Dallas County |
+      | Briscoe County |
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
+      | Zzzz Smith  | zzz.smith@example.com  | Public | Briscoe County |
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
     And Texas has the following administrators:
@@ -25,7 +27,7 @@ Feature: An admin deleting users
   Scenario: Attempt to delete an invalid user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     When I go to the users delete page for an admin
-    And I fill in fcbk control with "Zzzjonah"
+    And I fill in fcbk control with "Yyyjonah"
     And I press "Delete Users"
     Then I should see "A valid user was not selected"
     
@@ -99,3 +101,9 @@ Feature: An admin deleting users
       | Home Jurisdiction  | Dallas County    |
     Then I should see "Thanks for signing up"
  
+  Scenario: Admin shouldn't be able to delete a user outside of his admin jurisdictions
+    When I go to the users delete page for an admin
+    And delayed jobs are processed
+    And I fill out the delete user form with "Zzzz Smith"
+    And I press "Delete Users"
+    Then I should see "does not have permission"
