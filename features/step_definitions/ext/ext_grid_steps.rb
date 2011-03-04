@@ -45,7 +45,7 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([a-zA-Z0-9
   #we're expecting num to be 1-indexed in tests.
   with_scope(within_selector) do
     waiter do
-      @grid = page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//*[contains(text(), '#{content}')#{column}] ]]")
+      @grid = page.find(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3 ') and .//div[contains(@class, 'x-grid3-row') and .//*[contains(text(), '#{content}')#{column}] ]]")
     end
 
     @grid.should_not be_nil unless not_exists
