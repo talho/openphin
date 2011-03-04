@@ -136,6 +136,7 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    And I should see "Add Forum"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
     And I select the following in the audience panel:
@@ -326,7 +327,7 @@ Feature: Creating a forum (room)
     And I press "Save"
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
-    Then I should see "Measuring Time" within ".x-grid3"
+    Then I should see "Measuring Time" within ".x-grid3-cell"
     And I navigate to "Sign Out"
 
     Given session name is "default"
@@ -334,6 +335,9 @@ Feature: Creating a forum (room)
     And I press "Save"
     And I wait for the "Saving..." mask to go away
     Then I should see "Another user recently updated the same topic.  Please try again." within the alert box
+    When I press "Cancel"
+    Then I should not see "Measuring Reward"
+    When I click edit_topic on the "Measuring Fulfillment" grid row
     And I fill in "Topic Title" with "Measuring Reward"
     And I press "Save"
     And I wait for the "Saving..." mask to go away

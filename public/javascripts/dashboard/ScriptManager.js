@@ -36,7 +36,7 @@ Ext.ns("Talho");
         'Talho.DocumentSearch': {js: '$(ext_extensions)/ImageDisplayField.js /javascripts/documents/DocumentViews.js /javascripts/documents/DocumentSearch.js'},
         'Talho.NewInvitation': {js:'NewInvitation /javascripts/ext/src/widgets/grid/EditorGrid.js > /javascripts/invitations/NewInvitation.js'},
         'Talho.Invitations': {js:'/javascripts/invitations/Invitations.js'},
-        'Talho.AddUser': {js:'/javascripts/profile/ProfileBase.js /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js /javascripts/profile/OrganizationsControl.js > /javascripts/admin/AddUser.js'},
+        'Talho.AddUser': {js:'ProfileBase /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js /javascripts/profile/OrganizationsControl.js > /javascripts/admin/AddUser.js'},
         'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'},
         'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'},
         'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'},

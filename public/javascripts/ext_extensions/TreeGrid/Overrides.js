@@ -1,7 +1,6 @@
 
 
 (function(){
-    var oldRenderCellTreeUI = Ext.ux.maximgb.tg.GridView.prototype.renderCellTreeUI;
     Ext.override(Ext.ux.maximgb.tg.GridView, {
         renderCellTreeUI : function(record, store)
         {
@@ -9,9 +8,43 @@
             {
                 return this.templates.treeui.apply({});
             }
-            return oldRenderCellTreeUI.apply(this, arguments);
-        },
 
+            var tpl = this.templates.treeui,
+                line_tpl = this.templates.elbow_line,
+                tpl_data = {},
+                rec, parent,
+                depth = level = store.getNodeDepth(record);
+
+            tpl_data.wrap_width = (depth + 1) * 16;
+            if (level > 0) {
+                tpl_data.elbow_line = '';
+                rec = record;
+                left = 0;
+            }
+            if (!store.isLeafNode(record)) {
+                tpl_data.cls = 'ux-maximgb-tg-elbow-active ';
+                if (store.isExpandedNode(record)) {
+                    if (store.hasNextSiblingNode(record)) {
+                        tpl_data.cls += this.expanded_icon_class;
+                    }
+                    else {
+                        tpl_data.cls += this.last_expanded_icon_class;
+                    }
+                }
+                else {
+                    if (store.hasNextSiblingNode(record)) {
+                        tpl_data.cls += this.collapsed_icon_class;
+                    }
+                    else {
+                        tpl_data.cls += this.last_collapsed_icon_class;
+                    }
+                }
+            }
+            tpl_data.left = 1 + depth * 16;
+
+            return tpl.apply(tpl_data);
+        },
+        
         // Private - Overriden
         doRender : function(cs, rs, ds, startRow, colCount, stripe)
         {
@@ -92,7 +125,7 @@
                 oldSetActiveNode.apply(this, arguments);
             }
         },
-        
+
         getNodeDescendants: function(rc)
         {
             if(!this.hasChildNodes(rc)) // if there are no child nodes

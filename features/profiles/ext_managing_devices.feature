@@ -26,8 +26,9 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
-    And I select "E-mail" from ext combo "Device type"
-    And I fill in "Device info" with "johnny@example.com"
+    Then I should see "Address / Number:"
+    When I select "E-mail" from ext combo "Device type"
+    And I fill in "dev[value]" with "johnny@example.com"
     And I press "Add"
     Then I should see the following within ".device-item":
       | johnny@example.com | E-mail | needs to be saved |
@@ -70,8 +71,9 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
-    And I fill in "Device info" with "5121231234x1234"
+    And I fill in "dev[value]" with "5121231234x1234"
     And I press "Add"
     And I press "Apply Changes"
     Then I should see "Phone is invalid"
@@ -85,8 +87,9 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
-    And I fill in "Device info" with "5552345678"
+    And I fill in "dev[value]" with "5552345678"
     And I press "Add"
     And I press "Apply Changes"
     Then I should see "Device already exists"
@@ -96,8 +99,9 @@ Feature: Managing devices when editing user profiles
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
     And I press "Add device"
+    Then I should see "Address / Number:"
     And I select "SMS" from ext combo "Device type"
-    And I fill in "Device info" with "5556667788"
+    And I fill in "dev[value]" with "5556667788"
     And I press "Add"
     Then I should see the following within ".device-item":
       | 5556667788 | SMS | needs to be saved |

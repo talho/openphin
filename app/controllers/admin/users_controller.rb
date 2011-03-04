@@ -45,25 +45,45 @@ class Admin::UsersController < ApplicationController
     }
     @user.organization_membership_requests.each { |omr| omr.requester = current_user }
 
-    respond_to do |format|
-      if @user.save
-        @user.confirm_email!
+    errors = Array.new
+    if @user.save
+      @user.confirm_email!
 
-        # Handle new devices and role requests (ext only)
-        update_devices(params[:user][:new_devices]) if params[:user].has_key?(:new_devices)
-        handle_role_requests(params[:user][:new_roles]) if params[:user].has_key?(:new_roles)
-        handle_org_requests(params[:user][:new_orgs]) if params[:user].has_key?(:new_orgs)
-
-        flash[:notice] = 'The user has been successfully created.'
-        format.html { redirect_to new_admin_user_path }
-        format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages} }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+      # Handle new devices, role requests and organizations (ext only)
+      success = true
+      if params[:user].has_key?(:new_devices)
+        dev_success,dev_errors = @user.update_devices(params[:user][:new_devices], current_user)
+        success &&= dev_success
+        errors.concat(dev_errors)
       end
+      if params[:user].has_key?(:new_roles)
+        result,rq_errors = @user.handle_role_requests(params[:user][:new_roles], current_user)
+        success &&= (result == "success")
+        errors.concat(rq_errors)
+      end
+      if params[:user].has_key?(:new_orgs)
+        org_success,org_errors = @user.handle_org_requests(params[:user][:new_orgs], current_user)
+        success &&= (org_success == "success")
+        errors.concat(org_errors)
+      end
+ 
+      if success
+        flash[:notice] = 'The user has been successfully created.'
+        respond_to do |format|
+          format.html { redirect_to new_admin_user_path }
+          format.json { render :json => {:flash => flash[:notice], :type => :completed, :success => true} }
+          format.xml  { render :xml => @user, :status => :created, :location => @user }
+        end
+        return
+      end
+      @user.destroy
     end
+
+    respond_to do |format|
+      format.html { render :action => "new" }
+      format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages + errors} }
+      format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+    end        
   end
 
 end

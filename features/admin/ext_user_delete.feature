@@ -11,8 +11,10 @@ Feature: An admin deleting users
       | Role         | Medical Director |
     And Texas is the parent jurisdiction of:
       | Dallas County |
+      | Briscoe County |
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
+      | Zzzz Smith  | zzz.smith@example.com  | Public | Briscoe County |
     And Dallas County has the following administrators:
       | Bob Jones      | bob.jones@example.com      |
     And Texas has the following administrators:
@@ -74,3 +76,12 @@ Feature: An admin deleting users
       | Last Name      | Brown            |
       | Home Jurisdiction  | Dallas County    |
     Then I should see "Thanks for signing up"
+ 
+  Scenario: Admin shouldn't be able to delete a user outside of his admin jurisdictions
+    When I navigate to the ext dashboard page
+    And I maliciously post a destroy user "zzz.smith@example.com"
+    And delayed jobs are processed
+    # delayed jobs must be repeated for the delete above to be picked up
+    And I navigate to the ext dashboard page
+    And delayed jobs are processed
+    Then "zzz.smith@example.com" should have the "Public" role for "Briscoe County"

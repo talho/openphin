@@ -265,3 +265,18 @@ When '"$email1" is deleted as a user by "$email2"' do |email1,email2|
   User.find_by_email(email1).delayed_delete_by(email2,"127.0.0.1")
 end
 
+When /^I maliciously post a destroy user "([^\"]*)"$/ do |user_email|
+  user = User.find_by_email!(user_email)
+  script = "var f = document.createElement('form'); " +
+    "f.style.display = 'none'; " +
+    "$('body').append(f); " +
+    "f.method = 'POST'; " +
+    "f.action = '/users_delete'; " +
+    "var u = document.createElement('input'); " +
+    "u.setAttribute('type', 'hidden'); " +
+    "u.setAttribute('name', 'users[user_ids][]'); " +
+    "u.setAttribute('value', '#{user.id}'); " +
+    "f.appendChild(u); " +
+    "f.submit();"
+  page.execute_script(script)
+end

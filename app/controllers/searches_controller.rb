@@ -1,8 +1,8 @@
 class SearchesController < ApplicationController
-  
+
   before_filter :non_public_role_required
   #app_toolbar "han"
-  
+
   def show
     if !params[:tag].blank?
       search_size = 20
@@ -11,7 +11,7 @@ class SearchesController < ApplicationController
       @paginated_results = @results;
       @results = sort_by_tag(@results, tags)
     end
-    
+
     respond_to do |format|
       format.html
       format.json {
@@ -50,8 +50,8 @@ class SearchesController < ApplicationController
         params[:with] = Hash.new if !params.has_key?(:with)
         if !params[:with].has_key?(:jurisdiction_ids)
           params[:with][:jurisdiction_ids] = Array.new
-          current_user.jurisdictions.each { |j|
-            j.self_and_descendants.admin.each { |j| params[:with][:jurisdiction_ids].push(j.id) }
+          current_user.jurisdictions.admin.each { |j|
+            j.self_and_descendants.each { |jsub| params[:with][:jurisdiction_ids].push(jsub.id) }
           }
         end
       end

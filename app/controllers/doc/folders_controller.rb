@@ -44,7 +44,7 @@ class Doc::FoldersController < ApplicationController
     end
 
     folder = owner.folders.build(params[:folder])
-    unless folder.save!
+    unless folder.save
       respond_to do |format|
         format.json {render :json => {:success => false, :errors => folder.errors.as_json }, :status => 400}
       end
@@ -54,7 +54,7 @@ class Doc::FoldersController < ApplicationController
     folder.audience.recipients(:force => true).length if folder.audience # apply the recipients for the audience so that the mapped joins will actually work
 
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.nil? ? [] : (folder.audience.recipients(:force => true).with_no_hacc) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients(:force => true).with_no_hacc } ) unless folder.audience.nil? || folder.audience.recipients(:force => true).with_no_hacc.empty?
     end
 
     respond_to do |format|

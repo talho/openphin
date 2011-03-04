@@ -4,6 +4,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   constructor: function(config){
     Talho.FindPeople.superclass.constructor.call(this, config);
 
+    this.admin_mode = config.admin_mode;
     this.rolesStore = new Ext.data.JsonStore({
       url: '/roles.json',
       restful: true,
@@ -22,7 +23,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
 
     this.RESULTS_PAGE_SIZE = 10;
     this.resultsStore = new Ext.data.JsonStore({
-      url: 'search/show_advanced.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
+      url: '/search/show_advanced.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
       method: 'POST',
       root: 'results',
       fields: [ 'user_id', 'display_name','first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
@@ -65,7 +66,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.rolesSelector = new Ext.Panel ({
-      id: 'roles-select',
+      cls: 'find-people-roles-select',
       layout: 'fit',
       flex: 1,
       width: '100%',
@@ -79,7 +80,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.jurisSelector = new Ext.Panel ({
-      id: 'jurisdictions-select',
+      cls: 'find-people-jurisdictions-select',
       layout: 'fit',
       flex: 1,
       width: '100%',
@@ -91,7 +92,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     });
 
     this.searchSidebar = new Ext.FormPanel({
-      id: 'people-search',
       labelAlign: 'top',
       frame: true,
       region: 'west',
@@ -105,14 +105,14 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         layout: 'form',
         width: '100%',
         items: [
-          { fieldLabel: 'Name', name: 'conditions[name]', xtype: 'textfield', anchor: '95%', id: 'search-name' },
-          { fieldLabel: 'Email Address', name: 'conditions[email]', xtype: 'textfield', anchor: '95%', id: 'search-email' },
+          { fieldLabel: 'Name', name: 'conditions[name]', xtype: 'textfield', anchor: '95%' },
+          { fieldLabel: 'Email Address', name: 'conditions[email]', xtype: 'textfield', anchor: '95%' },
           { layout: 'column', items: [
             { columnWidth: .5, layout: 'form',
-              items: [{ fieldLabel: 'Phone', name: 'conditions[phone]', xtype: 'textfield', anchor: '90%', id: 'search-phone' }]
+              items: [{ fieldLabel: 'Phone', name: 'conditions[phone]', xtype: 'textfield', anchor: '90%' }]
             },
             { columnWidth: .5, layout: 'form',
-              items: [{ fieldLabel: 'Job Title', name: 'conditions[title]', xtype: 'textfield', anchor: '90%', id: 'search-title' }]
+              items: [{ fieldLabel: 'Job Title', name: 'conditions[title]', xtype: 'textfield', anchor: '90%' }]
           }]
         }]
       },
