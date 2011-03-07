@@ -118,6 +118,8 @@ class User < ActiveRecord::Base
     
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
 
+  has_paper_trail
+
   def editable_by?(other_user)
     self == other_user || other_user.is_admin_for?(self.jurisdictions)
   end
@@ -339,16 +341,17 @@ class User < ActiveRecord::Base
   def viewable_groups
     groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
   end
-   
+
   def delete_by(requester_email,requester_ip)
     # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
     begin
       User.transaction do
-        self.deleted_by = requester_email   # email addr of the deleter
+        self.deleted_by = requester_email   # email addr of the deleter - redundant with paper_trail
         self.deleted_from = requester_ip    # ip addr of the deleter
-        self.deleted_at = Time.now.utc
+        self.deleted_at = Time.now.utc      # redundant with paper_trail
         self.save!
       end
+      #self.destroy
     rescue
       errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
     end
@@ -365,7 +368,16 @@ class User < ActiveRecord::Base
       end 
     end
   end
-  
+
+  def self.find_deleted(user_id)
+    deleted_user = Version.find_by_item_id_and_item_type_and_event(user_id, 'User', 'destroy') # look for a deleted version of User in paper_trail
+    if deleted_user.nil?
+      raise ActiveRecord::RecordNotFound , "Couldn't find User with ID=#{user_id}"
+    else
+      return deleted_user.reify
+    end
+  end
+
   def moderator_of?(object)
     return is_super_admin? if object == Forum
     return false unless [Forum,Topic].include? object.class
