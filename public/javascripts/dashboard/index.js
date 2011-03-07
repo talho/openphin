@@ -129,9 +129,9 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
 
         Ext.each(Application.menuConfig, function(item, index){
-            if(item === '->')
-                this.favorites_menu = this.top_toolbar.add(this.getFavoritesMenu());
-            this.top_toolbar.add(builder.buildMenu(item));
+          var menu = this.top_toolbar.add(builder.buildMenu(item));
+          if(menu.text === 'My Account')
+                this.favorites_menu = menu.menu.add(this.getFavoritesMenu());
         }, this);
 
         return this.top_toolbar;
