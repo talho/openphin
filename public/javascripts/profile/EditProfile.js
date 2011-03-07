@@ -8,12 +8,12 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
     this.orgs_control = new Talho.ux.OrganizationsControl(config.url + ".json", this);
 
     var item_list = [
-      {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+      {xtype: 'container', layout: 'form', labelAlign: 'top', width: 400, defaults:{width:400}, items:[
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
-          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', allowBlank: false}
           ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Last name', name: 'user[last_name]', maxLength: '46', allowBlank: false}
           ]}
         ]},
@@ -32,32 +32,32 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'hidden', name: '_method', value: 'PUT'},
         {xtype: 'hidden', name: 'user[lock_version]', value: ''}
       ]},
-      {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:400},
+      {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', width: 400, defaults:{width:400},
         margins: '0 0 0 10', items:[
         {xtype: 'container', name: 'user[current_photo]', html: '<img id=current_photo' + user_id + ' src="images/missing.jpg">'},
         {xtype: 'spacer', height: '10'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[photo]', maxLength: '1024', width: 'auto'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
-          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true, vtype: 'phone'}
           ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Office fax', name: 'user[fax]', maxLength: '46', allowBlank: true, vtype: 'phone'}
           ]}
         ]},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
-          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Home phone', name: 'user[home_phone]', maxLength: '46', allowBlank: true, vtype: 'phone'}
           ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Mobile phone', name: 'user[mobile_phone]', maxLength: '46', allowBlank: true, vtype: 'phone'}
           ]}
         ]},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
-          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true}
           ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', width: 195, defaults:{width:195}, items:[
             {xtype: 'textfield', fieldLabel: 'Employer', name: 'user[employer]', maxLength: '46', allowBlank: true}
           ]}
         ]},

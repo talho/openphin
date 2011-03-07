@@ -95,10 +95,12 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
       '<ul class="orgs">',
       '<tpl for=".">',
         '<li class="org-item ' + '<tpl if="state==' + "'pending'" + '">org-pending</tpl>' + '">',
-          '<p><span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}<a id="{id}" class="destroy">Del {name}</a>',
-            '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
-            '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
-          '</p>',
+          '<!--[if IE]><div class="IEonly"><![endif]-->',
+          '<span class="org-title">{name}</span>&nbsp;&nbsp;&nbsp;{desc}',
+          '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
+          '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
+          '<a id="{id}" class="profile-destroy">Del {name}</a>',
+          '<!--[if IE]></div><![endif]-->',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -123,7 +125,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
 
   _destroy_handler: function(dv,index,node,e){
     var elem = Ext.get(e.getTarget());
-    if (elem.hasClass("destroy")) {
+    if (elem.hasClass("profile-destroy")) {
       this.store.getAt(index).set("state", "deleted");
       this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
     }

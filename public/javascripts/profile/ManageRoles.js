@@ -24,6 +24,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
       item_list: [
         {xtype: 'container', items: [
           {xtype: 'container', html: 'My Roles', cls: 'roles-label'},
+          {xtype: 'spacer', height: '10'},
           this.infobox,
           {xtype: 'spacer', height: '10'},
           this.roles_control

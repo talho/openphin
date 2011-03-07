@@ -117,10 +117,12 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       '<ul class="roles">',
       '<tpl for=".">',
         '<li class="role-item ' + '<tpl if="state==' + "'pending'" + '">role-pending</tpl>' + '">',
-          '<p><span class="role-title">{rname}</span>&nbsp;&nbsp;&nbsp;{jname}<a id="{id}" class="destroy">Del {jname} {rname}</a>',
-            '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
-            '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
-          '</p>',
+          '<!--[if IE]><div class="IEonly"><![endif]-->',
+          '<span class="role-title">{rname}</span>&nbsp;&nbsp;&nbsp;{jname}',
+          '<tpl if="state==' + "'pending'" + '"><br>&nbsp;<small><i>waiting for approval</i></small></tpl>',
+          '<tpl if="state==' + "'new'" + '"><br>&nbsp;<small><i>needs to be saved</i></small></tpl>',
+          '<a id="{id}" class="profile-destroy">Del {jname} {rname}</a>',
+          '<!--[if IE]></div><![endif]-->',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -149,7 +151,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
 
   _destroy_handler: function(dv,index,node,e){
     var elem = Ext.get(e.getTarget());
-    if (elem.hasClass("destroy")) {
+    if (elem.hasClass("profile-destroy")) {
       this.store.getAt(index).set("state", "deleted");
       this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
     }
