@@ -237,7 +237,7 @@ Feature: Document Sharing
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders "Bartleby"
-    Then I should see the grid items in this order "Bartleby>2 Reader>3 Author>4 Admin>5"
+    Then I should see the grid items in this order "Bartleby>2 Admin>3 Author>4 Reader>5"
 
     When I select the "Reader" grid row
     Then ext inlineLink "Create New Folder" should be hidden

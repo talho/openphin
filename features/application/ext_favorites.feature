@@ -19,11 +19,12 @@ Feature: User should be able to set values as favorites
     When I drag the "HAN Alerts" tab to "#favoritestoolbar"
     And I wait for the "Saving" mask to go away
     And I should see "HAN Alerts" within "#favoritestoolbar"
-    When I press "Bookmarks"
+    When I navigate to "My Account > Bookmarks"
+    And I suspend cucumber
     Then I should see the following ext menu items:
       | name                       |
       | Test Favorite              |
-      | HAN Alerts                   |
+      | HAN Alerts                 |
       | Hide the Bookmarks Toolbar |
       | Manage Bookmarks           |
 
@@ -41,7 +42,7 @@ Feature: User should be able to set values as favorites
     And I click x-menu-item "Remove"
     And I wait for the "Saving" mask to go away
     Then I should not see "Test Favorite"
-    When I press "Bookmarks"
+    When I navigate to "My Account > Bookmarks"
     Then I should see the following ext menu items:
       | name                       |
       | Hide the Bookmarks Toolbar |
@@ -51,7 +52,7 @@ Feature: User should be able to set values as favorites
       | Test Favorite |
 
   Scenario: User can view and remove favorites through manage favorites
-    When I navigate to "Bookmarks > Manage Bookmarks"
+    When I navigate to "My Account > Bookmarks > Manage Bookmarks"
     Then the "Manage Bookmarks" window should be open
     When I will confirm on next step
     When I click removeBtn on the "Test Favorite" grid row

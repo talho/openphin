@@ -144,6 +144,7 @@ Feature: Create a folder tree in documents
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
     Then the "Edit Folder" window should be open
+    And I suspend cucumber
     And the "Folder Name" field should contain "Folder1"
     When I close the active ext window
     And I click folder-context-icon on the "Folder1" grid row
@@ -172,4 +173,5 @@ Feature: Create a folder tree in documents
     And I click documents-folder-item "Sub1"
     And I click inlineLink "Edit Folder"
     Then the "Edit Folder" window should be open
+    And I suspend cucumber
     And the "Folder Name" field should contain "Sub1"
