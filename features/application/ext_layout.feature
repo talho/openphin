@@ -32,22 +32,23 @@ Feature: Application layout should have communications, portal & application too
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
       | FAQs                 |
-      | Forums               |
+#      | Forums               |
       | Tutorials            |
-      | Bookmarks            |
+#      | Bookmarks            |
       | My Dashboard         |
       | My Account           |
       | About TXPHIN         |
       | Sign Out             |
     And I should see the following toolbar items in "bottom_toolbar":
-      | Calendar             |
-      | Chat                 |
+#      | Calendar             |
+#      | Chat                 |
       | Documents            |
+      | Forums               |
       | Links                |
     When I press "HAN" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                    |
-      | HAN Alerts                |
+      | HAN Alerts              |
     When I press "FAQs" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                            |
@@ -59,6 +60,7 @@ Feature: Application layout should have communications, portal & application too
       | HAN             |
       | Documents Panel |
       | Forums          |
+      | Rollcall        |
     When I press "My Account" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                 |
@@ -68,6 +70,7 @@ Feature: Application layout should have communications, portal & application too
       | Manage Devices       |
       | Manage Roles         |
       | Manage Organizations |
+      | Bookmarks            |
     #And I should see 4 "article" sections
 
   Scenario: Seeing the Administrator menu as an admin
@@ -101,10 +104,11 @@ Feature: Application layout should have communications, portal & application too
     When I navigate to the ext dashboard page
     Then I should not see "Admin" within "#top_toolbar"
 
-  Scenario: Public-only members should not see advanced search
+  Scenario: Public-only members should not see advanced search or Apps
     Given the user "publico publican" with the email "public@example.com" has the role "Public" in "Texas"
     Given I am logged in as "public@example.com"
     When I navigate to the ext dashboard page
     Then I should not see "Find People" within "#top_toolbar"
+    And I should not see "Apps" within "#top_toolbar"
 
 

@@ -132,7 +132,8 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         {xtype: 'container', cls:'infobox-inner', items:[
           {xtype: 'box', html: 'Load new user data into the form via CSV Import, or one at a time with the "Add User" button. '},
           {xtype: 'box', html: 'Users without a specified Jurisdiction will appear in the selected Default Jurisdiction.'},
-          {xtype: 'box', html: 'Click any row in the list to make changes before submission. When you are satisfied with the list, click "Apply Changes".'}
+          {xtype: 'box', html: 'Click any row in the list to make changes before submission. When you are satisfied with the list, click "Apply Changes".'},
+          {xtype: 'box', html: 'You can download an example CSV file for use in a spreadsheet: <a href="/user_batch.csv">user_batch.csv</a>'}
         ]}
       ]
     });

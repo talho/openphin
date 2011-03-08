@@ -13,8 +13,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   menu_config += "]},"
 
   if current_user.has_non_public_role?
-    menu_config += "{name: 'Apps', items: ["
-    menu_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},"
+    app_menu_config = "{name: 'Apps', items: ["
 
     plugin_config_items = []
       Phin::Application.eval_if_plugin_present(:rollcall) do
@@ -29,8 +28,12 @@ page << "Application.rails_environment = '#{ Rails.env }';"
       Phin::Application.eval_if_plugin_present(:vms) do
         plugin_config_items << $menu_config[:vms]
       end
-    menu_config += plugin_config_items.join(',')
-    menu_config += "]},"
+    app_menu_config += plugin_config_items.join(',')
+    app_menu_config += "]},"
+    # Remove the app menu if it's empty
+    unless app_menu_config == "{name: 'Apps', items: []},"
+      menu_config += app_menu_config
+    end
   end
 
   menu_config += "{name: 'FAQs', items:[
@@ -90,15 +93,17 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   role_list = ["Rollcall","VMS"]
   user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_name(item)}.compact.empty?
 
-  bbar_config = "Application.bbarConfig = [
-                     {name: 'Calendar'},
-                     {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
-                     {name: 'Chat'},
-                     {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
-                     {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
-                     '->',
-                     '<a href=\"http://www.talho.org\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/talho-tiny.png\"></a>',
-                     {name: 'Need Help?', win: {id: 'phin_help_button', title: 'TxPhin Help', initializer: 'Talho.HelpWindow', has_app_roles: '#{user_has_app_roles}' } }
-                  ];"
+  bbar_config =  "Application.bbarConfig = ["
+                     #{name: 'Calendar'},
+                     #{name: 'Chat'},
+
+  bbar_config += "{name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
+                  {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
+                  {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
+                  {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
+                  '->',
+                  '<a href=\"http://www.talho.org\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/talho-tiny.png\"></a>',
+                  {name: 'Need Help?', win: {id: 'phin_help_button', title: 'TxPhin Help', initializer: 'Talho.HelpWindow', has_app_roles: '#{user_has_app_roles}' } }
+                ];"
 
   page << bbar_config

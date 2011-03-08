@@ -143,6 +143,7 @@ class Folder < ActiveRecord::Base
   def self.get_formatted_folders(current_user)
     folders = []
     Folder.each_with_level(current_user.folders) { |folder, level| folder[:level] = level + 1; folders << folder }
+    folders = folders.sort_by {|f| f.name.downcase}
 
     folders.each do |folder|
       folder[:safe_parent_id] = (folder[:parent_id].nil? ? 0 : 'folder' + folder[:parent_id].to_s )
@@ -159,6 +160,7 @@ class Folder < ActiveRecord::Base
 
   def self.get_formatted_shares(current_user)
     shares = current_user.shares
+    shares = shares.sort_by {|s| s.name.downcase}
 
     shares |= shares.map do |share|
       user = {:name => share.owner.display_name, :id => nil, :safe_id => share.owner.id.to_s + share.owner.display_name.gsub(/ /, ''), :safe_parent_id => nil, :parent_id => nil, :leaf => false, :ftype => 'share', :level => 0}

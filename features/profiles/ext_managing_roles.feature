@@ -37,6 +37,7 @@ I should be able to remove all but one public role from my profile
     Then the "Manage Roles" tab should be open
     And I should not see "Texas" within ".role-item"
     When I click destroy "Dallas County"
+    #Then I should see a "Smouldering Ruin"
     Then I should not see "Dallas County"
     When I press "Apply Changes"
     Then I should see "You must have at least one public role"
