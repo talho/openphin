@@ -45,7 +45,7 @@ Feature: Managing devices when editing user profiles
     And I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "My Account > Manage Devices"
-    When I click destroy "5552345678"
+    When I click profile-destroy "5552345678"
     Then I should not see "5552345678"
     When I press "Apply Changes"
     Then I should not see any errors
@@ -105,7 +105,7 @@ Feature: Managing devices when editing user profiles
     And I press "Add"
     Then I should see the following within ".device-item":
       | 5556667788 | SMS | needs to be saved |
-    When I click destroy "5556667788"
+    When I click profile-destroy "5556667788"
     Then I should not see "5556667788"
     When I press "Apply Changes"
     Then I should not see any errors

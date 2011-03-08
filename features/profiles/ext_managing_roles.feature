@@ -36,7 +36,7 @@ I should be able to remove all but one public role from my profile
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     And I should not see "Texas" within ".role-item"
-    When I click destroy "Dallas County"
+    When I click profile-destroy "Dallas County"
     Then I should not see "Dallas County"
     When I press "Apply Changes"
     Then I should see "You must have at least one public role"
@@ -48,7 +48,7 @@ I should be able to remove all but one public role from my profile
     And I navigate to "My Account > Manage Roles"
     Then the "Manage Roles" tab should be open
     Then I should not see "Texas" within ".role-item"
-    And I click destroy "Dallas County"
+    And I click profile-destroy "Dallas County"
     Then I should see "No roles to display"
     When I press "Request Role"
     And I select "Public" from ext combo "rq[role]"
@@ -79,7 +79,7 @@ I should be able to remove all but one public role from my profile
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
-    When I click destroy "BioTerrorism Coordinator"
+    When I click profile-destroy "BioTerrorism Coordinator"
     Then I should not see "BioTerrorism Coordinator"
     When I press "Apply Changes"
     Then I should not see any errors
