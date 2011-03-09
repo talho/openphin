@@ -95,9 +95,11 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
       '<ul class="devices">',
       '<tpl for=".">',
         '<li class="device-item">',
-          '<p><span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<a id="{id}" class="destroy">Del {value}</a><br>',
-            '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
-          '</p>',
+          '<!--[if IE]><div class="IEonly"><![endif]-->',
+          '<span class="device-title">{value}</span>&nbsp;&nbsp;&nbsp;{type}<br>',
+          '<tpl if="state==' + "'new'" + '"><small><i>needs to be saved</i></small></tpl>',
+          '<a id="{id}" class="profile-destroy">Del {value}</a>',
+          '<!--[if IE]></div><![endif]-->',
         '</li>',
       '</tpl>',
       '</ul>'
@@ -114,7 +116,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
 
   _destroy_handler: function(dv,index,node,e){
     var elem = Ext.get(e.getTarget());
-    if (elem.hasClass("destroy")) {
+    if (elem.hasClass("profile-destroy")) {
       this.store.getAt(index).set("state", "deleted");
       this.store.filterBy(function(e){ return e.get("state")!="deleted"; });
     }

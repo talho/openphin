@@ -21,7 +21,7 @@ When /^I request the org "([^"]*)" in the OrgsControl$/ do |org|
 end
 
 When /^I remove the org "([^"]*)" in the OrgsControl$/ do |org|
-  When %Q{I click destroy "#{org}"}
+  When %Q{I click profile-destroy "#{org}"}
 end
 
 When /^I remove the org "([^"]*)" from EditProfile$/ do |org|
@@ -49,7 +49,7 @@ end
 When /^I remove the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
   #When %Q{I click role-item "#{jurisdiction} #{role}"}
   #When %Q{I press "Remove role"}
-  When %Q{I click destroy "#{role}"}
+  When %Q{I click profile-destroy "#{role}"}
 end
 
 When /^I remove the role "([^"]*)" for "([^"]*)" from EditProfile$/ do |role,jurisdiction|
