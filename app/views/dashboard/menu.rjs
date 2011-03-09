@@ -98,8 +98,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
                   '->',
-                  '<a href=\"http://www.talho.org\" target=\"_blank\"><img style=\"border: 0; margin-right: 20px; padding-bottom: 2px;\" src=\"/images/talho-tiny.png\"></a>',
-                  {name: 'Need Help?', win: {id: 'phin_help_button', title: 'TxPhin Help', initializer: 'Talho.HelpWindow', has_app_roles: '#{user_has_app_roles}' } }
+                  'Need Help? Email: <a href=\"mailto:phinadmin@dshs.state.tx.us\" target=\"_blank\">phinadmin@dshs.state.tx.us</a>'
                 ];"
 
   page << bbar_config
