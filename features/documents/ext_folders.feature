@@ -150,7 +150,6 @@ Feature: Create a folder tree in documents
     And I click x-menu-item "Delete Folder"
     Then the "Delete Folder" window should be open
     When I close the active ext window
-                                                                    q
     And I select the "Folder1" grid row
     And I click inlineLink "Create New Folder"
     Then the "Add Folder" window should be open

@@ -208,6 +208,7 @@ Then /^I should not see the following toolbar items in "([^\"]*)":$/ do |name, t
 end
 
 Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
+  sleep(1)
   with_scope(selector) do
     menus = page.all('.x-menu')
     menu_lists = []
@@ -227,6 +228,7 @@ Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |se
 end
 
 Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
+  sleep(1)
   with_scope(selector) do
     table.hashes.each do |hash|
       page.should_not have_xpath(".//*[contains(concat(' ', @class, ' '), ' x-menu-item ')]", :text => hash[:name])
