@@ -20,7 +20,6 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       this.addEvents('markerclick', 'mapready');
       
       Application.addListener('mapready', this.mapReady, this);
-      
       Ext.ux.GMapPanel.superclass.constructor.apply(this, arguments);
     },
     
@@ -53,26 +52,31 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       }
       catch(e){}
     },
-    
-    mapReady: function(){       
-      this.geocoder = new google.maps.Geocoder();
-      var opts = {
-        zoom: this.zoomLevel,
-        center: new google.maps.LatLng(0,0),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      this.gmap = new google.maps.Map(this.body.dom, opts);
 
-      if(Ext.isObject(this.setCenter)){
-        if(Ext.isString(this.setCenter.geoCodeAddr)){
-          this.centerMap(this.setCenter.geoCodeAddr);
+
+    mapReady: function(){
+      dominoes('$(ext_extensions)/GMapStyledMarker.js', function(){
+        this.geocoder = new google.maps.Geocoder();
+        var opts = {
+          zoom: this.zoomLevel,
+          center: new google.maps.LatLng(0,0),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        this.gmap = new google.maps.Map(this.body.dom, opts);
+
+        if(Ext.isObject(this.setCenter)){
+          if(Ext.isString(this.setCenter.geoCodeAddr)){
+            this.centerMap(this.setCenter.geoCodeAddr);
+          }
+          else{
+            this.centerMap(this.setCenter.lat, this.setCenter.lng);
+          }
         }
-        else{
-          this.centerMap(this.setCenter.lat, this.setCenter.lng);
-        }
-      }
-      
-      google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.createDelegate(this));      
+
+        google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.createDelegate(this));
+        this.fireEvent('mapready', this);
+        this.map_ready = true;
+      }.createDelegate(this));
     },
     
     centerMap: function(lat, lng){
@@ -116,7 +120,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     getCurrentLatLng: function(){
       return this.current_latlng;
     },
-    
+
     addMarker: function(latLng, title, data){
       var add_marker = function(){
         var marker = new google.maps.Marker({position: latLng, title: title, map: this.gmap, data: data});
@@ -142,7 +146,37 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       this.markers.remove(marker);
       marker.setMap(null);
     },
-    
+
+    addStyledMarker: function (latLng, title, data)
+    {
+      var add_styled_marker = function()
+      {
+        var marker = new StyledMarker({
+          styleIcon: new StyledIcon(StyledIconTypes.MARKER, {color:data.color}),
+          position: latLng,
+          title: title,
+          data: data,
+          map: this.gmap
+        });
+        this.markers.push(marker);
+        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'click', this.onMarkerClick.createDelegate(this, [marker], true));
+        return marker;
+      }.createDelegate(this);
+      var defined = false;
+      try{
+        defined = Ext.isDefined(google) && Ext.isDefined(google.maps) && Ext.isDefined(google.maps.Map) && Ext.isDefined(StyledMarker);
+      } catch(e){
+        defined = false
+      }
+      if(!defined)
+        this.on('mapready', add_styled_marker, this);
+      else
+        return add_styled_marker();
+
+    },
+
     showInfoWindow: function(marker, content){
       if(this.open_window){
         this.open_window.close();
