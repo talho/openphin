@@ -20,7 +20,6 @@ Feature: User should be able to set values as favorites
     And I wait for the "Saving" mask to go away
     And I should see "HAN Alerts" within "#favoritestoolbar"
     When I navigate to "My Account > Bookmarks"
-    And I suspend cucumber
     Then I should see the following ext menu items:
       | name                       |
       | Test Favorite              |
