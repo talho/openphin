@@ -41,7 +41,7 @@ Scenario: User can view their own profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.pub@example.com"
   And I navigate to the ext dashboard page
-  And I navigate to "My Account > View My Profile"
+  And I navigate to "Potter Public > View My Profile"
   Then I should see:
    | Potter Public                         |
    | pott.pub@example.com                  |

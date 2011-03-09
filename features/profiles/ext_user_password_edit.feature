@@ -14,7 +14,7 @@ Background:
 Scenario: Password and Confirm Password must match
   Given I am logged in as "tex.ho@example.com"
   And I navigate to the ext dashboard page
-  And I navigate to "My Account > Change Password"
+  And I navigate to "Tex Ho > Change Password"
 
   # confirm mismatch
   When I edit my password to "Andre1" and confirm with "Andrw1"

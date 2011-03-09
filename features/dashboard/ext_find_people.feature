@@ -33,7 +33,7 @@ Scenario: Public-only user can not navigate to Find People
   When I navigate to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
   Then I should see the following toolbar items in "top_toolbar":
-    | My Account |
+    | Dallas Public |
   And I should not see the following toolbar items in "top_toolbar":
     | Find People |
 

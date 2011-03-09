@@ -64,7 +64,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 
 
         var panel = new Ext.Panel({
-            title: 'Home',
+            title: 'Dashboard',
             itemId: this.itemId,
             layout:'hbox',
             layoutConfig: {defaultMargins:'15'},

@@ -71,6 +71,8 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
 
         item = {
             text: menuConfig.name,
+            icon: menuConfig.icon,
+            itemId: menuConfig.itemId,
             menu: submenu,
             handler: handler
         };

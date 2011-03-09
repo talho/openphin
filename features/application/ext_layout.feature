@@ -36,7 +36,7 @@ Feature: Application layout should have communications, portal & application too
       | Tutorials            |
 #      | Bookmarks            |
       | My Dashboard         |
-      | My Account           |
+      | Martin Fowler        |
       | About TXPHIN         |
       | Sign Out             |
     And I should see the following toolbar items in "bottom_toolbar":
@@ -61,7 +61,7 @@ Feature: Application layout should have communications, portal & application too
       | Documents Panel |
       | Forums          |
       | Rollcall        |
-    When I press "My Account" within "#top_toolbar"
+    When I press "Martin Fowler" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                 |
       | View My Profile      |

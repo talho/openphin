@@ -39,7 +39,7 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
-    And I navigate to "My Account > Manage Organizations"
+    And I navigate to "Jane Smith > Manage Organizations"
     Then I should see "Organizations"
     When I press "Request Organization"
     And I select "DSHS" from ext combo "rq[org]"
@@ -61,7 +61,7 @@ I should be able to edit my profile
 
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
-    And I navigate to "My Account > Manage Organizations"
+    And I navigate to "Jane Smith > Manage Organizations"
     Then I should see "Organizations"
     Then I should see the following within ".org-item":
       | DSHS |
@@ -71,7 +71,7 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
     When I go to the dashboard page
-    And I follow "My Account"
+    And I follow "Jane Smith"
     Then I should see "Organizations"
     When I select "DSHS" from "Organization Membership Request"
     And I maliciously post an approver id

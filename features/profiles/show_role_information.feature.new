@@ -17,7 +17,7 @@ Feature: Show role information when the user is requesting a role
   Scenario: Removing a public role from user profile
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
-    And I navigate to "My Account > Manage Roles"
+    And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
     When I select "Potter County" from "Jurisdiction"
 

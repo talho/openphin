@@ -44,21 +44,10 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                   '->',"
 
   if signed_in?
-    menu_config +="{name: 'My Dashboard', handler: 'go_to_dashboard'},"
 
     if current_user.has_non_public_role?
       menu_config += "{name: 'Find People', tab: {id: 'find_people', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.FindPeople'}},"
     end
-
-    menu_config += "{name: 'My Account', items:[
-                      {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
-                      {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
-                      {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
-                      {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
-                      {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
-                      {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
-                        initializer: 'Talho.ManageOrganizations'}}
-                    ]},"
 
     if current_user.is_admin?
       menu_config += "{name: 'Admin', items:[
@@ -73,8 +62,18 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]}]},"
     end
 
-    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
-                   {name: 'Sign Out', redirect: '#{sign_out_path}'}"
+    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},"
+    menu_config += "{name: '#{current_user.display_name}', icon:'/images/gear.png', itemId: 'My Account', items:[
+                    {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
+                    {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
+                    {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
+                    {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
+                    {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
+                    {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
+                      initializer: 'Talho.ManageOrganizations'}},
+                    {name: 'Sign Out', redirect: '#{sign_out_path}'}
+                  ]}"
+
   else
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
                    {name:  'Sign Up', redirect: '#{new_user_path}'},
