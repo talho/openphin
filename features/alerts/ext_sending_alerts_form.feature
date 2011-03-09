@@ -75,7 +75,7 @@ Feature: Sending alerts form
     Then I should have the "Recipients" breadcrumb selected
     When I click x-accordion-hd "Roles"
     Then I should not see "Admin"
-    When I press "Sign Out"
+    When I press "John Smith > Sign Out"
 
   Scenario: User with one or more jurisdictions
     Given the following entities exists:

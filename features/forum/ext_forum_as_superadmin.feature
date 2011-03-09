@@ -57,7 +57,7 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     Then I should see "Seeking funding"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -80,13 +80,13 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     Then I should see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Jane Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -109,13 +109,13 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     Then I should see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Black > Sign Out"
     When I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -125,7 +125,7 @@ Feature: Creating a forum (room)
       | Potter County  | Jurisdiction |
     And I press "Save"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     And I am logged in as "joe.black@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -147,13 +147,13 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     And I should see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Jane Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -234,7 +234,7 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     Then I should see "Measuring Fulfillment"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -300,7 +300,7 @@ Feature: Creating a forum (room)
       | Potter County  | Jurisdiction |
     And I press "Save"
     And I wait for the "Saving..." mask to go away
-    And I navigate to "Sign Out"
+    And I navigate to "Joe Smith > Sign Out"
 
     Given session name is "default"
     When I press "Save"
@@ -328,7 +328,7 @@ Feature: Creating a forum (room)
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
     Then I should see "Measuring Time" within ".x-grid3-cell"
-    And I navigate to "Sign Out"
+    And I navigate to "Joe Smith > Sign Out"
 
     Given session name is "default"
     When I override alert

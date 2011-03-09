@@ -37,7 +37,7 @@ I should be able to create topics to forums and place comments to these topics
     And the "Measuring Fulfillment" grid row should not have the delete_topic icon
     And the "Measuring Fulfillment" grid row should have the edit_topic icon
 
-    When I navigate to "Sign Out"
+    When I navigate to "Jane Smith > Sign Out"
     And I am logged in as "harry.simon@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"

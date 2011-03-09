@@ -38,7 +38,7 @@ I should be able to create topics to forums and place comments to these topics
     And I should see "Edit"
     And I should see "Quote"
 
-    When I navigate to "Sign Out"
+    When I navigate to "Jane Smith > Sign Out"
     And I am logged in as "harry.simon@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
@@ -110,7 +110,7 @@ I should be able to create topics to forums and place comments to these topics
     And I wait for the "Loading..." mask to go away
     Then I should see "This is a response" in grid row 2
 
-    When I navigate to "Sign Out"
+    When I navigate to "Harry Simon > Sign Out"
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"

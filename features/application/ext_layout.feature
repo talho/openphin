@@ -32,16 +32,10 @@ Feature: Application layout should have communications, portal & application too
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
       | FAQs                 |
-#      | Forums               |
       | Tutorials            |
-#      | Bookmarks            |
-      | My Dashboard         |
       | Martin Fowler        |
       | About TXPHIN         |
-      | Sign Out             |
     And I should see the following toolbar items in "bottom_toolbar":
-#      | Calendar             |
-#      | Chat                 |
       | Documents            |
       | Forums               |
       | Links                |

@@ -62,7 +62,7 @@ Scenario: Public user viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.pub@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -84,7 +84,7 @@ Scenario: Public user viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.pub@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -107,7 +107,7 @@ Scenario: User with a non-public, non-admin role viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -129,7 +129,7 @@ Scenario: User with a non-public, non-admin role viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.md@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -152,7 +152,7 @@ Scenario: Admin viewing a subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.admin@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -175,7 +175,7 @@ Scenario: Admin viewing a non-subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.admin@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -197,7 +197,7 @@ Scenario: Admin viewing a subordinate private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "pott.admin@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -221,7 +221,7 @@ Scenario: Admin viewing a non-subordinate private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.admin@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
@@ -244,7 +244,7 @@ Scenario: Fields should not be visible if they do not have data
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
     Then I should see:
@@ -291,7 +291,7 @@ Scenario: First and Last name fields should be visible if different from Display
   And pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
   And I navigate to the ext dashboard page
-  And I should see "My Dashboard"
+  And I should see "About TXPHIN"
 
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
