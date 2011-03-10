@@ -21,7 +21,7 @@ class RemoveUnusedDocumentsTables < ActiveRecord::Migration
       t.integer :permission
     end
 
-    add_column :documents, :delta, :boolean, :default => 1
+    add_column :documents, :delta, :boolean, :default => true
     Document.reset_column_information
 
     #find the shares that need to be converted

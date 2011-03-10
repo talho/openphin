@@ -42,6 +42,7 @@ group :default do
   gem "libxml-ruby", "1.1.3"
   #gem "clamav", "0.4.1"
   gem "daemons", "1.1.0"
+  gem "pg", "0.10.1"
 end
 
 group :test do
