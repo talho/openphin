@@ -30,7 +30,7 @@ louisiana=Jurisdiction.find_or_create_by_name(:name => "Louisiana") { |j|
 }
 louisiana.move_to_child_of(Jurisdiction.root) unless Jurisdiction.root.children.include?(louisiana)
 
-{"Caldwell" => 22021, "Beauregard" => 22011, "Calcasieu" => 22019}.each do |parish, fips|
+{"Caldwell" => "22021", "Beauregard" => "22011", "Calcasieu" => "22019"}.each do |parish, fips|
   p=Jurisdiction.find_or_create_by_name_and_fips_code(:name => parish, :fips_code => fips) { |j|
     j.foreign=true
   }
