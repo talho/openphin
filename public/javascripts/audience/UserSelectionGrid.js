@@ -5,6 +5,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
 
     constructor: function(config){
         this.layout = 'border';
+        this.addEvents('beforeselect');
 
         this.record = config.record || Ext.data.Record.create(['name', 'id', 'email', 'title', 'tip', 'type']);
 
@@ -107,8 +108,12 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
                 listeners:{
                     scope: this,
                     'select': function(combo, record, index){
-                        this.user_store.add(new this.record({name: record.get('name'), email: record.get('email'), id: record.get('id'), title: record.get('title'), tip: record.get('extra'), type: 'user'}));
+                      if(!this.fireEvent('beforeselect', record)){
                         combo.clearValue()
+                        return;
+                      }
+                      this.user_store.add(new this.record({name: record.get('name'), email: record.get('email'), id: record.get('id'), title: record.get('title'), tip: record.get('extra'), type: 'user'}));
+                      combo.clearValue()
                     }
                 }
             }
