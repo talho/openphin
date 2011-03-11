@@ -24,7 +24,7 @@ Feature: Application layout should have communications, portal & application too
     When I navigate to the ext dashboard page
     Then I should have "#tabpanel" within "#centerpanel"
     And I should have "#favoritestoolbar" within "#centerpanel"
-    And the "Home" tab should be open
+    And the "Dashboard" tab should be open
 
   Scenario: Viewing the portal and comm toolbar as a user
     Given I am logged in as "martin@example.com"

@@ -30,7 +30,7 @@ Feature: User should be able to set values as favorites
   Scenario: Clicking on a favorite opens that tab and opens only one tab
     When I click favorite_button "Test Favorite"
     Then the "Test Favorite" tab should be open
-    When I click x-tab-right "Home"
+    When I click x-tab-right "Dashboard"
     Then the "Test Favorite" tab should be open and inactive
     When I click favorite_button "Test Favorite"
     Then the "Test Favorite" tab should be open and active
