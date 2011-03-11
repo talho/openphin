@@ -71,7 +71,7 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
     When I go to the dashboard page
-    And I navigate to "Jane Smith > Edit My Account"
+    And I follow "My Account"
     Then I should see "Organizations"
     When I select "DSHS" from "Organization Membership Request"
     And I maliciously post an approver id

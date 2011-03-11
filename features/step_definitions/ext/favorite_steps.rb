@@ -6,6 +6,10 @@ When /^I drag the "([^\"]*)" tab to "([^\"]*)"$/ do |tabname, target|
   page.find("li", :text => tabname).drag_to(page.find(target));
 end
 
+When /^I drag the "([^"]*)" folder to "([^"]*)"$/ do |foldername, target|
+  page.find(".documents-folder-item", :text=> foldername).drag_to(page.find(target));
+end
+
 When /^I right click favorite button "([^\"]*)"$/ do |button|
   waiter do
     page.find('.favorite_button', :text => button)
