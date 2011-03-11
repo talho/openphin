@@ -69,7 +69,10 @@ Talho.Documents = Ext.extend(function(){}, {
                     'load': {
                         single: true,
                         fn: function(store){
-                            this._folderTreeGrid.getSelectionModel().selectFirstRow();
+                          if (this.selected_folder_id === undefined) { this.selected_folder_id = 0; }
+                          rowToSelect  =  store.getById(this.selected_folder_id);
+                          this._folderTreeGrid.getSelectionModel().selectRecords([rowToSelect]);
+                          if ( this.selected_folder_id === 0){ store.expandNode(rowToSelect); }
                         }
                     }
                 }
@@ -94,6 +97,15 @@ Talho.Documents = Ext.extend(function(){}, {
 
                         this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').setTitle(record.get('name'));
                         this._fileGrid.setTitle(record.get('name'));
+                        this.getPanel().setTitle("Documents: " + record.get('name'));
+                        this.getPanel().tab_config.title = "Documents: " + record.get('name');
+                        if (record.id == 0 ) {
+                          this.getPanel().tab_config.selected_folder_id = null;
+                          this.getPanel().tab_config.id = "documents";
+                        } else {
+                          this.getPanel().tab_config.selected_folder_id = record.id;
+                          this.getPanel().tab_config.id = "documents-" + record.id;
+                        }
 
                         if(record.get('type') == 'share' && record.get('id') == null){
                             if(this._fileGrid){
@@ -129,14 +141,28 @@ Talho.Documents = Ext.extend(function(){}, {
         });
     },
 
+    ddConfig: {
+
+    },
+
     showFiles: function(record){
         var store = new Talho.ux.Documents.FileStore({
             url: '/folders/' + record.get('id') + '.json',
             autoLoad: true,
             listeners: {
                 scope: this,
-                'load': function(){
-                    true
+                'load': {delay: 1,
+                  fn: function(store){
+                     if(!this._iconView){
+                        this._iconView = this.getPanel().getComponent('file_grid_holder').getComponent('file_icon_holder').getComponent('file_icon_view');
+                     }
+                     store.each(function(r){
+                       if (r.get('type') === 'folder' || r.get('type') === 'share' ){
+                          var dragdrop = new Ext.dd.DragSource(this._iconView.getNode(r), {ignoreSelf: true, ddGroup: 'FolderDD'});
+                          dragdrop.dragData = r;
+                        }
+                     }, this)
+                  }
                 },
                 'beforeload': function(store, options){
                     options['params'] = options['params'] || {};

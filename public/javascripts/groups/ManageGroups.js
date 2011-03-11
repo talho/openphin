@@ -152,7 +152,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
             {xtype: 'container', cls:'infobox-inner', items:[
               {xtype: 'box', html: 'Click on a group to view details.'},
-              {xtype: 'box', html: 'To Edit or Delete a group, use the icons on the left.'}
+              {xtype: 'box', html: 'To Edit or Delete a group, use the icons on the right.'}
             ]}
           ]
         });

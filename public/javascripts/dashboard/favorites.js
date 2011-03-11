@@ -22,7 +22,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
                 fn:function(panel){
                    panel.loadMask = new Ext.LoadMask(panel.getEl(), {store: this.store});
                    panel.loadMask.show();
-                   panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving...'});
+                   panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving Bookmarks...'});
                 },
                 single: true,
                 scope: this
@@ -102,7 +102,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
 
     setupDropZone: function(ct){
         ct.dropZone = new Ext.dd.DropTarget(ct.getEl().dom, {
-            ddGroup: 'TabPanelDD',
+            ddGroup:'TabPanelDD',
             parent: this,
             buttonPanel: ct,
             canDrop: function(tab_config)
@@ -110,21 +110,31 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
                 // require a tab_config and a tab_config.id to save a favorite
                 return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.find('targetId', tab_config.id).length > 0)
             },
-            gettab_config: function(item){
-                return item.tab_config;
+            gettab_config: function(data){
+              if (data.item) {
+                return data.item.tab_config;
+              } else if (data.get('type') === 'folder' || data.get('type') === 'share'){
+                  var tab_config = {};
+                  tab_config.initializer = 'Talho.Documents';
+                  tab_config.selected_folder_id = data.get('type') + data.get('id');
+                  tab_config.id = 'Documents-' + tab_config.selected_folder_id;
+                  tab_config.title = 'Documents: ' + data.get('name');
+                  return tab_config;
+              }
             },
+
             notifyOver: function(source, evt, data)
             {
-                var tab_config = this.gettab_config(data.item);
+                tab_config = this.gettab_config(data);
                 if(this.canDrop(tab_config))
                     return 'x-dd-drop-ok';
                 else
                     return 'x-dd-drop-nodrop';
             },
+          
             notifyDrop: function(dd, e, data){
                 // Build launchable item
-                var tab_config = this.gettab_config(data.item);
-
+                var tab_config = this.gettab_config(data);
                 if(this.canDrop(tab_config))
                 {
                     this.lock();
@@ -136,6 +146,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
                 else return false;
             }
         });
+      ct.dropZone.addToGroup('FolderDD'); // Have to do this here because you can't add more than one ddGroup in the config.
     },
 
     renderFavorites: function(store){

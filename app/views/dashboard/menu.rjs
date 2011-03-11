@@ -63,7 +63,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
     end
 
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},"
-    menu_config += "{name: '#{current_user.display_name}', icon:'/images/gear.png', itemId: 'My Account', items:[
+    menu_config += "{name: '#{current_user.display_name}', itemId: 'My Account', items:[
                     {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
                     {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
                     {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
@@ -71,8 +71,8 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                     {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
                     {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
                       initializer: 'Talho.ManageOrganizations'}},
-                    {name: 'Sign Out', redirect: '#{sign_out_path}'}
-                  ]}"
+                    {name: 'Sign Out', icon: '/images/logoff.png', redirect: '#{sign_out_path}'}
+                  ]},"
 
   else
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
@@ -92,8 +92,10 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                      #{name: 'Calendar'},
                      #{name: 'Chat'},
 
-  bbar_config += "{name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
-                  {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
+  if current_user.has_non_public_role?
+    bbar_config += "{name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },"
+  end
+  bbar_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
                   '->',
