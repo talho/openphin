@@ -72,7 +72,7 @@ class Alert < ActiveRecord::Base
   has_one :cancellation, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Cancel"], :include => [:original_alert, :cancellation, :updates, :author, :from_jurisdiction]
   has_many :updates, :class_name => 'Alert', :foreign_key => :original_alert_id, :conditions => ['message_type = ?', "Update"], :include => [:original_alert, :cancellation, :updates, :author, :from_jurisdiction]
   has_many :ack_logs, :class_name => 'AlertAckLog'
-  has_many :recipients, :class_name => "User", :finder_sql => "SELECT users.* FROM users, targets, targets_users WHERE targets.item_type='Alert' AND targets.item_id=#{object_id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"
+  has_many :recipients, :class_name => "User", :finder_sql => 'SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id'
 
   has_attached_file :message_recording, :path => ":rails_root/:attachment/:id.:extension"
 
