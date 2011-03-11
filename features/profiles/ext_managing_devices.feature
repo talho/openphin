@@ -114,7 +114,6 @@ Feature: Managing devices when editing user profiles
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"
     When I navigate to the ext dashboard page
-    And I suspend cucumber
     And I navigate to "Default FactoryUser > Manage Devices"
     And I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"
