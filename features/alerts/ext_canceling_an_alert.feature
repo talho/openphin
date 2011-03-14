@@ -42,8 +42,8 @@ Feature: Canceling an alert
     Then I should see a display form with:
       | Severity      | Moderate       |
       | Status        | Actual         |
-      | Acknowledge   | No             |
-      | Methods       | Email, Console |
+      | Acknowledge   | None           |
+      | Methods       | Console, Email |
       | Delivery Time | 72 hours       |
     And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease is not contagious"
@@ -99,8 +99,8 @@ Feature: Canceling an alert
     Then I should see a display form with:
       | Severity      | Moderate       |
       | Status        | Actual         |
-      | Acknowledge   | No             |
-      | Methods       | Email, Console |
+      | Acknowledge   | None           |
+      | Methods       | Console, Email |
       | Delivery Time | 72 hours       |
     And I should see "[Cancel] - Flying Monkey Disease"
     And I should see "Flying monkey disease is not contagious"

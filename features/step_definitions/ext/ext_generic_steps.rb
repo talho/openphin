@@ -324,7 +324,9 @@ When /^I should see a display form with:$/ do |table|
 end
 
 When /^I should see "([^"]*)" within display field "([^"]*)"/ do |value, name|
-  page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
+  value.split(',').each do |v|
+    page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => /#{v.strip}/)
+  end
 end
 
 When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|

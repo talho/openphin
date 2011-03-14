@@ -22,6 +22,8 @@ require "#{Rails.root}/spec/factories"
 require 'spec/mocks'
 require 'features/support/patches/send_key'
 
+require 'db/migrate/20110314145442_create_my_sql_compatible_functions_for_postgres'
+
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
 # prefer to use XPath just remove this line and adjust any selectors in your
@@ -94,7 +96,7 @@ Spork.prefork do
   at_exit do
     ts.controller.stop
   end
-
+  CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 end
 
 Spork.each_run do
@@ -129,6 +131,8 @@ Spork.each_run do
     ThinkingSphinx.suppress_delta_output = true
     ts.build
     ts.controller.index
+
+   ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 
     $rspec_mocks ||= Spec::Mocks::Space.new
   end
