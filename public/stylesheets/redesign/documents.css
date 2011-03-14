@@ -6,6 +6,7 @@
     word-wrap: break-word;
     border-radius: 4px;
     -moz-border-radius: 4px;
+    cursor: default;
 }
 
 .documents-folder-item-hover{
