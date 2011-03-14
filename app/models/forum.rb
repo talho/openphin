@@ -22,7 +22,6 @@ class Forum < ActiveRecord::Base
   alias :_destroy :_delete unless respond_to? '_destroy'
   
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
-  named_scope :distinct_poster, :group => :poster_id
 
 
   # would like to DRY this up
