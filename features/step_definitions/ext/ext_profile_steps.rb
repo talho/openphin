@@ -63,12 +63,12 @@ end
 When /^I fill in the add user form with:/ do |table|
   When %Q{I navigate to "Admin > Manage Users > Add a User"}
   table.rows_hash.each { |label,value|
-    case label
+    case label.strip
     when /Language/, /Jurisdiction/
-      When %Q{I open ext combo "#{label}"}
-      When %Q{I click x-combo-list-item "#{value}"}
+      When %Q{I open ext combo "#{label.strip}"}
+      When %Q{I click x-combo-list-item "#{value.strip}"}
     else
-      When %Q{I fill in "#{label}" with "#{value}"}
+      When %Q{I fill in "#{label}" with "#{value.strip}"}
     end
   }
 end

@@ -52,7 +52,6 @@ Feature: An admin deleting users
     When I go to the users delete page for an admin
     And I fill out the delete user form with "Jane Smith"
     And I press "Delete Users"
-    
     Then I should see "Users have been successfully deleted"
 
     When I go to the users delete page for an admin

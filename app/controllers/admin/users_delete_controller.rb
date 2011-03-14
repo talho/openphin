@@ -7,7 +7,9 @@ class Admin::UsersDeleteController < ApplicationController
   
   def create
     params[:users][:user_ids] -= [current_user.id.to_s]   # avoid current user deleting self
-    @users = User.find_all_by_id(params[:users][:user_ids])
+    params[:users][:user_ids] -= [""]
+    @users = []
+    @users = User.find_all_by_id(params[:users][:user_ids]) unless params[:users][:user_ids].blank?
     if @users.empty?
       flash[:error] = "A valid user was not selected."
       redirect_to :back

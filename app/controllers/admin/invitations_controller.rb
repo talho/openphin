@@ -336,25 +336,25 @@ class Admin::InvitationsController < ApplicationController
   def inviteeStatus
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil && params[:sort] != 'completionStatus' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*",
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, users.email_confirmed",
                                           :joins => "LEFT JOIN users ON invitees.email = users.email",
-                                          :order => "users.email_confirmed #{order_in}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
+                                          :order => "users.email_confirmed #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
   
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil && params[:sort] != 'organizationMembership' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*",
-                                          :joins => "LEFT JOIN users ON invitees.email = users.email LEFT JOIN (audiences_users INNER JOIN audiences) ON (users.id = audiences_users.user_id AND audiences_users.audience_id = audiences.id AND audiences.scope='Organization')",
-                                          :order => "audiences.id #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, audiences.id AS audience_id",
+                                          :joins => "LEFT JOIN users ON invitees.email = users.email LEFT JOIN audiences_users ON users.id = audiences_users.user_id LEFT JOIN audiences ON audiences_users.audience_id = audiences.id AND audiences.scope='Organization'",
+                                          :order => "audience_id #{order_in}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
 
   def inviteeStatusByPendingRequests
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil && params[:sort] != 'pendingRequests' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*",
+    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, role_requests.id IS#{order_in == 'DESC' ? ' NOT ' : ' '}NULL AS role_requests_id",
                                          :joins => "LEFT JOIN users ON invitees.email = users.email LEFT JOIN role_requests ON users.id = role_requests.user_id AND role_requests.jurisdiction_id IN (#{current_user.role_memberships.admin_roles.map(&:jurisdiction_id).join(',')})",
-                                         :order => "role_requests.id IS#{order_in == 'DESC' ? ' NOT ' : ' '}NULL, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
+                                         :order => "role_requests_id, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
 
   def inviteeStatusByProfileUpdate
@@ -362,8 +362,8 @@ class Admin::InvitationsController < ApplicationController
     order_by = params[:sort] != nil && params[:sort] != 'profileUpdated' ? params[:sort] : 'email'
     order_by = "display_name" if order_by == "name"
     invitation_time = Invitation.find(params[:id]).updated_at
-    Invitee.paginate_by_invitation_id params[:id], :select => "DISTINCT invitees.*", :joins => "LEFT JOIN users ON invitees.email = users.email",
-                                      :order => "users.updated_at > '#{invitation_time}' #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
+    Invitee.paginate_by_invitation_id params[:id], :select => "DISTINCT invitees.*, users.updated_at > '#{invitation_time}' AS users_updated_at", :joins => "LEFT JOIN users ON invitees.email = users.email",
+                                      :order => "users_updated_at #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
   
   def csv_download
