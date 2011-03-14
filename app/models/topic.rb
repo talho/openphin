@@ -12,7 +12,6 @@ class Topic < ActiveRecord::Base
                       :allow_destroy => true
   
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
-  named_scope :distinct_poster, :group => :poster_id
   
   named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 

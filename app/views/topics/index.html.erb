@@ -55,7 +55,7 @@
             <%= "#{link_if_public topic.poster} - #{time_ago_in_words(topic.updated_at)} ago" -%>
           </td>
           <td>
-             <% unless (comments_last = topic.comments.distinct_poster.recent(2)).blank? %>
+             <% unless (comments_last = topic.comments.recent(2)).blank? %>
               <%= link_if_public comments_last[0].poster if comments_last[0] -%>
               <%= link_if_public comments_last[1].poster if comments_last[1] -%>
             <% end %>

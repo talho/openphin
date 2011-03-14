@@ -102,7 +102,7 @@ class ForumsController < ApplicationController
           @audience.recipients(:force => true)
           
           # Force a lock_version increment for stale object detection on the audience itself
-          Audience.update_counters params[:forum][:audience_attributes][:id], :lock_version => 1
+          Audience.update_counters params[:forum][:audience_attributes][:id], {}
         end
 
         if params[:forum][:topic_attributes]
