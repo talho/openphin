@@ -18,11 +18,11 @@ Feature: Sending alerts to multiple devices
       | Blackberry | 246D6BA3 |
     And joe.black@example.com has the following devices:
       | Phone | 5125551236 |
-    And henry.frank@example.com  has the following devices:
+    And henry.frank@example.com has the following devices:
       | SMS   | 5125551247 |
-    And martin.gons@example.com  has the following devices:
+    And martin.gons@example.com has the following devices:
       | Blackberry | 246D6BA6 |
-    And george.strait@example.com  has the following devices:
+    And george.strait@example.com has the following devices:
       | Phone | 5125551239 |
       | Blackberry | 246D6BA7 |
     And the role "Health Alert and Communications Coordinator" is an alerter
