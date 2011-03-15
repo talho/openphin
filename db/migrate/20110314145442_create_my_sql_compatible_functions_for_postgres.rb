@@ -3,7 +3,22 @@ class CreateMySqlCompatibleFunctionsForPostgres < ActiveRecord::Migration
     if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
       execute "CREATE OR REPLACE FUNCTION UTC_TIMESTAMP() RETURNS timestamp AS $$ SELECT current_timestamp at time zone 'utc'; $$ LANGUAGE SQL;"
       execute "CREATE OR REPLACE FUNCTION UNIX_TIMESTAMP(newtime timestamp without time zone) RETURNS BIGINT AS $$ SELECT EXTRACT(EPOCH FROM $1)::bigint AS result; $$ LANGUAGE SQL;"
-      execute "CREATE LANGUAGE plpgsql;"
+      execute "CREATE OR REPLACE FUNCTION public.create_plpgsql_language () \
+                RETURNS TEXT \
+                AS $$ \
+                  CREATE LANGUAGE plpgsql; \
+                  SELECT 'language plpgsql created'::TEXT; \
+                $$ LANGUAGE 'sql'; \
+                SELECT CASE WHEN \
+                  (SELECT true::BOOLEAN \
+                    FROM pg_language \
+                    WHERE lanname='plpgsql') \
+                  THEN \
+                    (SELECT 'language already installed'::TEXT) \
+                  ELSE \
+                    (SELECT public.create_plpgsql_language()) \
+                  END; \
+                  DROP FUNCTION public.create_plpgsql_language ();"
       execute "drop function IF EXISTS rebuilt_sequences() RESTRICT; \
         CREATE OR REPLACE FUNCTION  rebuilt_sequences() RETURNS integer as \
         $body$ \
