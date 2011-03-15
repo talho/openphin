@@ -110,7 +110,7 @@ class Admin::GroupsController < ApplicationController
             @group.user_ids.map{|u| u.to_s} == params[:group][:user_ids].sort
 
             @group.update_attributes! ids
-            Group.update_counters @group.id, :lock_version => 0
+            Group.update_counters @group.id, {}
           end
 
           @group = Group.find(@group.id)
