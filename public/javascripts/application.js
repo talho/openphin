@@ -63,8 +63,8 @@ jQuery(function($) {
 });
 
 jQuery(function($) {
-  $('.alert .summary').click(function(){
-    $(this).parent(".alert").children(".detail").toggle();
+  $('.han_alert .summary').click(function(){
+    $(this).parent(".han_alert").children(".detail").toggle();
   });
 });
 

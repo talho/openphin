@@ -61,3 +61,12 @@
 [submodule "vendor/plugins/rollcall"]
 	path = vendor/plugins/rollcall
 	url = git://github.com/talho/rollcall.git
+[submodule "vendor/plugins/citiesforrails"]
+	path = vendor/plugins/citiesforrails
+	url = git://github.com/altrabio/CITIEsForRAILS.git
+[submodule "vendor/plugins/pin_cushion"]
+	path = vendor/plugins/pin_cushion
+	url = git://github.com/Dishwasha/pin_cushion.git
+[submodule "vendor/plugins/han"]
+	path = vendor/plugins/han
+	url = ssh://git@git.talho.org/home/git/repositories/han.git

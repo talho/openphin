@@ -128,7 +128,7 @@ div.help a                                          {color:#fff}
 
 #feature 																			      {width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
 #content p																		      {margin:0 0 15px; line-height:1.6;}
-#content > .alert                                   {float: left;}
+#content > .han_alert                                   {float: left;}
 #content div.details													      {width:410px; float:left;}
 #content div.aside														      {width:210px; float:right;}
 #content div.callout													      {font-size:11px; background:#efefef url(images/feature_bottom.png) no-repeat bottom left; margin:0 0 15px;}
@@ -164,9 +164,9 @@ div.details p.texas_dshs a                          {background:url(images/texas
 #edit > div#details .details input.submit						{width:149px;}
 #edit > div#details .aside												  {padding-top:1.6em;}
 #edit > div#details .aside p												{margin-bottom:8px;}
-#alert_title																	      {font-size:22px; font-weight:bold;}
-#alert_message																      {height:200px;}
-#alert_short_message													      {height:50px;}
+#han_alert_title																	      {font-size:22px; font-weight:bold;}
+#han_alert_message																      {height:200px;}
+#han_alert_short_message													      {height:50px;}
 div.audio                                           {display:none; line-height:1.6em; padding-bottom:10px;}
 
 ul.progress																		      {width:650px; height:26px; background:url(images/progress.png) no-repeat; margin:0 0 15px; padding:0;}
@@ -208,7 +208,7 @@ form legend																		      {padding:0 0 5px; display:block;}
 #edit fieldset ul.check_selector a.closed			      {background-image:url(images/arrow_right.png);}
 #edit fieldset ul.check_selector li label.checked	  {background:#EBF2FD; color:#333;}
 
-#alert_caller_id									                  {width: 80px;}
+#han_alert_caller_id									                  {width: 80px;}
 #details p.caller_id											          {display: none;}
 
 .preview > .aside h5														    {line-height:1.2; font-weight:bold; font-size:11px; color:#CCC; clear:left; float:left; width:80px; text-align:right; margin:0 10px 0 0;}
@@ -452,7 +452,7 @@ table.inviteTable td                                {border-bottom:1px solid #D9
 
 .pagination                                         {margin-bottom: 10px;}
 
-/*#alert_not_cross_jurisdictional{width:20px !important; float:left; position:relative; top:2px;}   */
+/*#han_alert_not_cross_jurisdictional{width:20px !important; float:left; position:relative; top:2px;}   */
 div#tooltip                                         {position:absolute; padding:5px; background: #fff; border: 1px solid #666;}
 
 span.media_list legend                              {position: relative; top: -5px;}

@@ -30,14 +30,24 @@ module NavigationHelpers
         admin_role_requests_path
       when /the new alert page/i
         new_alert_path
+      when /the new HAN alert page/i
+        new_han_alert_path
       when /the alerts acknowledge page/i
         alerts_acknowledge_path
       when /the roles requests page for an admin/
         admin_role_requests_path
+      when /the HAN alert log/i
+        han_alerts_path
+      when /cancel the HAN alert/
+        edit_han_alert_path(HanAlert.last, :_action => "cancel")
+      when /update the HAN alert/
+        edit_han_alert_path(HanAlert.last, :_action => "update")
+      when /the update HAN alert page/i
+        url_for(:controller => "han_alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update", :only_path => true)
+      when /the cancel HAN alert page/i
+        url_for(:controller => "han_alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel", :only_path => true)
       when /the HAN/i
         hud_path
-      when /the alert log/i
-        alerts_path
       when /the user edit page/i
         edit_user_path(current_user)
       when /the edit profile page$/i
@@ -48,16 +58,8 @@ module NavigationHelpers
         edit_user_profile_path(User.find_by_email!(arg))
       when /^the user account roles page$/i
         new_role_request_path
-      when /cancel the alert/
-        edit_alert_path(Alert.last, :_action => "cancel")
-      when /update the alert/
-        edit_alert_path(Alert.last, :_action => "update")
       when /the new organization page/
         new_organization_path
-      when /the update alert page/i
-        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update", :only_path => true)
-      when /the cancel alert page/i
-        url_for(:controller => "alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel", :only_path => true)
       when /the admin add user page/i
         new_admin_user_path
       when /the groups page/i

@@ -53,8 +53,8 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                         //store: this.acknowledgement_store,
                         //pageSize: 10,
                         //prependButtons: true,
-                        items: [{text:'Export as CSV', handler: function(){window.open("/alerts/" + this.alertId + ".csv");}, scope: this},
-                            {text:'Export as PDF', handler: function(){window.open("/alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
+                        items: [{text:'Export as CSV', handler: function(){window.open("/han_alerts/" + this.alertId + ".csv");}, scope: this},
+                            {text:'Export as PDF', handler: function(){window.open("/han_alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
                         listeners:{'beforechange': function(toolbar, o){return toolbar.cursor != o.start;}}
                     })
                 }
@@ -72,7 +72,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
         if(loadAlert) {
             // perform load from AJAX
             Ext.Ajax.request({
-                url: '/alerts/' + this.alertId + '.json',
+                url: '/han_alerts/' + this.alertId + '.json',
                 method: 'GET',
                 scope: this,
                 callback: this.getAlertDetailFromServer_complete
@@ -99,20 +99,20 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
 
         // we're going to rewrite this into something that the loadData method can understand
         var data = {
-            'alert[title]': alert_json.alert.title,
-            'alert[message]': alert_json.alert.message,
-            'alert[short_message]': alert_json.alert.short_message,
-            'alert[not_cross_jurisdictional]': alert_json.alert.not_cross_jurisdictional,
-            'alert[severity]': alert_json.alert.severity,
-            'alert[status]': alert_json.alert.status,
-            'alert[acknowledge]': alert_json.alert.acknowledge ? call_downs.length > 0 ? 'Advanced' : 'Normal' : 'None',
-            'alert[sensitive]': alert_json.alert.sensitive,
-            'alert[delivery_time]': alert_json.alert.delivery_time,
-            'alert[call_down_messages][]': call_downs,
-            'alert[created_at]': new Date(alert_json.alert.created_at),
-            'alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device'),
-            'alert[author]': alert_json.alert.author.display_name,
-            'alert[recipient_count]': alert_json.recipient_count
+            'han_alert[title]': alert_json.alert.title,
+            'han_alert[message]': alert_json.alert.message,
+            'han_alert[short_message]': alert_json.alert.short_message,
+            'han_alert[not_cross_jurisdictional]': alert_json.alert.not_cross_jurisdictional,
+            'han_alert[severity]': alert_json.alert.severity,
+            'han_alert[status]': alert_json.alert.status,
+            'han_alert[acknowledge]': alert_json.alert.acknowledge ? call_downs.length > 0 ? 'Advanced' : 'Normal' : 'None',
+            'han_alert[sensitive]': alert_json.alert.sensitive,
+            'han_alert[delivery_time]': alert_json.alert.delivery_time,
+            'han_alert[call_down_messages][]': call_downs,
+            'han_alert[created_at]': new Date(alert_json.alert.created_at),
+            'han_alert[device_types][]': Ext.pluck(alert_json.alert.alert_device_types, 'device'),
+            'han_alert[author]': alert_json.alert.author.display_name,
+            'han_alert[recipient_count]': alert_json.recipient_count
         };
 
         Ext.apply(data, alert_json.audiences);
@@ -150,29 +150,29 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
             var detail_panel = this.getComponent('alert_detail_panel');
             var leftPane = detail_panel.getComponent('left_detail');
             if(!Ext.isEmpty(this.alertId)) leftPane.getComponent('alert_title').getEl().id = this.alertId;
-            leftPane.getComponent('alert_title').update(data['alert[title]']);
-            leftPane.getComponent('alert_message').update(data['alert[message]']);
-            leftPane.getComponent('alert_short_text').update(data['alert[short_message]']);
+            leftPane.getComponent('alert_title').update(data['han_alert[title]']);
+            leftPane.getComponent('alert_message').update(data['han_alert[message]']);
+            leftPane.getComponent('alert_short_text').update(data['han_alert[short_message]']);
 
             var alertResponseContainer = leftPane.getComponent('alert_response_container');
             alertResponseContainer.removeAll(true);
-            Ext.each(data['alert[call_down_messages][]'], function(call_down, index){
+            Ext.each(data['han_alert[call_down_messages][]'], function(call_down, index){
                 if(!Ext.isEmpty(call_down))
                 {
                     alertResponseContainer.add({xtype: 'displayfield', html: call_down, fieldLabel: 'Alert Response ' + (index + 1).toString()});
                 }
             }, this);
 
-            if(data['alert[created_at]']){
-                leftPane.getComponent('alert_created_at').update(data['alert[created_at]'].format('F j, Y, g:i a'));
+            if(data['han_alert[created_at]']){
+                leftPane.getComponent('alert_created_at').update(data['han_alert[created_at]'].format('F j, Y, g:i a'));
                 leftPane.getComponent('alert_created_at').show();
             }
-            if(data['alert[author]']){
-                leftPane.getComponent('alert_author').update(data['alert[author]']);
+            if(data['han_alert[author]']){
+                leftPane.getComponent('alert_author').update(data['han_alert[author]']);
                 leftPane.getComponent('alert_author').show();
             }
-            if(data['alert[recipient_count]']){
-               this.updateRecipientCount(data['alert[recipient_count]'], leftPane.getComponent('alert_recipient_count'));
+            if(data['han_alert[recipient_count]']){
+               this.updateRecipientCount(data['han_alert[recipient_count]'], leftPane.getComponent('alert_recipient_count'));
             } else {
               this.buttons[1].disable();
               leftPane.getComponent('alert_recipient_count').removeClass('large-bold');
@@ -180,12 +180,12 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
               leftPane.getComponent('alert_recipient_count').addClass('working-notice');
               leftPane.getComponent('alert_recipient_count').update('Calculating...');
               Ext.Ajax.request({
-                url: '/alerts/calculate_recipient_count.json',
+                url: '/han_alerts/calculate_recipient_count.json',
                 method: 'POST',
                 params: this.buildAudienceParams(),
                 scope: this,
                 success: function(result){
-                    this.data[ 'alert[recipient_count]'] = result.responseText * 1;
+                    this.data[ 'han_alert[recipient_count]'] = result.responseText * 1;
                     this.updateRecipientCount(result.responseText, leftPane.getComponent('alert_recipient_count'));
                     this.buttons[1].enable(); //Send Alert button
                 },
@@ -196,17 +196,17 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
               });
             }
 
-            leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
+            leftPane.getComponent('alert_disable_cross_jurisdictional').update(data['han_alert[not_cross_jurisdictional]'] ? 'Yes' : 'No');
             var rightPane = this.getComponent('alert_detail_panel').getComponent('right_detail');
-            rightPane.getComponent('alert_severity').update(data['alert[severity]']);
-            rightPane.getComponent('alert_status').update(data['alert[status]']);
-            rightPane.getComponent('alert_acknowledge').update(data['alert[acknowledge]']);
-            rightPane.getComponent('alert_sensitive').update(data['alert[sensitive]'] ? 'Yes' : 'No');
+            rightPane.getComponent('alert_severity').update(data['han_alert[severity]']);
+            rightPane.getComponent('alert_status').update(data['han_alert[status]']);
+            rightPane.getComponent('alert_acknowledge').update(data['han_alert[acknowledge]']);
+            rightPane.getComponent('alert_sensitive').update(data['han_alert[sensitive]'] ? 'Yes' : 'No');
 
-            var delivery_time = data['alert[delivery_time]'];
+            var delivery_time = data['han_alert[delivery_time]'];
             rightPane.getComponent('alert_delivery_time').update(delivery_time <= 90 ? delivery_time + ' minutes' : (delivery_time/60) + ' hours');
 
-            var delivery_methods = data['alert[device_types][]'] || [];
+            var delivery_methods = data['han_alert[device_types][]'] || [];
             if(!Ext.isArray(delivery_methods))
                 delivery_methods = [delivery_methods];
 
@@ -249,8 +249,8 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
       Ext.each(this.data.groups, function(group){params['group_ids[]'].push(group.id)});
       Ext.each(this.data.jurisdictions, function(jurisdiction){params['jurisdiction_ids[]'].push(jurisdiction.id)});
       Ext.each(this.data.roles, function(role){params['role_ids[]'].push(role.id)});
-      if ( this.data["alert[not_cross_jurisdictional]"]) { params['not_cross_jurisdictional'] = 1; }
-      params['from_jurisdiction_id'] = this.data["alert[from_jurisdiction_id]"]  ;
+      if ( this.data["han_alert[not_cross_jurisdictional]"]) { params['not_cross_jurisdictional'] = 1; }
+      params['from_jurisdiction_id'] = this.data["han_alert[from_jurisdiction_id]"]  ;
       return params;
     },
 

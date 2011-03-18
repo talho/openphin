@@ -20,13 +20,13 @@ class Service::Email < Service::Base
       users = alert.unacknowledged_users.map(&:formatted_email)
       users.batch_process(50) do |emails|
         begin
-          AlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
+          HanAlertMailer.deliver_batch_alert(alert, emails) unless alert.alert_attempts.nil?
         rescue Net::SMTPSyntaxError => e
           logger.error "Error mailing alert to the following recipients: #{emails.join(",")}\nException:#{e}"
           logger.error "Attempting individual resends"
           emails.each do |eml|
             begin
-              AlertMailer.deliver_batch_alert(alert, eml)
+              HanAlertMailer.deliver_batch_alert(alert, eml)
               logger.error "Resent to #{eml}"
             rescue
               logger.error "Unable to resend to #{eml}"

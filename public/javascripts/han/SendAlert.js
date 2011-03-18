@@ -92,7 +92,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
             layout: 'column',
             width: '820',
             defaults:{style: 'padding:5px;', columnWidth: .5},
-            url: '/alerts.json',
+            url: '/han_alerts.json',
             method: 'POST',
             listeners:{
                 scope: this,
@@ -102,29 +102,29 @@ Talho.SendAlert = Ext.extend(function(){}, {
             },
             items: [
                 {xtype: 'container', itemId:'left_side_form', layout: 'form', labelAlign: 'top', defaults:{anchor: '100%'}, items:[
-                    {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', maxLength: '46', style: 'font-weight: bold; font-size: 150%; height: 3ex;', allowBlank: false, blankText: 'Alerts must have a title'},
+                    {xtype: 'textfield', itemId:'alert_title', fieldLabel: 'Title', name: 'han_alert[title]', maxLength: '46', style: 'font-weight: bold; font-size: 150%; height: 3ex;', allowBlank: false, blankText: 'Alerts must have a title'},
                     {xtype: 'box', itemId: 'alert_title_label', cls:'formInformational', hideLabel: true, html: 'The title must be 46 characters or less including whitespace'},
-                    {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
+                    {xtype: 'textarea', itemId: 'alert_message', fieldLabel: 'Message', name: 'han_alert[message]', height: 150, enableKeyEvents: true, validator: this.validateMessage.createDelegate(this), listeners:{'keyup': function(ta){Ext.get('message_length').update(ta.getValue().length.toString());}}},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: '(<span id="message_length">0</span> characters)<br/>Any message larger than 580 characters including whitespace will cause the message to be truncated and recipients will need to visit the TXPhin website to view the entire message contents.'},
                     this.call_down_message_container,
-                    {xtype: 'textarea', itemId: 'alert_short_message', fieldLabel: 'Short Message', name: 'alert[short_message]', maxLength: '160', height: 75, validator: this.validateShortMessage.createDelegate(this)},
+                    {xtype: 'textarea', itemId: 'alert_short_message', fieldLabel: 'Short Message', name: 'han_alert[short_message]', maxLength: '160', height: 75, validator: this.validateShortMessage.createDelegate(this)},
                     {xtype: 'box', cls:'formInformational', hideLabel: true, html: 'This field allows the use of a shorter message that will be used for certain devices with message length limitations, e.g. SMS (text messaging) and Blackberry PIN. <br/><b>Maximum length: 160 characters.</b>'}
                 ]},
                 {xtype: 'container', itemId:'right_side_form', layout: 'form', defaults: {anchor: '100%'}, items:[
-                    {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
-                    {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
-                    {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
-                    {xtype: 'combo', itemId: 'alert_delivery_time', fieldLabel: 'Delivery Time', hiddenName: 'alert[delivery_time]', valueField:'value', displayField:'display', mode: 'local', editable: false, triggerAction: 'all', value: 4320, store: new Ext.data.ArrayStore({
+                    {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'han_alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
+                    {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'han_alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
+                    {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'han_alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
+                    {xtype: 'combo', itemId: 'alert_delivery_time', fieldLabel: 'Delivery Time', hiddenName: 'han_alert[delivery_time]', valueField:'value', displayField:'display', mode: 'local', editable: false, triggerAction: 'all', value: 4320, store: new Ext.data.ArrayStore({
                         data: [[15], [30], [45], [60], [75], [90], [1440], [4320]],
                         fields: ['value', {name: 'display', mapping:0, convert: function(val){return val <= 90 ? val + ' minutes' : (val/60) + ' hours';}}]
                     })},
-                    {xtype: 'combo', itemId: 'acknowledge_combo', fieldLabel: 'Acknowledgement', name: 'alert[acknowledge]', store: ['None', 'Normal', 'Advanced'], editable: false, triggerAction: 'all', value: 'None',
+                    {xtype: 'combo', itemId: 'acknowledge_combo', fieldLabel: 'Acknowledgement', name: 'han_alert[acknowledge]', store: ['None', 'Normal', 'Advanced'], editable: false, triggerAction: 'all', value: 'None',
                         listeners:{scope: this, 'select': this.acknowledgement_select}},
-                    {xtype: 'checkbox', itemId: 'alert_cross_jurisdictional', inputValue: 1, boxLabel: 'Disable Cross-Jurisdictional Alerting', name: 'alert[not_cross_jurisdictional]'},
-                    {xtype: 'checkbox', itemId: 'alert_sensitive', inputValue: 1, boxLabel: 'Sensitive (confidential)', name: 'alert[sensitive]'},
+                    {xtype: 'checkbox', itemId: 'alert_cross_jurisdictional', inputValue: 1, boxLabel: 'Disable Cross-Jurisdictional Alerting', name: 'han_alert[not_cross_jurisdictional]'},
+                    {xtype: 'checkbox', itemId: 'alert_sensitive', inputValue: 1, boxLabel: 'Sensitive (confidential)', name: 'han_alert[sensitive]'},
                     {xtype: 'checkboxgroup', itemId: 'communication_methods', fieldLabel: 'Communication Methods', cls: 'checkboxGroup', allowBlank: false, columns: 1,
                         emptyText: 'You must select at least one communication method',
-                        defaults: {name: 'alert[device_types][]'}, items:[
+                        defaults: {name: 'han_alert[device_types][]'}, items:[
                         {boxLabel: 'E-mail', inputValue: 'Device::EmailDevice'},
                         {boxLabel: 'Phone', inputValue: 'Device::PhoneDevice', handler: this.handlePhoneTypeCheck, scope: this},
                         {itemId: 'sms_communication_method', boxLabel: 'SMS', inputValue: 'Device::SMSDevice', handler: this.handlePhoneTypeCheck, scope: this},
@@ -166,11 +166,11 @@ Talho.SendAlert = Ext.extend(function(){}, {
             if(this.call_down_message_container.items.length === 0)
             {
                 // insert 2 text boxes and a button to add more into the acknowledgement
-                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 1', name: 'alert[call_down_messages][1]'});
-                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 2', name: 'alert[call_down_messages][2]'});
+                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 1', name: 'han_alert[call_down_messages][1]'});
+                this.call_down_message_container.add({xtype:'textfield', fieldLabel: 'Alert Response 2', name: 'han_alert[call_down_messages][2]'});
                 this.call_down_message_container.add({xtype:'button', hideLabel: true, text:"+ Add another response", width: 'auto', name: '', scope: this, handler: function(btn){
                     var resp_num = this.call_down_message_container.items.length.toString();
-                    this.call_down_message_container.insert(this.call_down_message_container.items.indexOf(btn), {xtype:'textfield', fieldLabel: 'Alert Response ' + resp_num, name: 'alert[call_down_messages][' + resp_num + ']'});
+                    this.call_down_message_container.insert(this.call_down_message_container.items.indexOf(btn), {xtype:'textfield', fieldLabel: 'Alert Response ' + resp_num, name: 'han_alert[call_down_messages][' + resp_num + ']'});
                     this.form_card.doLayout();
                     this.getPanel().doLayout();
                 }});
@@ -209,20 +209,20 @@ Talho.SendAlert = Ext.extend(function(){}, {
         if(this.mode === 'new')
         {
             var audienceIds = this.audiencePanel.getSelectedIds();
-            action.options.params['alert[audiences_attributes][1][jurisdiction_ids][]'] = audienceIds.jurisdiction_ids;
-            action.options.params['alert[audiences_attributes][1][role_ids][]'] = audienceIds.role_ids;
-            action.options.params['alert[audiences_attributes][1][user_ids][]'] = audienceIds.user_ids;
-            action.options.params['alert[audience_ids][]'] = audienceIds.group_ids;
+            action.options.params['han_alert[audiences_attributes][1][jurisdiction_ids][]'] = audienceIds.jurisdiction_ids;
+            action.options.params['han_alert[audiences_attributes][1][role_ids][]'] = audienceIds.role_ids;
+            action.options.params['han_alert[audiences_attributes][1][user_ids][]'] = audienceIds.user_ids;
+            action.options.params['han_alert[audience_ids][]'] = audienceIds.group_ids;
         }
         return true;
     },
 
     checkAudienceSize: function(){
-      if (this.alert_preview.data['alert[recipient_count]'] > this.audience_warning_size ){
+      if (this.alert_preview.data['han_alert[recipient_count]'] > this.audience_warning_size ){
         Ext.Msg.show({
           scope: this,
           title:'Large Audience',
-          msg: 'ATTENTION: This alert will be sent to <span style="font-size: 120%; font-weight: bold;">' + this.alert_preview.data['alert[recipient_count]'] +
+          msg: 'ATTENTION: This alert will be sent to <span style="font-size: 120%; font-weight: bold;">' + this.alert_preview.data['han_alert[recipient_count]'] +
                '</span> people.  <br> Press OK to send the alert. <br> Press CANCEL to modify the audience.',
           buttons: Ext.Msg.OKCANCEL,
           fn: function(buttonId){if (buttonId == 'ok') { this.form_card.getForm().submit({force: true}) } else { this.breadCrumb.previous(); } },
@@ -240,13 +240,13 @@ Talho.SendAlert = Ext.extend(function(){}, {
         if(this.mode === 'new')
             this.form_card.getForm().submit();
         else if(this.mode === 'update' || this.mode === 'cancel')
-            this.form_card.getForm().submit({url:'/alerts/' + this.alertId + '.json', method: 'PUT'});
+            this.form_card.getForm().submit({url:'/han_alerts/' + this.alertId + '.json', method: 'PUT'});
     },
 
     submit_success: function(form, action){
         if(action.type == 'submit')
         {
-            Application.fireEvent('opentab', {title: 'Alert Log and Reporting', url: '/alerts', id: 'han_alert_log', initializer: 'Talho.Alerts' });
+            Application.fireEvent('opentab', {title: 'Alert Log and Reporting', url: '/han_alerts', id: 'han_alert_log', initializer: 'Talho.Alerts' });
             this.getPanel().ownerCt.remove(this.getPanel()); // We're going to close the window now that we've successfully created an alert
         }
     },
@@ -299,7 +299,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 // build the output of the form panel and audience panel into a consumable object then pass that to alert_preview.loadData()
                 data = this.form_card.getForm().getFieldValues();
                 var call_downs = this.getCallDownMessages(data);
-                if(data['alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(call_downs, 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
+                if(data['han_alert[acknowledge]'] === 'Advanced' && Ext.clean(Ext.pluck(call_downs, 'length')).length === 0) // if we're at advanced and there are no non 0-length strings in the
                 {
                     var acknowledge_combo = this.form_card.getComponent('right_side_form').getComponent('acknowledge_combo');
                     acknowledge_combo.setValue('Normal');
@@ -307,23 +307,23 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
                     data = this.form_card.getForm().getFieldValues();
                 }
-                data['alert[call_down_messages][]'] = call_downs;
-                data['alert[device_types][]'] = this.getSelectedCommunicationDevices();
+                data['han_alert[call_down_messages][]'] = call_downs;
+                data['han_alert[device_types][]'] = this.getSelectedCommunicationDevices();
                 Ext.apply(data, this.audiencePanel.getSelectedItems());
             }
             else if(this.mode === 'update' || this.mode === 'cancel')
             {
                 data = this.form_card.getForm().getFieldValues();
                 // look for json to handle the rest
-                data['alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.alert.title;
-                data['alert[status]'] = this.alert_json.alert.alert.status;
+                data['han_alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.han_alert.title;
+                data['han_alert[status]'] = this.alert_json.alert.han_alert.status;
                 if (this.recipient_count) {
-                  data['alert[recipient_count]'] = this.recipient_count;
+                  data['han_alert[recipient_count]'] = this.recipient_count;
                 }
-                data['alert[call_down_messages][]'] = [];
+                data['han_alert[call_down_messages][]'] = [];
                 Ext.each(this.getSelectedResponders(), function(responder, index){
                     responder = responder * 1; // turn this into an int
-                    data['alert[call_down_messages][]'][responder - 1] = this.alert_json.alert.alert.call_down_messages[responder];
+                    data['han_alert[call_down_messages][]'][responder - 1] = this.alert_json.alert.han_alert.call_down_messages[responder];
                 }, this);
 
                 data.roles = [];
@@ -344,11 +344,11 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
     getCallDownMessages: function(data){
         var i = 1, call_downs = [];
-        var call_down = data['alert[call_down_messages][' + i + ']'];
+        var call_down = data['han_alert[call_down_messages][' + i + ']'];
         while(!Ext.isEmpty(call_down, true))
         {
             call_downs.push(call_down);
-            call_down = data['alert[call_down_messages][' + ++i + ']']
+            call_down = data['han_alert[call_down_messages][' + ++i + ']']
         }
 
         return call_downs;
@@ -381,7 +381,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         {
             if(!this.form_card.getComponent('right_side_form').getComponent('caller_id_field'))
             {
-                this.form_card.getComponent('right_side_form').add({xtype: 'textfield', itemId: 'caller_id_field', actionMode: 'itemCt', fieldLabel: 'Caller ID', name: 'alert[caller_id]', value: '', allowBlank: false, maxLength: '10', maskRe: /^[0-9]{0,10}$/});
+                this.form_card.getComponent('right_side_form').add({xtype: 'textfield', itemId: 'caller_id_field', actionMode: 'itemCt', fieldLabel: 'Caller ID', name: 'han_alert[caller_id]', value: '', allowBlank: false, maxLength: '10', maskRe: /^[0-9]{0,10}$/});
                 this.form_card.doLayout();
             }
         }
@@ -414,7 +414,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
 
     loadAlertDetail: function(mode){
         Ext.Ajax.request({
-            url: '/alerts/' + this.alertId + '/edit.json?_action=' + mode,
+            url: '/han_alerts/' + this.alertId + '/edit.json?_action=' + mode,
             method: 'GET',
             callback: this.alertDetailLoad_complete,
             scope: this
@@ -431,7 +431,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
         if(success)
         {
             this.alert_json = Ext.decode(response.responseText, true);
-            var alertInfo = this.alert_json.alert.alert;
+            var alertInfo = this.alert_json.alert.han_alert;
             var deviceTypes = this.alert_json.devices;
 
             // load the form up
@@ -458,7 +458,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
             var alertTitle = leftSide.getComponent('alert_title');
             var ix = leftSide.items.indexOf(alertTitle);
             leftSide.remove(alertTitle, true);
-            leftSide.insert(ix, {xtype: 'displayfield', itemId:'alert_title', fieldLabel: 'Title', name: 'alert[title]', value: '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alertInfo.title});
+            leftSide.insert(ix, {xtype: 'displayfield', itemId:'alert_title', fieldLabel: 'Title', name: 'han_alert[title]', value: '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alertInfo.title});
             leftSide.getComponent('alert_title_label').destroy();
             rightSide.getComponent('alert_jurisdiction').disable();
 
@@ -477,12 +477,12 @@ Talho.SendAlert = Ext.extend(function(){}, {
                     i++;
                 }
                 if(groupItems.length > 0)
-                    rightSide.add({xtype: 'checkboxgroup', itemId: 'alert_responders', fieldLabel: 'Responders', cls: 'checkboxGroup', columns: 1, defaults: {name: 'alert[responders][]'}, items: groupItems})
+                    rightSide.add({xtype: 'checkboxgroup', itemId: 'alert_responders', fieldLabel: 'Responders', cls: 'checkboxGroup', columns: 1, defaults: {name: 'han_alert[responders][]'}, items: groupItems})
             }
 
             // create hidden fields
             Ext.each(deviceTypes, function(value){
-                rightSide.add({xtype:'hidden', value: value, name: 'alert[device_types][]'})
+                rightSide.add({xtype:'hidden', value: value, name: 'han_alert[device_types][]'})
             }, this);
             leftSide.add({xtype:'hidden', value: this.mode, name: '_action'});
 

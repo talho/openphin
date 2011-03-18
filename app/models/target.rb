@@ -27,7 +27,7 @@ class Target < ActiveRecord::Base
 #            inner join role_memberships on users.id=role_memberships.user_id
 #          where #{conditions_for(audience)}"
 #    )
-    user_ids = if item_type == 'Alert' && !item.not_cross_jurisdictional
+    user_ids = if item.class.to_s == 'HanAlert' && !item.not_cross_jurisdictional
       audience.recipients(:select => "id", :force => true).map(&:id)
     elsif ["Channel", "Document"].include?(item_type)
       audience.recipients(:force => true).with_no_hacc(:select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
