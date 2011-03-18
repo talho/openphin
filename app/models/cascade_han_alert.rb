@@ -1,4 +1,4 @@
-class CascadeAlert
+class CascadeHanAlert
   attr_accessor :alert
   
   def initialize(alert)
@@ -75,7 +75,7 @@ class CascadeAlert
               xml.ns1 :sent, alert.sent_at.utc.iso8601(3)
               xml.ns1 :status, alert.status
               xml.ns1 :msgType, alert.message_type
-              xml.ns1 :references, alert.reference unless alert.message_type == 'Alert'
+              xml.ns1 :references, alert.alert_references unless alert.message_type == 'Alert'
               xml.ns1 :scope, 'Restricted'
               xml.ns1 :info do |info|
                 xml.ns1 :category, 'Health'

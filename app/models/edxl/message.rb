@@ -96,10 +96,10 @@ module EDXL
       returning super do |message|
         message.alerts.each do |alert|
           next if options[:no_delivery]
-          a = ::Alert.new(
+          a = ::HanAlert.new(
             :identifier => alert.identifier,
             :message_type => message.distribution_type,
-            :references => alert.references,
+            :alert_references => alert.references,
             :severity => alert.severity,
             :status => alert.status,
             :delivery_time => !alert.delivery_time.blank? ? alert.delivery_time : message.delivery_time,
@@ -142,7 +142,7 @@ module EDXL
           a.jurisdictions_per_level
           a.save!
 
-          original_alert = ::Alert.find_by_identifier(a.references.split(',')[1].strip) if !a.references.blank?
+          original_alert = ::HanAlert.find_by_identifier(a.alert_references.split(',')[1].strip) if !a.alert_references.blank?
           
           if a.message_type == "Cancel" || a.message_type == "Update"
             a.title = "[#{a.message_type}] - #{a.title}"
@@ -176,7 +176,7 @@ module EDXL
     element :combined_confidentiality, String, :tag => "combinedConfidentiality"
 
     def alert
-      @alert ||= ::Alert.find_by_identifier(distribution_id.split(',')[0].strip)
+      @alert ||= ::HanAlert.find_by_identifier(distribution_id.split(',')[0].strip)
     end
     
     def organization

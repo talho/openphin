@@ -166,14 +166,14 @@ FeatureHelpers
         when 'Delivery Time'
           case value
             when /^(\d+) hours$/ then
-              if Alert::DeliveryTimes.include?($1.to_i.hours.to_i/1.minute.to_i)
-                select value, :from => "alert_delivery_time"
+              if HanAlert::DeliveryTimes.include?($1.to_i.hours.to_i/1.minute.to_i)
+                select value, :from => "han_alert_delivery_time"
               else
                 raise "Not a valid Delivery Time"
             end
             when /^(\d+) minutes$/ then
-              if Alert::DeliveryTimes.include? $1.to_i
-                select value, :from => "alert_delivery_time"
+              if HanAlert::DeliveryTimes.include? $1.to_i
+                select value, :from => "han_alert_delivery_time"
               else
                 raise "Not a valid Delivery Time"
             end
@@ -181,7 +181,7 @@ FeatureHelpers
               raise "Not a valid Delivery Time"
           end
         when 'Acknowledge', 'Sensitive'
-          id = "alert_#{label.parameterize('_')}"
+          id = "han_alert_#{label.parameterize('_')}"
           if value == '<unchecked>'
             uncheck id
           else
@@ -195,13 +195,13 @@ FeatureHelpers
       when "Message Recording"
         attach_file(:alert_message_recording, File.join(RAILS_ROOT, 'features', 'fixtures', value), "audio/x-wav")
       when "Short Message"
-        fill_in "alert_short_message", :with => value
+        fill_in "han_alert_short_message", :with => value
       when "Title"
         fill_in label, :with => value
       when "Message"
         # instantly set the message text to avoid javascript not responding
         # dialog notice in firefox
-        page.execute_script("$('#alert_message').val('#{value}')")
+        page.execute_script("$('#han_alert_message').val('#{value}')")
       when "Alert Response 1", "Alert Response 2", "Alert Response 3", "Alert Response 4", "Alert Response 5"
         fill_in label, :with => value
       else

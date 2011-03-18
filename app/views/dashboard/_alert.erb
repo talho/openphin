@@ -10,12 +10,12 @@
       <%- end -%>
 	  <span class="severity <%=h alert.severity %>"><strong>Severity:</strong> <%=h alert.severity %></span>
       <span class="from_jurisdiction"><strong>From:</strong> <%=h alert.sender %></span>
-    </p> 
+    </p>
   </div>
   <div class="extended preview">
     <div class="details">
       <p class="brief"><strong>Alert ID:</strong> <%=h alert.identifier %></p>
-        
+
       <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
       <p class="brief acknowledge alertResponse"><strong>Acknowledge:</strong> <%=
         if alert.has_alert_response_messages? && alert.original_alert.nil?
@@ -43,7 +43,7 @@
             Acknowledgement is no longer allowed for this Alert.
           <% else %>
             <% if alert.original_alert.nil? && alert.has_alert_response_messages? %>
-              <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %>
+              <% form_for :alert_attempt, :url=>acknowledge_han_alert_path(alert), :html => {:method => :put} do |form| %>
                 <%= form.label "call_down_response", "Alert Response" %>
                 <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{ :prompt => true }) %>
                 <p><%= form.submit "Acknowledge" %></p>
@@ -54,7 +54,7 @@
           <% end %>
         <% end %>
       </p>
-      
+
     </div>
   </div>
 <%- end -%>

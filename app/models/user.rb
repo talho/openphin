@@ -58,10 +58,10 @@ class User < ActiveRecord::Base
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role, :jurisdiction]}, :conditions => ['roles.alerter = ?', true]
-  has_many :alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
+  has_many :han_alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :alert, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
-  has_many :recent_alerts, :through => :alert_attempts, :source => 'alert', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "alerts.created_at DESC"
+  has_many :recent_alerts, :through => :alert_attempts, :source => 'han_alert', :foreign_key => 'alert_id', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "view_han_alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
@@ -322,10 +322,10 @@ class User < ActiveRecord::Base
     return [] if jurs.empty?
     ors=jurs.map{|j| "(jurisdictions.lft >= #{j.lft} AND jurisdictions.lft <= #{j.rgt})"}.join(" OR ")
 
-    Alert.paginate(:conditions => ors,
-                   :joins => "inner join jurisdictions on alerts.from_jurisdiction_id=jurisdictions.id",
+    HanAlert.paginate(:conditions => ors,
+                   :joins => "inner join jurisdictions on view_han_alerts.from_jurisdiction_id=jurisdictions.id",
                    :include => [:original_alert, :cancellation, :author, :from_jurisdiction],
-                   :order => "alerts.created_at DESC, alerts.id DESC",
+                   :order => "view_han_alerts.created_at DESC, view_han_alerts.id DESC",
                    :page => page,
                    :per_page => 10)
   end

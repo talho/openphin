@@ -40,7 +40,7 @@ describe "AlertAttempt" do
 			audience.jurisdictions << @j1
 			audience.jurisdictions << @j2
 			audience.roles << role
-            @alert=Factory(:alert, :audiences => [audience])
+            @alert=Factory(:han_alert, :audiences => [audience])
 			@alert.alert_attempts.create!(:user => u1)
 			aa = @alert.alert_attempts.create!(:user => u2)
             @alert.initialize_statistics

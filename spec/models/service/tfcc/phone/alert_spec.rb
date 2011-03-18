@@ -14,7 +14,7 @@ describe Service::TFCC::Phone::Alert do
   end
 
   before(:each) do
-    @alert = Factory(:alert, :acknowledge => false)
+    @alert = Factory(:han_alert, :acknowledge => false)
     @user = Factory(:user, :devices => [Factory(:phone_device)])
     @client_id = "AAA1"
     @user_id = "BBB2"

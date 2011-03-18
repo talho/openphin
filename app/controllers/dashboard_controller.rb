@@ -37,13 +37,13 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "han"
     @user = current_user
     per_page = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 10 )
-    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts.paginate(:page => params[:page], :per_page => per_page) : [Alert.default_alert].paginate(:page => 1))
+    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts.paginate(:page => params[:page], :per_page => per_page) : [HanAlert.default_alert].paginate(:page => 1))
     respond_to do |format|
       format.html
       format.ext
       format.json do
         unless @alerts.nil? || @alerts.empty? || ( @alerts.map(&:id) == [nil] ) # for dummy default alert
-          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_alert_path(alert),alert.acknowledged_by_user?) }
+          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_han_alert_path(alert),alert.acknowledged_by_user?) }
           headers["Access-Control-Allow-Origin"] = "*"
           render :json => jsonObject
         else

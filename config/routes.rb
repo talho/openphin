@@ -34,13 +34,7 @@ ActionController::Routing::Routes.draw do |map|
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
 
-  map.resources :alerts, :member => {:acknowledge => [:get, :put]}
-  map.connect "alerts/calculate_recipient_count.:format", :controller => "alerts", :action => "calculate_recipient_count"
-  map.email_acknowledge_alert "alerts/:id/emailack/:call_down_response", :controller => "alerts", :action => "acknowledge", :email => "1"
-  map.connect "alerts/:id/acknowledge.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.token_acknowledge_alert "alerts/:id/acknowledge/:token.:format", :controller => "alerts", :action => "token_acknowledge"
-  map.upload "alerts/index/upload", :controller => "alerts", :action => "upload", :method => [:get, :post]
-  map.playback "alerts/new/playback.wav", :controller => "alerts", :action => "playback", :method => [:get]
+  #map.resources :alerts, :member => {:acknowledge => [:get, :put]}
 
   map.connect "/roles.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :roles

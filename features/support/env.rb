@@ -74,6 +74,7 @@ Capybara.register_driver :selenium_with_firebug do |app|
 end
 
 Capybara.default_driver = :selenium_with_firebug
+Capybara.default_wait_time = 7
 #if File.exists?("#{Rails.root}/firebug.xpi")
 #  profile = Selenium::WebDriver::Firefox::Profile.new
 #  profile['extensions.firebug.currentVersion'] = '100.100.100'

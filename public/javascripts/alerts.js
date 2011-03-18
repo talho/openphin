@@ -5,10 +5,10 @@
         $('#details .caller_id').show();
       }
       $('#alert_device_fax_device').attr('disabled', true);
-      if($('#alert_acknowledge').find('option').filter(':selected').text() == 'Advanced'){
+      if($('#han_alert_acknowledge').find('option').filter(':selected').text() == 'Advanced'){
         $('#call_down_container').toggleClass('hidden');
       }
-		$('#alert_submit').click(function(e) {
+		$('#han_alert_submit').click(function(e) {
 			$(this).fadeTo("fast", 0.5);
 			$(this).unbind("click");
 			$(this).click(function(e) {
@@ -18,8 +18,8 @@
 			});
 			return true;
 		});
-      $('#alert_attempt_submit').click(function(e){
-         if ($('#alert_attempt_call_down_response')[0][0].selected){
+      $('#han_alert_attempt_submit').click(function(e){
+         if ($('#han_alert_attempt_call_down_response')[0][0].selected){
              alert('You must select a response before acknowledging this alert.');
              return false;
          }
@@ -43,7 +43,7 @@
       var selector = $(this).attr('href');
       if (selector == '#audience') {
         var cont = true;
-        if (jQuery.trim($('#alert_title').val()).length == 0) {
+        if (jQuery.trim($('#han_alert_title').val()).length == 0) {
           alert("You must specify a title");
           return false;
         }
@@ -56,19 +56,19 @@
           switch ($(this).val())
           {
             case "Device::EmailDevice":
-              if (jQuery.trim($('#alert_message').val()) == "") {
+              if (jQuery.trim($('#han_alert_message').val()) == "") {
                 cont = false;
                 alert("You must provide a message for an email alert");
               }
               break;
             case "Device::PhoneDevice":
               //if(jQuery.trim($('.short_message').val()) == "" && $('.success:hidden').length != 0) {
-              if (jQuery.trim($('#alert_message').val()) == "") {
+              if (jQuery.trim($('#han_alert_message').val()) == "") {
                 cont = false;
                 alert("You must provide a message for a phone alert.");
                 break;
               }
-              if (jQuery.trim($('#alert_caller_id').val()) == "") {
+              if (jQuery.trim($('#han_alert_caller_id').val()) == "") {
                 cont = false;
                 alert("You must provide a Caller ID number for a phone alert.");
               }
@@ -79,13 +79,13 @@
                 alert("You must provide a short message for an SMS alert.");
                 break;
               }
-              if (jQuery.trim($('#alert_caller_id').val()) == "") {
+              if (jQuery.trim($('#han_alert_caller_id').val()) == "") {
                 cont = false;
                 alert("You must provide a Caller ID number for an SMS alert.");
               }
               break;
             case "Device::FaxDevice":
-              if (jQuery.trim($('#alert_message').val()) == "") {
+              if (jQuery.trim($('#han_alert_message').val()) == "") {
                 cont = false;
                 alert("You must provide a message for a fax alert.");
               }
@@ -193,7 +193,7 @@
       })
     });
 
-    $('ul#alerts li.alert').click(function(event) {
+    $('ul#alerts li.han_alert').click(function(event) {
      if ( !( $(event.target).hasClass("submit") || (event.target.nodeName=="A") ) ) {
        $(this).closest('li').toggleClass('more');
        return false;
@@ -222,7 +222,7 @@
       else $('#details .caller_id').hide();
     });
 
-    $('#alert_caller_id').keydown(function(event) {
+    $('#han_alert_caller_id').keydown(function(event) {
       if(event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) return true;
       if(event.keyCode >= 37 && event.keyCode <= 40) return true;
       if(event.keyCode >= 48 && event.keyCode <=57) return true;
@@ -231,9 +231,9 @@
       return false;
     });
 
-    $('#alert_acknowledge').bind('change', function(e){
-      if($('#alert_acknowledge :selected').text() == 'Advanced' || $('#alert_acknowledge :selected').text() == 'Normal'){
-        if($('#alert_acknowledge :selected').text() == 'Advanced') $('#call_down_container').removeClass('hidden');
+    $('#han_alert_acknowledge').bind('change', function(e){
+      if($('#han_alert_acknowledge :selected').text() == 'Advanced' || $('#han_alert_acknowledge :selected').text() == 'Normal'){
+        if($('#han_alert_acknowledge :selected').text() == 'Advanced') $('#call_down_container').removeClass('hidden');
         else $('#call_down_container').addClass('hidden');
 
         $('.alert_call_down_messages').val('');
@@ -245,7 +245,7 @@
                   $(this).removeAttr('disabled');
             }else{
                 $(this).attr('disabled', true);
-                $('#alert_acknowledge').attr('checked', true);
+                $('#han_alert_acknowledge').attr('checked', true);
             }
           }
         });
@@ -270,19 +270,19 @@
           $(this).removeAttr('disabled');
          }else{
            $(this).attr('disabled', true);
-           $('#alert_acknowledge').attr('checked', true);
+           $('#han_alert_acknowledge').attr('checked', true);
          }
 
        }
      });
    });
 
-  $('#alert_message').bind('keyup', function(e){
+  $('#han_alert_message').bind('keyup', function(e){
     $('#msgcnt').text($(this).val().length);
   });
 
-  $('#alert_not_cross_jurisdictional').bind("click", function(e){
-    if($('#alert_not_cross_jurisdictional:checked').length != 0) {
+  $('#han_alert_not_cross_jurisdictional').bind("click", function(e){
+    if($('#han_alert_not_cross_jurisdictional:checked').length != 0) {
       return confirm("Disabling cross jurisdictional alerting will potentially create a non-HAN compliant alert.  Are you sure you wish to send a non-compliant alert?")
     }
   });

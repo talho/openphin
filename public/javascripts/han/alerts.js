@@ -25,17 +25,17 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
 
     panelLoaded: function(panel){
         var panelEl = panel.getEl();
-        var els = panelEl.select('li.alert');
+        var els = panelEl.select('li.han_alert');
         els.addListener('click', function(evt){
             if ( !( $(evt.target).hasClass("submit") || (evt.target.nodeName=="A") ) ) {
-                var elem = Ext.get(evt.getTarget('li.alert'));
+                var elem = Ext.get(evt.getTarget('li.han_alert'));
                 elem.toggleClass('more');
                 panel.findParentByType('panel').doLayout();
             }
         });
         els.addClass('inlineBtn');
 
-        var alerts = panelEl.select('li.alert');
+        var alerts = panelEl.select('li.han_alert');
 
         alerts.each(function(alert){
             var alertDom = Ext.getDom(alert.dom);

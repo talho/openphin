@@ -5,7 +5,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   end
 
   def query(args = nil)
-    Alert.active.has_acknowledge.uniq.each do |alert|
+    HanAlert.active.has_acknowledge.uniq.each do |alert|
       next if alert.alert_attempts.with_device('Device::PhoneDevice').not_acknowledged.size == 0 && alert.alert_attempts.with_device('Device::EmailDevice').not_acknowledged.size == 0
       devices = {"Device::PhoneDevice" => "PHONE", "Device::EmailDevice" => "EMAIL"}
       alert.alert_device_types.map(&:device).reject{|type| devices[type].blank?}.each do |type|

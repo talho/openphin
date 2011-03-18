@@ -67,6 +67,13 @@ Factory.define :alert do |m|
   m.sequence(:title) {|t| "alert#{t}"}
   m.message "alertmessage"
   m.short_message ""
+  m.audiences {|a| [a.association(:audience)] }
+end
+
+Factory.define :han_alert do |m|
+  m.sequence(:title) {|t| "HAN alert#{t}"}
+  m.message "alertmessage"
+  m.short_message ""
   m.status 'Test'
   m.severity 'Moderate'
   m.delivery_time 60

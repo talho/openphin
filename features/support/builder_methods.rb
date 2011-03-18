@@ -1,6 +1,6 @@
 module FeatureHelpers
   module BuilderMethods
-    def create_alert_with(attributes)
+    def create_han_alert_with(attributes)
       attributes['from_jurisdiction'] = Jurisdiction.find_by_name(attributes['from_jurisdiction']) unless attributes['from_jurisdiction'].blank?
       jurisdictions = (attributes.delete('jurisdictions') || attributes.delete('jurisdiction')).to_s.split(',').map{|m| Jurisdiction.find_by_name(m.strip)}
       roles = attributes.delete('roles').to_s.split(',').map{
@@ -70,7 +70,7 @@ module FeatureHelpers
         end
         attributes['audiences'] += gps
       end
-      Factory(:alert, attributes)
+      Factory(:han_alert, attributes)
     end
   end
 end

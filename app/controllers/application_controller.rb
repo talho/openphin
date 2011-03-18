@@ -126,7 +126,7 @@ class ApplicationController < ActionController::Base
   end
 
   def can_view_alert
-    alert = Alert.find(params[:id])
+    alert = HanAlert.find(params[:id])
     unless !alert.nil? &&
         (alert.recipients.include?(current_user) ||
           alert.from_jurisdiction.self_and_ancestors.detect{|j| j.han_coordinators.include?(current_user)})

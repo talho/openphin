@@ -84,7 +84,7 @@ class Jurisdiction < ActiveRecord::Base
 
   def deliver(alert)
     raise "#{self.name} is not foreign jurisdiction" unless foreign?
-    cascade_alert = CascadeAlert.new(alert)
+    cascade_alert = CascadeHanAlert.new(alert)
     Dir.ensure_exists(Agency[:phin_ms_path])
     File.open(File.join(Agency[:phin_ms_path], "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
   end
