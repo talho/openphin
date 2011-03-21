@@ -24,6 +24,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
     <div class='lede'>\
       <p class='article_link'><a href='http://www.dshs.state.tx.us/preparedness/' target='_blank' title='Public Health Preparedness'>Public Health Preparedness</a></p>\
       <p class='article_link'><a href='http://www.dhs.gov/files/prepresprecovery.shtm' target='_blank' title='Preparedness, Response & Recovery'>Preparedness, Response & Recovery</a></p>\
+      <p class='article_link'><a href='http://wwwnc.cdc.gov/travel/content/id/2511.aspx' target='_blank' title='2011 Earthquake, Tsunami, and Radiation Release in Japan - Travel Information'>2011 Earthquake, Tsunami, and Radiation Release in Japan - Travel Information</a></p>\
     </div>\
   </div>"
         });
