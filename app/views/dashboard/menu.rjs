@@ -72,7 +72,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                     {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
                       initializer: 'Talho.ManageOrganizations'}},
                     {name: 'Sign Out', icon: '/images/logoff.png', redirect: '#{sign_out_path}'}
-                  ]},"
+                  ]}"
 
   else
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
