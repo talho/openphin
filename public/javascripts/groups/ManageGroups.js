@@ -323,7 +323,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
         this.group_detail_panel.getComponent('group_name').update(group.name);
         this.group_detail_panel.getComponent('group_scope').update(group.scope);
-        this.group_detail_panel.getComponent('group_jurisdiction').update(group.owner_jurisdiction.name);
+        if(group.owner_jurisdiction) this.group_detail_panel.getComponent('group_jurisdiction').update(group.owner_jurisdiction.name);
         this.group_detail_panel.buttons[0].getEl().select('a').set({href: group.csv_path});
 
         this.group_detail_panel.getComponent('group_audience_panel').load(group);
@@ -355,7 +355,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     this.create_group_form_panel.groupId = group.id;
                     this.create_group_form_panel.getComponent('group_name').setValue(group.name);
                     this.create_group_form_panel.getComponent('group_scope').setValue(group.scope);
-                    this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.id);
+                    if(group.owner_jurisdiction) this.create_group_form_panel.getComponent('group_owner_jurisdiction').setValue(group.owner_jurisdiction.id);
                     var group_lock_version = this.create_group_form_panel.getComponent('group_lock_version');
                     if(!group_lock_version) // Handle adding/removing the group lock version to take care of issue with blank lock version not being able to save on the create new.
                     {

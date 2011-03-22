@@ -102,7 +102,6 @@ class Admin::GroupsController < ApplicationController
           # will throw ActiveRecord::StaleObjectError, but the associations won't revert to their original state
           non_ids = params[:group].reject{|key,value| key =~ /_ids$/}
           ids = params[:group].reject{|key,value| !(key =~ /_ids$/)}
-          @group.update_attributes! non_ids
 
           # If any associations have changed, manually update the locking on groups to prevent overlapping changes
           unless @group.jurisdiction_ids.map{|j| j.to_s} == params[:group][:jurisdiction_ids].sort &&
@@ -112,6 +111,8 @@ class Admin::GroupsController < ApplicationController
             @group.update_attributes! ids
             Group.update_counters @group.id, {}
           end
+          
+          @group.update_attributes! non_ids
 
           @group = Group.find(@group.id)
           @group.recipients(:force => true)
