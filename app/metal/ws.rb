@@ -25,7 +25,7 @@ end
 get "/ws/alerts" do
   debugger
   protected!
-  current_user.recent_alerts.to_json(
+  current_user.recent_han_alerts.to_json(
       :include => {
         :author => {:methods => :display_name, :only => [:first_name, :last_name, :email]},
         :from_jurisdiction => {:only => :name}}

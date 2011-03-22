@@ -70,7 +70,7 @@ module FeatureHelpers
         end
         attributes['audiences'] += gps
       end
-      Factory(:han_alert, attributes)
+      alert = Factory(:han_alert, attributes)
     end
   end
 end

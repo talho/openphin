@@ -58,10 +58,10 @@ class User < ActiveRecord::Base
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true 
   has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role, :jurisdiction]}, :conditions => ['roles.alerter = ?', true]
-  has_many :han_alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
-  has_many :alert_attempts, :include => [:jurisdiction, :organization, :alert, :user, :acknowledged_alert_device_type, :devices]
+  has_many :alerts, :foreign_key => 'author_id', :include => [:audiences, :alert_device_types, :from_jurisdiction, :original_alert, :author]
+  has_many :alert_attempts, :include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
-  has_many :recent_alerts, :through => :alert_attempts, :source => 'han_alert', :foreign_key => 'alert_id', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "view_han_alerts.created_at DESC"
+  has_many :recent_han_alerts, :through => :alert_attempts, :source => 'alert', :source_type => 'HanAlert', :foreign_key => 'alert_id', :include => [:alert_device_types, :from_jurisdiction, :original_alert, :author], :order => "view_han_alerts.created_at DESC"
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 

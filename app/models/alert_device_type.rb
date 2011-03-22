@@ -10,7 +10,9 @@
 #
 
 class AlertDeviceType < ActiveRecord::Base
-  belongs_to :alert
+  belongs_to :alert, :polymorphic => true
+
+  after_create :update_alert_type
 
   def device_type
     self.device.constantize
@@ -18,5 +20,10 @@ class AlertDeviceType < ActiveRecord::Base
 
   def to_s
     device_type.to_s.demodulize
+  end
+
+  private
+  def update_alert_type
+    update_attribute('alert_type', alert.class.to_s)
   end
 end

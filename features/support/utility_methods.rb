@@ -32,7 +32,7 @@ module FeatureHelpers
               if value.blank?
                 status &&= email.body.include?(email_acknowledge_alert_url(attempt.alert, :call_down_response => 0, :host => HOST))
               else
-                call_down_response = attempt.alert.call_down_messages.index(value).to_i
+                call_down_response = attempt.alert.becomes(HanAlert).reload.call_down_messages.index(value).to_i
                 status &&= email.body.include?(email_acknowledge_alert_url(attempt.alert, :call_down_response => call_down_response, :host => HOST))
               end
             when /body does not contain alert acknowledgment link/
@@ -75,7 +75,7 @@ module FeatureHelpers
                 status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                   {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text).first =~ /#{Regexp.escape("Please press one to acknowledge this alert.")}/
               else
-                call_down_response = attempt.alert.call_down_messages.index(value).to_i
+                call_down_response = attempt.alert.becomes(HanAlert).reload.call_down_messages.index(value).to_i
                 status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                   {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)[call_down_response-1] =~ /#{Regexp.escape(value)}/
               end
@@ -85,7 +85,7 @@ module FeatureHelpers
                 status &&= (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                   {"swn" => "http://www.sendwordnow.com/notification"})).empty?
               else
-                call_down_response = attempt.alert.call_down_messages.index(value).to_i
+                call_down_response = attempt.alert.becomes(HanAlert).reload.call_down_messages.index(value).to_i
                 status &&= !(xml.search('//swn:SendNotificationInfo/swn:gwbText',
                   {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)[call_down_response-1] =~ /#{Regexp.escape(value)}/
               end

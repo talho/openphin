@@ -15,7 +15,7 @@ class Delivery < ActiveRecord::Base
   belongs_to :alert_attempt
   has_one :user, :through => :alert_attempt
   belongs_to :device
-  has_one :han_alert, :foreign_key => :alert_id, :through => :alert_attempt
+  has_one :alert, :foreign_key => :alert_id, :through => :alert_attempt
   has_one :organization, :through => :alert_attempt
   has_one :jurisdiction, :through => :alert_attempt
 
@@ -41,11 +41,11 @@ class Delivery < ActiveRecord::Base
   
   def deliver
     if jurisdiction.nil? && organization.nil?
-      device.deliver(han_alert)
+      device.deliver(alert)
     elsif jurisdiction.nil?
-      organization.deliver(han_alert)
+      organization.deliver(alert)
     else
-      jurisdiction.deliver(han_alert)
+      jurisdiction.deliver(alert)
     end
     update_attribute :delivered_at, Time.zone.now
   end

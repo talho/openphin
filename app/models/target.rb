@@ -17,6 +17,7 @@ class Target < ActiveRecord::Base
   belongs_to :creator, :class_name => 'User'
   has_and_belongs_to_many :users, :include => [:devices, :role_memberships]
 
+  after_create :update_item_type
   after_create :save_snapshot_of_users
 
 
@@ -27,7 +28,7 @@ class Target < ActiveRecord::Base
 #            inner join role_memberships on users.id=role_memberships.user_id
 #          where #{conditions_for(audience)}"
 #    )
-    user_ids = if item.class.to_s == 'HanAlert' && !item.not_cross_jurisdictional
+    user_ids = if item(true).class.to_s == 'HanAlert' && !item(true).not_cross_jurisdictional
       audience.recipients(:select => "id", :force => true).map(&:id)
     elsif ["Channel", "Document"].include?(item_type)
       audience.recipients(:force => true).with_no_hacc(:select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
@@ -40,6 +41,11 @@ class Target < ActiveRecord::Base
   #handle_asynchronously :save_snapshot_of_users
 
   private
+  # polymorphic class does not set item_type correctly when inheritance is involved
+  def update_item_type
+    update_attribute('item_type', item.class.to_s)
+  end
+
   def conditions_for(audience)
     jurs = audience.jurisdictions.map(&:id).join(",")
     if audience.roles.empty?
