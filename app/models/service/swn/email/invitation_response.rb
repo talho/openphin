@@ -1,6 +1,6 @@
 class Service::SWN::Email::InvitationNotificationResponse < ActiveRecord::Base
   set_table_name "swn_notification_response"
-  belongs_to :alert
+  belongs_to :alert, :polymorphic => true
 
   named_scope :acknowledge, :joins => :alert, :conditions => ['alerts.acknowledge = ?', true]
   named_scope :active, :joins => :alert, :conditions => ['UNIX_TIMESTAMP(alerts.created_at) + (alerts.delivery_time * 60) > UNIX_TIMESTAMP(UTC_TIMESTAMP())']

@@ -53,7 +53,7 @@ class Service::Fax < Service::Base
     
     class CampaignActivationResponse < ActiveRecord::Base
       set_table_name "tfcc_campaign_activation_response"
-      belongs_to :alert
+      belongs_to :alert, :polymorphic => true
 
       def self.build(response, alert)
         if !alert.blank?

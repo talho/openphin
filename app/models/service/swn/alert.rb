@@ -38,7 +38,7 @@ class Service::SWN::Alert < Service::SWN::Base
 
   class AlertNotificationResponse < ActiveRecord::Base
     set_table_name "swn_notification_response"
-    belongs_to :alert
+    belongs_to :alert, :polymorphic => true
 
     def self.build(response, alert)
       if !alert.blank?

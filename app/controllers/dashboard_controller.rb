@@ -37,7 +37,7 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "han"
     @user = current_user
     per_page = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 10 )
-    @alerts = present_collection(current_user.recent_alerts.size > 0 ? current_user.recent_alerts.paginate(:page => params[:page], :per_page => per_page) : [HanAlert.default_alert].paginate(:page => 1))
+    @alerts = present_collection(current_user.recent_han_alerts.size > 0 ? current_user.recent_han_alerts.paginate(:page => params[:page], :per_page => per_page) : [HanAlert.default_alert].paginate(:page => 1))
     respond_to do |format|
       format.html
       format.ext
