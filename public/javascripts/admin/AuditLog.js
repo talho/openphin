@@ -67,8 +67,8 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
         {xtype: 'tbtext', itemId: 'version_count', html: ''},
         {xtype: 'button', text: 'Show Versions', scope: this, handler: function(){ this.showRecordVersions(); } } ,
         '->',
-        {xtype: 'button', text: '< Older', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'older'); } },
-        {xtype: 'button', text: 'Newer >', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'newer'); } }
+        {xtype: 'button', itemId:'olderButton', text: '< Older', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'older'); } },
+        {xtype: 'button', itemId:'newerButton', text: 'Newer >', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'newer'); } }
       ]}),
       border: false, flex: 1,
       items: [ this.selectedVersionDisplay ]
@@ -120,18 +120,19 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     };
   },  //end constructor
 
-  getVersion: function(versionId){
-      var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN };
-      Ext.Ajax.request({
-        url: '/audits.json', method: 'POST', scope: this,
-        params: params,
-        success: function(response){
-          this.resultsLoadMask.hide();
-          var versionData = Ext.util.JSON.decode(response.responseText);
-          this.selectedVersion = versionId;
-          this.updateVersionDisplay(versionData);
-        },
-        failure: function(){ this.resultsLoadMask.hide(); }
+  getVersion: function(versionId, step){
+    this.resultsLoadMask.show();
+    var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN, 'step': step };
+    Ext.Ajax.request({
+      url: '/audits.json', method: 'POST', scope: this,
+      params: params,
+      success: function(response){
+        this.resultsLoadMask.hide();
+        var versionData = Ext.util.JSON.decode(response.responseText);
+        this.selectedVersion = versionId;
+        this.updateVersionDisplay(versionData);
+      },
+      failure: function(){ this.resultsLoadMask.hide(); }
     });
   },
 
@@ -146,12 +147,16 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     if (versionData.previous_version[0] !== 'none'){
       this.previousDisplay.update( this.versionTemplate.apply(versionData.previous_version) );
     } else {
+      this.selectedVersionPanel.getComponent('olderButton').disable();
       this.previousDisplay.update(this.versionTemplate.apply([['No older version','']]));
     }
-    if (versionData.current_version[0] !== 'none'){
+    if (versionData.current_version[0] !== 'none'){ 
       this.currentDisplay.update( this.versionTemplate.apply(versionData.current_version) );
     } else {
       this.currentDisplay.update(this.versionTemplate.apply([['Record deleted','']]));
+    }
+    if {
+            this.selectedVersionPanel.getComponent('newerButton').disable();
     }
   },
 
