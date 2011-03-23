@@ -13,7 +13,7 @@
 #
 
 class Group < Audience
-  SCOPES = ['Personal', 'Jurisdiction', 'Global', 'Organization']
+  SCOPES = ['Personal', 'Jurisdiction', 'Global', 'Organization', 'Team']
   validates_inclusion_of :scope, :in => SCOPES
   validate :at_least_one_recipient?, :unless => Proc.new{|group| group.scope == "Organization"}
 

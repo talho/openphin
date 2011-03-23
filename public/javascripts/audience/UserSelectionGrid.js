@@ -37,12 +37,13 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
         };
 
         this.user_store = new Ext.data.Store({
-            reader: new Ext.data.JsonReader({fields: this.record}),
+            reader: new Ext.data.JsonReader({idProperty: 'id', fields: this.record}),
             listeners:{
                 scope: this,
                 'add': userAddRecords,
                 'load': userAddRecords,
-                'remove': function(store, record){ this.user_search_store.removeFilter(record.get('id')); }
+                'remove': function(store, record){ this.user_search_store.removeFilter(record.get('id')); },
+                'clear': function(store, record){ this.user_search_store.filters.clear(); this.user_search_store.clearFilter(); }
             }
         });
 
@@ -62,6 +63,12 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             totalProperty: 'total',
             fields: ['name', 'email', 'id', 'title', 'extra'],
             filters: new Ext.util.MixedCollection(),
+            listeners: {
+              scope: this,
+              'load': function(){
+                this.user_search_store.filter(this.user_search_store.filters.getRange());
+              }
+            },
             addFilters: function(ids){
                 Ext.each(ids, function(id){this.filters.add(id, {property: 'id', value: new RegExp('^(?!' + id.toString() + '$).*$')})}, this);
                 this.filter(this.filters.getRange());
