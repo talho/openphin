@@ -11,7 +11,6 @@ class AuditsController < ApplicationController
   #
   # Otherwise, return a list of versions, respecting optional param 'model'
 
-
   def show
     if params[:id]   # requesting an individual record.
       attrs = get_version(params)
@@ -39,9 +38,9 @@ class AuditsController < ApplicationController
   end
 
   def get_version(params)
-    if params[:step] == 'next'
+    if params[:step] == 'newer'
       version_record = Version.find(params[:id].to_i).next
-    elsif params[:step] == 'previous'
+    elsif params[:step] == 'older'
       version_record = Version.find(params[:id].to_i).previous
     else
       version_record = Version.find(params[:id].to_i)
