@@ -111,12 +111,6 @@ class Organization < ActiveRecord::Base
 
   end
   
-  def deliver(alert)
-    raise 'not foreign' unless foreign?
-    cascade_alert = CascadeHanAlert.new(alert)
-    File.open(File.join(phin_ms_queue, "#{cascade_alert.distribution_id}.edxl"), 'w') {|f| f.write cascade_alert.to_edxl }
-  end
-  
   def email
     distribution_email
   end

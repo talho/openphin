@@ -38,7 +38,7 @@ class Target < ActiveRecord::Base
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end
 
-  #handle_asynchronously :save_snapshot_of_users
+  #handle_asynchronously :save_snapshot_of_users                                                                                                                                                                                                                         
 
   private
   # polymorphic class does not set item_type correctly when inheritance is involved

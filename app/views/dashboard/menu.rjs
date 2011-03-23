@@ -2,15 +2,18 @@
 page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
 
-  menu_config = "Application.menuConfig = [{name: 'HAN', items:[
+  menu_config = "Application.menuConfig = ["
+  Phin::Application.eval_if_plugin_present(:han) do
+    menu_config += "{name: 'HAN', items:[
                 {name: 'HAN Alerts', tab:{id: 'han_home', title:'HAN Alerts', url:'#{ hud_path }.ext', initializer: 'Talho.Alerts'}}"
-  if current_user.alerter?
-    menu_config +=",
+    if current_user.alerter?
+      menu_config +=",
                 {name: 'Send an Alert', tab:{id: 'new_han_alert', title:'Send Alert', url:'#{ new_han_alert_path }', initializer: 'Talho.SendAlert'}},
                 {name: 'Alert Log and Reporting', tab:{id: 'han_alert_log', title:'Alert Log and Reporting', url:'#{ han_alerts_path }', initializer: 'Talho.Alerts'}}"
-  end
+    end
 
-  menu_config += "]},"
+    menu_config += "]},"
+  end
 
   if current_user.has_non_public_role?
     app_menu_config = "{name: 'Apps', items: ["
