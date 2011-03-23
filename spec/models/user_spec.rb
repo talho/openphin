@@ -193,7 +193,7 @@ describe User do
     end
   end
   
-  describe "alerts_within_jurisdictions" do
+  describe "han_alerts_within_jurisdictions" do
     before(:each) do
       @jurisdiction = Factory(:jurisdiction)
       Factory(:jurisdiction).move_to_child_of(@jurisdiction)
@@ -208,7 +208,7 @@ describe User do
       role = Factory(:role, :alerter => true)
       User.assign_role(role, jurisdiction, [user])
       alert = Factory(:han_alert, :from_jurisdiction => jurisdiction)
-      user.alerts_within_jurisdictions.should include(alert)
+      user.han_alerts_within_jurisdictions.should include(alert)
     end
     
     it "should include alerts in child jurisdictions" do
@@ -220,7 +220,7 @@ describe User do
       role = Factory(:role, :alerter => true)
       User.assign_role(role, parent, [user])
       alert = Factory(:han_alert, :from_jurisdiction => child)
-      user.alerts_within_jurisdictions.should include(alert)
+      user.han_alerts_within_jurisdictions.should include(alert)
     end
     
     it "should not include alerts in other jurisdicitions" do
@@ -233,7 +233,7 @@ describe User do
       role = Factory(:role, :alerter => true)
       User.assign_role(role, jurisdiction, [user])
       alert = Factory(:han_alert, :from_jurisdiction => another)
-      user.alerts_within_jurisdictions.should_not include(alert)
+      user.han_alerts_within_jurisdictions.should_not include(alert)
     end
   end
   

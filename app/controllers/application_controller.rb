@@ -125,24 +125,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def can_view_alert
-    alert = HanAlert.find(params[:id])
-    unless !alert.nil? &&
-        (alert.recipients.include?(current_user) ||
-          alert.from_jurisdiction.self_and_ancestors.detect{|j| j.han_coordinators.include?(current_user)})
-      error = "That resource does not exist or you do not have access to it."
-      if request.xhr?
-        respond_to do |format|
-            format.html {render :text => error, :status => 404}
-            format.json {render :json => {:message => error}, :status => 404}
-        end
-      else
-        flash[:error] = error
-        redirect_to root_path
-      end
-    end
-  end
-
   def app_toolbar(toolbar, options = {})
     if toolbar.nil?
       @toolbar.blank? ? self.class.app_toolbar(toolbar, options) : @toolbar

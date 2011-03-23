@@ -27,8 +27,7 @@ class Role < ActiveRecord::Base
     :admin => 'Admin',
     :org_admin => 'OrgAdmin',
     :superadmin => "Superadmin",
-    :public => 'Public',
-    :han_coordinator => 'Health Alert and Communications Coordinator'
+    :public => 'Public'
   }
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
   
@@ -50,10 +49,6 @@ class Role < ActiveRecord::Base
 
   def self.public
     find_or_create_by_name Defaults[:public]
-  end
-
-  def self.han_coordinator
-    find_or_create_by_name Defaults[:han_coordinator]
   end
 
   named_scope :user_roles, :conditions => { :user_role => true }

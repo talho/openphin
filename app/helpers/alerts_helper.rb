@@ -1,11 +1,5 @@
 module AlertsHelper
   
-  def acknowledge_alert_button(alert)
-    if alert.ask_for_acknowledgement?
-      button_to 'Acknowledge', acknowledge_han_alert_path(alert), :method => :put
-    end
-  end
-  
   def jurisdiction_list(form, items = nil)
     items ||= [Jurisdiction.root]
     ul_class = items[0].root? ? 'check_selector' : nil
