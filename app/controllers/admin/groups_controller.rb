@@ -85,7 +85,7 @@ class Admin::GroupsController < ApplicationController
   end
 
   def update
-    group = Group.find_by_id(params[:id])
+    group = Group.find(params[:id])
     @group = group if current_user.viewable_groups.include?(group)
     if @group.nil?
       flash[:error] = "This resource does not exist or is not available."
@@ -103,18 +103,22 @@ class Admin::GroupsController < ApplicationController
           non_ids = params[:group].reject{|key,value| key =~ /_ids$/}
           ids = params[:group].reject{|key,value| !(key =~ /_ids$/)}
 
+          if params[:group][:lock_version].to_i < @group.lock_version
+            raise ActiveRecord::StaleObjectError
+          end
+          
           # If any associations have changed, manually update the locking on groups to prevent overlapping changes
-          unless @group.jurisdiction_ids.map{|j| j.to_s} == params[:group][:jurisdiction_ids].sort &&
-            @group.role_ids.map{|r| r.to_s} == params[:group][:role_ids].sort &&
-            @group.user_ids.map{|u| u.to_s} == params[:group][:user_ids].sort
+          unless @group.jurisdiction_ids.map{|j| j.to_s}.sort == params[:group][:jurisdiction_ids].sort &&
+            @group.role_ids.map{|r| r.to_s}.sort == params[:group][:role_ids].sort &&
+            @group.user_ids.map{|u| u.to_s}.sort == params[:group][:user_ids].sort
 
             @group.update_attributes! ids
-            Group.update_counters @group.id, {}
           end
           
           @group.update_attributes! non_ids
+          Group.update_counters @group.id, {}
 
-          @group = Group.find(@group.id)
+          @group.reload
           @group.recipients(:force => true)
           
           format.html do
@@ -124,11 +128,9 @@ class Admin::GroupsController < ApplicationController
           format.xml  { render :xml => @group, :status => :created, :location => @group }
           format.json  { render :json => {:group => group_hash_for_display(@group), :success => true}, :status => :created, :location => admin_group_path(@group) }
         rescue ActiveRecord::StaleObjectError
-          group = Group.find_by_id(params[:id])
-          @group = current_user.viewable_groups.include?(group) ? group : nil
           format.html {
-            flash[:error] = "The group <b>#{group.name}</b> has been recently modified by another user.  Please try again."
-            if @group.nil?
+            flash[:error] = "The group <b>#{@group.name}</b> has been recently modified by another user.  Please try again."
+            unless current_user.viewable_groups.include?(@group)
               flash[:error] = "This resource does not exist or is not available."
               redirect_to admin_groups_path
             else
@@ -136,10 +138,10 @@ class Admin::GroupsController < ApplicationController
             end
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
-          format.json  { render :text => "The group <b>#{group.name}</b> has been recently modified by another user.  Please try again.", :status => :unprocessable_entity }
+          format.json  { render :text => "The group <b>#{@group.name}</b> has been recently modified by another user.  Please try again.", :status => :unprocessable_entity }
         rescue StandardError => ex
           format.html {
-            flash[:error] = "Could not save group <b>#{group.name}</b>.  Please try again."
+            flash[:error] = "Could not save group <b>#{@group.name}</b>.  Please try again."
             redirect_to edit_admin_group_path(@group)
           }
           format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
