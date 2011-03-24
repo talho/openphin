@@ -26,12 +26,7 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :groups, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :sub_audiences, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Audience'
   has_and_belongs_to_many :parent_audiences, :foreign_key => 'sub_audience_id', :association_foreign_key => 'audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
-  has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true do
-    def with_no_hacc(options={})
-      options[:conditions] = User.merge_conditions(options[:conditions], ["audiences_recipients.is_hacc = ?", false])
-      scoped(options)
-    end
-  end
+  has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true
 
   def recipients(options={})
     refresh_recipients(options)
@@ -76,7 +71,8 @@ class Audience < ActiveRecord::Base
     a
   end
 
-  def refresh_recipients(options = {})
+  # A block can be used to pass custom functionality to refresh_recipients (See HAN plugin)
+  def refresh_recipients(options = {}, &block)
     return true unless options[:force] || self.recipients_expires.nil? || Time.now > self.recipients_expires
     
     self.update_attribute('recipients_expires', Time.now + 1.minute)
@@ -87,9 +83,7 @@ class Audience < ActiveRecord::Base
       (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
       (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
       (update_groups_recipients ? true : raise(ActiveRecord::Rollback)) unless self.groups.empty?
-      target = Target.find_by_audience_id(self.id)
-      primary_audience_jurisdictions = determine_primary_audience_jurisdictions
-      (update_han_coordinators_recipients(primary_audience_jurisdictions) ? true : raise(ActiveRecord::Rollback)) if target && target.item.class.to_s == "HanAlert"
+      yield if block_given?
     end
     return true
   end
@@ -231,46 +225,6 @@ class Audience < ActiveRecord::Base
     return jurs.flatten.uniq
   end
 
-  def update_han_coordinators_recipients(jurs)
-    alert = Target.find_by_audience_id(self.id).item
-    unless (jurs == [alert.from_jurisdiction] || jurs.blank? )           # only sending within the originating jurisdiction? no need for coordinators to be notified
-      unless ( jurs.include?(alert.from_jurisdiction)) then    # otherwise we need to include the originating jurisdiction for the calculations to work properly.
-        jurs << alert.from_jurisdiction if alert.from_jurisdiction
-      end
-      # grab all jurisdictions we're sending to, plus the from jurisdiction and get their ancestors
-      jurs = if alert.from_jurisdiction.nil?
-        jurs.map(&:self_and_ancestors).flatten.uniq - (Jurisdiction.federal)
-      else
-        selves_and_ancestors =  jurs.flatten.compact.uniq.map(&:self_and_ancestors)
-
-        # union them all, but that may give us too many ancestors
-        unioned = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|union, list| list | union}
-
-        # intersecting will give us all the ancestors in common
-        intersected = selves_and_ancestors[1..-1].inject(selves_and_ancestors.first){|intersection, list| list & intersection}
-
-        # So we grab the lowest common ancestor; ancestry at the lowest level
-        ((unioned - intersected) + [intersected.max{|x, y| x.level <=> y.level }]).compact
-      end
-
-      db = ActiveRecord::Base.connection()
-      sql = "INSERT INTO audiences_recipients (audience_id, user_id, is_hacc)"
-      sql += " SELECT DISTINCT #{id}, rm.user_id, true FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
-      sql += " WHERE rm.role_id = #{Role.han_coordinator.id}"
-      sql += " AND rm.jurisdiction_id IN (#{jurs.map(&:id).join(',')})"
-      sql += " AND ar.user_id IS NULL"
-
-      begin
-        db.execute sql
-      rescue
-        return false
-      end
-      true
-    else
-      return false
-    end
-  end
-  
   private
   def doesnt_contain_self_as_group
     def check_recursion(group)

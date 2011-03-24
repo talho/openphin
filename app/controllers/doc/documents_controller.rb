@@ -127,7 +127,7 @@ class Doc::DocumentsController < ApplicationController
     document = Document.find(params[:id])
     folder = params[:parent_id].blank? ? nil : Folder.find(params[:parent_id])
 
-    unless document.audience.recipients.with_no_hacc.include?(current_user)
+    unless document.audience.recipients.include?(current_user)
       respond_to do |format|
         format.json { render :json => { :msg => 'Current user does not have permission to modify this document.', :success => false}, :status => 401}
       end
