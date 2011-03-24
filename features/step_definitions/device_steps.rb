@@ -122,28 +122,6 @@ Then /^the following users should receive the email:$/ do |table|
   end
 end
 
-Then /^the following users should receive the alert email:$/ do |table|
-  When "delayed jobs are processed"
-
-  headers = table.headers
-  recipients = if headers.first == "roles"
-    jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
-    jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
-    jurisdiction.users.with_role(role_name)
-  end
-
-  recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
-
-  email = YAML.load(IO.read(RAILS_ROOT+"/config/email.yml"))[RAILS_ENV]
-  recipients.each do |user|
-    if email["alert"] == "SWN"
-      Then %Q{"#{user.email}" should receive the email via SWN:}, table
-    else
-      Then %Q{"#{user.email}" should receive the email:}, table
-    end
-  end
-end
-
 Then '"$email" should not receive an email' do |email|
   find_email(email).should be_nil
 end
@@ -171,23 +149,6 @@ Then "the following users should not receive any emails" do |table|
 
   recipients.each do |user|
     Then %Q{"#{user.email}" should not receive an email}
-  end
-end
-
-Then "the following users should not receive any alert emails" do |table|
-  When "delayed jobs are processed"
-  
-  headers = table.headers
-  recipients = if headers.first == "roles"
-    jurisdiction_name, role_name = headers.last.split("/").map(&:strip)
-    jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
-    jurisdiction.users.with_role(role_name)
-  elsif headers.first == "emails"
-    headers.last.split(',').map(&:strip).map{|m| User.find_by_email!(m)}
-  end
-
-  recipients.each do |user|
-    Then %Q{"#{user.email}" should not receive an email via SWN}
   end
 end
 

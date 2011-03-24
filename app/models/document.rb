@@ -44,7 +44,7 @@ class Document < ActiveRecord::Base
   end
 
   def viewable_by? (user)
-    if owner_id == user.id || audience.recipients.with_no_hacc.include?(user)
+    if owner_id == user.id || audience.recipients.include?(user)
       true
     else
       false

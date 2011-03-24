@@ -21,20 +21,23 @@ class Target < ActiveRecord::Base
   after_create :save_snapshot_of_users
 
 
-  def save_snapshot_of_users
+  # A block can be used to pass custom functionality to refresh_recipients (See HAN plugin)
+  def save_snapshot_of_users &block
 #    ActiveRecord::Base.connection.execute(
 #        "insert into targets_users (target_id, user_id)
 #          select #{self.id}, users.id from users
 #            inner join role_memberships on users.id=role_memberships.user_id
 #          where #{conditions_for(audience)}"
 #    )
-    user_ids = if item(true).class.to_s == 'HanAlert' && !item(true).not_cross_jurisdictional
-      audience.recipients(:select => "id", :force => true).map(&:id)
-    elsif ["Channel", "Document"].include?(item_type)
-      audience.recipients(:force => true).with_no_hacc(:select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
-    else
-      audience.recipients(:force => true).with_no_hacc(:select => "id").map(&:id)
+    user_ids = if block_given?
+      yield
     end
+
+    user_ids = if ["Channel", "Document"].include?(item_type)
+      audience.recipients(:force => true, :select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
+    else
+      audience.recipients(:force => true, :select => "id").map(&:id)
+    end if user_ids.blank?
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end
 
