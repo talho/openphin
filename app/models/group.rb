@@ -24,6 +24,8 @@ class Group < Audience
   validates_uniqueness_of :name, :scope => [:scope, :owner_id], :if => Proc.new {|group| group.scope == "Personal"}
   validates_uniqueness_of :name, :scope => [:scope, :owner_jurisdiction_id], :if => Proc.new {|group| group.scope == "Jurisdiction"}
 
+  has_paper_trail
+
   named_scope :personal, lambda{{:conditions => ["scope = ?", "Personal"]}}
   named_scope :jurisdictional, lambda{{:conditions => ["scope = ?", "Jurisdiction"]}}
   named_scope :global, lambda{{:conditions => ["scope = ?", "Global"]}}

@@ -35,6 +35,8 @@ class Jurisdiction < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
 
+  has_paper_trail
+
   named_scope :admin, lambda{{:include => :role_memberships,
     :conditions => { :role_memberships => { :role_id => [Role.admin.id,Role.superadmin.id] } }}}
   named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}

@@ -18,6 +18,7 @@ class Delivery < ActiveRecord::Base
   has_one :alert, :foreign_key => :alert_id, :through => :alert_attempt
   has_one :organization, :through => :alert_attempt
   has_one :jurisdiction, :through => :alert_attempt
+  has_paper_trail
 
 #  default_scope :order => "delivered_at DESC"
 

@@ -17,6 +17,8 @@ class Device < ActiveRecord::Base
   has_many :deliveries
   belongs_to :user
 
+  has_paper_trail
+
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
   named_scope :sms, :conditions => "type = 'Device::SMSDevice'"

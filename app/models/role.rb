@@ -18,6 +18,8 @@ class Role < ActiveRecord::Base
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
 
+  has_paper_trail
+
   named_scope :alerters, :conditions => {:alerter => true}
   named_scope :alphabetical, :order => 'name'
   named_scope :public, :conditions => {:approval_required => false}

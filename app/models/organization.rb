@@ -36,6 +36,8 @@ class Organization < ActiveRecord::Base
   belongs_to :contact, :class_name => "User"
   has_many :organization_requests, :dependent => :destroy
 
+  has_paper_trail
+
   validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
   def validate
     errors.add_to_base("Organization name can't be blank") if self.name.blank?

@@ -19,6 +19,8 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :role_request, :dependent => :delete
   has_one :approver, :through => :role_request
 
+  has_paper_trail
+
   validates_presence_of :jurisdiction_id
   validates_presence_of :user_id
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]

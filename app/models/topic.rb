@@ -10,7 +10,9 @@ class Topic < ActiveRecord::Base
   accepts_nested_attributes_for :comments, 
                       :reject_if => lambda { |a| a[:content].blank? }, 
                       :allow_destroy => true
-  
+
+  has_paper_trail
+
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
   
   named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}

@@ -25,6 +25,8 @@ class AlertAttempt < ActiveRecord::Base
   has_many :deliveries, :dependent => :delete_all
   has_many :devices, :through => :deliveries, :uniq => true
 
+  has_paper_trail
+
   named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
   named_scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"
   named_scope :with_device, lambda {|device_type|

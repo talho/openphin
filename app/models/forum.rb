@@ -10,6 +10,8 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   has_one   :audience, :autosave => true
+  has_paper_trail
+  
   def audiences
     # audiences/_fields excepts an array for has_many relationship
     [audience]

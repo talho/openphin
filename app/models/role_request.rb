@@ -33,6 +33,8 @@ class RoleRequest < ActiveRecord::Base
   belongs_to :jurisdiction
   has_one :role_membership, :dependent => :delete
 
+  has_paper_trail
+
   named_scope :unapproved, :conditions => ["approver_id is null"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|
     {:conditions => ["jurisdiction_id in (?)", jurisdictions],

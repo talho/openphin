@@ -16,6 +16,8 @@ class OrganizationRequest < ActiveRecord::Base
   belongs_to :organization
   belongs_to :approver, :class_name => "User", :foreign_key => "approver_id"
 
+  has_paper_trail
+
   named_scope :unapproved, :conditions => ["approved = false"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|
     {:conditions => ["jurisdiction_id in (?)", jurisdictions]}

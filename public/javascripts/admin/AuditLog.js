@@ -8,23 +8,54 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
     this.resultsStore = new Ext.data.JsonStore({
       url: '/audits.json',
-      method: 'POST',
+      method: 'GET',
+      restful: true,
       root: 'versions',
       totalProperty: 'total_count',
-      fields: [ 'id', 'item_type','item_id', 'descriptor', 'event', 'whodunnit', 'object', { name: 'created_at', type: 'date'} ],
+      fields: [ 'id', 'item_type', 'item_id', 'descriptor', 'event', 'whodunnit', { name: 'created_at', type: 'date'} ],
       autoLoad: true,
       remoteSort: true
     });
 
-    this.modelSelector = new Ext.Container({
-      //TODO: this should do a thing.
-      region: 'west', width: 100,
+
+    this.modelList = new Ext.list.ListView({
+      store: this.modelStore,
+      multiSelect: true,
+      simpleSelect: true,
+      columnSort: false,
+      loadingText: 'Fetching Log lists...',
+      emptyText: 'Error:  Could not retrieve log lists',
+      deferEmptyText: true,
+      hideHeaders: true,
+      style: { 'background-color': 'white'},
+      columns: [{ dataIndex: 'name', cls: 'jur-list-item'}]
+    });
+
+    this.modelSelector = new Ext.Panel({
+//TODO: this should do a thing.
+//TODO: fetch this list from the server
+      region: 'west', width: 200, title: 'hello',
       items: [
-       // {html: 'All', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'All', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Alerts', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Alert Attempts', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Devices', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Documents', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Folders', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Forums', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Forum Topics', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Folders', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Groups', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Invitations', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Jurisdictions', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Organizations', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Organization Reqs', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Roles', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Role Requests', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
+        {html: 'Role Memberships', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30},
         {html: 'Users', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30}
-       //{html: 'Alerts', style: {'font-size': '150%', 'font-weight': 'bold'}, height: 30}
       ]
-      //TODO: add constraints - show only creates, updates, or deletes. (checkboxes)
+//TODO: add constraints - show only creates, updates, or deletes. (checkboxes)
     });
 
     this.resultsPanel = new Ext.grid.GridPanel({
@@ -32,11 +63,13 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
       colModel: new Ext.grid.ColumnModel({
         columns: [
           { id: 'date', dataIndex: 'created_at', header: 'date', sortable: true, width: 150, renderer:Ext.util.Format.dateRenderer('H:i:s  d M Y')},
-          { id: 'model', dataIndex: 'item_type', header: 'Model', sortable: true, width: 100},
-          { id: 'descriptor', dataIndex: 'descriptor', header: 'Record', sortable: true, width: 300},
-                //TODO: fix to allow sorting by descriptor.  See also:  show history for specific record.
+          { id: 'model', dataIndex: 'item_type', header: 'Type', sortable: true, width: 100},
+          { id: 'id', dataIndex: 'item_id', header: 'ID', sortable: false, width: 30},
+          { id: 'descriptor', dataIndex: 'descriptor', header: 'Descriptor', sortable: false, width: 350},
+//TODO: fix to allow sorting by descriptor/item_id.  See also:  show history for specific record.
           { id: 'action', dataIndex: 'event', header: 'Action', sortable: true, width: 100},
-          { id: 'whodunnit', dataIndex: 'whodunnit', header: 'Whodunnit', sortable: true, width: 300}
+          { id: 'whodunnit', dataIndex: 'whodunnit', header: 'Whodunnit', sortable: true, width: 200},
+          { id: 'id', dataIndex: 'id', header: 'Ver', sortable: true, width: 30}
         ]
       }),
       tbar: new Ext.PagingToolbar({
@@ -59,6 +92,20 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.selectedVersionDisplay = new Ext.Container({ html: '' });
     this.previousDisplay = new Ext.Container({ html: '' });
     this.currentDisplay = new Ext.Container({ html: '' });
+    this.olderButton = new Ext.Button({
+      text: '< Older',
+      scope: this,
+      handler: function(){
+        this.getVersion(this.selectedVersion, 'older');
+      }
+    });
+    this.newerButton = new Ext.Button({
+      text: 'Newer >',
+      scope: this,
+      handler: function(){
+        this.getVersion(this.selectedVersion, 'newer'); 
+      }
+    });
 
     this.selectedVersionPanel = new Ext.Panel({
       autoScroll: true,
@@ -67,8 +114,8 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
         {xtype: 'tbtext', itemId: 'version_count', html: ''},
         {xtype: 'button', text: 'Show Versions', scope: this, handler: function(){ this.showRecordVersions(); } } ,
         '->',
-        {xtype: 'button', itemId:'olderButton', text: '< Older', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'older'); } },
-        {xtype: 'button', itemId:'newerButton', text: 'Newer >', scope: this, handler: function(){ this.getVersion(this.selectedVersion, 'newer'); } }
+        this.olderButton,
+        this.newerButton
       ]}),
       border: false, flex: 1,
       items: [ this.selectedVersionDisplay ]
@@ -77,7 +124,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.versionTabs = new Ext.TabPanel({
       activeTab: 0,  border: false,
       deferredRender: false,
-      // TODO: this is broken in current EXT, hidden tabs don't get updated until they've been shown once
+// TODO: this is tricky, hidden tabs don't get updated until they've been shown once
       flex: 1,
       items: [
         {title: 'Previous Version',autoScroll: true, items: [this.previousDisplay]},
@@ -124,12 +171,13 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.resultsLoadMask.show();
     var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN, 'step': step };
     Ext.Ajax.request({
-      url: '/audits.json', method: 'POST', scope: this,
+//TODO: pull this from some sort of caching store system (JsonReader)
+      url: '/audits/'+ versionId +'.json', method: 'GET', scope: this,
       params: params,
       success: function(response){
         this.resultsLoadMask.hide();
         var versionData = Ext.util.JSON.decode(response.responseText);
-        this.selectedVersion = versionId;
+        this.selectedVersion = versionData.requested_version_id;
         this.updateVersionDisplay(versionData);
       },
       failure: function(){ this.resultsLoadMask.hide(); }
@@ -138,39 +186,36 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
   updateVersionDisplay: function(versionData){
     this.selectedVersionPanel.getTopToolbar().getComponent('version_count').update(versionData.version_count + " versions total");
-    this.selectedVersionPanel.getTopToolbar().getComponent('version_label').update('Record: "' + versionData.descriptor +'"');
+    this.selectedVersionPanel.getTopToolbar().getComponent('version_label').update('Record '+ this.selectedVersion +': "' + versionData.descriptor +'"');
+
     if (versionData.requested_version[0] !== 'none'){
       this.selectedVersionDisplay.update( this.versionTemplate.apply(versionData.requested_version) );
     } else {
       this.selectedVersionDisplay.update(this.versionTemplate.apply([["Initial create/update",""]]));
     }
+
     if (versionData.previous_version[0] !== 'none'){
+      this.olderButton.enable();
       this.previousDisplay.update( this.versionTemplate.apply(versionData.previous_version) );
     } else {
-      this.selectedVersionPanel.getComponent('olderButton').disable();
-      this.previousDisplay.update(this.versionTemplate.apply([['No older version','']]));
+      this.olderButton.disable();
+      this.previousDisplay.update(this.versionTemplate.apply([['No older version available','']]));
     }
-    if (versionData.current_version[0] !== 'none'){ 
+    
+    if (versionData.current_version[0] !== 'none'){
       this.currentDisplay.update( this.versionTemplate.apply(versionData.current_version) );
     } else {
-      this.currentDisplay.update(this.versionTemplate.apply([['Record deleted','']]));
-    }
-    if {
-            this.selectedVersionPanel.getComponent('newerButton').disable();
+      this.currentDisplay.update(this.versionTemplate.apply([['This record no longer exists','']]));
     }
   },
 
   versionTemplate: new Ext.XTemplate(
-          //TODO: add header with Record info.  (total versions count, button to show only this record's versions, step though with <prev and next>
     '<table cellspacing="10">'+
     '<tpl for="."><tr><td>{[values[0]]}</td><td>{[values[1]]}</td></tr></tpl>'+
     '</table>'
   )
 });
 
-/**
- * Initializer for the AuditLog object. Returns a panel
- */
 Talho.AuditLog.initialize = function(config){
     var audit_log_panel = new Talho.AuditLog(config);
     return audit_log_panel.getPanel();

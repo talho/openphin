@@ -36,7 +36,9 @@ ActionController::Routing::Routes.draw do |map|
 
   #map.resources :alerts, :member => {:acknowledge => [:get, :put]}
 
-  map.connect "audits.:format", :controller => "audits", :action => "show", :method => :post
+  #map.connect "audits.:format", :controller => "audits", :action => "show", :method => :post
+  map.resources :audits
+  map.connect "/audits/list.:format", :controller => "audits", :action => "list", :conditions => {:method => [:options]}
 
   map.connect "/roles.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :roles

@@ -21,6 +21,9 @@ class Invitation < ActiveRecord::Base
   has_many :registered_invitees, :class_name => "Invitee", :finder_sql =>
       'SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email' +
       ' AND invitees.invitation_id = #{id}'
+  
+  has_paper_trail
+
   belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
 
