@@ -34,7 +34,8 @@ class Admin::GroupsController < ApplicationController
   def show
     group = Group.find_by_id(params[:id])
     @group = current_user.viewable_groups.include?(group) ? group : nil
-    @recipients = @group ? @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") : []
+    @recipients = @group ? @group.recipients : [] 
+    @recipients = @recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") unless params[:page].nil?
 
     respond_to do |format|
       if @group

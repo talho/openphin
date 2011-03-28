@@ -65,6 +65,11 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             filters: new Ext.util.MixedCollection(),
             listeners: {
               scope: this,
+              'beforeload': function(store, options){
+                options.params = options.params || {};
+                options.params["without_ids[]"] = store.filters.keys;
+                return true;
+              },
               'load': function(){
                 this.user_search_store.filter(this.user_search_store.filters.getRange());
               }
@@ -114,6 +119,9 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
                 pageSize: 10,
                 listeners:{
                     scope: this,
+                    'beforequery': function(qe){
+                        delete qe.combo.lastQuery;
+                    },
                     'select': function(combo, record, index){
                       if(!this.fireEvent('beforeselect', record)){
                         combo.clearValue()

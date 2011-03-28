@@ -164,6 +164,7 @@ class User < ActiveRecord::Base
     indexes email,          :sortable => true
     indexes phone,          :sortable => true
     indexes title,          :sortable => true
+    has user(:id),          :as => :user_id
     has roles(:id),         :as => :role_ids
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"

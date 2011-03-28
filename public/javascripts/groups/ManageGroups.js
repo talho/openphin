@@ -368,6 +368,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
                     this.audience_panel.load(group.jurisdictions, group.roles, group.users);
                     
                     this.create_group_form_panel.mask.hide();
+                    this.create_group_form_panel.doLayout();
                 },
                 scope: this
             });

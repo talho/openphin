@@ -296,9 +296,9 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
                             cgrid = this.roleSelectionGrid;
                         else if(type === 'group')
                             cgrid = this.groupSelectionGrid;
-
-                        if(cgrid && cgrid.rendered) {
-                            var sm = cgrid.getSelectionModel();
+                        
+                        var sm;
+                        if(cgrid && cgrid.rendered && (sm = cgrid.getSelectionModel()) && sm.grid) {
                             sm.deselectRow(cgrid.getStore().findExact('id', id));
                         }
                         else
