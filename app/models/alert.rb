@@ -45,51 +45,46 @@
 
 require 'ftools'
 
-module AlertMixin
-  module ClassMethods
-    def default_alert
-      title = "Example Alert - please click More to see the alert contents"
-      message = "This is an example of ah alert.  You can see the title above and this is the alert body.\n\nThe status lets you know if this is an actual alert or just a test alert."
-      Alert.new(:title => title, :message => message, :created_at => Time.zone.now)
-    end
-  end
+class Alert < ActiveRecord::Base
+  acts_as_MTI
 
-  def self.included(klass)
-    klass.extend ClassMethods
-    klass.instance_eval do
-      belongs_to :author, :class_name => 'User'
+  belongs_to :author, :class_name => 'User'
 
-      has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => 'targets.item_type = \'#{self.class.to_s}\'', :include => :users
-      has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
+  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => 'targets.item_type = \'#{self.class.to_s}\'', :include => :users
+  has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
 
-      has_many :alert_device_types, :foreign_key => :alert_id, :dependent => :delete_all
-      has_many :alert_attempts, :foreign_key => :alert_id, :dependent => :destroy, :include => [:user, :acknowledged_alert_device_type, :jurisdiction, :organization, :devices], :as => :alert
-      has_many :deliveries, :through => :alert_attempts
-      has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
-      has_many :acknowledged_users,
-               :source => :user,
-               :through => :alert_attempts,
-               :uniq => true,
-               :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
-      has_many :unacknowledged_users,
-               :source => :user,
-               :through => :alert_attempts,
-               :uniq => true,
-               :conditions => ["alert_attempts.acknowledged_at IS NULL"]
+  has_many :alert_device_types, :foreign_key => :alert_id, :dependent => :delete_all
+  has_many :alert_attempts, :foreign_key => :alert_id, :dependent => :destroy, :include => [:user, :acknowledged_alert_device_type, :jurisdiction, :organization, :devices], :as => :alert
+  has_many :deliveries, :through => :alert_attempts
+  has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
+  has_many :acknowledged_users,
+           :source => :user,
+           :through => :alert_attempts,
+           :uniq => true,
+           :conditions => ["alert_attempts.acknowledged_at IS NOT NULL"]
+  has_many :unacknowledged_users,
+           :source => :user,
+           :through => :alert_attempts,
+           :uniq => true,
+           :conditions => ["alert_attempts.acknowledged_at IS NULL"]
 
-      has_many :ack_logs, :class_name => 'AlertAckLog'
-      has_many :recipients, :class_name => "User", :finder_sql => 'SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id'
+  has_many :ack_logs, :class_name => 'AlertAckLog'
+  has_many :recipients, :class_name => "User", :finder_sql => 'SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id'
 
-      after_create :create_console_alert_device_type
+  after_create :create_console_alert_device_type
 
-      named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
-      named_scope :devices, {
-          :select => "DISTINCT devices.type",
-          :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
-          :conditions => "alerts.id=#{object_id}"
-      }
-      named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
-    end
+  named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
+  named_scope :devices, {
+      :select => "DISTINCT devices.type",
+      :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
+      :conditions => "alerts.id=#{object_id}"
+  }
+  named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
+
+  def self.default_alert
+    title = "Example Alert - please click More to see the alert contents"
+    message = "This is an example of ah alert.  You can see the title above and this is the alert body.\n\nThe status lets you know if this is an actual alert or just a test alert."
+    Alert.new(:title => title, :message => message, :created_at => Time.zone.now)
   end
 
 #  def superclass
@@ -131,8 +126,4 @@ module AlertMixin
   def create_console_alert_device_type
     AlertDeviceType.create!(:alert_id => self.id, :device => "Device::ConsoleDevice") unless alert_device_types.map(&:device).include?("Device::ConsoleDevice")
   end
-end
-
-class Alert < ActiveRecord::Base
-  acts_as_MTI
 end
