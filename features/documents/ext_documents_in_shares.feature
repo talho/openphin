@@ -101,7 +101,7 @@ Feature: User documents managed through shares
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Replace File"
 
-    And I attach the file "spec/fixtures/sample.wave" to "File"
+    And I attach the file "spec/fixtures/sample.wav" to "File"
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away

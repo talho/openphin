@@ -34,8 +34,7 @@ class Admin::GroupsController < ApplicationController
   def show
     group = Group.find_by_id(params[:id])
     @group = current_user.viewable_groups.include?(group) ? group : nil
-    @recipients = @group ? @group.recipients : [] 
-    @recipients = @recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") unless params[:page].nil?
+    @recipients = @group ? @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") : [] 
 
     respond_to do |format|
       if @group
@@ -192,9 +191,9 @@ class Admin::GroupsController < ApplicationController
   private
 
   def group_hash_for_display(group, recipients = nil)
-    if(recipients.nil?)
+    #if(recipients.nil?)
       recipients = group.recipients
-    end
+    #end
 
     { :name => group.name, :id => group.id, :scope => group.scope, :owner_jurisdiction => group.owner_jurisdiction_id.nil? ? nil : Jurisdiction.find(group.owner_jurisdiction_id),
       :csv_path => admin_group_path(group, :format=>:csv), :lock_version => group.lock_version,

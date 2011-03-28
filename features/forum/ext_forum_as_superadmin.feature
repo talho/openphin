@@ -324,7 +324,8 @@ Feature: Creating a forum (room)
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
     And I fill in "Topic Title" with "Measuring Time"
-    And I press "Save"
+    Then I should see "Save"
+    When I press "Save"
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
     Then I should see "Measuring Time" within ".x-grid3-cell"
