@@ -2,21 +2,17 @@
 Ext.ns('Ext.ux');
 
 Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
-    constructor: function(config){
-        Ext.applyIf(config, {
-            layout: 'hbox',
-            height: 300,
-            width: 600,
-            layoutConfig:{ align: 'stretch', padding: '5'}            
-        });
-
+    layout: 'hbox',
+    height: 300,
+    width: 600,
+    layoutConfig:{ align: 'stretch', padding: '5'}, 
+     
+    initComponent: function(){        
         this._createGridsAndStores();
 
-        Ext.apply(config, {
-             items: [ this.recipientGrid, this.audienceGrid ]
-        });
+        this.items = [ this.recipientGrid, this.audienceGrid ];
 
-        Ext.ux.AudienceDisplayPanel.superclass.constructor.call(this, config);
+        Ext.ux.AudienceDisplayPanel.superclass.initComponent.apply(this, arguments);
     },
 
     /**
@@ -50,20 +46,31 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
     loadRecipientStoreFromAjax: function(url, params, options)
     {
         options = options || {};
+        Ext.apply(params, {no_page: true});
         
-        this.recipientStore = new Ext.data.JsonStore({
+        this.recipientStore = new Ext.ux.data.PagingStore({
+          reader: new Ext.data.JsonReader({
             fields: ['name', 'id', 'profile_path'],
-            idProperty: 'id',
-            proxy: new Ext.data.HttpProxy({
-                api:{
-                    read: {url: url, method: options.method || 'POST'}
-                }                
-            })
+            idProperty: 'id'
+          }),            
+          baseParams: params,
+          proxy: new Ext.data.HttpProxy({
+              api:{
+                  read: {url: url, method: options.method || 'POST'}
+              }                
+          }),
+          listeners: {
+            'beforeload' : function(){
+              return true;
+            }
+          }
         });
 
         this.recipientGrid.reconfigure(this.recipientStore, this.recipientGrid.getColumnModel());
+        this.recipientGrid.getBottomToolbar().bindStore(this.recipientStore);
 
-        this.recipientStore.load({params: params});
+        this.recipientGrid.getBottomToolbar().doRefresh();
+        //this.recipientStore.load();
     },
 
     _createGridsAndStores: function(){
@@ -75,9 +82,11 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
             groupField: 'type'
         });
 
-        this.recipientStore = new Ext.data.JsonStore({
+        this.recipientStore = new Ext.ux.data.PagingStore({
+          reader: new Ext.data.JsonReader({
             idProperty: 'id',
             fields: ['name', 'id', 'profile_path']
+          })
         });
 
         this.recipientGrid = new Ext.grid.GridPanel({xtype: 'grid', itemId: 'recipient_grid', title: 'Recipients',
@@ -90,6 +99,10 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
             autoExpandColumn: 'name_column',
             disableSelection: true,
             loadMask: true,
+            bbar: new Ext.PagingToolbar({
+              store: this.recipientStore,
+              pageSize: 30
+            }),
             listeners:{
                 scope: this,
                 'rowclick': function(grid, rowIndex){

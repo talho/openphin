@@ -411,6 +411,7 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
 
             Ext.Ajax.request({
                 url: '/admin_groups/' + group + '.json',
+                params: {no_page: true},
                 method: 'GET',
                 success: function(response, options){
                     var group = Ext.decode(response.responseText);

@@ -34,7 +34,7 @@ class Admin::GroupsController < ApplicationController
   def show
     group = Group.find_by_id(params[:id])
     @group = current_user.viewable_groups.include?(group) ? group : nil
-    @recipients = @group ? @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") : [] 
+    @recipients = @group ? (params[:no_page] == 'true' ? @group.recipients : @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") ) : [] 
 
     respond_to do |format|
       if @group
@@ -191,12 +191,12 @@ class Admin::GroupsController < ApplicationController
   private
 
   def group_hash_for_display(group, recipients = nil)
-    #if(recipients.nil?)
+    if(recipients.nil?)
       recipients = group.recipients
-    #end
+    end
 
     { :name => group.name, :id => group.id, :scope => group.scope, :owner_jurisdiction => group.owner_jurisdiction_id.nil? ? nil : Jurisdiction.find(group.owner_jurisdiction_id),
-      :csv_path => admin_group_path(group, :format=>:csv), :lock_version => group.lock_version,
+      :csv_path => admin_group_path(group, :format=>:csv), :lock_version => group.lock_version, :total_recipients => recipients.methods.include?('total_entries') ? recipients.total_entries : recipients.count,
       :users => group.users.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } },
       :jurisdictions => group.jurisdictions.map {|jurisdiction| {:name => jurisdiction.name, :id => jurisdiction.id } },
       :roles => group.roles.map {|role| {:name => role.name, :id => role.id } },

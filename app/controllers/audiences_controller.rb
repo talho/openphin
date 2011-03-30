@@ -31,21 +31,22 @@ class AudiencesController < ApplicationController
   end
 
   def determine_recipients
-    recipients = []
-    params[:group_ids].compact.reject{|x| x.empty?}.each do |id|
-      recipients << Group.find(id).recipients(:force => true)
+    temp_recipients = []
+    ActiveRecord::Base.transaction do
+      temp_al = HanAlert.new_with_defaults( :audiences => [Audience.new({
+          :group_ids => params[:group_ids].compact.reject{|x| x.empty?}.map{ |id| id },
+          :jurisdiction_ids => params[:jurisdiction_ids].compact,
+          :role_ids => params[:role_ids].compact,
+          :user_ids => params[:user_ids].compact
+        })],
+        :title => "Test Title", :message => "Test Message", :acknowledge => false, :author_id => current_user.id,
+        :status => 'Test', :from_jurisdiction_id => params[:from_jurisdiction_id]
+      )
+      temp_al.save!
+      temp_recipients = temp_al.recipients(:force => true)
+      raise ActiveRecord::Rollback
     end
-    params[:jurisdiction_ids].compact.each do |id|
-      recipients << Jurisdiction.find(id).users unless id.blank?
-    end
-    params[:role_ids].compact.each do |id|
-      recipients << Role.find(id).users unless id.blank?
-    end
-    params[:user_ids].compact.each do |id|
-      recipients << User.find(id) unless id.blank?
-    end
-
-    render :json => recipients.flatten.map {|user| {'name' => user.display_name, 'id' => user.id, 'profile_path' => user_profile_path(user)}}.uniq
+    render :json => temp_recipients.map {|user| {'name' => user.display_name, 'id' => user.id, 'profile_path' => user_profile_path(user)}}.uniq
   end
 
   def recipients

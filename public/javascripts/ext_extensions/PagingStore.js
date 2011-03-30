@@ -439,7 +439,7 @@ Ext.reg('pagingarraystore', Ext.ux.data.PagingArrayStore);
 
 Ext.ux.data.PagingSimpleStore = Ext.ux.data.PagingArrayStore;
 Ext.reg('pagingsimplestore', Ext.ux.data.PagingSimpleStore);
-
+/*
 Ext.ux.data.PagingGroupingStore = Ext.extend(Ext.ux.data.PagingStore, Ext.copyTo({}, Ext.data.GroupingStore.prototype, [
     'constructor',
     'remoteGroup',
@@ -452,7 +452,7 @@ Ext.ux.data.PagingGroupingStore = Ext.extend(Ext.ux.data.PagingStore, Ext.copyTo
     'applyGrouping',
     'getGroupState'
 ]));
-Ext.reg('paginggroupingstore', Ext.ux.data.PagingGroupingStore);
+Ext.reg('paginggroupingstore', Ext.ux.data.PagingGroupingStore);*/
 
 Ext.ux.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
     onLoad: function (store, r, o) {

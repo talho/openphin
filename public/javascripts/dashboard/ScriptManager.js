@@ -10,7 +10,8 @@ Ext.ns("Talho");
     dominoes.rule('GroupSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/GroupSelectionGrid.js )');
     dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js /javascripts/audience/UserSelectionGrid.js');
     dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid /javascripts/audience/AudiencePanel.js');
-    dominoes.rule('AlertDetail', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
+    dominoes.rule('AudienceDisplayPanel', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js')
+    dominoes.rule('AlertDetail', 'AudienceDisplayPanel $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
     dominoes.rule('NewInvitation', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/invitations/NewInvitationBase.js');
     dominoes.rule('ProfileBase', '(( $css(/stylesheets/redesign/profile.css) )) /javascripts/profile/ProfileBase.js');
     dominoes.rule('BatchUsers', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/ext/src/widgets/grid/EditorGrid.js');
@@ -21,7 +22,7 @@ Ext.ns("Talho");
         'Talho.AlertDetail': {js:'AlertDetail'},
 
         'Talho.FindPeople': {js:'/javascripts/search/FindPeople.js'},
-        'Talho.ManageGroups': {js:'/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/xActionColumn.js AudiencePanel > /javascripts/groups/ManageGroups.js'},
+        'Talho.ManageGroups': {js:'AudienceDisplayPanel $(ext_extensions)/xActionColumn.js AudiencePanel > /javascripts/groups/ManageGroups.js'},
         'Talho.Tutorials': {js: 'AjaxPanel > /javascripts/dashboard/tutorials.js'},
         'Talho.Alerts': {js: "AjaxPanel > /javascripts/han/alerts.js"},
         'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js /javascripts/forums/forums.js"},
