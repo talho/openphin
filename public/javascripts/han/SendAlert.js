@@ -313,17 +313,19 @@ Talho.SendAlert = Ext.extend(function(){}, {
             }
             else if(this.mode === 'update' || this.mode === 'cancel')
             {
+                var alert_json = this.alert_json.alert.han_alert || this.alert_json.alert;
                 data = this.form_card.getForm().getFieldValues();
                 // look for json to handle the rest
-                data['han_alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + this.alert_json.alert.han_alert.title;
-                data['han_alert[status]'] = this.alert_json.alert.han_alert.status;
+                data['han_alert[title]'] = '[' + (this.mode === 'cancel' ? 'Cancel' : 'Update') + '] - ' + alert_json.title;
+                data['han_alert[status]'] = alert_json.status;
+                data['han_alert[from_jurisdiction_id]'] = alert_json.from_jurisdiction_id;
                 if (this.recipient_count) {
                   data['han_alert[recipient_count]'] = this.recipient_count;
                 }
                 data['han_alert[call_down_messages][]'] = [];
                 Ext.each(this.getSelectedResponders(), function(responder, index){
                     responder = responder * 1; // turn this into an int
-                    data['han_alert[call_down_messages][]'][responder - 1] = this.alert_json.alert.han_alert.call_down_messages[responder];
+                    data['han_alert[call_down_messages][]'][responder - 1] = alert_json.call_down_messages[responder];
                 }, this);
 
                 data.roles = [];
@@ -331,10 +333,10 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 data.jurisdictions = [];
                 data.groups = [];
 
-                Ext.each(this.alert_json.audiences.roles, function(r){data.roles.push({name: r.role.name, id: r.role.id, type: 'role'})});
-                Ext.each(this.alert_json.audiences.users, function(u){data.users.push({name: u.user.display_name, id: u.user.id, profile_path: '/users/' + u.user.id + '/profile', type: 'user'})});
-                Ext.each(this.alert_json.audiences.jurisdictions, function(j){data.jurisdictions.push({name: j.jurisdiction.name, id: j.jurisdiction.id, type: 'jurisdiction'})});
-                Ext.each(this.alert_json.audiences.groups, function(g){data.groups.push({name: g.group.name, id: g.group.id, type: 'group'})});
+                Ext.each(this.alert_json.audiences.roles, function(r){data.roles.push({name: (r.role || r).name, id: (r.role || r).id, type: 'role'})});
+                Ext.each(this.alert_json.audiences.users, function(u){data.users.push({name: (u.user || u).display_name, id: (u.user || u).id, profile_path: '/users/' + (u.user || u).id + '/profile', type: 'user'})});
+                Ext.each(this.alert_json.audiences.jurisdictions, function(j){data.jurisdictions.push({name: (j.jurisdiction || j).name, id: (j.jurisdiction || j).id, type: 'jurisdiction'})});
+                Ext.each(this.alert_json.audiences.groups, function(g){data.groups.push({name: (g.group || g).name, id: (g.group || g).id, type: 'group'})});
             }
             this.alert_preview.loadData(data);
         }
@@ -428,10 +430,10 @@ Talho.SendAlert = Ext.extend(function(){}, {
      * @param {Object}  response    The action response. Should decode response.responseText to get the JSON result.
      */
     alertDetailLoad_complete: function(options, success, response){
-        if(success)
+        if(success)  
         {
             this.alert_json = Ext.decode(response.responseText, true);
-            var alertInfo = this.alert_json.alert.han_alert;
+            var alertInfo = this.alert_json.alert.han_alert || this.alert_json.alert;
             var deviceTypes = this.alert_json.devices;
 
             // load the form up
