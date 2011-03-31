@@ -19,6 +19,7 @@ task :testing do
     task :migrate do
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:sync"
       run "cd #{current_path}; rake hydra:ruby:killall"
+      run "cd #{current_path}; RAILS_ENV=cucumber rake db:killall"
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:db:migrate:reset"
     end
 

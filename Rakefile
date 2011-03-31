@@ -20,6 +20,8 @@ Hydra::TestTask.new('hydra' => ['environment']) do |t|
   t.environment = 'cucumber'
 end
 
+Hydra::GlobalTask.new('db:killall')
+
 Hydra::GlobalTask.new('db:migrate:reset')
 
 Hydra::GlobalTask.new('firefox:killall')
