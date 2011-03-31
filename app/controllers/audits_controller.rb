@@ -3,154 +3,203 @@ class AuditsController < ApplicationController
   before_filter :change_include_root
   after_filter :change_include_root_back
 
-  # Returns version information.
-  # If a specific version ID is received, returns:
-  #   what changed in a specific Version,
-  #   what the changed values were in the previous version,
-  #   What values are different between this and the latest version.
-  #
-  # Otherwise, return a list of versions, respecting optional param 'model'
-
   def index
-    version_list = get_list(params)
+    version_list = get_version_list(params)
     respond_to do |format|
-        format.json { render :json => {:versions => version_list['versions'], :total_count => version_list['total_count']} }
+      format.json{ render :json => {
+        :versions => version_list['versions'],
+        :total_count => version_list['total_count'] }
+      }
     end
   end
 
   def show
-    attrs = get_version(params)
+    version = get_version(params)
     respond_to do |format|
-      # some data sent as arrays for EXT xtemplate ease-of-use
-      format.json { render :json =>  {
-              :requested_version_id => attrs['req_id'],
-              :requested_version => attrs['req'].to_a,
-              :previous_version => attrs['prev'].to_a,
-              :current_version => attrs['curr'].to_a,
-              :version_count => attrs['version_count'],
-              :descriptor => attrs['descriptor']  }
+      format.json{ render :json => {
+        :diff_list => version['diff_list'],
+        :requested_version_id => version['requested_version_id'],
+        :version_count => version['version_count'],
+        :version_index => version['version_index'],
+        :model => version['model'],
+        :event => version['event'].humanize,
+        :descriptor => version['descriptor'],
+        :newest => version['newest'],
+        :oldest => version['oldest'],
+        :deleted => version['deleted'] }
       }
+    end
+  end
+
+  def models
+    model_list = [
+        {'name' => 'Han Alerts', 'model_name' => 'HanAlert'},
+        {'name' => 'Alert Attempts', 'model_name' => 'AlertAttempts'},
+        {'name' => 'Articles', 'model_name' => 'Article'},
+        {'name' => 'Audiences', 'model_name' => 'Audience'},
+        {'name' => 'Deliveries', 'model_name' => 'Delivery'},
+        {'name' => 'Forums', 'model_name' => 'Forum'},
+        {'name' => 'Forum Topics', 'model_name' => 'Topic'},
+        {'name' => 'Groups', 'model_name' => 'Group'},
+        {'name' => 'Invitations', 'model_name' => 'Invitation'},
+        {'name' => 'Organizations', 'model_name' => 'Organization'},
+        {'name' => 'Roles', 'model_name' => 'Role'},
+        {'name' => 'Role Memberships', 'model_name' => 'RoleMembership'},
+        {'name' => 'Role Requests', 'model_name' => 'RoleRequests'},
+        {'name' => 'Users', 'model_name' => 'User'}
+      ]
+    respond_to do |format|
+      format.json{ render :json => { :models => model_list } }
     end
   end
 
   private
 
-  # for human-readablity
-  def get_version(params)
-    root_version = Version.find(params[:id].to_i)
-    if params[:step] == 'newer'
-      version_record = Version.find(params[:id].to_i).next
-    elsif params[:step] == 'older'
-      version_record = Version.find(params[:id].to_i).previous
-    else
-      version_record = root_version
-    end
-    attr = {}
-
-    # Get total versions for this record
-    attr['version_count'] = Version.find_all_by_item_type_and_item_id(root_version.item_type, root_version.item_id ).count
-
-    # Get diffs.
-    if !version_record.nil?
-      requested_version = version_record.reify
-      previous_version = version_record.previous.nil? ? nil : version_record.previous.reify
-      next_version = version_record.next.nil? ? nil : version_record.next.reify
-
-      if !previous_version.nil?
-        previous_version = previous_version.attributes
-        attr['prev'] = previous_version.diff(requested_version.attributes)
-        attr['req'] = requested_version.attributes.diff(previous_version)
-        attr['prev'] = sanitize(attr['prev'])
-      else                  #no older version, nothing to compare to.
-        attr['prev'] = ['none']
-        attr['req'] = requested_version.nil? ? ['none'] : requested_version.attributes
-      end
-      attr['req'] = sanitize(attr['req'])
-      attr['req_id'] = version_record.id
-    else                    # something's weird, maybe an empty object
-      requested_version = {}
-      attr['prev'] = ['none']
-      attr['req'] = ['none']
-    end
-    attr['descriptor'] = get_descriptor(root_version)
-    begin
-      current_version = root_version.item_type.constantize.find(root_version.item_id).attributes
-      attr['curr'] = current_version.diff(requested_version.attributes)
-      attr['curr'] = sanitize(attr['curr'])
-    rescue ActiveRecord::RecordNotFound
-      attr['curr'] = ['none']
-    end
-    return attr
-  end
-
-  def get_diffs(attr)
-
-  end
-
-  def get_list(params)
-
+  def get_version_list(params)
     # set some defaults
     params[:start] = 0 unless params[:start]
     params[:limit] = 15 unless params[:limit]
     params[:sort] = 'id' unless params[:sort]
     params[:dir] = 'DESC' unless params[:dir]
     version_list = {}
+    conditions = {}
 
-    if params[:model]
-      version_list['versions'] = Version.find(:item_type => params[:model], :order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
-      version_list['total_count'] = Version.find(:item_type => params[:model]).count
-    else
-      version_list['versions'] = Version.find(:all, :order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
-      version_list['total_count'] = Version.count
+    if params[:models] && !params['models'].delete_if{|x| x.blank?}.blank?   # checks if the models array has just a blank string, because it's messy to remove individual baseParams from an EXT store.
+      conditions['item_type'] = params[:models]
     end
+    if params[:show_versions_for]
+      selected_ver = Version.find(params[:show_versions_for])
+      conditions['item_type'] = selected_ver['item_type']
+      conditions['item_id'] = selected_ver['item_id']
+    end
+    if params[:event] && !params['event'].delete_if{|x| x.blank?}.blank?
+      conditions['event'] = params[:event]
+    end
+
+    version_list['versions'] = Version.find(:all, :conditions => conditions,:order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
+    version_list['total_count'] = Version.find(:all, :conditions => conditions).count
     version_list['versions'].each do |v|
       v['whodunnit'] = get_whodunnit(v)
-      v['descriptor'] = get_descriptor(v)
+      v['descriptor'] = get_current_descriptor(v)
       v['object'] = nil    # hacky way to strip out the data
     end
     return version_list
+  end
+
+  def get_version(params)
+    # xxx_ver refers to the Version data, xxx_rec refers to the actual exhumed record.
+    if params[:step] == 'newer'
+      req_ver = Version.find(params[:id].to_i).next
+    elsif params[:step] == 'older'
+      req_ver = Version.find(params[:id].to_i).previous
+    else
+      req_ver = Version.find(params[:id].to_i)
+    end
+    req_rec = req_ver.reify
+    req_rec = req_rec.nil? ? {} : req_rec.attributes
+
+    begin
+      next_rec = req_ver.next.reify.attributes
+    rescue NoMethodError
+    end
+    begin
+      prev_rec = req_ver.previous.reify.attributes
+    rescue NoMethodError
+    end
+
+    begin
+      curr_rec = req_ver.item_type.constantize.find(req_ver.item_id).attributes
+      record_deleted = false
+    rescue ActiveRecord::RecordNotFound
+      record_deleted = true
+    end
+
+    attrs = {}
+    all_versions = Version.find_all_by_item_type_and_item_id( req_ver.item_type, req_ver.item_id )
+    attrs['version_count'] = all_versions.count
+    attrs['version_index'] = all_versions.index(req_ver) + 1
+    attrs['requested_version_id'] = req_ver.id
+    attrs['descriptor'] = get_current_descriptor(req_ver)
+    attrs['oldest'] = req_ver.previous.nil?
+    attrs['newest'] = req_ver.next.nil?
+    attrs['deleted'] = record_deleted
+    attrs['model'] = req_ver.item_type
+    attrs['event'] = req_ver.event
+    attrs['diff_list'] = []
+
+    changed_attributes = []
+    changed_attributes += get_diff_keys(req_rec, next_rec) unless next_rec.nil?
+    changed_attributes += get_diff_keys(req_rec, prev_rec) unless prev_rec.nil?
+    changed_attributes += get_diff_keys(req_rec, curr_rec) unless curr_rec.nil?
+    changed_attributes = req_rec.keys  if changed_attributes.empty? && !req_rec.nil?
+
+    changed_attributes.uniq.each{ |a|   # yuck.
+      dif = []
+      dif.push(a)
+      dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil? ? '<i>-nil-</i>' : req_rec[a] )
+      dif.push(prev_rec.nil? ? '<i>-nil-</i>' : prev_rec[a].nil? ? '<i>-nil-</i>' : prev_rec[a] )
+      dif.push(next_rec.nil? ? '<i>-nil-</i>' : next_rec[a].nil? ? '<i>-nil-</i>' : next_rec[a] )
+      dif.push(curr_rec.nil? ? '<i>-nil-</i>' : curr_rec[a].nil? ? '<i>-nil-</i>' : curr_rec[a] )
+      attrs['diff_list'].push(dif)
+    }
+    return attrs
+  end
+
+  def get_diff_keys(record_one, record_two)
+    return record_one.diff(record_two).keys
   end
 
   def get_whodunnit(v)
     begin
         return  User.find(v.whodunnit).email
       rescue ActiveRecord::RecordNotFound
-        return 'system'
+        return 'system/unknown'
       end
   end
 
-  def descriptor_field
-    {'User' => 'display_name',
-    'RoleRequest' => 'requester_id',
-    'Alert' => 'title',
-    'Folder' => 'name',
-    'Forum' => 'name',
-    'Document' => 'file_file_name',
-    'Topic' => 'content'}
+  def descriptor_field  # TODO: This is hacky and doesn't allow for looking up associations etc.
+    {'Audience'   => 'name',        
+    'Document'    => 'file_file_name',
+    'HanAlert'    => 'title',
+    'Folder'      => 'name',
+    'Forum'       => 'name',
+    'Group'       => 'name',
+    'RoleRequest' => 'user_id',
+    'Topic'       => 'content',
+    'User'        => 'display_name'}
   end
 
-  def get_descriptor(v)
+  def get_current_descriptor(v) #finds the current version of the record and matches descriptor_field.  Falls back to
+    begin
+      desc = v.item_type.constantize.find(v.item_id)[descriptor_field[v.item_type]]
+    rescue ActiveRecord::RecordNotFound
+      begin
+        desc = v.next.reify.attributes[descriptor_field[v.item_type]]
+      rescue NoMethodError
+        desc = get_old_descriptor(v)
+      end
+    end
+    return truncate(desc.to_s, {:length => 70})
+  end
+
+  def get_old_descriptor(v)
     begin
       desc = v.reify.attributes[descriptor_field[v.item_type]]
-    rescue NoMethodError
-      begin
-        desc = v.item_type.constantize.find(v.item_id)[descriptor_field[v.item_type]]
-      rescue ActiveRecord::RecordNotFound
+      if desc.nil?
         desc = '-unknown-'
       end
-
+    rescue NoMethodError
+      desc = '-unknown-'
     end
     return desc
   end
 
   def sanitize(version_attributes)
-    # don't show the data in these elements, but do report them as changed.
+    # strip the data, but still report as changed.
     hidden_attributes = ['encrypted_password', 'salt', 'token', 'phin_oid']
     version_attributes.each do |k,v|
-      version_attributes.delete(k) if v.nil?
       version_attributes[k] = '-hidden-' if hidden_attributes.include?(k)
     end
     return version_attributes
   end
-
 end                           

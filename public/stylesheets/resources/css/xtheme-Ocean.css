@@ -1902,3 +1902,6 @@ background-image: none;
   border: 0px solid;
   padding: 5px;
 }
+.x-grid3-col-attribute-name{
+  font-weight: bold;
+}
