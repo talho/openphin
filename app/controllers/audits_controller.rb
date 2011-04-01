@@ -32,24 +32,15 @@ class AuditsController < ApplicationController
   end
 
   def models
-    model_list = [
-        {'name' => 'Han Alerts', 'model_name' => 'HanAlert'},
-        {'name' => 'Alert Attempts', 'model_name' => 'AlertAttempts'},
-        {'name' => 'Articles', 'model_name' => 'Article'},
-        {'name' => 'Audiences', 'model_name' => 'Audience'},
-        {'name' => 'Deliveries', 'model_name' => 'Delivery'},
-        {'name' => 'Forums', 'model_name' => 'Forum'},
-        {'name' => 'Forum Topics', 'model_name' => 'Topic'},
-        {'name' => 'Groups', 'model_name' => 'Group'},
-        {'name' => 'Invitations', 'model_name' => 'Invitation'},
-        {'name' => 'Organizations', 'model_name' => 'Organization'},
-        {'name' => 'Roles', 'model_name' => 'Role'},
-        {'name' => 'Role Memberships', 'model_name' => 'RoleMembership'},
-        {'name' => 'Role Requests', 'model_name' => 'RoleRequests'},
-        {'name' => 'Users', 'model_name' => 'User'}
-      ]
+    model_list = ['Han Alerts', 'Alert Attempts', 'Articles', 'Audiences',
+                  'Deliveries', 'Documents', 'Folders', 'Topics', 'Groups', 'Invitations',
+                  'Organizations', 'Roles', 'Role Memberships', 'Role Requests', 'Users']
+    models = []
+    model_list.each do |m|
+      models.push({'name' => m.titleize.pluralize, 'model_name' => m})
+    end
     respond_to do |format|
-      format.json{ render :json => { :models => model_list } }
+      format.json{ render :json => { :models => models } }
     end
   end
 
@@ -72,7 +63,7 @@ class AuditsController < ApplicationController
       conditions['item_type'] = selected_ver['item_type']
       conditions['item_id'] = selected_ver['item_id']
     end
-    if params[:event] && !params['event'].delete_if{|x| x.blank?}.blank?
+    if params[:event] && !params['event'].delete_if{|x| x.blank?}.blank?   # what ^ he said
       conditions['event'] = params[:event]
     end
 
@@ -87,7 +78,6 @@ class AuditsController < ApplicationController
   end
 
   def get_version(params)
-    # xxx_ver refers to the Version data, xxx_rec refers to the actual exhumed record.
     if params[:step] == 'newer'
       req_ver = Version.find(params[:id].to_i).next
     elsif params[:step] == 'older'
@@ -95,17 +85,11 @@ class AuditsController < ApplicationController
     else
       req_ver = Version.find(params[:id].to_i)
     end
-    req_rec = req_ver.reify
-    req_rec = req_rec.nil? ? {} : req_rec.attributes
 
-    begin
-      next_rec = req_ver.next.reify.attributes
-    rescue NoMethodError
-    end
-    begin
-      prev_rec = req_ver.previous.reify.attributes
-    rescue NoMethodError
-    end
+    req_rec = reify_and_get_attrs(req_ver)
+    req_rec = req_ver.item_type.constantize.new.attributes if req_rec.nil?
+    next_rec = reify_and_get_attrs(req_ver.next)
+    prev_rec = reify_and_get_attrs(req_ver.previous)
 
     begin
       curr_rec = req_ver.item_type.constantize.find(req_ver.item_id).attributes
@@ -128,12 +112,13 @@ class AuditsController < ApplicationController
     attrs['diff_list'] = []
 
     changed_attributes = []
-    changed_attributes += get_diff_keys(req_rec, next_rec) unless next_rec.nil?
-    changed_attributes += get_diff_keys(req_rec, prev_rec) unless prev_rec.nil?
-    changed_attributes += get_diff_keys(req_rec, curr_rec) unless curr_rec.nil?
-    changed_attributes = req_rec.keys  if changed_attributes.empty? && !req_rec.nil?
+    changed_attributes.push(get_diff_keys(req_rec, next_rec))
+    changed_attributes.push(get_diff_keys(req_rec, prev_rec))
+    changed_attributes.push(get_diff_keys(req_rec, curr_rec))
+    changed_attributes = changed_attributes.flatten.delete_if{|x| x.nil?}
+    changed_attributes = req_rec.keys if changed_attributes.empty?
 
-    changed_attributes.uniq.each{ |a|   # yuck.
+    changed_attributes.flatten.uniq.each{ |a|   # yuck.
       dif = []
       dif.push(a)
       dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil? ? '<i>-nil-</i>' : req_rec[a] )
@@ -146,7 +131,17 @@ class AuditsController < ApplicationController
   end
 
   def get_diff_keys(record_one, record_two)
-    return record_one.diff(record_two).keys
+    begin
+      return record_one.diff(record_two).keys
+    rescue NoMethodError
+    end    
+  end
+
+  def reify_and_get_attrs(v)
+    begin
+      return v.reify.attributes
+    rescue NoMethodError
+    end
   end
 
   def get_whodunnit(v)
@@ -157,16 +152,21 @@ class AuditsController < ApplicationController
       end
   end
 
-  def descriptor_field  # TODO: This is hacky and doesn't allow for looking up associations etc.
-    {'Audience'   => 'name',        
-    'Document'    => 'file_file_name',
-    'HanAlert'    => 'title',
-    'Folder'      => 'name',
-    'Forum'       => 'name',
-    'Group'       => 'name',
-    'RoleRequest' => 'user_id',
-    'Topic'       => 'content',
-    'User'        => 'display_name'}
+  def descriptor_field  # TODO: This is hacky and doesn't allow for more complicated lookups etc.  Also should default to 'name''
+    {'AlertAttempt'   => 'alert_id', # should look up alert title
+    'Article'         => 'title',
+    'Audience'        => 'name',
+    'Delivery'        => 'device_id',  # should look up device type and owner
+    'Document'        => 'file_file_name',
+    'HanAlert'        => 'title',
+    'Folder'          => 'name',
+    'Forum'           => 'name',
+    'Group'           => 'name',
+    'Invitation'      => 'name',
+    'RoleMembership'  => 'user_id', # should lookup the user name
+    'RoleRequest'     => 'user_id',    # should lookup the user name
+    'Topic'           => 'content',
+    'User'            => 'display_name'}
   end
 
   def get_current_descriptor(v) #finds the current version of the record and matches descriptor_field.  Falls back to

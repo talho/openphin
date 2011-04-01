@@ -21,8 +21,12 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
       }
     });
 
+    this.selectionCache = new Ext.data.SimpleStore({
+      fields: ['id','data']
+    });
+
     this.selectionStore =  new Ext.data.SimpleStore({
-      fields: [ 'attribute_name', 'selected_version', 'previous_version', 'next_version', 'current_version' ]
+      fields: ['attribute_name', 'selected_version', 'previous_version', 'next_version', 'current_version']
     });
 
     this.modelStore = new Ext.data.JsonStore({
@@ -91,12 +95,12 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
         columns: [
           { id: 'date', dataIndex: 'created_at', header: 'date', sortable: true, width: 130, renderer:Ext.util.Format.dateRenderer('H:i:s  d M Y')},
           { id: 'model', dataIndex: 'item_type', header: 'Type', sortable: true, width: 100},
-          { id: 'id', dataIndex: 'item_id', header: 'ID', sortable: false, width: 30},
+          { id: 'id', dataIndex: 'item_id', header: 'ID', sortable: true, width: 30},
           { id: 'descriptor', dataIndex: 'descriptor', header: 'Descriptor', sortable: false, width: 350},
                 //TODO: fix to allow sorting by descriptor/item_id.
           { id: 'action', dataIndex: 'event', header: 'Action', sortable: true, width: 50},
           { id: 'whodunnit', dataIndex: 'whodunnit', header: 'Whodunnit', sortable: true, width: 200},
-          { id: 'id', dataIndex: 'id', header: 'Ver', sortable: true, width: 30}
+          { id: 'id', dataIndex: 'id', header: 'Version', sortable: true, width: 30}
         ]
       }),
       tbar: new Ext.PagingToolbar({
@@ -120,9 +124,9 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
       store: this.selectionStore,
       colModel: new Ext.grid.ColumnModel({
         columns: [
-          { id: 'attribute-name', dataIndex: 'attribute_name', header: 'Attribute', sortable: false, width: 180 },
+          { id: 'attribute-name', dataIndex: 'attribute_name', header: 'Attribute', sortable: true, defaultWidth: 180 },
           { id: 'previous-version', dataIndex: 'previous_version', header: 'Previous Version', sortable: false, width: 180 },
-          { id: 'selected-version', dataIndex: 'selected_version', header: 'Version', sortable: false, width: 180 },          
+          { id: 'selected-version', dataIndex: 'selected_version', header: 'This Version', sortable: false, width: 180},
           { id: 'next-version', dataIndex: 'next_version', header: 'Next Version', sortable: false, width: 180 },
           { id: 'current-version', dataIndex: 'current_version', header: 'Current Version', sortable: false, width: 180 }
         ]
@@ -202,21 +206,30 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
   getVersion: function(versionId, step){
     this.resultsLoadMask.show();
-        //TODO: work up some sort of caching store system to avoid repeat queries
-    var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN, 'step': step };
-    Ext.Ajax.request({
-      url: '/audits/'+ versionId +'.json', method: 'GET', scope: this,
-      params: params,
-      success: function(response){
-        var versionData = Ext.util.JSON.decode(response.responseText);
-        this.selectedVersion = versionData.requested_version_id;
-        this.updateVersionDisplay(versionData);
-        this.selectionStore.loadData(versionData['diff_list']);
-      },
-      failure: function(){
-         this.selectedVersionPanel.getEl().mask("Server error.  Please try again.");
-      }
-    });
+    var cachedVersion = this.selectionCache.getById(versionId);
+    if (cachedVersion === undefined){
+      var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN, 'step': step };
+      Ext.Ajax.request({
+        url: '/audits/'+ versionId +'.json', method: 'GET', scope: this,
+        params: params,
+        success: function(response){
+          var versionData = Ext.util.JSON.decode(response.responseText);
+          this.selectedVersion = versionData.requested_version_id;
+          this.updateVersionDisplay(versionData);
+          this.selectionStore.loadData(versionData['diff_list']);
+          var d = new this.selectionCache.recordType(response, this.selectedVersion);
+          this.selectionCache.add(d);
+        },
+        failure: function(){  this.selectedVersionPanel.getEl().mask("Server error.  Please try again.");  }
+      });
+    } else {
+      var versionData = Ext.util.JSON.decode(cachedVersion['data'].responseText);
+      this.selectedVersion = versionData.requested_version_id;
+      this.updateVersionDisplay(versionData);
+      this.selectionStore.loadData(versionData['diff_list']);
+    }
+
+
   },
 
   checkEventBoxes: function(checkbox, checked){
@@ -239,17 +252,15 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
   },
 
   updateVersionDisplay: function(versionData){
-    var rowid = this.resultsStore.indexOfId(this.selectedVersion);
+    var version_rowid = this.resultsStore.indexOfId(this.selectedVersion);
     var sel_model = this.resultsPanel.getSelectionModel();
-    if (this.resultsStore.indexOfId(sel_model.getSelected().id) !== rowid){  // if the correct row isn't already selected
-      if ( rowid !== -1 ){
-        sel_model.selectRow(rowid, false);
-      } else {
-        sel_model.clearSelections();
-      }
+    sel_model.clearSelections();
+    if ( version_rowid !== -1 ){                 // if the correct row is visible
+      sel_model.selectRow(version_rowid, false);
     }
+
     this.versionButton.setText("Version " + versionData.version_index + " of " + versionData.version_count );
-    this.selectedVersionPanel.getTopToolbar().getComponent('version_label').update('Record '+ this.selectedVersion + ' : ' + versionData.event + ' ' + versionData.model + ' "' + versionData.descriptor +'"');
+    this.selectedVersionPanel.getTopToolbar().getComponent('version_label').update('Version '+ this.selectedVersion + ' : ' + versionData.event + ' ' + versionData.model + ' "' + versionData.descriptor +'"');
     var col_model = this.selectedVersionDisplay.getColumnModel();
     if (versionData['oldest']) {
       this.olderButton.disable();
@@ -270,6 +281,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     } else {
       col_model.setHidden( col_model.findColumnIndex('current_version') , false )
     }
+    col_model.setColumnWidth(col_model.findColumnIndex('attribute_name'), 180);   // ...and I mean it.
     this.versionButton.enable();
     this.resultsLoadMask.hide();
   },
@@ -277,13 +289,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
   showRecordVersions: function(version_id){
     this.modelList.clearSelections(true);
     this.resultsStore.load({'params': {'show_versions_for' : version_id } });
-  },
-
-  versionTemplate: new Ext.XTemplate(
-    '<table cellspacing="10">'+
-    '<tpl for="."><tr><td>{[values[0]]}</td><td>{[values[1]]}</td></tr></tpl>'+
-    '</table>'
-  )
+  }
 });
 
 Talho.AuditLog.initialize = function(config){
