@@ -14,20 +14,12 @@ class AuditsController < ApplicationController
   end
 
   def show
-    version = get_version(params)
+    versions = {}
+    versions['requested_version'] = get_version(params['id']) unless Version.find(params['id']).nil?
+    versions['next_version']      = get_version(Version.find(params['id']).next.id) unless Version.find(params['id']).next.nil?
+    versions['previous_version']  = get_version(Version.find(params['id']).previous.id) unless Version.find(params['id']).previous.nil?
     respond_to do |format|
-      format.json{ render :json => {
-        :diff_list => version['diff_list'],
-        :requested_version_id => version['requested_version_id'],
-        :version_count => version['version_count'],
-        :version_index => version['version_index'],
-        :model => version['model'],
-        :event => version['event'].humanize,
-        :descriptor => version['descriptor'],
-        :newest => version['newest'],
-        :oldest => version['oldest'],
-        :deleted => version['deleted'] }
-      }
+      format.json{ render :json => versions }
     end
   end
 
@@ -77,15 +69,8 @@ class AuditsController < ApplicationController
     return version_list
   end
 
-  def get_version(params)
-    if params[:step] == 'newer'
-      req_ver = Version.find(params[:id].to_i).next
-    elsif params[:step] == 'older'
-      req_ver = Version.find(params[:id].to_i).previous
-    else
-      req_ver = Version.find(params[:id].to_i)
-    end
-
+  def get_version(id)
+    req_ver = Version.find(id)
     req_rec = reify_and_get_attrs(req_ver)
     req_rec = req_ver.item_type.constantize.new.attributes if req_rec.nil?
     next_rec = reify_and_get_attrs(req_ver.next)
@@ -104,11 +89,11 @@ class AuditsController < ApplicationController
     attrs['version_index'] = all_versions.index(req_ver) + 1
     attrs['requested_version_id'] = req_ver.id
     attrs['descriptor'] = get_current_descriptor(req_ver)
-    attrs['oldest'] = req_ver.previous.nil?
-    attrs['newest'] = req_ver.next.nil?
+    attrs['older_id'] = req_ver.previous.id unless req_ver.previous.nil?
+    attrs['newer_id'] = req_ver.next.id unless req_ver.next.nil?
     attrs['deleted'] = record_deleted
     attrs['model'] = req_ver.item_type
-    attrs['event'] = req_ver.event
+    attrs['event'] = req_ver.event.humanize
     attrs['diff_list'] = []
 
     changed_attributes = []
