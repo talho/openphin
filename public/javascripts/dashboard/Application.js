@@ -22,7 +22,7 @@
 
 // Override default window configuration to constrain header
 Ext.override(Ext.Window, {
-  constrainHeader: true
+  constrain: true
 });
 
 // Override Ext.Container to add the findComponent function

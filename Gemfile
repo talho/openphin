@@ -43,6 +43,7 @@ group :default do
   #gem "clamav", "0.4.1"
   gem "daemons", "1.1.0"
   gem "pg", "0.10.1"
+  gem "acts-as-taggable-on", "2.0.6"
 end
 
 group :test do

@@ -13,6 +13,7 @@ GEM
     activeresource (2.3.5)
       activesupport (= 2.3.5)
     activesupport (2.3.5)
+    acts-as-taggable-on (2.0.6)
     builder (2.1.2)
     bullet (1.7.6)
     capistrano (2.5.19)
@@ -166,6 +167,7 @@ DEPENDENCIES
   activerecord (= 2.3.5)
   activeresource (= 2.3.5)
   activesupport (= 2.3.5)
+  acts-as-taggable-on (= 2.0.6)
   builder (= 2.1.2)
   bullet (= 1.7.6)
   capistrano
