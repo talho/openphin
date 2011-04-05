@@ -114,7 +114,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
         scope: this,
         'cellclick': function(grid, row){
           var record = grid.getStore().getAt(row); 
-          this.getVersion(record.id)
+          this.getVersion({'id': record.id})
         }
       }
     });
@@ -214,27 +214,65 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.selectionCache.add(rec);
   },
 
-  getVersion: function(versionId, forceRefresh){
-    this.resultsLoadMask.show();
-    if (!forceRefresh){ var cachedVersion = this.selectionCache.getById(versionId); }
-    if (cachedVersion === undefined){
-      var params = { 'id': versionId, 'authenticity_token': FORM_AUTH_TOKEN };
-      Ext.Ajax.request({
-        url: '/audits/'+ versionId +'.json', method: 'GET', scope: this,
-        params: params,
-        success: function(response){
-          var versionData = Ext.util.JSON.decode(response.responseText);
-          this.selectedVersionId = versionData['requested_version'].requested_version_id;
-          for (var v in versionData){ this.addToCache(versionData[v]); }
-          this.selectionStore.loadData(versionData['requested_version']['diff_list']);
-          this.updateVersionDisplay(versionData['requested_version']);
-        },
-        failure: function(){  this.selectedVersionPanel.getEl().mask("Server error.  Please try again.");  }
-      });
+  checkCacheAndPrefetch: function(vIds){      // accepts an array of versionIds and caches them if they aren't already.
+    for (var i = 0; i < vIds.length; i++){
+      if (vIds[i] && !this.selectionCache.getById(vIds[i])){
+        var rec = new this.selectionCache.recordType('loading', vIds[i]);
+        this.selectionCache.add(rec);
+        this.getVersion({'id': vIds[i], 'cache_only': true});
+      }
+    }
+  },
+
+  handleFetchedVersionData: function(response, options){
+    var versionData = Ext.util.JSON.decode(response.responseText);
+    this.selectedVersionId = versionData['requested_version'].requested_version_id;
+    for (var v in versionData){ this.addToCache(versionData[v]); }
+    if (!options.cache_only){
+      this.updateVersionDisplay(versionData['requested_version']);
+      this.checkCacheAndPrefetch([versionData['requested_version'].newer_id, versionData['requested_version'].older_id]);
+    }
+  },
+
+  handleCachedVersionData: function(versionData, options){
+      this.selectedVersionId = versionData.requested_version_id;
+      if (!options.cache_only){
+        this.updateVersionDisplay(versionData);
+        this.checkCacheAndPrefetch([versionData.newer_id, versionData.older_id]);
+      }
+  },
+
+  prefechInProgress: function(id){
+    if (this.selectionCache.getById(id) === 'loading'){
+      this.resultsLoadMask.show();
+      this.selectionCache.addListener('datachanged', function(){this.handleCachedVersionData(this.selectionCache.getById(id), null)}, {single: true, scope: this});
+      return true;
     } else {
-      this.selectedVersionId = cachedVersion['data'].requested_version_id;
-      this.selectionStore.loadData(cachedVersion['data']['diff_list']);
-      this.updateVersionDisplay(cachedVersion['data']);
+      return false;
+    }
+//    console.log('ajax loading? '+ this.lastVersionRequest + ' : ' + Ext.Ajax.isLoading(this.lastVersionRequest));
+//    if(Ext.Ajax.isLoading(this.lastVersionRequest)){
+//      this.resultsLoadMask.show();
+//      this.lastVersionRequest.addListener('requestcomplete', function(response){ this.handleVersionData(response), {scope: this, single: true} } );
+//      return false;
+//    } else {
+//      return true;
+//    }
+  },
+
+  getVersion: function(options){   // options:  id (required), force_refresh to ignore cached version, cache_only to fetch and cache but not update display  
+    if (!options.cache_only){ this.resultsLoadMask.show(); }
+    if (!options.force_refresh){ var cachedVersion = this.selectionCache.getById(options.id); }
+    if (cachedVersion === undefined || cachedVersion === 'loading'){
+      if (!this.prefechInProgress(options.id)){
+        this.lastVersionRequest = Ext.Ajax.request({
+          url: '/audits/'+ options.id +'.json', method: 'GET', scope: this,
+          success: function(response){ this.handleFetchedVersionData(response, options); },
+          failure: function(){ this.selectedVersionPanel.getEl().mask("Server error.  Please try again.");  }
+        });
+      }
+    } else {
+      this.handleCachedVersionData(cachedVersion['data'], options);
     }
   },
 
@@ -258,6 +296,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
   },
 
   updateVersionDisplay: function(versionData){
+    this.selectionStore.loadData(versionData.diff_list);
     var version_rowid = this.resultsStore.indexOfId(this.selectedVersionId);
     var sel_model = this.resultsPanel.getSelectionModel();
     sel_model.clearSelections();
@@ -269,7 +308,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
     if (versionData['older_id']) {
       this.olderButton.purgeListeners();
-      this.olderButton.on('click', function(){ this.getVersion(versionData['older_id'])}, this);
+      this.olderButton.on('click', function(){ this.getVersion({'id': versionData['older_id']})}, this);
       this.olderButton.enable();
       col_model.setHidden( col_model.findColumnIndex('previous_version') , false );
     } else {
@@ -279,7 +318,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
     if (versionData['newer_id']) {
       this.newerButton.purgeListeners();
-      this.newerButton.on('click', function(){ this.getVersion(versionData['newer_id']) }, this);
+      this.newerButton.on('click', function(){ this.getVersion({'id': versionData['newer_id']}) }, this);
       this.newerButton.enable();
       col_model.setHidden( col_model.findColumnIndex('next_version') , false );
     } else {
@@ -294,7 +333,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     }
     this.versionRefreshButton.enable();
     this.versionRefreshButton.purgeListeners();
-    this.versionRefreshButton.on('click', function(){ this.getVersion(this.selectedVersionId, true)}, this);
+    this.versionRefreshButton.on('click', function(){ this.getVersion({'id': this.selectedVersionId, 'force_refresh': true})}, this);
     col_model.setColumnWidth(col_model.findColumnIndex('attribute_name'), 180);   // ...and I mean it.
     this.versionButton.enable();
     this.resultsLoadMask.hide();

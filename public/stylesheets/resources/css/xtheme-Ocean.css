@@ -1903,5 +1903,8 @@ background-image: none;
   padding: 5px;
 }
 .x-grid3-col-attribute-name{
+  background-color: lightgray;
+}
+.x-grid3-col-selected-version{
   font-weight: bold;
 }

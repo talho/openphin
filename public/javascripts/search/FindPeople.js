@@ -185,7 +185,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
           { id: 'user', dataIndex: 'last_name', header: 'Search Results', sortable: true, width: 300, xtype: 'templatecolumn', tpl: this.nameColTemplate },
           { id: 'roles', dataIndex: 'role_memberships', header: 'Roles', sortable: false, width: 350, xtype: 'templatecolumn', tpl: this.rolesColTemplate }
         ]
-      }),       
+      }),
       selModel: new Ext.grid.RowSelectionModel({
         listeners: {scope:this, 'selectionchange': this.set_edit_delete_state}
       }),
