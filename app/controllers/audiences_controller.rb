@@ -52,7 +52,7 @@ class AudiencesController < ApplicationController
     audience = Audience.find(params[:audience_id])
     
     respond_to do |format|
-      format.json {render :json => audience.recipients.with_no_hacc.map{ |u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
+      format.json {render :json => audience.recipients.map{ |u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
                                       :tip => render_to_string(:partial => 'searches/extra.json', :locals => {:user => u})} } }
     end
   end
