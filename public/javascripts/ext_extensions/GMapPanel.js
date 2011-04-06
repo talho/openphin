@@ -55,7 +55,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
 
 
     mapReady: function(){
-      dominoes('$(ext_extensions)/GMapStyledMarker.js $(ext_extensions)/GMapInfoWindow.js', function(){
+      dominoes('$(ext_extensions)/GMapStyledMarker.js', function(){
         this.geocoder = new google.maps.Geocoder();
         var opts = {
           zoom: this.zoomLevel,
