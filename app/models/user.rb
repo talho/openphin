@@ -570,6 +570,10 @@ class User < ActiveRecord::Base
     [ result, rq_errors ]
   end
 
+  def to_s
+    display_name    
+  end
+
 private
 
   def assign_public_role

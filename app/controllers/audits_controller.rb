@@ -24,12 +24,12 @@ class AuditsController < ApplicationController
   end
 
   def models
-    model_list = ['Han Alerts', 'Alert Attempts', 'Articles', 'Audiences',
-                  'Deliveries', 'Documents', 'Folders', 'Topics', 'Groups', 'Invitations',
-                  'Organizations', 'Roles', 'Role Memberships', 'Role Requests', 'Users']
+    model_list = ['HanAlert', 'AlertAttempt', 'Article', 'Audience',
+                  'Delivery', 'Document', 'Folder', 'Topic', 'Group', 'Invitation',
+                  'Organization', 'Role', 'RoleMembership', 'RoleRequest', 'User']
     models = []
     model_list.each do |m|
-      models.push({'name' => m.titleize.pluralize, 'model_name' => m})
+      models.push({'model_name' => m, 'human_name' => m.titleize.pluralize})
     end
     respond_to do |format|
       format.json{ render :json => { :models => models } }
@@ -59,12 +59,16 @@ class AuditsController < ApplicationController
       conditions['event'] = params[:event]
     end
 
-    version_list['versions'] = Version.find(:all, :conditions => conditions,:order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
+    versions = Version.find(:all, :conditions => conditions,:order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
     version_list['total_count'] = Version.find(:all, :conditions => conditions).count
-    version_list['versions'].each do |v|
-      v['whodunnit'] = get_whodunnit(v)
-      v['descriptor'] = get_current_descriptor(v)
-      v['object'] = nil    # hacky way to strip out the data
+    version_list['versions'] = []
+    versions.each do |v|
+      version_attrs = v.attributes  # turn the version object to a hash to avoid attr class conflicts
+      version_attrs['whodunnit'] = get_whodunnit(v)
+      version_attrs['descriptor'] = get_current_descriptor(v)
+      version_attrs['created_at'] = v['created_at'].to_time.to_s(:standard)
+      version_attrs['object'] = nil    # hacky way to strip out the data
+      version_list['versions'].push(version_attrs)
     end
     return version_list
   end
@@ -83,18 +87,20 @@ class AuditsController < ApplicationController
       record_deleted = true
     end
 
-    attrs = {}
+    #TODO: dry this up.
+
+    version = {}
     all_versions = Version.find_all_by_item_type_and_item_id( req_ver.item_type, req_ver.item_id )
-    attrs['version_count'] = all_versions.count
-    attrs['version_index'] = all_versions.index(req_ver) + 1
-    attrs['requested_version_id'] = req_ver.id
-    attrs['descriptor'] = get_current_descriptor(req_ver)
-    attrs['older_id'] = req_ver.previous.id unless req_ver.previous.nil?
-    attrs['newer_id'] = req_ver.next.id unless req_ver.next.nil?
-    attrs['deleted'] = record_deleted
-    attrs['model'] = req_ver.item_type
-    attrs['event'] = req_ver.event.humanize
-    attrs['diff_list'] = []
+    version['version_count'] = all_versions.count
+    version['version_index'] = all_versions.index(req_ver) + 1
+    version['requested_version_id'] = req_ver.id
+    version['descriptor'] = get_current_descriptor(req_ver)
+    version['older_id'] = req_ver.previous.id unless req_ver.previous.nil?
+    version['newer_id'] = req_ver.next.id unless req_ver.next.nil?
+    version['deleted'] = record_deleted
+    version['model'] = req_ver.item_type
+    version['event'] = req_ver.event.humanize
+    version['diff_list'] = []
 
     changed_attributes = []
     changed_attributes.push(get_diff_keys(req_rec, next_rec))
@@ -103,16 +109,21 @@ class AuditsController < ApplicationController
     changed_attributes = changed_attributes.flatten.delete_if{|x| x.nil?}
     changed_attributes = req_rec.keys if changed_attributes.empty?
 
+    req_rec = sanitize_and_beautify_for_your_comfort(req_rec) unless req_rec.nil?
+    prev_rec = sanitize_and_beautify_for_your_comfort(prev_rec) unless prev_rec.nil?
+    next_rec = sanitize_and_beautify_for_your_comfort(next_rec) unless next_rec.nil?
+    curr_rec = sanitize_and_beautify_for_your_comfort(curr_rec) unless curr_rec.nil?
+
     changed_attributes.flatten.uniq.each{ |a|   # yuck.
       dif = []
       dif.push(a)
-      dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil? ? '<i>-nil-</i>' : req_rec[a] )
+      dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil?  ? '<i>-nil-</i>' : req_rec[a] )
       dif.push(prev_rec.nil? ? '<i>-nil-</i>' : prev_rec[a].nil? ? '<i>-nil-</i>' : prev_rec[a] )
       dif.push(next_rec.nil? ? '<i>-nil-</i>' : next_rec[a].nil? ? '<i>-nil-</i>' : next_rec[a] )
       dif.push(curr_rec.nil? ? '<i>-nil-</i>' : curr_rec[a].nil? ? '<i>-nil-</i>' : curr_rec[a] )
-      attrs['diff_list'].push(dif)
+      version['diff_list'].push(dif)
     }
-    return attrs
+    return version
   end
 
   def get_diff_keys(record_one, record_two)
@@ -137,29 +148,12 @@ class AuditsController < ApplicationController
       end
   end
 
-  def descriptor_field  # TODO: This is hacky and doesn't allow for more complicated lookups etc.  Also should default to 'name''
-    {'AlertAttempt'   => 'alert_id', # should look up alert title
-    'Article'         => 'title',
-    'Audience'        => 'name',
-    'Delivery'        => 'device_id',  # should look up device type and owner
-    'Document'        => 'file_file_name',
-    'HanAlert'        => 'title',
-    'Folder'          => 'name',
-    'Forum'           => 'name',
-    'Group'           => 'name',
-    'Invitation'      => 'name',
-    'RoleMembership'  => 'user_id', # should lookup the user name
-    'RoleRequest'     => 'user_id',    # should lookup the user name
-    'Topic'           => 'content',
-    'User'            => 'display_name'}
-  end
-
-  def get_current_descriptor(v) #finds the current version of the record and matches descriptor_field.  Falls back to
+  def get_current_descriptor(v) # finds the current version of the record and matches descriptor_field.  Falls back to
     begin
-      desc = v.item_type.constantize.find(v.item_id)[descriptor_field[v.item_type]]
-    rescue ActiveRecord::RecordNotFound
+      desc = v.item_type.constantize.find(v.item_id).to_s
+    rescue ActiveRecord::RecordNotFound # record deleted
       begin
-        desc = v.next.reify.attributes[descriptor_field[v.item_type]]
+        desc = v.next.reify.to_s
       rescue NoMethodError
         desc = get_old_descriptor(v)
       end
@@ -169,21 +163,24 @@ class AuditsController < ApplicationController
 
   def get_old_descriptor(v)
     begin
-      desc = v.reify.attributes[descriptor_field[v.item_type]]
-      if desc.nil?
-        desc = '-unknown-'
-      end
+      desc = v.reify.to_s.nil? ? '-unknown-' : v.reify.to_s
     rescue NoMethodError
       desc = '-unknown-'
     end
     return desc
   end
 
-  def sanitize(version_attributes)
+  def sanitize_and_beautify_for_your_comfort(version_attributes)
     # strip the data, but still report as changed.
     hidden_attributes = ['encrypted_password', 'salt', 'token', 'phin_oid']
+    date_attributes = ['created_at', 'updated_at']
+    lookup_attributes = ['alert_id', 'audience_id', 'device_id', 'user_id']
     version_attributes.each do |k,v|
-      version_attributes[k] = '-hidden-' if hidden_attributes.include?(k)
+      unless version_attributes[k].nil?
+        version_attributes[k] = '-hidden-' if hidden_attributes.include?(k)
+        version_attributes[k] = version_attributes[k].to_s(:standard) if date_attributes.include?(k)
+        version_attributes[k] = k.split('_').first.capitalize.constantize.find(v).to_s + ' (' + v.to_s + ')' if lookup_attributes.include?(k)
+      end
     end
     return version_attributes
   end

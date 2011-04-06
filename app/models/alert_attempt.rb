@@ -132,6 +132,10 @@ class AlertAttempt < ActiveRecord::Base
     super(options)
   end
 
+  def to_s
+    Alert.find(alert_id).to_s + ' to ' + User.find(user_id).to_s
+  end
+
   protected
   def generate_acknowledgment_token
     self.token = ActiveSupport::SecureRandom.hex

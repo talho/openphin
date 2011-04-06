@@ -64,6 +64,10 @@ class RoleRequest < ActiveRecord::Base
     self.destroy
   end
 
+  def to_s
+    User.find(user_id).to_s + ' for ' + Role.find(role_id).to_s + ' in ' + Jurisdiction.find(jurisdiction_id).to_s
+  end
+
 private
 
   def auto_approve_if_public_role

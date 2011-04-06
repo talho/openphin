@@ -39,4 +39,8 @@ class RoleMembership < ActiveRecord::Base
     false
   end
 
+  def to_s
+    User.find(user_id).to_s + ', ' + Role.find(role_id).to_s + ' in ' + Jurisdiction.find(jurisdiction_id).to_s
+  end
+
 end

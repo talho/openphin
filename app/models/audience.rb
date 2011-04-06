@@ -88,6 +88,10 @@ class Audience < ActiveRecord::Base
     return true
   end
 
+  def to_s
+    name.nil? ? 'anonymous' : name
+  end
+
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?

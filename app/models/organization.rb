@@ -125,6 +125,10 @@ class Organization < ActiveRecord::Base
     email_confirmed
   end
 
+  def to_s
+    name
+  end
+
   private
 
   def set_token

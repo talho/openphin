@@ -72,5 +72,9 @@ class Invitation < ActiveRecord::Base
     invitees.size - registered_users.size
   end
 
+  def to_s
+    name
+  end
+
   handle_asynchronously :deliver
 end

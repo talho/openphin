@@ -51,4 +51,8 @@ class Delivery < ActiveRecord::Base
     update_attribute :delivered_at, Time.zone.now
   end
   #handle_asynchronously :deliver
+
+  def to_s
+    Device.find(device_id).to_s + ', ' + AlertAttempt.find(alert_attempt_id).to_s
+  end
 end
