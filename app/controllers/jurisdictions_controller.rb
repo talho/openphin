@@ -31,7 +31,7 @@ class JurisdictionsController < ApplicationController
             @jurisdictions.concat(j.self_and_descendants.find(:all,:select=>'jurisdictions.id,name'))
           }
         else
-          @jurisdictions = Jurisdiction.find(:all,:select=>'id,name')
+          @jurisdictions = Jurisdiction.find(:all,:select=>'id,name',:order =>'name ASC')
         end
         render :json => {"jurisdictions"=>@jurisdictions,"expires_on"=>1.day.since.to_i*1000}
       end
