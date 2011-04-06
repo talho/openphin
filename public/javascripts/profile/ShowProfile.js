@@ -18,7 +18,6 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
     this.inner_panel  = new Ext.Panel({
       layout: 'column',
       cls: 'inner-panel',
-      id: 'snuffalupagus-inner',
       layoutConfig: {defaultMargins:'5'}
     });
 
@@ -28,7 +27,6 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
       padding: 5,
       itemId: config.id,
       cls: 'primary-panel',
-      id: 'snuffalupagus',
       closable: true,
       title: this.title,
       items: [{xtype: 'container', html: '&nbsp;', columnWidth:0.5}, this.inner_panel, {xtype: 'container', html: '&nbsp;', columnWidth:0.5}]

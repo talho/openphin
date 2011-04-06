@@ -125,7 +125,8 @@ Talho.Alerts = Ext.extend(Ext.util.Observable, {
     userLink_clicked: function(evt, elem){
         // open the user tab
         var url = Ext.get(elem).getAttribute('url');
-        Application.fireEvent('opentab', {title: 'User Profile - ' + elem.textContent, url: url, id: 'user_profile_for_' + url.match(/[0-9]*(?=\/profile)/) });
+        var user_id = url.match(/[0-9]*(?=\/profile)/);
+        Application.fireEvent('opentab', {title: 'Profile: ' + elem.textContent, user_id: user_id, id: 'user_profile_for_' + user_id, initializer: 'Talho.ShowProfile'});
     }
 });
 
