@@ -22,7 +22,7 @@ class DocumentMailer < ActionMailer::Base
   end
 
   def document_addition(document, user)
-    users = document.audience.recipients.reject{|u| u.roles.length == 1 && u.roles.include?(Role.public)}
+    users = document.audience.nil? ? [] : document.audience.recipients.reject{|u| u.roles.length == 1 && u.roles.include?(Role.public)}
     users << document.folder.owner
     users.delete(user)
 

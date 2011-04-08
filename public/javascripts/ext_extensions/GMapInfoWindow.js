@@ -15,11 +15,9 @@ Ext.ux.GMap.GMapInfoWindow = Ext.extend(Ext.Container, {
     this.holder = Ext.getBody().appendChild(Ext.DomHelper.createDom({tag: 'div', style: 'display:none;'}));
     
     if(this.autoShow)
-      this.show();
-    
+      this.show();    
     
     Ext.ux.GMap.GMapInfoWindow.superclass.initComponent.apply(this, arguments);
-    
   },
   
   domReady: function(){
