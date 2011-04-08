@@ -54,7 +54,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
 
     if current_user.is_admin?
       menu_config += "{name: 'Admin', items:[
-                      {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'#{ admin_role_requests_path }'}},
+                      {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'#{ admin_role_requests_path }', initializer: 'Talho.PendingRoleRequests'}},
                       {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }', initializer: 'Talho.ManageGroups'}},
                       {name: 'Manage Users', items: [
                           {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},

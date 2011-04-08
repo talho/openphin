@@ -41,6 +41,7 @@ Ext.ns("Talho");
         'Talho.AddUser': {js:'ProfileBase /javascripts/profile/DevicesControl.js /javascripts/profile/RolesControl.js /javascripts/profile/OrganizationsControl.js > /javascripts/admin/AddUser.js'},
         'Talho.BatchUsers': {js:'BatchUsers ProfileBase > /javascripts/admin/BatchUsers.js'},
         'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'},
+        'Talho.PendingRoleRequests': {js: "AjaxPanel > /javascripts/admin/PendingRoleRequests.js"},
         'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'},
         'Talho.BetaWindow': {js:'/javascripts/dashboard/BetaWindow.js'}
     };
