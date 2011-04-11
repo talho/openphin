@@ -48,9 +48,9 @@ Feature: Audit Log
     And I wait for the "Loading..." mask to go away
     And I explicitly click x-grid3-cell-inner "TEST ALERT"
     And I wait for the "Fetching Version Data..." mask to go away
-    When I press "Event 8 of 8" 
+    When I press "Event 4 of 4" 
     And I wait for the "Loading..." mask to go away
-    Then I should see 8 rows in grid "grid-version-results"
+    Then I should see 4 rows in grid "grid-version-results"
 
   Scenario: Step forward and backward in record history  
     Given I am logged in as "billsmith@example.com"
@@ -67,17 +67,17 @@ Feature: Audit Log
     And I wait for the "Loading..." mask to go away
     And I explicitly click x-grid3-cell-inner "TEST ALERT"
     And I wait for the "Fetching Version Data..." mask to go away
-    Then I should see "Event 8 of 8"
+    Then I should see "Event 4 of 4"
     When I press "Older"
-    Then I should see "Event 7 of 8"
+    Then I should see "Event 3 of 4"
     When I press "Older"
-    Then I should see "Event 6 of 8"
+    Then I should see "Event 2 of 4"
     When I press "Older"
-    Then I should see "Event 5 of 8"
+    Then I should see "Event 1 of 4"
     When I press "Newer"
-    Then I should see "Event 6 of 8"
+    Then I should see "Event 2 of 4"
     When I press "Newer"
-    Then I should see "Event 7 of 8"
+    Then I should see "Event 3 of 4"
 
   Scenario: View only creates, updates, or destroys
     Given I am logged in as "billsmith@example.com"
@@ -105,7 +105,7 @@ Feature: Audit Log
     And I wait for the "Loading..." mask to go away for 1 second
     And I click model-selector-list-item "Han Alerts"
     And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 8 rows in grid "grid-version-results"
+    Then I should see 4 rows in grid "grid-version-results"
     And I click model-selector-list-item "Han Alerts"
     And I click model-selector-list-item "Alert Attempts"
     And I wait for the "Loading..." mask to go away for 1 second
@@ -178,6 +178,7 @@ Feature: Audit Log
     Then I should see "TEST USER for Sous Chef in Lubbock County" in column "Descriptor" within "grid-version-results"
 
 #  Scenario: Audit log for Documents
+#    pending #document step definitions are working
 #    Given I am logged in as "billsmith@example.com"
 #    And I navigate to the ext dashboard page
 #    And I have a folder named "TESTFOLDERONE"
@@ -190,8 +191,6 @@ Feature: Audit Log
 #    And I navigate to "Admin > Audit Log"
 #    Then the "Audit Log" tab should be open
 #    And I wait for the "Loading..." mask to go away for 1 second
-#    pending #document step definitions are working
-
 
   Scenario: Audit log for Invitations
     Given I am logged in as "billsmith@example.com"
