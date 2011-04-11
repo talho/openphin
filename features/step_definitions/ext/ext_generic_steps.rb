@@ -146,6 +146,20 @@ When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_t
   end
 end
 
+When /^I explicitly click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
+  # same as above, but text must match exactly.
+  with_scope(selector) do
+    button = waiter do
+      page.find('.' + class_type, :text => /^#{button}$/)
+    end
+    if button.nil?
+      raise Capybara::ElementNotFound
+    else
+      button.click
+    end
+  end
+end
+
 When /^I wait until I have (\d*) ext menus$/ do |number|
   wait_until { page.all('.x-menu').length == number.to_i }
 end
@@ -329,10 +343,10 @@ When /^I should see "([^"]*)" within display field "([^"]*)"/ do |value, name|
   end
 end
 
-When /^I wait for the "([^\"]*)" mask to go away$/ do |mask_text|
+When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do |mask_text, wait_seconds|
   begin
     mask = page.find('.loading-indicator', :text => mask_text)
-    end_time = Time.now + 5.seconds # wait a max of 5 seconds for the mask to disappear
+    end_time = Time.now + wait_seconds.nil? ? 5.seconds : wait_seconds.to_i.seconds # wait a max of 5 seconds for the mask to disappear
     while !mask.nil? and Time.now < end_time
       mask = page.find('.loading-indicator', :text => mask_text)
     end

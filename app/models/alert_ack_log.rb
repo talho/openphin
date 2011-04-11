@@ -11,9 +11,14 @@ class AlertAckLog < ActiveRecord::Base
   validates_inclusion_of :item_type, :in => Types
   validates_presence_of :acks
   validates_presence_of :total
-  
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
+
   def acknowledged_percent
     total > 0 ? acks.to_f / total.to_f : 0.0
+  end
+
+  def to_s
+    Alert.find(alert_id).to_s + ', ' + acks.to_s + ' acks'
   end
 
   private

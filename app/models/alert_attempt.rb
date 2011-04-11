@@ -24,8 +24,7 @@ class AlertAttempt < ActiveRecord::Base
   belongs_to :acknowledged_alert_device_type, :foreign_key => :acknowledged_alert_device_type_id, :class_name => "AlertDeviceType"
   has_many :deliveries, :dependent => :delete_all
   has_many :devices, :through => :deliveries, :uniq => true
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
   named_scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"

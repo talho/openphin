@@ -14,6 +14,7 @@
 class Invitee < ActiveRecord::Base
   belongs_to :invitation
   has_one :user, :class_name => "User", :foreign_key => :email, :primary_key => :email
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   cattr_reader :per_page
   @@per_page = 20
 
@@ -31,6 +32,10 @@ class Invitee < ActiveRecord::Base
 
   def is_member?
     invitation.default_organization.members.include?(user) ? "Yes" : "No"
+  end
+
+  def to_s
+    name
   end
 
   private

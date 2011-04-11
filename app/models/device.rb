@@ -16,8 +16,7 @@
 class Device < ActiveRecord::Base
   has_many :deliveries
   belongs_to :user
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
@@ -38,10 +37,6 @@ class Device < ActiveRecord::Base
 
   def self.display_name
     'Device'
-  end
-
-  def to_s
-    self.class.display_name
   end
 
   def to_dsml(builder=nil)
@@ -69,6 +64,10 @@ class Device < ActiveRecord::Base
       entry.dsml(:attr, :name => :emergencyUseInd) {|a| a.dsml :value, emergencyUseInd}
       entry.dsml(:attr, :name => :homeInd) {|a| a.dsml :value, homeInd}
     end
+  end
+
+  def to_s
+    self.class.display_name
   end
 
   private

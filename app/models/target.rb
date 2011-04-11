@@ -16,10 +16,10 @@ class Target < ActiveRecord::Base
   belongs_to :audience, :include => [:roles, :jurisdictions, :users]
   belongs_to :creator, :class_name => 'User'
   has_and_belongs_to_many :users, :include => [:devices, :role_memberships]
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :update_item_type
   after_create :save_snapshot_of_users
-
 
   # A block can be used to pass custom functionality to refresh_recipients (See HAN plugin)
   def save_snapshot_of_users &block
@@ -39,6 +39,10 @@ class Target < ActiveRecord::Base
       audience.recipients(:force => true, :select => "id").map(&:id)
     end if user_ids.blank?
     self.user_ids = user_ids.uniq unless user_ids.empty?
+  end
+
+  def to_s
+    item_type
   end
 
   #handle_asynchronously :save_snapshot_of_users                                                                                                                                                                                                                         

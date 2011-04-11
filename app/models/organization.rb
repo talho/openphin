@@ -35,8 +35,7 @@ class Organization < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   belongs_to :contact, :class_name => "User"
   has_many :organization_requests, :dependent => :destroy
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
   def validate

@@ -10,7 +10,7 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   has_one   :audience, :autosave => true
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
   def audiences
     # audiences/_fields excepts an array for has_many relationship
@@ -103,6 +103,10 @@ class Forum < ActiveRecord::Base
   def self.per_page
     # for paginate
     10
+  end
+
+  def to_s
+    name
   end
 
   private

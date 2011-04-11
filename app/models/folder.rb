@@ -40,7 +40,7 @@ class Folder < ActiveRecord::Base
   has_many :folder_permissions
   has_many :authors, :through => :folder_permissions, :source => 'user', :conditions => "permission = 1"
   has_many :admins, :through => :folder_permissions, :source => 'user', :conditions => 'permission = 2'
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def users
     User.scoped :joins => ', audiences_recipients, folders', :conditions => ['audiences_recipients.user_id = users.id and audiences_recipients.audience_id = folders.audience_id and folders.id = ?', self.id]

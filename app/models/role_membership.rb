@@ -18,8 +18,7 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :user 
   belongs_to :role_request, :dependent => :delete
   has_one :approver, :through => :role_request
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   validates_presence_of :jurisdiction_id
   validates_presence_of :user_id

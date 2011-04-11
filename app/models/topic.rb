@@ -11,7 +11,7 @@ class Topic < ActiveRecord::Base
                       :reject_if => lambda { |a| a[:content].blank? }, 
                       :allow_destroy => true
 
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
   
@@ -55,6 +55,10 @@ class Topic < ActiveRecord::Base
   
   def dest_forum_id
     forum_id
+  end
+
+  def to_s
+    name
   end
 
   private

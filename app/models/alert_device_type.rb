@@ -11,6 +11,7 @@
 
 class AlertDeviceType < ActiveRecord::Base
   belongs_to :alert, :polymorphic => true
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :update_alert_type
 

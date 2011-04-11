@@ -17,13 +17,14 @@
 class Document < ActiveRecord::Base
 
   has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
-  has_paper_trail
+
   validates_attachment_presence :file
   validate_on_create :validate_mime
   validate_on_create :validate_extension
   validate_on_create :validate_virus
 
   has_one :audience, :through => :folder
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
     
   belongs_to :user
   belongs_to :folder

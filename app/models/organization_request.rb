@@ -15,8 +15,7 @@ class OrganizationRequest < ActiveRecord::Base
   belongs_to :jurisdiction
   belongs_to :organization
   belongs_to :approver, :class_name => "User", :foreign_key => "approver_id"
-
-  has_paper_trail
+#  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :unapproved, :conditions => ["approved = false"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|
@@ -43,4 +42,9 @@ class OrganizationRequest < ActiveRecord::Base
   def deny!
     self.destroy
   end
+
+  def to_s
+    Organization.find(organization_id).to_s + ' in ' + Jurisdiction.find(jurisdiction_id)
+  end
+
 end

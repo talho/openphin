@@ -20,9 +20,8 @@ class Invitation < ActiveRecord::Base
       ' AND invitees.invitation_id = #{id} AND users.email_confirmed = true'
   has_many :registered_invitees, :class_name => "Invitee", :finder_sql =>
       'SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email' +
-      ' AND invitees.invitation_id = #{id}'
-  
-  has_paper_trail
+      ' AND invitees.invitation_id = #{id}'  
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"

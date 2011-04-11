@@ -14,8 +14,7 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   belongs_to :user
   belongs_to :approver, :class_name => "User", :foreign_key => "approver_id"
   belongs_to :requester, :class_name => "User", :foreign_key => "requester_id"
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   attr_protected :approver_id
 
@@ -48,6 +47,10 @@ class OrganizationMembershipRequest < ActiveRecord::Base
       return true unless invitation.invitees.find_by_email(user.email).nil?
     end
     return false
+  end
+
+  def to_s
+    User.find(requester_id).to_s + ' in ' + Organization.find(organization_id).to_s
   end
 
   private

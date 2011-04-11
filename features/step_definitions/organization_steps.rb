@@ -7,8 +7,9 @@ end
 
 Given /^there is an unapproved "([^\"]*)" organization with "([^\"]*)" as the contact$/ do |name, email|
 	contact = User.find_by_email(email) || Factory(:user, :email => email)
-	Factory(:organization, :name => name, :approved => false, :contact_email => email)
+	Factory(:organization, :name => name, :approved => false)
 end
+
 Given "there is an unapproved $name organization" do |name|
 	contact=Factory(:user)
 	Given "there is an unapproved #{name} organization with \"#{contact.email}\" as the contact"
@@ -31,6 +32,12 @@ Given /^the organization "([^\"]*)" has been approved$/ do |org_name|
   org=Organization.find_by_name(org_name)
   org.approved = true
   org.save!
+end
+
+Given /^"([^"]*)" has requested membership in organization "([^"]*)"$/ do |email, orgname|
+  user = User.find_by_email(email)
+  org = Organization.find_or_create_by_name(orgname)
+  OrganizationMembershipRequest.new(:organization_id => org.id, :user_id => user.id, :requester_id => user.id).save!
 end
 
 # When 'I approve the "([^\"]*)" membership for "$email"' do |org_name, email|

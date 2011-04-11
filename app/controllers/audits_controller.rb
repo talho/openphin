@@ -24,9 +24,9 @@ class AuditsController < ApplicationController
   end
 
   def models
-    model_list = ['HanAlert', 'AlertAttempt', 'Article', 'Audience',
-                  'Delivery', 'Document', 'Folder', 'Topic', 'Group', 'Invitation',
-                  'Organization', 'Role', 'RoleMembership', 'RoleRequest', 'User']
+    model_list = ['AlertAttempt', 'AlertDeviceType', 'AlertAckLog', 'Article', 'Audience', 'DelayedJobCheck', 'Delivery', 'Device',
+                  'Document', 'Favorite', 'Folder', 'FolderPermission', 'Forum', 'Group', 'HanAlert', 'Invitation','Invitee', 'Jurisdiction',
+                  'Organization', 'OrganizationMembershipRequest', 'Role', 'RoleMembership', 'RoleRequest', 'Target', 'Topic', 'User']
     models = []
     model_list.each do |m|
       models.push({'model_name' => m, 'human_name' => m.titleize.pluralize})
@@ -41,7 +41,7 @@ class AuditsController < ApplicationController
   def get_version_list(params)
     # set some defaults
     params[:start] = 0 unless params[:start]
-    params[:limit] = 15 unless params[:limit]
+    params[:limit] =  30 unless params[:limit]
     params[:sort] = 'id' unless params[:sort]
     params[:dir] = 'DESC' unless params[:dir]
     version_list = {}
@@ -65,7 +65,7 @@ class AuditsController < ApplicationController
     versions.each do |v|
       version_attrs = v.attributes  # turn the version object to a hash to avoid attr class conflicts
       version_attrs['whodunnit'] = get_whodunnit(v)
-      version_attrs['descriptor'] = get_current_descriptor(v)
+      version_attrs['item_desc'] = v['item_desc']
       version_attrs['created_at'] = v['created_at'].to_time.to_s(:standard)
       version_attrs['object'] = nil    # hacky way to strip out the data
       version_list['versions'].push(version_attrs)
@@ -88,13 +88,12 @@ class AuditsController < ApplicationController
     end
 
     #TODO: dry this up.
-
     version = {}
-    all_versions = Version.find_all_by_item_type_and_item_id( req_ver.item_type, req_ver.item_id )
+    all_versions = Version.find(:all, :conditions => {:item_type => req_ver.item_type, :item_id => req_ver.item_id }, :order => 'id ASC' )
     version['version_count'] = all_versions.count
     version['version_index'] = all_versions.index(req_ver) + 1
     version['requested_version_id'] = req_ver.id
-    version['descriptor'] = get_current_descriptor(req_ver)
+    version['descriptor'] = req_ver.item_desc
     version['older_id'] = req_ver.previous.id unless req_ver.previous.nil?
     version['newer_id'] = req_ver.next.id unless req_ver.next.nil?
     version['deleted'] = record_deleted
@@ -148,38 +147,19 @@ class AuditsController < ApplicationController
       end
   end
 
-  def get_current_descriptor(v) # finds the current version of the record and matches descriptor_field.  Falls back to
-    begin
-      desc = v.item_type.constantize.find(v.item_id).to_s
-    rescue ActiveRecord::RecordNotFound # record deleted
-      begin
-        desc = v.next.reify.to_s
-      rescue NoMethodError
-        desc = get_old_descriptor(v)
-      end
-    end
-    return truncate(desc.to_s, {:length => 70})
-  end
-
-  def get_old_descriptor(v)
-    begin
-      desc = v.reify.to_s.nil? ? '-unknown-' : v.reify.to_s
-    rescue NoMethodError
-      desc = '-unknown-'
-    end
-    return desc
-  end
-
   def sanitize_and_beautify_for_your_comfort(version_attributes)
     # strip the data, but still report as changed.
     hidden_attributes = ['encrypted_password', 'salt', 'token', 'phin_oid']
-    date_attributes = ['created_at', 'updated_at']
-    lookup_attributes = ['alert_id', 'audience_id', 'device_id', 'user_id']
+    date_attributes = ['created_at', 'updated_at', 'file_updated_at']
+    lookup_attributes = {'alert_id' => Alert, 'alert_attempt_id' => AlertAttempt, 'approver_id' => User, 'audience_id' => Audience, 'author_id' => User,
+                         'device_id' => Device, 'folder_id' => Folder, 'forum_id' => Forum, 'from_jurisdiction_id' => Jurisdiction, 'group_id' => Group,
+                         'invitation_id' => Invitation, 'jurisdiction_id' => Jurisdiction, 'organization_id' => Organization, 'owner_id' => User,
+                         'parent_id' => Jurisdiction, 'poster_id' => User, 'requester_id' => User, 'role_id' => Role, 'user_id' => User}
     version_attributes.each do |k,v|
       unless version_attributes[k].nil?
         version_attributes[k] = '-hidden-' if hidden_attributes.include?(k)
         version_attributes[k] = version_attributes[k].to_s(:standard) if date_attributes.include?(k)
-        version_attributes[k] = k.split('_').first.capitalize.constantize.find(v).to_s + ' (' + v.to_s + ')' if lookup_attributes.include?(k)
+        version_attributes[k] = !lookup_attributes[k].find_by_id(v).nil? ? v.to_s + ' (' + lookup_attributes[k].find(v).to_s + ')' : '-deleted-' if lookup_attributes.include?(k) 
       end
     end
     return version_attributes

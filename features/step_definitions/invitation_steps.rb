@@ -1,6 +1,6 @@
 Given /^an Invitation "([^\"]*)" exists with:$/ do |name, table|
   subject = table.rows_hash["Subject"]
-  organization = Organization.find_by_name(table.rows_hash["Organization"])
+  organization = Organization.find_or_create_by_name(table.rows_hash["Organization"])
   body = table.rows_hash["Body"]
   Invitation.create!(:name=>name,:subject=>subject,:organization_id=>organization.id,:body=>body,:author=>current_user)
 end

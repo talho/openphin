@@ -4,11 +4,11 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
   constructor: function(config){
     Talho.AuditLog.superclass.constructor.call(this, config);
 
-    this.RESULTS_PAGE_SIZE = 20;
+    this.RESULTS_PAGE_SIZE = 30;
 
     this.resultsStore = new Ext.data.JsonStore({ // Stores the main list of versions
       url: '/audits.json', method: 'GET', restful: true, root: 'versions', totalProperty: 'total_count', autoLoad: true, remoteSort: true,
-      fields: [ 'id', 'item_type', 'item_id', 'descriptor', 'event', 'whodunnit', 'created_at' ],
+      fields: [ 'id', 'item_type', 'item_id', 'item_desc', 'event', 'whodunnit', 'created_at' ],
       listeners: { scope: this, 'beforeload' : this.applyModelSelections  }
     });
 
@@ -21,7 +21,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.modelList = new Ext.list.ListView({
       region: 'center', store: this.modelStore, multiSelect: true, simpleSelect:true, columnSort: false, hideHeaders: true, style: { 'background-color': 'white'},
       loadingText: 'Fetching list...',  emptyText: 'Error:  Could not retrieve list', deferEmptyText: true,
-      columns: [{ dataIndex: 'human_name', cls: 'upload-audience-list-item'}],
+      columns: [{ dataIndex: 'human_name', cls: 'model-selector-list-item'}],
       listeners: { scope: this, 'selectionchange' : function(){ this.resultsStore.load(); } }
     });
 
@@ -35,7 +35,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     });
 
     this.selectorPanel = new Ext.Panel({
-      autoScroll: true, region: 'west', width: 200, margins: '5 5 0 5', layout: 'border',
+      cls: 'panel-version-selector', autoScroll: true, region: 'west', width: 200, margins: '5 5 0 5', layout: 'border',
       tbar: new Ext.Toolbar({items: [
         {xtype: 'tbtext', name: 'hdr', html: 'Log Filters'}, '->',
         {xtype: 'button', text: 'Reset', scope: this, handler: function(){ (this.modelList.getSelectionCount() == 0) ? this.modelList.fireEvent('selectionchange') : this.modelList.clearSelections();  }}
@@ -44,14 +44,13 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     });
 
     this.resultsPanel = new Ext.grid.GridPanel({
-      loadMask: true, region: 'center',  margins: '5 5 0 0',  store: this.resultsStore,
+      cls: 'grid-version-results', loadMask: true, region: 'center',  margins: '5 5 0 0',  store: this.resultsStore,
       colModel: new Ext.grid.ColumnModel({
         columns: [
           { id: 'date', dataIndex: 'created_at', header: 'date', sortable: true, width: 130},
           { id: 'model', dataIndex: 'item_type', header: 'Type', sortable: true, width: 100},
           { id: 'id', dataIndex: 'item_id', header: 'ID', sortable: true, width: 30},
-          { id: 'descriptor', dataIndex: 'descriptor', header: 'Descriptor', sortable: false, width: 330},
-                //TODO: fix to allow sorting by descriptor/item_id.
+          { id: 'descriptor', dataIndex: 'item_desc', header: 'Descriptor', sortable: true, width: 330},
           { id: 'action', dataIndex: 'event', header: 'Action', sortable: true, width: 50},
           { id: 'whodunnit', dataIndex: 'whodunnit', header: 'Whodunnit', sortable: true, width: 200},
           { id: 'id', dataIndex: 'id', header: 'Event ID', sortable: true, width: 60}
@@ -67,7 +66,7 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     });
 
     this.selectedVersionDisplay = new Ext.grid.GridPanel({
-      viewConfig: { forceFit: true }, store: this.selectionStore,
+      cls: 'grid-version-display', viewConfig: { forceFit: true }, store: this.selectionStore,
       colModel: new Ext.grid.ColumnModel({
         columns: [
           { id: 'attribute-name', dataIndex: 'attribute_name', header: 'Attribute', sortable: true, defaultWidth: 180 },
@@ -85,8 +84,8 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
     this.versionRefreshButton = new Ext.Button({ text: 'Force Refresh', disabled: true });
 
     this.selectedVersionPanel = new Ext.Panel({
-      region: 'south', height: 200, layout: 'fit', margins: '0 5 5 5',  autoScroll: true,  border: false, split: true,
-      tbar: new Ext.Toolbar({items: [
+      cls: 'panel-version-display', region: 'south', height: 250, layout: 'fit', margins: '0 5 5 5',  autoScroll: true,  border: false, split: true,
+      tbar: new Ext.Toolbar({ items: [
         {xtype: 'tbtext', itemId: 'version_label', html: ''}, {xtype: 'tbtext', itemId: 'version_count', html: ''}, '->',
         this.versionButton, this.versionRefreshButton, this.olderButton, this.newerButton
       ]}),

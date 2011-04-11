@@ -25,6 +25,15 @@ When /^I select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, with
   end
 end
 
+When /^I explicitly select the "([^"]*)" grid row(?: within "([^"]*)")?$/ do |content, within_selector|
+  # similar to 'I select the "derp" grid row' except this expects an exact string match
+  with_scope(within_selector) do
+    waiter do
+      page.find(".x-grid3-row", :text => /^#{content}$/).click
+    end
+  end
+end
+
 When /^I select the "([^"]*)" grid cell(?: within "([^"]*)")?$/ do |content, within_selector|
   # we want to find the row with the content, and get the div that's a few levels up
   with_scope(within_selector) do
@@ -61,6 +70,29 @@ Then /^I should (not )?see "([^\"]*)" in grid row ([0-9]*)(?: column ([a-zA-Z0-9
     end
   end
 end
+
+Then /^I should see (\d+) rows? in grid "([^\"]*)"$/ do |row_count, grid_class|
+  waiter do
+    @grid = page.find(:xpath, ".//div[contains(@class, '#{grid_class}')] ")
+  end
+  @grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-row ')]").count.to_s.should == row_count
+end
+
+Then /^I should (not )?see "([^"]*)" in column "([^"]*)" within "([^"]*)"$/ do |not_exists, text, column, grid_class|
+  waiter do
+    @grid = page.find(:xpath, ".//div[contains(@class, '#{grid_class}')] ")
+  end
+  cell_values = []
+  if @grid
+    headers = @grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-header ')]")
+    rows = @grid.all(:xpath, ".//div[contains(concat(' ', @class, ' '), ' x-grid3-row ')]")
+    rows.each do |r|
+      cell_values.push(r.text.split("\n")[headers.first.text.split("\n").index(column)] )
+    end
+  end
+  not_exists.nil? ? cell_values.include?(text) : !cell_values.include?(text)
+end
+
 
 When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ do |content, not_exists, icon_name|
   # we want to find the row with the content, and get the div that's a few levels up

@@ -32,8 +32,7 @@ class RoleRequest < ActiveRecord::Base
   belongs_to :role,       :class_name => "Role", :foreign_key => "role_id"
   belongs_to :jurisdiction
   has_one :role_membership, :dependent => :delete
-
-  has_paper_trail
+  has_paper_trail  :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
   named_scope :in_jurisdictions, lambda { |jurisdictions|

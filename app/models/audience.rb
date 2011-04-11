@@ -27,6 +27,7 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :sub_audiences, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Audience'
   has_and_belongs_to_many :parent_audiences, :foreign_key => 'sub_audience_id', :association_foreign_key => 'audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def recipients(options={})
     refresh_recipients(options)

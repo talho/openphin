@@ -34,8 +34,7 @@ class Jurisdiction < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :admin, lambda{{:include => :role_memberships,
     :conditions => { :role_memberships => { :role_id => [Role.admin.id,Role.superadmin.id] } }}}

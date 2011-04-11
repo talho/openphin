@@ -118,7 +118,7 @@ class User < ActiveRecord::Base
     
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
 
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def editable_by?(other_user)
     self == other_user || other_user.is_admin_for?(self.jurisdictions)

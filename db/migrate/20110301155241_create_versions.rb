@@ -5,10 +5,11 @@ class CreateVersions < ActiveRecord::Migration
       t.integer  :item_id,   :null => false
       t.string   :event,     :null => false
       t.string   :whodunnit
+      t.string   :item_desc
       t.text     :object
       t.datetime :created_at
     end
-    add_index :versions, [:item_type, :item_id]
+    add_index :versions, [:item_type, :item_id, :item_desc]
   end
 
   def self.down

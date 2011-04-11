@@ -17,8 +17,7 @@ class Role < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
-
-  has_paper_trail
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :alerters, :conditions => {:alerter => true}
   named_scope :alphabetical, :order => 'name'
