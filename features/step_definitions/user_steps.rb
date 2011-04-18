@@ -17,9 +17,9 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
   end
   roles = role.split(',').map(&:strip)
   roles.each do |r|
-    role_obj = Role.find_by_name(role.to_s)
-    role_obj = Role.create_by_name_and_application(role.to_s, 'phin') if role_obj.nil?
-    role_obj.update_attribute('approval_required', true) unless role.to_s == "Public"
+    role_obj = Role.find_by_name(r.to_s)
+    role_obj = Role.create_by_name_and_application(r.to_s, 'phin') if role_obj.nil?
+    role_obj.update_attribute('approval_required', true) unless r.to_s == "Public"
     unless r == "Public"
       unless RoleMembership.already_exists?(user, role_obj, jur_obj)
         #force creation of the role membership.  this leaves the request dangling.
