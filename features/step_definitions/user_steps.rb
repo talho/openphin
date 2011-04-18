@@ -2,7 +2,7 @@ Given "a user named $name" do |name|
   first_name, last_name = name.split
   User.find_by_first_name_and_last_name(first_name, last_name) ||
     Factory(:user, :first_name => first_name, :last_name => last_name)
-end
+end 
 
 Given 'a user with the email "$email"' do |email|
   User.find_by_email(email) || Factory(:user, :email => email)
