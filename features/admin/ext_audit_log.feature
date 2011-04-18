@@ -36,48 +36,43 @@ Feature: Audit Log
   Scenario: View all events for a specific record
     Given I am logged in as "billsmith@example.com"
     And I navigate to the ext dashboard page
-    And a sent alert with:
-      | title                 | TEST ALERT              |
-      | message               | TEST PLEASE DISREGARD   |
-      | acknowledge           | No                      |
-      | from_jurisdiction     | Dallas County           |
-      | communication methods | Email                   |
-      | people                | Jane Smith              |
+    And "janesmith@example.com" has the title "title one"
+    And "janesmith@example.com" has the title "title two"
+    And "janesmith@example.com" has the title "title three"
+    And "janesmith@example.com" has the title "title four"
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     And I wait for the "Loading..." mask to go away
-    And I explicitly click x-grid3-cell-inner "TEST ALERT"
+    And I explicitly click x-grid3-cell-inner "Jane Smith"
     And I wait for the "Fetching Version Data..." mask to go away
-    When I press "Event 8 of 8"
+    When I press "Event 5 of 5"
     And I wait for the "Loading..." mask to go away
-    Then I should see 8 rows in grid "grid-version-results"
+    Then I should see 5 rows in grid "grid-version-results"
 
   Scenario: Step forward and backward in record history  
     Given I am logged in as "billsmith@example.com"
     And I navigate to the ext dashboard page
-    And a sent alert with:
-      | title                 | TEST ALERT              |
-      | message               | TEST PLEASE DISREGARD   |
-      | acknowledge           | No                      |
-      | from_jurisdiction     | Dallas County           |
-      | communication methods | Email                   |
-      | people                | Jane Smith              |
+    And "janesmith@example.com" has the title "title one"
+    And "janesmith@example.com" has the title "title two"
+    And "janesmith@example.com" has the title "title three"
+    And "janesmith@example.com" has the title "title four"
+    And "janesmith@example.com" has the title "title five"
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     And I wait for the "Loading..." mask to go away
-    And I explicitly click x-grid3-cell-inner "TEST ALERT"
+    And I explicitly click x-grid3-cell-inner "Jane Smith"
     And I wait for the "Fetching Version Data..." mask to go away
-    Then I should see "Event 8 of 8"
+    Then I should see "Event 6 of 6"
     When I press "Older"
-    Then I should see "Event 7 of 8"
+    Then I should see "Event 5 of 6"
     When I press "Older"
-    Then I should see "Event 6 of 8"
+    Then I should see "Event 4 of 6"
     When I press "Older"
-    Then I should see "Event 5 of 8"
+    Then I should see "Event 3 of 6"
     When I press "Newer"
-    Then I should see "Event 6 of 8"
+    Then I should see "Event 4 of 6"
     When I press "Newer"
-    Then I should see "Event 7 of 8"
+    Then I should see "Event 5 of 6"
 
   Scenario: View only creates, updates, or destroys
     Given I am logged in as "billsmith@example.com"
@@ -89,43 +84,6 @@ Feature: Audit Log
     And I wait for the "Loading..." mask to go away
     Then I should see "update" in column "Action" within "grid-version-results"
     Then I should not see "create" in column "Action" within "grid-version-results"
-
-  Scenario: Audit log for Han Alert model
-    Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
-    And a sent alert with:
-      | title                 | TEST ALERT              |
-      | message               | TEST PLEASE DISREGARD   |
-      | acknowledge           | No                      |
-      | from_jurisdiction     | Dallas County           |
-      | communication methods | Email                   |
-      | people                | Jane Smith              |
-    And I navigate to "Admin > Audit Log"
-    Then the "Audit Log" tab should be open
-    And I wait for the "Loading..." mask to go away for 1 second
-    And I click model-selector-list-item "Han Alerts"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 8 rows in grid "grid-version-results"
-    And I click model-selector-list-item "Han Alerts"
-    And I click model-selector-list-item "Alert Attempts"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 4 rows in grid "grid-version-results"
-    And I click model-selector-list-item "Alert Attempts"
-    And I click model-selector-list-item "Audiences"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 2 rows in grid "grid-version-results"
-    And I click model-selector-list-item "Audiences"
-    And I click model-selector-list-item "Deliveries"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 2 rows in grid "grid-version-results"
-    And I click model-selector-list-item "Deliveries"
-    And I click model-selector-list-item "Targets"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 2 rows in grid "grid-version-results"
-    And I click model-selector-list-item "Targets"
-    And I click model-selector-list-item "Alert Ack Logs"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see 8 rows in grid "grid-version-results"
 
   Scenario: Audit log for Forums
     Given I am logged in as "billsmith@example.com"
