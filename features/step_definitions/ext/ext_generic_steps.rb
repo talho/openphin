@@ -346,8 +346,8 @@ end
 When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do |mask_text, wait_seconds|
   begin
     mask = page.find('.loading-indicator', :text => mask_text)
-    end_time = Time.now + wait_seconds.nil? ? 5.seconds : wait_seconds.to_i.seconds # wait a max of 5 seconds for the mask to disappear
-    while !mask.nil? and Time.now < end_time
+    end_time = Time.now + (wait_seconds.blank? ? 5.seconds : wait_seconds.to_i.seconds) # wait a max of 5 seconds for the mask to disappear
+    while !mask.blank? and Time.now < end_time
       mask = page.find('.loading-indicator', :text => mask_text)
     end
     mask.should be_nil
