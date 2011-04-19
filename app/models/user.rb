@@ -150,10 +150,12 @@ class User < ActiveRecord::Base
     { :conditions => ["users.id = ?", user.id]}
   }
 
+
 #  named_scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
 #  }
   
+
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
 
   # thinking sphinx stuff
@@ -245,7 +247,19 @@ class User < ActiveRecord::Base
   def is_org_approver?
     return role_memberships.count(:conditions => ["role_id = ?", Role.org_admin]) > 0
   end
-  
+
+  def has_role?(role_sym)
+    roles.any? { |r| r.name.underscore.to_sym == role_sym }
+  end
+
+  def has_application?(app_sym)
+    roles.any? { |r| r.application.to_sym == app_sym }
+  end
+
+  def enabled_applications
+    return current_user.roles.map(&:application).flatten
+  end
+
   def has_non_public_role?
     self.roles.non_public.size > 0
   end
@@ -257,7 +271,6 @@ class User < ActiveRecord::Base
   def has_public_role_in?(jurisdiction)
     return role_memberships.count(:conditions => ["role_id = ? AND jurisdiction_id = ?", Role.public.id, j.id]) > 0
   end
-
 
   def has_public_role_request?
     return role_requests.count(:conditions => ["role_id = ?", Role.public.id]) > 0

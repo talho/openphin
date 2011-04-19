@@ -11,7 +11,7 @@
 #  approval_required :boolean(1)
 #  alerter           :boolean(1)
 #  user_role         :boolean(1)      default(TRUE)
-#
+#  application       :string(255)     
 
 class Role < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
@@ -31,7 +31,12 @@ class Role < ActiveRecord::Base
     :public => 'Public'
   }
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
-  
+
+  #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
+  named_scope :all, lambda { |app| { :conditions => { :application => app } } }   
+  named_scope :for_phin, :conditions => { :application => 'phin' }
+  named_scope :for_rollcall, :conditions => { :application => 'rollcall' } 
+
   def self.latest_in_secs
     recent(1).first.updated_at.utc.to_i
   end
