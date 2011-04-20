@@ -1,7 +1,7 @@
 Ext.apply(Ext.form.VTypes, {
 
   phone : function(value){
-    return /^\(?([2-9]\d{2})(\)?)(-|.|\s)?([1-9]\d{2})(-|.|\s)?(\d{4})$/.test(value);
+    return /\(?([2-9]\d{2})(\)?)(-|.|\s)?([1-9]\d{2})(-|.|\s)?(\d{4})/.test(value);
   },
   phoneText : 'Invalid phone number.',
 
