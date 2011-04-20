@@ -136,11 +136,16 @@ end
 Capybara.class_eval do
   class << self
     def switch_session_by_name(name)
-      if @sessions_by_name.nil?
-        @sessions_by_name = {:default => Capybara.current_driver}
+      if @drivers_by_name.nil?
+        @drivers_by_name = {:default => Capybara.current_driver}
       end
 
-      if @sessions_by_name[name.to_sym].nil?
+# The latest capybara will support this
+#      if @sessions_by_name.nil?
+#        @sessions_by_name = {:default => Capybara.session_name}
+#      end
+
+      if @drivers_by_name[name.to_sym].nil?
         Capybara.register_driver "selenium_with_firebug_#{name}".to_sym do |app|
           Capybara::Driver::Selenium
           profile = Selenium::WebDriver::Firefox::Profile.new
@@ -157,10 +162,12 @@ Capybara.class_eval do
           end
         end
 
-        @sessions_by_name[name.to_sym] = "selenium_with_firebug_#{name}".to_sym
+        @drivers_by_name[name.to_sym] = "selenium_with_firebug_#{name}".to_sym
       end
-      
-      @current_driver = @sessions_by_name[name.to_sym]
+
+      Capybara.current_driver = @drivers_by_name[name.to_sym]
+      Capybara.default_driver = @drivers_by_name[name.to_sym] if name == "default"
+      #Capybara.session_name = @sessions_by_name[name.to_sym]
     end
 
     def quit_session_by_name(name)
