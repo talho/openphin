@@ -132,7 +132,9 @@ class AlertAttempt < ActiveRecord::Base
   end
 
   def to_s
-    Alert.find(alert_id).to_s + ' to ' + User.find(user_id).to_s
+    begin recip = User.find(user_id).to_s rescue recip = '-?-' end
+    begin alert = Alert.find(alert_id).to_s rescue alert = '-?-' end
+    alert + ' to ' + recip
   end
 
   protected

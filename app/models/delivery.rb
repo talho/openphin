@@ -53,6 +53,8 @@ class Delivery < ActiveRecord::Base
   #handle_asynchronously :deliver
 
   def to_s
-    Device.find(device_id).to_s + ', ' + AlertAttempt.find(alert_attempt_id).to_s
+    begin att = AlertAttempt.find(alert_attempt_id).to_s rescue att = '-?-' end
+    begin dev = Device.find(device_id).to_s rescue dev = '-?-' end
+    dev + ', ' + att
   end
 end

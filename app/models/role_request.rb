@@ -64,7 +64,10 @@ class RoleRequest < ActiveRecord::Base
   end
 
   def to_s
-    User.find(user_id).to_s + ' for ' + Role.find(role_id).to_s + ' in ' + Jurisdiction.find(jurisdiction_id).to_s
+    begin user_name = User.find(user_id).to_s rescue user_name = '-?-' end
+    begin role_name = Role.find(role_id).to_s rescue role_name = '-?-' end
+    begin jur_name = Jurisdiction.find(jurisdiction_id).to_s rescue jur_name = '-?-' end
+    user_name + ' for ' + role_name + ' in ' + jur_name
   end
 
 private

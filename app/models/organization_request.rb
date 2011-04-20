@@ -44,7 +44,9 @@ class OrganizationRequest < ActiveRecord::Base
   end
 
   def to_s
-    Organization.find(organization_id).to_s + ' in ' + Jurisdiction.find(jurisdiction_id)
+    begin org = Organization.find(organization_id).to_s rescue org = '-?-' end
+    begin jur = Jurisdiction.find(jurisdiction_id) rescue jur = '-?-' end
+    org + ' in ' + jur
   end
 
 end

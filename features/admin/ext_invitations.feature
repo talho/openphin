@@ -28,6 +28,7 @@ Feature: Invitation System
     And I sleep 1
     When I press "Send Invitation"
     Then I should see "Invitation was successfully sent"
+    And I sleep 1
     Then "jane.smith@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
     When delayed jobs are processed

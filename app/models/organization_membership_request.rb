@@ -50,7 +50,9 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   end
 
   def to_s
-    User.find(requester_id).to_s + ' in ' + Organization.find(organization_id).to_s
+    begin req_name = User.find(requester_id).to_s rescue req_name = '-?-' end
+    begin org_name = Organization.find(organization_id).to_s rescue org_name = '-?-' end
+    req_name + ' for ' + org_name
   end
 
   private

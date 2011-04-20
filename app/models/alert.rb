@@ -123,7 +123,8 @@ class Alert < ActiveRecord::Base
   end
 
   def to_s
-    alert_type + ': ' + alert_type.constantize.find(id).to_s
+    begin alert_title = alert_type.constantize.find(id).to_s rescue alert_title = '-?-' end
+    alert_type + ': ' + alert_title
   end
 
   private

@@ -18,7 +18,8 @@ class AlertAckLog < ActiveRecord::Base
   end
 
   def to_s
-    Alert.find(alert_id).to_s + ', ' + acks.to_s + ' acks'
+    begin alert_name = Alert.find(alert_id).to_s rescue alert_name = '-?-' end
+    alert_name + ', ' + acks.to_s + ' acks'
   end
 
   private

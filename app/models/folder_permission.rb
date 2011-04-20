@@ -7,7 +7,9 @@ class FolderPermission < ActiveRecord::Base
   PERMISSION_TYPES = {:author => 1, :admin => 2}
 
   def to_s
-    Folder.find(folder_id).to_s + ': ' + User.find(user_id).to_s
+    begin owner = User.find(user_id).to_s rescue owner = '-?-' end
+    begin name = Folder.find(folder_id).to_s rescue name = '-?-' end
+    name + ': ' + owner
   end
 
 end
