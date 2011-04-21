@@ -426,3 +426,7 @@ end
 When /^I force open the edit group tab$/ do
   force_open_tab("Edit Group","/admin_groups/#{Group.find(:all).first[:id]}/edit")
 end
+
+When /^I force open the audit log tab$/ do
+  force_open_tab("Audit Log","/audits/")
+end

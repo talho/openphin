@@ -318,27 +318,3 @@ end
 When /^I attach the "([^\"]*)" file at "([^\"]*)" to "([^\"]*)"$/ do |mime, path, field|
   attach_file(field, path, mime)
 end
-
-When /^I suspend cucumber/ do
-  print "Cucumber suspended: press Return to continue"
-  STDIN.getc  
-end
-
-When /^I maliciously post data to "([^"]*)"$/ do | url, table |
-  script =
-    "felem = document.createElement('form'); " +
-    "felem.setAttribute('method','POST'); " +
-    "felem.setAttribute('action', '#{url}');"
-  table.rows_hash.each do |name, value|
-    script +=
-      "fhiddenField = document.createElement('input'); " +
-      "fhiddenField.setAttribute('type', 'hidden');" +
-      "fhiddenField.setAttribute('name', '#{name}');" +
-      "fhiddenField.setAttribute('value', '#{value}');" +
-      "felem.appendChild(fhiddenField);"
-  end
-  script +=
-    "document.body.appendChild(felem);" +
-    "felem.submit();"
-  page.execute_script(script)
-end

@@ -110,6 +110,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def super_admin_in_texas_required
+    unless current_user.role_memberships.detect{ |rm| rm.role == Role.superadmin && rm.jurisdiction == Jurisdiction.find_by_name("Texas") }
+      message = "That resource does not exist or you do not have access to it."
+      if request.xhr?
+        respond_to do |format|
+          format.html {render :text => message, :status => 404}
+          format.json {render :json => {:message => message}, :status => 404}
+        end
+      else
+        flash[:error] = message
+        redirect_to root_path
+      end
+      false
+    end
+  end
+
   def non_public_role_required
     unless current_user.has_non_public_role?
       if request.xhr?
