@@ -62,9 +62,11 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                           {name: 'Edit Users', tab: {id: 'edit_users', title:'Edit Users', url:'#{ show_advanced_search_path }', admin_mode: true, initializer: 'Talho.FindPeople'}}]},
                       {name: 'Manage Invitations', items:[
                           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
-                          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]},
-                      {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}},
-                      ]},"
+                          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]}"
+      if current_user.is_super_admin?
+         menu_config += ", {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}"
+      end
+      menu_config += "]},"
     end
 
     menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},"

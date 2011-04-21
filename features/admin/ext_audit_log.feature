@@ -10,7 +10,9 @@ Feature: Audit Log
       | Role         | Boss                                        |
       | Role         | Lackey                                      |
       | Role         | Sous Chef                                   |
-
+      | System role  | Superadmin                                  |
+      | System role  | Admin                                       |
+    
     And Texas is the parent jurisdiction of:
      | Region 1, Region 2 |
     And Region 1 is the parent jurisdiction of:
@@ -18,12 +20,18 @@ Feature: Audit Log
     And Region 2 is the parent jurisdiction of:
      | Lubbock County, Denton County |
     And the following users exist:
+      | Bill Smith | billsmith@example.com | Superadmin                                  | Texas          |
+      | Nate Smith | natesmith@example.com | Superadmin                                  | Region 1       |
       | Jane Smith | janesmith@example.com | Boss                                        | Dallas County  |
       | Fred Smith | fredsmith@example.com | Lackey                                      | Lubbock County |
       | Sara Smith | sarasmith@example.com | Health Alert and Communications Coordinator | Lubbock County |
-    And Dallas County has the following administrators:
-      | Bill Smith | billsmith@example.com |
     And the role "Health Alert and Communications Coordinator" is an alerter
+
+  Scenario: Only superadmins in texas can see auditlog
+    When I am logged in as "natesmith@example.com"
+    And I navigate to the ext dashboard page
+    And I navigate to "Admin"
+    Then I should not see "Audit Log"
 
   Scenario: Pagination
     Given I am logged in as "billsmith@example.com"
@@ -204,3 +212,19 @@ Feature: Audit Log
     When I click model-selector-list-item "Favorites"
     And I wait for the "Loading..." mask to go away for 1 second
     Then I should see "Find People" in column "Descriptor" within "grid-version-results"
+
+  Scenario: Prevent Bad People(tm) from seeing audit data
+    Given I am logged in as "fredsmith@example.com"
+    And I visit the url "/audits/"
+    Then I should be redirected to "the dashboard page"
+    And I should see "you do not have access"
+
+    When I navigate to the ext dashboard page
+    And I force open the audit log tab
+    Then I should see "you do not have access"
+
+    When I navigate to the dashboard page
+    When I maliciously get data from "/audits/show.json"
+      | id | 1 |
+    Then I should be redirected to "the dashboard page"
+    And I should see "you do not have access"

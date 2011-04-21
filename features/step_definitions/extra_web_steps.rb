@@ -93,3 +93,31 @@ end
 When /^I click "([^\"]*)"$/ do |arg1|
   page.find(arg1).click
 end
+
+When /^I visit the url "([^"]*)"$/ do |page_url|
+   visit page_url
+end
+
+When /^I suspend cucumber/ do
+  print "Cucumber suspended: press Return to continue"
+  STDIN.getc
+end
+
+When /^I maliciously (.+) data .+ "([^"]*)"$/ do | method, url, table |
+  script =
+    "form = document.createElement('form'); " +
+    "form.setAttribute('method', '#{method.upcase}'); " +
+    "form.setAttribute('action', '#{url}');"
+  table.rows_hash.each do |name, value|
+    script +=
+      "hiddenField = document.createElement('input'); " +
+      "hiddenField.setAttribute('type', 'hidden');" +
+      "hiddenField.setAttribute('name', '#{name}');" +
+      "hiddenField.setAttribute('value', '#{value}');" +
+      "form.appendChild(hiddenField);"
+  end
+  script +=
+    "document.body.appendChild(form);" +
+    "form.submit();"
+  page.execute_script(script)
+end
