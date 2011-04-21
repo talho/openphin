@@ -9,9 +9,7 @@ Feature: Audit Log
       | Role         | Health Alert and Communications Coordinator | phin |
       | Role         | Boss                                        | phin |
       | Role         | Lackey                                      | phin |
-      | Role         | Sous Chef                                   | phin |
-
-    
+      | Role         | Sous Chef                                   | phin |    
     And Texas is the parent jurisdiction of:
      | Region 1, Region 2 |
     And Region 1 is the parent jurisdiction of:
