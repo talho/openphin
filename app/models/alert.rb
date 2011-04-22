@@ -298,7 +298,7 @@ class Alert < ActiveRecord::Base
             end
           end
         end
-
+ 
         options[:supplement].call(ivrtree) if options[:supplement]
       end
     end
