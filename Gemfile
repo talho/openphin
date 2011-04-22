@@ -45,7 +45,6 @@ group :default do
   gem "pg", "0.10.1"
   gem "acts-as-taggable-on", "2.0.6"
   gem "paper_trail", "1.6.5"  # 2.x versions require rails3
-  gem "cancan", "1.6.4"
 end
 
 group :test do
