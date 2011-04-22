@@ -150,11 +150,9 @@ class User < ActiveRecord::Base
     { :conditions => ["users.id = ?", user.id]}
   }
 
-
 #  named_scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
 #  }
-  
 
   named_scope :alphabetical, :order => 'last_name, first_name, display_name'
 
@@ -230,6 +228,10 @@ class User < ActiveRecord::Base
     jurisdiction.alerting_users.include?(self)
   end
 
+  def is_sysadmin?
+    return role_memberships.count(:conditions => ["role_id IN (?)", Role.sysadmin.map(&:id)]) > 0
+  end
+
   def is_super_admin?
     begin
       j = Jurisdiction.root.children.first
@@ -237,15 +239,15 @@ class User < ActiveRecord::Base
       return false # Should be Texas
     end
     return false if j.nil?
-    return role_memberships.count(:conditions => ["role_id = ? AND jurisdiction_id = ?", Role.superadmin.id, j.id]) > 0
+    return role_memberships.count(:conditions => ["role_id IN (?) AND jurisdiction_id = ?", Role.superadmin.map(&:id), j.id]) > 0
   end
 
   def is_admin?
-    return role_memberships.count(:conditions => ["role_id = ? OR role_id = ?", Role.admin.id, Role.superadmin.id]) > 0
+    return role_memberships.count(:conditions => ["role_id IN (?)", Role.admin.map(&:id)]) > 0
   end
 
   def is_org_approver?
-    return role_memberships.count(:conditions => ["role_id = ?", Role.org_admin]) > 0
+    return role_memberships.count(:conditions => ["role_id IN (?)", Role.org_admin.map(&:id)]) > 0
   end
 
   def has_role?(role_sym)
