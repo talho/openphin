@@ -28,6 +28,10 @@ class Device::FaxDevice < Device
     super + ": #{fax}"
   end
 
+  def key
+    :fax
+  end
+
   def deliver(alert)
     Service::Fax.deliver_alert(alert, user)
   end

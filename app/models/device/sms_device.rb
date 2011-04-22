@@ -28,6 +28,10 @@ class Device::SMSDevice < Device
     super + ": #{sms}"
   end
 
+  def key
+    :sms
+  end
+
   def deliver(alert)
     Service::SMS.deliver_alert(alert, user)
   end

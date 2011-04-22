@@ -70,6 +70,10 @@ class Device < ActiveRecord::Base
     self.class.display_name
   end
 
+  def URN
+    self.options[self.key]
+  end
+
   private
 
   def check_uniq_device
