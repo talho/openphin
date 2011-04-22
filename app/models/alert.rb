@@ -73,6 +73,7 @@ class Alert < ActiveRecord::Base
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type
+  after_create :batch_deliver
 
   named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   named_scope :devices, {
@@ -127,9 +128,144 @@ class Alert < ActiveRecord::Base
     alert_type + ': ' + alert_title
   end
 
+  def to_xml(options={})
+    options={} if options.blank?
+    builder=Builder::XmlMarkup.new( :indent => 2)
+    builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+    builder.TMAPI do |tmapi|
+      xml_build_author tmapi, options[:Author]
+      xml_build_messages tmapi, options[:Messages]
+      xml_build_ivrtree tmapi, options[:IVRTree]
+      xml_build_recipients tmapi, options[:Recipients]
+    end
+  end
+#
+#  def to_json
+#
+#  end
+
+  def batch_deliver &block
+    recipients.each do |user|
+      alert_attempts.create!(:user => user).batch_deliver
+    end
+    yield
+    ::TMAPI.deliver(self)
+#    alert_device_types(true).each do |device_type|
+#      device_type.device_type.batch_deliver(self)
+#    end
+    initialize_statistics
+  end
+
+  def initialize_statistics
+    self.reload
+    aa_size = alert_attempts(true).size.to_f
+
+    types = (alert_device_types.map(&:device) << "Device::ConsoleDevice").uniq
+    types.each do |type|
+      ack_logs.create(:item_type => "device", :item => type, :acks => 0, :total => aa_size)
+    end
+
+    ack_logs.create(:item_type => "total", :acks => 0, :total => aa_size)
+  end
+
+  def update_statistics(options)
+    aa_size = nil
+    if options[:device]
+      ack = ack_logs.find_by_item_type_and_item("device",options[:device])
+      ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
+    end
+
+    ack = ack_logs.find_by_item_type("total")
+    ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
+  end
+
   private
 
   def create_console_alert_device_type
     AlertDeviceType.create!(:alert_id => self.id, :device => "Device::ConsoleDevice") unless alert_device_types.map(&:device).include?("Device::ConsoleDevice")
+  end
+
+  def xml_build_author builder, options={}
+    options={} if options.blank?
+    unless self.author.blank?
+      builder.Author(:givenName => self.author.first_name, :surname => self.author.last_name, :display_name => self.author.display_name) do |a|
+        if options[:override]
+          options[:override].call(a)
+        else
+          a.Contact(:device_type => "E-mail") do |contact|
+            contact.Value self.author.email
+          end
+
+          options[:supplement].call(a) if options[:supplement]
+        end
+      end
+    end
+  end
+
+  def xml_build_messages builder, options={}
+    options={} if options.blank?
+    builder.Messages do |messages|
+      if options[:override]
+          options[:override].call(messages)
+      else
+        messages.Message(:name => "title", :lang => "en/us", :encoding => "utf8", :content_type => "text/plain") do |message|
+          message.Value self.title
+        end
+
+        messages.Message(:name => "title", :lang => "en/us", :encoding => "utf8", :content_type => "text/plain") do |message|
+          message.Value self.message
+        end
+
+        options[:supplement].call(messages) if options[:supplement]
+      end
+    end
+  end
+
+  def xml_build_ivrtree builder, options={}
+    options={} if options.blank?
+    if options[:override]
+      builder.IVRTree do |ivrtree|
+        options[:override].call(ivrtree)
+      end
+    else
+      if self.has_alert_response_messages?
+        builder.IVRTree do |ivrtree|
+          ivrtree.IVR(:name => "alert_responses") do |ivr|
+            ivr.RootNode do |root|
+              sorted_messages = self.call_down_messages.sort {|a, b| a[0]<=>b[0]}
+              sorted_messages.each do |key, call_down|
+                root.Node do |node|
+                  node.label key
+                  node.operation "TTS"
+                  node.response call_down
+                end
+              end
+              root.Node do |response_node|
+                response_node.label "Prompt"
+                response_node.operation "Prompt"
+              end
+            end
+          end
+
+          options[:supplement].call(ivrtree) if options[:supplement]
+        end
+      end
+    end
+  end
+
+  def xml_build_recipients builder, options={}
+    options={} if options.blank?
+    builder.Recipients do |rcpts|
+      # Can't use recipients association since find_each doesn't append the LIMIT to it properly
+      User.find_each(:joins => "INNER JOIN targets_users ON targets_users.user_id=users.id INNER JOIN targets ON targets_users.target_id=targets.id AND targets.item_type='#{self.class.to_s}'", :conditions => ['targets.item_id = ?', self.id]) do |recipient|
+        rcpts.Recipient(:givenName => recipient.first_name, :surname => recipient.last_name, :display_name => recipient.display_name) do |rcpt|
+          (recipient.devices.find_all_by_type(self.alert_device_types.map(&:device))).each do |device|
+            rcpt.Device(:device_type =>  device.class.display_name) do |d|
+              d.URN device.URN
+            end
+          end
+        end
+      end
+    end
   end
 end
