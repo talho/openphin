@@ -674,5 +674,5 @@ private
   def set_display_name
     self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
   end
-  
+
 end
