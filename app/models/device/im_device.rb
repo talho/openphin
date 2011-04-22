@@ -25,6 +25,10 @@ class Device::IMDevice < Device
     super + ": #{im}"
   end
 
+  def key
+    :im
+  end
+
   def deliver(alert)
     Service::IM.deliver_alert(alert, user)
   end

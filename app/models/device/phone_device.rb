@@ -27,6 +27,10 @@ class Device::PhoneDevice < Device
     super + ": #{phone}"
   end
 
+  def key
+    :phone
+  end
+
   def deliver(alert)
     Service::Phone.deliver_alert(alert, user)
   end

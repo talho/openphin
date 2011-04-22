@@ -28,7 +28,11 @@ class Device::EmailDevice < Device
   def to_s
     super + ": #{email_address}"
   end
-  
+
+  def key
+    :email_address
+  end
+
   def deliver(alert)
     HanAlertMailer.deliver_alert(alert, user) unless alert.alert_attempts.nil?
   end

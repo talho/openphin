@@ -25,6 +25,10 @@ class Device::BlackberryDevice < Device
   def to_s
     super + ": #{blackberry}"
   end
+
+  def key
+    :blackberry
+  end
   
   def deliver(alert)
     Service::Blackberry.deliver_alert(alert)
