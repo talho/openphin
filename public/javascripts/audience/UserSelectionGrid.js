@@ -102,7 +102,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             border: false
         };
     },
-
+ 
     _createUserSearchCombo: function(){
         return { xtype: 'combo',
                 border: false,
