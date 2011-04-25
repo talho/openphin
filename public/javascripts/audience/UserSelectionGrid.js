@@ -128,7 +128,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
                         return;
                       }
                       this.user_store.add(new this.record({name: record.get('name'), email: record.get('email'), id: record.get('id'), title: record.get('title'), tip: record.get('extra'), type: 'user'}));
-                      combo.clearValue()
+                      combo.clearValue();
                     }
                 }
             }
