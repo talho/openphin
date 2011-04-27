@@ -132,8 +132,9 @@ class Alert < ActiveRecord::Base
     options={} if options.blank?
     builder=Builder::XmlMarkup.new( :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-    builder.TMAPI do |tmapi|
+    builder.TMAPI(:messageId => options[:messageId].blank? ? "#{self.class}-#{self.id}" : options[:messageId]) do |tmapi|
       xml_build_author tmapi, options[:Author]
+      xml_build_behavior tmapi, options[:Behavior]
       xml_build_messages tmapi, options[:Messages]
       xml_build_ivrtree tmapi, options[:IVRTree]
       xml_build_recipients tmapi, options[:Recipients]
@@ -149,7 +150,7 @@ class Alert < ActiveRecord::Base
       alert_attempts.create!(:user => user).batch_deliver
     end
     yield
-    ::TMAPI.deliver(self)
+    ::MessageApi.deliver(self)
 #    alert_device_types(true).each do |device_type|
 #      device_type.device_type.batch_deliver(self)
 #    end
@@ -202,6 +203,17 @@ class Alert < ActiveRecord::Base
     end
   end
 
+  def xml_build_behavior builder, options={}
+    options={} if options.blank?
+    if options[:override]
+      options[:override].call(options[:Behavior])
+    else
+      builder.Behavior do |behavior|
+        options[:supplement].call(behavior) if options[:supplement]
+      end
+    end
+end
+
   def xml_build_messages builder, options={}
     options={} if options.blank?
     builder.Messages do |messages|
@@ -212,7 +224,7 @@ class Alert < ActiveRecord::Base
           message.Value self.title
         end
 
-        messages.Message(:name => "title", :lang => "en/us", :encoding => "utf8", :content_type => "text/plain") do |message|
+        messages.Message(:name => "message", :lang => "en/us", :encoding => "utf8", :content_type => "text/plain") do |message|
           message.Value self.message
         end
 
@@ -231,16 +243,16 @@ class Alert < ActiveRecord::Base
       if self.has_alert_response_messages?
         builder.IVRTree do |ivrtree|
           ivrtree.IVR(:name => "alert_responses") do |ivr|
-            ivr.RootNode do |root|
+            ivr.RootNode(:operation => "start") do |rootnode|
               sorted_messages = self.call_down_messages.sort {|a, b| a[0]<=>b[0]}
               sorted_messages.each do |key, call_down|
-                root.Node do |node|
+                rootnode.ContextNode do |node|
                   node.label key
                   node.operation "TTS"
                   node.response call_down
                 end
               end
-              root.Node do |response_node|
+              rootnode.ContextNode do |response_node|
                 response_node.label "Prompt"
                 response_node.operation "Prompt"
               end
@@ -258,9 +270,9 @@ class Alert < ActiveRecord::Base
     builder.Recipients do |rcpts|
       # Can't use recipients association since find_each doesn't append the LIMIT to it properly
       User.find_each(:joins => "INNER JOIN targets_users ON targets_users.user_id=users.id INNER JOIN targets ON targets_users.target_id=targets.id AND targets.item_type='#{self.class.to_s}'", :conditions => ['targets.item_id = ?', self.id]) do |recipient|
-        rcpts.Recipient(:givenName => recipient.first_name, :surname => recipient.last_name, :display_name => recipient.display_name) do |rcpt|
+        rcpts.Recipient(:id => recipient.id, :givenName => recipient.first_name, :surname => recipient.last_name, :display_name => recipient.display_name) do |rcpt|
           (recipient.devices.find_all_by_type(self.alert_device_types.map(&:device))).each do |device|
-            rcpt.Device(:device_type =>  device.class.display_name) do |d|
+            rcpt.Device(:id => device.id, :device_type =>  device.class.display_name) do |d|
               d.URN device.URN
             end
           end
