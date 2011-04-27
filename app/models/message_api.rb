@@ -1,4 +1,5 @@
 require 'active_record/validations'
+require 'happymapper'
 
 module ObjectValidation
   def self.included(base)
@@ -45,6 +46,7 @@ class MessageApi
   include ObjectValidation
   include ActiveRecord::Validations
 
+  validates_presence_of :messageId
   validates_presence_of :Author, :message => "You must include an Author tag"
   validates_associated :Author
   validates_associated :Behavior
@@ -55,7 +57,7 @@ class MessageApi
   validates_associated :Recipients
 
   def self.deliver item
-    self.parse case item.class
+    message = self.parse(case item.class
     when String
       comparer = "<?xml"
       if item[0..(comparer.length - 1)] == comparer
@@ -71,7 +73,9 @@ class MessageApi
       else
         raise "Object does not support to_xml"
       end
-    end
+    end)
+
+     Service::Base.dispatch message
   end
 
   class ContextNode
@@ -81,11 +85,11 @@ class MessageApi
 
     validates_length_of :operation, :minimum => 1    
 
-    tag "Node"
+    tag "ContextNode"
     has_one :label, String, :attributes => {:name => String}
     has_one :operation, String, :attributes => {:name => String}
     has_one :response, String, :attributes => {:ref => String}
-    has_many :Node, ContextNode
+    has_many :ContextNodes, ContextNode
     attribute :name, String
   end
 
@@ -131,6 +135,7 @@ class MessageApi
 
     tag "Author"
     has_many :Contacts, Contact
+    attribute :display_name, String
     attribute :givenName, String
     attribute :surname, String
   end
@@ -148,6 +153,21 @@ class MessageApi
     attribute :name, String
   end
 
+  class ProviderMessage
+    include HappyMapper
+    include ObjectValidation
+    include ActiveRecord::Validations
+
+    validates_presence_of :name
+    validate do |record|
+      record.errors.add "ProviderMessage", "Provider must specify a message or reference a named message" if record.Value.blank? && record.ref.blank?
+    end
+
+    has_one :Value, String
+    attribute :name, String
+    attribute :ref, String
+  end
+
   class Provider
     include HappyMapper
     include ObjectValidation
@@ -162,11 +182,14 @@ class MessageApi
     validates_associated :customAttributes
 
     tag "Provider"
+
+    has_many :Messages, ProviderMessage
     has_many :customAttributes, CustomAttribute
     has_one :allowDuplicates, Boolean
     attribute :name, String
     attribute :version, String
     attribute :device, String
+
   end
 
   class Delivery
@@ -178,6 +201,7 @@ class MessageApi
 
     tag "Delivery"
     has_many :Providers, Provider
+    has_many :customAttributes, CustomAttribute
     attribute :start, Date
     attribute :end, Date
     attribute :defaultProvider, String
@@ -215,11 +239,10 @@ class MessageApi
     include ObjectValidation
     include ActiveRecord::Validations
 
-    validates_length_of :RootNode, :minimum => 1
     validates_presence_of :name
 
     tag "IVR"
-    has_many :RootNode, ContextNode
+    has_many :ContextNodes, ContextNode
     attribute :name, String
   end
 
@@ -237,6 +260,7 @@ class MessageApi
     has_one :URN, String
     has_one :Options, String
     has_one :Message, Message
+    attribute :id, String
     attribute :device_type, String
     attribute :priority, Integer
     attribute :provider, String
@@ -249,11 +273,13 @@ class MessageApi
 
     validates_length_of :Devices, :minimum => 1
     validates_associated :Devices
+    validates_presence_of :id
     validates_presence_of :givenName
     validates_presence_of :surname
 
     tag "Recipient"
     has_many :Devices, Device
+    attribute :id, String
     attribute :givenName, String
     attribute :surname, String
     attribute :display_name, String
@@ -266,6 +292,7 @@ class MessageApi
   has_many :Messages, Message
   has_many :IVRTree, IVR
   has_many :Recipients, Recipient
+  attribute :messageId, String
 
   def self.communication_device_names
     ::Device.constants.select{|x| x[-6..-1] == "Device"}.map{|name| "Device::#{name}"}.map(&:constantize).map(&:display_name)

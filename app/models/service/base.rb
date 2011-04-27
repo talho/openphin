@@ -25,6 +25,8 @@ class Service::Base
   #   Service::Sms.deliveries # => array of delivered messages
   # 
   # The default delivery method is +deliver+
+  PROVIDERS = {:swn => Service::SWN::Message, :TALHO => Service::TALHO::Message}
+
   class Configuration
     FAKE_DELIVERY_METHOD = :test
     DEFAULT_DELIVERY_METHOD = :deliver
@@ -66,6 +68,24 @@ class Service::Base
       end
     end
   end
+
+  def self.dispatch message
+    providers = []
+    if message.Behavior && message.Behavior.Delivery
+      providers = message.Behavior.Delivery.Providers.map(&:name).map(&:to_sym).uniq
+      providers << message.Behavior.Delivery.defaultProvider.to_sym unless message.Behavior.Delivery.defaultProvider.blank?
+    end
+    providers = [:swn] if providers.blank?
+    
+    providers.each do |provider|
+      if PROVIDERS[provider]
+        provider_message = PROVIDERS[provider].new(:message => message)
+        provider_message.deliver
+      else
+        LOGGER.warn = "#{provider} is not a valid service provider"
+      end
+    end
+  end
   
   # =================
   # = INSTANCE METHODS =
@@ -79,5 +99,5 @@ class Service::Base
     view.extend SmsHelper
     view.render :file => "services/#{self.class.name.demodulize.tableize}/#{template}", :locals => locals
   end
-  
+
 end
