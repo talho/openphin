@@ -241,7 +241,7 @@ class User < ActiveRecord::Base
   end
 
   def is_sysadmin?
-    return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0
+    return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0 
   end
 
   def is_super_admin?(app = "phin")
