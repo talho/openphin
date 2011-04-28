@@ -260,7 +260,7 @@ class User < ActiveRecord::Base
     return true if is_super_admin?(app)
     return role_memberships(true).count(:conditions => { :role_id => Role.admin(app).id } ) > 0
   end
-
+ 
   def is_org_approver?(app = "phin")
     return role_memberships(true).count(:conditions => { :role_id => Role.org_admin(app).id } ) > 0
   end
