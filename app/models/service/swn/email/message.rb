@@ -86,7 +86,7 @@ class Service::SWN::Email::Message < Service::SWN::Email::Base
       provider = message.Behavior.Delivery.Providers.select{|c| c.name == "swn" && c.device == "E-mail"}.first
       title = ""
       messagetext = ""
-      if provider.blank?
+      if provider.blank? || provider.Messages.blank?
         title = message.Messages.select{|m| m.name == "title"}.first.Value
         messagetext = message.Messages.select{|m| m.name == "message"}.first.Value
       else
@@ -104,11 +104,13 @@ class Service::SWN::Email::Message < Service::SWN::Email::Base
 
   def add_notification_responses(xml)
     unless message.IVRTree.blank?
-      message.IVRTree.select{|ivr| ivr.name == "alert_responses"}.each do |ivr|
+      provider = message.Behavior.Delivery.Providers.select{|c| c.name == "swn" && c.device == "E-mail"}.first
+
+      message.IVRTree.select{|ivr| ivr.name == provider.ivr}.each do |ivr|
         ivr.ContextNodes.select{|node| node.operation == "TTS"}.each do |node|
           xml.swn(:gwbText, node.response)
         end
-      end
+      end unless provider.blank? || provider.ivr.blank?
     end
   end
 

@@ -55,6 +55,7 @@ class Service::SWN::Message < Service::SWN::Base
 
   class NotificationResponse < ActiveRecord::Base
     set_table_name "message_notification_response"
+    serialize :response
 
     def self.build(response, message)
       msg_id = response['soap:Envelope']['soap:Header']['wsa:MessageID'] unless response.blank? || response['soap:Envelope'].blank? || response['soap:Envelope']['soap:Header'].blank?

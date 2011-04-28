@@ -189,7 +189,7 @@ class MessageApi
     attribute :name, String
     attribute :version, String
     attribute :device, String
-
+    attribute :ivr, String
   end
 
   class Delivery
