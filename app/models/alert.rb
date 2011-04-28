@@ -205,14 +205,40 @@ class Alert < ActiveRecord::Base
 
   def xml_build_behavior builder, options={}
     options={} if options.blank?
-    if options[:override]
-      options[:override].call(options[:Behavior])
-    else
-      builder.Behavior do |behavior|
+    builder.Behavior do |behavior|
+      if options[:override]
+        options[:override].call(behavior)
+      else
+        if options[:Delivery]
+          behavior.Delivery do |delivery|
+            if options[:Delivery][:override]
+              options[:Delivery][:override].call(delivery)
+            else
+              if options[:Delivery][:Providers]
+                delivery.Providers do |providers|
+                  if options[:Delivery][:Providers][:override]
+                    options[:Delivery][:Providers][:override].call(providers)
+                  else
+                    (self.alert_device_types.map{|device| device.device_type.display_name} || Service::SWN::Message::SUPPORTED_DEVICES.keys).each do |device|
+                      device_options = {:name => "swn", :device => device}
+                      device_options[:ivr] = "alert_responses" if self.has_alert_response_messages?
+                      providers.Provider(device_options)
+                    end
+
+                    options[:Delivery][:Providers][:supplement].call(providers) if options[:Delivery][:Providers][:supplement]
+                  end
+                end
+              end
+
+              options[:Delivery][:supplement].call(delivery) if options[:Delivery][:supplement]
+            end
+          end
+        end
+
         options[:supplement].call(behavior) if options[:supplement]
       end
     end
-end
+  end
 
   def xml_build_messages builder, options={}
     options={} if options.blank?
@@ -235,32 +261,28 @@ end
 
   def xml_build_ivrtree builder, options={}
     options={} if options.blank?
-    if options[:override]
-      builder.IVRTree do |ivrtree|
-        options[:override].call(ivrtree)
-      end
-    else
-      if self.has_alert_response_messages?
-        builder.IVRTree do |ivrtree|
-          ivrtree.IVR(:name => "alert_responses") do |ivr|
-            ivr.RootNode(:operation => "start") do |rootnode|
-              sorted_messages = self.call_down_messages.sort {|a, b| a[0]<=>b[0]}
-              sorted_messages.each do |key, call_down|
-                rootnode.ContextNode do |node|
-                  node.label key
-                  node.operation "TTS"
-                  node.response call_down
-                end
-              end
-              rootnode.ContextNode do |response_node|
-                response_node.label "Prompt"
-                response_node.operation "Prompt"
+    builder.IVRTree do |ivrtree|
+      if options[:override]
+          options[:override].call(ivrtree)
+      elsif self.has_alert_response_messages?
+        ivrtree.IVR(:name => "alert_responses") do |ivr|
+          ivr.RootNode(:operation => "start") do |rootnode|
+            sorted_messages = self.call_down_messages.sort {|a, b| a[0]<=>b[0]}
+            sorted_messages.each do |key, call_down|
+              rootnode.ContextNode do |node|
+                node.label key
+                node.operation "TTS"
+                node.response call_down
               end
             end
+            rootnode.ContextNode do |response_node|
+              response_node.label "Prompt"
+              response_node.operation "Prompt"
+            end
           end
-
-          options[:supplement].call(ivrtree) if options[:supplement]
         end
+
+        options[:supplement].call(ivrtree) if options[:supplement]
       end
     end
   end
@@ -268,15 +290,21 @@ end
   def xml_build_recipients builder, options={}
     options={} if options.blank?
     builder.Recipients do |rcpts|
-      # Can't use recipients association since find_each doesn't append the LIMIT to it properly
-      User.find_each(:joins => "INNER JOIN targets_users ON targets_users.user_id=users.id INNER JOIN targets ON targets_users.target_id=targets.id AND targets.item_type='#{self.class.to_s}'", :conditions => ['targets.item_id = ?', self.id]) do |recipient|
-        rcpts.Recipient(:id => recipient.id, :givenName => recipient.first_name, :surname => recipient.last_name, :display_name => recipient.display_name) do |rcpt|
-          (recipient.devices.find_all_by_type(self.alert_device_types.map(&:device))).each do |device|
-            rcpt.Device(:id => device.id, :device_type =>  device.class.display_name) do |d|
-              d.URN device.URN
+      if options[:override]
+        options[:override].call(rcpts)
+      else
+        # Can't use recipients association since find_each doesn't append the LIMIT to it properly
+        User.find_each(:joins => "INNER JOIN targets_users ON targets_users.user_id=users.id INNER JOIN targets ON targets_users.target_id=targets.id AND targets.item_type='#{self.class.to_s}'", :conditions => ['targets.item_id = ?', self.id]) do |recipient|
+          rcpts.Recipient(:id => recipient.id, :givenName => recipient.first_name, :surname => recipient.last_name, :display_name => recipient.display_name) do |rcpt|
+            (recipient.devices.find_all_by_type(self.alert_device_types.map(&:device))).each do |device|
+              rcpt.Device(:id => device.id, :device_type =>  device.class.display_name) do |d|
+                d.URN device.URN
+              end
             end
           end
         end
+
+        options[:supplement].call(rcpts) if options[:supplement]
       end
     end
   end

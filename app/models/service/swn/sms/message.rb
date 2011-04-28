@@ -86,7 +86,7 @@ class Service::SWN::SMS::Message < Service::SWN::SMS::Base
       provider = message.Behavior.Delivery.Providers.select{|c| c.name == "swn" && c.device == "SMS"}.first
       title = ""
       messagetext = ""
-      if provider.blank?
+      if provider.blank? || provider.Messages.blank?
         title = message.Messages.select{|m| m.name == "title"}.first.Value
         messagetext = message.Messages.select{|m| m.name == "short_message"}.first.Value
       else
