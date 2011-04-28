@@ -130,7 +130,7 @@ Talho.ProfileBase = Ext.extend(function(){}, {
     } else if (json.errors != null) {
       jQuery.each(json.errors, function(i,e){
         var item = (jQuery.isArray(e)) ? e.join(" - ") : e;
-        msg += item[0].toUpperCase() + item.substr(1) + "<br>";
+        msg += item.substr(0,1).toUpperCase() + item.substr(1) + "<br>";
       });
     } else {
       var w = 300;
