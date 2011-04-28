@@ -14,9 +14,9 @@
  dominoes('http://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
  
 Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
-    markers: [],
-    
     constructor: function(){
+      this.markers = [];
+      
       this.addEvents('markerclick', 'mapready');
       
       Application.addListener('mapready', this.mapReady, this);
@@ -52,7 +52,6 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       }
       catch(e){}
     },
-
 
     mapReady: function(){
       dominoes('$(ext_extensions)/GMapStyledMarker.js', function(){
@@ -200,6 +199,18 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         this.open_window = null;
       }.createDelegate(this));
       return this.open_window;
+    },
+    
+    beforeDestroy: function(){
+      Ext.ux.GMapPanel.superclass.beforeDestroy.apply(this, arguments);
+      
+      google.maps.event.clearInstanceListeners(this.gmap);
+      Ext.each(this.markers, function(marker){
+        google.maps.event.clearInstanceListeners(marker);
+        delete marker;
+      });
+      
+      delete this.gmap;
     }
     /*
     afterRender : function(){
