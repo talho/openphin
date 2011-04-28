@@ -221,7 +221,7 @@ class User < ActiveRecord::Base
       end
     end
     false
-  end
+  end 
 
   def is_org_admin_for?(other)
     unless other.class == Array || other.class == ActiveRecord::NamedScope::Scope
