@@ -50,18 +50,18 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       padding: '10',
       width: 600, height: 250,
       items: [
-        {xtype: 'container', layout: 'hbox', anchor: '100%', items: [
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.6, items: [
+        {xtype: 'container', layout: 'column', anchor: '100%', padding: '10', items: [
+          {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.6, items: [
             {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
               anchor: '100%', store: this.roles_store, mode: 'local', displayField: 'name'}
           ]},
-          {xtype: 'container', layout: 'form', labelAlign: 'top', flex: 0.4, margins: '0 0 0 10', items: [
+          {xtype: 'container', layout: 'form', width: 10, items: [ {xtype: 'spacer', height: 10} ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.4, items: [
             {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
               anchor: '100%', store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
           ]}
         ]},
-        {xtype: 'displayfield', anchor: '100% -50',
-          html: ''}
+        {xtype: 'displayfield', anchor: '100% -50', html: ''}
       ]
     });
     win.addButton({xtype: 'button', text: 'Add', handler: function(){ this.add_cb(win); }, scope: this, width:'auto'});

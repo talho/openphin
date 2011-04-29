@@ -36,15 +36,17 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
   add_device: function(){
     var win = new Ext.Window({
       title: "Add Device",
-      layout: 'hbox', layoutConfig: {defaultMargins:'10',pack:'center'},
+      layout: 'column',
+      padding: '10',
       width: 450,
       items: [
-        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
-          {xtype: 'textfield', fieldLabel: 'Address / Number', name: 'dev[value]', maxLength: '46', allowBlank: false}
+        {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.5, items: [
+          {xtype: 'textfield', fieldLabel: 'Address / Number', name: 'dev[value]', maxLength: '46', allowBlank: false, anchor: '100%'}
         ]},
-        {xtype: 'container', layout: 'form', labelAlign: 'top', items: [
-          {xtype: 'combo', fieldLabel: 'Device type', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', triggerAction: 'all',
-            store: this.device_types}
+        {xtype: 'container', layout: 'form', width: 10, items: [ {xtype: 'spacer', height: 10} ]},
+        {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.5, items: [
+          {xtype: 'combo', fieldLabel: 'Device type', name: 'dev[type]', editable: false, value: 'Device::EmailDevice', anchor: '100%',
+            triggerAction: 'all', store: this.device_types}
         ]}
       ]
     });
