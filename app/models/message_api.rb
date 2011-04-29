@@ -163,6 +163,7 @@ class MessageApi
       record.errors.add "ProviderMessage", "Provider must specify a message or reference a named message" if record.Value.blank? && record.ref.blank?
     end
 
+    tag "ProviderMessage"
     has_one :Value, String
     attribute :name, String
     attribute :ref, String

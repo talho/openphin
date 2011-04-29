@@ -2,6 +2,7 @@
 When /^I select the following alert audience:$/ do |table|
   When %{delayed jobs are processed}
   When %{I click breadCrumbItem "Recipients"}
+  Then %{I should see "Recipient Preview"}
   When %{I select the following in the audience panel:}, table
 end
 

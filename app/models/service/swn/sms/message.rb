@@ -88,12 +88,12 @@ class Service::SWN::SMS::Message < Service::SWN::SMS::Base
       messagetext = ""
       if provider.blank? || provider.Messages.blank?
         title = message.Messages.select{|m| m.name == "title"}.first.Value
-        messagetext = message.Messages.select{|m| m.name == "short_message"}.first.Value
+        messagetext = message.Messages.select{|m| m.name == "message"}.first.Value
       else
         messageref = provider.Messages.select{|m| m.name == "title"}.first.ref
         title = message.Messages.select{|m| m.name == messageref}.first.Value
 
-        messageref = provider.Messages.select{|m| m.name == "short_message"}.first.ref
+        messageref = provider.Messages.select{|m| m.name == "message"}.first.ref
         messagetext = message.Messages.select{|m| m.name == messageref}.first.Value
       end
 

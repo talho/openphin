@@ -99,7 +99,7 @@ class Service::SWN::Phone::Message < Service::SWN::Phone::Base
       end
 
       xml.swn(:subject, title)
-      xml.swn(:body, construct_message(messagetext))
+      xml.swn(:body, messagetext)
     end
   end
 
@@ -135,16 +135,4 @@ class Service::SWN::Phone::Message < Service::SWN::Phone::Base
       end
     end
   end
-
-  def construct_message messagetext
-    output = "The following is an alert from the Texas Public Health Information Network.  "
-    if output.size + messagetext.size > 1000
-      footer = ".  The rest of this message is unavailable.  Please visit the T X Fin website for the rest of this alert."
-      output += messagetext[0..(1000 - output.size - footer.size)] + footer
-    else
-      output += messagetext
-    end
-    output
-  end
-
 end
