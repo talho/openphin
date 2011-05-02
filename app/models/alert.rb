@@ -39,7 +39,7 @@
 #  distribution_id                :string(255)
 #  reference                      :string(255)
 #  sender_id                      :string(255)
-#  call_down_messages      n       :text
+#  call_down_messages             :text
 #  not_cross_jurisdictional       :boolean(1)     default(true)
 #
 
@@ -47,6 +47,8 @@ require 'ftools'
 
 class Alert < ActiveRecord::Base
   acts_as_MTI
+
+  serialize :call_down_messages, Hash
 
   belongs_to :author, :class_name => 'User'
 
@@ -221,7 +223,7 @@ class Alert < ActiveRecord::Base
                   else
                     (self.alert_device_types.map{|device| device.device_type.display_name} || Service::SWN::Message::SUPPORTED_DEVICES.keys).each do |device|
                       device_options = {:name => "swn", :device => device}
-                      device_options[:ivr] = "alert_responses" if self.has_alert_response_messages?
+                      device_options[:ivr] = "alert_responses" if self.acknowledge?
                       providers.Provider(device_options)
                     end
 
@@ -264,7 +266,7 @@ class Alert < ActiveRecord::Base
     builder.IVRTree do |ivrtree|
       if options[:override]
           options[:override].call(ivrtree)
-      elsif self.has_alert_response_messages?
+      elsif self.acknowledge?
         ivrtree.IVR(:name => "alert_responses") do |ivr|
           ivr.RootNode(:operation => "start") do |rootnode|
             sorted_messages = self.call_down_messages.sort {|a, b| a[0]<=>b[0]}

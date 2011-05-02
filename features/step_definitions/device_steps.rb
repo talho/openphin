@@ -3,12 +3,6 @@ Given /^I have an? (.*) device$/ do |device_type|
 
 end
 
-When /^"([^\"]*)" acknowledges the phone message for "([^\"]*)"$/ do |email, title|
-  a = User.find_by_email(email).alert_attempts.find_by_alert_id(Alert.find_by_title(title).id)
-  a.acknowledge!(:ack_device => "Device::PhoneDevice")
-end
-
-
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
   a.acknowledge! :ack_device => "Device::PhoneDevice"
