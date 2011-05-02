@@ -108,7 +108,7 @@ class Alert < ActiveRecord::Base
       audiences << Audience.new(value)
     end
   end
-
+ 
   def device_types=(types)
     alert_device_types.clear
     types.each do |type|
