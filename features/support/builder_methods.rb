@@ -22,6 +22,8 @@ module FeatureHelpers
 
       if attributes.has_key?('acknowledge')
         attributes['acknowledge'] = true_or_false(attributes.delete('acknowledge'))
+        attributes['call_down_messages'] = {}
+        attributes['call_down_messages']['1'] = "Please press one to acknowledge this alert."
       end
 
       if attributes.has_key?('not_cross_jurisdictional')
