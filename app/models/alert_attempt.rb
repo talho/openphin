@@ -97,7 +97,7 @@ class AlertAttempt < ActiveRecord::Base
   def acknowledge! options = {} # accepted options: ack_device, ack_response, ack_time
     unless self.acknowledged?
       unless alert.expired?
-        if alert.has_alert_response_messages?
+        if alert.acknowledge?
           #TODO: narrow range of allowed responses to the number on that alert
           if !(1..5).include? options[:ack_response].to_i || options[:ack_response].blank?
             errors.add('acknowledgement','You must select a response before acknowledging this alert.')
@@ -105,8 +105,6 @@ class AlertAttempt < ActiveRecord::Base
           else
             ack_response = options[:ack_response]
           end
-        else
-          ack_response = 0       # although SWN replies with a 1, 0 (zero) means a normal acknowledgement in our system.  this is not conventional.
         end
         ack_device = options[:ack_device].blank? ? "Device::ConsoleDevice" : options[:ack_device]
         ack_time = options[:ack_time].blank? ? Time.zone.now : options[:ack_time]
