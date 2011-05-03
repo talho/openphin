@@ -32,14 +32,6 @@ class Device::FaxDevice < Device
     :fax
   end
 
-  def deliver(alert)
-    Service::Fax.deliver_alert(alert, user)
-  end
-
-  def self.batch_deliver(alert)
-    Service::Fax.batch_deliver_alert(alert)
-  end
-
   private
   def strip_extra_characters
     self.fax = self.fax.tr('()-. ','')

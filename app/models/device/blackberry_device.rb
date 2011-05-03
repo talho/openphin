@@ -29,12 +29,4 @@ class Device::BlackberryDevice < Device
   def key
     :blackberry
   end
-  
-  def deliver(alert)
-    Service::Blackberry.deliver_alert(alert)
-  end
-  
-  def self.batch_deliver(alert)
-    Service::Blackberry.batch_deliver_alert(alert)
-  end
 end

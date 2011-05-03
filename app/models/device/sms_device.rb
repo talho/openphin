@@ -32,15 +32,6 @@ class Device::SMSDevice < Device
     :sms
   end
 
-  def deliver(alert)
-    Service::SMS.deliver_alert(alert, user)
-  end
-
-  def self.batch_deliver(alert)
-    Service::SMS.batch_deliver_alert(alert)
-  end
-
-
   private
   def strip_extra_characters
     self.sms = self.sms.tr('()-. ','')

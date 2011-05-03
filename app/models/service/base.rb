@@ -27,47 +27,6 @@ class Service::Base
   # The default delivery method is +deliver+
   PROVIDERS = {:swn => Service::SWN::Message, :TALHO => Service::TALHO::Message}
 
-  class Configuration
-    FAKE_DELIVERY_METHOD = :test
-    DEFAULT_DELIVERY_METHOD = :deliver
-    
-    attr_accessor_with_default(:options){ Hash.new }
-
-    
-    def fake_delivery?
-      options["delivery_method"] == "test"
-    end
-    
-    def to_hash
-      options.dup
-    end
-    
-    delegate :[], :to => :options
-    delegate :[]=, :to => :options
-  end
-  
-  # =================
-  # = CLASS METHODS =
-  # =================
-  
-  def self.configuration
-    #configuration on a per-class basis
-    @@configuration||={}
-    @@configuration[self.name] ||= Configuration.new
-  end
-  
-  def self.load_configuration_file(file)
-    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
-    if configuration.fake_delivery?
-      def self.deliveries 
-        @deliveries ||= []
-      end
-
-      def self.clearDeliveries
-        @deliveries = []
-      end
-    end
-  end
 
   def self.dispatch message
     providers = []
@@ -86,18 +45,4 @@ class Service::Base
       end
     end
   end
-  
-  # =================
-  # = INSTANCE METHODS =
-  # =================
-  
-  # Renders a template found in app/views/services/<name of service>/<template>
-  # with the passed in hash of local variables.
-  def render(template, locals={})
-    view = ActionView::Base.new ApplicationController.view_paths
-    view.extend FormatHelper
-    view.extend SmsHelper
-    view.render :file => "services/#{self.class.name.demodulize.tableize}/#{template}", :locals => locals
-  end
-
 end
