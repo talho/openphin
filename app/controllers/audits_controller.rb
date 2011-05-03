@@ -47,7 +47,7 @@ class AuditsController < ApplicationController
     version_list = {}
     conditions = {}
 
-    if params[:models] && !params['models'].delete_if{|x| x.blank?}.blank?   # checks if the models array has just a blank string, because it's messy to remove individual baseParams from an EXT store.
+    if params[:models] && !params['models'].delete_if{|x| x.blank?}.blank? # checks if the models array has just a blank string, because it's messy to remove individual baseParams from an EXT store.
       conditions['item_type'] = params[:models]
     end
     if params[:show_versions_for]
@@ -59,7 +59,10 @@ class AuditsController < ApplicationController
       conditions['event'] = params[:event]
     end
 
-    versions = Version.find(:all, :conditions => conditions,:order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
+    #don't show user actions by users with apps that current_user doesn't have
+    conditions['whodunnit'] = User.without_role("sysadmin").without_apps( Role.all.map(&:application).uniq - current_user.apps ).map(&:id).map(&:to_s) unless current_user.is_sysadmin?
+
+    versions = Version.find(:all, :conditions => conditions, :order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
     version_list['total_count'] = Version.find(:all, :conditions => conditions).count
     version_list['versions'] = []
     versions.each do |v|

@@ -5,6 +5,13 @@ Given /^the sphinx daemon is running$/ do
   output.should_not be_blank
 end
 
+Then /^I reindex sphinx$/ do
+  begin
+    output = `rake ts:index`
+  end
+  assert output =~ /SIGHUP/
+end
+
 Then /^I see the following users in the search results$/ do |table|
   table.raw.each do |row|
     row[0].split(',').map(&:strip).each do |name|

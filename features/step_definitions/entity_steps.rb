@@ -1,8 +1,12 @@
 Given /^the following entities exist[s]?:$/ do |table|
 
   table.raw.each do |row|
-    key, value = row
-    Given "a #{key.downcase} named #{value}"
+    key, value, app = row
+    if app.blank?
+      Given "a #{key.downcase} named #{value}"
+    else
+      Given "an application #{key.downcase} named #{value} for #{app}"
+    end
   end
 end
 
@@ -57,21 +61,33 @@ Given 'a child jurisdiction named $name' do |name|
   end
 end
 
-Given 'a role named $name' do |name|
-  Role.find_by_name(name) || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true))
+Given /^a[n]? role named (.*)$/ do |name|
+  Role.find_by_name_and_application(name,"phin") || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => "phin")
+end
+
+Given /^a[n]? application role named (.*) for (.*)$/ do |name, app|
+  Role.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => app)
 end
 
 Given /^a[n]? organization type named (.*)$/ do |name|
   OrganizationType.find_by_name(name) || Factory(:organization_type, :name => name)
 end
 
-
 Given /^a[n]? approval role named (.*)$/ do |name|
   r = Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true)
 end
+
 Given /^a[n]? system role named (.*)$/ do |name|
-  r = Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true, :user_role => false)
+  r = Role.approval_roles.find_by_name_and_application(name, "phin") || Factory(:role, :name => name, :approval_required => true, :user_role => false, :application => "phin")
 end
+Given /^a[n]? application system role named (.*) for (.*)$/ do |name, app|
+  Role.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => true, :user_role => false, :application => app)
+end
+
+Given /^the role "([^\"]*)" is for the "([^\"]*)" application$/ do |role, app|
+  Role.find_by_name(role).update_attributes(:application => app.downcase)
+end
+
 Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   jurisdictions = table.raw.first
   parent = Given "a jurisdiction named #{parent_name}"

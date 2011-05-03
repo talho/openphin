@@ -7,9 +7,9 @@
 
   Background:
     Given the following entities exist:
-      | Jurisdiction | Texas         |
-      | Jurisdiction | Dallas County |
-      | Jurisdiction | Potter County |
+      | Jurisdiction | Texas          |
+      | Jurisdiction | Dallas County  |
+      | Jurisdiction | Potter County  |
       | Role         | Health Officer |
     And Texas is the parent jurisdiction of:
       | Dallas County |
@@ -25,7 +25,7 @@
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And the user "Joe Black" with the email "joe.black@example.com" has the role "Health Officer" in "Potter County"
     And there is an system administrator role
-    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Superadmin" in "Texas"
+    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "SuperAdmin" in "Texas"
 
 
   Scenario: Create and edit a forum

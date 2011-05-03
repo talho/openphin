@@ -137,6 +137,10 @@ class User < ActiveRecord::Base
     role = role.is_a?(Role) ? role : Role.find_by_name(role)
     { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
   }
+  named_scope :without_role, lambda {|role|
+    role = role.is_a?(Role) ? role : Role.find_by_name(role)
+    { :conditions => [ "users.id not in (select user_id from role_memberships where role_id = ?)", role.id ], :include => :role_memberships}
+  }
   named_scope :with_roles, lambda {|roles|
     roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
     { :conditions => [ "role_memberships.role_id in (?)", roles.map(&:id) ], :include => :role_memberships}
@@ -145,9 +149,15 @@ class User < ActiveRecord::Base
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
   }
-  
+
   named_scope :with_user?, lambda {|user|
     { :conditions => ["users.id = ?", user.id]}
+  }
+  named_scope :with_apps, lambda{|apps|  #apps is an array of string app names
+    { :conditions => ["id in (select user_id from role_memberships where role_id in (select id from roles where application IN (?)))", apps ] }
+  }
+  named_scope :without_apps, lambda{|apps|  #apps is an array of string app names
+    { :conditions => ["id NOT IN (select user_id from role_memberships where role_id IN (select id from roles where application IN (?)))", apps ] }
   }
 
 #  named_scope :acknowledged_alert, lamda {|alert|
@@ -189,7 +199,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin_for?(other)
-    return true if roles.include?(Role.superadmin)
+    return true if roles.include?(Role.sysadmin) || roles.include?(Role.superadmin)
     if other.class == Jurisdiction
       return true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
     elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
@@ -229,25 +239,28 @@ class User < ActiveRecord::Base
   end
 
   def is_sysadmin?
-    return role_memberships.count(:conditions => ["role_id IN (?)", Role.sysadmin.map(&:id)]) > 0
+    return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0
   end
 
-  def is_super_admin?
+  def is_super_admin?(app = "phin")
+    return true if is_sysadmin?
     begin
-      j = Jurisdiction.root.children.first
+      jid = Jurisdiction.root.children.blank? ? 0 : Jurisdiction.root.children.first.id # Should be Texas
     rescue
-      return false # Should be Texas
+      return false
     end
-    return false if j.nil?
-    return role_memberships.count(:conditions => ["role_id IN (?) AND jurisdiction_id = ?", Role.superadmin.map(&:id), j.id]) > 0
+    return false if jid.nil?
+    return role_memberships(true).count(:conditions => { :role_id => Role.superadmin(app).id, :jurisdiction_id => jid } ) > 0
   end
 
-  def is_admin?
-    return role_memberships.count(:conditions => ["role_id IN (?)", Role.admin.map(&:id)]) > 0
+  def is_admin?(app = "phin")
+    return true if is_sysadmin?
+    return true if is_super_admin?(app)
+    return role_memberships(true).count(:conditions => { :role_id => Role.admin(app).id } ) > 0
   end
 
-  def is_org_approver?
-    return role_memberships.count(:conditions => ["role_id IN (?)", Role.org_admin.map(&:id)]) > 0
+  def is_org_approver?(app = "phin")
+    return role_memberships(true).count(:conditions => { :role_id => Role.org_admin(app).id } ) > 0
   end
 
   def has_role?(role_sym)
@@ -276,6 +289,14 @@ class User < ActiveRecord::Base
 
   def has_public_role_request?
     return role_requests.count(:conditions => ["role_id = ?", Role.public.id]) > 0
+  end
+
+  def has_app?(app)
+    self.roles.for_app(app).size > 0
+  end
+
+  def apps
+    return self.roles.map(&:application).uniq
   end
 
   alias_attribute :name, :display_name

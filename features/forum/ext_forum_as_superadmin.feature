@@ -7,9 +7,9 @@ Feature: Creating a forum (room)
 
   Background:
     Given the following entities exist:
-      | Jurisdiction | Texas         |
-      | Jurisdiction | Dallas County |
-      | Jurisdiction | Potter County |
+      | Jurisdiction | Texas          |
+      | Jurisdiction | Dallas County  |
+      | Jurisdiction | Potter County  |
       | Role         | Health Officer |
     And Texas is the parent jurisdiction of:
       | Dallas County |
@@ -25,9 +25,8 @@ Feature: Creating a forum (room)
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And the user "Joe Black" with the email "joe.black@example.com" has the role "Health Officer" in "Potter County"
     And there is an system administrator role
-    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Superadmin" in "Texas"
+    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "SuperAdmin" in "Texas"
     And I am on the dashboard page
-
 
   # issue: currently a forum without an audience does not show to anyone outside of superadmins.
   # I think that a forum without an audience should show to all users, no matter role
@@ -35,7 +34,8 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
-    And I should see "Add Forum"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I press "Add Forum"
     Then the "New Forum" window should be open
     When I fill in "Forum Name" with "Funding methodology"
@@ -68,6 +68,8 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I should see "Add Forum"
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
@@ -97,7 +99,8 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
-    And I should see "Add Forum"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
     And I select the following in the audience panel:
@@ -136,7 +139,8 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
-    And I should see "Add Forum"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I press "Add Forum"
     And I fill in "Forum Name" with "Funding methodology"
     And I select the following in the audience panel:
@@ -165,6 +169,8 @@ Feature: Creating a forum (room)
     And I have the forum named "Forum to verify sticky topics"
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Forum to verify sticky topics" grid row
     And I press "New Topic"
     And I fill in "Topic Title" with "Sticky topic that was created earlier"
@@ -201,6 +207,8 @@ Feature: Creating a forum (room)
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     Then I should see "Measuring Fulfillment"
 
@@ -227,6 +235,8 @@ Feature: Creating a forum (room)
 
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
     And I check "Hidden"
@@ -250,6 +260,8 @@ Feature: Creating a forum (room)
 
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
     And I check "Closed"
@@ -268,6 +280,8 @@ Feature: Creating a forum (room)
 
     And I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     And I will confirm on next step
     And I click delete_topic on the "Measuring Fulfillment" grid row
@@ -283,7 +297,8 @@ Feature: Creating a forum (room)
     And I have the forum named "Forum to verify concurrency"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
-
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I click edit_forum on the "Forum to verify concurrency" grid row
     And I select the following in the audience panel:
       | name           | type         |
@@ -293,7 +308,8 @@ Feature: Creating a forum (room)
     And I am logged in as "joe.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
-
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I click edit_forum on the "Forum to verify concurrency" grid row 
     And I select the following in the audience panel:
       | name           | type         |
@@ -313,6 +329,8 @@ Feature: Creating a forum (room)
       | Users | joe.smith@example.com |
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
     And I fill in "Topic Title" with "Measuring Reward"
@@ -321,6 +339,8 @@ Feature: Creating a forum (room)
     And I am logged in as "joe.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
+    Then the "Forums" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I select the "Grant Capturing" grid row
     And I click edit_topic on the "Measuring Fulfillment" grid row
     And I fill in "Topic Title" with "Measuring Time"

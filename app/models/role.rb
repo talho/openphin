@@ -26,7 +26,8 @@ class Role < ActiveRecord::Base
   default_scope :order => "user_role, name ASC"
 
   Defaults = {
-    :superadmin => 'SuperAdmin',\
+    :sysadmin => 'SysAdmin',
+    :superadmin => 'SuperAdmin',
     :admin => 'Admin',
     :org_admin => 'OrgAdmin',
     :public => 'Public'
@@ -36,37 +37,35 @@ class Role < ActiveRecord::Base
 
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
   named_scope :for_app, lambda { |app| { :conditions => { :application => app } } }
-  #named_scope :for_phin, :conditions => { :application => 'phin' }
-  #named_scope :for_rollcall, :conditions => { :application => 'rollcall' }
-
+  
   def self.latest_in_secs
     recent(1).first.updated_at.utc.to_i
   end
 
-  def self.admin(app = nil)
-    app.nil? ? find(:all, :conditions => {:user_role => false}) : find(:all, :conditions => {:user_role => false, :application => app})
+  def self.admin(app = "phin")
+      find_or_create_by_name_and_approval_required_and_user_role_and_application Defaults[:admin],true,false,app
   end
 
-  def self.org_admin(app = nil)
-    app.nil? ? find(:all, :conditions => {:name => Defaults[:org_admin]}) : find(:all, :conditions => {:name => Defaults[:org_admin], :application => app})
+  def self.org_admin(app = "phin")
+      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:org_admin],true,false,app)
   end
 
-  def self.superadmin(app = nil)
-    app.nil? ? find(:all, :conditions => {:name => Defaults[:superadmin]}) : find(:all, :conditions => {:name => Defaults[:superadmin], :application => app})
+  def self.superadmin(app = "phin")
+      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:superadmin],true,false,app)
   end
 
   def self.sysadmin
-    find(:all, :conditions => {:name => Defaults[:sysadmin], :application => 'system'})
+    find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:sysadmin],true,false,"system")
   end
 
-  def self.public(app = nil)
-    app.nil? ? find(:all, :conditions => {:user_role => true}) : find(:all, :conditions => {:user_role => true, :application => app})
+  def self.public(app = "phin")
+      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:public],false,true,app)
   end
 
   named_scope :user_roles, :conditions => { :user_role => true }
   named_scope :approval_roles, :conditions => { :approval_required => true }
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, :scope => :application
 
   def is_public?
     if name == Defaults[:public]

@@ -22,6 +22,7 @@ Feature: An admin managing users
     And a role named Public
     And jonas.brothers@example.com has a public profile
     And an approval role named Health Alert and Communications Coordinator
+    And the role "Health Alert and Communications Coordinator" is for the "phin" application
     And the sphinx daemon is running
     And delayed jobs are processed
   
@@ -29,14 +30,14 @@ Feature: An admin managing users
     Given I am logged in as "bob.jones@example.com"
     When I navigate to the ext dashboard page
     When I fill in the add user form with:
-      | Email address  | john.smith@example.com |
-      | First name     | John                   |
-      | Last name      | Smith                  |
-      | Password       | Password1              |
-      | Confirm password | Password1            |
-      | Display name   | Jonathan Smith         |
-      | Language       | English                |
-      | Home Jurisdiction | Dallas County       |
+      | Email address     | john.smith@example.com |
+      | First name        | John                   |
+      | Last name         | Smith                  |
+      | Password          | Password1              |
+      | Confirm password  | Password1              |
+      | Display name      | Jonathan Smith         |
+      | Language          | English                |
+      | Home Jurisdiction | Dallas County          |
     And I request the role "Health Alert and Communications Coordinator" for "Dallas County" in the RolesControl
     And I request the org "Red Cross" in the OrgsControl
     And I press "Apply Changes"

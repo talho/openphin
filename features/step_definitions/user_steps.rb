@@ -35,7 +35,7 @@ Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
   u.save
 end
 Given /^the following users exist:$/ do |table|
-  table.raw.each do |row|                   cd op 
+  table.raw.each do |row| 
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
   end
 end
@@ -179,7 +179,7 @@ end
 
 When 'I signup for an account with the following info:' do |table|
   visit new_user_path
-  fill_in_user_signup_form(table)
+  fill_in_user_signup_form(table)  
   click_button 'Sign Up'
 end
 

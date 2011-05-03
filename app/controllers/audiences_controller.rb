@@ -21,11 +21,6 @@ class AudiencesController < ApplicationController
     render :json => data
   end
 
-  def roles
-    roles = current_user.is_admin? ? Role.all : Role.user_roles
-    render :json => roles.collect {|r| {:id => r.id, :name => r.display_name}}
-  end
-
   def groups
     render :json => (current_user.visible_groups | Organization.non_foreign.map(&:group)).flatten.compact
   end

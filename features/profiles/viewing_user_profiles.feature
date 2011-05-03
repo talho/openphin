@@ -64,18 +64,18 @@ Feature: Viewing user profiles
     When I view the profile page for "big.admin@example.com"
     Then I can see the profile
     And I can see the following roles:
-      | System:Admin   | Texas         |
+      | Phin: Admin   | Texas         |
       | Epidemiologist | Dallas County |
       | Epidemiologist | Potter County |
 
   Scenario: Viewing my own profile as an superadmin
     Given big.admin@example.com has a private profile
-  	And the user "Big Admin" with the email "big.admin@example.com" has the role "Superadmin" in "Texas"
+  	And the user "Big Admin" with the email "big.admin@example.com" has the role "SuperAdmin" in "Texas"
     And I am logged in as "big.admin@example.com"
     When I view the profile page for "big.admin@example.com"
     Then I can see the profile
     And I can see the following roles:
-      | System:Superadmin | Texas         |
+      | Phin: SuperAdmin | Texas         |
       | Epidemiologist    | Dallas County |
       | Epidemiologist    | Potter County |
   

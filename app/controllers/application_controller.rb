@@ -111,6 +111,7 @@ class ApplicationController < ActionController::Base
   end
 
   def super_admin_in_texas_required
+    return true if current_user.is_sysadmin?
     unless current_user.role_memberships.detect{ |rm| rm.role == Role.superadmin && rm.jurisdiction == Jurisdiction.find_by_name("Texas") }
       message = "That resource does not exist or you do not have access to it."
       if request.xhr?

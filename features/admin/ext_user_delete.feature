@@ -10,7 +10,7 @@ Feature: An admin deleting users
       | Jurisdiction | Dallas County    |
       | Role         | Medical Director |
     And Texas is the parent jurisdiction of:
-      | Dallas County |
+      | Dallas County  |
       | Briscoe County |
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
@@ -24,10 +24,11 @@ Feature: An admin deleting users
     And I am logged in as "bob.jones@example.com"
     And delayed jobs are processed
 
+
   Scenario: Delete a user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And all email has been delivered
-
+    And I reindex sphinx
     When I am logged in as "bob.jones@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
@@ -40,22 +41,23 @@ Feature: An admin deleting users
 
   Scenario: Not permit multiple case insensitive email users unless the first user has been deleted
     Given I signup for an account with the following info:
-      | Email          | greg.brown@example.com |
-      | Password       | Apples1          |
-      | Password Confirmation | Apples1   |
-      | First Name     | Greg             |
-      | Last Name      | Brown            |
-      | Home Jurisdiction  | Dallas County    |
+      | Email                 | greg.brown@example.com |
+      | Password              | Apples1                |
+      | Password Confirmation | Apples1                |
+      | First Name            | Greg                   |
+      | Last Name             | Brown                  |
+      | Home Jurisdiction     | Dallas County          |
     Then I should see "Thanks for signing up"
+
     And "greg.brown@example.com" should have the "Public" role for "Dallas County"
 
     When I signup for an account with the following info:
-      | Email          | Greg.Brown@example.com |
-      | Password       | Apples1          |
-      | Password Confirmation | Apples1   |
-      | First Name     | Greg             |
-      | Last Name      | Brown            |
-      | Home Jurisdiction  | Dallas County    |
+      | Email                 | Greg.Brown@example.com |
+      | Password              | Apples1                |
+      | Password Confirmation | Apples1                |
+      | First Name            | Greg                   |
+      | Last Name             | Brown                  |
+      | Home Jurisdiction     | Dallas County          |
     Then I should not see "Thanks for signing up"
 
     When delayed jobs are processed
@@ -69,12 +71,12 @@ Feature: An admin deleting users
     # delayed jobs must be repeated below for the delete above to be picked up
     And delayed jobs are processed
     When I signup for an account with the following info:
-      | Email          | greg.brown@example.com |
-      | Password       | Apples1          |
-      | Password Confirmation | Apples1   |
-      | First Name     | Greg             |
-      | Last Name      | Brown            |
-      | Home Jurisdiction  | Dallas County    |
+      | Email                 | greg.brown@example.com |
+      | Password              | Apples1                |
+      | Password Confirmation | Apples1                |
+      | First Name            | Greg                   |
+      | Last Name             | Brown                  |
+      | Home Jurisdiction     | Dallas County          |
     Then I should see "Thanks for signing up"
  
   Scenario: Admin shouldn't be able to delete a user outside of his admin jurisdictions

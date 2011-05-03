@@ -18,8 +18,8 @@ I should be able to create topics to forums and place comments to these topics
     And a role named Health Officer
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And the user "Harry Simon" with the email "harry.simon@example.com" has the role "Health Officer" in "Dallas County"
-    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Superadmin" in "Texas"
-    And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Superadmin" in "Texas"
+    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "SuperAdmin" in "Texas"
+    And the user "Jim Smith" with the email "jim.smith@example.com" has the role "SuperAdmin" in "Texas"
 
 
   Scenario: Create a topic and edit the topic as the poster

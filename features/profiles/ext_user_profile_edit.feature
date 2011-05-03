@@ -10,14 +10,14 @@ I should be able to edit my profile
       | Jurisdiction | Potter County  |
       | Jurisdiction | Texas          |
       | Role         | Health Officer |
-      | System role  | Superadmin     |
+      | System role  | SuperAdmin     |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County |
     And the following users exist:
       | John Smith      | john.smith@example.com   | Public | Dallas County |
       | Jane Smith      | jane.smith@example.com   | Public | Potter County |
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
-      | Bob Smith       | bob.smith@example.com    | Superadmin  | Texas    |
+      | Bob Smith       | bob.smith@example.com    | SuperAdmin  | Texas    |
     When delayed jobs are processed
 
   Scenario: editing user information

@@ -20,12 +20,14 @@ page << "Application.rails_environment = '#{ Rails.env }';"
 
     plugin_config_items = []
       Phin::Application.eval_if_plugin_present(:rollcall) do
-        if current_user.roles.find_by_name("Rollcall")
+        if current_user.has_app?("rollcall")
           plugin_config_items << $menu_config[:rollcall] unless $menu_config[:rollcall].nil?
         end
       end
       Phin::Application.eval_if_plugin_present(:vms) do
-        plugin_config_items << $menu_config[:vms] unless $menu_config[:vms].nil?
+        if current_user.has_app?("vms")
+          plugin_config_items << $menu_config[:vms] unless $menu_config[:vms].nil?
+        end
       end
     app_menu_config += plugin_config_items.join(',')
     app_menu_config += "]},"
@@ -106,7 +108,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
                   '->',
-                  'Need Help? Email: <a href=\"mailto:phinadmin@dshs.state.tx.us\" target=\"_blank\">phinadmin@dshs.state.tx.us</a>'
+                  'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:phinadmin@dshs.state.tx.us\" target=\"_blank\">phinadmin@dshs.state.tx.us</a>'
                 ];"
 
   page << bbar_config

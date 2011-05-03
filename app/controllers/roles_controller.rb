@@ -1,7 +1,7 @@
 class RolesController < ApplicationController
 	app_toolbar "han"
 	
-  before_filter :non_public_role_required
+  before_filter :non_public_role_required, :except => [:index]
   before_filter :admin_required, :except => [:mapping, :index]
   before_filter :change_include_root, :only => [:index, :mapping]
   after_filter :change_include_root_back, :only => [:index, :mapping]
@@ -26,9 +26,14 @@ class RolesController < ApplicationController
       format.json do
         # this header is a must for CORS
         headers["Access-Control-Allow-Origin"] = "*"
-        is_admin = current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
-        @alerts = is_admin ? Role.find(:all,:select=>'id,name') : Role.user_roles.find(:all,:select=>'id,name')
-        render :json => {"roles"=>@alerts,"expires_on"=>1.day.since.to_i*1000}
+        if current_user.is_sysadmin?
+          roles = Role.all
+        elsif current_user.is_admin?
+          roles = Role.for_app(current_user.apps)
+        else
+          roles = Role.user_roles.for_app(current_user.apps)
+        end
+        render :json => roles.collect {|r| {:id => r.id, :name => r.display_name}}
       end
     end
   end

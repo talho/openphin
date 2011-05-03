@@ -52,7 +52,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
             items: [
               new Ext.Container({
                 flex: 2,
-                items:[{xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;> ({first_name} {last_name}) </span></tpl>'}]
+                items:[{xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;"> ({first_name} {last_name}) </span></tpl>'}]
               }),
               new Ext.Container({
                 flex: 1,

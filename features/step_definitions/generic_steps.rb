@@ -114,3 +114,7 @@ end
 Then /^"([^"]*)" should be implemented$/ do |arg1|
   pending arg1
 end
+
+When /^this scenario is written$/ do
+  pending
+end

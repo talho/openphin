@@ -23,6 +23,7 @@ Feature: An admin managing users
     And "jonas.brothers@example.com" is not public in "Texas"
     And jonas.brothers@example.com has a public profile
     And an approval role named Health Alert and Communications Coordinator
+    And the role "Health Alert and Communications Coordinator" is for the "phin" application
     And I am logged in as "bob.jones@example.com"
   
   Scenario: Creating a user

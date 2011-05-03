@@ -11,7 +11,7 @@ Feature: Assigning roles to users for roles
       | Jurisdiction | Potter County  |
       | Role         | Health Officer |
       | Role         | Epidemiologist |
-      | System role  | Superadmin     |
+      | System role  | SuperAdmin     |
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County |
     And Health Officer is a non public role
@@ -24,12 +24,13 @@ Feature: Assigning roles to users for roles
       | John Smith      | john@example.com   | Public | Dallas County |
       | Jane Doe        | jane@example.com   | Public | Dallas County |
       | Bob Doe         |  bob@example.com   | Public | Potter County |
-      | Super Doe       |  super@example.com | Superadmin | Texas     |
+      | Super Doe       |  super@example.com | SuperAdmin | Texas     |
     When the sphinx daemon is running
     And delayed jobs are processed
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
+    And I reindex sphinx
     When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Doe"
     And I add the role "Health Officer" for "Dallas County" from EditProfile
@@ -96,22 +97,22 @@ Feature: Assigning roles to users for roles
     Given I am logged in as "admin@potter.gov"
     When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
-    And I add the role "System:Admin" for "Potter County" from EditProfile
+    And I add the role "Phin: Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should see "System:Admin" within ".role-title"
+    And I should see "Phin: Admin" within ".role-title"
 
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
     When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
-    And I add the role "System:Admin" for "Potter County" from EditProfile
+    And I add the role "Phin: Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should see "System:Admin" within ".role-title"
+    And I should see "Phin: Admin" within ".role-title"
 
   Scenario: Assigning system roles to a user in a child of my jurisdiction
     Given I am logged in as "admin@state.tx.us"
     When I navigate to the ext dashboard page
     And I edit the user profile for "Bob Doe"
-    And I add the role "System:Admin" for "Potter County" from EditProfile
+    And I add the role "Phin: Admin" for "Potter County" from EditProfile
     Then "bob@example.com" should have the "Admin" role in "Potter County"
-    And I should see "System:Admin" within ".role-title"
+    And I should see "Phin: Admin" within ".role-title"

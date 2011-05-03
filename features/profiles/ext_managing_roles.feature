@@ -8,7 +8,8 @@ I should be able to remove all but one public role from my profile
       | Jurisdiction  | Dallas County            |
       | Jurisdiction  | Potter County            |
       | Jurisdiction  | Texas                    |
-      | approval role | BioTerrorism Coordinator |
+      | role          | BioTerrorism Coordinator |
+    And the role "BioTerrorism Coordinator" is for the "phin" application
     And Federal is a foreign jurisdiction
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County  |
@@ -31,7 +32,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Potter County | Public |
 
-  Scenario: Removing all public roles from user profile
+  Scenario: Cannot remove all public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
@@ -144,3 +145,6 @@ I should be able to remove all but one public role from my profile
     And I open ext combo "Jurisdiction"
     Then I should see "Dallas County"
     And I should not see "Federal"
+
+  Scenario: Role request window should not show roles for applications the user does not have
+    When this scenario is written

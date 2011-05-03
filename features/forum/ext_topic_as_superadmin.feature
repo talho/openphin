@@ -21,7 +21,7 @@ Feature: Managing a topic as a super admin
     And a role named Health Officer
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And the user "Jeff Brown" with the email "joe.black@example.com" has the role "Health Officer" in "Dallas County"
-    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "Superadmin" in "Texas"
+    And the user "Joe Smith" with the email "joe.smith@example.com" has the role "SuperAdmin" in "Texas"
     And I am logged in as "jane.smith@example.com"
     And I have the comment "Walmart claims 100% fulfillment" to topic "Measuring Fulfillment" to forum "Grant Capturing"
     When I am logged in as "joe.smith@example.com"

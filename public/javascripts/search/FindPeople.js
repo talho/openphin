@@ -8,7 +8,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     this.rolesStore = new Ext.data.JsonStore({
       url: '/roles.json',
       restful: true,
-      root: 'roles',
       fields: ['name', 'id'],
       autoLoad: true
     });
