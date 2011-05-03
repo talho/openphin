@@ -50,7 +50,7 @@ class Service::SWN::Blackberry::Alert < Service::SWN::Blackberry::Base
     xml.swn(:sendNotification, xmlns => "http://www.sendwordnow.com/notification") do
       xml.swn(:pSendNotificationInfo) do
         xml.swn(:SendNotificationInfo) do
-          xml.swn(:id, alert.distribution_id + "-BLACKBERRY")
+          xml.swn(:id, alert.alert_identifier + "-BLACKBERRY")
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml

@@ -91,9 +91,17 @@ class Alert < ActiveRecord::Base
     Alert.new(:title => title, :message => message, :created_at => Time.zone.now)
   end
 
+  def self.child_classes
+    Module.constants.map{|constant_name| constant_name.constantize if !(defined? constant_name.constantize.superclass).nil? && constant_name.constantize.superclass == ::Alert}.compact
+  end
+
 #  def superclass
 #    self.class.superclass
 #  end
+
+  def alert_identifier
+    id
+  end
 
   def audiences_attributes=(attrs={})
     attrs.each do |key, value|
@@ -156,7 +164,7 @@ class Alert < ActiveRecord::Base
 #    alert_device_types(true).each do |device_type|
 #      device_type.device_type.batch_deliver(self)
 #    end
-    initialize_statistics
+    self.initialize_statistics
   end
 
   def initialize_statistics
@@ -173,6 +181,13 @@ class Alert < ActiveRecord::Base
 
   def update_statistics(options)
     aa_size = nil
+    
+    if options[:response] && options[:response].to_i > 0
+      response = options[:response]
+      ack = ack_logs.find_by_item_type_and_item("alert_response", call_down_messages[options[:response]])
+      ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
+    end
+
     if options[:device]
       ack = ack_logs.find_by_item_type_and_item("device",options[:device])
       ack.update_attribute(:acks, ack[:acks] + 1) unless ack.nil?
