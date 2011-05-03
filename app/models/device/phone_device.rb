@@ -31,14 +31,6 @@ class Device::PhoneDevice < Device
     :phone
   end
 
-  def deliver(alert)
-    Service::Phone.deliver_alert(alert, user)
-  end
-
-  def self.batch_deliver(alert)
-    Service::Phone.batch_deliver_alert(alert)
-  end
-
   private
   def strip_extra_characters
     return if self.phone.blank?

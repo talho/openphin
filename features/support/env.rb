@@ -106,22 +106,6 @@ Spork.each_run do
    FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
    ActionMailer::Base.deliveries = []
 
-   Service::Blackberry.instance_eval do
-     Service::Blackberry.clearDeliveries
-   end
-
-   Service::Phone.instance_eval do
-     Service::Phone.clearDeliveries
-   end
-
-   Service::SMS.instance_eval do
-     Service::SMS.clearDeliveries
-   end
-
-    Service::Email.instance_eval do
-      Service::Email.clearDeliveries
-    end
-
    Service::SWN::Message.instance_eval do
      Service::SWN::Message.clearDeliveries
    end
