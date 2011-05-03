@@ -37,7 +37,7 @@ class Service::SWN::Phone::Alert < Service::SWN::Phone::Base
 --MIME_boundary
 Content-Type: text/xml; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-ID: <#{alert.distribution_id}@#{Agency[:agency_domain]}>
+Content-ID: <#{alert.alert_identifier}@#{Agency[:agency_domain]}>
 
 #{body}
 --MIME_boundary
@@ -71,7 +71,7 @@ EOF
     xml.swn(:sendNotification, xmlns => "http://www.sendwordnow.com/notification") do
       xml.swn(:pSendNotificationInfo) do
         xml.swn(:SendNotificationInfo) do
-          xml.swn(:id, alert.distribution_id + "-PHONE")
+          xml.swn(:id, alert.alert_identifier + "-PHONE")
           xml.swn(:custSentTimestamp, Time.now.utc.iso8601(3))
           add_sender xml
           add_notification xml
