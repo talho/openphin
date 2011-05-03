@@ -6,12 +6,4 @@ class Device::ConsoleDevice
   def key
     :console
   end
-
-  def deliver(alert)
-    #intentionally do nothing
-  end
-
-  def self.batch_deliver(alert)
-    #intentionally do nothing
-  end
 end

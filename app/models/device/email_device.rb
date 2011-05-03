@@ -32,12 +32,4 @@ class Device::EmailDevice < Device
   def key
     :email_address
   end
-
-  def deliver(alert)
-    HanAlertMailer.deliver_alert(alert, user) unless alert.alert_attempts.nil?
-  end
-  
-  def self.batch_deliver(alert)
-    Service::Email.batch_deliver_alert(alert)
-  end
 end
