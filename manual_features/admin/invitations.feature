@@ -30,7 +30,7 @@ Feature: Invitation System
     And "jane.smith@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
     When delayed jobs are processed
-    Then the following Emails should be broadcasted:
+    Then the following invitation Emails should be broadcasted:
       | email                  | message                                   |
       | jane.smith@example.com | Please click the link below to join DSHS. |
 
@@ -71,7 +71,7 @@ Feature: Invitation System
     Then I should see "Invitation was successfully sent."
     And "joe.smith@example.com" is an invitee of "DSHS"
     When delayed jobs are processed
-    Then the following Emails should be broadcasted:
+    Then the following invitation Emails should be broadcasted:
       | email                 | message                                               |
       | joe.smith@example.com | You have been made a member of the organization DSHS. |
 
@@ -93,7 +93,7 @@ Feature: Invitation System
     And I should see "Bob User <bob@example.com>"
     And I should see "John User <john@example.com>"
     When delayed jobs are processed
-    Then the following Emails should be broadcasted:
+    Then the following invitation Emails should be broadcasted:
       | email            | message                                   |
       | bob@example.com  | Please click the link below to join DSHS. |
       | john@example.com | Please click the link below to join DSHS. |

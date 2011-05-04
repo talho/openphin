@@ -235,6 +235,20 @@ Then /^the following Emails should be broadcasted:$/ do |table|
   end
 end
 
+Then /^the following invitation Emails should be broadcasted:$/ do |table|
+  table.hashes.each do |row|
+    call = Service::SWN::Invitation.deliveries.detect do |email_call|
+      xml = Nokogiri::XML(email_call.body)
+      email = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Email"]/swn:address',
+                          {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
+      message = xml.search( "//swn:notification/swn:body",
+                            {"swn" => "http://www.sendwordnow.com/notification"}).map(&:inner_text)
+      !message.map{|msg| msg.match(row["message"])}.compact.empty? && email.include?(row["email"])
+    end
+    call.should_not be_nil
+  end
+end
+
 Then /^the following SMS calls should be made:$/ do |table|
   table.hashes.each do |row|
     call = Service::SWN::Message.deliveries.detect do |sms_call|
