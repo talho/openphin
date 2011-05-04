@@ -13,6 +13,9 @@
 #
 
 class Service::SWN::Invitation < Service::SWN::Base
+  load_configuration_file RAILS_ROOT+"/config/swn.yml"
+  load_configuration_file RAILS_ROOT+"/config/email.yml"
+
   def initialize(invitation, config, users)
     @invitation, @config, @users = invitation, config, users
   end
@@ -24,6 +27,8 @@ class Service::SWN::Invitation < Service::SWN::Base
       |  user_ids: #{@users.map(&:id).inspect}
       |  config: #{@config.options.inspect}
     EOT
+
+    initialize_fake_delivery(@config) if @config.fake_delivery?
 
     body = Service::SWN::Email::Invitation.new(
       :invitation => @invitation,
@@ -44,6 +49,8 @@ class Service::SWN::Invitation < Service::SWN::Base
       |  config: #{@config.options.inspect}
     EOT
 
+    initialize_fake_delivery(@config) if @config.fake_delivery?
+    
     @invitation.body = "You have been made a member of the organization #{@invitation.default_organization.name}."
 
     body = Service::SWN::Email::Invitation.new(
@@ -55,5 +62,16 @@ class Service::SWN::Invitation < Service::SWN::Base
     ).build!
 
     perform_delivery body
+  end
+
+  private
+
+  def initialize_fake_delivery(config) # :nodoc:
+    Service::SWN::Invitation.instance_eval do
+      define_method(:perform_delivery) do |body|
+        Service::SWN::Invitation.deliveries << OpenStruct.new(:body => body)
+        config.options[:default_response] ||= "200 OK"
+      end
+    end
   end
 end
