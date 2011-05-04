@@ -14,7 +14,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
           result = if Rails.env == 'cucumber'
             Crack::XML.parse(File.read("#{args[:filename]}"))
           else
-            Service::SWN::Alert::NotificationResultsRequest.build("#{alert.alert_identifier}-#{devices[type]}", Service::Phone.configuration.options)
+            Service::SWN::Message::NotificationResponse.build("#{alert.alert_identifier}-#{devices[type]}", Service::SWN::Message.configuration.options)
           end
 
           envelope = result['soap:Envelope']
