@@ -38,8 +38,8 @@ class Invitation < ActiveRecord::Base
   end
 
   def deliver
-    deliver_status = Service::Email.deliver_invitation(self) unless new_invitees.empty?
-    org_deliver_status = Service::Email.deliver_org_membership_notification(self) unless default_organization.nil? || registered_invitees.empty?
+    deliver_status = Service::Invitation.deliver_invitation(self) unless new_invitees.empty?
+    org_deliver_status = Service::Invitation.deliver_org_membership_notification(self) unless default_organization.nil? || registered_invitees.empty?
     if deliver_status.nil?
       org_deliver_status == "200 OK"
     elsif org_deliver_status.nil?
