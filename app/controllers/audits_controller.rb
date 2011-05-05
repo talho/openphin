@@ -60,7 +60,7 @@ class AuditsController < ApplicationController
     end
 
     #don't show user actions by users with apps that current_user doesn't have
-    conditions['whodunnit'] = User.without_role("SysAdmin").without_apps( Role.all.map(&:application).uniq - current_user.apps ).map(&:id).map(&:to_s) unless current_user.is_sysadmin?
+    conditions['whodunnit'] = current_user.visible_actors.map(&:id).map(&:to_s) unless current_user.is_sysadmin?
 
     versions = Version.find(:all, :conditions => conditions, :order => "#{params[:sort]} #{params[:dir]}", :limit => params[:limit], :offset => params[:start])
     version_list['total_count'] = Version.find(:all, :conditions => conditions).count

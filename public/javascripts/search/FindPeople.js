@@ -126,7 +126,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         keys: [{key: Ext.EventObject.RETURN, shift: false, fn: this.displaySearchResults, scope: this}]
     });
 
-     this.nameColTemplate = new Ext.XTemplate(
+    this.nameColTemplate = new Ext.XTemplate(
       '<div style="float: left; height: 60px; width: 60px;"><img src="{photo}"></div>',
       '<div style="float: left; margin-left: 15px; width: 205px;">',
         '<span style="white-space:normal; font-weight: bold; font-size: 150%;">{display_name}</span><br/ >',
@@ -225,7 +225,11 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         this.searchResults,
         this.noResultsScreen,
         this.serverError
-      ]
+      ],
+      listeners: {
+        scope: this,
+        'afterrender': function(cmp){ this.searchingLoadMask = new Ext.LoadMask(cmp.getEl(), { msg:"Searching...", store: this.resultsStore }); }
+      }
     });
 
     this.primary_panel = new Ext.Panel({

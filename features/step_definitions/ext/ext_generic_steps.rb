@@ -383,7 +383,7 @@ When /^I click to download the file "([^\"]*)"$/ do |value|
   end
 end
 
-Then /^the "([^\"]*)" window should be open$/ do |window_title, neg|
+Then /^the "([^\"]*)" window should be open$/ do |window_title|
    page.evaluate_script("Ext.WindowMgr.getActive().title").should == window_title
 end
 

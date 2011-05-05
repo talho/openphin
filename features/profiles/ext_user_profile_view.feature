@@ -283,18 +283,3 @@ Scenario: Fields should not be visible if they do not have data
       | They call me Mr. Clean Genes          |
       | I've been washing genes               |
       | Born in Japan and Educated in Germany |
-
-##### removed until RBAC is fully implemented
-#Scenario: First and Last name fields should be visible if different from Display Name
-#  Given pott.pub@example.com has the following information:
-#    | display_name | Potsdam Scrubbing Bubbles Public |
-#  And pott.pub@example.com has a public profile
-#  And I am logged in as "dall.md@example.com"
-#  And I navigate to the ext dashboard page
-#  And I should see "About TXPHIN"
-#  And I suspend cucumber
-#  And I pause
-#  And I view the ext profile page for "pott.pub@example.com"
-#   Then I should see:
-#    | (Potter Public)                  |
-#    | Potsdam Scrubbing Bubbles Public |

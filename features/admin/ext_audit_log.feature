@@ -10,8 +10,7 @@ Feature: Audit Log
       | Role         | Boss                                        | phin |
       | Role         | Lackey                                      | phin |
       | Role         | Sous Chef                                   | phin |
-      | System role  | SuperAdmin                                  | phin |
-      | System role  | Admin                                       | phin |
+
     
     And Texas is the parent jurisdiction of:
      | Region 1, Region 2 |
@@ -20,7 +19,7 @@ Feature: Audit Log
     And Region 2 is the parent jurisdiction of:
      | Lubbock County, Denton County |
     And the following users exist:
-      | Bill Smith | billsmith@example.com | SuperAdmin                                  | Texas          |
+      | Bill Smith | billsmith@example.com | SysAdmin                                    | Texas          |
       | Nate Smith | natesmith@example.com | Admin                                       | Texas          |
       | Jane Smith | janesmith@example.com | Boss                                        | Dallas County  |
       | Fred Smith | fredsmith@example.com | Lackey                                      | Lubbock County |

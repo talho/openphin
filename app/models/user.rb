@@ -299,6 +299,10 @@ class User < ActiveRecord::Base
     return self.roles.map(&:application).uniq
   end
 
+  def visible_actors  #this is an ugly solution - returns every user in the system that a given user has rights to see.
+    return User.without_role("SysAdmin").without_apps( Role.all.map(&:application).uniq - apps )
+  end
+
   alias_attribute :name, :display_name
   
   def alerter_jurisdictions
