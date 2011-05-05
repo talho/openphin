@@ -25,7 +25,7 @@ class Admin::GroupsController < ApplicationController
         format.json {
           @groups = @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT
                                                                      :owner => {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)}} unless @groups.empty?
-          render :json => { :groups =>  @groups, :count => groups.length, :page => page, :per_page => 10 }
+          render :json => { :groups =>  @groups, :count => groups.length, :page => page.to_i, :per_page => 10, :start => params[:start].to_i }
         }
       end
     end

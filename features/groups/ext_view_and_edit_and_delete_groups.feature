@@ -299,3 +299,51 @@ Feature: Viewing groups
       | Potter County | Jurisdiction |
       | Jane Smith    | User         |
       | John Smith    | User         |
+
+  Scenario: Page through groups
+    Given the following groups for "jill.smith@example.com" exist:
+      | Group A | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group B | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group C | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group F | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group G | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group H | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group I | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group J | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group K | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group L | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group M | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group N | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+    When I navigate to the ext dashboard page
+    And I navigate to "Admin > Manage Groups"
+    Then the "Manage Groups" tab should be open
+    Then I should see "Dallas County Health Officer Group" in grid row 1
+    Then I should see "Dallas County Health Officer Jurisdiction Group" in grid row 2
+    Then I should see "Group A" in grid row 3
+    Then I should see "Group B" in grid row 4
+    Then I should see "Group C" in grid row 5
+    Then I should see "Group F" in grid row 6
+    Then I should see "Group G" in grid row 7
+    Then I should see "Group H" in grid row 8
+    Then I should see "Group I" in grid row 9
+    Then I should see "Group J" in grid row 10
+    When I click x-tbar-page-next ""
+    And I wait for the "Loading..." mask to go away
+    Then I should see "Group K" in grid row 1
+    Then I should see "Group L" in grid row 2
+    Then I should see "Group M" in grid row 3
+    Then I should see "Group N" in grid row 4
+    When I click x-tbar-page-prev ""
+    And I wait for the "Loading..." mask to go away
+    Then I should see "Dallas County Health Officer Group" in grid row 1
+    Then I should see "Dallas County Health Officer Jurisdiction Group" in grid row 2
+    Then I should see "Group A" in grid row 3
+    Then I should see "Group B" in grid row 4
+    Then I should see "Group C" in grid row 5
+    Then I should see "Group F" in grid row 6
+    Then I should see "Group G" in grid row 7
+    Then I should see "Group H" in grid row 8
+    Then I should see "Group I" in grid row 9
+    Then I should see "Group J" in grid row 10
+
+
