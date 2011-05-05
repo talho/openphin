@@ -229,7 +229,11 @@ class User < ActiveRecord::Base
   end
 
   def is_super_admin?
-    j = Jurisdiction.root.children.first rescue return false # Should be Texas
+    begin
+      j = Jurisdiction.root.children.first
+    rescue
+      return false # Should be Texas
+    end
     return false if j.nil?
     return role_memberships.count(:conditions => ["role_id = ? AND jurisdiction_id = ?", Role.superadmin.id, j.id]) > 0
   end

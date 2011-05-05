@@ -214,7 +214,7 @@ class Audience < ActiveRecord::Base
     alert = target ? target.item : nil
     jj = jurisdictions.map(&:id)    # ids of every specified jurisdiction
     rr = roles.map(&:id)            # ids of every specified role
-    au = if alert && (alert.class == Alert || alert.superclass == Alert) && alert.from_jurisdiction
+    au = if alert && (alert.class == Alert || alert.superclass == Alert) && defined?(alert.from_jurisdiction) && alert.from_jurisdiction
       users.map{|user| user.role_memberships.find_by_jurisdiction_id(alert.from_jurisdiction.id).nil? ? user : nil}.compact.map(&:id) # Don't include users that are in the same jurisdiction that the alert was sent from
     else
       users.map(&:id)
