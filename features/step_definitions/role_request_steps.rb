@@ -57,6 +57,11 @@ Then /^I should see (\d*) pending role requests?$/ do |num|
   current_user.role_requests.unapproved.flatten.size.should == num.to_i
 end
 
+Then /^"([^"]*)" should( not)? have the role "([^"]*)" in "([^"]*)"$/ do |email, neg, role, jur|
+  expectation = neg.nil? ? 1 : 0
+  RoleMembership.find(:all, :conditions=>{:user_id=>User.find_by_email(email).id, :role_id=>Role.find_by_name(role).id, :jurisdiction_id=>Jurisdiction.find_by_name(jur).id }).count.should == expectation
+end
+
 When /^I maliciously post a delete for a role request for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   role_request = user.role_requests.first
@@ -89,6 +94,10 @@ end
 
 Then /^I should see that I have a pending role request$/ do
   current_user.role_requests.unapproved.should_not be_empty
+end
+
+Then /^I should have no pending role requests$/ do
+  current_user.role_requests.unapproved.should be_empty
 end
 
 Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jurisdiction_name|
@@ -130,3 +139,19 @@ end
 Then /^I can't test 'should redirect_to' because of webrat bug$/ do
   true
 end
+
+Given /^I maliciously request the role "([^"]*)" in "([^"]*)"$/ do |role, jur|
+  rhashes = []
+  current_user.role_memberships.each{|rm|
+    rid = rm.role_id
+    jid = rm.jurisdiction_id
+    rhashes.push({:id=>rm.id, :role_id=>rid, :jurisdiction_id=>jid,:rname=>Role.find(rid).name, :jname=>Jurisdiction.find(jid).name, :state=>'unchanged' })
+  }
+  role = Role.find_by_name(role)
+  jur = Jurisdiction.find_by_name(jur)
+  rhashes.push({:id=>-1, :role_id=>role.id, :jurisdiction_id=>jur.id, :rname=> role.name, :jname=> jur.name, :state=>"new"})
+  When "I maliciously put data to \"/users/#{current_user.id}/profile.json\"", table(%{
+    | user[rq] | #{ActiveSupport::JSON.encode(rhashes)} |
+  })
+end
+

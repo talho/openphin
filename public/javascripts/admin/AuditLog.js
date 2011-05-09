@@ -137,11 +137,13 @@ Talho.AuditLog = Ext.extend(Ext.util.Observable, {
 
   handleFetchedVersionData: function(response, cache_only){
     var versionData = Ext.util.JSON.decode(response.responseText);
-    this.selectedVersionId = versionData['requested_version'].requested_version_id;
-    for (var v in versionData){ this.addToCache(versionData[v]); }
-    if (!cache_only){
-      this.updateVersionDisplay(versionData['requested_version']);
-      this.checkCacheAndPrefetch([versionData['requested_version'].newer_id, versionData['requested_version'].older_id]);
+    if (versionData['success']) {
+      this.selectedVersionId = versionData['versions']['requested_version'].requested_version_id;
+      for (var v in versionData['versions']){ this.addToCache(versionData['versions'][v]); }
+      if (!cache_only){
+        this.updateVersionDisplay(versionData['versions']['requested_version']);
+        this.checkCacheAndPrefetch([versionData['versions']['requested_version'].newer_id, versionData['versions']['requested_version'].older_id]);
+      }
     }
   },
 

@@ -53,7 +53,7 @@ When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)
 end
 
 Then /^I refresh page$/ do
-  execute_script("self.location.reload()")
+  page.execute_script("self.location.reload()")
 end
 
 Then /^I should (not )?see "([^"]*)" in an? (?:|html)editor(?: within "([^"]*)")?$/ do |not_exists, content, selector|
@@ -103,21 +103,23 @@ When /^I suspend cucumber/ do
   STDIN.getc
 end
 
-When /^I maliciously (.+) data .+ "([^"]*)"$/ do | method, url, table |
-  script =
-    "form = document.createElement('form'); " +
-    "form.setAttribute('method', '#{method.upcase}'); " +
-    "form.setAttribute('action', '#{url}');"
+When /^I wait for (\d+) seconds?$/ do |secs|
+  print "Cucumber suspended for #{secs} seconds..."
+  sleep secs.to_i
+end
+
+When /^I maliciously post formdata .+ "([^"]*)"$/ do | url, table |
+  script = "form = document.createElement('form'); form.setAttribute('method', 'POST'); form.setAttribute('action', '#{url}');"
   table.rows_hash.each do |name, value|
-    script +=
-      "hiddenField = document.createElement('input'); " +
-      "hiddenField.setAttribute('type', 'hidden');" +
-      "hiddenField.setAttribute('name', '#{name}');" +
-      "hiddenField.setAttribute('value', '#{value}');" +
-      "form.appendChild(hiddenField);"
+    script += "hiddenField = document.createElement('input'); hiddenField.setAttribute('type', 'hidden'); hiddenField.setAttribute('name', '#{name}'); hiddenField.setAttribute('value', '#{value}'); form.appendChild(hiddenField);"
   end
-  script +=
-    "document.body.appendChild(form);" +
-    "form.submit();"
+  script += "document.body.appendChild(form); form.submit();"
+  page.execute_script(script)
+end
+
+When /^I maliciously (.+) data .+ "([^"]*)"$/ do | method, url, table |
+  script = "xhr = new XMLHttpRequest(); " +
+          "xhr.open('#{method.upcase}','#{url}?#{table.rows_hash.to_query}',true); "+
+          "xhr.send(); "
   page.execute_script(script)
 end

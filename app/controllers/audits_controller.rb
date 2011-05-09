@@ -14,12 +14,20 @@ class AuditsController < ApplicationController
   end
 
   def show
-    versions = {}
-    versions['requested_version'] = get_version(params['id']) unless Version.find(params['id']).nil?
-    versions['next_version']      = get_version(Version.find(params['id']).next.id) unless Version.find(params['id']).next.nil?
-    versions['previous_version']  = get_version(Version.find(params['id']).previous.id) unless Version.find(params['id']).previous.nil?
-    respond_to do |format|
-      format.json{ render :json => versions }
+    if allowed_to_see(params['id'])
+      versions = {}
+      versions['requested_version'] = get_version(params['id']) unless Version.find(params['id']).nil?
+      versions['next_version']      = get_version(Version.find(params['id']).next.id) unless Version.find(params['id']).next.nil?
+      versions['previous_version']  = get_version(Version.find(params['id']).previous.id) unless Version.find(params['id']).previous.nil?
+      versions.delete_if{|k,v| v.nil?}
+      respond_to do |format|
+        format.json{ render :json =>{ :success=>true, :versions=>versions } }
+      end
+    else
+      respond_to do |format|
+        format.json { render :json =>{:success=>false, :response=>"You do not have permission to view this record."} }
+        format.all { render :text => 'You do not have permission to view this record.'}
+      end
     end
   end
 
@@ -37,6 +45,10 @@ class AuditsController < ApplicationController
   end
 
   private
+
+  def allowed_to_see(id)
+    current_user.visible_actors.include?(User.find(Version.find(id).whodunnit)) || current_user.is_sysadmin?
+  end
 
   def get_version_list(params)
     # set some defaults
@@ -77,55 +89,59 @@ class AuditsController < ApplicationController
   end
 
   def get_version(id)
-    req_ver = Version.find(id)
-    req_rec = reify_and_get_attrs(req_ver)
-    req_rec = req_ver.item_type.constantize.new.attributes if req_rec.nil?
-    next_rec = reify_and_get_attrs(req_ver.next)
-    prev_rec = reify_and_get_attrs(req_ver.previous)
+    if allowed_to_see(id)
+      req_ver = Version.find(id)
+      req_rec = reify_and_get_attrs(req_ver)
+      req_rec = req_ver.item_type.constantize.new.attributes if req_rec.nil?
+      next_rec = reify_and_get_attrs(req_ver.next)
+      prev_rec = reify_and_get_attrs(req_ver.previous)
 
-    begin
-      curr_rec = req_ver.item_type.constantize.find(req_ver.item_id).attributes
-      record_deleted = false
-    rescue ActiveRecord::RecordNotFound
-      record_deleted = true
+      begin
+        curr_rec = req_ver.item_type.constantize.find(req_ver.item_id).attributes
+        record_deleted = false
+      rescue ActiveRecord::RecordNotFound
+        record_deleted = true
+      end
+
+      #TODO: dry this up.
+      version = {}
+      all_versions = Version.find(:all, :conditions => {:item_type => req_ver.item_type, :item_id => req_ver.item_id }, :order => 'id ASC' )
+      version['version_count'] = all_versions.count
+      version['version_index'] = all_versions.index(req_ver) + 1
+      version['requested_version_id'] = req_ver.id
+      version['descriptor'] = req_ver.item_desc
+      version['older_id'] = req_ver.previous.id unless req_ver.previous.nil? || !allowed_to_see(req_ver.previous.id)
+      version['newer_id'] = req_ver.next.id unless req_ver.next.nil? || !allowed_to_see(req_ver.next.id)
+      version['deleted'] = record_deleted
+      version['model'] = req_ver.item_type
+      version['event'] = req_ver.event.humanize
+      version['diff_list'] = []
+
+      changed_attributes = []
+      changed_attributes.push(get_diff_keys(req_rec, next_rec))
+      changed_attributes.push(get_diff_keys(req_rec, prev_rec))
+      changed_attributes.push(get_diff_keys(req_rec, curr_rec))
+      changed_attributes = changed_attributes.flatten.delete_if{|x| x.nil?}
+      changed_attributes = req_rec.keys if changed_attributes.empty?
+
+      req_rec = sanitize_and_beautify_for_your_comfort(req_rec) unless req_rec.nil?
+      prev_rec = sanitize_and_beautify_for_your_comfort(prev_rec) unless prev_rec.nil?
+      next_rec = sanitize_and_beautify_for_your_comfort(next_rec) unless next_rec.nil?
+      curr_rec = sanitize_and_beautify_for_your_comfort(curr_rec) unless curr_rec.nil?
+
+      changed_attributes.flatten.uniq.each{ |a|   # yuck.
+        dif = []
+        dif.push(a)
+        dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil?  ? '<i>-nil-</i>' : req_rec[a] )
+        dif.push(prev_rec.nil? ? '<i>-nil-</i>' : prev_rec[a].nil? ? '<i>-nil-</i>' : prev_rec[a] )
+        dif.push(next_rec.nil? ? '<i>-nil-</i>' : next_rec[a].nil? ? '<i>-nil-</i>' : next_rec[a] )
+        dif.push(curr_rec.nil? ? '<i>-nil-</i>' : curr_rec[a].nil? ? '<i>-nil-</i>' : curr_rec[a] )
+        version['diff_list'].push(dif)
+      }
+      return version
+    else
+      return nil
     end
-
-    #TODO: dry this up.
-    version = {}
-    all_versions = Version.find(:all, :conditions => {:item_type => req_ver.item_type, :item_id => req_ver.item_id }, :order => 'id ASC' )
-    version['version_count'] = all_versions.count
-    version['version_index'] = all_versions.index(req_ver) + 1
-    version['requested_version_id'] = req_ver.id
-    version['descriptor'] = req_ver.item_desc
-    version['older_id'] = req_ver.previous.id unless req_ver.previous.nil?
-    version['newer_id'] = req_ver.next.id unless req_ver.next.nil?
-    version['deleted'] = record_deleted
-    version['model'] = req_ver.item_type
-    version['event'] = req_ver.event.humanize
-    version['diff_list'] = []
-
-    changed_attributes = []
-    changed_attributes.push(get_diff_keys(req_rec, next_rec))
-    changed_attributes.push(get_diff_keys(req_rec, prev_rec))
-    changed_attributes.push(get_diff_keys(req_rec, curr_rec))
-    changed_attributes = changed_attributes.flatten.delete_if{|x| x.nil?}
-    changed_attributes = req_rec.keys if changed_attributes.empty?
-
-    req_rec = sanitize_and_beautify_for_your_comfort(req_rec) unless req_rec.nil?
-    prev_rec = sanitize_and_beautify_for_your_comfort(prev_rec) unless prev_rec.nil?
-    next_rec = sanitize_and_beautify_for_your_comfort(next_rec) unless next_rec.nil?
-    curr_rec = sanitize_and_beautify_for_your_comfort(curr_rec) unless curr_rec.nil?
-
-    changed_attributes.flatten.uniq.each{ |a|   # yuck.
-      dif = []
-      dif.push(a)
-      dif.push(req_rec.nil?  ? '<i>-nil-</i>' : req_rec[a].nil?  ? '<i>-nil-</i>' : req_rec[a] )
-      dif.push(prev_rec.nil? ? '<i>-nil-</i>' : prev_rec[a].nil? ? '<i>-nil-</i>' : prev_rec[a] )
-      dif.push(next_rec.nil? ? '<i>-nil-</i>' : next_rec[a].nil? ? '<i>-nil-</i>' : next_rec[a] )
-      dif.push(curr_rec.nil? ? '<i>-nil-</i>' : curr_rec[a].nil? ? '<i>-nil-</i>' : curr_rec[a] )
-      version['diff_list'].push(dif)
-    }
-    return version
   end
 
   def get_diff_keys(record_one, record_two)
