@@ -254,7 +254,7 @@ class User < ActiveRecord::Base
     return false if jid.nil?
     return role_memberships(true).count(:conditions => { :role_id => Role.superadmin(app).id, :jurisdiction_id => jid } ) > 0
   end
-
+ 
   def is_admin?(app = "phin")
     return true if is_sysadmin?
     return true if is_super_admin?(app)
