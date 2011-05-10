@@ -223,7 +223,6 @@ Feature: Audit Log
     Then I should see "you do not have access"
 
     When I navigate to the dashboard page
-    When I maliciously get data from "/audits/show.json"
-      | id | 1 |
+    When I visit the url "/audits/1.json"
     Then I should be redirected to "the dashboard page"
     And I should see "you do not have access"

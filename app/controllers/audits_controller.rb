@@ -47,7 +47,9 @@ class AuditsController < ApplicationController
   private
 
   def allowed_to_see(id)
-    current_user.visible_actors.include?(User.find(Version.find(id).whodunnit)) || current_user.is_sysadmin?
+    return true if current_user.is_sysadmin?
+    return current_user.visible_actors.include?(User.find(Version.find(id).whodunnit)) unless Version.find(id).whodunnit.nil?
+    false
   end
 
   def get_version_list(params)
@@ -97,13 +99,14 @@ class AuditsController < ApplicationController
       prev_rec = reify_and_get_attrs(req_ver.previous)
 
       begin
-        curr_rec = req_ver.item_type.constantize.find(req_ver.item_id).attributes
+        current_record = req_ver.item_type.constantize.find(req_ver.item_id)
+        curr_rec = allowed_to_see(current_record.versions.last.id.to_i) ? current_record.attributes : nil
         record_deleted = false
       rescue ActiveRecord::RecordNotFound
         record_deleted = true
       end
 
-      #TODO: dry this up.
+      #TODO: dry this up!
       version = {}
       all_versions = Version.find(:all, :conditions => {:item_type => req_ver.item_type, :item_id => req_ver.item_id }, :order => 'id ASC' )
       version['version_count'] = all_versions.count
@@ -147,7 +150,7 @@ class AuditsController < ApplicationController
   def get_diff_keys(record_one, record_two)
     begin
       return record_one.diff(record_two).keys
-    rescue NoMethodError
+    rescue
     end    
   end
 
