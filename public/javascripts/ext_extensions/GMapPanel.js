@@ -92,7 +92,20 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         this.gmap.setCenter(new google.maps.LatLng(lat, lng));
       }
     },
-    
+
+    panTo: function(lat, lng)
+    {
+      if(Ext.isString(lat)){
+        this.geocoder.geocode({address: lat}, function(results, status){
+          this.gmap.panTo(results[0].geometry.location);
+        }.createDelegate(this));
+      }else if(Ext.isObject(lat)){
+        this.gmap.panTo(lat);
+      }else{
+        this.gmap.panTo(new google.maps.LatLng(lat, lng));
+      }
+    },
+
     trackMouse: function(mouseEvent){
       this.current_latlng = mouseEvent.latLng;
     },
