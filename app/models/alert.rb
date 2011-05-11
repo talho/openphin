@@ -159,7 +159,7 @@ class Alert < ActiveRecord::Base
     recipients.each do |user|
       alert_attempts.create!(:user => user).batch_deliver
     end
-    yield
+    yield if block_given?
     ::MessageApi.deliver(self)
 #    alert_device_types(true).each do |device_type|
 #      device_type.device_type.batch_deliver(self)
