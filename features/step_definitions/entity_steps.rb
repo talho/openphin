@@ -74,7 +74,10 @@ Given /^a[n]? organization type named (.*)$/ do |name|
 end
 
 Given /^a[n]? approval role named (.*)$/ do |name|
-  r = Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true)
+  Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true)
+end
+Given /^a[n]? application approval role named (.*) for (.*)$/ do |name, app|
+  Role.approval_roles.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => true, :application => app)
 end
 
 Given /^a[n]? system role named (.*)$/ do |name|
