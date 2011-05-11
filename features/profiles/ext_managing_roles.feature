@@ -5,11 +5,11 @@ I should be able to remove all but one public role from my profile
 
   Background:
     Given the following entities exist:
-      | Jurisdiction  | Dallas County            |
-      | Jurisdiction  | Potter County            |
-      | Jurisdiction  | Texas                    |
-      | role          | BioTerrorism Coordinator |
-    And the role "BioTerrorism Coordinator" is for the "phin" application
+      | Jurisdiction  | Dallas County            |      |
+      | Jurisdiction  | Potter County            |      |
+      | Jurisdiction  | Texas                    |      |
+      | role          | BioTerrorism Coordinator | phin |
+ #   And the role "BioTerrorism Coordinator" is for the "phin" application
     And Federal is a foreign jurisdiction
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County  |
