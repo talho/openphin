@@ -1,5 +1,122 @@
 Ext.namespace('Talho');
-Ext.namespace('Talho.Dashboard');
+
+Talho.DashboardPortalColumn = Ext.extend(Ext.ux.PortalColumn, {
+  defaultType : 'dashboardportlet',
+  cls: ''
+});
+
+Ext.reg('dashboardportalcolumn', Talho.DashboardPortalColumn);
+
+Talho.DashboardPortlet = Ext.extend(Ext.ux.Portlet, {
+  initComponent: function(config) {
+    Ext.ux.Portlet.superclass.initComponent.call(this);
+  },
+  border: false,
+  header: true,
+  frame: false,
+  closable: false,
+  collapsible : false,
+  draggable : true,
+  headerCssClass: 'x-hide-display',
+  cls: ''
+});
+
+Ext.reg('dashboardportlet', Talho.DashboardPortlet);
+
+Talho.DashboardPortal = Ext.extend(Ext.ux.Portal, {
+  constructor: function(config) {
+    Ext.apply(this, config);
+    Talho.DashboardPortal.superclass.constructor.call(this, config);
+  },
+  region: 'center',
+  itemId: this.itemId,
+  defaultType : 'dashboardportalcolumn',
+  cls: '',
+  adminMode: false,
+  listeners:{
+    'show':function(panel){panel.doLayout();}
+  },
+
+  initComponent : function(config){
+    this.bbar = {
+      items: [{
+        text: "Admin Mode",
+        scope: this,
+        handler: function(b, e) {
+          var text = this.adminMode ? "Admin Mode" : "User Mode";
+          b.setText(text);
+          this.toggleAdmin();
+
+          this.getBottomToolbar().items.each(function(item, index, allItems) {
+            if(item != b) item.setVisible(!item.isVisible());
+          });
+        }
+      },{
+        xtype: 'tbseparator',
+        hidden: true
+      },{
+        text: 'Preview',
+        hidden: true
+      },{
+        xtype: 'tbseparator',
+        hidden: true
+      },{
+        text: 'Published',
+        hidden: true
+      }],
+      hidden: true
+    }
+
+    Ext.ux.Portal.superclass.initComponent.call(this);
+
+    this.addEvents({
+        validatedrop:true,
+        beforedragover:true,
+        dragover:true,
+        beforedrop:true,
+        drop:true
+    });
+
+    var toolbar = this.getBottomToolbar();
+    Ext.Ajax.request({
+      url: '/users/' + Application.current_user + '/is_admin.json',
+      scope: toolbar,
+      success: function(response) {
+        var data = Ext.util.JSON.decode(response.responseText);
+        if(data['admin']) this.show();
+      }
+    });
+  },
+
+  toggleAdmin: function() {
+    this.items.each(function(item, index, allItems) {
+      item.items.each(function(item, index, allItems) {
+        item.el.toggleClass('x-panel-noborder');
+        item.el.child('.x-panel-header').toggleClass('x-hide-display');
+        var panel = item.el.child('.x-panel-body');
+        var width = (item.el.getStyle('width') == panel.getStyle('width') ? -2 : 0)
+        item.el.child('.x-panel-body').setStyle('width', (item.el.getWidth() + width));
+        item.el.child('.x-panel-body').toggleClass('x-panel-body-noborder');
+      });
+    });
+
+    this.adminMode = !this.adminMode;
+  },
+
+  initEvents : function(){
+    Ext.ux.Portal.superclass.initEvents.call(this);
+
+    this.dd = new Ext.ux.Portal.DropZone(this, this.dropConfig);
+  },
+
+  beforeDestroy : function() {
+    if(this.dd){
+        this.dd.unreg();
+    }
+
+    Ext.ux.Portal.superclass.beforeDestroy.call(this);
+  }
+});
 
 Talho.Dashboard = Ext.extend(Ext.util.Observable, {
   constructor: function(config)
