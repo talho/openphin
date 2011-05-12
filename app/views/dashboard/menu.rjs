@@ -1,6 +1,7 @@
 
 page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
+page << "Application.current_user = #{current_user.id};"
 
   menu_config = "Application.menuConfig = ["
   Phin::Application.eval_if_plugin_present(:han) do
