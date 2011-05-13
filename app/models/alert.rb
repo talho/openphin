@@ -221,7 +221,7 @@ class Alert < ActiveRecord::Base
   end
 
   def xml_build_behavior builder, options={}
-    options={} if options.blank?
+    options={ :Delivery => {:Providers => {} } } if options.blank?
     builder.Behavior do |behavior|
       if options[:override]
         options[:override].call(behavior)
