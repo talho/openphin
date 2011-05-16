@@ -8,21 +8,20 @@ class DocumentDailyCleanupWorker < BackgrounDRb::MetaWorker
 
   def clean(args = nil)
     #find all folders for whom documents expire
-    folders = Folder.scoped_by_expire_documents(true, :include => [:documents])
-    #find all documents that are older than 30 days
-    documents = folders.map {|f| f.documents.expired }.flatten
-    #delete these documents
-    documents.map(&:destroy)
-
+    Folder.find_each(:conditions => {:expire_documents => true}, :batch_size => 100) do |folder|
+      #find all documents that are older than 30 days
+      folder.documents.expired.each(&:destroy)
+    end
+  
+    users = []
     #find all folders that expire and require notification
-    notifying_folders = Folder.scoped_by_notify_before_document_expiry(true)
-    #find all documents that are exactly 25 days old
-    documents_expiring_soon = notifying_folders.map {|f| f.documents.expiring_soon(:include => :owner) }.flatten
+    Folder.find_each(:conditions => {:notify_before_document_expiry => true}, :batch_size => 100) do |folder|
+      #find all documents that are exactly 25 days old
+      users << folder.documents.expiring_soon(:include => :owner).map(&:owner)
+    end
+    
     #notify users that these documents are going to expire soon
-
-    users = documents_expiring_soon.map(&:owner).uniq
-
-    users.each do |user|
+    users.flatten.each do |user|
       DocumentMailer.deliver_documents_soon_to_expire_warning(user)
     end
   end

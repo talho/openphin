@@ -294,7 +294,7 @@ Talho.Documents = Ext.extend(function(){}, {
                               }
 
                               if(file.length > 0){
-                                  this._downloadFrame.src = file;
+                                  this._downloadFrame.src = window.location.protocol + "//" + window.location.host + file;
                               }
                           }
                         }

@@ -162,6 +162,7 @@ Feature: Create a folder tree in documents
     When I close the active ext window
     And I click inlineLink "Edit Folder"
     Then the "Edit Folder" window should be open
+    And I wait for the "Loading" mask to go away
     And the "Folder Name" field should contain "Folder1"
     When I close the active ext window
     And I click inlineLink "Delete Folder"
@@ -171,4 +172,5 @@ Feature: Create a folder tree in documents
     And I click documents-folder-item "Sub1"
     And I click inlineLink "Edit Folder"
     Then the "Edit Folder" window should be open
+    And I wait for the "Loading" mask to go away
     And the "Folder Name" field should contain "Sub1"

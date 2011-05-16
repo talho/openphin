@@ -161,7 +161,7 @@ class Doc::DocumentsController < ApplicationController
       format.json {render :json => {:files => results.map do |result|
             result[:is_author] = result.editable_by?(current_user)
             result[:is_owner] = result.owner_id == current_user.id
-            result[:doc_url] = document_url(result)
+            result[:doc_url] = document_path(result)
             result.as_json(:include => {:owner => {:only => [:display_name]}} )
         end 
       } }

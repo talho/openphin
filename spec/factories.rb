@@ -156,12 +156,13 @@ Factory.define :target do |m|
   m.association :item, :factory => :alert
 end
 
-Factory.define :share do |m|
-  m.sequence(:name){|t| "share ##{t}"}
+Factory.define :folder do |m|
+  m.sequence(:name){|t| "Folder ##{t}"}
+  m.association :owner, :factory => :user
 end
 
 Factory.define :document do |m|
-  m.association :user
+  m.association :owner, :factory => :user
   m.file {|f| File.open(__FILE__)}
 end
 

@@ -16,7 +16,7 @@ Ext.ns("Talho.ux");
       if(Application.rails_environment === 'cucumber')
       {
         Ext.Ajax.request({
-          url: '/rollcall/export',
+          url: uri,
           method: 'GET',
           success: function(){
             alert("Success");

@@ -37,3 +37,9 @@ Feature: Document scheduled backgroundrb task
       | body contains | "invitees.csv" in folder "Folder1" |
       | body contains | "sample.wav" in folder "Folder2" | 
       | body does not contain | "orglist.csv" in folder "Folder1" |
+
+#   Scenario: Handle cleaning up and notifying of a lot of folders
+#     Given I create 1000 folders
+#     And I uploaded 1 files into each folder 25 days ago
+#     And I uploaded 10 files into each folder 50 days ago
+#     When backgroundrb has processed the nightly documents

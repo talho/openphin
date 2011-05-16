@@ -113,3 +113,18 @@ Then /^"([^\"]*)" (should not|should)? exist in folder "([^\"]*)"$/ do |file, sh
     file.should be_nil
   end
 end
+
+Given /^I create ([0-9]*) folders$/ do |num|
+  num.to_i.times do
+    Factory.create(:folder)
+  end
+end
+
+Given /^I uploaded ([0-9]*) files into each folder ([0-9]*) days ago$/ do |num, days|
+  num = num.to_i
+  Folder.all.each do |folder|
+    num.times do
+      Factory.create(:document, {:folder => folder, :owner => folder.owner, :created_at => days.to_i.days.ago, :file => File.open("spec/fixtures/sample.wav") })
+    end
+  end
+end

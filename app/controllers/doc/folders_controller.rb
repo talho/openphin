@@ -20,7 +20,7 @@ class Doc::FoldersController < ApplicationController
 
     docs = folder.nil? ? current_user.documents.inbox : folder.documents
     folders = folder.nil? ? current_user.folders.rootsm : folder.children
-    docs.each {|doc| doc[:doc_url] = document_url(doc) }
+    docs.each {|doc| doc[:doc_url] = document_path(doc) }
     folders.reject! { |f| !(f.owner == current_user || f.users.include?(current_user)) }
     folders.each { |f| f[:ftype] = f.owner == current_user ? 'folder' : 'share'; f[:is_owner] = f.owner?(current_user); f[:is_author] = f.author?(current_user) }
     render :json => { :files => folders.sort_by{|f| f.name.downcase}.as_json + docs.sort_by{|d| d.name.downcase}.as_json }

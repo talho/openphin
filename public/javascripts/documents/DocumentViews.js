@@ -234,7 +234,7 @@ Ext.ns('Talho.ux.Documents');
                 }
 
                 if(this.current_selections.length > 0){
-                    this._downloadFrame.src = this.current_selections[0].get('doc_url');
+                    this._downloadFrame.src = window.location.protocol + "//" + window.location.host + this.current_selections[0].get('doc_url');
                 }
             }
         },
