@@ -58,7 +58,7 @@ class Document < ActiveRecord::Base
   end
 
   def editable_by? (user)
-    if owner_id == user.id || authors.include?(user) || admins.include?(user)
+    if owner_id == user.id || authors.include?(user) || admins.include?(user) || folder.owner == user
       true
     else
       false
