@@ -46,7 +46,7 @@ class Document < ActiveRecord::Base
   end
 
   def viewable_by? (user)
-    if owner_id == user.id || audience.recipients.include?(user)
+    if owner_id == user.id || audience.recipients.include?(user) || folder.owner == user
       true
     else
       false
