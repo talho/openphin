@@ -12,6 +12,7 @@ set :use_sudo, false
 set :user, 'apache'
 set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
+set :default_run_options, {:shell => "sh -l"}
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
 
@@ -26,17 +27,18 @@ set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
 task :production do
-	role :app, "txphin.texashan.org"
-	role :web, "txphin.texashan.org"
-	role :jobs, "jobs.texashan.org"
-	role :db,  "jobs.texashan.org", :primary => true
+  require 'hoptoad_notifier/capistrano'
+  role :app, "txphin.texashan.org"
+  role :web, "txphin.texashan.org"
+  role :jobs, "jobs.texashan.org"
+  role :db,  "jobs.texashan.org", :primary => true
 end
 
 task :staging do
-	role :app, "staging.txphin.org"
-	role :web, "staging.txphin.org"
-	role :jobs, "staging.txphin.org"
-	role :db,  "staging.txphin.org", :primary => true
+  role :app, "staging.txphin.org"
+  role :web, "staging.txphin.org"
+  role :jobs, "staging.txphin.org"
+  role :db,  "staging.txphin.org", :primary => true
 end
  
 # Setup dependencies
@@ -97,5 +99,3 @@ set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
 end
-
-require 'hoptoad_notifier/capistrano'

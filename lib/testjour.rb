@@ -10,12 +10,14 @@ task :testing do
   set :repository,  TestJour_config["repository"]
   set :rails_env, 'test'
   set :branch, get_branch
+  set :keep_releases, 1
 
   set :user, TestJour_config["master_user"]
   set :root_path, TestJour_config["root_path"]
 
   namespace :deploy do
     set :deploy_to, "#{root_path}/#{application}"
+
     task :migrate do
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:sync"
       run "cd #{current_path}; rake hydra:ruby:killall"
@@ -28,11 +30,7 @@ task :testing do
       run "cd #{current_path}; rake hydra:sphinx:killall"
       run "cd #{current_path}; rake hydra:firefox:killall"
       run "cd #{current_path}; RAILS_ENV=cucumber rake hydra:ts:in"
-      run "cd #{current_path}; RAILS_ENV=cucumber rake hydra"
-    end
-
-    before :cold, :role => :app do
-      `git push testjour #{get_branch} -f`
+      run "cd #{current_path}; RAILS_ENV=cucumber DISPLAY=:0 rake hydra"
     end
   end
 
@@ -51,6 +49,10 @@ task :testing do
     run ":> #{shared_path}/log/swn.log"
     run ":> #{shared_path}/log/test.log"
   end
+  before 'deploy:cold', :role => :app do
+    `git push testjour #{get_branch} -f`
+  end
+  before 'deploy:cold', 'deploy:cleanup'
 end
 
 def get_branch

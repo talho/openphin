@@ -10,6 +10,7 @@ group :default do
     gem "actionpack", "2.3.5"
     gem "actionmailer", "2.3.5"
     gem "rack", "1.0.1"
+    gem "rake", "0.8.7"
   gem "sinatra", "1.0"
   gem "packet", "0.1.15"
   gem "thoughtbot-clearance", "0.6.9", :require => "clearance"
