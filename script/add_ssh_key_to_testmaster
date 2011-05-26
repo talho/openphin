@@ -1,0 +1,17 @@
+#!/bin/sh
+
+SSHPUBKEY="$HOME/.ssh/id_rsa.pub"
+if [[ -n "$1" ]]; then
+  SSHPUBKEY="$1"
+fi
+
+if [[ ! -f "$SSHPUBKEY" ]]; then
+  echo "Error: Public ssh key file not found: $SSHPUBKEY"
+  echo
+  echo "Usage: add_ssh_key_to_testmaster [ssh_public_key_file]"
+  echo "  default ssh_public_key_file = \$HOME/.ssh/id_rsa.pub"
+  exit 1
+fi
+
+cat $SSHPUBKEY | \
+  ssh testjour@testmaster "cat >> /home/testjour/.ssh/authorized_keys"
