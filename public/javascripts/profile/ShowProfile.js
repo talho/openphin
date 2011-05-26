@@ -48,23 +48,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
       if (this.userdata.can_edit){
         assembledItems.push([
           new Ext.Container({
-            layout: 'hbox',
-            items: [
-              new Ext.Container({
-                flex: 2,
-                items:[{xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;"> ({first_name} {last_name}) </span></tpl>'}]
-              }),
-              new Ext.Container({
-                flex: 1,
-                items: [
-                  new Ext.Container({
-                    layout: 'hbox',
-                    layoutConfig: { pack: 'end' },
-                    items: [ new Ext.Button({ scope: this, handler: this.openEditUserTab, text: "Edit This Account" }) ]
-                  })
-                ]
-              })
-            ]
+            items:[{xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;"> ({first_name} {last_name}) </span></tpl>'}, new Ext.Button({ scope: this, handler: this.openEditUserTab, text: "Edit This Account" })]
           })
         ]);
       } else {
