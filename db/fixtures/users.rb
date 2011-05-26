@@ -7,20 +7,22 @@ u = User.find_or_create_by_email(:email => "keith@example.com") { |m|
   m.password_confirmation = 'Password1'
 }
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+if u.new_record?
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.find_by_name('Public').id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.admin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.admin.id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
+end
 
 u = User.find_or_create_by_email(:email => "bob@example.com") { |m|
   m.first_name = 'Bob'
@@ -138,82 +140,6 @@ r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:ju
                                                                              :user_id => u.id)
 u.role_memberships << r
 
-u = User.find_or_create_by_email(:email => "jason@texashan.org") { |m|
-  m.first_name = 'Jason'
-  m.last_name = 'Phipps'
-  m.display_name = 'Jason Phipps'
-  m.email_confirmed = true
-  m.password = 'Password1'
-  m.password_confirmation = 'Password1'
-}
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.admin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-u = User.find_or_create_by_email(:email => "jphipps@texashan.org") { |m|
-  m.first_name = 'Jason'
-  m.last_name = 'Phipps'
-  m.display_name = 'Jason Phipps'
-  m.email_confirmed = true
-  m.password = 'Password1'
-  m.password_confirmation = 'Password1'
-}
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Wise').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Wise').id,
-                                                                              :role_id => Role.admin.id,
-                                                                              :user_id => u.id)
-u.role_memberships << r
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Wise').id,
-                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-u = User.find_or_create_by_email(:email => "jphipps@talho.org") { |m|
-  m.first_name = 'Jason'
-  m.last_name = 'Phipps'
-  m.display_name = 'Jason Phipps'
-  m.email_confirmed = true
-  m.password = 'Password1'
-  m.password_confirmation = 'Password1'
-}
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Wise').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-u = User.find_or_create_by_email(:email => "jason.phipps@earthlink.net") { |m|
-  m.first_name = 'Jason'
-  m.last_name = 'Phipps'
-  m.display_name = 'Jason Phipps'
-  m.email_confirmed = true
-  m.password = 'Password1'
-  m.password_confirmation = 'Password1'
-}
-
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
 u = User.find_or_create_by_email(:email => "ewaldo@talho.org") { |m|
   m.first_name = 'Ethan'
   m.last_name = 'Weirdo'
@@ -302,43 +228,45 @@ u = User.find_or_create_by_email(:email => "eddie@talho.org") { |m|
   m.password_confirmation = 'Password1'
 }
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.find_by_name('Public').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+if u.new_record?
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.find_by_name('Public').id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.admin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.admin.id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id,
-                                                                             :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id,
+                                                                               :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Harris').id,
-                                                                             :role_id => Role.find_by_name('Rollcall').id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Harris').id,
+                                                                               :role_id => Role.find_by_name('Rollcall').id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.superadmin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.superadmin.id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
+end
 
-u = User.find_or_create_by_email(:email => "awesome@example.com") { |m|
-  m.first_name = 'Awesome'
-  m.last_name = 'Blossoms'
-  m.display_name = 'Awesome Blossoms'
-  m.email_confirmed = true
-  m.password = 'Password1'
-  m.password_confirmation = 'Password1'
-}
+unless Rails.env.strip.downcase == "production"
+  u = User.find_or_create_by_email(:email => "awesome@example.com") { |m|
+    m.first_name = 'Awesome'
+    m.last_name = 'Blossoms'
+    m.display_name = 'Awesome Blossoms'
+    m.email_confirmed = true
+    m.password = 'Password1'
+    m.password_confirmation = 'Password1'
+  }
 
-r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
-                                                                             :role_id => Role.sysadmin.id,
-                                                                             :user_id => u.id)
-u.role_memberships << r
-
-
+  r = RoleMembership.find_or_create_by_jurisdiction_id_and_role_id_and_user_id(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id,
+                                                                               :role_id => Role.sysadmin.id,
+                                                                               :user_id => u.id)
+  u.role_memberships << r
+end
