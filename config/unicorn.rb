@@ -14,6 +14,7 @@ timeout 30
 # Listen on a Unix data socket
 listen '0.0.0.0:8080', :backlog => 2048
 
+stderr_path "#{working_directory}/log/unicorn.stderr.log"
 
 ##
 # REE

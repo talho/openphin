@@ -61,6 +61,7 @@ Factory.sequence(:rolename) {|r| "role#{r}"}
 Factory.define :role do |pr|
   pr.name { Factory.next(:rolename) }
   pr.approval_required {false}
+  pr.application "phin"
 end
 
 Factory.define :alert do |m|

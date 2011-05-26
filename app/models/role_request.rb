@@ -18,7 +18,6 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :user, :if => lambda { |rr| !rr.new_record? }
   validate_on_create do |req|
     unless req.user.blank?
-      debugger
       req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
       req.errors.add("You do not have permission to request that role") unless Role.for_app("phin").include?(req.role) || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
     end
