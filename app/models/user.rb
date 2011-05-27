@@ -245,7 +245,7 @@ class User < ActiveRecord::Base
   def is_super_admin?(app = "phin")
     return true if is_sysadmin?
     begin
-      jid = Jurisdiction.root.children.blank? ? 0 : Jurisdiction.root.children.first.id # Should be Texas
+      jid = Jurisdiction.state.nonforeign.blank? ? 0 : Jurisdiction.state.nonforeign.first.id # Should be Texas
     rescue
       return false
     end
@@ -625,7 +625,7 @@ private
     public_role = Role.public
     if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
       if(role_requests.blank? && role_memberships.blank?)
-        role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.first) unless Jurisdiction.state.empty?
+        role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.nonforeign.first) unless Jurisdiction.state.nonforeign.empty?
       else
         rr = role_requests
         rr.each do |request|

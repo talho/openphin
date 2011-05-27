@@ -65,11 +65,11 @@ class UsersController < ApplicationController
     end
 
     remove_blank_role_requests
-    if params[:user][:role_requests_attributes]['0']['role_id'].blank? && params[:user][:role_requests_attributes]['0']['jurisdiction_id'].blank?
-      params[:user][:role_requests_attributes]['0'] = {} if params[:user][:role_requests_attributes]['0'].nil?
-      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public 
-    end
     
+    if (defined? params[:user][:role_requests_attributes]['0']['role_id']).nil? && (defined? params[:user][:role_requests_attributes]['0']['jurisdiction_id']).nil?
+      params[:user].delete(:role_requests_attributes)
+    end
+
 
     @user = User.new params[:user]
     respond_to do |format|
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
         format.xml  { render :xml => @user, :status => :created, :location => @user }
         flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{DOMAIN}."
       else
-        @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i
+        @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i if defined? params[:user][:role_requests_attributes]['0']['role_id']
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end

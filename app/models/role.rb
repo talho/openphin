@@ -59,7 +59,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.public(app = "phin")
-      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:public],false,true,app)
+    find_or_create_by_name_and_user_role_and_application(Defaults[:public],true,app)
   end
 
   named_scope :user_roles, :conditions => { :user_role => true }
