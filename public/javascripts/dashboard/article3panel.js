@@ -11,22 +11,66 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             flex: 1,
             autoHeight:true,
             html: "  <div class='article'>\
-    <h2>Flu Awareness</h2>\
-    <p class='date'>January 9, 2011</p>\
-    <div class='lede'>\
-      <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
-      <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
-    </div>\
+<h2>Flu Awareness</h2>\
+<p class='date'>January 9, 2011</p>\
+<div class='lede'>\
+  <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
+  <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
+</div>\
+<br/>\
+</div>\
+  <div class='article'>\
+  <h2>Disaster Preparedness</h2>\
+  <p class='date'>January 9, 2011</p>\
+  <div class='lede'>\
+    <p class='article_link'><a href='http://www.dshs.state.tx.us/preparedness/' target='_blank' title='Public Health Preparedness'>Public Health Preparedness</a></p>\
+    <p class='article_link'><a href='http://www.dhs.gov/files/prepresprecovery.shtm' target='_blank' title='Preparedness, Response & Recovery'>Preparedness, Response & Recovery</a></p>\
   </div>\
-    <div class='article'>\
-    <h2>Disaster Preparedness</h2>\
-    <p class='date'>January 9, 2011</p>\
-    <div class='lede'>\
-      <p class='article_link'><a href='http://www.dshs.state.tx.us/preparedness/' target='_blank' title='Public Health Preparedness'>Public Health Preparedness</a></p>\
-      <p class='article_link'><a href='http://www.dhs.gov/files/prepresprecovery.shtm' target='_blank' title='Preparedness, Response & Recovery'>Preparedness, Response & Recovery</a></p>\
-      <p class='article_link'><a href='http://wwwnc.cdc.gov/travel/content/id/2511.aspx' target='_blank' title='2011 Earthquake, Tsunami, and Radiation Release in Japan - Travel Information'>2011 Earthquake, Tsunami, and Radiation Release in Japan - Travel Information</a></p>\
-    </div>\
-  </div>"
+</div>\
+<br/>\
+<div>\
+  <p>\
+    <img src=\"/images/CDC-HHST.png\" align=\"left\"/><b>Tip of the Week:</b> Be informed about how to protect your health and safety after a hurricane strikes.<br/><br/>For additional tips, fact sheets, and podcasts, see <a href=\"http://emergency.cdc.gov/disasters/hurricanes/recovery.asp?source=govdelivery\">CDC's Hurricanes website</a>.\
+  </p>\
+</div>\
+<br/>\
+<div><!-- ############################# -->\
+  <!-- WIDGET EMBED CODE STARTS HERE -->\
+  <div>\
+    <h3 id=\"start-widget-focus\">\
+      <a href=\"http://emergency.cdc.gov/disasters/hurricanes/readiness.asp\">Hurricane Health & Safety Tips </a>\
+     </h3>\
+     <p>\
+      <br />\
+      <!--[if!IE]><!-->\
+        <object tabindex=\"0\" id=\"widgetID\" data=\"http://www.cdc.gov/widgets/HurricaneTip/HurricaneTip.swf\" width=\"170\" height=\"340\" type=\"application/x-shockwave-flash\" title=\"Hurricane Health & Safety Tips Widget\">\
+          <param name=\"quality\" value=\"high\"/>\
+          <param name=\"AllowScriptAccess\" value=\"always\"/>\
+          <param name=\"FlashVars\" value=\"bg=ffffff\"/>\
+          <param name=\"pluginurl\" value=\"http://get.adobe.com/flashplayer/\"/>\
+          <div style=\"width:auto\">\
+            <img src=\"http://www.cdc.gov/widgets/HurricaneTip/HurricaneTip.jpg\" width=\"170\" height=\"340\" alt=\"Hurricane Health & Safety Tips Widget. Flash Player 9 is required.\"/>\
+            <br />Hurricane Health & Safety Tips Widget. <br />\
+            <a href=\"http://get.adobe.com/flashplayer/\">Flash Player 9 is required.</a>\
+          </div>\
+        </object>\
+      <!--><![endif]-->\
+      <!--[if IE]>\
+        <object tabindex=\"0\" id=\"widgetID\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\"170\" height=\"340\" title=\"widgetTitle\">\
+          <param name=\"movie\" value=\"http://www.cdc.gov/widgets/HurricaneTip/HurricaneTip.swf\"/>\
+          <param name=\"quality\" value=\"high\"/>\
+          <param name=\"AllowScriptAccess\" value=\"always\"/>\
+          <param name=\"FlashVars\" value=\"bg=ffffff\"/>\
+          <div style=\"width:auto\">\
+          <img src=\"http://www.cdc.gov/widgets/HurricaneTip/HurricaneTip.jpg\" width=\"170\" height=\"340\" alt=\"Hurricane Health & Safety Tips Widget. Flash Player 9 is required.\"/>\
+          <br />Hurricane Health & Safety Tips Widget.<br />\
+          <a href=\"http://get.adobe.com/flashplayer/\">Flash Player 9 is required.</a>\
+        </div>\
+      </object>\
+    <![endif]-->\
+    <a id=\"end-widget-focus\"></a>\
+  </p>\
+</div> <!-- WIDGET EMBED CODE ENDS HERE --> <!-- ############################# -->"
         });
 
         this.newsFeedPanel = new Ext.Panel({
