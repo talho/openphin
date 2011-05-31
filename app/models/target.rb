@@ -34,9 +34,9 @@ class Target < ActiveRecord::Base
     end
 
     user_ids = if ["Channel", "Document"].include?(item_type)
-      audience.recipients(:force => true, :select => "id", :conditions => ["role_memberships.role_id <> ?", Role.public.id], :include => :role_memberships).map(&:id)
+      audience.recipients(:force => true, :select => "id", :conditions => ["role_memberships.role_id <> ? AND users.deleted_at IS NULL", Role.public.id], :include => :role_memberships).map(&:id)
     else
-      audience.recipients(:force => true, :select => "id").map(&:id)
+      audience.recipients(:force => true, :select => "id", :conditions => "users.deleted_at IS NULL").map(&:id)
     end if user_ids.blank?
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end

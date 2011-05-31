@@ -28,7 +28,7 @@ class AudiencesController < ApplicationController
   def determine_recipients
     temp_recipients = []
     ActiveRecord::Base.transaction do
-      temp_al = HanAlert.new_with_defaults( :audiences => [Audience.new({
+      temp_al = HanAlert.new_with_defaults( :not_cross_jurisdictional => params[:not_cross_jurisdictional], :audiences => [Audience.new({
           :group_ids => params[:group_ids].compact.reject{|x| x.empty?}.map{ |id| id },
           :jurisdiction_ids => params[:jurisdiction_ids].compact,
           :role_ids => params[:role_ids].compact,
