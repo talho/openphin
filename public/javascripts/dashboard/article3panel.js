@@ -37,8 +37,8 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 <!-- ############################# --> <!-- WIDGET EMBED CODE STARTS HERE --> <div>\
   <h3 id=\"start-widget-focus\">\
     <a href=\"http://emergency.cdc.gov/disasters/hurricanes/readiness.asp\">Hurricane Health & Safety Tips </a>\
-  /h3>\
-  p>\
+  </h3>\
+  <p>\
   <br />\
   <!--[if!IE]><!-->\
     <object tabindex=\"0\" id=\"widgetID\" data=\"http://www.cdc.gov/widgets/HurricaneTip/HurricaneTip.swf\" width=\"170\" height=\"340\" type=\"application/x-shockwave-flash\" title=\"Hurricane Health & Safety Tips Widget\">\
