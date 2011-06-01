@@ -4,9 +4,9 @@ Given /^I view the ext profile page for "([^"]*)"$/ do |email|
   force_open_tab("hello", "","#{tab_config}")
 end
 
-Given /^visit the Edit Profile page for "([^"]*)"$/ do |email|
+Given /^I visit the Edit Profile page for "([^"]*)"$/ do |email|
   u = User.find_by_email(email)
-  tab_config = "{title:'Edit Profile:#{u.first_name} #{u.last_name}', user_id:'#{u.id}', id: 'edit_profile_for_#{u.id}', initializer: 'Talho.EditProfile'}"
+  tab_config = "{title:'Edit Profile:#{u.first_name} #{u.last_name}', url:'#{ user_profile_path(u) }', id: 'edit_profile_for_#{u.id}', initializer: 'Talho.EditProfile'}"
   force_open_tab("hello", "","#{tab_config}")
 end
 

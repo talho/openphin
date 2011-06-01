@@ -9,7 +9,6 @@ I should be able to remove all but one public role from my profile
       | Jurisdiction  | Potter County            |      |
       | Jurisdiction  | Texas                    |      |
       | role          | BioTerrorism Coordinator | phin |
- #   And the role "BioTerrorism Coordinator" is for the "phin" application
     And Federal is a foreign jurisdiction
     And Texas is the parent jurisdiction of:
       | Dallas County | Potter County  |
@@ -130,12 +129,8 @@ I should be able to remove all but one public role from my profile
   
   Scenario: As a user the request role window should not display system-roles or foreign jurisdictions
     Given there is an system only Admin role
-    And the following users exist:
-      | John Smith      | john.smith@example.com   | Public | Dallas County |
-    And I am logged in as "john.smith@example.com" 
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-
     And I press "Request Role"
     And I open ext combo "rq[role]"
     Then I should see "BioTerrorism Coordinator"
@@ -148,3 +143,27 @@ I should be able to remove all but one public role from my profile
 
   Scenario: Role request window should not show roles for applications the user does not have
     When this scenario is written
+
+  Scenario: Role Requests should not cross-pollinate
+    Given the following users exist:
+      | Awesome Blossoms | awesome@example.com      | SuperAdmin | Texas     |
+      | Fred Smith       | fred.smith@example.com   | Public     | Texas     |
+    When I navigate to the ext dashboard page
+    And I navigate to "John Smith > Manage Roles"
+    When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
+    Then I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | needs to be saved |
+    When I press "Apply Changes"
+    Then I should not see any errors
+    And I should see the following within ".role-item":
+      | Potter County | BioTerrorism Coordinator | waiting for approval |
+
+    When I am logged in as "awesome@example.com"
+    When I navigate to the ext dashboard page
+    And I visit the Edit Profile page for "fred.smith@example.com"
+    When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
+    When I press "Apply Changes"
+    Then I should not see any errors
+    And "fred.smith@example.com" should have the role "BioTerrorism Coordinator" in "Potter County"
+    And "john.smith@example.com" should not have the role "BioTerrorism Coordinator" in "Potter County"
+    And "john.smith@example.com" should have a pending role request
