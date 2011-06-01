@@ -11,7 +11,7 @@ class Clearance::PasswordsController < ApplicationController
   end
 
   def create
-    if user = ::User.find_by_email(params[:password][:email])
+    if user = ::User.find_by_email(params[:password][:email].downcase)
       user.forgot_password!
       ::ClearanceMailer.deliver_change_password user
       flash_notice_after_create

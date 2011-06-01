@@ -39,6 +39,7 @@ class Admin::UsersController < ApplicationController
     end
 
     @user = User.new params[:user]
+    @user.email = @user.email.downcase
     @user.role_requests.each { |role_request|
       role_request.requester = current_user
       role_request.approver = current_user if current_user.is_admin_for?(role_request.jurisdiction)

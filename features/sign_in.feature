@@ -30,6 +30,18 @@ Feature: Sign in
       And I sign in as "email@person.com/Password1"
       And I should be signed in
 
+   Scenario: User signs in successfully case insensitively #1
+      Given I am signed up and confirmed as "Email@person.com/Password1"
+      When I go to the sign in page
+      And I sign in as "email@person.com/Password1"
+      And I should be signed in
+
+  Scenario: User signs in successfully case insensitively #2
+     Given I am signed up and confirmed as "email@person.com/Password1"
+     When I go to the sign in page
+     And I sign in as "Email@person.com/Password1"
+     And I should be signed in
+
 #   Scenario: User signs in and checks "remember me"
 #      Given I am signed up and confirmed as "email@person.com/Password1"
 #      When I go to the sign in page

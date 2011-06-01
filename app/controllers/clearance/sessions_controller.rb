@@ -12,7 +12,7 @@ class Clearance::SessionsController < ApplicationController
   end
 
   def create
-    @user = User.authenticate(params[:session][:email],
+    @user = User.authenticate(params[:session][:email].downcase,
                                 params[:session][:password])
     respond_to do |format|
       if @user.nil?

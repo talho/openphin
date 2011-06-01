@@ -72,6 +72,7 @@ class UsersController < ApplicationController
 
 
     @user = User.new params[:user]
+    @user.email = @user.email.downcase
     respond_to do |format|
       if @user.save
         SignupMailer.deliver_confirmation(@user)

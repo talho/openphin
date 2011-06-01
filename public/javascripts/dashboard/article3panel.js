@@ -11,15 +11,15 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             flex: 1,
             autoHeight:true,
             html: "  <div class='article'>\
-<h2>Flu Awareness</h2>\
-<p class='date'>January 9, 2011</p>\
-<div class='lede'>\
-  <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
-  <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
+  <h2>Flu Awareness</h2>\
+  <p class='date'>January 9, 2011</p>\
+  <div class='lede'>\
+    <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
+    <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
+  </div>\
+  <br/>\
 </div>\
-<br/>\
-</div>\
-  <div class='article'>\
+<div class='article'>\
   <h2>Disaster Preparedness</h2>\
   <p class='date'>January 9, 2011</p>\
   <div class='lede'>\

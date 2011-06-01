@@ -19,7 +19,7 @@ end
 
 Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
   user = Factory :user,
-    :email                 => email,
+    :email                 => email.downcase,
     :password              => password,
     :password_confirmation => password,
     :email_confirmed       => false
@@ -27,7 +27,7 @@ end
 
 Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
   user = Factory :user,
-    :email                 => email,
+    :email                 => email.downcase,
     :password              => password,
     :password_confirmation => password
 end
@@ -75,7 +75,7 @@ Then /^a password reset message should be sent to "(.*)"$/ do |email|
 end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|
-  user = User.find_by_email(email)
+  user = User.find_by_email(email.downcase)
   visit edit_user_password_path(:user_id => user, :token => user.token)
 end
 
