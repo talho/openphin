@@ -100,6 +100,14 @@ Then /^I should have no pending role requests$/ do
   current_user.role_requests.unapproved.should be_empty
 end
 
+Then /^"([^\"]*)" should have no pending role requests$/ do | email |
+  User.find_by_email(email).role_requests.unapproved.should be_empty
+end
+
+Then /^"([^\"]*)" should have a pending role request$/ do | email |
+  User.find_by_email(email).role_requests.unapproved.should_not be_empty
+end
+
 Then /^I should see I am awaiting approval for (.*) in (.*)$/ do |role_name, jurisdiction_name|
   role = Role.find_by_name!(role_name)
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)

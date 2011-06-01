@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_admin_or_self(user_id)
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin } || current_user.id.to_s == user_id.to_s
+    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin || rm.role == Role.sysadmin } || current_user.id.to_s == user_id.to_s
       respond_to do |format|
         format.html {
           flash[:error] = "That resource does not exist or you do not have access to it."
