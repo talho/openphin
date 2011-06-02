@@ -8,6 +8,7 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
     border: true,
     column: true,
     headerCssClass: true,
+    id: true,
     ownerCt: true,
     xtype: true
   },
@@ -26,6 +27,15 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   initComponent: function(config) {
     Ext.ux.Portlet.superclass.initComponent.call(this);
   },
+
+  isModified: function() {
+    return true;
+  },
+
+  revert: function() {
+    return false;
+  },
+
   border: false,
   header: true,
   frame: false,
