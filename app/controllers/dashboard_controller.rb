@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController  
+class DashboardController < ApplicationController
   skip_before_filter :login_required, :only => [:about]
   require 'feedzirra'
 
@@ -21,6 +21,11 @@ class DashboardController < ApplicationController
       end
 
       format.ext {render :layout => 'ext.html'}
+
+      format.json do
+        dashboard = Dashboard.first
+        render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config}, :success => true}
+      end
     end
   end
 
@@ -51,7 +56,7 @@ class DashboardController < ApplicationController
   
 	def faqs
     DashboardController.app_toolbar "faqs"
-    end
+  end
 
   def feed_articles
     feed_urls = [
