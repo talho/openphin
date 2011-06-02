@@ -30,7 +30,6 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     Talho.Dashboard.Portlet.HTML.superclass.initComponent.call(this, config);
   },
 
-<<<<<<< HEAD
   isModified: function() {
     return this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML
   },
@@ -44,8 +43,6 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     }
   },
 
-=======
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
   title: 'HTML Portlet',
   tools: [{
     id:'gear',
@@ -53,11 +50,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     handler: function(event, toolEl, panel, tc){
       var htmleditor = new Ext.form.HtmlEditor({
         html: panel.el.child('.x-portlet-html').dom.innerHTML,
-<<<<<<< HEAD
         enableSourceEdit: true,
-=======
-        enableSourceEdit: false,
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
         width: 680,
         height: 510
       });

@@ -105,7 +105,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         text: "Admin Mode",
         scope: this,
         handler: function(b, e) {
-<<<<<<< HEAD
           var toggleBBar = function() {
             var text = this.adminMode ? "Admin Mode" : "User Mode";
             b.setText(text);
@@ -148,31 +147,18 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           } else {
             toggleBBar();
           }
-=======
-          var text = this.adminMode ? "Admin Mode" : "User Mode";
-          b.setText(text);
-          this.toggleAdmin();
-
-          this.getBottomToolbar().items.each(function(item, index, allItems) {
-            if(item != b) item.setVisible(!item.isVisible());
-          });
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
         }
       },{
         xtype: 'tbseparator',
         hidden: true
       },{
         text: 'Preview',
-<<<<<<< HEAD
         hidden: true,
         scope: this,
         handler: function(b, e) {
           this.previewMode = !this.previewMode;
           this.toggleAdminBorder(this);
         }
-=======
-        hidden: true
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
       },{
         xtype: 'tbseparator',
         hidden: true
@@ -185,7 +171,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
 
     Ext.ux.Portal.superclass.initComponent.call(this);
 
-<<<<<<< HEAD
     this.store = new Ext.data.JsonStore({
       autoLoad: true,
       autoSave: false,
@@ -219,8 +204,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       }
     });
 
-=======
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
     this.addEvents({
         validatedrop:true,
         beforedragover:true,
@@ -240,14 +223,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     });
   },
 
-<<<<<<< HEAD
   toggleAdminBorder: function(obj) {
     obj.items.each(function(item, index, allItems) {
-=======
-  toggleAdmin: function() {
-    this.getTopToolbar().setVisible(!this.getTopToolbar().isVisible());
-    this.items.each(function(item, index, allItems) {
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
       item.items.each(function(item, index, allItems) {
         item.el.toggleClass('x-panel-noborder');
         item.el.child('.x-panel-header').toggleClass('x-hide-display');
@@ -257,7 +234,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         item.el.child('.x-panel-body').toggleClass('x-panel-body-noborder');
       });
     });
-<<<<<<< HEAD
   },
 
   toggleAdmin: function() {
@@ -265,10 +241,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     if(!this.previewMode) this.toggleAdminBorder(this);
     this.adminMode = !this.adminMode;
     if(!this.adminMode) this.previewMode = false;
-=======
-
-    this.adminMode = !this.adminMode;
->>>>>>> Reorganized dashboard CMS client files.  Also added in UI support for creating a new dashboard, adjusting between 2 and 3 columns, and adding HTML-based Portlets.
     this.doLayout();
   },
 
