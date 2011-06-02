@@ -20,7 +20,6 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
     }
 
     Ext.apply(this, approvedConfig);
-    debugger
     Talho.Dashboard.Portlet.superclass.constructor.call(this, approvedConfig);
   },
 
