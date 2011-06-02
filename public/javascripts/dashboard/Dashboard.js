@@ -12,40 +12,15 @@ Talho.Dashboard = Ext.extend(Ext.util.Observable, {
       items: [{
         columnWidth:.33,
         style:'padding:10px 0 10px 10px',
-        items:[{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> Test 1 </p>',
-          layout:'fit',
-          column: 0
-        },{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> Test 2 </p>',
-          column: 0
-        }]
+        items:[]
       },{
         columnWidth:.33,
         style:'padding:10px 0 10px 10px',
-        items:[{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> <a href="//tech.slashdot.org/story/11/05/12/188221/Engineers-Find-Nuclear-Meltdown-At-Fukushima-Plant"">Engineers Find Nuclear Meltdown At Fukushima Plant</a> </p>',
-          column: 1
-        },{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> <b>Test 4</b> </p>',
-          column: 1
-        }]
+        items:[]
       },{
         columnWidth:.33,
         style:'padding:10px',
-        items:[{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> Test 5 </p>',
-          column: 2
-        },{
-          xtype: 'dashboardhtmlportlet',
-          html: '<p> Test 6 </p>',
-          column: 2
-        }]
+        items:[]
       }]
     });
 

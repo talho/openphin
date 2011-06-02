@@ -3,6 +3,15 @@ Ext.namespace('Talho.Dashboard');
 Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
+  fields: {
+    border: true,
+    column: true,
+    data: true,
+    headerCssClass: true,
+    ownerCt: true,
+    xtype: true
+  },
+
   constructor: function(config) {
     if(config.html) {
       if(config.data === undefined) config.data = {};

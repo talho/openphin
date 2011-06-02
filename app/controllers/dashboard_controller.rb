@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController  
+class DashboardController < ApplicationController
   skip_before_filter :login_required, :only => [:about]
   require 'feedzirra'
 
@@ -17,10 +17,27 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html do
         DashboardController.app_toolbar "application"
-        expire_fragment(:controller => "dashboard", :action => "index") if DashboardController.expired?
+        @articles = Article.recent
+        feed_urls = Rails.env == "production" ? [
+          "http://www.nhc.noaa.gov/gtwo.xml",
+          "http://www.nhc.noaa.gov/nhc_at2.xml",
+          "http://www.weather.gov/alerts-beta/tx.php?x=1"
+         ] : []
+        @entries = []
+        begin
+          feed_urls.each do |url|
+            @entries += Feedzirra::Feed.fetch_and_parse(url).entries
+          end
+          @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
+        rescue
+          @entries = nil
+        end
       end
 
-      format.ext {render :layout => 'ext.html'}
+      format.json do
+        dashboard = Dashboard.first
+        render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config}, :success => true}
+      end
     end
   end
 
@@ -51,7 +68,7 @@ class DashboardController < ApplicationController
   
 	def faqs
     DashboardController.app_toolbar "faqs"
-    end
+  end
 
   def feed_articles
     feed_urls = [

@@ -209,8 +209,8 @@ Ext.ns('Talho.ux.Documents');
 
         downloadFile: function(){
             // create a hidden iframe, open the file
-            if(Application.rails_environment === 'cucumber')
-            {
+            //if(Application.rails_environment === 'cucumber')
+            //{
                 Ext.Ajax.request({
                     url: this.current_selections[0].get('doc_url'),
                     method: 'GET',
@@ -221,7 +221,7 @@ Ext.ns('Talho.ux.Documents');
                         alert("File Download Failed");
                     }
                 })
-            }
+            /*}
             else
             {
                 if(!this._downloadFrame){
@@ -236,7 +236,7 @@ Ext.ns('Talho.ux.Documents');
                 if(this.current_selections.length > 0){
                     this._downloadFrame.src = window.location.protocol + "//" + window.location.host + this.current_selections[0].get('doc_url');
                 }
-            }
+            }*/
         },
 
         deleteItem: function(){

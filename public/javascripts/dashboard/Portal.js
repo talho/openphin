@@ -92,12 +92,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             text: 'HTML',
             scope: this,
             handler: function() {
-        /*item.el.toggleClass('x-panel-noborder');
-        item.el.child('.x-panel-header').toggleClass('x-hide-display');
-        var panel = item.el.child('.x-panel-body');
-        var width = (item.el.getStyle('width') == panel.getStyle('width') ? -2 : 0)
-        item.el.child('.x-panel-body').setStyle('width', (item.el.getWidth() + width));
-        item.el.child('.x-panel-body').toggleClass('x-panel-body-noborder');*/
               this.items.first().add(new Talho.Dashboard.Portlet.HTML({html: '&nbsp;', headerCssClass: undefined, border: true, column: 0}));
               this.doLayout();
             }
@@ -136,6 +130,39 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
 
     Ext.ux.Portal.superclass.initComponent.call(this);
 
+    this.store = new Ext.data.JsonStore({
+      autoLoad: true,
+      autoSave: false,
+      restful: true,
+      url: '/dashboard.json',
+      storeId: 'dashboardStore',
+      root: 'dashboard',
+      idProperty: 'id',
+      fields: ['id',{name: 'updated_at', type: 'date'},'config'],
+      writer: new Ext.data.JsonWriter({
+        encode: true,
+        writeAllFields: true
+      }),
+      listeners: {
+        scope: this,
+        load: function(store, records, options) {
+          this.items.clear();
+          Ext.each(records, function(record, recordsIndex, allRecords) {
+            if(record.id == "1") {
+              this.columnCount = record.data.config.length;
+              Ext.each(record.data.config, function(item, index, allItems) {
+                this.items.add(Ext.create(item));
+              }, this);
+            }
+          }, this);
+
+          this.doLayout();
+
+          this.toggleAdminBorder(this);
+        }
+      }
+    });
+
     this.addEvents({
         validatedrop:true,
         beforedragover:true,
@@ -155,9 +182,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     });
   },
 
-  toggleAdmin: function() {
-    this.getTopToolbar().setVisible(!this.getTopToolbar().isVisible());
-    this.items.each(function(item, index, allItems) {
+  toggleAdminBorder: function(obj) {
+    obj.items.each(function(item, index, allItems) {
       item.items.each(function(item, index, allItems) {
         item.el.toggleClass('x-panel-noborder');
         item.el.child('.x-panel-header').toggleClass('x-hide-display');
@@ -167,7 +193,11 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         item.el.child('.x-panel-body').toggleClass('x-panel-body-noborder');
       });
     });
+  },
 
+  toggleAdmin: function() {
+    this.getTopToolbar().setVisible(!this.getTopToolbar().isVisible());
+    this.toggleAdminBorder(this);
     this.adminMode = !this.adminMode;
     this.doLayout();
   },
