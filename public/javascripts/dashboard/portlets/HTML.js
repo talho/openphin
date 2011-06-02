@@ -8,6 +8,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     column: true,
     data: true,
     headerCssClass: true,
+    id: true,
     ownerCt: true,
     xtype: true
   },
@@ -29,6 +30,19 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     Talho.Dashboard.Portlet.HTML.superclass.initComponent.call(this, config);
   },
 
+  isModified: function() {
+    return this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML
+  },
+
+  revert: function() {
+    try {
+      this.el.child('.x-portlet-html').update(this.initialConfig["data"]["html"]);
+      return true;
+    } catch(err) {
+      return false;
+    }
+  },
+
   title: 'HTML Portlet',
   tools: [{
     id:'gear',
@@ -36,7 +50,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     handler: function(event, toolEl, panel, tc){
       var htmleditor = new Ext.form.HtmlEditor({
         html: panel.el.child('.x-portlet-html').dom.innerHTML,
-        enableSourceEdit: false,
+        enableSourceEdit: true,
         width: 680,
         height: 510
       });

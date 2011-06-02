@@ -17,6 +17,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   itemId: this.itemId,
   defaultType : 'dashboardportalcolumn', cls: '',
   adminMode: false,
+  previewMode: false,
   columnCount: 3,
   listeners:{
     'show':function(panel){panel.doLayout();}
@@ -104,20 +105,60 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         text: "Admin Mode",
         scope: this,
         handler: function(b, e) {
-          var text = this.adminMode ? "Admin Mode" : "User Mode";
-          b.setText(text);
-          this.toggleAdmin();
+          var toggleBBar = function() {
+            var text = this.adminMode ? "Admin Mode" : "User Mode";
+            b.setText(text);
+            this.toggleAdmin();
 
-          this.getBottomToolbar().items.each(function(item, index, allItems) {
-            if(item != b) item.setVisible(!item.isVisible());
-          });
+            this.getBottomToolbar().items.each(function(item, index, allItems) {
+              if(item != b) item.setVisible(!item.isVisible());
+            });
+          }.createDelegate(this);
+
+          var revertItems = function() {
+            this.items.each(function(item, index, allItems) {
+              item.items.each(function(portlet, index, allItems) {
+                if(portlet.isModified())
+                  if(!portlet.revert()) return false;
+              }, this);
+            }, this);
+            return true;
+          }.createDelegate(this);
+
+          if(this.adminMode) {
+            this.items.each(function(item, index, allItems) {
+              item.items.each(function(portlet, index, allItems) {
+                if(portlet.isModified()) {
+                  Ext.Msg.confirm("Warning","The contents have changed and not been published.  Any changes you have made will be lost.  Are you sure you want to continue?", function(btn) {
+                    if(btn == 'yes') {
+                      if(!revertItems()) {
+                        Ext.Msg.alert("Error", "Could not revert one or more controls.  Please refresh your browser to correct this error, but doing so will cause you to lose any changes you have made.");
+                        return;
+                      };
+                      toggleBBar();
+                      this.doLayout();
+                    }
+                  }, this);
+                } else {
+                  toggleBBar();
+                }
+              }, this);
+            }, this);
+          } else {
+            toggleBBar();
+          }
         }
       },{
         xtype: 'tbseparator',
         hidden: true
       },{
         text: 'Preview',
-        hidden: true
+        hidden: true,
+        scope: this,
+        handler: function(b, e) {
+          this.previewMode = !this.previewMode;
+          this.toggleAdminBorder(this);
+        }
       },{
         xtype: 'tbseparator',
         hidden: true
@@ -197,8 +238,9 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
 
   toggleAdmin: function() {
     this.getTopToolbar().setVisible(!this.getTopToolbar().isVisible());
-    this.toggleAdminBorder(this);
+    if(!this.previewMode) this.toggleAdminBorder(this);
     this.adminMode = !this.adminMode;
+    if(!this.adminMode) this.previewMode = false;
     this.doLayout();
   },
 
