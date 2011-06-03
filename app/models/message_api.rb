@@ -82,15 +82,31 @@ class MessageApi
     include HappyMapper
     include ObjectValidation
     include ActiveRecord::Validations
-
+  
+    class Response
+      include HappyMapper
+      
+      tag "response"
+      attribute :ref, String
+      content :value
+    end
+    
     validates_length_of :operation, :minimum => 1    
 
     tag "ContextNode"
     has_one :label, String, :attributes => {:name => String}
     has_one :operation, String, :attributes => {:name => String}
-    has_one :response, String, :attributes => {:ref => String}
+    has_many :responses, Response
     has_many :ContextNodes, ContextNode
     attribute :name, String
+    
+    def response
+      responses.first
+    end
+    
+    def response=(r)
+      responses << r
+    end
   end
 
   class Authentication
@@ -230,6 +246,7 @@ class MessageApi
     tag "Message"
     has_one :Value, String
     attribute :name, String
+    attribute :ref, String
     attribute :lang, String
     attribute :encoding, String
     attribute :content_type, String
@@ -260,7 +277,7 @@ class MessageApi
     tag "Device"
     has_one :URN, String
     has_one :Options, String
-    has_one :Message, Message
+    has_many :Messages, Message
     attribute :id, String
     attribute :device_type, String
     attribute :priority, Integer
