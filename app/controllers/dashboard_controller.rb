@@ -4,27 +4,22 @@ class DashboardController < ApplicationController
 
   #layout if_not_ext 'application' #disable the default layout for ext requests
   #  layout 'application'
+  def self.expired?
+    if @expire_time && Time.now.utc.hour == @expire_time.hour
+      true
+    else
+      @expire_time = Time.now.utc
+      false
+    end
+  end
 
   def index
-    DashboardController.app_toolbar "application"
-	  @articles = Article.recent
-    feed_urls = Rails.env == "production" ? [
-      "http://www.nhc.noaa.gov/gtwo.xml",
-      "http://www.nhc.noaa.gov/nhc_at2.xml",
-      "http://www.weather.gov/alerts-beta/tx.php?x=1"
-     ] : []
-    @entries = []
-    begin   
-      feed_urls.each do |url|
-        @entries += Feedzirra::Feed.fetch_and_parse(url).entries
-      end
-      @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
-    rescue
-      @entries = nil  
-    end
-
     respond_to do |format|
-      format.html
+      format.html do
+        DashboardController.app_toolbar "application"
+        expire_fragment(:controller => "dashboard", :action => "index") if DashboardController.expired?
+      end
+
       format.ext {render :layout => 'ext.html'}
     end
   end
