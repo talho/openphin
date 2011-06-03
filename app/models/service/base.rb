@@ -26,7 +26,7 @@ class Service::Base
   # 
   # The default delivery method is +deliver+
   PROVIDERS = {:swn => Service::SWN::Message, :talho => Service::TALHO::Message}
-
+ 
   def self.dispatch message
     providers = []
     if message.Behavior && message.Behavior.Delivery
