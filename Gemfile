@@ -40,6 +40,7 @@ group :default do
     gem "pauldix-sax-machine", "0.0.14"
     gem "taf2-curb", "0.5.4.0"
   gem "mysql", "2.8.1"
+  gem "happymapper", "0.3.2"
   gem "libxml-ruby", "1.1.3"
   #gem "clamav", "0.4.1"
   gem "daemons", "1.1.0"
