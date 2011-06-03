@@ -1,0 +1,13 @@
+production:
+  provider: talho
+  
+development: &DEVELOPMENT
+  provider: talho
+  delivery_method: test
+
+test: &TEST
+  <<: *DEVELOPMENT
+  delivery_method: test
+  
+cucumber:
+  <<: *TEST  

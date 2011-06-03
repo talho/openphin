@@ -5,6 +5,7 @@
 config/*.db
 config/database.yml
 config/document.yml
+config/talho_service.yml
 *.sqlite3*
 *.log
 .svn
