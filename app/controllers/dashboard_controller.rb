@@ -20,8 +20,6 @@ class DashboardController < ApplicationController
         expire_fragment(:controller => "dashboard", :action => "index") if DashboardController.expired?
       end
 
-      format.ext {render :layout => 'ext.html'}
-
       format.json do
         dashboard = Dashboard.first
         render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config}, :success => true}
