@@ -1,7 +1,6 @@
 class Service::TALHO::Message < Service::TALHO::Base
-
   property :message
-  
+
   SUPPORTED_DEVICES = {"E-mail" => Service::TALHO::Email::Message}
 
   def deliver
