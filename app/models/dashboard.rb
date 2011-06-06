@@ -1,7 +1,7 @@
 class Dashboard < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   extend ActionView::Helpers::SanitizeHelper::ClassMethods
-  
+
   has_many :dashboard_portlets, :dependent => :destroy do
     def with_column(column)
       scoped :conditions => ["dashboards_portlets.column = ?", column]
@@ -42,7 +42,17 @@ class Dashboard < ActiveRecord::Base
     end
   end
 
+  def self.draft
+    scoped :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
+  end
+
+  def self.published
+    scoped :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
+  end
+
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
+
+  accepts_nested_attributes_for :dashboard_audiences, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
 
   def config(options={})
     jsonConfig = []
@@ -72,6 +82,11 @@ class Dashboard < ActiveRecord::Base
     end
     jsonConfig
   end
+
+  def refresh_audiences
+    self.audiences.map(&:refresh_recipients)
+  end
+  handle_asynchronously :refresh_audiences
 
   private
   def sanitizeJSON json

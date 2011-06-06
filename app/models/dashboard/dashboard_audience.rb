@@ -6,6 +6,8 @@ class Dashboard::DashboardAudience < ActiveRecord::Base
   belongs_to :audience
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
+  accepts_nested_attributes_for :audience, :reject_if => Proc.new{|attributes| attributes["id"] != self.audience_id}
+
   def role
     ROLES.index(read_attribute(:role)).to_s
   end

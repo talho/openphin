@@ -26,12 +26,15 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.index [:audience_id, :dashboard_id]
       t.index :role
     end
+
+    add_column :users, :dashboard_id, :integer
   end
 
   def self.down
-    drop_table :dashboards_permissions
-    drop_table :dashboards_porlets
-    drop_table :porlets
+    drop_column :users, :dashboard_id
+    drop_table :audiences_dashboards
+    drop_table :dashboards_portlets
+    drop_table :portlets
     drop_table :dashboards
   end
 end
