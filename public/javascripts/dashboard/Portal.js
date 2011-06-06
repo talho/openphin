@@ -29,9 +29,12 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   previewMode: false,
   columnCount: 3,
   listeners:{
-    'show':function(panel){panel.doLayout();},
+    show: function(panel){panel.doLayout();},
     beforedrop: function(dropEvent) {
       dropEvent.panel.column = dropEvent.columnIndex;
+    },
+    render: function() {
+      this.loadMask = new Ext.LoadMask(this.getEl(),{msg:"Loading Dashboard...", removeMask: true, store: this.store});
     }
   },
 
@@ -112,6 +115,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             Ext.Msg.confirm("Warning","Are you sure you want to delete this dashboard and all its contents?", function(btn) {
               if(btn == 'yes') {
                 if(this.itemId) {
+                  this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Deleting...", store: this.store});
+                  this.loadMask.show();
                   var rec = this.store.getById(this.itemId);
                   this.store.remove(rec);
                   this.store.save();
@@ -204,6 +209,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         hidden: true,
         scope: this,
         handler: function(b, e) {
+          this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving...", store: this.store});
+          this.loadMask.show();
           this.save(true);
         }
       },{
@@ -214,7 +221,13 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         hidden: true,
         scope: this,
         handler: function(b, e) {
-          this.save(false);
+          Ext.Msg.confirm("Warning", "Clicking Save and Publish will make all changes active in production.  Are you sure you want to publish these changes?", function(btn) {
+            if(btn == 'yes') {
+              this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving and Publishing...", store: this.store});
+              this.loadMask.show();
+              this.save(false);
+            }
+          }, this);
         }
       }],
       hidden: true
@@ -253,6 +266,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           this.doLayout();
         },
         save: function(store, batch, data) {
+          this.loadMask.hide();
           if(data.create != undefined) this.itemId = data.create[0].id
         }
       }
