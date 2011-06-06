@@ -64,6 +64,12 @@ class User < ActiveRecord::Base
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
+  belongs_to :dashboard_default, :class_name => "Dashboard", :foreign_key => "dashboard_id", :include => :dashboard_portlets, :conditions =>  ["dashboards_portlets.draft = ?", false]
+
+  def dashboards
+    Dashboard.scoped :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN audiences_recipients ON (audiences_recipients.audience_id = audiences_dashboards.audience_id)", :conditions => "audiences_recipients.user_id = #{self.id}"
+  end
+
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'

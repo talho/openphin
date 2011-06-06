@@ -21,8 +21,7 @@ class DashboardController < ApplicationController
       end
 
       format.json do
-        dp = Dashboard::DashboardPortlet.published.first
-        dashboard = dp.dashboard if dp
+        dashboard = current_user.dashboards.published.find_by_id(current_user.dashboard_default) || current_user.dashboards.published.first
         if dashboard
           render :json => {:dashboard => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns, :config => dashboard.config(:draft => false), :draft => false}, :success => true}
         else
@@ -38,7 +37,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.json do
         dashboard_json = ActiveSupport::JSON.decode(params["dashboard"])
-        dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"])
+        dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"], :dashboard_audiences_attributes => dashboard_json["dashboard_audiences_attributes"] || {})
         draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
         config = dashboard_json["config"]
         config.length.times do |column|
