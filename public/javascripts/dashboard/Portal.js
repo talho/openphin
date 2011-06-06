@@ -8,6 +8,14 @@ Talho.Dashboard.PortalColumn = Ext.extend(Ext.ux.PortalColumn, {
 
 Ext.reg('dashboardportalcolumn', Talho.Dashboard.PortalColumn);
 
+Talho.Dashboard.Record = Ext.data.Record.create([
+  {name: 'id'},
+  {name: 'updated_at', type: 'date'},
+  {name: 'columns'},
+  {name: 'config'},
+  {name: 'draft'}
+]);
+
 Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   constructor: function(config) {
     Ext.apply(this, config);
@@ -20,7 +28,10 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   previewMode: false,
   columnCount: 3,
   listeners:{
-    'show':function(panel){panel.doLayout();}
+    'show':function(panel){panel.doLayout();},
+    beforedrop: function(dropEvent) {
+      dropEvent.panel.column = dropEvent.columnIndex;
+    }
   },
 
   initComponent : function(config){
@@ -116,10 +127,14 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           }.createDelegate(this);
 
           var revertItems = function() {
-            this.items.each(function(item, index, allItems) {
-              item.items.each(function(portlet, index, allItems) {
-                if(portlet.isModified())
+            this.items.each(function(column, columnIndex, allColumnItems) {
+              column.items.each(function(portlet, portletIndex, allPortletItems) {
+                if(portlet.isModified()) {
+                  if(portlet.itemId == undefined) {
+                    column.remove(portlet);
+                  }
                   if(!portlet.revert()) return false;
+                }
               }, this);
             }, this);
             return true;
@@ -165,6 +180,46 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       },{
         text: 'Published',
         hidden: true
+      },{
+        xtype: 'tbfill',
+        hidden: true
+      },{
+        text: 'Save',
+        hidden: true,
+        scope: this,
+        handler: function(b, e) {
+          var rec = undefined;
+
+          if(this.itemId == undefined) {
+            rec = new Talho.Dashboard.Record({
+              id: undefined,
+              date: undefined,
+              config: undefined
+            });
+          } else {
+            rec = this.store.getById(this.itemId);
+          }
+
+          if(rec == undefined) Ext.Msg.alert("Error saving dashboard.");
+
+          var config = this.buildConfig();
+          if(rec.data.id != undefined && this.compareProperties(rec.data.config, config)) return;
+
+          rec.beginEdit();
+          rec.data.config = config;
+          rec.data.draft = true;
+          rec.data.columns = this.columnCount;
+          rec.markDirty();
+          rec.endEdit();
+          if(rec.data.id == undefined) this.store.add(rec);
+          var i = this.store.save();
+        }
+      },{
+        xtype: 'tbseparator',
+        hidden: true
+      },{
+        text: 'Save and Publish',
+        hidden: true
       }],
       hidden: true
     }
@@ -179,7 +234,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       storeId: 'dashboardStore',
       root: 'dashboard',
       idProperty: 'id',
-      fields: ['id',{name: 'updated_at', type: 'date'},'config'],
+      fields: ['id',{name: 'updated_at', type: 'date'},'columns','config','draft'],
       writer: new Ext.data.JsonWriter({
         encode: true,
         writeAllFields: true
@@ -187,19 +242,22 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       listeners: {
         scope: this,
         load: function(store, records, options) {
-          this.items.clear();
-          Ext.each(records, function(record, recordsIndex, allRecords) {
-            if(record.id == "1") {
-              this.columnCount = record.data.config.length;
-              Ext.each(record.data.config, function(item, index, allItems) {
-                this.items.add(Ext.create(item));
-              }, this);
-            }
-          }, this);
+          //Ext.each(records, function(record, recordsIndex, allRecords) {
+          if(records.length > 0) {
+            record = records[0]
+            this.items.clear();
+            this.columnCount = record.data.config.length;
+            this.itemId = record.data.id;
+            Ext.each(record.data.config, function(item, index, allItems) {
+              this.items.add(Ext.create(item));
+            }, this);
+          }
+          //}, this);
 
           this.doLayout();
-
-          this.toggleAdminBorder(this);
+        },
+        save: function(store, batch, data) {
+          if(data.create != undefined) this.itemId = data.create[0].id
         }
       }
     });
@@ -256,5 +314,35 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     }
 
     Ext.ux.Portal.superclass.beforeDestroy.call(this);
+  },
+
+  buildConfig: function() {
+    var config = [];
+    this.items.each(function(column, columnIndex, allColumnItems) {
+      var item = {columnWidth: column.columnWidth, style: 'padding:10px 0 10px 10px', xtype: 'dashboardportalcolumn', items: []}
+      column.items.each(function(portlet, portletIndex, allPortletItems) {
+        item.items.push(portlet.buildConfig());
+      });
+      config.push(item);
+    });
+    return config;
+  },
+
+  compareProperties: function(config1, config2) {
+    if(config1.length != config2.length) return false;
+
+    for(var i = 0; i < config1.length; i++) {
+      for(var propertyName in config1[i]) {
+        if(propertyName != "remove" && propertyName != "__proto__") {
+          if(propertyName == "items") {
+            if(!this.compareProperties(config1[i].items, config2[i].items)) return false;
+          } else {
+            if(config1[i][propertyName] != config2[i][propertyName]) return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 });

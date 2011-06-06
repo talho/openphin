@@ -14,9 +14,9 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
     create_table :dashboards_portlets do |t|
       t.integer :dashboard_id
       t.integer :portlet_id
-      t.boolean :draft
+      t.boolean :draft, :default => true, :null => true 
       t.integer :column
-      t.index [:dashboard_id, :portlet_id]
+      t.index [:dashboard_id, :portlet_id, :draft]
     end
 
     create_table :audiences_dashboards do |t|

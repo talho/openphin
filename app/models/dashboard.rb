@@ -2,38 +2,62 @@ class Dashboard < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   extend ActionView::Helpers::SanitizeHelper::ClassMethods
   
-  has_many :dashboard_portlets do
+  has_many :dashboard_portlets, :dependent => :destroy do
     def with_column(column)
       scoped :conditions => ["dashboards_portlets.column = ?", column]
     end
+
+    def draft
+      scoped :conditions => ["dashboards_portlets.draft = ?", true]
+    end
+
+    def published
+      scoped :conditions => ["dashboards_portlets.draft = ?", false]
+    end
   end
-  has_many :portlets, :through => :dashboard_portlets do
+
+  has_many :portlets, :through => :dashboard_portlets, :dependent => :destroy do
     def with_column(column)
       scoped :conditions => ["dashboards_portlets.column = ?", column]
     end
+
+    def draft
+      scoped :conditions => ["dashboards_portlets.draft = ?", true]
+    end
+
+    def published
+      scoped :conditions => ["dashboards_portlets.draft = ?", false]
+    end
   end
-  has_many :dashboard_audiences do
+
+  has_many :dashboard_audiences, :dependent => :destroy do
     def with_role(role)
       scoped :conditions => ["audiences_dashboards.role = ?", Dashboard::DashboardAudience::ROLES[role.to_sym]]
     end
   end
-  has_many :audiences, :through => :dashboard_audiences do
+
+  has_many :audiences, :through => :dashboard_audiences, :dependent => :destroy do
     def with_role(role)
       scoped :conditions => ["audiences_dashboards.role = ?", Dashboard::DashboardAudience::ROLES[role.to_sym]]
     end
   end
+
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  def config
+  def config(options={})
     jsonConfig = []
-    columnWidth = (1.0 / self.columns.to_f).round(2).to_s[1..-1]
-    self.columns.times do |i|
+    columnWidth = (1.0 / (self.columns || 3).to_f).round(2).to_s[1..-1]
+    (self.columns || 3).times do |i|
       items = []
 
-      items = self.portlets.with_column(i).map do |portlet|
+      p = options[:draft] ? self.portlets(true).draft.with_column(i) : self.portlets(true).published.with_column(i)
+      items = p.map do |portlet|
         if portlet.valid?
+          column = self.dashboard_portlets.find_by_portlet_id_and_draft(portlet.id, options[:draft] == true).column
           json = sanitizeJSON(ActiveSupport::JSON.decode(portlet.config))
+          json["itemId"] = portlet.id
           json["xtype"] = portlet.xtype
+          json["column"] = column
           json
         end
       end.compact
