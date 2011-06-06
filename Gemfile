@@ -81,6 +81,10 @@ group :cucumber do
   gem "hydra", "0.23.3"
 end
 
+group :production do
+  gem "unicorn"
+end
+
 group :tools do
   gem "launchy"
   gem "capistrano"

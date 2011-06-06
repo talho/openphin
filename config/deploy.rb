@@ -13,13 +13,14 @@ set :user, 'apache'
 set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
 set :default_run_options, {:shell => "sh -l"}
+set :rake, "bundle exec rake"
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-  set :deploy_to, "#{root_path}/#{application}"
+set :deploy_to, "#{root_path}/#{application}"
 
 # Unicorn configuration
 set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
@@ -69,6 +70,11 @@ namespace :deploy do
     end
   end
 
+  desc "unicorn start"
+  task :start, :roles => [:app, :web] do
+    run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
+  end
+
   desc "unicorn restart"
   task :restart, :roles => [:app, :web] do 
     begin
@@ -85,7 +91,7 @@ end
 after 'deploy:migrations', :seed
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
-  run "cd #{current_path}; rake db:seed RAILS_ENV=#{rails_env}"
+  run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{rails_env}"
 end
 
 # useful for testing on_rollback actions
