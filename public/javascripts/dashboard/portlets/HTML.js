@@ -4,12 +4,12 @@ Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   fields: {
-    border: true,
+    //border: true,
     column: true,
     data: true,
-    headerCssClass: true,
-    id: true,
-    ownerCt: true,
+    //headerCssClass: true,
+    itemId: true,
+    //ownerCt: true,
     xtype: true
   },
 
@@ -21,7 +21,9 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     }
 
     Ext.apply(this, config);
-    Talho.Dashboard.Portlet.HTML.superclass.constructor.call(this, config);
+    Talho.Dashboard.Portlet.HTML.superclass.constructor.call(this);
+
+    this.initialConfig = config;
   },
   
   initComponent: function(config) {
@@ -31,7 +33,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   },
 
   isModified: function() {
-    return this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML
+    return this.itemId == undefined || this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML
   },
 
   revert: function() {
@@ -41,6 +43,15 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     } catch(err) {
       return false;
     }
+  },
+
+  buildConfig: function() {
+    var config = {};
+    config["column"] = this.column;
+    config["xtype"] = "dashboardhtmlportlet";
+    config["itemId"] = this.itemId;
+    config["html"] = this.el.child('.x-portlet-html').dom.innerHTML;
+    return config;
   },
 
   title: 'HTML Portlet',

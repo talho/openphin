@@ -22,10 +22,78 @@ class DashboardController < ApplicationController
 
       format.json do
         dashboard = Dashboard.first
-        render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config}, :success => true}
+        if dashboard
+          render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :columns => dashboard.columns, :config => dashboard.config(:draft => true), :draft => false}, :success => true}
+        else
+          render :json => {:dashboard => {}, :success => true}
+        end
       end
 
       format.ext {render :layout => 'ext.html'}
+    end
+  end
+
+  def create
+    respond_to do |format|
+      format.json do
+        dashboard_json = ActiveSupport::JSON.decode(params["dashboard"])
+        dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"])
+        config = dashboard_json["config"]
+        config.length.times do |column|
+          portlets = config[column]
+          portlets["items"].each do |portlet|
+            p = Portlet.create(:xtype => portlet["xtype"], :config => portlet)
+            dashboard.dashboard_portlets.create(:portlet_id => p.id, :column => portlet["column"], :draft => dashboard_json["draft"] || true)
+            portlet["id"] = p.id
+          end
+        end
+
+        render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config({:draft => dashboard_json["draft"]})}, :success => true}
+      end
+    end
+  end
+
+  def update
+    respond_to do |format|
+      format.json do
+        dashboard_json = ActiveSupport::JSON.decode(params["dashboard"])
+        dashboard = Dashboard.find_by_id(dashboard_json["id"])
+        portlet_ids = []
+        if dashboard
+          config = dashboard_json["config"]
+          config.length.times do |column|
+            portlets = config[column]
+            portlets["items"].each do |portlet|
+              p = if portlet["itemId"]
+                dp = dashboard.dashboard_portlets.find_by_portlet_id(portlet["itemId"])
+                if dp
+                  dp["column"] = portlet["column"]
+                  dp.portlet["config"] = portlet
+                  dp.portlet.save && dp.save ? dp.portlet : nil
+                end
+              else
+                p = Portlet.create(:xtype => portlet["xtype"], :config => portlet)
+                dashboard.dashboard_portlets.create(:portlet_id => p.id, :column => portlet["column"], :draft => dashboard_json["draft"] || true)
+                p
+              end
+
+              unless p
+                render :json => {:success => false}
+                return
+              end
+
+              portlet["id"] = p.id
+              portlet_ids.push(p.id)
+            end
+          end
+
+          dashboard.dashboard_portlets.find(:all, :conditions => ["\"dashboards_portlets\".portlet_id NOT IN (?)", portlet_ids]).map(&:destroy) if portlet_ids.size
+
+          render :json => {:dashboard => {:id => dashboard.id.to_s, :updated_at => Time.now.to_s, :config => dashboard.config({:draft => dashboard_json["draft"]})}, :success => true}
+        else
+          render :json => {:success => false}
+        end
+      end
     end
   end
 
