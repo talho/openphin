@@ -37,7 +37,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.json do
         dashboard_json = ActiveSupport::JSON.decode(params["dashboard"])
-        dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"], :dashboard_audiences_attributes => dashboard_json["dashboard_audiences_attributes"] || {})
+        dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"], :dashboard_audiences_attributes => dashboard_json["dashboard_audiences_attributes"] || {}, :author => current_user)
         draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
         config = dashboard_json["config"]
         config.length.times do |column|
