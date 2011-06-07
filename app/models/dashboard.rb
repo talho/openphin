@@ -42,17 +42,29 @@ class Dashboard < ActiveRecord::Base
     end
   end
 
-  def self.draft
-    scoped :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
-  end
+  named_scope :draft, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
 
-  def self.published
-    scoped :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
-  end
+  named_scope :published, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   accepts_nested_attributes_for :dashboard_audiences, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
+
+  after_create :add_default_audience
+
+  def self.create(options={})
+    author = options[:author]
+    options.delete :author if author
+    created = super options
+    if author
+      audience = created.audiences.first
+      if audience
+        audience.user_ids = [author.id]
+        audience.recipients
+      end
+    end
+    created
+  end
 
   def config(options={})
     jsonConfig = []
@@ -99,5 +111,12 @@ class Dashboard < ActiveRecord::Base
       end
     end
     json
+  end
+
+  def add_default_audience
+    if dashboard_audiences.blank?
+      audience = Audience.new(:type => "Dashboard")
+      Dashboard::DashboardAudience.create(:audience => audience, :dashboard => self, :role => Dashboard::DashboardAudience::ROLES[:publisher])
+    end
   end
 end
