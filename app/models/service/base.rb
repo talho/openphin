@@ -34,7 +34,7 @@ class Service::Base
       providers << message.Behavior.Delivery.defaultProvider.to_sym unless message.Behavior.Delivery.defaultProvider.blank?
     end
     providers = [:swn] if providers.blank?
- 
+
     providers.each do |provider|
       if PROVIDERS[provider]
         provider_message = PROVIDERS[provider].new(:message => message)
