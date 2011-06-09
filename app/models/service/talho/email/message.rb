@@ -9,8 +9,11 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
   def perform_delivery
     # find the title, sender, and other things that are static
     @title = message.Messages.select {|m| m.name == 'title' }.first.Value
-    return if !message.Author # Since we don't have an author, we don't have a sender, and that's bad.
-    @sender = message.Author.Contacts.select {|c| c.device_type == 'E-mail'}.first.Value
+    if !message.Author
+      @sender = DO_NOT_REPLY
+    else
+      @sender = message.Author.Contacts.select {|c| c.device_type == 'E-mail'}.first.Value
+    end
     
     # for now, deliver IVR per recipient
     provider = message.Behavior.Delivery.Providers.select{|p| p.device == 'E-mail' && p.name == 'talho'}.first
@@ -62,9 +65,24 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
   
   def build_ivr(message_hash)
     msg = ''
+    if @ivr.nil?
+      begin
+        message_name = message.Behavior.Delivery.Providers.select{|p| p.device == 'E-mail'}.first.Messages.select{|m| m.name == "message"}.first.ref
+      rescue
+        message_name = 'message'
+      end
+      
+      if message_hash[message_name]
+        message_name = message_hash[message_name]
+      elsif message_hash['message']
+        message_name = message_hash['message']
+      end
+      return message.Messages.select{|m| m.name == message_name}.first.Value
+    end
+    
     @ivr.ContextNodes.each do |ctxt|
       case ctxt.operation
-        when 'put'
+        when 'put', 'TTS'
           ctxt.responses.each do |resp|
             msg += get_text_response(resp, message_hash)
           end
@@ -75,7 +93,7 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
   end
   
   def get_text_response(resp, message_hash)
-    if resp.ref
+    unless resp.ref.blank?
       if message_hash[resp.ref]
         return message_hash[resp.ref][:value] if message_hash[resp.ref][:value]
         return message.Messages.select{|m| m.name == message_hash[resp.ref][:ref]}.first.Value if message_hash[resp.ref][:ref]
