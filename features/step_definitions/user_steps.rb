@@ -8,7 +8,7 @@ Given 'a user with the email "$email"' do |email|
   User.find_by_email(email) || Factory(:user, :email => email)
 end
 
-Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisdiction"' do |name, email, role, jurisdiction|
+Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: application "([^"]*)")? in "([^"]*)"$/ do |name, email, role, application, jurisdiction|
   first_name, last_name = name.split
   jur_obj = Jurisdiction.find_or_create_by_name(jurisdiction.to_s)
   unless (user = User.find_by_email(email))
@@ -17,7 +17,8 @@ Given 'the user "$name" with the email "$email" has the role "$role" in "$jurisd
   end
   roles = role.split(',').map(&:strip)
   roles.each do |r|
-    role_obj = Role.find_or_create_by_name(r.to_s)
+    role_obj = application.blank? ? Role.find_by_name(r.to_s) : Role.find_by_name_and_application(r.to_s, application)
+    role_obj = Role.create(:name => r.to_s, :application => (application.blank? ? 'phin' : application ) ) if role_obj.nil?
     role_obj.update_attribute('approval_required', true) unless r.to_s == "Public"
     unless r == "Public"
       unless RoleMembership.already_exists?(user, role_obj, jur_obj)
@@ -37,9 +38,10 @@ Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
   u.update_password(password,password)
   u.save
 end
+
 Given /^the following users exist:$/ do |table|
   table.raw.each do |row| 
-    Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}" in "#{row[3]}"}
+    Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}"#{row[4].blank? ? '' : " application \"#{row[4]}\""} in "#{row[3]}"}
   end
 end
 
