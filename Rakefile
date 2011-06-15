@@ -13,6 +13,20 @@ require 'hydra/tasks'
 
 task :build => %w(db:migrate spec cucumber)
 task :db => %w(db:migrate db:test:prepare)
+task :phin_plugins do
+  phin_plugins = YAML.load_file("config/phin_plugins.yml")
+  phin_plugins.each { |pp|
+    cmds = Array.new
+    name = File.basename(pp["url"]).sub(/\.git$/, "")
+    branch = pp["branch"] || "master"
+    cmds << "git clone #{pp["url"]} --branch #{branch} vendor/plugins/#{name}"
+    if pp.has_key?("commit")
+      cmds << "cd vendor/plugins/#{name}"
+      cmds << "git checkout #{pp["commit"]}"
+    end
+    sh cmds.join(" && ")
+  }
+end
 
 Hydra::TestTask.new('hydra' => ['environment']) do |t|
   t.add_files 'features/**/*.feature'

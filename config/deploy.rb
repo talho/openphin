@@ -7,7 +7,7 @@ set :application, "openphin"
 set :repository,  "git://github.com/talho/openphin.git"
 set :rails_env, 'production'
 set :scm, :git  # override default of subversion
-set :branch, 'master'
+set :branch, 'noplugins2'
 set :use_sudo, false
 set :user, 'apache'
 set :git_enable_submodules, true
@@ -16,6 +16,7 @@ set :default_run_options, {:shell => "sh -l"}
 set :rake, "bundle exec rake"
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
+
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -46,10 +47,12 @@ end
 before 'deploy', 'backgroundrb:stop'
 before 'deploy', 'delayed_job:stop'
 before 'deploy', 'sphinx:start_if_not'
-after 'deploy:update_code', 'app:symlinks'
+after 'deploy:update_code', 'app:phin_plugins'
+after 'app:phin_plugins', 'app:symlinks'
 after 'app:symlinks', 'app:bundle_install'
 after "deploy", "deploy:cleanup"
 after 'deploy', "sphinx:rebuild"
+after 'deploy:cold', "sphinx:rebuild"
 after 'sphinx:rebuild', 'backgroundrb:restart'
 after 'sphinx:rebuild', 'delayed_job:restart'
 

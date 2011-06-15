@@ -1,4 +1,20 @@
 namespace :app do
+  desc "deploy the PHIN plugins: han, etc."
+  task :phin_plugins, :roles => [:app, :web, :jobs] do
+    phin_plugins = YAML.load_file("config/phin_plugins.yml")
+    phin_plugins.each { |pp|
+      cmds = [ "cd #{release_path}" ]
+      name = File.basename(pp["url"]).sub(/\.git$/, "")
+      branch = pp["branch"] || "master"
+      cmds << "git clone #{pp["url"]} --branch #{branch} vendor/plugins/#{name}"
+      if pp.has_key?("commit")
+        cmds << "cd vendor/plugins/#{name}"
+        cmds << "git checkout #{pp["commit"]}"
+      end
+      run cmds.join(" && ")
+    }
+  end
+
   desc "we need a database. this helps with that."
   task :symlinks, :roles => [:app, :web, :jobs] do 
     run "ln -fs #{shared_path}/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"

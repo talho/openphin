@@ -63,3 +63,8 @@ lib/workers/vms
 public/javascripts/vms
 public/stylesheets/vms
 firebug.xpi
+public/javascripts/han
+public/javascripts/han/*
+public/stylesheets/han
+public/stylesheets/han/*
+config/phin_plugins.yml
