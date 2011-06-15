@@ -50,6 +50,7 @@ before 'deploy', 'sphinx:start_if_not'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'app:phin_plugins', 'app:symlinks'
 after 'app:symlinks', 'app:bundle_install'
+after 'deploy:migrate', 'app:phin_plugins_install'
 after "deploy", "deploy:cleanup"
 after 'deploy', "sphinx:rebuild"
 after 'deploy:cold', "sphinx:rebuild"
