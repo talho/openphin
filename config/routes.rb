@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
   map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
   map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
   map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
-  map.resources :dashboard
+  map.resources :dashboard, :collection => {:all => :get}
   map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
   map.root :controller => "dashboard", :action => "index"
   map.about "/about", :controller => "dashboard", :action => "about"

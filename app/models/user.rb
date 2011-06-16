@@ -70,6 +70,10 @@ class User < ActiveRecord::Base
     Dashboard.scoped :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN audiences_recipients ON (audiences_recipients.audience_id = audiences_dashboards.audience_id)", :conditions => "audiences_recipients.user_id = #{self.id}"
   end
 
+  def default_dashboard
+    self.dashboards.published.find_by_id(self.dashboard_default) || self.dashboards.published.first
+  end
+
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'
