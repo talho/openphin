@@ -3,12 +3,14 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
     create_table :dashboards do |t|
       t.string :name
       t.integer :columns
+      t.timestamps
     end
 
     create_table :portlets do |t|
       t.string :name
       t.string :xtype
       t.text :config
+      t.timestamps
     end
 
     create_table :dashboards_portlets do |t|
@@ -16,6 +18,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.integer :portlet_id
       t.boolean :draft, :default => true, :null => true 
       t.integer :column
+      t.timestamps
       t.index [:dashboard_id, :portlet_id, :draft]
     end
 
@@ -23,6 +26,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.integer :audience_id
       t.integer :dashboard_id
       t.integer :role
+      t.timestamps
       t.index [:audience_id, :dashboard_id]
       t.index :role
     end

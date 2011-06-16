@@ -75,7 +75,7 @@ class Dashboard < ActiveRecord::Base
       p = options[:draft] ? self.portlets(true).draft.with_column(i) : self.portlets(true).published.with_column(i)
       items = p.map do |portlet|
         if portlet.valid?
-          column = self.dashboard_portlets.find_by_portlet_id_and_draft(portlet.id, options[:draft] == true).column
+          column = self.dashboard_portlets(true).find_by_portlet_id_and_draft(portlet.id, options[:draft].to_s == "true").column
           json = sanitizeJSON(ActiveSupport::JSON.decode(portlet.config))
           json["itemId"] = portlet.id
           json["xtype"] = portlet.xtype

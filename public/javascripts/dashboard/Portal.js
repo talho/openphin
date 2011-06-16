@@ -17,6 +17,21 @@ Talho.Dashboard.Record = Ext.data.Record.create([
   {name: 'draft'}
 ]);
 
+Talho.Dashboard.DashboardStore = Ext.extend(Ext.data.JsonStore, {
+  readerConfig: {
+    root: 'dashboards',
+    idProperty: 'id',
+    fields: ['id','name',{name: 'updated_at', type: 'date'},'columns','config','draft']
+  },
+  autoLoad: true,
+  autoSave: false,
+  restful: true,
+  constructor: function(config) {
+    Ext.applyIf(config, this.readerConfig);
+    Talho.Dashboard.DashboardStore.superclass.constructor.call(this, config);
+  }
+});
+
 Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   constructor: function(config) {
     Ext.apply(this, config);
@@ -34,11 +49,116 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       dropEvent.panel.column = dropEvent.columnIndex;
     },
     render: function() {
-      this.loadMask = new Ext.LoadMask(this.getEl(),{msg:"Loading Dashboard...", removeMask: true, store: this.store});
+      this.loadMask = new Ext.LoadMask(this.getEl(),{msg:"Loading Dashboard...", removeMask: true, store: this.viewStore});
     }
   },
 
   initComponent : function(config){
+    this.viewStore = new Talho.Dashboard.DashboardStore({
+      url: '/dashboard/' + Application.default_dashboard + '.json',
+      storeId: 'dashboardViewStore',
+      listeners: {
+        scope: this,
+        load: function(store, records, options) {
+          //Ext.each(records, function(record, recordsIndex, allRecords) {
+          if(records.length > 0) {
+            record = records[0]
+            this.items.clear();
+            this.columnCount = record.data.config.length;
+            this.itemId = record.data.id;
+            Ext.each(record.data.config, function(item, index, allItems) {
+              this.items.add(Ext.create(item));
+            }, this);
+          }
+          //}, this);
+
+          this.doLayout();
+        },
+        save: function(store, batch, data) {
+          this.loadMask.hide();
+          if(data.create != undefined) this.itemId = data.create[0].id
+        }
+      }
+    });
+
+    this.draftStore = new Talho.Dashboard.DashboardStore({
+      autoLoad: false,
+      storeId: 'dashboardDraftStore',
+      proxy: new Ext.data.HttpProxy({
+        url: '/dashboard.json',
+        api: {
+          read: '/dashboard.json?draft=true'
+        }
+      }),
+      writer: new Ext.data.JsonWriter({
+        encode: true,
+        writeAllFields: true
+      }),
+      listeners: {
+        scope: this,
+        beforeload: function() {
+          this.dashboardList.setRawValue("Loading Dashboards...");
+        },
+        load: function(store, records, options) {
+          var record = store.getById(Application.default_dashboard);
+          if(record == undefined) {
+            this.dashboardList.setRawValue("");
+            this.itemId = Application.default_dashboard;
+            rec = new Talho.Dashboard.Record({
+              id: Application.default_dashboard,
+              date: undefined,
+              config: undefined
+            });
+            rec.id = Application.default_dashboard;
+            store.add(rec);
+            this.items.each(function(column, columnIndex, allColumnItems) {
+              column.items.each(function(portlet, portletIndex, allPortletItems) {
+                portlet.itemId = undefined
+              });
+            });
+          } else {
+            this.dashboardList.setValue(record.data[this.dashboardList.displayField]);
+            this.switchDashboard(record);
+          }
+
+          this.doLayout();
+        },
+        save: function(store, batch, data) {
+          this.loadMask.hide();
+          if(data.create != undefined) this.itemId = data.create[0].id
+        }
+      }
+    });
+
+    this.publishedStore = new Talho.Dashboard.DashboardStore({
+      autoLoad: false,
+      storeId: 'dashboardPublishedStore',
+      url: '/dashboard.json'
+    });
+
+    this.dashboardListStore = new Talho.Dashboard.DashboardStore({
+      autoLoad: false,
+      storeId: 'dashboardListStore',
+      url: '/dashboard/all.json',
+      listeners: {
+        scope: this,
+        beforeload: function() {
+          this.dashboardList.setRawValue("Loading Dashboards...");
+        }
+      }
+    });
+
+    this.dashboardList = new Ext.form.ComboBox({
+      displayField: 'name',
+      hiddenName: 'name',
+      valueField: 'id',
+      hiddenValue: 'id',
+      lazyRender: true,
+      store: this.dashboardListStore,
+      mode: 'local',
+      width: 250
+    });
+
     this.tbar = {
       hidden: true,
       items: [{
@@ -48,7 +168,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           scope: this,
           handler: function() {
             this.resetDashboardPage();
-            this.store.removeAll(true);
+            //this.viewStore.removeAll(true);
           }
         },{
           text: '2 column',
@@ -115,19 +235,20 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             Ext.Msg.confirm("Warning","Are you sure you want to delete this dashboard and all its contents?", function(btn) {
               if(btn == 'yes') {
                 if(this.itemId) {
-                  this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Deleting...", store: this.store});
+                  this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Deleting...", store: this.draftStore});
                   this.loadMask.show();
-                  var rec = this.store.getById(this.itemId);
-                  this.store.remove(rec);
-                  this.store.save();
+                  var rec = this.draftStore.getById(this.itemId);
+                  this.draftStore.remove(rec);
+                  this.draftStore.save();
                 }
                 this.resetDashboardPage();
               }
             }, this);
           }
         }]
-      }]
-    },
+      },this.dashboardList]
+    };
+
     this.bbar = {
       items: [{
         text: "Admin Mode",
@@ -209,7 +330,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         hidden: true,
         scope: this,
         handler: function(b, e) {
-          this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving...", store: this.store});
+          this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving...", store: this.draftStore});
           this.loadMask.show();
           this.save(true);
         }
@@ -223,7 +344,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         handler: function(b, e) {
           Ext.Msg.confirm("Warning", "Clicking Save and Publish will make all changes active in production.  Are you sure you want to publish these changes?", function(btn) {
             if(btn == 'yes') {
-              this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving and Publishing...", store: this.store});
+              this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving and Publishing...", store: this.draftStore});
               this.loadMask.show();
               this.save(false);
             }
@@ -234,43 +355,6 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     }
 
     Ext.ux.Portal.superclass.initComponent.call(this);
-
-    this.store = new Ext.data.JsonStore({
-      autoLoad: true,
-      autoSave: false,
-      restful: true,
-      url: '/dashboard.json',
-      storeId: 'dashboardStore',
-      root: 'dashboard',
-      idProperty: 'id',
-      fields: ['id','name',{name: 'updated_at', type: 'date'},'columns','config','draft'],
-      writer: new Ext.data.JsonWriter({
-        encode: true,
-        writeAllFields: true
-      }),
-      listeners: {
-        scope: this,
-        load: function(store, records, options) {
-          //Ext.each(records, function(record, recordsIndex, allRecords) {
-          if(records.length > 0) {
-            record = records[0]
-            this.items.clear();
-            this.columnCount = record.data.config.length;
-            this.itemId = record.data.id;
-            Ext.each(record.data.config, function(item, index, allItems) {
-              this.items.add(Ext.create(item));
-            }, this);
-          }
-          //}, this);
-
-          this.doLayout();
-        },
-        save: function(store, batch, data) {
-          this.loadMask.hide();
-          if(data.create != undefined) this.itemId = data.create[0].id
-        }
-      }
-    });
 
     this.addEvents({
         validatedrop:true,
@@ -308,7 +392,10 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     this.getTopToolbar().setVisible(!this.getTopToolbar().isVisible());
     if(!this.previewMode) this.toggleAdminBorder(this);
     this.adminMode = !this.adminMode;
+    this.loadMask = new Ext.LoadMask(this.getEl(),{msg:"Loading Dashboard...", removeMask: true, store: this.adminMode ? this.draftStore : this.viewStore});
     if(!this.adminMode) this.previewMode = false;
+    if(this.dashboardList.getStore().data.length == 0) this.dashboardList.getStore().load();
+    if(this.draftStore.data.length == 0) this.draftStore.load();
     this.doLayout();
   },
 
@@ -349,7 +436,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         config: undefined
       });
     } else {
-      rec = this.store.getById(this.itemId);
+      rec = this.draftStore.getById(this.itemId);
     }
 
     if(rec == undefined) Ext.Msg.alert("Error saving dashboard.");
@@ -363,8 +450,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     rec.data.columns = this.columnCount;
     rec.markDirty();
     rec.endEdit();
-    if(rec.data.id == undefined) this.store.add(rec);
-    var i = this.store.save();
+    if(rec.data.id == undefined) this.draftStore.add(rec);
+    var i = this.draftStore.save();
   },
 
   buildConfig: function() {
@@ -380,7 +467,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   },
 
   compareProperties: function(config1, config2) {
-    if(config1.length != config2.length) return false;
+    if(config1 == undefined || config1.length != config2.length) return false;
 
     for(var i = 0; i < config1.length; i++) {
       for(var propertyName in config1[i]) {
@@ -395,5 +482,20 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     }
 
     return true;
+  },
+
+  switchDashboard: function(record) {
+    if(record.data.draft == "true") {
+      this.items.each(function(item, index, allItems) {
+        item.removeAll(true);
+      });
+      this.removeAll(true);
+      Ext.each(record.data.config, function(item, index, allItems) {
+        this.items.add(Ext.create(item));
+      }, this);
+      this.columnCount = record.data.columns;
+      this.doLayout();
+      this.toggleAdminBorder(this);
+    }
   }
 });
