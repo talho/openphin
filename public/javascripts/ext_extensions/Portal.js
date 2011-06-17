@@ -150,7 +150,8 @@ Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
         if(!this.lastPos){
             return;
         }
-        var c = this.lastPos.c,
+      this.portal.items.items[data.panel.column].items.remove(data.panel);
+      var c = this.lastPos.c,
             col = this.lastPos.col,
             pos = this.lastPos.p,
             panel = dd.panel,
@@ -161,13 +162,14 @@ Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
            this.portal.fireEvent('beforedrop', dropEvent) !== false){
 
             dd.proxy.getProxy().remove();
-            panel.el.dom.parentNode.removeChild(dd.panel.el.dom);
+            //panel.el.dom.parentNode.removeChild(dd.panel.el.dom);
 
             if(pos !== false){
                 c.insert(pos, panel);
             }else{
                 c.add(panel);
             }
+          
 
             c.doLayout();
 
