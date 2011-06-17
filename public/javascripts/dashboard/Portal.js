@@ -59,6 +59,9 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       storeId: 'dashboardViewStore',
       listeners: {
         scope: this,
+        beforeload: function() {
+          return Application.default_dashboard != undefined;
+        },
         load: function(store, records, options) {
           //Ext.each(records, function(record, recordsIndex, allRecords) {
           if(records.length > 0) {
@@ -103,9 +106,9 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           var record = store.getById(Application.default_dashboard);
           if(record == undefined) {
             this.dashboardList.setRawValue("");
-            this.itemId = Application.default_dashboard;
+            this.itemId = Application.default_dashboard || undefined;
             rec = new Talho.Dashboard.Record({
-              id: Application.default_dashboard,
+              id: Application.default_dashboard || undefined,
               date: undefined,
               config: undefined
             });
@@ -118,7 +121,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             });
           } else {
             this.dashboardList.setValue(record.data[this.dashboardList.displayField]);
-            this.switchDashboard(record);
+            this.switchDashboard(record, "true");
           }
 
           this.doLayout();
@@ -321,7 +324,16 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         hidden: true
       },{
         text: 'Published',
-        hidden: true
+        hidden: true,
+        scope: this,
+        handler: function(b, e) {
+          Ext.Msg.confirm("Warning","This will revert the draft portlets back to what is currently published.  Any changes you have made will be lost.  Are you sure you want to continue?", function(btn) {
+            if(btn == 'yes') {
+              var record = this.publishedStore.getById(this.itemId);
+              this.switchDashboard(record, "false");
+            }
+          }, this);
+        }
       },{
         xtype: 'tbfill',
         hidden: true
@@ -396,6 +408,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     if(!this.adminMode) this.previewMode = false;
     if(this.dashboardList.getStore().data.length == 0) this.dashboardList.getStore().load();
     if(this.draftStore.data.length == 0) this.draftStore.load();
+    if(this.publishedStore.data.length == 0) this.publishedStore.load();
     this.doLayout();
   },
 
@@ -484,8 +497,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     return true;
   },
 
-  switchDashboard: function(record) {
-    if(record.data.draft == "true") {
+  switchDashboard: function(record, draft) {
+    if(String(record.data.draft) == draft) {
       this.items.each(function(item, index, allItems) {
         item.removeAll(true);
       });

@@ -3,6 +3,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
     create_table :dashboards do |t|
       t.string :name
       t.integer :columns
+      t.integer :draft_columns
       t.timestamps
     end
 
