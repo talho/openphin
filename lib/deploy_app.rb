@@ -39,8 +39,7 @@ namespace :app do
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
-    # for the rollcall plugin
-    run "ln -fs #{shared_path}/rollcall #{release_path}/tmp/rollcall"
+    # For the PHIN plugins
     run "ln -fs #{shared_path}/phin_plugins/rrdtool.yml #{release_path}/vendor/plugins/rollcall/config/rrdtool.yml"
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"

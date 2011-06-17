@@ -50,7 +50,8 @@ before 'deploy', 'sphinx:start_if_not'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'app:phin_plugins', 'app:symlinks'
 after 'app:symlinks', 'app:bundle_install'
-after 'deploy:migrate', 'app:phin_plugins_install'
+before 'deploy:start', 'app:phin_plugins_install'
+before 'deploy:restart', 'app:phin_plugins_install'
 after "deploy", "deploy:cleanup"
 after 'deploy', "sphinx:rebuild"
 after 'deploy:cold', "sphinx:rebuild"
@@ -92,10 +93,11 @@ namespace :deploy do
   end
 end
 
+after 'deploy:migrate', :seed
 after 'deploy:migrations', :seed
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
-  run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{rails_env}"
+  run "cd #{current_path}; #{rake} db:seed RAILS_ENV=#{rails_env}"
 end
 
 # useful for testing on_rollback actions
