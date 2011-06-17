@@ -21,9 +21,9 @@ class DashboardController < ApplicationController
       end
 
       format.json do
-        draft = params[:draft] || false
+        draft = params[:draft].to_s == "true" || false
         dashboards = current_user.dashboards.map do |dashboard|
-          {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns, :config => dashboard.config(:draft => draft), :draft => draft} unless draft.to_s == dashboard.portlets.draft.empty?.to_s
+          {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => draft), :draft => draft} unless (draft && dashboard.portlets.draft.empty?) || (!draft && dashboard.portlets.published.empty?)
         end.compact
 
         render :json => {:dashboards => dashboards, :success => true}
@@ -41,10 +41,10 @@ class DashboardController < ApplicationController
       end
 
       format.json do
-        draft = params[:draft] || false
+        draft = params[:draft].to_s == "true" || false
         dashboard = (draft ? current_user.dashboards.draft : current_user.dashboards.published).find_by_id(params[:id])
         if dashboard
-          render :json => {:dashboards => [{:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns, :config => dashboard.config(:draft => false), :draft => false}], :success => true}
+          render :json => {:dashboards => [{:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => false), :draft => false}], :success => true}
         else
           render :json => {:dashboards => [], :success => true}
         end
@@ -63,8 +63,10 @@ class DashboardController < ApplicationController
           params[:id] = dashboard_json["id"]
           update_it
         else
-          dashboard = Dashboard.create(:name => dashboard_json["name"] || "", :columns => dashboard_json["columns"], :dashboard_audiences_attributes => dashboard_json["dashboard_audiences_attributes"] || {}, :author => current_user)
+          options = {:name => dashboard_json["name"] || "", :dashboard_audiences_attributes => dashboard_json["dashboard_audiences_attributes"] || {}, :author => current_user}
           draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
+          options[(draft ? :draft_columns : :columns)] = dashboard_json["columns"]
+          dashboard = Dashboard.create(options)
           config = dashboard_json["config"]
           config.length.times do |column|
             portlets = config[column]
@@ -92,8 +94,14 @@ class DashboardController < ApplicationController
     dashboard_json = ActiveSupport::JSON.decode(params["dashboards"])
     dashboard = Dashboard.find_by_id(params[:id])
     dashboard.name = dashboard_json["name"] if dashboard_json["name"]
-    dashboard.columns = dashboard_json["columns"] if dashboard_json["columns"]
-    draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
+    draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"].to_s == "true"
+    if dashboard_json["columns"]
+      if draft
+        dashboard.draft_columns = dashboard_json["columns"]
+      else
+        dashboard.columns = dashboard_json["columns"]
+      end
+    end
     portlet_ids = []
     if dashboard && dashboard.save
       config = dashboard_json["config"]

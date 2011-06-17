@@ -66,10 +66,15 @@ class Dashboard < ActiveRecord::Base
     created
   end
 
+  def columns draft=false
+    self.read_attribute(draft ? "draft_columns" : "columns")
+  end
+
   def config(options={})
     jsonConfig = []
-    columnWidth = (1.0 / (self.columns || 3).to_f).round(2).to_s[1..-1]
-    (self.columns || 3).times do |i|
+    columns = (options[:draft].to_s == "true" ? self.draft_columns : self.columns)
+    columnWidth = (1.0 / (columns || 3).to_f).round(2).to_s[1..-1]
+    (columns || 3).times do |i|
       items = []
 
       p = options[:draft] ? self.portlets(true).draft.with_column(i) : self.portlets(true).published.with_column(i)
