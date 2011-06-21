@@ -59,7 +59,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                     ],
                     bbar:new Ext.PagingToolbar({
                         store: this.acknowledgement_store,
-                        pageSize: 5,
+                        pageSize: 10,
                         prependButtons: true,
                         items: [{text:'Export as CSV', handler: function(){window.open("/han_alerts/" + this.alertId + ".csv");}, scope: this},
                             {text:'Export as PDF', handler: function(){window.open("/han_alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
@@ -89,7 +89,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
             this.on('render', function(panel){
                 panel.loadMask = new Ext.LoadMask(this.getEl());
                 panel.loadMask.show();
-            }, this, {delay: 10, single: true});
+            }, this, {delay: 5, single: true});
 
             // show the acknowledgement grid
             this.getComponent('acknowledgement_grid').show();
