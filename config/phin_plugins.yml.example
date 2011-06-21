@@ -4,8 +4,8 @@
 #  branch: master
 #  commit: "75c7f36bf41fb788b550fe0a2579e99feed160be"
 - url: "ssh://git@git.talho.org/home/git/repositories/han.git"
-  branch: master
+  branch: messaging
 - url: "ssh://git@git.talho.org/home/git/repositories/rollcall"
-  branch: master
+  branch: ext_adst
 - url: "ssh://git@git.talho.org/home/git/repositories/vms"
   branch: master
