@@ -252,6 +252,7 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
       Ext.each(this.data.roles, function(role){params['role_ids[]'].push(role.id)});
       if ( this.data["han_alert[not_cross_jurisdictional]"]) { params['not_cross_jurisdictional'] = 1; }
       params['from_jurisdiction_id'] = this.data["han_alert[from_jurisdiction_id]"]  ;
+      if( this.alertId != undefined) params["alert_id"] = this.alertId;
       return params;
     },
 
