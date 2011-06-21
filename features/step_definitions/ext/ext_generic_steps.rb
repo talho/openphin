@@ -387,6 +387,10 @@ Then /^the "([^\"]*)" window should be open$/ do |window_title|
    page.evaluate_script("Ext.WindowMgr.getActive().title").should == window_title
 end
 
+Then /^there should be no open windows$/ do
+  page.evaluate_script("Ext.WindowMgr.getActive()").should be_nil
+end
+
 When /^I should see "([^\"]*)" (\d) times? within "([^\"]*)"$/ do |item_name, number, selector|
    page.all(selector, :text => item_name).length.should == number.to_i
 end
