@@ -9,7 +9,15 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
   border:false,
     constructor: function(config){
         
-        this.acknowledgement_store = new Ext.data.Store({reader: new Ext.data.JsonReader({fields: ['name', 'email', 'device', 'response', 'acknowledged_at']})});
+        this.acknowledgement_store = new Ext.data.Store({
+          restful: true,
+          url: config.alertId ? '/han_alerts/' + config.alertId + '/acknowledgements.json' : null,
+          autoLoad: false,
+          reader: new Ext.data.JsonReader({
+            root: 'attempts',
+            fields: ['name', 'email', 'device', 'response', 'acknowledged_at']
+          })
+        });
 
         Ext.apply(config, { // we want to absolutely override the items passed in the constructor.
             items:[
@@ -49,10 +57,10 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
                         {field: 'response', header: 'Acknowledgement Response', width: 200},
                         {field: 'acknowledged_at', header: 'Acknowledgement Time', renderer: Ext.util.Format.dateRenderer('F j, Y, g:i a'), width: 200}
                     ],
-                    bbar:new Ext.Toolbar({
-                        //store: this.acknowledgement_store,
-                        //pageSize: 10,
-                        //prependButtons: true,
+                    bbar:new Ext.PagingToolbar({
+                        store: this.acknowledgement_store,
+                        pageSize: 5,
+                        prependButtons: true,
                         items: [{text:'Export as CSV', handler: function(){window.open("/han_alerts/" + this.alertId + ".csv");}, scope: this},
                             {text:'Export as PDF', handler: function(){window.open("/han_alerts/" + this.alertId + ".pdf");}, scope: this}, '->'],
                         listeners:{'beforechange': function(toolbar, o){return toolbar.cursor != o.start;}}
@@ -119,18 +127,18 @@ Talho.AlertDetail = Ext.extend(Ext.Panel, {
         Ext.apply(data, alert_json.audiences);
         this.loadData(data);
 
-        var acknowledgements = [];
-        // let's go ahead and rewrite the alert attempts to something that works better for us
-        Ext.each(alert_json.alert_attempts, function(attempt, index){
-            acknowledgements.push({name: attempt.user.display_name,
-                email: attempt.user.email,
-                device: attempt.acknowledged_alert_device_type ? attempt.acknowledged_alert_device_type.device : "",
-                response: attempt.call_down_response ? alert_json.alert.call_down_messages[attempt.call_down_response.toString()] : attempt.call_down_response === 0 ? "Acknowledged" : "",
-                acknowledged_at: attempt.acknowledged_at
-            });
-        }, this);
+        // var acknowledgements = [];
+        // // let's go ahead and rewrite the alert attempts to something that works better for us
+        // Ext.each(alert_json.alert_attempts, function(attempt, index){
+            // acknowledgements.push({name: attempt.user.display_name,
+                // email: attempt.user.email,
+                // device: attempt.acknowledged_alert_device_type ? attempt.acknowledged_alert_device_type.device : "",
+                // response: attempt.call_down_response ? alert_json.alert.call_down_messages[attempt.call_down_response.toString()] : attempt.call_down_response === 0 ? "Acknowledged" : "",
+                // acknowledged_at: attempt.acknowledged_at
+            // });
+        // }, this);
 
-        this.acknowledgement_store.loadData(acknowledgements);
+        this.acknowledgement_store.load({params:{start:0, limit:10}});
 
         if(this.loadMask) this.loadMask.hide();
     },
