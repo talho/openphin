@@ -10,7 +10,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
         this.linksPanel = new Ext.Panel({
             flex: 1,
             autoHeight:true,
-            html: "  <div class='article'>\
+            html: window.Application.rails_environment == "cucumber" ? "" : "  <div class='article'>\
   <h2>Flu Awareness</h2>\
   <p class='date'>January 9, 2011</p>\
   <div class='lede'>\
