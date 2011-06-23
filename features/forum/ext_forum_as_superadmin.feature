@@ -8,14 +8,9 @@ Feature: Creating a forum (room)
   Background:
     Given the following entities exist:
       | Jurisdiction | Texas          |
-      | Jurisdiction | Dallas County  |
-      | Jurisdiction | Potter County  |
       | Role         | Health Officer |
     And Texas is the parent jurisdiction of:
-      | Dallas County |
-      | Potter County |
-    And a role named Public
-    And there is an system administrator role
+      | Dallas County | Potter County |
     And  Health Officer is a non public role
     And the following users exist:
       | Jane Smith | jane.smith@example.com | Public | Dallas County |
@@ -192,8 +187,8 @@ Feature: Creating a forum (room)
     And I should see "Sticky topic that was created earlier" in grid row 2
 
     When I click edit_topic on the "Sticky topic that was created earlier" grid row
-    And I check "Pinned"
-    And I press "Save"
+    And I check "Pinned" within ".x-window"
+    And I press "Save" within ".x-window"
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
     Then I should see "Sticky topic that was created earlier" in grid row 1
@@ -310,7 +305,7 @@ Feature: Creating a forum (room)
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
-    And I click edit_forum on the "Forum to verify concurrency" grid row 
+    And I click edit_forum on the "Forum to verify concurrency" grid row
     And I select the following in the audience panel:
       | name           | type         |
       | Potter County  | Jurisdiction |
@@ -319,7 +314,7 @@ Feature: Creating a forum (room)
     And I navigate to "Joe Smith > Sign Out"
 
     Given session name is "default"
-    When I press "Save"
+    When I press "Save" within ".x-window"
     Then I should see "This forum was recently changed by another user. Please try again."
 
   Scenario: Editing forum topics concurrently to another admin editing the same forum topic
