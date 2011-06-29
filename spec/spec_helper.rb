@@ -8,7 +8,7 @@ unless defined?(Rails.root)
     require File.dirname(__FILE__) + "/../spec/factories"
   else
     require File.dirname(__FILE__) + "/../config/environment"
-    Dir[File.dirname(__FILE__) + "/../**/spec/factories.rb"].each{ |f| require f }
+    Dir[File.dirname(__FILE__) + "/../**{,/*/**}/*/spec/factories.rb"].each{ |f| require f }
   end
 end
 require 'spec/autorun'
