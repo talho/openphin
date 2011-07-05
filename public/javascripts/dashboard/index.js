@@ -1,6 +1,5 @@
 
 Ext.onReady(function(evt){
-    Ext.BLANK_IMAGE_URL = '/images/s.gif';
     //TODO: remove after beta period
     document.cookie="phin2beta=true;path=/";
 

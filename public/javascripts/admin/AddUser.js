@@ -10,43 +10,62 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
     this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
     this.orgs_control = new Talho.ux.OrganizationsControl(config.url + ".json", this);
     var item_list = [
-      {xtype: 'panel', layout: 'column', width: 850,  border: true, bodyStyle: 'background-color: white;',
-        defaults: {bodyStyle:'background-color: white;', border: false, layout: 'form', xtype: 'panel'}, items: [
-      // Left column
-        { columnWidth: 1, defaults: {anchor: '100%', border: false}, items: [
-          {xtype: 'panel', layout: 'column', bodyStyle:'background-color: white;', defaults: {layout: 'form', labelAlign: 'top', border: false, xtype: 'panel'}, items: [
-            {columnwidth: 0.5, bodyStyle:'padding-right: 20px; background-color: white;', defaults: {anchor: '100%'}, items: [
-              {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', allowBlank: false, tabIndex: 1},
-              {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true, tabIndex: 3},
-              {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', id: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password', tabIndex: 5},
-              {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true, tabIndex: 7},
-              {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true, vtype: 'phone', tabIndex: 9},
-              {xtype: 'textfield', fieldLabel: 'Home phone', name: 'user[home_phone]', maxLength: '46', allowBlank: true, tabIndex: 11}
-            ]},
-            {columnwidth: 0.5, bodyStyle: 'background-color: white;' ,defaults: {anchor: '100%'}, items: [
-              {xtype: 'textfield', fieldLabel: 'Last name', name: 'user[last_name]', maxLength: '46', allowBlank: false, tabIndex: 2},
-              {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false, vtype: 'email', tabIndex: 4},
-              {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false, initialPassword: 'initialPass', vtype: 'password', tabIndex: 6},
-              {xtype: 'textfield', fieldLabel: 'Employer', name: 'user[employer]', maxLength: '46', allowBlank: true, tabIndex: 8},
-              {xtype: 'textfield', fieldLabel: 'Office fax', name: 'user[fax]', maxLength: '46', allowBlank: true, tabIndex: 10},
-              {xtype: 'textfield', fieldLabel: 'Mobile phone', name: 'user[mobile_phone]', maxLength: '46', allowBlank: true, tabIndex: 12}
-            ]}
+      {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', allowBlank: false}
           ]},
-          {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all', store: ['English', 'Spanish'], value: 'English', tabIndex: 13}
-        ]},
-      //Right column
-        { width: 420, defaults: {anchor: '100%'}, items: [
-          {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:420}, items:[
-            {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all', allowBlank: false,
-              store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;', tabIndex: 14},
-            {xtype: 'container', style: {'padding-top': '10px'}, html: 'Roles:'},
-            this.roles_control,
-            {xtype: 'container', style: {'padding-top': '10px'}, html: 'Alerting Devices:'},
-            this.devices_control,
-            {xtype: 'container', style: {'padding-top': '10px'}, html: 'Organizations:'},
-            this.orgs_control
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Last name', name: 'user[last_name]', maxLength: '46', allowBlank: false}
           ]}
-        ]}
+        ]},
+        {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true},
+        {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false, vtype: 'email'},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', id: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password'}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false, initialPassword: 'initialPass', vtype: 'password'}
+          ]}
+        ]},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Employer', name: 'user[employer]', maxLength: '46', allowBlank: true}
+          ]}
+        ]},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true, vtype: 'phone'}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Office fax', name: 'user[fax]', maxLength: '46', allowBlank: true}
+          ]}
+        ]},
+        {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Home phone', name: 'user[home_phone]', maxLength: '46', allowBlank: true}
+          ]},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', margins: '0 0 0 10', defaults:{width:195}, items:[
+            {xtype: 'textfield', fieldLabel: 'Mobile phone', name: 'user[mobile_phone]', maxLength: '46', allowBlank: true}
+          ]}
+        ]},
+        {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all',
+          store: ['English', 'Spanish'], value: 'English'}
+      ]},
+      {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:440},
+        margins: '0 0 0 10', items:[
+        {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all', allowBlank: false,
+          store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 20px 0 0'},
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Roles:'}, this.roles_control,
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Alerting Devices:'}, this.devices_control,
+        {xtype: 'spacer', height: '10'},
+        {xtype: 'container', html: 'Organizations:'},  this.orgs_control
       ]}
     ];
     this.form_config = {
