@@ -39,3 +39,5 @@ PHIN_APP_OID="1"
 PHIN_ENV_OID="3"
 PHIN_OID_ROOT="#{PHIN_PARTNER_OID}.#{PHIN_ENV_OID}.#{PHIN_APP_OID}"
 
+
+  config.gem 'rspec-rails', :version => '>= 1.3.4', :lib => false unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
