@@ -190,3 +190,17 @@ Factory.define :favorite, :class => Favorite do |f|
   f.tab_config  "{:id => 'test_favorite', :title =>'Test Favorite'}"
   f.association :user
 end
+
+Factory.define :report_recipe, :class => Report::Recipe do |f|
+end
+
+Factory.define :report_recipe, :class => Report::Recipe do |f|
+  f.sequence(:type) {|t| "Report::Factory#{t}Recipe"}
+end
+
+Factory.define :report_report, :class => Report::Report do |f|
+  f.association :author, :factory => :user
+  f.association :recipe, :factory => :report_recipe
+  f.association :audience, :factory => :audience
+  f.incomplete :true
+end
