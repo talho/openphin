@@ -41,7 +41,6 @@ group :default do
     gem "taf2-curb", "0.5.4.0"
   gem "mysql", "2.8.1"
   gem "libxml-ruby", "1.1.3"
-  #gem "clamav", "0.4.1"
   gem "daemons", "1.1.0"
   gem "pg", "0.10.1"
   gem "acts-as-taggable-on", "2.0.6"
@@ -77,12 +76,12 @@ group :cucumber do
   gem "sinatra", "1.0"
   gem "xpath", "0.1.3"
   gem "capybara", "0.4.1.2"
-  #gem "clamav", "0.4.1"
   gem "hydra", "0.23.3"
 end
 
 group :production do
   gem "unicorn"
+  gem "clamav", "0.4.1"
 end
 
 group :tools do
