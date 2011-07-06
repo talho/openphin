@@ -82,7 +82,6 @@ describe Report::Recipe do
       values["instance"][:incomplete].should be_false
     end
 
-    ##
     after(:all) do
       # this assures the deletion of the paperclip files
       Report::Report.all.map(&:destroy)
