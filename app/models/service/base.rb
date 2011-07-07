@@ -41,7 +41,7 @@ class Service::Base
         provider_message = PROVIDERS[provider].new(:message => message)
         provider_message.deliver
       else
-        LOGGER.warn = "#{provider} is not a valid service provider"
+        LOGGER.warn "#{provider} is not a valid service provider"
       end
     end
   end
