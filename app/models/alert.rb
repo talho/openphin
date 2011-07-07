@@ -84,6 +84,7 @@ class Alert < ActiveRecord::Base
       :conditions => "alerts.id=#{object_id}"
   }
   named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
+  before_create :set_alert_type
 
   def self.default_alert
     title = "Example Alert - please click More to see the alert contents"
@@ -134,8 +135,7 @@ class Alert < ActiveRecord::Base
   end
 
   def to_s
-    begin alert_title = alert_type.constantize.find(id).to_s rescue alert_title = '-?-' end
-    alert_type + ': ' + alert_title
+    (alert_type.nil? || alert_type == "Alert") ? self.title : alert_type + ':' + alert_type.constantize.find(id).to_s
   end
 
   def to_xml(options={})
@@ -324,4 +324,10 @@ class Alert < ActiveRecord::Base
       end
     end
   end
+
+  private
+  def set_alert_type
+    self[:alert_type] = "Alert"
+  end
+
 end
