@@ -44,7 +44,6 @@ Ext.ns("Talho");
         'Talho.PendingRoleRequests': {js: "AjaxPanel > /javascripts/admin/PendingRoleRequests.js"},
         'Talho.AuditLog': {js: "AjaxPanel > /javascripts/admin/AuditLog.js"},
         'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'},
-        'Talho.BetaWindow': {js:'/javascripts/dashboard/BetaWindow.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

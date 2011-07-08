@@ -36,7 +36,7 @@ end
 
 Then /^I should be signed in$/ do
   Given %{I am on the homepage}
-  Then %{I should see "Sign Out"}
+  Then %{I should see "Need Help?"}
 end
 
 Then /^I should be signed out$/ do

@@ -13,7 +13,7 @@ module NavigationHelpers
       when /the dashboard page/i
         root_path
       when /the ext dashboard page/i
-        ext_path
+        root_path
       when /the sign up page/i
         new_user_path
       when /the (log|sign) ?in page/i

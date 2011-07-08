@@ -106,7 +106,6 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   end
   bbar_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
-                  {name: 'OLD: Use TXPHIN 1.0', win: {id: 'phin_beta_button', title: 'TxPhin beta', initializer: 'Talho.BetaWindow' } },
                   '->',
                   'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:phinadmin@dshs.state.tx.us\" target=\"_blank\">phinadmin@dshs.state.tx.us</a>'
                 ];"
