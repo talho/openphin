@@ -43,10 +43,10 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   menu_config += "{name: 'Tutorials', items:[
                     {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'#{ tutorials_path }', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
                     {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'#{ tutorials_path }', anchor: 'HAN', initializer: 'Talho.Tutorials'}},
-                    {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'#{ tutorials_path }', anchor: 'Documents', initializer: 'Talho.Tutorials'}},
-                    {name: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'#{ tutorials_path }', anchor: 'Forums', initializer: 'Talho.Tutorials'}},
-                    {name: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'#{ tutorials_path }', anchor: 'Rollcall', initializer: 'Talho.Tutorials'}}]},
+                    {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'#{ tutorials_path }', anchor: 'Documents', initializer: 'Talho.Tutorials'}}]},
                   '->',"
+#{name: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'#{ tutorials_path }', anchor: 'Forums', initializer: 'Talho.Tutorials'}},
+#{name: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'#{ tutorials_path }', anchor: 'Rollcall', initializer: 'Talho.Tutorials'}}]},
 
   if signed_in?
 
