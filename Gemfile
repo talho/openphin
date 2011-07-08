@@ -48,6 +48,10 @@ group :default do
   gem "acts-as-taggable-on", "2.0.6"
   gem "paper_trail", "1.6.5"  # 2.x versions require rails3
   gem "wicked_pdf", "0.7.0"
+  gem "mongo", "1.3.1"
+    gem "bson", "1.3.1"
+    gem "bson_ext", "1.3.1"
+    gem "SystemTimer", "1.2.3"
 end
 
 group :test do
