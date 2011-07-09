@@ -58,8 +58,8 @@ class User < ActiveRecord::Base
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   has_many :roles, :through => :role_memberships, :uniq => true
   def alerting_jurisdictions
-      self.role_memberships.scoped(:conditions => {:roles => {:alerter => true}}).map(&:jurisdiction)
-    end
+    Jurisdiction.scoped(:joins => [:role_memberships => [:role, :user]], :conditions => {:role_memberships => {:roles => {:alerter => true}}, :users => {:id => self.id}})
+  end
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
