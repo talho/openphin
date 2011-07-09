@@ -56,8 +56,10 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :role_requests, :organization_membership_requests
 
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
-  has_many :roles, :through => :role_memberships, :uniq => true 
-  has_many :alerting_jurisdictions, :through => :role_memberships, :source => 'jurisdiction', :include => {:role_memberships => [:role, :jurisdiction]}, :conditions => ['roles.alerter = ?', true]
+  has_many :roles, :through => :role_memberships, :uniq => true
+  def alerting_jurisdictions
+      self.role_memberships.scoped(:conditions => {:roles => {:alerter => true}}).map(&:jurisdiction)
+    end
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices]
   has_many :deliveries,    :through => :alert_attempts
