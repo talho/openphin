@@ -10,7 +10,7 @@ Ext.ns("Talho");
     dominoes.rule('GroupSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/GroupSelectionGrid.js )');
     dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js /javascripts/audience/UserSelectionGrid.js');
     dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid /javascripts/audience/AudiencePanel.js');
-    dominoes.rule('AudienceDisplayPanel', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js')
+    dominoes.rule('AudienceDisplayPanel', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js');
     dominoes.rule('AlertDetail', 'AudienceDisplayPanel $(ext_extensions)/CenterLayout.js /javascripts/han/AlertDetail.js');
     dominoes.rule('NewInvitation', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/invitations/NewInvitationBase.js');
     dominoes.rule('ProfileBase', '(( $css(/stylesheets/redesign/profile.css) )) /javascripts/profile/ProfileBase.js');
@@ -43,7 +43,7 @@ Ext.ns("Talho");
         'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'},
         'Talho.PendingRoleRequests': {js: "AjaxPanel > /javascripts/admin/PendingRoleRequests.js"},
         'Talho.AuditLog': {js: "AjaxPanel > /javascripts/admin/AuditLog.js"},
-        'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'},
+        'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
