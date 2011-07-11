@@ -26,7 +26,8 @@ class Report::Report < ActiveRecord::Base
   belongs_to :audience
 
   has_many   :filters
-  
+  has_one    :dataset
+
   has_attached_file :resultset, :path => ":rails_root/reports/:rails_env/:id/:filename"
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
@@ -34,8 +35,10 @@ class Report::Report < ActiveRecord::Base
   validates_presence_of     :recipe_id
   validates_inclusion_of    :incomplete, :in => [false,true]
 
-  def before_create
-    self.write_attribute(:incomplete,true)
+  public
+
+  def dataset
+    @collection ||= REPORT_DB.collection(name)
   end
 
   def name
@@ -59,12 +62,25 @@ class Report::Report < ActiveRecord::Base
     json
   end
 
+  protected
+
   def resultset_updated_at
-    self[:resultset_updated_at] ? time_ago_in_words(self[:resultset_updated_at]) : "Generating...Click Refresh"
+    date = dataset.find_one().present? ? dataset.find_one()["created_at"] : nil
+    date ? time_ago_in_words(date) : "Generating...Click Refresh"
   end
 
   def rendering_updated_at
     self[:rendering_updated_at] ? time_ago_in_words(self[:rendering_updated_at]) : "Generating...Click Refresh"
+  end
+
+  private
+
+  def before_create
+    self.write_attribute(:incomplete,true)
+  end
+
+  def before_destroy
+    dataset.drop
   end
 
 end

@@ -19,13 +19,15 @@ class Report::UserAllRecipe < Report::Recipe
     File.join(Rails.root,'app','views','reports','show.html.erb')
   end
 
-  def capture_to(file)
-    file.write( "# #{Time.now.to_formatted_s(:db)} recipe is #{self.class.name}".to_yaml)
-    User.all.each do |u|
-      rec = Hash["display_name",u.display_name,"email",u.email,"role_memberships",
+  def capture_to_db(report)
+    dataset = report.dataset
+    dataset.insert({"created_at"=>Time.now.utc})
+    User.all.each_with_index do |u,i|
+      doc = Hash["i",i,"display_name",u.display_name,"email",u.email,"role_memberships",
         u.role_memberships.map(&:as_hash)]
-      file.write(rec.to_yaml)
+      dataset.insert(doc)
     end
+    dataset.create_index("i")
   end
 
 end

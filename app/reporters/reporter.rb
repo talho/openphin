@@ -51,7 +51,7 @@ class Reporters::Reporter < Struct.new(:options)
 
       begin
         start_time = Time.now
-          recipe.capture_resultset_of report
+          recipe.capture_to_db report
         logger.info %Q(Report "#{report.name}", Data Capture #{Time.now-start_time} seconds)
       rescue StandardError => e
         message = %Q(Report "#{report_id}" erred in capturing data: (#{e}))

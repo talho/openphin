@@ -45,26 +45,21 @@ describe Report::Recipe do
     end
     it "capture data to a file" do
       recipe = Factory(:report_recipe,:type=>"Report::Recipe")
-      file = mock('file')
-      file.should_receive(:write).with("--- \ndisplay_name: User101 FactoryUser\n")
-      recipe.capture_to file
+      report = Factory(:report_report)
+      report.dataset.should_receive(:insert).with(any_args())
+      recipe.capture_to_db report
     end
     it "capture data to the report as a resultset and generate the html to the report as a rendering" do
       report = Factory(:report_report)
       recipe = report.recipe
 
-      recipe.capture_resultset_of report
-      resultset = report.resultset
-
-      resultset.should be_an_instance_of(Paperclip::Attachment)
-      values = resultset.instance_values
-      values["_resultset_file_name"].should match("#{report.name}.yml")
-      values["_resultset_file_size"].should > 0
-      values["_resultset_content_type"].should match("application/x-yml")
-      values["_resultset_updated_at"].should <= Time.now
-      values["errors"].should be_empty
-      values["instance"].should == report
-      values["instance"][:incomplete].should be_true
+      recipe.capture_to_db report
+      dataset = report.dataset
+      dataset.should be_an_instance_of Mongo::Collection
+      values = dataset.instance_values
+      values["name"].should match /-Recipe-/
+      values.find().should be_an_instance_of Enumerable::Enumerator
+      report.incomplete.should be_false
 
       # Reporter does this
       view = ActionView::Base.new( Rails::Configuration.new.view_path )
@@ -74,11 +69,11 @@ describe Report::Recipe do
       rendering.should be_an_instance_of(Paperclip::Attachment)
       values = rendering.instance_values
       values["_rendering_file_name"].should match("#{report.name}.html")
-      values["_rendering_file_size"].should > 0
       values["_rendering_content_type"].should match("text/html")
       values["_rendering_updated_at"].should <= Time.now
       values["errors"].should be_empty
       values["instance"].should == report
+      values["instance"]["rendering_file_size"].should equal 0
       values["instance"][:incomplete].should be_false
     end
 
