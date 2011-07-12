@@ -35,6 +35,9 @@ class Report::Report < ActiveRecord::Base
   validates_presence_of     :recipe_id
   validates_inclusion_of    :incomplete, :in => [false,true]
 
+  named_scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
+  named_scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
+
   public
 
   def dataset
@@ -52,8 +55,7 @@ class Report::Report < ActiveRecord::Base
     end
   end
 
-  JSON_COLUMNS =  %w(id author_id resultset_file_name resultset_file_size rendering_file_name rendering_file_size
-    resultset_updated_at rendering_updated_at incomplete)
+  JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at incomplete)
 
   def as_json(options={})
     json_columns = JSON_COLUMNS.map(&:to_sym)
@@ -62,12 +64,12 @@ class Report::Report < ActiveRecord::Base
     json
   end
 
-  protected
-
-  def resultset_updated_at
+  def dataset_updated_at
     date = dataset.find_one().present? ? dataset.find_one()["created_at"] : nil
     date ? time_ago_in_words(date) : "Generating...Click Refresh"
   end
+
+  protected
 
   def rendering_updated_at
     self[:rendering_updated_at] ? time_ago_in_words(self[:rendering_updated_at]) : "Generating...Click Refresh"

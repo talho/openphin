@@ -17,7 +17,7 @@ class Report::ReportsController < ApplicationController
         report_count = current_user.reports.count
         ActiveRecord::Base.include_root_in_json = false
         @reports.collect! do |r|
-          r.as_json(:inject=>{'report_path'=>report_report_path(r[:id]),'recipe'=>r.recipe.type_humanized})
+          r.as_json(:inject=>{'report_path'=>report_report_path(r[:id]),'recipe'=>r.recipe.type_humanized, 'dataset_updated_at'=>r.dataset_updated_at})
         end
         render :json => {"reports"=>@reports,'total' => report_count, :success=>true}
       end

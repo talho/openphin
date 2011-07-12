@@ -74,7 +74,7 @@ class Report::Recipe < ActiveRecord::Base
    end
   end
 
-  JSON_COLUMNS =  %w(id type type_humanized description)
+  JSON_COLUMNS =  %w(id type_humanized description)
 
   def as_json(options={})
    json_columns = JSON_COLUMNS.map(&:to_sym)

@@ -17,7 +17,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       url: '/report/reports.json',
       restful: true,
       root: 'reports',
-      fields: [ 'id','recipe','report_path','resultset_updated_at','resultset_file_size','rendering_updated_at','rendering_file_size','incomplete' ],
+      fields: [ 'id','recipe','report_path','dataset_updated_at','rendering_updated_at','rendering_file_size','incomplete' ],
       autoLoad: true,
       remoteSort: true,
       baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
@@ -103,8 +103,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
         columns: [
           { id: 'report-id', dataIndex: 'id', header: 'Report ID' },
           { id: 'report-recipe', dataIndex: 'recipe', header: 'Recipe' },
-          { id: 'generated-at', dataIndex: 'resultset_updated_at', header: 'Generated at' },
-          { id: 'generated-size', dataIndex: 'resultset_file_size', header: 'Resultset size' },
+          { id: 'generated-at', dataIndex: 'dataset_updated_at', header: 'Generated at' },
           { id: 'rendered-at', dataIndex: 'rendering_updated_at', header: 'Rendered at' },
           { id: 'render-size', dataIndex: 'rendering_file_size', header: 'Render size' }
          ]

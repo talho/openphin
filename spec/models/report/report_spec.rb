@@ -18,15 +18,12 @@ describe Report::Report do
       json.should be_kind_of(Hash)
       json.should have_key("report")
       report_derived = json["report"]
-      report_derived.should have_key(%q(rendering_updated_at))
-      report_derived.should have_key(%q(resultset_file_size))
-      report_derived.should have_key(%q(rendering_file_name))
       report_derived.should have_key(%q(id))
-      report_derived.should have_key(%q(resultset_updated_at))
-      report_derived.should have_key(%q(rendering_file_size))
       report_derived.should have_key(%q(author_id))
-      report_derived.should have_key(%q(resultset_file_name))
       report_derived.should have_key(%q(incomplete))
+      report_derived.should have_key(%q(rendering_updated_at))
+      report_derived.should have_key(%q(rendering_file_name))
+      report_derived.should have_key(%q(rendering_file_size))
     end
   end
 
