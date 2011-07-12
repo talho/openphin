@@ -72,8 +72,6 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.2"
-  gem "childprocess", "0.1.7"
-  gem "selenium-webdriver", "0.1.3"
   gem "childprocess", "0.1.9"
   gem "selenium-webdriver", "0.2.2"
   gem "sinatra", "1.0"
