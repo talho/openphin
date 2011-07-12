@@ -50,8 +50,8 @@ group :default do
 end
 
 group :test do
-  gem "rspec", "1.3.0", :require => "spec"
-  gem "rspec-rails", "1.3.2"
+  gem "rspec", "1.3.2", :require => "spec"
+  gem "rspec-rails", "1.3.4"
   gem "thoughtbot-factory_girl", "1.2.2", :require => "factory_girl"
   gem "webrat", "0.7.1"
     gem "rack-test", "0.5.4"
@@ -72,7 +72,7 @@ group :cucumber do
   gem "mime-types", "1.16"
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
-  gem "rspec", "1.3.0"
+  gem "rspec", "1.3.2"
   gem "childprocess", "0.1.9"
   gem "selenium-webdriver", "0.2.2"
   gem "sinatra", "1.0"
