@@ -24,6 +24,11 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true,
           cls:'checkbox-left-margin'},
         {xtype: 'spacer', height: '10'},
+          {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
+          {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: false, id: 'initialPass', vtype: 'password'},
+          {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: false, initialPassword: 'initialPass', vtype: 'password'}
+        ]},
+        {xtype: 'spacer', height: '10'},
         {xtype: 'container', html: 'Alerting Devices:'}, this.devices_control,
         {xtype: 'spacer', height: '10'},
         {xtype: 'container', html: 'Roles:'}, this.roles_control,
