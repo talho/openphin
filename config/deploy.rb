@@ -37,10 +37,10 @@ task :production do
 end
 
 task :staging do
-  role :app, "talhostaging.talho.org"
-  role :web, "talhostaging.talho.org"
-  role :jobs, "talhostaging.talho.org"
-  role :db,  "talhostaging.talho.org", :primary => true
+  role :app, "staging.txphin.org"
+  role :web, "staging.txphin.org"
+  role :jobs, "staging.txphin.org"
+  role :db,  "staging.txphin.org", :primary => true
 end
  
 # Setup dependencies

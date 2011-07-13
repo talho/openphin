@@ -1,3 +1,8 @@
+def if_plugin_present(plugin_name)
+  plugins = YAML.load_file("config/phin_plugins.yml")
+  yield if plugins.find {|e| e["url"] =~ /\b#{plugin_name}\b/}
+end
+
 namespace :app do
   desc "deploy the PHIN plugins: han, etc."
   task :phin_plugins, :roles => [:app, :web, :jobs] do
@@ -40,7 +45,9 @@ namespace :app do
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
     # For the PHIN plugins
-    run "ln -fs #{shared_path}/phin_plugins/rrdtool.yml #{release_path}/vendor/plugins/rollcall/config/rrdtool.yml"
+    if_plugin_present(:rollcall) {
+      run "ln -fs #{shared_path}/phin_plugins/rrdtool.yml #{release_path}/vendor/plugins/rollcall/config/rrdtool.yml"
+    }
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
     if rails_env == 'test'|| rails_env == 'development' || rails_env == "cucumber"
