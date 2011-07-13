@@ -107,7 +107,7 @@ Ext.ux.AudienceDisplayPanel = Ext.extend(Ext.Container, {
                 scope: this,
                 'rowclick': function(grid, rowIndex){
                     var record = grid.getStore().getAt(rowIndex);
-                    Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), url: record.get('profile_path'), id: 'user_profile_for_' + record.get('id') });
+                    Application.fireEvent('opentab', {title: 'User Profile - ' + record.get('name'), user_id: record.get('id'), id: 'user_profile_for_' + record.get('id'), initializer: 'Talho.ShowProfile' });
                 }
             }
         });
