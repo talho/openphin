@@ -7,7 +7,7 @@ set :application, "openphin"
 set :repository,  "git://github.com/talho/openphin.git"
 set :rails_env, 'production'
 set :scm, :git  # override default of subversion
-set :branch, 'noplugins2'
+set :branch, 'master'
 set :use_sudo, false
 set :user, 'apache'
 set :git_enable_submodules, true
