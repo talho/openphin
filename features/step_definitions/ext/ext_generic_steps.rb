@@ -411,8 +411,12 @@ When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, cont
   end.should_not be_nil
 end
 
-Then /^I should see the image "([^\"]*)"$/ do |file_name|
-  page.should have_xpath("//*/img[contains(@src, '#{file_name}')]")
+Then /^I should( not)? see the image "([^\"]*)"$/ do |neg, file_name|
+  if neg.nil?
+    page.should have_xpath("//*/img[contains(@src, '#{file_name}')]")
+  else
+    page.should_not have_xpath("//*/img[contains(@src, '#{file_name}')]")
+  end 
 end
 
 When /^I force open the manage groups tab$/ do
