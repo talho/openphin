@@ -70,7 +70,7 @@ class Forum < ActiveRecord::Base
     end
   end
   
-  def self.paginate_for(id,user,page)
+  def self.paginate_for(id,user,page,per_page=10)
     options = hide_conditions !user.is_super_admin?
     result = self.find(id,options)
     return result unless result
@@ -82,6 +82,7 @@ class Forum < ActiveRecord::Base
       result = result.select{|f| self.accessible_to(f,user) }
       forum_ids = result.collect(&:id)
       options[:page] = page
+      options[:per_page] = per_page
       forums = self.paginate(forum_ids,options)
     end
   end

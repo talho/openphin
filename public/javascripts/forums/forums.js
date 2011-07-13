@@ -35,10 +35,13 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             restful: true,
             root: 'forums',
             idProperty: 'id',
+            paramNames: {limit: 'per_page'},
+            totalProperty: 'total_entries',
             fields: ['name', {name:'hidden_at', type: 'date'}, {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
                 'lock_version', 'id', {name: 'is_moderator', type: 'boolean'}, 'threads'
             ],
-            autoLoad: true,
+            baseParams: {per_page: 20},
+            autoLoad: {params: {start: 0}},
             listeners:{
                 scope: this,
                 'load': function(store){
@@ -87,6 +90,11 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                     'rowselect': this.getForumData
                 },
                 singleSelect:true
+            }),
+            fbar: new Ext.PagingToolbar({
+              beforePageText: '',
+              pageSize: 20,
+              store: store
             })
         };
 
@@ -498,7 +506,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
     },
 
     refresh: function(){
-        this.forum_grid.getStore().load();
+        this.forum_grid.getFooterToolbar().doRefresh();
         if(this.topic_grid) this.topic_grid.getStore().load();            
     }
 });

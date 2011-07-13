@@ -8,7 +8,8 @@ class ForumsController < ApplicationController
   # GET /forums.xml
   # GET /forums.json
   def index
-    @forums = Forum.paginate_for(:all,current_user,params[:page] || 1)
+    page = params[:page] || (params[:start].nil? ? nil : (params[:start].to_i/(params[:per_page]||10).to_i) + 1) || 1
+    @forums = Forum.paginate_for(:all,current_user, page, params[:per_page]||10)
     respond_to do |format|
       format.html
       format.json  {render :json => {
