@@ -214,7 +214,7 @@ Feature: Audit Log
     Given I am logged in as "fredsmith@example.com"
     And I visit the url "/audits/"
     Then I should be redirected to "the dashboard page"
-    And I should see "you do not have access"
+#    And I should see "you do not have access"
 
     When I navigate to the ext dashboard page
     And I force open the audit log tab
@@ -223,4 +223,4 @@ Feature: Audit Log
     When I navigate to the dashboard page
     When I visit the url "/audits/1.json"
     Then I should be redirected to "the dashboard page"
-    And I should see "you do not have access"
+#    And I should see "you do not have access"

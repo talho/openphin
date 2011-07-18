@@ -40,7 +40,7 @@ class Service::SWN::Message < Service::SWN::Base
         |Building message:
         |  message: #{message}
       EOT
-
+      
       config = Service::SWN::Message.configuration
       body = SUPPORTED_DEVICES[key].new(:message => message,
         :username => config['username'],
