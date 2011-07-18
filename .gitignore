@@ -68,4 +68,10 @@ public/javascripts/han
 public/javascripts/han/*
 public/stylesheets/han
 public/stylesheets/han/*
+public/*/rollcall
+public/*/rollcall/*
+Gemfile.lock
+vendor/plugins/han
+vendor/plugins/rollcall
+spec/rollcall
 config/phin_plugins.yml
