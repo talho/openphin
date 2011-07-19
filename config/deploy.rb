@@ -43,6 +43,14 @@ task :staging do
   role :db,  "staging.txphin.org", :primary => true
 end
  
+task :talhostaging do
+  set :branch, 'vms_working_branch'
+  role :app, "talhostaging.talho.org"
+  role :web, "talhostaging.talho.org"
+  role :jobs, "talhostaging.talho.org"
+  role :db,  "talhostaging.talho.org", :primary => true
+end 
+
 # Setup dependencies
 before 'deploy', 'backgroundrb:stop'
 before 'deploy', 'delayed_job:stop'
