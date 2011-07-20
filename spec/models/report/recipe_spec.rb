@@ -30,8 +30,6 @@ describe Report::Recipe do
       recipe_derived = json["recipe"]
       recipe_derived.should have_key("id")
       recipe_derived["id"].should equal(recipe[:id])
-      recipe_derived.should have_key("type")
-      recipe_derived["type"].should equal(recipe[:type])
     end
     it "create a recipe model for future association to reports" do
       before = Report::Recipe.count

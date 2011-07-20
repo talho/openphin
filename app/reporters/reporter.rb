@@ -10,9 +10,10 @@ class Reporters::Reporter < Struct.new(:options)
     report_id = options[:report_id]
     logger = REPORT_LOGGER || Logger.new
     begin
-      if ( (report_id.kind_of? Integer) && ( report = Report::Report.find_by_id(report_id) ) )
+      begin
+        report = Report::Report.find_by_id(report_id)
         logger.info %Q(Report "#{report.name}" started.)
-      else
+      rescue
         message = "Reporter could not find report with report_id of #{report_id}"
         raise StandardError, message
       end

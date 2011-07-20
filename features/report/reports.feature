@@ -126,11 +126,11 @@ Scenario: Initiate the viewing of a report contents
   When I click x-grid3-hd-inner "Generated at"
   Then the "Generated at" grid header is sorted descending
 
-    When I click x-grid3-hd-inner "Resultset size"
-    Then the "Resultset size" grid header is sorted ascending
-
-    When I click x-grid3-hd-inner "Resultset size"
-    Then the "Resultset size" grid header is sorted descending
+#    When I click x-grid3-hd-inner "Resultset size"
+#    Then the "Resultset size" grid header is sorted ascending
+#
+#    When I click x-grid3-hd-inner "Resultset size"
+#    Then the "Resultset size" grid header is sorted descending
 
     When I click x-grid3-hd-inner "Rendered at"
     Then the "Rendered at" grid header is sorted ascending

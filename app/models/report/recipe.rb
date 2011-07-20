@@ -5,8 +5,8 @@ class Report::Recipe < ActiveRecord::Base
   has_many :reports, :class_name => 'Report::Report'
   named_scope :deployable, :conditions => "report_recipes.type <> 'Report::Recipe'"
 
-  validates_presence_of     :type
-  validates_uniqueness_of   :type
+#  validates_presence_of     :type
+#  validates_uniqueness_of   :type
 
   def self.find_or_create
     self.find_or_create_by_type(self.name)
@@ -33,7 +33,14 @@ class Report::Recipe < ActiveRecord::Base
   end
 
   def capture_to_db(report)
-    report.dataset.insert({"created_at"=>Time.now.utc})
+    now = Time.now.utc
+    report.dataset.insert({"created_at"=>now})
+    begin
+      size = report.dataset.stats["size"]
+    rescue Mongo::OperationFailure
+      size = 0
+    end
+    report.update_attributes(:dataset_updated_at=>now,:dataset_size=>size)
   end
 
 # Overwriteable Infrastructure

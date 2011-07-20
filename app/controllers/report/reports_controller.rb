@@ -13,11 +13,11 @@ class Report::ReportsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        @reports = current_user.reports.find(:all, :order=>order, :limit => params["limit"], :offset => params["start"])
-        report_count = current_user.reports.count
+        @reports = current_user.reports.complete.find(:all, :order=>order, :limit => params["limit"], :offset => params["start"])
+        report_count = current_user.reports.complete.count
         ActiveRecord::Base.include_root_in_json = false
         @reports.collect! do |r|
-          r.as_json(:inject=>{'report_path'=>report_report_path(r[:id]),'recipe'=>r.recipe.type_humanized, 'dataset_updated_at'=>r.dataset_updated_at})
+          r.as_json(:inject=>{'report_path'=>report_report_path(r[:id]),'recipe'=>r.recipe.type_humanized})
         end
         render :json => {"reports"=>@reports,'total' => report_count, :success=>true}
       end

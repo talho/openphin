@@ -25,7 +25,7 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report_id).perform
     end
     it "on a non-existent author" do
-      report = @current_user.reports.create(:recipe=>@recipe,:incomplete=>true)
+      report = @current_user.reports.complete.create(:recipe=>@recipe,:incomplete=>true)
       @current_user.destroy
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}" started.)
       message = %Q(Report "#{report.name}" could not find author with id of #{report.author_id})
@@ -34,7 +34,7 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report[:id]).perform
     end
     it "on a non-existent recipe" do
-      report = @current_user.reports.create(:recipe=>@recipe,:incomplete=>true)
+      report = @current_user.reports.complete.create(:recipe=>@recipe,:incomplete=>true)
       @recipe.destroy
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}" started.)
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}", Author is #{report.author.display_name})

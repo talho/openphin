@@ -67,11 +67,19 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       html: 'recipe description'
     });
 
+    this.numSlider = new Ext.Slider({
+      width: 200,
+      value: 50,
+      increment: 10,
+      minValue: 0,
+      maxValue: 100
+    });
     this.sidebarPanel = new Ext.Panel({
       layout: 'border',
       border: false,
       items: [
         this.recipeListPanel,
+        this.numSlider,
         this.recipeDescriptor
       ]
     });
