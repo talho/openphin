@@ -25,7 +25,7 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
       if messages.count == 0                                      # if the recipient has no custom messages, store in the empty object hash
         rh[{}] = [] if rh[{}].nil?
         rh[{}] << recipient
-      elsif messages.select{|m| !m.Value.blank?}.count > 0        # if the recipient has a custom message with a specific value, add that to a nil hash since we have to run all these guys separately
+      elsif messages.select{|m| !m.Value.blank?}.count > 0        # if the recipient has a custom message with a specific value, add that to a nil hash since we have to run all these guys separately.
         rh[nil] = [] if rh[nil].nil?
         rh[nil] << recipient
       else                                                        # if the recipient has a custom message but no specific values, then we add them to the hash based on what will become the message hash.
@@ -96,12 +96,13 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
     unless resp.ref.blank?
       if message_hash[resp.ref]
         return message_hash[resp.ref][:value] if message_hash[resp.ref][:value]
-        return message.Messages.select{|m| m.name == message_hash[resp.ref][:ref]}.first.Value if message_hash[resp.ref][:ref]
+        return message.Messages.select{|m| m.name == message_hash[resp.ref][:ref]}.first.Value unless message_hash[resp.ref][:ref].blank? # check for blank as m.name will never be blank
       else
         return message.Messages.select{|m| m.name == resp.ref}.first.Value
       end
     else
       return resp.value
     end
+    '' # return an empty string if we get to this point.
   end
 end 

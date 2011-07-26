@@ -82,22 +82,21 @@ Then /^the grid "([^"]*)" should( not)? contain:$/ do |grid_class, not_exists, t
   waiter do
     @grid = page.find(grid_class)
   end
-  found_rows = Array.new
-  (0..table.rows.first.length).each{|i| found_rows[i] = false} #prime the output array
-  if @grid
-    grid_rows = @grid.all('.x-grid3-row').inject([]){|a,grid_row| a.push(grid_row.text.split(/\n/))}
-    results = table.rows.collect{|table_row|
-      grid_rows.find{|grid_row|
-        !table_row.collect{|item|
-          grid_row.include?(item)
-        }.include?(false)
-      }
+
+  @grid.should_not be_nil
+
+  grid_rows = @grid.all('.x-grid3-row').inject([]){|a,grid_row| a.push(grid_row.text.split(/\n/))}
+  results = table.rows.collect{|table_row|
+    grid_rows.find{|grid_row|
+      !table_row.reject{|r| r.blank?}.collect{|item|
+        grid_row.include?(item)
+      }.include?(false)
     }
-    if not_exists.nil?
-      results.include?(nil).should be_false
-    else
-      results.compact.empty?.should be_true
-    end
+  }
+  if not_exists.nil?
+    results.include?(nil).should be_false
+  else
+    results.compact.empty?.should be_true
   end
 end
 

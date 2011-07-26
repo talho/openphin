@@ -43,23 +43,23 @@ class Role < ActiveRecord::Base
   end
 
   def self.admin(app = "phin")
-      find_or_create_by_name_and_approval_required_and_user_role_and_application Defaults[:admin],true,false,app
+      find_or_create_by_name_and_application(Defaults[:admin],app) {|r| r.approval_required = true, r.user_role = false }
   end
 
   def self.org_admin(app = "phin")
-      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:org_admin],true,false,app)
+      find_or_create_by_name_and_application(Defaults[:org_admin],app) {|r| r.approval_required = true, r.user_role = false }
   end
 
   def self.superadmin(app = "phin")
-      find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:superadmin],true,false,app)
+      find_or_create_by_name_and_application(Defaults[:superadmin],app) {|r| r.approval_required = true, r.user_role = false }
   end
 
   def self.sysadmin
-    find_or_create_by_name_and_approval_required_and_user_role_and_application(Defaults[:sysadmin],true,false,"system")
+    find_or_create_by_name_and_application(Defaults[:sysadmin],"system") {|r| r.approval_required = true, r.user_role = false }
   end
 
   def self.public(app = "phin")
-    find_or_create_by_name_and_user_role_and_application(Defaults[:public],true,app)
+    find_or_create_by_name_and_application(Defaults[:public],app) {|r| r.user_role = true }
   end
 
   named_scope :user_roles, :conditions => { :user_role => true }
