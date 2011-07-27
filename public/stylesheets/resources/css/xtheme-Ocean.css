@@ -1686,6 +1686,7 @@ background-image:url(../images/Ocean/editor/tb-sprite.png);
 background:transparent no-repeat ;
 background-image:url(../images/Ocean/panel/tool-sprites.png);
 margin-left:0 ;
+width:42px;
 }
 *.x-window-header *.x-tool-close{
 background-position:0 0 ;
