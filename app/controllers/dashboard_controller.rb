@@ -116,7 +116,7 @@ class DashboardController < ApplicationController
         dashboard.columns = dashboard_json["columns"]
       end
     end
-    dashboard.audiences_attributes = dashboard_json['audiences_attributes']
+    dashboard.audiences_attributes = dashboard_json['audiences_attributes'] unless dashboard_json['audiences_attributes'].blank?
     portlet_ids = []
     if dashboard && dashboard.save
       config = dashboard_json["config"]

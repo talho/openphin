@@ -70,6 +70,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             record = records[0]
             this.items.clear();
             this.columnCount = record.data.config.length;
+            Ext.ComponentMgr.get('columnToggle').setText(this.columnCount + " column");
             this.itemId = record.data.id;
             if(record.data.audiences_attributes.length > 0)
               this.audiences = record.data.audiences_attributes;
@@ -171,6 +172,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       hidden: true,
       items: [{
         xtype: 'buttongroup',
+        title: 'Dashboard',
         items: [{
           text: 'New',
           scope: this,
@@ -179,10 +181,36 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             //this.viewStore.removeAll(true);
           }
         },{
-          text: '2 column',
+          xtype: 'container',
+          width: 250,
+          items: this.dashboardList
+        },{
+          text: 'Delete',
           scope: this,
           handler: function() {
-            if(this.columnCount != 2) {
+            Ext.Msg.confirm("Warning","Are you sure you want to delete this dashboard and all its contents?", function(btn) {
+              if(btn == 'yes') {
+                if(this.itemId) {
+                  this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Deleting...", store: this.draftStore});
+                  this.loadMask.show();
+                  var rec = this.draftStore.getById(this.itemId);
+                  this.draftStore.remove(rec);
+                  this.draftStore.save();
+                }
+                this.resetDashboardPage();
+              }
+            }, this);
+          }
+        }]
+      },{
+        xtype: 'buttongroup',
+        title: 'Content',
+        items: [{
+          text: '3 column',
+          id: 'columnToggle',
+          scope: this,
+          handler: function(b, e) {
+            if(this.columnCount == 3) {
               // Distribute existing portlets on last column to other columns
               this.items.last().items.each(function(item, index, allItems) {
                 if(index % 2 == 0) {
@@ -204,26 +232,19 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
                 item.columnWidth = .5;
               });
               this.doLayout();
+              b.setText("2 column");
               this.columnCount = 2;
-            }
-          }
-        },{
-          text: '3 column',
-          scope: this,
-          handler: function() {
-            if(this.columnCount != 3) {
+            } else {
               this.items.each(function(item, index, allItems) {
                 item.columnWidth = .33;
               });
               this.items.add(new Talho.Dashboard.PortalColumn({columnWidth:.33, style:'padding:10px', items: []}));
               this.doLayout();
               this.columnCount = 3;
+              b.setText("3 column");
             }
           }
-        }]
-      },{
-        xtype: 'buttongroup',
-        items: [{
+        },{
           text: 'Add Portlet',
           menu: [{
             text: 'HTML',
@@ -236,8 +257,10 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         }]
       },{
         xtype: 'buttongroup',
+        title: 'Permissions',
         items: [{
-          text: 'Edit Audience',
+          text: 'Edit',
+          width: 75,
           scope: this,
           handler: function() {
             var audiencePanel = new Ext.ux.AudiencePanel({
@@ -293,27 +316,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             window.show();
           }
         }]
-      },{
-        xtype: 'buttongroup',
-        items: [{
-          text: 'Delete Dashboard',
-          scope: this,
-          handler: function() {
-            Ext.Msg.confirm("Warning","Are you sure you want to delete this dashboard and all its contents?", function(btn) {
-              if(btn == 'yes') {
-                if(this.itemId) {
-                  this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Deleting...", store: this.draftStore});
-                  this.loadMask.show();
-                  var rec = this.draftStore.getById(this.itemId);
-                  this.draftStore.remove(rec);
-                  this.draftStore.save();
-                }
-                this.resetDashboardPage();
-              }
-            }, this);
-          }
-        }]
-      },this.dashboardList]
+      }]
     };
 
     this.bbar = {
@@ -524,9 +527,13 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     if(rec.data.id != undefined && this.compareProperties(rec.data.config, config)) return;
 
     rec.beginEdit();
-    var audience = this.audienceAsNestedAttributes();
-    audience['id'] = this.audiences[0].audience.id;
-    rec.data.audiences_attributes = [audience];
+    if(this.audiences_attributes == null) {
+      rec.data.audiences_attributes = null;
+    } else {
+      var audience = this.audienceAsNestedAttributes();
+      audience['id'] = this.audiences[0].audience.id;
+      rec.data.audiences_attributes = [audience];
+    }
     rec.data.config = config;
     rec.data.draft = draft;
     rec.data.columns = this.columnCount;
