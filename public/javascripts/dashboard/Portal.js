@@ -14,14 +14,15 @@ Talho.Dashboard.Record = Ext.data.Record.create([
   {name: 'updated_at', type: 'date'},
   {name: 'columns'},
   {name: 'config'},
-  {name: 'draft'}
+  {name: 'draft'},
+  {name: 'audiences_attributes'}
 ]);
 
 Talho.Dashboard.DashboardStore = Ext.extend(Ext.data.JsonStore, {
   readerConfig: {
     root: 'dashboards',
     idProperty: 'id',
-    fields: ['id','name',{name: 'updated_at', type: 'date'},'columns','config','draft']
+    fields: ['id','name',{name: 'updated_at', type: 'date'},'columns','config','draft','audiences_attributes']
   },
   autoLoad: true,
   autoSave: false,
@@ -43,6 +44,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   adminMode: false,
   previewMode: false,
   columnCount: 3,
+  audiences_attributes: null,  
   listeners:{
     show: function(panel){panel.doLayout();},
     beforedrop: function(dropEvent) {
@@ -69,6 +71,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             this.items.clear();
             this.columnCount = record.data.config.length;
             this.itemId = record.data.id;
+            if(record.data.audiences_attributes.length > 0)
+              this.audiences = record.data.audiences_attributes;
             Ext.each(record.data.config, function(item, index, allItems) {
               this.items.add(Ext.create(item));
             }, this);
@@ -110,7 +114,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             rec = new Talho.Dashboard.Record({
               id: Application.default_dashboard || undefined,
               date: undefined,
-              config: undefined
+              config: undefined,
+              audiences_attributes: undefined
             });
             rec.id = Application.default_dashboard;
             store.add(rec);
@@ -232,6 +237,65 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       },{
         xtype: 'buttongroup',
         items: [{
+          text: 'Edit Audience',
+          scope: this,
+          handler: function() {
+            var audiencePanel = new Ext.ux.AudiencePanel({
+              id:'portlet_audience-' + this.id,
+              width: 550,
+              height: 400,
+              showJurisdictions: false,
+              showRoles: false,
+              showGroups: true
+            });
+            if(this.audiences != null && this.audiences.length > 0) {
+              audiencePanel.load(this.audiences[0].audience.jurisdictions, this.audiences[0].audience.roles, this.audiences[0].audience.users, this.audiences[0].audience.groups);
+            }
+            
+            var window = new Ext.Window({
+              layout: 'fit',
+              title: 'Edit Porlet Audience',
+              constrain: true,
+              style: {
+                opacity: 100
+              },
+              headerCfg: {
+                style: {
+                  valign: 'middle',
+                  padding: 3,
+                  opacity: 100
+                }
+              },
+              items: [audiencePanel],
+              buttons: ['->',{
+                text: 'OK',
+                scope: this,
+                handler: function() {
+                  if(this.audiences_attributes == null) this.audiences_attributes = [];
+                  if(this.audiences_attributes.length == 0) this.audiences_attributes.push({audience: null});
+                  this.audiences_attributes[0].audience = audiencePanel.getSelectedItems();
+                  this.audiences[0].audience.groups = this.audiences_attributes[0].audience.groups;
+                  this.audiences[0].audience.jurisdictions = this.audiences_attributes[0].audience.jurisdictions;
+                  this.audiences[0].audience.roles = this.audiences_attributes[0].audience.roles;
+                  this.audiences[0].audience.users = this.audiences_attributes[0].audience.users;
+                  window.close();
+                }
+              },{
+                text: 'Cancel',
+                handler: function() {
+                  window.close();
+                }
+              }],
+              tools: [{
+                id:'help'
+              }]
+            });
+            window.show();
+          }
+        }]
+      },{
+        xtype: 'buttongroup',
+        items: [{
           text: 'Delete Dashboard',
           scope: this,
           handler: function() {
@@ -323,6 +387,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         xtype: 'tbseparator',
         hidden: true
       },{
+        text: 'Published',
         text: 'Published',
         hidden: true,
         scope: this,
@@ -446,7 +511,8 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       rec = new Talho.Dashboard.Record({
         id: undefined,
         date: undefined,
-        config: undefined
+        config: undefined,
+        audiences_attributes: undefined
       });
     } else {
       rec = this.draftStore.getById(this.itemId);
@@ -458,6 +524,9 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     if(rec.data.id != undefined && this.compareProperties(rec.data.config, config)) return;
 
     rec.beginEdit();
+    var audience = this.audienceAsNestedAttributes();
+    audience['id'] = this.audiences[0].audience.id;
+    rec.data.audiences_attributes = [audience];
     rec.data.config = config;
     rec.data.draft = draft;
     rec.data.columns = this.columnCount;
@@ -510,5 +579,22 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       this.doLayout();
       this.toggleAdminBorder(this);
     }
+  },
+
+  audienceAsNestedAttributes: function() {
+    var audience = {jurisdiction_ids: [], role_ids: [], user_ids: [], group_ids: []}
+    Ext.each(this.audiences_attributes[0].audience.jurisdictions, function(item, index, allItems) {
+      audience.jurisdiction_ids.push(item.id)
+    });
+    Ext.each(this.audiences_attributes[0].audience.roles, function(item, index, allItems) {
+      audience.role_ids.push(item.id)
+    });
+    Ext.each(this.audiences_attributes[0].audience.users, function(item, index, allItems) {
+      audience.user_ids.push(item.id)
+    });
+    Ext.each(this.audiences_attributes[0].audience.groups, function(item, index, allItems) {
+      audience.group_ids.push(item.id)
+    });
+    return audience;
   }
 });

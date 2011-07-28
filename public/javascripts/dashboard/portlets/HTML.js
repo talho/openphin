@@ -20,6 +20,53 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
       delete config.html;
     }
 
+    this.tools.unshift({
+      id:'gear',
+      qtip: 'Edit',
+      handler: function(event, toolEl, panel, tc){
+        var htmleditor = new Ext.form.HtmlEditor({
+          html: panel.el.child('.x-portlet-html').dom.innerHTML,
+          enableSourceEdit: true,
+          width: 680,
+          height: 510                                                           
+        });
+
+        var window = new Ext.Window({
+          layout: 'fit',
+          title: 'Edit HTML Porlet',
+          constrain: true,
+          style: {
+            opacity: 100
+          },
+          headerCfg: {
+            style: {
+              valign: 'middle',
+              padding: 3,
+              opacity: 100
+            }
+          },
+          items: [htmleditor],
+          buttons: ['->',{
+            text: 'OK',
+            handler: function() {
+              panel.el.child('.x-portlet-html').update(htmleditor.getRawValue());
+              window.close();
+            }
+          },{
+            text: 'Cancel',
+            handler: function() {
+              window.close();
+            }
+          }],
+          tools: [{
+            id:'help'
+          }]
+        });
+        window.show();
+      }
+    });
+    
+
     Ext.apply(this, config);
     Talho.Dashboard.Portlet.HTML.superclass.constructor.call(this);
 
@@ -54,57 +101,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
     return config;
   },
 
-  title: 'HTML Portlet',
-  tools: [{
-    id:'gear',
-    qtip: 'Edit',
-    handler: function(event, toolEl, panel, tc){
-      var htmleditor = new Ext.form.HtmlEditor({
-        html: panel.el.child('.x-portlet-html').dom.innerHTML,
-        enableSourceEdit: true,
-        width: 680,
-        height: 510
-      });
-
-      var window = new Ext.Window({
-        layout: 'fit',
-        title: 'Edit HTML Porlet',
-        constrain: true,
-        style: {
-          opacity: 100
-        },
-        headerCfg: {
-          style: {
-            valign: 'middle',
-            padding: 3,
-            opacity: 100
-          }
-        },
-        items: [htmleditor],
-        buttons: ['->',{
-          text: 'OK',
-          handler: function() {
-            panel.el.child('.x-portlet-html').update(htmleditor.getRawValue());
-            window.close();
-          }
-        },{
-          text: 'Cancel',
-          handler: function() {
-            window.close();
-          }
-        }],
-        tools: [{
-          id:'help'
-        }]
-      });
-      window.show();
-    }
-  },{
-    id:'close',
-    handler: function(e, target, panel){
-      panel.ownerCt.remove(panel, true);
-    }
-  }]
+  title: 'HTML Portlet'
 });
 
 Ext.reg('dashboardhtmlportlet', Talho.Dashboard.Portlet.HTML);

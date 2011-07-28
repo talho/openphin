@@ -29,6 +29,8 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
+  attr_protected :name
+
   def recipients(options={})
     refresh_recipients(options)
     options.delete(:force)

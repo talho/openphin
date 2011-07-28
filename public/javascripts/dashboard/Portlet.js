@@ -47,7 +47,13 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   collapsible : false,
   draggable : true,
   headerCssClass: 'x-hide-display',
-  cls: ''
+  cls: '',
+  tools: [{
+    id:'close',
+    handler: function(e, target, panel){
+      panel.ownerCt.remove(panel, true);
+    }
+  }]
 });
 
 Ext.reg('dashboardportlet', Talho.Dashboard.Portlet);

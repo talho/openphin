@@ -48,7 +48,7 @@ class Dashboard < ActiveRecord::Base
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  accepts_nested_attributes_for :dashboard_audiences, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
+  accepts_nested_attributes_for :audiences #, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
 
   after_create :add_default_audience
 
