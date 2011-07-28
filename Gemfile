@@ -48,6 +48,10 @@ group :default do
   gem "paper_trail", "1.6.5"  # 2.x versions require rails3
 end
 
+group :development do
+  gem "jslint_on_rails"
+end
+
 group :test do
   gem "rspec", "1.3.2", :require => "spec"
   gem "rspec-rails", "1.3.4"

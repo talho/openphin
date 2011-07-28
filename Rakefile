@@ -11,6 +11,9 @@ require 'tasks/rails'
 require 'hydra'
 require 'hydra/tasks'
 
+require 'jslint/tasks'
+JSLint.config_path = "config/jslint.yml"
+
 task :build => %w(db:migrate spec cucumber)
 task :db => %w(db:migrate db:test:prepare)
 task :phin_plugins do

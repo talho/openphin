@@ -10,7 +10,7 @@ Ext.ns("Talho");
     dominoes.rule('GroupSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/GroupSelectionGrid.js )');
     dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js /javascripts/audience/UserSelectionGrid.js');
     dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid /javascripts/audience/AudiencePanel.js');
-    dominoes.rule('AudienceDisplayPanel', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js')
+    dominoes.rule('AudienceDisplayPanel', '/javascripts/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js');
     dominoes.rule('NewInvitation', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/invitations/NewInvitationBase.js');
     dominoes.rule('ProfileBase', '(( $css(/stylesheets/redesign/profile.css) )) /javascripts/profile/ProfileBase.js');
     dominoes.rule('BatchUsers', '(( $css(/stylesheets/ux/fileuploadfield/fileuploadfield.css) $css(/stylesheets/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js /javascripts/ext/src/widgets/grid/EditorGrid.js');
@@ -57,8 +57,9 @@ Ext.ns("Talho");
          * @param {Function}    initializer     The initializer function. Singleton function that should return a panel.
          */
         reg: function(name, classVariable, initializer){
-            if(!regList[name])// Here we want to register allow people to register a constructor if there is one or isn't
+            if(!regList[name]){// Here we want to register allow people to register a constructor if there is one or isn't
                 regList[name] = {};
+            }
             Ext.apply(regList[name], {
                 initializer: initializer,
                 classVariable: classVariable
@@ -90,10 +91,11 @@ Ext.ns("Talho");
         },
 
         load: function(name, callback){
-            if(!Ext.isEmpty(regList[name]))
-                dominoes([regList[name].js], function(name, callback){
-                callback(regList[name].initializer);
-            }.createDelegate(this, [name, callback]));
+            if(!Ext.isEmpty(regList[name])){
+              dominoes([regList[name].js], function(name, callback){
+                  callback(regList[name].initializer);
+              }.createDelegate(this, [name, callback]));
+            }
         },
 
         loadOtherLibrary: function(name, callback){
