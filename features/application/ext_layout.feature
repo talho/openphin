@@ -34,15 +34,11 @@ Feature: Application layout should have communications, portal & application too
       | FAQs                 |
       | Tutorials            |
       | Martin Fowler        |
-      | About TXPHIN         |
+      | About                |
     And I should see the following toolbar items in "bottom_toolbar":
       | Documents            |
       | Forums               |
       | Links                |
-    When I press "HAN" within "#top_toolbar"
-    Then I should see the following ext menu items:
-      | name                    |
-      | HAN Alerts              |
     When I press "FAQs" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                            |
@@ -51,10 +47,7 @@ Feature: Application layout should have communications, portal & application too
     Then I should see the following ext menu items:
       | name            |
       | PHIN            |
-      | HAN             |
       | Documents Panel |
-      | Forums          |
-      | Rollcall        |
     When I press "Martin Fowler" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name                 |

@@ -1,0 +1,10 @@
+help_email: phinadmin@dshs.state.tx.us
+logo_image: /stylesheets/images/txphin_header_logo.png # leading slash reqd.
+about_button_label: About TXPhin
+about_button_url: /about
+
+### Config for TALHO Phin ###
+#logo_image: /stylesheets/images/talho_header_logo.png
+#help_email: admins@talho.org
+#about_button_label: About TALHO Phin
+#about_button_url: /about_talhophin
