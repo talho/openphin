@@ -60,6 +60,7 @@ class AuditsController < ApplicationController
     params[:dir] = 'DESC' unless params[:dir]
     version_list = {}
     conditions = {}
+    conditions[:app] = 'phin' if Version.column_names.include('app')
 
     if params[:models] && !params['models'].delete_if{|x| x.blank?}.blank? # checks if the models array has just a blank string, because it's messy to remove individual baseParams from an EXT store.
       conditions['item_type'] = params[:models]

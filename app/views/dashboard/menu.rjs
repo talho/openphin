@@ -2,7 +2,7 @@
 page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
 
-  menu_config = "Application.menuConfig = ["
+  menu_config = "Application.menuConfig = [ '<img width=\"#{ APP_LOGO_DIMENSIONS[0]}\" height=\"#{ APP_LOGO_DIMENSIONS[1]}\" src=\"#{ APP_LOGO }\">', "
   Phin::Application.eval_if_plugin_present(:han) do
      menu_config += eval($menu_config[:han]) unless $menu_config[:han].nil?
   end
@@ -63,7 +63,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
       menu_config += "]},"
     end
 
-    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},"
+    menu_config += "{name: '#{ ABOUT_BUTTON_LABEL }', tab: {id: 'about_phin', title:'#{ ABOUT_BUTTON_LABEL }', url:'#{ ABOUT_BUTTON_URL }'}},"
     menu_config += "{name: '#{current_user.display_name}', itemId: 'My Account', items:[
                     {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
                     {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
@@ -99,7 +99,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   bbar_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   '->',
-                  'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:phinadmin@dshs.state.tx.us\" target=\"_blank\">phinadmin@dshs.state.tx.us</a>'
+                  'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:#{ HELP_EMAIL }\" target=\"_blank\">#{ HELP_EMAIL }</a>'
                 ];"
 
   page << bbar_config

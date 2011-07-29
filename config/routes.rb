@@ -55,6 +55,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
   map.root :controller => "dashboard", :action => "index", :format => "ext"
   map.about "/about", :controller => "dashboard", :action => "about"
+  map.about_talhophin "/about_talhophin", :controller=> "dashboard", :action=> "about_talhophin"
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han.:format", :controller => "dashboard", :action => "hud"
@@ -88,13 +89,13 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   map.resources :products
-  
+
   # Sample resource route with options:
   #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
