@@ -59,7 +59,6 @@ vendor/cache
 config/hydra.yml
 public/rrd
 config/rrdtool.yml
-config/jslint.yml
 vendor/plugins/vms
 lib/workers/vms
 public/javascripts/vms
