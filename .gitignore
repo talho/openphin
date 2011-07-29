@@ -76,3 +76,5 @@ vendor/plugins/han
 vendor/plugins/rollcall
 spec/rollcall
 config/phin_plugins.yml
+config/dashboard.yml
+config/jslint.yml
