@@ -113,28 +113,21 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     },
 
     topbar: function(){
-        this.top_toolbar = new Ext.Toolbar({
-            id: 'top_toolbar',
-            itemId: 'top_toolbar',
-            items: [{
-				id: 'txphinlogo',
-                buttonSelector: 'span',
-            	template: new Ext.Template('<span id="{4}" class="phinlogo {3}" ><span tabindex="0"></span></span>'),
-				handler: this.go_to_dashboard,
-                scope: this
-			}],
-            plugins: [new Ext.ux.plugin.ToolBarNav]
-        });
+      this.top_toolbar = new Ext.Toolbar({
+        id: 'top_toolbar',
+        itemId: 'top_toolbar',
+        plugins: [new Ext.ux.plugin.ToolBarNav]
+      });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
+      var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
 
-        Ext.each(Application.menuConfig, function(item, index){
-          var menu = this.top_toolbar.add(builder.buildMenu(item));
-          if(menu.itemId === 'My Account')
-                this.favorites_menu = menu.menu.insert(0, this.getFavoritesMenu());
-        }, this);
+      Ext.each(Application.menuConfig, function(item, index){
+        var menu = this.top_toolbar.add(builder.buildMenu(item));
+        if(menu.itemId === 'My Account')
+          this.favorites_menu = menu.menu.insert(0, this.getFavoritesMenu());
+      }, this);
 
-        return this.top_toolbar;
+      return this.top_toolbar;
     },
 
     getFavoritesMenu: function(){
