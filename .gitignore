@@ -68,6 +68,8 @@ public/javascripts/han
 public/javascripts/han/*
 public/stylesheets/han
 public/stylesheets/han/*
+lib/workers/han
+lib/workers/han/*
 public/*/rollcall
 public/*/rollcall/*
 Gemfile.lock
