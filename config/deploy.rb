@@ -44,7 +44,7 @@ task :staging do
 end
  
 task :talhostaging do
-  set :branch, 'vms_working_branch'
+  set :branch, 'messaging'
   role :app, "talhostaging.talho.org"
   role :web, "talhostaging.talho.org"
   role :jobs, "talhostaging.talho.org"
