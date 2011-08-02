@@ -41,7 +41,7 @@ I should be able to edit my profile
     And I navigate to "Jane Smith > Manage Organizations"
     Then I should see "Organizations"
     When I press "Request Organization"
-    And I select "DSHS" from ext combo "rq[org]"
+    And I select "DSHS" from ext combo "Organization:"
     And I press "Add"
     Then I should see the following within ".org-item":
       | DSHS | needs to be saved |
@@ -70,15 +70,18 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
     When I go to the dashboard page
+    And I press "Jane Smith"
     And I follow "My Account"
     Then I should see "Organizations"
-    When I select "DSHS" from "Organization Membership Request"
+    And I press "Request Organization"
+    When I select "DSHS - National Organization" from ext combo "Organization:"
     And I maliciously post an approver id
-    And I press "Save"
-    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I press "Add"
+    And I press "Apply Changes"
+    #Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Profile information saved."
     And I should see "Organizations"
-    And the "organizations" class selector should not contain "DSHS"
-    And I should see "Your request to be a member of DSHS has been sent to an administrator for approval"
+    And the "org-pending" class selector should contain "waiting for approval"
     And "bob.smith@example.com" should receive the email:
       | subject       | Request submitted for organization membership in DSHS |
       | body contains | DSHS |

@@ -44,6 +44,10 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
             this.render_layout();
         }.createDelegate(this));
+
+        Ext.each(Ext.query('#hiddenflash .error'), function(item, index, allItems) {
+          Ext.Msg.alert("Error", item.innerHTML);
+        });
     },
 
     render_layout: function(){

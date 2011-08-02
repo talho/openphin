@@ -59,12 +59,8 @@ class Admin::RoleAssignmentsController < ApplicationController
         redirect_to session[:return_to]
       end
     else
-      flash[:notice] = "This resource does not exist or is not available."
-      if session[:return_to].blank?
-        redirect_to root_path
-      else
-        redirect_to session[:return_to]
-      end
+      flash[:error] = "This resource does not exist or is not available."
+      redirect_to root_path
     end
   end
 end

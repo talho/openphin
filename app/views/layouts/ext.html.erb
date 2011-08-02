@@ -51,6 +51,12 @@
   </script>
 </head>
 <body>
+    <div id="hiddenflash">
+      <%- if flash[:error] -%>
+        <p class="error flash"><%= flash[:error] %></p>
+      <%- end -%>
+    </div>
+
     <div id="loading-mask"></div>
     <div id="loading">
         <span id="loading-message">Loading jQuery...</span>
