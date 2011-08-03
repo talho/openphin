@@ -20,7 +20,7 @@ Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: ap
     role_obj = application.blank? ? Role.find_by_name(r.to_s) : Role.find_by_name_and_application(r.to_s, application)
     role_obj = Role.create(:name => r.to_s, :application => (application.blank? ? 'phin' : application ) ) if role_obj.nil?
     role_obj.update_attribute('approval_required', true) unless r.to_s == "Public"
-    unless r == "Public"
+    unless r == "Public" && jur_obj.name == "Texas"
       unless RoleMembership.already_exists?(user, role_obj, jur_obj)
         #force creation of the role membership.  this leaves the request dangling.
         Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )

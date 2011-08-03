@@ -121,10 +121,10 @@ Feature: Invitation System
     And I should see "Please Join DSHS"
     And I should see "Please click the link below to join DSHS"
     And I should see "Default Organization: DSHS" with html stripped
-    And I should see "Jane" in grid row 1 column 1 within "#invitationGrid"
-    And I should see "jane.smith@example.com" in grid row 1 column 2 within "#invitationGrid"
-    And I should see "Bob" in grid row 2 column 1 within "#invitationGrid"
-    And I should see "bob.smith@example.com" in grid row 2 column 2 within "#invitationGrid"
+    And the grid "#invitationGrid" should contain:
+      | name | email                  |
+      | Jane | jane.smith@example.com |
+      | Bob  | bob.smith@example.com  |
 
   Scenario: Viewing invitation completion status by email
     Given an Invitation "DSHS" exists with:

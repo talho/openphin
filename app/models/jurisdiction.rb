@@ -36,8 +36,8 @@ class Jurisdiction < ActiveRecord::Base
   has_many :deliveries, :through => :alert_attempts
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :admin, lambda{{:include => :role_memberships,
-    :conditions => { :role_memberships => { :role_id => [Role.admin.id,Role.superadmin.id] } }}}
+  named_scope :admin, lambda{ |*app| {:include => :role_memberships,
+    :conditions => { :role_memberships => { :role_id => (Role.admins(app).map(&:id) | Role.superadmins(app).map(&:id)) } }}}
   named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}
   named_scope :state, lambda {{:conditions => root ? "parent_id = #{root.id}" : "0=1"}}
   named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
@@ -54,12 +54,12 @@ class Jurisdiction < ActiveRecord::Base
     recent(1).first.updated_at.utc.to_i
   end
 
-  def admins
-    users.with_role(Role.admin)
+  def admins(app = '')
+    users.with_roles(Role.admins(app) )
   end
 
-  def super_admins
-    users.with_role(Role.superadmin)
+  def super_admins(app = '')
+    users.with_roles(Role.superadmins(app))
   end
 
   def alerting_users

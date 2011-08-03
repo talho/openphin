@@ -201,12 +201,13 @@ class User < ActiveRecord::Base
   end
 
   def is_admin_for?(other)
-    return true if roles.include?(Role.sysadmin) || roles.include?(Role.superadmin)
+    # TODO: Role.admin should check on role/app for the jurisdiction
+    return true if self.is_sysadmin? || self.is_super_admin?
     if other.class == Jurisdiction
-      return true if role_memberships.detect{|r| r.role==Role.admin && other.is_or_is_descendant_of?(r.jurisdiction)}
+      return true if role_memberships.find(:all, :conditions => {:role_id => Role.admins.map(&:id)}).detect{|r| other.is_or_is_descendant_of?(r.jurisdiction)}
     elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
       other.each do |jurisdiction|
-        return true if role_memberships.detect{|r| r.role==Role.admin && jurisdiction.is_or_is_descendant_of?(r.jurisdiction)}
+        return true if role_memberships.find(:all, :conditions => {:role_id => Role.admins.map(&:id)}).detect{|r| jurisdiction.is_or_is_descendant_of?(r.jurisdiction)}
       end
     end
     false
@@ -244,7 +245,7 @@ class User < ActiveRecord::Base
     return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0 
   end
 
-  def is_super_admin?(app = "phin")
+  def is_super_admin?(app = "")
     return true if is_sysadmin?
     begin
       jid = Jurisdiction.state.nonforeign.blank? ? 0 : Jurisdiction.state.nonforeign.first.id # Should be Texas
@@ -252,13 +253,16 @@ class User < ActiveRecord::Base
       return false
     end
     return false if jid.nil?
-    return role_memberships(true).count(:conditions => { :role_id => Role.superadmin(app).id, :jurisdiction_id => jid } ) > 0
+    conditions = app.blank? ? {} : {:application => app}
+    return role_memberships(true).count(:conditions => { :role_id => Role.superadmins.find(:all, conditions).map(&:id), :jurisdiction_id => jid } ) > 0
   end
  
-  def is_admin?(app = "phin")
+  def is_admin?(app = "")
+    # TODO: Should be app agnostic
     return true if is_sysadmin?
     return true if is_super_admin?(app)
-    return role_memberships(true).count(:conditions => { :role_id => Role.admin(app).id } ) > 0
+    conditions = app.blank? ? {} : {:application => app}
+    return role_memberships(true).count( :conditions => { :role_id => Role.admins.find(:all, conditions).map(&:id)} ) > 0
   end
  
   def is_org_approver?(app = "phin")

@@ -38,24 +38,45 @@ class Role < ActiveRecord::Base
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
   named_scope :for_app, lambda { |app| { :conditions => { :application => app } } }
   
+  named_scope :admins, lambda {|*app| app = app.to_s
+                                      conditions = {:name => Defaults[:admin]}
+                                      conditions[:application] = app unless app.blank?
+                                      {:conditions => conditions} }
+  named_scope :superadmins, lambda {|*app| app = app.to_s 
+                                           conditions = {:name => Defaults[:superadmin]}
+                                           conditions[:application] = app unless app.blank?
+                                           {:conditions => conditions} }
+  
   def self.latest_in_secs
     recent(1).first.updated_at.utc.to_i
   end
 
   def self.admin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:admin],app) {|r| r.approval_required = true, r.user_role = false }
+      find_or_create_by_name_and_application(Defaults[:admin],app) do |r| 
+        r.approval_required = true
+        r.user_role = false
+      end
   end
-
+  
   def self.org_admin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:org_admin],app) {|r| r.approval_required = true, r.user_role = false }
+      find_or_create_by_name_and_application(Defaults[:org_admin],app) do |r| 
+        r.approval_required = true
+        r.user_role = false
+      end
   end
 
   def self.superadmin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:superadmin],app) {|r| r.approval_required = true, r.user_role = false }
+      find_or_create_by_name_and_application(Defaults[:superadmin],app) do |r| 
+        r.approval_required = true
+        r.user_role = false
+      end
   end
 
   def self.sysadmin
-    find_or_create_by_name_and_application(Defaults[:sysadmin],"system") {|r| r.approval_required = true, r.user_role = false }
+    find_or_create_by_name_and_application(Defaults[:sysadmin],"system") do |r| 
+      r.approval_required = true
+      r.user_role = false
+    end
   end
 
   def self.public(app = "phin")

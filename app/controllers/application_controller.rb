@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_admin_or_self(user_id)
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin || rm.role == Role.superadmin || rm.role == Role.sysadmin } || current_user.id.to_s == user_id.to_s
+    unless User.find(user_id).editable_by?(current_user)
       respond_to do |format|
         format.html {
           flash[:error] = "That resource does not exist or you do not have access to it."
@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_required
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.admin  || rm.role == Role.superadmin }
+    unless current_user.role_memberships.count(:conditions => {:role_id => (Role.admins | Role.superadmins).map(&:id) }) > 0
       message = "That resource does not exist or you do not have access to it."
       if request.xhr?
         respond_to do |format|
@@ -112,7 +112,7 @@ class ApplicationController < ActionController::Base
 
   def super_admin_in_texas_required
     return true if current_user.is_sysadmin?
-    unless current_user.role_memberships.detect{ |rm| rm.role == Role.superadmin && rm.jurisdiction == Jurisdiction.find_by_name("Texas") }
+    unless current_user.role_memberships.count(:conditions => {:role_id => Role.superadmins.map(&:id), :jurisdiction_id => Jurisdiction.find_by_name("Texas") }) > 0
       message = "That resource does not exist or you do not have access to it."
       if request.xhr?
         respond_to do |format|
