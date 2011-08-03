@@ -11,11 +11,13 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             flex: 1,
             autoHeight:true,
             html: window.Application.rails_environment == "cucumber" ? "" : "  <div class='article'>\
-  <h2>Flu Awareness</h2>\
-  <p class='date'>January 9, 2011</p>\
+  <h2>HEAT STRESS SAFETY - Emphasis and Behavior Modification</h2>\
+  <p class='date'>August 3, 2011</p>\
   <div class='lede'>\
-    <p class='article_link'><a href='http://www.texasflu.org' target='_blank' title='Texas Flu'>Texas Flu</a></p>\
-    <p class='article_link'><a href='http://www.cdc.gov/flu/about/season/index.htm' target='_blank' title='2010-2011 Flu Season'>2010-2011 Flu Season</a></p>\
+    <p>DSHS continues to urge Texans to take precautions against the extremely high temperatures and heat indexes that have prevailed throughout the state for several weeks with no immediate let-up projected.  For more information please see the following very important and helpful links:</p>\
+    <p class='article_link'><a href='http://www.texasprepares.org/English/information-ex-heat.shtml' target='_blank' title='DSHS Extreme Heat Info'>DSHS Extreme Heat Info</a></p>\
+    <p class='article_link'><a href='http://www.bt.cdc.gov/disasters/extremeheat/heat_guide.asp' target='_blank' title='CDC Extreme Heat Info'>CDC Extreme Heat Info</a></p>\
+    <p class='article_link'><a href='http://www.osha.gov/SLTC/heatstress/index.html' target='_blank' title='OSHA Heat Stress Info'>OSHA Heat Stress Info</a></p>\
   </div>\
   <br/>\
 </div>\
