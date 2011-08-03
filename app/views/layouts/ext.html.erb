@@ -38,7 +38,7 @@
             Ext.get('loading-message').update('Loading PHIN...');
         },
         initView: function(){
-            window.Application.phin = new PhinApplication();
+            window.Application.phin = new PhinApplication({path: '<%= @path %>'});
             var loading = Ext.get('loading');
             var loadingMask = Ext.get('loading-mask');
             setTimeout(function(){

@@ -29,7 +29,6 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
               scope: this
             }
         });
-
         Talho.ScriptManager.loadOtherLibrary('Favorites PhinLayout Dashboard', function(){
             this.favoritesToolbar = new Talho.ux.FavoritesPanel({
                 parent: this,
@@ -43,6 +42,11 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             });
 
             this.render_layout();
+
+            if(config.path != "") {
+              Application.fireEvent('opentab', {title: 'Email Link', url: config.path});
+            }
+
         }.createDelegate(this));
 
         Ext.each(Ext.query('#hiddenflash .error'), function(item, index, allItems) {

@@ -55,7 +55,7 @@ I should be able to edit my profile
 
     Given I am logged in as "bob.smith@example.com"
     When I click the organization membership request approval link in the email for "jane.smith@example.com"
-    And I follow "Approve"
+    And I click inlineLink "Approve"
     Then I should see "Jane Smith is now a member of DSHS"
 
     And I am logged in as "jane.smith@example.com"
@@ -124,8 +124,6 @@ I should be able to edit my profile
     And I should see "DSHS"
     When I will confirm on next step
     And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
-    Then I should be specifically on the user profile page for "jane.smith@example.com"
-    And I should see "Organizations"
-    And I should see "DSHS" within ".organizations"
+    Then I should see "You do not have permission to carry out this action."
     And "jane.smith@example.com" should not receive an email
     And "bob.smith@example.com" should not receive an email
