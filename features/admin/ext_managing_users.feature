@@ -97,7 +97,7 @@ Feature: An admin managing users
     When I remove the role "Health Officer" for "Dallas County" from EditProfile
     Then "jane.smith@example.com" should not have the "Health Officer" role in "Dallas County"
     And I should not see "Health Officer in Dallas County" within ".role-item"
-    And I should see "Permission denied"
+    And I should see "Profile information saved."
 
   Scenario: Add user as admin should not occur if no home jurisdictation is specified
     Given I am logged in as "bob.jones@example.com"

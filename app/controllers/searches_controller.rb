@@ -7,7 +7,7 @@ class SearchesController < ApplicationController
     if !params[:tag].blank?
       search_size = 20
       tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')
-      @results = User.search("*" + tags, :match_mode => :all, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
+      @results = User.search("*" + tags, :match_mode => :all, :with => {:applications => current_user_applications}, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
       @paginated_results = @results;
       @results = sort_by_tag(@results, tags)
     end
@@ -28,7 +28,7 @@ class SearchesController < ApplicationController
       search_size = (params[:limit]||20).to_i
       page = (params[:start]||0).to_i/search_size + 1
       tags = params[:tag].split(/\s/).map{|x| '*' + x + '*'}.join(' ')
-      @results = User.search(tags, :match_mode => :all, :without => without, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
+      @results = User.search(tags, :match_mode => :all, :without => without, :with => {:applications => current_user_applications}, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
       total = @results.total_entries
       @results = sort_by_tag(@results, tags)
     end
@@ -47,8 +47,9 @@ class SearchesController < ApplicationController
       strip_blank_arrays(params[:with])
       prevent_email_in_name(params)
       sanitize(params[:conditions])
+      params[:with] = Hash.new if !params.has_key?(:with)
+      params[:with][:applications] = current_user_applications
       if params[:admin_mode] == "1"
-        params[:with] = Hash.new if !params.has_key?(:with)
         if !params[:with].has_key?(:jurisdiction_ids)
           params[:with][:jurisdiction_ids] = Array.new
           current_user.jurisdictions.admin.each { |j|
@@ -157,6 +158,10 @@ protected
         0
       end
     }
+  end
+  
+  def current_user_applications
+    current_user.roles.map{|r| r.application.to_crc32 }
   end
   
 end

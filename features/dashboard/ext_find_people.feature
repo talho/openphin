@@ -427,3 +427,33 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
 
   When I click x-grid3-cell "Dallas MD"
   Then the "Profile: Dallas MD" tab should be open
+
+@people
+Scenario: User cannot search for users in a different app
+  Given the following users exist:
+    | Notin Myapp | notinmyapp@example.com | Public | Dallas County | vms |
+  And "notinmyapp@example.com" is not public in "Texas"
+  And delayed jobs are processed
+  And I reindex sphinx
+
+  When I am logged in as "tex.admin@example.com"
+  And I navigate to the ext dashboard page
+  And I navigate to "Find People"
+
+  When I search for a user with the following:
+   | Name         |                        |
+   | Email        |                        |
+   | Phone        |                        |
+   | Title        |                        |
+   | Roles        |                        |
+   |Jurisdictions |                        |
+  Then I should not see "Notin Myapp"
+
+  When I search for a user with the following:
+   | Name          | Notin         |
+   | Email         |               |
+   | Phone         |               |
+   | Title         |               |
+   | Roles         |               |
+   | Jurisdictions |               |
+  Then I should not see "Notin Myapp"

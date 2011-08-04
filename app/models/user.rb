@@ -180,12 +180,13 @@ class User < ActiveRecord::Base
     indexes title,          :sortable => true
     has user(:id),          :as => :user_id
     has roles(:id),         :as => :role_ids
+    has "array_to_string(array_accum(DISTINCT CRC32(roles.application)), ',')", :type => :multi, :as => :applications
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
   end  
   sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
-  
+    
   def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
   end
