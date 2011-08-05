@@ -2,7 +2,9 @@
 page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
 
-  menu_config = "Application.menuConfig = [ '<img width=\"#{ APP_LOGO_DIMENSIONS[0]}\" height=\"#{ APP_LOGO_DIMENSIONS[1]}\" src=\"#{ APP_LOGO }\">', "
+  request_full_domain = (request.subdomains.push(request.domain)).join('.')
+  dash_config = DASHBOARD_CONFIG.has_key?(request_full_domain) ? DASHBOARD_CONFIG[request_full_domain] : DASHBOARD_CONFIG['default']
+  menu_config = "Application.menuConfig = [ '<img width=\"#{ dash_config['logo_image_dimensions'][0]}\" height=\"#{ dash_config['logo_image_dimensions'][1]}\" src=\"#{ dash_config['logo_image'] }\">', "
   Phin::Application.eval_if_plugin_present(:han) do
      menu_config += eval($menu_config[:han]) unless $menu_config[:han].nil?
   end
@@ -63,7 +65,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
       menu_config += "]},"
     end
 
-    menu_config += "{name: '#{ ABOUT_BUTTON_LABEL }', tab: {id: 'about_phin', title:'#{ ABOUT_BUTTON_LABEL }', url:'#{ ABOUT_BUTTON_URL }'}},"
+    menu_config += "{name: '#{ dash_config['about_button_label'] }', tab: {id: 'about_phin', title:'#{ dash_config['about_button_label'] }', url:'#{ dash_config['about_button_url'] }'}},"
     menu_config += "{name: '#{current_user.display_name}', itemId: 'My Account', items:[
                     {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
                     {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
@@ -99,7 +101,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   bbar_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
                   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   '->',
-                  'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:#{ HELP_EMAIL }\" target=\"_blank\">#{ HELP_EMAIL }</a>'
+                  'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:#{ dash_config['help_email'] }\" target=\"_blank\">#{ dash_config['help_email'] }</a>'
                 ];"
 
   page << bbar_config

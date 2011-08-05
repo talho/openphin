@@ -624,6 +624,9 @@ class User < ActiveRecord::Base
 private
 
   def assign_public_role
+    # bail out if they have any roles/rolerequests for application other than phin
+    return unless ( role_requests.map(&:role) + role_memberships.map(&:role) ).map(&:application).uniq.reject{|a| a=='phin'}.blank?
+
     public_role = Role.public
     if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
       if(role_requests.blank? && role_memberships.blank?)

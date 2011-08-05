@@ -1,0 +1,35 @@
+<img src="/stylesheets/images/talho_home_graphic.jpg">
+<br />    <br />
+<div class="details">
+  <p>The TALHO Public Health Information Network (TALHO Phin) is an online portal containing a collection of applications which provide users with a range of functions 
+    to carry out public health preparedness goals and duties.
+    <a href="/tutorials/Registering_and_Navigating_The_PHIN_-_Manual.pdf">Click here</a> for a tutorial on registering and navigating the PHIN,
+    and <%= link_to "here", "/tutorials/Health_Alert_Network_Training_-_Manual.pdf" %> for Health Alert Network (HAN) training.</p>
+  <p>To learn more about TALHO Phin, please visit <%= link_to dash_config['about_button_label'], dash_config['about_button_url'] %></p>
+</div>
+
+<div class="aside">
+  <h2>Sign In to Your Account</h2>
+
+  <% form_for :session, :url => session_path, :html => {:id => 'sign_in_form'} do |form| %>
+    <p class="text_field">
+      <%= form.label :email %>
+      <%= form.text_field :email, :value => flash[:email_address] %>
+    </p>
+    <p class="text_field">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+      <%= link_to "Forgot password?", new_password_path %>
+    </p>
+    <p class="checkbox_field">
+      <%= form.check_box :remember_me %>
+      <%= form.label :remember_me %>
+    </p>
+    <p class="submit_field">
+      <%= form.submit "Sign in", :disable_with => "Please wait..." %>
+      Need an account? <%= link_to "Sign up", new_user_path %>.
+    </p>
+  <% end %>
+  <ul id="associations">
+  </ul>
+</div>
