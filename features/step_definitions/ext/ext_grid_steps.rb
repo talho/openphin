@@ -112,7 +112,8 @@ Then /^I should (not )?see "([^"]*)" in column "([^"]*)" within "([^"]*)"$/ do |
       cell_values.push(r.text.split("\n")[headers.first.text.split("\n").index(column)] )
     end
   end
-  not_exists.nil? ? cell_values.include?(text) : !cell_values.include?(text)
+  matched_cells = cell_values.collect{|cv| cv =~ /#{text}/ }.compact
+  not_exists.nil? ? (matched_cells.blank?.should be_false) : (matched_cells.blank?.should be_true)
 end
 
 

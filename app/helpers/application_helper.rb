@@ -47,6 +47,11 @@ module ApplicationHelper
     render :partial => @controller.toolbar
   end
 
+  def dash_config
+    request_full_domain = (request.subdomains.push(request.domain)).join('.')
+    DASHBOARD_CONFIG.has_key?(request_full_domain) ? DASHBOARD_CONFIG[request_full_domain] : DASHBOARD_CONFIG['default']
+  end
+
   def tab_me(paths)
     paths = [paths] unless paths.class.name == "Array"
 

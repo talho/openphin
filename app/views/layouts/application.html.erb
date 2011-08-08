@@ -31,7 +31,7 @@
   <div id="header">
     <div id="portal_toolbar">
 
-      <h1><%= link_to 'TXPhin', root_path %></h1>
+      <%= link_to '<img src="' + dash_config['logo_image'] + '">', root_path %>
       <ul class="apps">
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
         <% Phin::Application.eval_if_plugin_present(:rollcall) do %>
@@ -51,7 +51,7 @@
           <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), show_advanced_search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'accounts' %>><%= link_to s('My Account'), edit_user_profile_path(current_user), :class => '.edit_profile' %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'admin' %>><%= link_to s('Admin'), admin_role_requests_path if current_user.is_admin? %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= tab_me about_path %>><%= link_to s('About TXPHIN'), about_path, :class => '.about' %></li><li>&nbsp;|&nbsp;</li>
+          <li<%= tab_me about_path %>><%= link_to s(dash_config['about_button_label']), dash_config['about_button_url'], :class => '.about' %></li><li>&nbsp;|&nbsp;</li>
           <li><%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></li>
       <%- else -%>
           <li><%= link_to 'Sign In', sign_in_path %></li>
@@ -65,7 +65,7 @@
   		<%- else -%>
   			<ul>
   			  <li><%= link_to s('Sign Up'), new_user_path %></li>
-  				<li><%= link_to s('About TXPHIN'), about_path %></li>
+  				<li><%= link_to s(dash_config['about_button_label']), dash_config['about_button_url'] %></li>
   			</ul>
   		<%- end -%>
     </div>
@@ -139,7 +139,7 @@
   <div id="newphin" style="padding-top: 2px; margin-left: 42%;">
     <a href="/ext"><img style="border: none;" src="/images/newphin.gif"></a>
   </div>
-  <div class='help'>Need help?  Email <%= link_to "phinadmin@dshs.state.tx.us", "mailto:phinadmin@dshs.state.tx.us" %></div>
+  <div class='help'>Need help?  Email <%= link_to dash_config['help_email'], "mailto:" + dash_config['help_email'] %></div>
   
 	
 </div>

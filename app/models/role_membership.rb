@@ -21,7 +21,7 @@ class RoleMembership < ActiveRecord::Base
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   validates_presence_of :jurisdiction_id
-  validates_presence_of :user_id
+  validates_presence_of :user
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
   named_scope :user_roles, :include => [:role, :jurisdiction, :user], :conditions => {:roles => {:user_role => true}}
   named_scope :admin_roles, lambda{{ :include => :role, :conditions => {:role_id => Role.admin.id} }}

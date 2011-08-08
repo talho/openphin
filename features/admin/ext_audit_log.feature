@@ -195,7 +195,7 @@ Feature: Audit Log
     And I click model-selector-list-item "Organizations"
     When I click model-selector-list-item "Organization Membership Requests"
     And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see "Jane Smith in SILLY HATS ONLY" in column "Descriptor" within "grid-version-results"
+    Then I should see "Jane Smith for SILLY HATS ONLY" in column "Descriptor" within "grid-version-results"
 
   Scenario: Audit log for Favorites
     Given I am logged in as "billsmith@example.com"
