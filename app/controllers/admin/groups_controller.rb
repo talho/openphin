@@ -63,6 +63,12 @@ class Admin::GroupsController < ApplicationController
   def new
     @group = Group.new
     @group.owner = current_user
+    scopes = ['Personal']
+    scopes = scopes | ['Jurisdiction', 'Global', 'Organization'] if current_user.is_admin?('phin')
+    respond_to do |format|
+      format.html
+      format.json {render :json => {:scopes => scopes}}
+    end
   end
 
   def create
@@ -158,6 +164,12 @@ class Admin::GroupsController < ApplicationController
           flash[:error] = "This resource does not exist or is not available."
           redirect_to admin_groups_path
     end 
+    scopes = ['Personal']
+    scopes = scopes | ['Jurisdiction', 'Global', 'Organization'] if current_user.is_admin?('phin')
+    respond_to do |format|
+      format.html
+      format.json {render :json => {:scopes => scopes, :group => group_hash_for_display(@group, @recipients)} }
+    end
   end
   
   def dismember

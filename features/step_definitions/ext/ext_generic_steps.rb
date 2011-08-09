@@ -282,7 +282,11 @@ def check_for_tab_strip_item(active, tab_name)
 end
 
 When /^the "([^\"]*)" tab should not be open$/ do |tab_name|
-  page.should_not have_css(".x-tab-strip li", :text => tab_name)
+  begin
+    page.should_not have_css(".x-tab-strip li", :text => tab_name)
+  rescue Selenium::WebDriver::Error::ObsoleteElementError
+    1==1
+  end
 end
 
 def force_open_tab(tab_name, tab_url, config = nil)

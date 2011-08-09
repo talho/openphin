@@ -255,7 +255,7 @@ class User < ActiveRecord::Base
     end
     return false if jid.nil?
     conditions = app.blank? ? {} : {:application => app}
-    return role_memberships(true).count(:conditions => { :role_id => Role.superadmins.find(:all, conditions).map(&:id), :jurisdiction_id => jid } ) > 0
+    return role_memberships(true).count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
   end
  
   def is_admin?(app = "")
@@ -263,7 +263,7 @@ class User < ActiveRecord::Base
     return true if is_sysadmin?
     return true if is_super_admin?(app)
     conditions = app.blank? ? {} : {:application => app}
-    return role_memberships(true).count( :conditions => { :role_id => Role.admins.find(:all, conditions).map(&:id)} ) > 0
+    return role_memberships(true).count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
   end
  
   def is_org_approver?(app = "phin")

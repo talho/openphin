@@ -185,10 +185,10 @@ Feature: Viewing groups
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     And I should see "Dallas County Health Officer Group"
-    And  I will confirm on next step
     When I click removeBtn on the "Dallas County Health Officer Group" grid row
+    And I press "Yes"
     And I wait for the "Loading" mask to go away
-    Then I should not see "Dallas County Health Officer Group"
+    Then I should not see "Dallas County Health Officer Group" within ".groupList"
     And the group "Dallas County Health Officer Group" should not exist
 
   Scenario: updating changed scope
