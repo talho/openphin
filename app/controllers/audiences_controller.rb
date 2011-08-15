@@ -1,7 +1,4 @@
 class AudiencesController < ApplicationController
-
-  before_filter :change_include_root
-  after_filter :change_include_root_back
   
   def index
     # this will at some point possibly return all of the audience data that we need

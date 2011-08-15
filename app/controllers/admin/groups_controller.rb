@@ -1,6 +1,5 @@
 class Admin::GroupsController < ApplicationController
-  before_filter :admin_required, :change_include_root
-  after_filter :change_include_root_back
+  before_filter :admin_required
   app_toolbar "admin"
 
   def index

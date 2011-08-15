@@ -1,7 +1,6 @@
 class Doc::DocumentsController < ApplicationController
-  before_filter :non_public_role_required, :change_include_root
+  before_filter :non_public_role_required
   before_filter :can_edit_document, :only => [:edit, :move, :destroy]
-  after_filter :change_include_root_back
 
   def show
     @document = Document.find(params[:id]).viewable_by(current_user)
