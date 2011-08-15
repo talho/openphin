@@ -2,8 +2,6 @@ class UserProfilesController < ApplicationController
   before_filter(:except => [:show]) do |controller|
     controller.admin_or_self_required(:user_id)
   end
-  before_filter :change_include_root, :only => [:edit, :show]
-  after_filter :change_include_root_back, :only => [:edit, :show]
 
   # GET /users
   # GET /users.xml

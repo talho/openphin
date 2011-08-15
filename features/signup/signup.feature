@@ -119,13 +119,14 @@ Feature: Signing up for an account
       | body contains | Dallas County |
 
     When I log in as "john@example.com"
-    And I follow "My Account"
-    And I follow "Request Roles"    
-    Then I should see "Awaiting Approval"
+    And I navigate to "Jonathan Smith > Manage Roles"
+    #And I follow "Jonathan Smith"
+    #And I follow "Request Roles"
+    Then I should see "waiting for approval"
     
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
-    Then I should not see "Awaiting Approval"
+    Then I should not see "waiting for approval"
 
   Scenario: Signing up as a public health professionals in Texas
     When I signup for an account with the following info:
@@ -156,13 +157,14 @@ Feature: Signing up for an account
       | body contains | Texas |
 
     When I log in as "john@example.com"
-    And I follow "My Account"
-    And I follow "Request Roles"
-    Then I should see "Awaiting Approval"
+    And I navigate to "Jonathan Smith > Manage Roles"
+    #And I follow "My Account"
+    #And I follow "Request Roles"
+    Then I should see "waiting for approval"
 
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
     When I log in as "john@example.com"
-    Then I should not see "Awaiting Approval"
+    Then I should not see "waiting for approval"
 
   Scenario: Signing up should not display system-roles
     Given there is an system only Admin role

@@ -5,10 +5,12 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
     Ext.apply(this, config);
     Talho.ShowProfile.superclass.constructor.call(this, config);
 
+    var url = '/users/' + this.user_id + '/profile.json';
     Ext.Ajax.request({
-      url: '/users/' + this.user_id + '/profile.json',
+      url: url,
       scope: this,
       success: function(response, options) {
+        this.getPanel().url = url;
         var record = Ext.decode(response.responseText);
         this.userdata = record.userdata;
         this.renderProfile();

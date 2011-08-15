@@ -1,7 +1,5 @@
 class AuditsController < ApplicationController
   before_filter :super_admin_in_texas_required
-  before_filter :change_include_root
-  after_filter :change_include_root_back
 
   def index
     version_list = get_version_list(params)

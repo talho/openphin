@@ -7,7 +7,11 @@ class Admin::OrganizationMembershipRequestsController < ApplicationController
     @request = OrganizationMembershipRequest.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do
+        session[:path] = admin_organization_membership_request_path(params[:id], :format => :ext)
+        redirect_to root_path
+      end # show.html.erb
+      format.ext
       format.xml  { render :xml => @request }
     end
   end
@@ -23,7 +27,7 @@ class Admin::OrganizationMembershipRequestsController < ApplicationController
     else
       flash[:error] = "You do not have permission to carry out this action."
     end
-    redirect_to user_profile_path(user)
+    render :inline => '', :layout => 'ext_panel'
   end
 
   def approve
@@ -33,7 +37,7 @@ class Admin::OrganizationMembershipRequestsController < ApplicationController
       request.approve!(current_user)
       link = "<a href=\"#{user_profile_path(request.user)}\">#{request.user.display_name}</a>"
       flash[:notice]="#{link} is now a member of #{request.organization.name}"
-      redirect_to root_path
+      render :inline => '', :layout => 'ext_panel'
       #redirect_to :action => :index
     end
   end

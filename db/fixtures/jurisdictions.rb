@@ -36,3 +36,15 @@ louisiana.move_to_child_of(Jurisdiction.root) unless Jurisdiction.root.children.
   }
   p.move_to_child_of louisiana unless louisiana.children.include?(p)
 end
+
+indiana=Jurisdiction.find_or_create_by_name(:name => "Indiana") { |j|
+  j.foreign=true
+  j.fips_code = "18"
+}
+indiana.move_to_child_of(Jurisdiction.root) unless Jurisdiction.root.children.include?(indiana)
+
+salud=Jurisdiction.find_or_create_by_name(:name => "Puerto Rico") { |j|
+  j.foreign=true
+  j.fips_code = "72"
+}
+salud.move_to_child_of(Jurisdiction.root) unless Jurisdiction.root.children.include?(salud)
