@@ -64,7 +64,7 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
   end
   
   def build_ivr(message_hash)
-    msg = ''
+    msg = []
     if @ivr.nil?
       begin
         message_name = message.Behavior.Delivery.Providers.select{|p| p.device == 'E-mail'}.first.Messages.select{|m| m.name == "message"}.first.ref
@@ -83,13 +83,13 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
     @ivr.ContextNodes.each do |ctxt|
       case ctxt.operation
         when 'put', 'TTS'
-          ctxt.responses.each do |resp|
-            msg += get_text_response(resp, message_hash)
-          end
+          msg << ctxt.responses.map {|resp| get_text_response(resp, message_hash) }.join('')
+        when 'prompt'
+          msg << get_prompt_response(ctxt, message_hash)
       end
     end
     
-    msg
+    msg.join("\n\n")
   end
   
   def get_text_response(resp, message_hash)
@@ -104,5 +104,18 @@ class Service::TALHO::Email::Message < Service::TALHO::Email::Base
       return resp.value
     end
     '' # return an empty string if we get to this point.
+  end
+  
+  def get_prompt_response(ctxt, message_hash)
+    href = get_text_response(ctxt.responses.first, message_hash) # The first response to a prompt with be the href
+    
+    if ctxt.ContextNodes && !ctxt.ContextNodes.blank? && !ctxt.ContextNodes.first.responses.blank?
+      # The first response of the first context node under a prompt action will be the display text
+      display_text = get_text_response(ctxt.ContextNodes.first.responses.first, message_hash)
+    else
+      display_text = href
+    end
+    
+    "<a href=\"#{href}\">#{display_text}</a>"
   end
 end 

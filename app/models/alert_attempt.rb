@@ -52,7 +52,7 @@ class AlertAttempt < ActiveRecord::Base
        :conditions => ["alert_device_types.device = ?", d]}}
 
   after_create :update_alert_type
-  before_save :generate_acknowledgment_token
+  before_create :generate_acknowledgment_token
      
   def deliver
     if jurisdiction.nil? && organization.nil?

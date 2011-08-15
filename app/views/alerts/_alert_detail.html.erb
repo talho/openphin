@@ -1,0 +1,14 @@
+<h1><%= @console_message.title %></h1>
+<p><%= simple_format @console_message.rendered_message %></p>
+<% if @alert.acknowledge %>
+  <p>Please select a response:</p>
+  <ul class="acknowledgement_list">
+    <% if @call_downs %>
+      <% @call_downs.each_index do |i| %>
+        <li index="<%= @call_downs[i][:value] %>" class="<%= @alert_attempt.call_down_response == (i+1) ? 'selected' : ''%>"><%= @call_downs[i][:msg] %></li>
+      <% end %>
+    <% else %>
+      <li index="1" class="<%= @alert_attempt.acknowledged_at.nil? ? '' : 'selected' %>" >Acknowledge Alert</li>
+    <% end %>
+  </ul>
+<% end %>

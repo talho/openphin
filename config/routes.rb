@@ -34,7 +34,9 @@ ActionController::Routing::Routes.draw do |map|
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
   end
 
-  #map.resources :alerts, :member => {:acknowledge => [:get, :put]}
+  map.resources :alerts, :only => [:show, :update]
+  map.alert_with_token '/alerts/:id/show_with_token/:token.:format', :controller => 'alerts', :action => 'show_with_token', :method => :get
+  map.update_alert_with_token '/alerts/:id/update_with_token/:token.:format', :controller => 'alerts', :action => 'update_with_token', :method => :put
 
   map.connect "/audits/models.:format", :controller => "audits", :action => "models"
   map.resources :audits
