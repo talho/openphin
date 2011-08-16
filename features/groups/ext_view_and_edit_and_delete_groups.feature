@@ -99,7 +99,8 @@ Feature: Viewing groups
     When I force open the group detail tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Group Detail" tab should not be open
-    When I force open the edit group tab
+    When I close the active ext window
+    And I force open the edit group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Edit Group" tab should not be open
 
@@ -115,7 +116,8 @@ Feature: Viewing groups
     When I force open the group detail tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Group Detail" tab should not be open
-    When I force open the edit group tab
+    When I close the active ext window
+    And I force open the edit group tab
     Then I should see "That resource does not exist or you do not have access to it."
     And the "Edit Group" tab should not be open
 

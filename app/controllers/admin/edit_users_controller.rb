@@ -1,7 +1,6 @@
 class Admin::EditUsersController < ApplicationController
-  before_filter :admin_required, :change_include_root
+  before_filter :admin_required
   app_toolbar "admin"
-  after_filter :change_include_root_back
 
   def admin_users
     start = (params[:start] || 0).to_i

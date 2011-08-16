@@ -20,7 +20,11 @@ class DashboardController < ApplicationController
         expire_fragment(:controller => "dashboard", :action => "index") if DashboardController.expired?
       end
 
-      format.ext {render :layout => 'ext.html'}
+      format.ext do
+        @path = session[:path]
+        session[:path] = nil
+        render :layout => 'ext.html'
+      end
     end
   end
 

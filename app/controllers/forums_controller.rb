@@ -1,7 +1,6 @@
 class ForumsController < ApplicationController
 
-  before_filter :non_public_role_required, :change_include_root
-  after_filter :change_include_root_back
+  before_filter :non_public_role_required
   app_toolbar "forums"
 
   # GET /forums

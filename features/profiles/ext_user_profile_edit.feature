@@ -41,7 +41,7 @@ I should be able to edit my profile
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
       And I navigate to the ext dashboard page
-      And I should see "About TXPHIN"
+      And I should see "About TXPhin"
       And I view the ext profile page for "john.smith@example.com"
       Then I should not see "Edit This Account"
     
@@ -49,7 +49,7 @@ I should be able to edit my profile
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
     And I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
-    And I should see "About TXPHIN"
+    And I should see "About TXPhin"
     And I view the ext profile page for "john.smith@example.com"
     And I should not see "Edit This Account"
 

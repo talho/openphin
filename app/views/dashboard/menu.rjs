@@ -88,8 +88,8 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   page << menu_config
 
   # user_has_app_roles will be true if current_user has any of these roles:
-  role_list = ["Rollcall","VMS"]
-  user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_name(item)}.compact.empty?
+  role_list = ["rollcall","vms"]
+  user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_application(item)}.compact.empty?
 
   bbar_config =  "Application.bbarConfig = ["
                      #{name: 'Calendar'},
