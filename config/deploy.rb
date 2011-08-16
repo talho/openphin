@@ -54,6 +54,7 @@ end
 task :talhoapps_production do
   require 'hoptoad_notifier/capistrano'
   set :branch, 'messaging'
+  set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2011.03/bin/unicorn_rails"
   role :app, "talhoapps.talho.org"
   role :web, "talhoapps.talho.org"
   role :jobs, "talhoapps.talho.org"

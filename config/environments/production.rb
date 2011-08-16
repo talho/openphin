@@ -1,6 +1,7 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
-UPLOAD_BASE_URI = "https://www.txphin.org"
+UPLOAD_BASE_URI = "https://phin.talho.org"
+HOST = 'phin.talho.org'
 
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
