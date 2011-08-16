@@ -56,8 +56,8 @@ task :talhoapps_production do
   set :branch, 'messaging'
   role :app, "talhoapps.talho.org"
   role :web, "talhoapps.talho.org"
-  role :jobs, "jobs.talho.org"
-  role :db,  "jobs.talho.org", :primary => true  
+  role :jobs, "talhoapps.talho.org"
+  role :db,  "talhoapps.talho.org", :primary => true  
 end
 
 # Setup dependencies
