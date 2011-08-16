@@ -51,6 +51,15 @@ task :talhostaging do
   role :db,  "talhostaging.talho.org", :primary => true
 end 
 
+task :talhoapps_production do
+  require 'hoptoad_notifier/capistrano'
+  set :branch, 'messaging'
+  role :app, "talhoapps.talho.org"
+  role :web, "talhoapps.talho.org"
+  role :jobs, "jobs.talho.org"
+  role :db,  "jobs.talho.org", :primary => true  
+end
+
 # Setup dependencies
 before 'deploy', 'backgroundrb:stop'
 before 'deploy', 'delayed_job:stop'
