@@ -13,27 +13,26 @@
 <body>
 <div id="application">
   <div id="header">
-      <div id="portal_toolbar">
-        <%= link_to '<img src="' + dash_config['logo_image'] + '">', root_path %>
-          <ul class="actions">
-            <li><%= link_to s(dash_config['about_button_label']), dash_config['about_button_url'] %></li><li>&nbsp;|&nbsp;</li>
-              <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
-              <li><%= link_to s('Sign In'), sign_in_path %></li>
-          </ul>
-      </div>
+    <div id="portal_toolbar">
+      <%= link_to '<img src="' + domain_config['logo_image'] + '">', root_path %>
+      <ul class="actions">
+        <li><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'] %></li><li>&nbsp;|&nbsp;</li>
+        <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
+        <li><%= link_to s('Sign In'), sign_in_path %></li>
+      </ul>
     </div>
-    <div id="wrapper">
-      <div class="flash">
-        <%- [:notice, :instructions, :completed, :error].each do |type| -%>
-          <%- if flash[type] -%>
-            <p class="<%= type %>"><%= flash[type] %></p><br/>
-          <%- end -%>
+  </div>
+  <div id="wrapper">
+    <div class="flash">
+      <%- [:notice, :instructions, :completed, :error].each do |type| -%>
+        <%- if flash[type] -%>
+          <p class="<%= type %>"><%= flash[type] %></p><br/>
         <%- end -%>
-      </div>
+      <%- end -%>
+    </div>
 
-      <div id="content">
-        <%= yield %>
-      </div>
+    <div id="content">
+      <%= yield %>
     </div>
   </div>
 </div>

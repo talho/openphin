@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_filter(:only => [:edit, :update, :destroy]) do |controller|
     controller.admin_or_self_required(:id)
   end
+  before_filter :redirect_to_plugin_signup, :only => :new
 
   # GET /users
   # GET /users.xml
@@ -165,6 +166,17 @@ class UsersController < ApplicationController
       flash[:error]="Invalid URL."
     end
     redirect_to root_path
+  end
+
+  protected
+
+  def redirect_to_plugin_signup
+    debugger
+    request_full_domain = (request.subdomains.push(request.domain)).join('.')
+    domain_config = DOMAIN_CONFIG.has_key?(request_full_domain) ? DOMAIN_CONFIG[request_full_domain] : DOMAIN_CONFIG['default']
+    unless domain_config['new_user_path'].blank?
+      redirect_to domain_config['new_user_path'].to_sym
+    end
   end
   
 end

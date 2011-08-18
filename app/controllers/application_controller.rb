@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :login_required, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
-  before_filter :get_dashboard_config, :only => :choose_layout
 
   layout :choose_layout
 
@@ -256,10 +255,5 @@ private
 
   def force_json_as_html
     self.class.rescue_from Exception, :with => :render_json_error_as_html
-  end
-
-  def get_dashboard_config
-    request_full_domain = (request.subdomains.push(request.domain)).join('.')
-    @dash_config = DASHBOARD_CONFIG.has_key?(request_full_domain) ? DASHBOARD_CONFIG[request_full_domain] : DASHBOARD_CONFIG['default']
   end
 end

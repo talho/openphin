@@ -1,0 +1,27 @@
+# 1) application will use the config where 'domain' matches request.domain or fall back to 'default'
+# 2) logo_image expects a PNG;  see initializers/dashboard.rb
+# 3) sign_in_partial will render a partial by that name in views/sessions/
+# 4) new_user_path will redirect_to the given route
+
+-
+    domain: txphin.org
+    sign_in_partial: txphin    
+    logo_image: /stylesheets/images/txphin_header_logo.png
+    help_email: phinadmin@dshs.state.tx.us
+    about_button_label: About TXPhin
+    about_button_url: /about
+-
+    domain: vms.talho.org
+    sign_in_partial: talho
+    new_user_path: new_vms_user
+    logo_image: /stylesheets/images/talho_header_logo.png
+    help_email: admins@talho.org
+    about_button_label: About TALHO Phin
+    about_button_url: /about_talhophin
+-
+    domain: default
+    sign_in_partial: txphin
+    logo_image: /stylesheets/images/txphin_header_logo.png
+    help_email: phinadmin@dshs.state.tx.us
+    about_button_label: About TXPhin
+    about_button_url: /about
