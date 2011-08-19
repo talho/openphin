@@ -31,6 +31,8 @@ class Audience < ActiveRecord::Base
 
   attr_protected :name
 
+  after_create {|audience| audience.refresh_recipients(:force => true)}
+
   def recipients(options={})
     refresh_recipients(options)
     options.delete(:force)

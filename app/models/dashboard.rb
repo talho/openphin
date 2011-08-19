@@ -48,7 +48,7 @@ class Dashboard < ActiveRecord::Base
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  accepts_nested_attributes_for :audiences #, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
+  accepts_nested_attributes_for :dashboard_portlets, :dashboard_audiences, :audiences #, :reject_if => Proc.new{|attributes| attributes["dashboard_id"] != self.id}
 
   after_create :add_default_audience
 
@@ -60,7 +60,7 @@ class Dashboard < ActiveRecord::Base
       audience = created.audiences.first
       if audience
         audience.user_ids = [author.id]
-        audience.recipients
+        audience.refresh_recipients(:force => true)
       end
     end
     created
@@ -100,11 +100,6 @@ class Dashboard < ActiveRecord::Base
     jsonConfig
   end
 
-  def refresh_audiences
-    self.audiences.map(&:refresh_recipients)
-  end
-  handle_asynchronously :refresh_audiences
-
   private
   def sanitizeJSON json
     json.keys.each do |key|
@@ -120,7 +115,7 @@ class Dashboard < ActiveRecord::Base
 
   def add_default_audience
     if dashboard_audiences.blank?
-      audience = Audience.new(:type => "Dashboard")
+      audience = Audience.create
       Dashboard::DashboardAudience.create(:audience => audience, :dashboard => self, :role => Dashboard::DashboardAudience::ROLES[:publisher])
     end
   end

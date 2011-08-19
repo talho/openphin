@@ -41,6 +41,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   region: 'center',
   itemId: this.itemId,
   defaultType : 'dashboardportalcolumn', cls: '',
+  name: "",
   adminMode: false,
   previewMode: false,
   columnCount: 3,
@@ -112,14 +113,23 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
           if(record == undefined) {
             this.dashboardList.setRawValue("");
             this.itemId = Application.default_dashboard || undefined;
-            rec = new Talho.Dashboard.Record({
+            record = new Talho.Dashboard.Record({
               id: Application.default_dashboard || undefined,
-              date: undefined,
+              name: "",
+              updated_at: undefined,
+              columns: undefined,
               config: undefined,
+              draft: true,
               audiences_attributes: undefined
             });
-            rec.id = Application.default_dashboard;
-            store.add(rec);
+            record.id = Application.default_dashboard;
+            Ext.each(this.viewStore.data.items, function(item, index, allItems) {
+              if(item.id == Application.default_dashboard) {
+                record.name = item.data.name;
+                this.name = record.name;
+              }
+            }, this);
+            //store.add(rec);
             this.items.each(function(column, columnIndex, allColumnItems) {
               column.items.each(function(portlet, portletIndex, allPortletItems) {
                 portlet.itemId = undefined
@@ -153,12 +163,19 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         scope: this,
         beforeload: function() {
           this.dashboardList.setRawValue("Loading Dashboards...");
+        },
+        load: function() {
+          if(Application.default_dashboard != undefined) {
+            this.dashboardList.setValue(Application.default_dashboard);
+          }
         }
       }
     });
 
     this.dashboardList = new Ext.form.ComboBox({
+      id: 'dashboardlist',
       displayField: 'name',
+      editable: false,
       hiddenName: 'name',
       valueField: 'id',
       hiddenValue: 'id',
@@ -422,13 +439,34 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
         hidden: true,
         scope: this,
         handler: function(b, e) {
-          Ext.Msg.confirm("Warning", "Clicking Save and Publish will make all changes active in production.  Are you sure you want to publish these changes?", function(btn) {
-            if(btn == 'yes') {
-              this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving and Publishing...", store: this.draftStore});
-              this.loadMask.show();
-              this.save(false);
+          if(this.getPortlets().length == 0) {
+            Ext.Msg.alert("Warning", "You must have at least one portlet added to save this dashboard.")
+          } else {
+            var opt = {
+              title: "Warning",
+              msg: "Clicking Save and Publish will make all changes active in production.  Are you sure you want to publish these changes?",
+              prompt: false,
+              scope: this,
+              buttons: Ext.Msg.YESNO,
+              fn: function(btn, text, opt) {
+                if(btn == 'yes') {
+                  if((this.name == undefined || $.trim(this.name) == "") && $.trim(text) == "") {
+                    Ext.Msg.show(opt);
+                  } else {
+                    this.name = $.trim(text);
+                    this.loadMask = new Ext.LoadMask(this.getEl(), {msg: "Saving and Publishing...", store: this.draftStore});
+                    this.loadMask.show();
+                    this.save(false);
+                  }
+                }
+              }
+            };
+            if(this.name == undefined || $.trim(this.name) == "") {
+              opt.msg = "Clicking Save and Publish will make all changes active in production.  Are you sure you want to publish these changes?<br/><br/>You must enter a name for this dashboard before continuing:";
+              opt.prompt = true;
             }
-          }, this);
+            Ext.Msg.show(opt);
+          }
         }
       }],
       hidden: true
@@ -495,6 +533,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
   },
 
   resetDashboardPage: function() {
+    this.name = undefined;
     this.items.each(function(item, index, allItems) {
       item.removeAll(true);
     });
@@ -513,8 +552,11 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     if(this.itemId == undefined) {
       rec = new Talho.Dashboard.Record({
         id: undefined,
-        date: undefined,
+        name: undefined,
+        updated_at: undefined,
+        columns: undefined,
         config: undefined,
+        draft: undefined,
         audiences_attributes: undefined
       });
     } else {
@@ -534,6 +576,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       audience['id'] = this.audiences[0].audience.id;
       rec.data.audiences_attributes = [audience];
     }
+    rec.data.name = this.name;
     rec.data.config = config;
     rec.data.draft = draft;
     rec.data.columns = this.columnCount;
@@ -582,6 +625,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       Ext.each(record.data.config, function(item, index, allItems) {
         this.items.add(Ext.create(item));
       }, this);
+      this.name = record.data.name;
       this.columnCount = record.data.columns;
       this.doLayout();
       this.toggleAdminBorder(this);
@@ -603,5 +647,13 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
       audience.group_ids.push(item.id)
     });
     return audience;
+  },
+
+  getPortlets: function() {
+    var portlets = [];
+    this.items.each(function(item, index, allItems) {
+      portlets = portlets.concat(item.items.items);
+    });
+    return portlets;
   }
 });

@@ -133,6 +133,11 @@ When /^(?:|I )fill in this (?:|html)editor "([^"]*)" for "([^"]*)"(?: within "([
   end
 end
 
+When /^(?:|I )fill in Ext prompt with "([^"]*)"$/ do |value|
+  field = find(".ext-mb-input")
+  field.set(value)
+end
+
 When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
   with_scope(selector) do
     button = waiter do
@@ -304,6 +309,7 @@ When /^I open ext combo "([^\"]*)"$/ do |select_box|
   field.click
 end
 
+# Must have editable: false property set to work properly if not typing in value to combobox
 When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
   When %Q{I open ext combo "#{select_box}"}
   When %Q{I click x-combo-list-item "#{value}"}

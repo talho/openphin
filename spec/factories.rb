@@ -190,3 +190,29 @@ Factory.define :favorite, :class => Favorite do |f|
   f.tab_config  "{:id => 'test_favorite', :title =>'Test Favorite'}"
   f.association :user
 end
+
+Factory.define :dashboard do |d|
+  d.sequence(:name){|t| "Dashboard ##{t}"}
+  d.columns 3
+  d.draft_columns 3
+  d.dashboard_portlets_attributes {{:one => {:portlet => Factory(:portlet), :draft => false, :column => 0}}}
+  d.dashboard_audiences_attributes {{:one => {:audience => Factory(:audience), :role => "publisher"}}}
+end
+
+Factory.define :dashboard_portlet, :class => Dashboard::DashboardPortlet do |dp|
+  dp.association :dashboard
+  dp.association :portlet
+  dp.draft false
+  dp.column 0
+end
+
+Factory.define :dashboard_audience, :class => Dashboard::DashboardAudience do |da|
+  da.association :dashboard
+  da.association :audience
+  da.role "publisher"
+end
+
+Factory.define :portlet do |p|
+  p.xtype "dashboardhtmlportlet"
+  p.config "--- \nhtml: \"\"\ncolumn: 0\nxtype: dashboardhtmlportlet\n"
+end

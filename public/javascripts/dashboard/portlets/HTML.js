@@ -25,16 +25,20 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
       qtip: 'Edit',
       handler: function(event, toolEl, panel, tc){
         var htmleditor = new Ext.form.HtmlEditor({
+          name: 'htmlportlet',
+          fieldLabel: 'Edit HTML Portlet',
           html: panel.el.child('.x-portlet-html').dom.innerHTML,
           enableSourceEdit: true,
           width: 680,
-          height: 510                                                           
+          height: 510
         });
 
         var window = new Ext.Window({
           layout: 'fit',
-          title: 'Edit HTML Porlet',
+          title: 'Edit HTML Portlet',
+          cls: 'html-portlet-window',
           constrain: true,
+          modal: true,
           style: {
             opacity: 100
           },

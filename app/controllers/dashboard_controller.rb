@@ -58,7 +58,7 @@ class DashboardController < ApplicationController
         draft = params[:draft].to_s == "true" || false
         dashboard = (draft ? current_user.dashboards.draft : current_user.dashboards.published).find_by_id(params[:id])
         if dashboard
-          render :json => {:dashboards => [{:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => false), :draft => false, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:only => :id, :include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}], :success => true}
+          render :json => {:dashboards => [{:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => draft), :draft => draft, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:only => :id, :include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}], :success => true}
         else
           render :json => {:dashboards => [], :success => true}
         end
@@ -77,7 +77,7 @@ class DashboardController < ApplicationController
           params[:id] = dashboard_json["id"]
           update_it
         else
-          options = {:name => dashboard_json["name"] || "", :audiences_attributes => dashboard_json["audiences_attributes"] || {}, :author => current_user}
+          options = {:name => dashboard_json["name"] || "", :dashboard_audiences_attributes => {:one => {:role => Dashboard::DashboardAudience::ROLES[:publisher], :audience_attributes => dashboard_json["audiences_attributes"] || {}}}, :author => current_user}
           draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
           options[(draft ? :draft_columns : :columns)] = dashboard_json["columns"]
           dashboard = Dashboard.create(options)
