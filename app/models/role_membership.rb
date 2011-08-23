@@ -25,7 +25,7 @@ class RoleMembership < ActiveRecord::Base
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
   named_scope :user_roles, :include => [:role, :jurisdiction, :user], :conditions => {:roles => {:user_role => true}}
   named_scope :admin_roles, lambda{{ :include => :role, :conditions => {:role_id => Role.admin.id} }}
-  named_scope :public_roles, lambda{{ :include => :role, :conditions => {:role_id => Role.public.id} }}
+  named_scope :public_roles, lambda{{ :include => :role, :conditions => {:role_id => (defined?($public_roles) ? $public_roles | [Role.public.id] : Role.public.id)} }}
   named_scope :not_public_roles, lambda{{ :include => :role, :conditions => ["role_id != ?", Role.public.id] }}
 
   named_scope :all_roles, :include => [:role, :jurisdiction]
