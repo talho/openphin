@@ -25,7 +25,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
           cls:'checkbox-left-margin'},
         {xtype: 'spacer', height: '10'},
           {xtype: 'container', layout: 'form', labelAlign: 'top', defaults:{width:400}, items:[
-          {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: true, id: 'initialPass', vtype: 'password'},
+          {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', maxLength: '46', allowBlank: true, itemId: 'initialPass', vtype: 'password'},
           {xtype: 'textfield', inputType: 'password', fieldLabel: 'Confirm password', name: 'user[password_confirmation]', maxLength: '46', allowBlank: true, initialPassword: 'initialPass', vtype: 'password'}
         ]},
         {xtype: 'spacer', height: '10'},
