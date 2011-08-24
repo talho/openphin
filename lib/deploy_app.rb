@@ -44,7 +44,7 @@ namespace :app do
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
-    run "ln -fs #{shared_path}/dashboard.yml #{release_path}/config/dashboard.yml"
+    run "ln -fs #{shared_path}/domain.yml #{release_path}/config/domain.yml"
     # For the PHIN plugins
     if_plugin_present(:rollcall) {
       run "ln -fs #{shared_path}/phin_plugins/rrdtool.yml #{release_path}/vendor/plugins/rollcall/config/rrdtool.yml"
