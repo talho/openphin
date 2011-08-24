@@ -76,11 +76,11 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.2"
-  gem "childprocess", "0.1.9"
-  gem "selenium-webdriver", "0.2.2"
+  gem "childprocess"
+  gem "selenium-webdriver"
   gem "sinatra", "1.0"
-  gem "xpath", "0.1.3"
-  gem "capybara", "0.4.1.2"
+  gem "xpath"#, "0.1.3"
+  gem "capybara"#, "0.4.1.2"
   gem "hydra", "0.23.3"
 end
 

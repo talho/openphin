@@ -58,7 +58,7 @@ Cucumber::Rails::World.use_transactional_fixtures = false
 # http://github.com/bmabey/database_cleaner for more info.
 
 Capybara.register_driver :selenium_with_firebug do |app|
-  Capybara::Driver::Selenium
+  Capybara::Selenium::Driver
   profile = Selenium::WebDriver::Firefox::Profile.new
   if File.exists?("#{Rails.root}/features/support/firebug.xpi")
     profile['extensions.firebug.currentVersion'] = '100.100.100'
@@ -67,14 +67,14 @@ Capybara.register_driver :selenium_with_firebug do |app|
     profile['extensions.firebug.net.enableSites'] = 'true'
     profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
 
-    Capybara::Driver::Selenium.new(app, { :browser => :firefox, :profile => profile })
+    Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile })
   else
-    Capybara::Driver::Selenium.new(app, { :browser => :firefox })
+    Capybara::Selenium::Driver.new(app, { :browser => :firefox })
   end
 end
 
 Capybara.default_driver = :selenium_with_firebug
-Capybara.default_wait_time = 7
+Capybara.default_wait_time = 2
 #if File.exists?("#{Rails.root}/firebug.xpi")
 #  profile = Selenium::WebDriver::Firefox::Profile.new
 #  profile['extensions.firebug.currentVersion'] = '100.100.100'
