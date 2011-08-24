@@ -5,10 +5,10 @@
   <ul class="acknowledgement_list">
     <% if @call_downs %>
       <% @call_downs.each_index do |i| %>
-        <li index="<%= @call_downs[i][:value] %>" class="<%= @alert_attempt.call_down_response == (i+1) ? 'selected' : ''%>"><%= @call_downs[i][:msg] %></li>
+        <li index="<%= @call_downs[i][:value] %>" class="alert_ack_option <%= @alert_attempt.call_down_response == (i+1) ? 'selected' : ''%>"><%= @call_downs[i][:msg] %></li>
       <% end %>
     <% else %>
-      <li index="1" class="<%= @alert_attempt.acknowledged_at.nil? ? '' : 'selected' %>" >Acknowledge Alert</li>
+      <li index="1" class="alert_ack_option <%= @alert_attempt.acknowledged_at.nil? ? '' : 'selected' %>" >Acknowledge Alert</li>
     <% end %>
   </ul>
 <% end %>
