@@ -84,7 +84,8 @@ Then /^I should see the following audience breakdown:?$/ do |table|
 end
 
 Then /^I should see the profile tab for "([^\"]*)"$/ do |email|
+  sleep 1
   user = User.find_by_email!(email)
   tab_url = page.evaluate_script("window.Application.phin.tabPanel.getActiveTab().url")
-  URI.parse(tab_url).path.should == user_profile_path(user)
+  URI.parse(tab_url).path.should == user_profile_path(user, :format => :json)
 end

@@ -24,6 +24,7 @@ table th,
 table td 																			      {padding:5px 20px 5px 0;}
 
 #wrapper																			      {/*width:700px;*/ margin:0 auto 20px; /*background:url(images/content.png) repeat-y;*/ clear:both;position:relative;}
+#hiddenflash																			  {/*width:700px;*/ margin:0 auto 20px; /*background:url(images/content.png) repeat-y;*/ clear:both;position:relative;display:none;}
 #header																				      {width:100%;}
 #header h1																		      {width:83px; height:31px; float:left; background:url(images/app_header_logo.png) no-repeat 15px 0;}
 #header h1 a																	      {height:31px; text-indent:-9999px; overflow:hidden; display:block;}

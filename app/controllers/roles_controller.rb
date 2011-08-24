@@ -3,10 +3,7 @@ class RolesController < ApplicationController
 	
   before_filter :non_public_role_required, :except => [:index]
   before_filter :admin_required, :except => [:mapping, :index]
-  before_filter :change_include_root, :only => [:index, :mapping]
-  after_filter :change_include_root_back, :only => [:index, :mapping]
-
-  
+ 
   def mapping
     roles = fetch_roles(params[:request])
     respond_to do |format|

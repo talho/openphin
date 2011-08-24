@@ -4,21 +4,21 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
     var jurisdictions_store = new Ext.data.JsonStore({
       url: '/admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
-      fields: [{name: 'name', mapping: 'jurisdiction.name'}]
+      fields: [{name: 'name', mapping: 'name'}]
     });
     this.roles_control = new Talho.ux.RolesControl(config.url + ".json", this);
     this.devices_control = new Talho.ux.DevicesControl(config.url + ".json", this);
     this.orgs_control = new Talho.ux.OrganizationsControl(config.url + ".json", this);
     var item_list = [
       {xtype: 'panel', layout: 'column', width: 850,  border: true, bodyStyle: 'background-color: white;',
-        defaults: {bodyStyle:'background-color: white;', border: false, layout: 'form', xtype: 'panel'}, items: [
+        defaults: {bodyStyle:'background-color: white;', border: false, layout: 'form', xtype: 'container'}, items: [
       // Left column
         { columnWidth: 1, defaults: {anchor: '100%', border: false}, items: [
           {xtype: 'panel', layout: 'column', bodyStyle:'background-color: white;', defaults: {layout: 'form', labelAlign: 'top', border: false, xtype: 'panel'}, items: [
             {columnwidth: 0.5, bodyStyle:'padding-right: 20px; background-color: white;', defaults: {anchor: '100%'}, items: [
               {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', allowBlank: false, tabIndex: 1},
               {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true, tabIndex: 3},
-              {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', id: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password', tabIndex: 5},
+              {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', itemId: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password', tabIndex: 5},
               {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true, tabIndex: 7},
               {xtype: 'textfield', fieldLabel: 'Office phone', name: 'user[phone]', maxLength: '46', allowBlank: true, vtype: 'phone', tabIndex: 9},
               {xtype: 'textfield', fieldLabel: 'Home phone', name: 'user[home_phone]', maxLength: '46', allowBlank: true, tabIndex: 11}

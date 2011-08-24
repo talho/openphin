@@ -38,7 +38,7 @@
             Ext.get('loading-message').update('Loading PHIN...');
         },
         initView: function(){
-            window.Application.phin = new PhinApplication();
+            window.Application.phin = new PhinApplication({path: '<%= @path %>'});
             var loading = Ext.get('loading');
             var loadingMask = Ext.get('loading-mask');
             setTimeout(function(){
@@ -51,6 +51,12 @@
   </script>
 </head>
 <body>
+    <div id="hiddenflash">
+      <%- if flash[:error] -%>
+        <p class="error flash"><%= flash[:error] %></p>
+      <%- end -%>
+    </div>
+
     <div id="loading-mask"></div>
     <div id="loading">
         <span id="loading-message">Loading jQuery...</span>

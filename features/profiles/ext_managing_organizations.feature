@@ -41,7 +41,7 @@ I should be able to edit my profile
     And I navigate to "Jane Smith > Manage Organizations"
     Then I should see "Organizations"
     When I press "Request Organization"
-    And I select "DSHS" from ext combo "rq[org]"
+    And I select "DSHS" from ext combo "Organization:"
     And I press "Add"
     Then I should see the following within ".org-item":
       | DSHS | needs to be saved |
@@ -55,7 +55,7 @@ I should be able to edit my profile
 
     Given I am logged in as "bob.smith@example.com"
     When I click the organization membership request approval link in the email for "jane.smith@example.com"
-    And I follow "Approve"
+    And I click inlineLink "Approve"
     Then I should see "Jane Smith is now a member of DSHS"
 
     And I am logged in as "jane.smith@example.com"
@@ -70,15 +70,18 @@ I should be able to edit my profile
       | Organization | DSHS |
     And I am logged in as "jane.smith@example.com"
     When I go to the dashboard page
+    And I press "Jane Smith"
     And I follow "My Account"
     Then I should see "Organizations"
-    When I select "DSHS" from "Organization Membership Request"
+    And I press "Request Organization"
+    When I select "DSHS - National Organization" from ext combo "Organization:"
     And I maliciously post an approver id
-    And I press "Save"
-    Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I press "Add"
+    And I press "Apply Changes"
+    #Then I should be specifically on the user profile page for "jane.smith@example.com"
+    And I should see "Profile information saved."
     And I should see "Organizations"
-    And the "organizations" class selector should not contain "DSHS"
-    And I should see "Your request to be a member of DSHS has been sent to an administrator for approval"
+    And the "org-pending" class selector should contain "waiting for approval"
     And "bob.smith@example.com" should receive the email:
       | subject       | Request submitted for organization membership in DSHS |
       | body contains | DSHS |
@@ -121,8 +124,6 @@ I should be able to edit my profile
     And I should see "DSHS"
     When I will confirm on next step
     And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
-    Then I should be specifically on the user profile page for "jane.smith@example.com"
-    And I should see "Organizations"
-    And I should see "DSHS" within ".organizations"
+    Then I should see "You do not have permission to carry out this action."
     And "jane.smith@example.com" should not receive an email
     And "bob.smith@example.com" should not receive an email
