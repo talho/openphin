@@ -30,39 +30,42 @@ class Reporters::Reporter < Struct.new(:options)
         raise StandardError, message
       end
 
-      begin
-        view_path = Rails::Configuration.new.view_path
-        view = view_for_at_using author, view_path, recipe
-      rescue StandardError => e
-        message = %Q(Report "#{report.name}" erred in building supporting view: (#{e}))
-        full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-        fatal_logging(logger,report,full_message)
+        begin
+          view_path = Rails::Configuration.new.view_path
+          view = view_for_at_using author, view_path, recipe
+        rescue StandardError => e
+          message = %Q(Report "#{report.name}" erred in building supporting view: (#{e}))
+          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
+          fatal_logging(logger,report,full_message)
+        end
+
+      unless options[:filters]
+        begin
+          start_time = Time.now
+            recipe.bind_attributes( report )
+          logger.info %Q(Report "#{report.name}", Bind Attributes #{Time.now-start_time} seconds)
+          logger.info %Q(Report "#{report.name}" completed\n)
+        rescue StandardError => e
+          message = %Q(Report "#{report.name}" erred in binding attributes: (#{e}))
+          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
+          fatal_logging(logger,report,full_message)
+        end
+
+        begin
+          start_time = Time.now
+            recipe.capture_to_db report
+          logger.info %Q(Report "#{report.name}", Data Capture #{Time.now-start_time} seconds)
+        rescue StandardError => e
+          message = %Q(Report "#{report_id}" erred in capturing data: (#{e}))
+          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
+          fatal_logging(logger,report,full_message)
+        end
+
       end
 
       begin
         start_time = Time.now
-          recipe.bind_attributes( report )
-        logger.info %Q(Report "#{report.name}", Bind Attributes #{Time.now-start_time} seconds)
-        logger.info %Q(Report "#{report.name}" completed\n)
-      rescue StandardError => e
-        message = %Q(Report "#{report.name}" erred in binding attributes: (#{e}))
-        full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-        fatal_logging(logger,report,full_message)
-      end
-
-      begin
-        start_time = Time.now
-          recipe.capture_to_db report
-        logger.info %Q(Report "#{report.name}", Data Capture #{Time.now-start_time} seconds)
-      rescue StandardError => e
-        message = %Q(Report "#{report_id}" erred in capturing data: (#{e}))
-        full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-        fatal_logging(logger,report,full_message)
-      end
-
-      begin
-        start_time = Time.now
-          recipe.generate_rendering_of_on_with  report, view, File.read(recipe.template_path)
+          recipe.generate_rendering_of_on_with  report, view, File.read(recipe.template_path), options[:filters]
         logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
         ReportMailer.deliver_report_generated(report.author.email,report.name)
       rescue StandardError => e
@@ -78,6 +81,7 @@ class Reporters::Reporter < Struct.new(:options)
   end
 
 protected
+
   def view_for_at_using(owner,path,recipe)
     view = ActionView::Base.new path
     view.class_eval do
