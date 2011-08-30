@@ -41,10 +41,22 @@ class Dashboard < ActiveRecord::Base
       scoped :conditions => ["audiences_dashboards.role = ?", Dashboard::DashboardAudience::ROLES[role.to_sym]]
     end
   end
+  
+  named_scope :with_user, lambda { |user|
+    user_id = user.class == User ? user.id : user
+    { :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN audiences_recipients ON (audiences_recipients.audience_id = audiences_dashboards.audience_id)", 
+      :conditions => {"audiences_recipients.user_id" => user_id} }
+  } do
+    def with_roles(*roles)
+      scoped :conditions => {"audiences_dashboards.role" => roles.to_a.flatten.map{|r| Dashboard::DashboardAudience::ROLES[r.to_sym] } }
+    end
+  end
 
   named_scope :draft, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
 
   named_scope :published, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
+
+  named_scope :application_default, :conditions => {:application_default => true}
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
@@ -72,15 +84,15 @@ class Dashboard < ActiveRecord::Base
 
   def config(options={})
     jsonConfig = []
-    columns = (options[:draft].to_s == "true" ? self.draft_columns : self.columns)
-    columnWidth = (1.0 / (columns || 3).to_f).round(2).to_s[1..-1]
-    (columns || 3).times do |i|
+    columns = (options[:draft].to_s == "true" ? self.draft_columns || self.columns : self.columns)
+    columnWidth = (1.0 / (columns || 3)).round(2).to_s
+    1.upto(columns || 3) do |i|
       items = []
 
-      p = options[:draft] ? self.portlets(true).draft.with_column(i) : self.portlets(true).published.with_column(i)
+      p = options[:draft] ? self.portlets(true).with_column(i) : self.portlets(true).published.with_column(i)
       items = p.map do |portlet|
         if portlet.valid?
-          column = self.dashboard_portlets(true).find_by_portlet_id_and_draft(portlet.id, options[:draft].to_s == "true").column
+          column = self.dashboard_portlets(true).find_by_portlet_id(portlet.id).column
           json = sanitizeJSON(ActiveSupport::JSON.decode(portlet.config))
           json["itemId"] = portlet.id
           json["xtype"] = portlet.xtype
@@ -90,9 +102,9 @@ class Dashboard < ActiveRecord::Base
       end.compact
 
       column = {
-        :xtype => "dashboardportalcolumn",
+        :xtype => "portalcolumn",
         :columnWidth => columnWidth,
-        :style => 'padding:10px 0 10px 10px',
+        :style => 'padding:5px',
         :items => items
       }
       jsonConfig << column

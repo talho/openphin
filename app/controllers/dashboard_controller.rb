@@ -55,16 +55,30 @@ class DashboardController < ApplicationController
       end
 
       format.json do
-        draft = params[:draft].to_s == "true" || false
-        dashboard = (draft ? current_user.dashboards.draft : current_user.dashboards.published).find_by_id(params[:id])
+        dashboard = current_user.dashboards.find_by_id(params[:id]) || (current_user.default_dashboard.id == params[:id].to_i ? current_user.default_dashboard : nil)
         if dashboard
-          render :json => {:dashboards => [{:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => draft), :draft => draft, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:only => :id, :include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}], :success => true}
+          render :json => {:dashboard => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns, :config => dashboard.config, :draft => false} }
         else
-          render :json => {:dashboards => [], :success => true}
+          render :json => {:dashboard => {}, :success => false}
         end
       end
 
       format.ext {render :layout => 'ext.html'}
+    end
+  end  
+  
+  def edit
+    respond_to do |format|
+      format.json do
+        dashboard = Dashboard.with_user(current_user).with_roles('publisher', 'editor').find(params[:id])
+        dashboard = Dashboard.find_by_id_and_application_default(params[:id], true) if current_user.is_super_admin? && dashboard.nil?
+        
+        if dashboard
+          render :json => {:dashboard => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(true), :config => dashboard.config(:draft => true), :draft => true, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:only => :id, :include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}, :success => true}
+        else
+          render :json => {:dashboard => {}, :success => false}
+        end
+      end
     end
   end
 

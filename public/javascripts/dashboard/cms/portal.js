@@ -486,7 +486,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
     Ext.Ajax.request({
       url: '/users/' + Application.current_user + '/is_admin.json',
       scope: toolbar,
-      success: function(response) {
+      callback: function(obj, success, response) {
         var data = Ext.util.JSON.decode(response.responseText);
         if(data['admin']) this.show();
       }
