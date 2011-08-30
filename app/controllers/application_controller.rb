@@ -229,7 +229,7 @@ private
 
   def render_error(exception)
     log_error(exception)
-    notify_hoptoad(exception)
+    notify_hoptoad(exception) if request.path.match(/rrd\//).blank?
     if request.format.to_sym == :json
       if Rails.env.downcase == "production"
         json = {:success => false, :error => "There was an error processing your request.  Please contact technical support."}
