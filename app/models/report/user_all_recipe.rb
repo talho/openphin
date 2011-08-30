@@ -23,7 +23,7 @@ class Report::UserAllRecipe < Report::Recipe
     dataset = report.dataset
     dataset.insert({"created_at"=>Time.now.utc})
     User.all.each_with_index do |u,i|
-      doc = Hash["i",i,"display_name",u.display_name,"email",u.email,"role_memberships",
+      doc = Hash["i",i+1,"display_name",u.display_name,"email",u.email,"role_memberships",
         u.role_memberships.map(&:as_hash)]
       dataset.insert(doc)
     end

@@ -47,7 +47,7 @@ class Report::UserFirstHundredBellCountyRecipe < Report::Recipe
               :joins=>:role_memberships,
               :conditions=>{:role_memberships=>{:jurisdiction_id=>audience.jurisdictions.first}}
     ).each_with_index do |u,i|
-      doc = Hash["i",i,"display_name",u.display_name,"email",u.email,"role_memberships",
+      doc = Hash["i",i+1,"display_name",u.display_name,"email",u.email,"role_memberships",
         u.role_memberships.map(&:as_hash)]
       dataset.insert(doc)
     end

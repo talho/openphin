@@ -22,7 +22,7 @@ class Report::UserAllBatchRecipe < Report::Recipe
   def capture_to_db(report)
     dataset = report.dataset
     dataset.insert({"created_at"=>Time.now.utc})
-    i = 0
+    i = 1
     User.find_each(:batch_size=>10000) do |u|
       doc = Hash["i",i,"display_name",u.display_name,"email",u.email,"role_memberships",
         u.role_memberships.map(&:as_hash)]
