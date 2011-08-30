@@ -52,6 +52,7 @@ group :default do
     gem "bson", "1.3.1"
     gem "bson_ext", "1.3.1"
     gem "SystemTimer", "1.2.3"
+  gem "base32-crockford", "0.1.0"
 end
 
 group :test do
@@ -78,11 +79,11 @@ group :cucumber do
   gem "nokogiri", "1.4.3.1"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.2"
-  gem "childprocess", "0.1.9"
-  gem "selenium-webdriver", "0.2.2"
+  gem "childprocess"
+  gem "selenium-webdriver"
   gem "sinatra", "1.0"
-  gem "xpath", "0.1.3"
-  gem "capybara", "0.4.1.2"
+  gem "xpath"#, "0.1.3"
+  gem "capybara"#, "0.4.1.2"
   #gem "clamav", "0.4.1"
   gem "hydra", "0.23.3"
 end
