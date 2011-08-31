@@ -6,14 +6,14 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes.json
 	def index
 	  Report::Recipe.register_recipes
-	  @recipes = Report::Recipe.deployable.find(:all, :order=>'updated_at DESC')
+	  @recipes = Report::Recipe.deployable.authorized(current_user).find(:all, :order=>'updated_at DESC')
 	   respond_to do |format|
 	     format.html
 	     format.json do
 	       ActiveRecord::Base.include_root_in_json = false
 	       @recipes.collect! do |r|
 	         r.as_json(:inject=>{'type'=>r.class.name,'type_humanized'=>r.type_humanized, 'description'=>r.description})
-	       end
+         end
 	       render :json => {"recipes"=>@recipes}
 	     end
 	   end
