@@ -1,0 +1,3 @@
+# rewrite this using ruby and Rails.env script
+
+`which mongod` --dbpath `pwd`"/reports/development/db"
