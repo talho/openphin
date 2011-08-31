@@ -67,19 +67,11 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       html: 'recipe description'
     });
 
-    this.numSlider = new Ext.Slider({
-      width: 200,
-      value: 50,
-      increment: 10,
-      minValue: 0,
-      maxValue: 100
-    });
     this.sidebarPanel = new Ext.Panel({
       layout: 'border',
       border: false,
       items: [
         this.recipeListPanel,
-        this.numSlider,
         this.recipeDescriptor
       ]
     });
@@ -127,6 +119,9 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
         'rowclick': function(grid, rowIndex){
           var record = grid.getStore().getAt(rowIndex);
           this.openViewTab(record);
+        },
+        'added': function(){
+          clearInterval(this.report_refresher);
         }
 	    }
     });
@@ -159,7 +154,13 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
         this.recipeSidebar,
         this.reportResultsContainer
       ],
-      title: config.title
+      title: config.title,
+      listeners:{
+        scope: this,
+        'beforeclose': function(){
+          clearInterval(this.report_refresher);
+        }
+      }
     });
 
     this.getPanel = function(){ return this.primary_panel; };
@@ -210,9 +211,10 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
   
   openViewTab: function(record){
     Application.fireEvent('opentab', {
-      title: 'Report: '+record.get('recipe')+'-'+record.get('id'), 
+      title: 'Report: '+record.get('recipe'),
       url: record.get('report_path'), 
-      id: 'report_view_for_' + record.get('id'), 
+      id: 'report_view_for_' + record.get('id'),
+      report_id: record.get('id'),
       initializer: 'Talho.ReportView' 
      });
   },
