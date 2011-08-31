@@ -1,0 +1,7 @@
+xml.instruct!
+@users.each do |user|
+  xml.user do
+    xml.name user[:display_name]
+    xml.email user[:email]
+  end
+end
