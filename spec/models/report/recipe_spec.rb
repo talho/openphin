@@ -1,5 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
+require File.expand_path(File.join(File.dirname(__FILE__),"..","..","..","db","fixtures","jurisdictions"))
+require File.expand_path(File.join(File.dirname(__FILE__),"..","..","..","db","fixtures","roles"))
+
 describe Report::Recipe do
 
   context "holds" do
