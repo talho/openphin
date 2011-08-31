@@ -1,5 +1,5 @@
 
-class Capybara::Driver::Selenium < Capybara::Driver::Base
+class Capybara::Selenium::Driver < Capybara::Driver::Base
   class Capybara::Node::Element
     def allowed_keys
       @allowed_keys ||= %q(option, null cancel help backspace
