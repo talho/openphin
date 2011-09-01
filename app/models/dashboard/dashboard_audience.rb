@@ -13,6 +13,6 @@ class Dashboard::DashboardAudience < ActiveRecord::Base
   end
 
   def role=(r)
-    write_attribute(:role, ROLES[r.class == Symbol ? r : r.to_sym])
+    write_attribute(:role, r.class == Fixnum ? r : ROLES[r.class == Symbol ? r : r.to_sym])
   end
 end

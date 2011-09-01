@@ -15,32 +15,15 @@ class DashboardController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html do
-        DashboardController.app_toolbar "application"
-        @articles = Article.recent
-        feed_urls = Rails.env == "production" ? [
-          "http://www.nhc.noaa.gov/gtwo.xml",
-          "http://www.nhc.noaa.gov/nhc_at2.xml",
-          "http://www.weather.gov/alerts-beta/tx.php?x=1"
-         ] : []
-        @entries = []
-        begin
-          feed_urls.each do |url|
-            @entries += Feedzirra::Feed.fetch_and_parse(url).entries
-          end
-          @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
-        rescue
-          @entries = nil
-        end
-      end
-
       format.json do
-        draft = params[:draft].to_s == "true" || false
-        dashboards = current_user.dashboards.map do |dashboard|
-          {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(draft), :config => dashboard.config(:draft => draft), :draft => draft, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))} unless (draft && dashboard.portlets.draft.empty?) || (!draft && dashboard.portlets.published.empty?)
-        end.compact
-
-        render :json => {:dashboards => dashboards, :success => true}
+        for_admin = params[:for_admin].to_s == "true"
+        if for_admin
+          dashboards = Dashboard.with_user(current_user).with_roles('publisher', 'editor')
+        else
+          dashboards = current_user.dashboards.compact
+        end
+        
+        render :json => {:dashboards => dashboards.map{ |d| d.as_json(:only => [:name, :id]) }, :success => true}
       end
 
       format.ext {render :layout => 'ext.html'}
@@ -85,27 +68,10 @@ class DashboardController < ApplicationController
   def create
     respond_to do |format|
       format.json do
-        dashboard_json = ActiveSupport::JSON.decode(params["dashboards"])
-        if dashboard_json["id"]
-          dashboard_json = ActiveSupport::JSON.decode(params["dashboards"])
-          params[:id] = dashboard_json["id"]
-          update_it
-        else
-          options = {:name => dashboard_json["name"] || "", :dashboard_audiences_attributes => {:one => {:role => Dashboard::DashboardAudience::ROLES[:publisher], :audience_attributes => dashboard_json["audiences_attributes"] || {}}}, :author => current_user}
-          draft = dashboard_json["draft"].blank? ? false : dashboard_json["draft"]
-          options[(draft ? :draft_columns : :columns)] = dashboard_json["columns"]
-          dashboard = Dashboard.create(options)
-          config = dashboard_json["config"]
-          config.length.times do |column|
-            portlets = config[column]
-            portlets["items"].each do |portlet|
-              p = Portlet.create(:xtype => portlet["xtype"], :config => portlet)
-              dashboard.dashboard_portlets.create(:portlet_id => p.id, :column => portlet["column"], :draft => draft)
-              portlet["id"] = p.id
-            end
-          end
-          render :json => {:dashboards => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :config => dashboard.config({:draft => draft}), :draft => draft, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}, :success => true}
-        end
+        options = {:name => params[:dashboard][:name], :author => current_user, :columns => 3}
+        draft = true
+        dashboard = Dashboard.create(options)
+        render :json => {:id => dashboard.id, :name => dashboard.name, :success => true}
       end
     end
   end
@@ -174,7 +140,7 @@ class DashboardController < ApplicationController
 
       dashboard.portlets.draft.map(&:destroy) unless draft
 
-      render :json => {:dashboards => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :config => dashboard.config({:draft => draft}), :draft => draft, :audiences => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:include => [:jurisdictions, :roles, :users, :groups]))}, :success => true}
+      render :json => {:success => true}
     else
       render :json => {:success => false}
     end

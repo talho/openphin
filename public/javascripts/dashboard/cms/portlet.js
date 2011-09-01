@@ -53,7 +53,15 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
     handler: function(e, target, panel){
       panel.ownerCt.remove(panel, true);
     }
-  }]
+  }],
+  
+  toggleAdminBorder: function(){
+      var el = this.getEl(),
+          panel = el.child('.x-panel-body');
+      el.toggleClass('x-panel-noborder');
+      el.child('.x-panel-header').toggleClass('x-hide-display');
+      panel.toggleClass('x-panel-body-noborder').setWidth(el.getWidth());
+  }
 });
 
 Ext.reg('dashboardportlet', Talho.Dashboard.Portlet);
