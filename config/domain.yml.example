@@ -1,5 +1,5 @@
 # 1) application will use the config where 'domain' matches request.domain or fall back to 'default'
-# 2) logo_image expects a PNG;  see initializers/dashboard.rb
+# 2) logo_image expects a PNG;  see initializers/domain.rb
 # 3) sign_in_partial will render a partial by that name in views/sessions/
 # 4) new_user_path will redirect_to the given route
 
