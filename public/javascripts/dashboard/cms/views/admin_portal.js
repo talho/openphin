@@ -5,6 +5,24 @@ Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.Vie
     beforedrop: function(dropEvent) {
       dropEvent.panel.column = dropEvent.columnIndex + 1;
     }
+  },
+  
+  showSaveMask: function(){
+    var ssm = function(){
+      if(!this.saveMask){ this.saveMask = new Ext.LoadMask(this.getEl(), { msg: 'Saving...'}); }
+      this.saveMask.show();
+    }
+    
+    if(this.rendered){
+      ssm.call(this);
+    }
+    else {
+      this.on('afterrender', ssm, this, {once: true, delay: 1});
+    }
+  },
+  
+  hideSaveMask: function(){
+    this.saveMask.hide();
   }, 
   
   toggleAdminBorder: function() {

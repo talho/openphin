@@ -57,7 +57,15 @@ class DashboardController < ApplicationController
         dashboard = Dashboard.find_by_id_and_application_default(params[:id], true) if current_user.is_super_admin? && dashboard.nil?
         
         if dashboard
-          render :json => {:dashboard => {:id => dashboard.id.to_s, :name => dashboard.name, :updated_at => Time.now.to_s, :columns => dashboard.columns(true), :config => dashboard.config(:draft => true), :draft => true, :audiences_attributes => ActiveSupport::JSON.decode(dashboard.audiences.to_json(:only => :id, :include => {:jurisdictions => {:only => [:id, :name]}, :roles => {:only => [:id, :name]}, :groups => {:only => [:id, :name]}, :users => {:only => :id, :methods => :name}}))}, :success => true}
+          render :json => {:dashboard => {:id => dashboard.id, :name => dashboard.name, :updated_at => dashboard.updated_at, :columns => dashboard.columns(true), :config => dashboard.config(:draft => true), :draft => true, :application_default => dashboard.application_default,
+                                          :dashboard_audiences => dashboard.dashboard_audiences.map {|da| {:id => da[:id], :role => da[:role], 
+                                                                                                           :audience => da.audience.as_json(:only => [], :include => {:roles => {:only => [:name, :id]}, 
+                                                                                                                                                                      :jurisdictions => {:only => [:name, :id]}, 
+                                                                                                                                                                      :groups => {:only => [:name, :id]}, 
+                                                                                                                                                                      :users => {:only => [:display_name, :id, :email]} 
+                                                                                                                                            }) 
+                                                                                                     } } 
+                                          }, :success => true}
         else
           render :json => {:dashboard => {}, :success => false}
         end
@@ -96,7 +104,11 @@ class DashboardController < ApplicationController
         dashboard.columns = dashboard_json["columns"]
       end
     end
-    dashboard.audiences_attributes = dashboard_json['audiences_attributes'] unless dashboard_json['audiences_attributes'].blank?
+    if dashboard_json["application_default"] && current_user.is_super_admin?
+      dashboard.application_default = dashboard_json["application_default"] == true
+    end
+    
+    dashboard.dashboard_audiences_attributes = dashboard_json['dashboard_audiences_attributes'] unless dashboard_json['dashboard_audiences_attributes'].blank?
     portlet_ids = []
     if dashboard && dashboard.save
       config = dashboard_json["config"]
@@ -134,6 +146,10 @@ class DashboardController < ApplicationController
           portlet["id"] = p.id
           portlet_ids.push(p.id)
         end
+      end
+      
+      if dashboard.application_default
+        Dashboard.find_all_by_application_default(true, :conditions => ["id != ?", dashboard.id]).each{|d| d.update_attributes :application_default => false } 
       end
 
       dashboard.dashboard_portlets.find(:all, :conditions => ["dashboards_portlets.draft = ? AND \"dashboards_portlets\".portlet_id NOT IN (?)", draft, portlet_ids]).map(&:destroy) if portlet_ids.size

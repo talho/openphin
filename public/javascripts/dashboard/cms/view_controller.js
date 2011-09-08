@@ -27,6 +27,8 @@ Talho.Dashboard.CMS.ViewController = Ext.extend(Ext.util.Observable, {
       }
     });
     
+    this.portal.showLoadMask();
+    
     // get current dashboard
     Ext.Ajax.request({
       url: '/dashboard/' + this.dashboard_id + '.json',
@@ -35,6 +37,9 @@ Talho.Dashboard.CMS.ViewController = Ext.extend(Ext.util.Observable, {
       success: function(resp){
         var data = Ext.decode(resp.responseText).dashboard;
         this.portal.loadPortlets(data);
+      },
+      callback: function(){
+        this.portal.hideLoadMask();
       }
     });
     
@@ -48,6 +53,7 @@ Talho.Dashboard.CMS.ViewController = Ext.extend(Ext.util.Observable, {
   
   show_admin_toolbar: function(resp){
     var data = Ext.decode(resp.responseText);
+    this.admin_info = data;
     if(data.admin === true){
       var bbar = this.portal.getBottomToolbar();
       bbar.add({text: 'Edit Dashboards', scope: this, handler: this.show_edit_dashboards});
@@ -58,7 +64,7 @@ Talho.Dashboard.CMS.ViewController = Ext.extend(Ext.util.Observable, {
   
   show_edit_dashboards: function(){
     // launch a new tab for the edit dashboard functionality
-    Application.fireEvent('opentab', {title: 'Edit Dashboards', initializer: 'Talho.Dashboard.CMS.Admin', dashboard_id: this.dashboard_id})
+    Application.fireEvent('opentab', {title: 'Edit Dashboards', initializer: 'Talho.Dashboard.CMS.Admin', dashboard_id: this.dashboard_id, superadmin: this.admin_info.superadmin})
   }
 });
 

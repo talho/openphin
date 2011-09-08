@@ -75,6 +75,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
 
     _createRoleSelectionGrid: function(){
         return this.roleSelectionGrid = new Talho.ux.RoleSelectionGrid({
+            store: this.role_store,
             store_listeners:{
                 scope:this,
                 'load': function(){
@@ -101,6 +102,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
 
     _createGroupSelectionGrid: function(){
         return this.groupSelectionGrid = new Talho.ux.GroupSelectionGrid({
+            store: this.group_store,
             store_listeners:{
                 scope:this,
                 'load': function(){
@@ -127,6 +129,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
 
     _createJurisdictionsTree: function(){
         return this.jurisdictionTree = new Talho.ux.JurisdictionsTree({
+            store: this.jurisdiction_store,
             store_listeners:{
                 scope: this,
                 'load': function(){
@@ -367,7 +370,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
         Ext.each(jurisdictions, function(j){j.type = 'jurisdiction';});
         Ext.each(roles, function(r){r.type = 'role'});
         Ext.each(groups, function(r){r.type = 'group'});
-        Ext.each(users, function(u){u.type = 'user'});
+        Ext.each(users, function(u){u.type = 'user'; if(!u.name){u.name = u.display_name;} });
 
         // clear the currently selected items: we're overwriting them
         this.selectedItemsStore.removeAll();

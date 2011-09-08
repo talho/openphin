@@ -12,7 +12,7 @@ Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
       '|',
       {text: 'Columns', itemId: 'column_button', scope: this, handler: function(){this.fireEvent('showcolumnslider');}},
       {text: 'Add Portlet', scope: this, handler: this.addPortlet},
-      {text: 'Permissions'}
+      {text: 'Permissions', scope: this, handler: function(){this.fireEvent('permissions');}}
     ];
     
     Talho.Dashboard.CMS.Views.AdminToolbar.superclass.initComponent.apply(this, arguments);

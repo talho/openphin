@@ -11,5 +11,23 @@ Talho.Dashboard.CMS.Views.ViewPortal = Ext.extend(Ext.ux.Portal, {
       this.add(item);
     }, this);
     this.doLayout();
+  },
+  
+  showLoadMask: function(){
+    var slm = function(){
+      if(!this.loadMask){ this.loadMask = new Ext.LoadMask(this.getEl()); }
+      this.loadMask.show();
+    }
+    
+    if(this.rendered){
+      slm.call(this);
+    }
+    else {
+      this.on('afterrender', slm, this, {once: true, delay: 1});
+    }
+  },
+  
+  hideLoadMask: function(){
+    this.loadMask.hide();
   }
 });
