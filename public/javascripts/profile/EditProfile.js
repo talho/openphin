@@ -19,8 +19,15 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         ]},
         {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true},
         {xtype: 'textfield', fieldLabel: 'Email address', name: 'user[email]', maxLength: '46', allowBlank: false, vtype: 'email'},
-        {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all',
+        {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', hiddenName: 'user[preferred_language]', editable: false, triggerAction: 'all',
           store: ['English', 'Spanish'], value: 'English'},
+        {xtype: 'combo', fieldLabel: 'Dashboard', name: 'user[dashboard_id]', hiddenName: 'user[dashboard_id]', editable: false, triggerAction: 'all', mode: 'local',
+          store: new Ext.data.JsonStore({
+            url: '/dashboard.json',
+            root: 'dashboards',
+            fields: ['id', 'name'],
+            autoLoad: true
+          }), displayField: 'name', valueField: 'id'},
         {xtype: 'checkbox', boxLabel: 'Make this profile public?', fieldLabel: 'Privacy setting', name: 'user[public]', inputValue: true,
           cls:'checkbox-left-margin'},
         {xtype: 'spacer', height: '10'},

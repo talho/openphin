@@ -19,11 +19,15 @@ class DashboardController < ApplicationController
         for_admin = params[:for_admin].to_s == "true"
         if for_admin
           dashboards = Dashboard.with_user(current_user).with_roles('publisher', 'editor')
+          if current_user.is_super_admin?
+            dashboards << Dashboard.application_default.first
+          end
         else
           dashboards = current_user.dashboards.compact
+          dashboards << Dashboard.application_default.first
         end
         
-        render :json => {:dashboards => dashboards.map{ |d| d.as_json(:only => [:name, :id]) }, :success => true}
+        render :json => {:dashboards => dashboards.uniq.map{ |d| d.as_json(:only => [:name, :id]) }, :success => true}
       end
 
       format.ext {render :layout => 'ext.html'}
@@ -151,6 +155,8 @@ class DashboardController < ApplicationController
       if dashboard.application_default
         Dashboard.find_all_by_application_default(true, :conditions => ["id != ?", dashboard.id]).each{|d| d.update_attributes :application_default => false } 
       end
+      
+      dashboard.dashboard_audiences.each{|da| da.audience.refresh_recipients(:force => true)}
 
       dashboard.dashboard_portlets.find(:all, :conditions => ["dashboards_portlets.draft = ? AND \"dashboards_portlets\".portlet_id NOT IN (?)", draft, portlet_ids]).map(&:destroy) if portlet_ids.size
 
