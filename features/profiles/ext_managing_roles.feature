@@ -164,6 +164,7 @@ I should be able to remove all but one public role from my profile
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     When I press "Apply Changes"
     Then I should not see any errors
+    And I wait for 1 seconds
     And "fred.smith@example.com" should have the role "BioTerrorism Coordinator" in "Potter County"
     And "john.smith@example.com" should not have the role "BioTerrorism Coordinator" in "Potter County"
     And "john.smith@example.com" should have a pending role request

@@ -33,10 +33,10 @@ Feature: Document upload, download, and view
       | Folder1      | spec/fixtures/invitees.csv | invitees.csv | My Documents |
       | My Documents | spec/fixtures/invitees.csv | invitees.csv | Folder1      |
     
-  Scenario Outline: Replace a document
-    Given I have uploaded "spec/fixtures/invitees.csv" to "<destination>"
+  Scenario: Replace a document
+    Given I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I expand the folders ""
-    And I select the "<destination>" grid row
+    And I select the "Folder1" grid row
     Then I should see "invitees.csv" within ".document-file-icon-view"
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Replace File"
@@ -44,14 +44,23 @@ Feature: Document upload, download, and view
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    And I select the "<destination>" grid row
+    And I select the "Folder1" grid row
     And I wait for the "Loading" mask to go away
     Then I should see "sample.wav" within ".document-file-icon-view"
 
-    Examples:
-      | destination  |
-      | Folder1      |
-      | My Documents |
+    Given I have uploaded "spec/fixtures/invitees.csv" to "My Documents"
+    When I expand the folders ""
+    And I select the "My Documents" grid row
+    Then I should see "invitees.csv" within ".document-file-icon-view"
+    When I click documents-folder-item "invitees.csv"
+    And I click inlineLink "Replace File"
+    And I attach the file "spec/fixtures/sample.wav" to "File"
+    And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I wait for the "Loading" mask to go away
+    And I select the "My Documents" grid row
+    And I wait for the "Loading" mask to go away
+    Then I should see "sample.wav" within ".document-file-icon-view"
 
   Scenario: Download a document
     Given I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
@@ -102,21 +111,32 @@ Feature: Document upload, download, and view
     And I wait for the "Loading" mask to go away
     Then I should see "invitees.csv" within ".document-file-icon-view"
 
-  Scenario Outline: Delete a document
-    Given I have uploaded "spec/fixtures/invitees.csv" to "<destination>"
+  Scenario: Delete a document
+    Given I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I expand the folders ""
-    And I select the "<destination>" grid row
+    And I select the "Folder1" grid row
     And I wait for the "Loading" mask to go away
     And I click documents-folder-item "invitees.csv"
     And I click inlineLink "Delete File"
     Then the "Delete File" window should be open
+
     When I press "Yes"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-    And I select the "<destination>" grid row
+    And I select the "Folder1" grid row
     Then I should not see "invitees.csv" within ".document-file-icon-view"
 
-    Examples:
-      | destination  |
-      | Folder1      |
-      | My Documents |
+    Given I have uploaded "spec/fixtures/invitees.csv" to "My Documents"
+    When I expand the folders ""
+    And I select the "My Documents" grid row
+    And I wait for the "Loading" mask to go away
+    And I click documents-folder-item "invitees.csv"
+    And I click inlineLink "Delete File"
+    Then the "Delete File" window should be open
+
+    When I press "Yes"
+    And I wait for the "Saving" mask to go away
+    And I wait for the "Loading" mask to go away
+    And I select the "My Documents" grid row
+    Then I should not see "invitees.csv" within ".document-file-icon-view"
+
