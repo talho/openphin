@@ -68,3 +68,6 @@ public/javascripts/han/*
 public/stylesheets/han
 public/stylesheets/han/*
 config/phin_plugins.yml
+config/mongo_database.yml
+config/dashboard.yml
+reports/
