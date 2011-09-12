@@ -29,10 +29,8 @@ describe Report::Recipe do
       recipe = Factory(:report_recipe,:type=>"Report::Recipe")
       json = recipe.as_json
       json.should be_kind_of Hash
-      json.should have_key("recipe")
-      recipe_derived = json["recipe"]
-      recipe_derived.should have_key("id")
-      recipe_derived["id"].should equal(recipe[:id])
+      json.should have_key("id")
+      json["id"].should equal(recipe[:id])
     end
     it "create a recipe model for future association to reports" do
       before = Report::Recipe.count

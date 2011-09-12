@@ -75,7 +75,6 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace "report" do |n|
     n.resources :reports, :member => { :filters => :get, :reduce => :post }
-    n.resources :recipes, :benchmarks
   end
 
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"

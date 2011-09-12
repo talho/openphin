@@ -16,14 +16,8 @@ describe Report::Report do
       report = Factory(:report_report)
       json = report.as_json
       json.should be_kind_of(Hash)
-      json.should have_key("report")
-      report_derived = json["report"]
-      report_derived.should have_key(%q(id))
-      report_derived.should have_key(%q(author_id))
-      report_derived.should have_key(%q(incomplete))
-      report_derived.should have_key(%q(rendering_updated_at))
-      report_derived.should have_key(%q(rendering_file_name))
-      report_derived.should have_key(%q(rendering_file_size))
+      json.should have_key("id")
+      json["id"].should == report[:id]
     end
   end
 
