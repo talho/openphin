@@ -40,6 +40,8 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   menu_config += "{name: 'FAQs', items:[
                     {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
 
+  menu_config += "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}},"
+  
   menu_config += "{name: 'Tutorials', items:[
                     {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'#{ tutorials_path }', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
                     {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'#{ tutorials_path }', anchor: 'HAN', initializer: 'Talho.Tutorials'}},

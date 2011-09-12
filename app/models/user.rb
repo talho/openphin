@@ -98,6 +98,8 @@ class User < ActiveRecord::Base
 
   has_many :favorites
 
+  has_many :reports, :class_name => 'Report::Report', :foreign_key => "author_id"
+  has_many :recipes, :class_name => 'Report::Recipe'
 
   validates_presence_of     :email
   validates_presence_of     :first_name
@@ -240,9 +242,9 @@ class User < ActiveRecord::Base
     jurisdiction.alerting_users.include?(self)
   end
 
-  def is_sysadmin?
+ def is_sysadmin?
     return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0
-  end
+ end
 
   def is_super_admin?(app = "phin")
     return true if is_sysadmin?
