@@ -11,6 +11,15 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
             flex: 1,
             autoHeight:true,
             html: window.Application.rails_environment == "cucumber" ? "" : "  <div class='article'>\
+  <h2>Q&amp;A for Mercury Poisoning Cluster Associated with Use of Aguamary Creams</h2>\
+  <p class='date'>September 6, 2011</p>\
+  <div class='lede'>\
+    <p>Please click below to download the Q&amp;A</p>\
+    <p class='article_link'><a href='http://www.txphin.org/faq/Mercury_Q_A.doc' target='_blank' title='Mercury Q&amp;A'>Mercury Q&amp;A</a></p>\
+ </div>\
+  <br/>\
+</div>\
+<div class='article'>\
   <h2>HEAT STRESS SAFETY - Emphasis and Behavior Modification</h2>\
   <p class='date'>August 3, 2011</p>\
   <div class='lede'>\

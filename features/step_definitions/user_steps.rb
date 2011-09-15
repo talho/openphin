@@ -40,7 +40,7 @@ Given /^"([^\"]*)" has the password "([^\"]*)"$/ do |email, password|
 end
 
 Given /^the following users exist:$/ do |table|
-  table.raw.each do |row| 
+  table.raw.each do |row|
     Given %Q{the user "#{row[0]}" with the email "#{row[1]}" has the role "#{row[2]}"#{row[4].blank? ? '' : " application \"#{row[4]}\""} in "#{row[3]}"}
   end
 end

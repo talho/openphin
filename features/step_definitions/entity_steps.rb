@@ -93,6 +93,10 @@ end
 
 Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   jurisdictions = table.raw.first
+  # just in case the jurisdictions are delimited by comma
+  unless (jurisdictions.size != 1) || (!jurisdictions.first.kind_of? String)
+    jurisdictions = jurisdictions.first.split(",").map(&:strip)
+  end
   parent = Given "a jurisdiction named #{parent_name}"
   jurisdictions.each do |name|
     jurisdiction = Given "a jurisdiction named #{name}"

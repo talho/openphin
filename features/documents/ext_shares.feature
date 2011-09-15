@@ -16,6 +16,7 @@ Feature: Document Sharing
     When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Add Folder"
+    And I wait for 1 seconds
     And I fill in "Folder Name" with "Shared Folder"
     And I click x-tab-strip-text "Sharing"
     And I choose "Shared - Accessible to the audience specified below"
@@ -227,6 +228,7 @@ Feature: Document Sharing
     When I click folder-context-icon on the "Admin" grid row
     And I click x-menu-item "Edit Folder"
     And I click x-tab-strip-text "Permissions"
+    And I wait for 1 seconds
     And I select "Admin" from ext combo "Atticus Finch"
     And I press "Save"
     And I wait for the "Saving" mask to go away

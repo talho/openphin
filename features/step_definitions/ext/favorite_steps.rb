@@ -3,11 +3,63 @@ When /^I have a favorite named "([^\"]*)"$/ do |favorite_name|
 end
 
 When /^I drag the "([^\"]*)" tab to "([^\"]*)"$/ do |tabname, target|
-  page.find("li", :text => tabname).drag_to(page.find(target));
+  # this replaces the capybara drag_to since it has been unreliable
+  page.execute_script("
+    var tname = '#{tabname}';
+    var tgt = '#{target.sub(/^#/,'')}';
+    var config = null;
+    var tab_panel = Ext.getCmp('tabpanel');
+    if (tab_panel) {
+      tab_panel.items.each(function(item) {
+        if (item.tab_config) {
+          if(item.tab_config.title == tname){
+            config = item;
+            return false;
+          }
+        }
+      });
+    }
+    if (config.tab_config) {
+      var t = Ext.getCmp(tgt);
+      if (t) {
+        t.dropZone.notifyDrop(null,null,{item: config});
+      }
+    }
+  ")
 end
 
 When /^I drag the "([^"]*)" folder to "([^"]*)"$/ do |foldername, target|
-  page.find(".documents-folder-item", :text=> foldername).drag_to(page.find(target));
+  # this replaces the capybara drag_to since it has been unreliable
+  page.execute_script("
+    var fname = '#{foldername}';
+    var tgt = '#{target.sub(/^#/,'')}';
+    var folderObj = null;
+    var viewId = Ext.query('.document-file-icon-view')[0].id;
+    if (viewId) {
+      var viewObj = Ext.getCmp(viewId);
+      if (viewObj.store) {
+        if (viewObj.store.data) {
+          if (viewObj.store.data.items) {
+            Ext.each(viewObj.store.data.items, function(item) {
+              if (item.data) {
+                if(item.data.name == fname){
+                  folderObj = item;
+                  return false;
+                }
+              }
+            });
+          }
+        }
+      }
+    }
+    if (folderObj.data) {
+      var t = Ext.getCmp(tgt);
+      if (t) {
+        t.dropZone.notifyDrop(null,null,folderObj);
+      }
+    }
+  ")
+
 end
 
 When /^I right click favorite button "([^\"]*)"$/ do |button|

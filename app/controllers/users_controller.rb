@@ -171,7 +171,6 @@ class UsersController < ApplicationController
   protected
 
   def redirect_to_plugin_signup
-    debugger
     request_full_domain = (request.subdomains.push(request.domain)).join('.')
     domain_config = DOMAIN_CONFIG.has_key?(request_full_domain) ? DOMAIN_CONFIG[request_full_domain] : DOMAIN_CONFIG['default']
     unless domain_config['new_user_path'].blank?

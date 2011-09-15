@@ -1,4 +1,5 @@
 # For bundler!
+source "http://gemcutter.org"
 source "http://rubygems.org"
 source "http://gems.github.com" 
 
@@ -46,6 +47,12 @@ group :default do
   gem "pg", "0.10.1"
   gem "acts-as-taggable-on", "2.0.6"
   gem "paper_trail", "1.6.5"  # 2.x versions require rails3
+  gem "wicked_pdf", "0.7.0"
+  gem "mongo", "1.3.1"
+    gem "bson", "1.3.1"
+    gem "bson_ext", "1.3.1"
+    gem "SystemTimer", "1.2.3"
+  gem "base32-crockford", "0.1.0"
 end
 
 group :development do
@@ -79,8 +86,8 @@ group :cucumber do
   gem "childprocess"
   gem "selenium-webdriver"
   gem "sinatra", "1.0"
-  gem "xpath"#, "0.1.3"
-  gem "capybara"#, "0.4.1.2"
+  gem "xpath" #, "0.1.3"
+  gem "capybara" #, "0.4.1.2"
   gem "hydra", "0.23.3"
 end
 
@@ -95,4 +102,5 @@ group :tools do
   gem "git"
   gem "git_remote_branch"
   gem "ruby-debug"
+  gem "rcov"
 end

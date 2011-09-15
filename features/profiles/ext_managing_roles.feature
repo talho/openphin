@@ -35,7 +35,7 @@ I should be able to remove all but one public role from my profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
-    And I should not see "Texas" within ".role-item"
+    And I click profile-destroy "Texas"
     When I click profile-destroy "Dallas County"
     Then I should not see "Dallas County"
     When I press "Apply Changes"
@@ -47,7 +47,7 @@ I should be able to remove all but one public role from my profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
-    Then I should not see "Texas" within ".role-item"
+    And I click profile-destroy "Texas"
     And I click profile-destroy "Dallas County"
     Then I should see "No roles to display"
     When I press "Request Role"
@@ -164,6 +164,7 @@ I should be able to remove all but one public role from my profile
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     When I press "Apply Changes"
     Then I should not see any errors
+    And I wait for 1 seconds
     And "fred.smith@example.com" should have the role "BioTerrorism Coordinator" in "Potter County"
     And "john.smith@example.com" should not have the role "BioTerrorism Coordinator" in "Potter County"
     And "john.smith@example.com" should have a pending role request

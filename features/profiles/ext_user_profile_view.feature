@@ -17,7 +17,7 @@ Background:
   And Medical Director is a non public role
 
   And Texas is the parent jurisdiction of:
-    | Dallas County, Potter County |
+    | Dallas County | Potter County |
 
   And the following users exist:
     | Texas Admin     | tex.admin@example.com    | Admin            | Texas          |
@@ -189,7 +189,6 @@ Scenario: Admin viewing a non-subordinate public profile
    | They call me Mr. Clean Genes          |
    | I've been washing genes               |
    | Born in Japan and Educated in Germany |
-
   And I should not see "Edit This Account"
 
 

@@ -10,7 +10,13 @@ Ext.apply(Ext.form.VTypes, {
   // and add initialPassword:'YOUR_ID_HERE' to the password confirmation field.
   password : function(value, field){
     if (field.initialPassword){
-      var pwd = Ext.getCmp(field.initialPassword);
+      var pwd     = null;
+      var curr_ct = field.ownerCt;
+      while(curr_ct.ownerCt){
+        pwd = curr_ct.findComponent(field.initialPassword);
+        if(!pwd) curr_ct = curr_ct.ownerCt;
+        else break;
+      }
       this.passwordText = 'Passwords must match.';
       return (value == pwd.getValue());
     }

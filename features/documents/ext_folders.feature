@@ -143,6 +143,7 @@ Feature: Create a folder tree in documents
     When I close the active ext window
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
+    And I wait for 1 seconds
     Then the "Edit Folder" window should be open
     And the "Folder Name" field should contain "Folder1"
     When I close the active ext window

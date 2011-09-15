@@ -7,7 +7,7 @@ class SignupMailer < ActionMailer::Base
       recipients user.email
       from DO_NOT_REPLY
       subject "Confirm your email"
-      body :confirm_link => user_confirmation_url(user, user.token)
+      body :confirm_link => user_confirmation_url(user, user.token, :host => HOST)
     end
   end
 

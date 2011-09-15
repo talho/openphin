@@ -6,12 +6,15 @@ c_path =  path_seed.split(File::SEPARATOR)
 c_path.pop
 config_path = c_path.push("mongo_database.yml").join(File::SEPARATOR)
 
-configs = YAML::load(File.read(config_path))
-
-if (config = configs[Rails.env])
-  conn = Mongo::Connection.new(config["host"],config["port"],config)
-  REPORT_DB = conn.db(config["database"])
-  REPORT_DB.authenticate(config["username"],config["password"]) if config["password"]
+begin
+  configs = YAML::load(File.read(config_path))
+  if (config = configs[Rails.env])
+    conn = Mongo::Connection.new(config["host"],config["port"],config)
+    REPORT_DB = conn.db(config["database"])
+    REPORT_DB.authenticate(config["username"],config["password"]) if config["password"]
+  end
+rescue
+  # no Reports menu without this REPORT_DB
 end
 
 

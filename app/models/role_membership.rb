@@ -33,6 +33,11 @@ class RoleMembership < ActiveRecord::Base
   named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}, :include => :jurisdiction
   named_scope :recent, lambda{{ :conditions => ["role_memberships.created_at > ?",1.days.ago] }}
 
+  named_scope :role_jurisdiction, :select => 'role_id, jurisdiction_id'
+  def as_hash
+    Hash["role",role.name,"jurisdiction",jurisdiction.name]
+  end 
+
   def self.already_exists?(user, role, jurisdiction)
     return true if RoleMembership.find_by_user_id_and_role_id_and_jurisdiction_id(user.id, role.id, jurisdiction.id, :include => [:user, :role, :jurisdiction])
     false

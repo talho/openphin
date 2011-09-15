@@ -61,3 +61,4 @@ vendor/plugins/han
 vendor/plugins/rollcall
 spec/rollcall
 config/*.yml
+reports/*

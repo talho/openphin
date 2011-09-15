@@ -205,3 +205,4 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
         this.store.remove(this.store.getById(recordId));
     }
 });
+
