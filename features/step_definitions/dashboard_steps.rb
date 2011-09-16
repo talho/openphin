@@ -1,15 +1,25 @@
 
-When /^the following dashboard exists:$/ do |table|
+When /^I edit (?:a|the "([^"]*)") dashboard (?:on|as) "([^\"]*)"$/ do |dash_name, user_email|
+  Then %{I am logged in as "#{user_email}"}
+   And %{I press "Edit Dashboards"}
+  if dash_name
+    Then %{I press "Open"}
+     And %{I select the "#{dash_name}" grid row}
+     And %{I press "Open" within ".cms-open-dash-window"}
+  end
+end
+
+Given /^the following dashboard exists:$/ do |table|
   Factory.create(:dashboard, table.rows_hash)
 end
 
-When /^the "([^\"]*)" dashboard has the following portlet:$/ do |dash_name, table|
+Given /^the "([^\"]*)" dashboard has the following portlet:$/ do |dash_name, table|
   dash = Dashboard.find_by_name(dash_name)
   dashboard_portlet_attributes = {:draft => false, :column => table.rows_hash[:column].to_i, :portlet_attributes => {:xtype => table.rows_hash[:xtype], :config => table.rows_hash[:config]} }
   dash.update_attributes :dashboard_portlets_attributes => [dashboard_portlet_attributes]
 end
 
-When /^the "([^\"]*)" dashboard has the following audience:$/ do |dash_name, table|
+Given /^the "([^\"]*)" dashboard has the following audience:$/ do |dash_name, table|
   dash = Dashboard.find_by_name(dash_name)
   users = table.rows_hash[:Users] ? table.rows_hash[:Users].split(',').map {|u| User.find_by_display_name(u.strip) } : []
   roles = table.rows_hash[:Roles] ? table.rows_hash[:Roles].split(',').map {|r| Role.find_by_name(r.strip) } : []
@@ -178,4 +188,22 @@ When /^I load ExtJs$/ do
     s2.src ='/javascripts/ext/ext-all.js';
     document.getElementsByTagName('HEAD')[0].appendChild(s2);
   ")
+end
+
+Then /^I should not see the application default option in the permissions window$/ do
+    When %{I press "Permissions"}
+    Then %{I should not see "Make this the application default"}
+end
+
+When /^I check application default in the dashboard permission window$/ do
+  Then %{I press "Permissions"}
+   And %{I check "Make this the application default"}
+   And %{I press "OK"}
+end
+
+Then /^"([^\"]*)" should be the default dashboard$/ do |dash_name|
+  # first ensure that there is only one default dashboard
+  dashes = Dashboard.find_all_by_application_default(true)
+  dashes.count.should == 1
+  dashes.first.should == Dashboard.find_by_name(dash_name)
 end
