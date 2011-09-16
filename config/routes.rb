@@ -24,7 +24,7 @@ ActionController::Routing::Routes.draw do |map|
   map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete
   #map.approve_admin_organization "/admin_organizations/:id/approve", :controller => "admin/organizations", :action => "approve"
   #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
-  map.resources :admin_users, :controller => "admin/users"
+  map.resources :admin_users, :controller => "admin/users" #, :member => {:deactivate => :post}
   map.resources :admin_user_batch, :controller => "admin/user_batch", :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
   map.resources :admin_edit_users, :controller => "admin/edit_users", :collection => {:admin_users => [:get]}
 
@@ -67,7 +67,7 @@ ActionController::Routing::Routes.draw do |map|
   map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
   
   map.resources :user_batch, :controller => "admin/user_batch"
-  map.resources :users_delete, :controller => "admin/users_delete"
+  map.resource :users, :controller => "admin/users", :only => [:deactivate], :member => {:deactivate => :post}
 
   map.resources :favorites, :only => ['create', 'index', 'destroy']
   

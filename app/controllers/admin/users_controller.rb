@@ -77,7 +77,7 @@ class Admin::UsersController < ApplicationController
         end
         return
       end
-      @user.destroy
+#      @user.destroy
     end
 
     respond_to do |format|
@@ -85,6 +85,28 @@ class Admin::UsersController < ApplicationController
       format.json { render :json => {:flash => nil, :type => :error, :errors => @user.errors.full_messages + errors} }
       format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
     end        
+  end
+
+  def deactivate
+    user_ids = params[:users][:user_ids].reject{|u| ["",current_user.id.to_s].include? u } # avoid current user deleting self
+    @users = user_ids.present? ? User.find_all_by_id(user_ids) : []
+    if @users.empty?
+      flash[:error] ||= ""
+      flash[:error] += "A valid user was not selected."
+    end
+    @users.each do |user|
+      # Make sure current_user has admin privileges over the user to be deleted
+      if user.editable_by?(current_user)
+        user.delete_by(current_user.email,request.remote_ip)
+      else
+        flash[:error] ||= ""
+        flash[:error] += "User #{current_user.email} does not have permission to delete #{user.email}.<br>"
+      end
+    end
+    respond_to do |format|
+      format.html {}
+      format.json { render :json => {:delete_result => flash[:error].blank?, :success => true} }
+    end
   end
 
 end

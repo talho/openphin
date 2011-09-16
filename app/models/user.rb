@@ -405,7 +405,6 @@ class User < ActiveRecord::Base
         self.deleted_at = Time.now.utc      # redundant with paper_trail
         self.save!
       end
-      #self.destroy
     rescue
       errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
     end
