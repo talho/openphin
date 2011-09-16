@@ -1,6 +1,5 @@
 class ForumsController < ApplicationController
-
-  before_filter :non_public_role_required
+  before_filter :login_required
   app_toolbar "forums"
 
   # GET /forums
@@ -99,7 +98,7 @@ class ForumsController < ApplicationController
           # Once we're sure that forums and the audience itself isn't stale, we update the audience
           @audience = Audience.find_by_id(non_ids[:id])
           @audience.update_attributes(ids)
-          @audience.recipients(:force => true)
+          @audience.recipients(:force => true).count # this is necessary to get the audience to actually calculate
           
           # Force a lock_version increment for stale object detection on the audience itself
           Audience.update_counters params[:forum][:audience_attributes][:id], {}

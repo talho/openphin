@@ -71,3 +71,5 @@ config/phin_plugins.yml
 config/mongo_database.yml
 config/dashboard.yml
 reports/*
+public/javascripts/rollcall
+public/stylesheets/rollcall

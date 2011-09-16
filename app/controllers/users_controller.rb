@@ -166,5 +166,14 @@ class UsersController < ApplicationController
     end
     redirect_to root_path
   end
+
+  def is_admin
+    user = User.find_by_id(params[:user_id])
+    admin = user && user.is_admin?
+    superadmin = user && user.is_super_admin?
+    respond_to do |format|
+      format.json {render :json => {:success => true, :admin => admin, :superadmin => superadmin}}
+    end
+  end
   
 end

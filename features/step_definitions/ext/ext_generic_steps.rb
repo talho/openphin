@@ -133,6 +133,11 @@ When /^(?:|I )fill in this (?:|html)editor "([^"]*)" for "([^"]*)"(?: within "([
   end
 end
 
+When /^(?:|I )fill in Ext prompt with "([^"]*)"$/ do |value|
+  field = find(".ext-mb-input")
+  field.set(value)
+end
+
 When /^I click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ do |class_type, button, selector|
   with_scope(selector) do
     button = waiter do
@@ -304,6 +309,7 @@ When /^I open ext combo "([^\"]*)"$/ do |select_box|
   field.click
 end
 
+# Must have editable: false property set to work properly if not typing in value to combobox
 When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
   When %Q{I open ext combo "#{select_box}"}
   When %Q{I click x-combo-list-item "#{value}"}
@@ -429,4 +435,12 @@ end
 
 When /^I force open the audit log tab$/ do
   force_open_tab("Audit Log","/audits/")
+end
+
+When /^I force open the "([^\"]*)" dashboard tab$/ do |dash_name|
+  force_open_tab("Forced Dashboard", "/dashboard/#{Dashboard.find_by_name(dash_name).id}.json")
+end
+
+When /^I expand the "([^\"]*)" combo box$/ do |combo_name|
+  page.find(:xpath, "//img[contains(concat(\" \", @class, \" \"), \"x-form-arrow-trigger\") and ../input[@name=\"#{combo_name}\"]]").click
 end

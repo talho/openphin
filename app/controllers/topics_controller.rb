@@ -1,6 +1,5 @@
 class TopicsController < ApplicationController
-
-  before_filter :non_public_role_required
+  before_filter :login_required
   app_toolbar "forums"
 
   before_filter :find_forum

@@ -52,3 +52,27 @@ Ext.override(Ext.Container, {
     return found;
   }
 });
+
+
+Ext.override(Ext.grid.RowSelectionModel, {
+  selectRow : function(index, keepExisting, preventViewNotify){
+      if(!this.grid || this.isLocked() || (index < 0 || index >= this.grid.store.getCount()) || (keepExisting && this.isSelected(index))){
+          return;
+      }
+      var r = this.grid.store.getAt(index);
+      if(r && this.fireEvent('beforerowselect', this, index, keepExisting, r) !== false){
+          if(!keepExisting || this.singleSelect){
+              this.clearSelections();
+          }
+          this.selections.add(r);
+          this.last = this.lastActive = index;
+          if(!preventViewNotify){
+              if(this.grid.getView().mainBody){ this.grid.getView().onRowSelect(index);}
+          }
+          if(!this.silent){
+              this.fireEvent('rowselect', this, index, r);
+              this.fireEvent('selectionchange', this);
+          }
+      }
+  }
+});

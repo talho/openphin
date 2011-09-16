@@ -82,8 +82,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                  '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
                  '</em></a></li>'
             ),
-            items: [Talho.Article3Panel.initialize({itemId:'dashboard_home'})],
-            plugins: [Ext.plugin.DragDropTabs, new Ext.ux.plugin.TabPanelNav()],
+            items: [Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
             listeners:{
                 'beforetabchange': function(tab_panel, new_tab, old_tab){
                     if(old_tab)

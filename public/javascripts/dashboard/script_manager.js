@@ -3,6 +3,7 @@ Ext.ns("Talho");
 // We're going to create a singleton manager here that is an observable
 (function(){
     dominoes.property('ext_extensions', '/javascripts/ext_extensions');
+    dominoes.property('cms', '/javascripts/dashboard/cms');
     dominoes.rule('RowActions', '(( $css(/stylesheets/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css(/stylesheets/TreeGrid/css/TreeGrid.css) $css(/stylesheets/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
     dominoes.rule('JurisdictionsTree', 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/FilterableCheckboxSelectionModel.js ( /javascripts/audience/BaseSelectionGrid.js > /javascripts/audience/JurisdictionsTree.js )');
@@ -44,15 +45,16 @@ Ext.ns("Talho");
         'Talho.EditUsers': {js:'EditUsers ProfileBase /javascripts/profile/RolesControl.js > /javascripts/admin/EditUsers.js'},
         'Talho.PendingRoleRequests': {js: "AjaxPanel > /javascripts/admin/PendingRoleRequests.js"},
         'Talho.AuditLog': {js: "AjaxPanel > /javascripts/admin/AuditLog.js"},
-        'Talho.HelpWindow': {js:'/javascripts/dashboard/HelpWindow.js'}
+        'Talho.HelpWindow': {js:'/javascripts/dashboard/help_window.js'},
+        'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js /javascripts/dashboard/favorites.js');
-    dominoes.rule('PhinLayout', '/javascripts/utility.js $(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js /javascripts/dashboard/MenuBuilder.js');
-    dominoes.rule('Dashboard', '$(ext_extensions)/TabPanelNav.js /javascripts/utility.js /javascripts/dashboard/article3panel.js');
-    dominoes.rule('ManageFavorites', 'RowActions /javascripts/dashboard/ManageFavoritesWindow.js');
+    dominoes.rule('PhinLayout', '/javascripts/utility.js $(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js /javascripts/dashboard/menu_builder.js');
+    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/view_portal.js $(cms)/view_controller.js');
+    dominoes.rule('ManageFavorites', 'RowActions /javascripts/dashboard/manage_favorites_window.js');
 
     var mgr = function(config){};
     Ext.extend(mgr, Ext.util.Observable, {

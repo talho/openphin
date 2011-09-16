@@ -42,3 +42,7 @@
 .favorite_button.x-btn-over.x-btn-click{
     background: #bbb;
 }
+
+.x-portlet-html{
+  padding: 10px;
+}

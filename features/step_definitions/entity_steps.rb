@@ -1,5 +1,4 @@
 Given /^the following entities exist[s]?:$/ do |table|
-
   table.raw.each do |row|
     key, value, app = row
     if app.blank?
@@ -122,6 +121,7 @@ Given '"$name" has the FIPS code "$code"' do |name, code|
   jurisdiction = Given "a jurisdiction named #{name}"
   jurisdiction.update_attributes :fips_code => code
 end
+
 When /^an article exists$/ do
 	Factory(:article)
 end

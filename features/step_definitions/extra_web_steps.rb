@@ -124,3 +124,9 @@ When /^I maliciously (.+) data .+ "([^"]*)"$/ do | method, url, table |
           "xhr.send(#{("\"" + table.rows_hash.to_query + "\"") if method.strip.downcase != "get"}); "
   page.execute_script(script)
 end
+
+When /^I click ([0-9a-zA-Z\-]*) number ([0-9]*)$/ do |cls, index|
+  btns = page.all(".#{cls}")
+  btns.reject!{|btn| !btn.visible? }
+  btns[index.to_i - 1].click
+end
