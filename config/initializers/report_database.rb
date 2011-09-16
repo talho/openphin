@@ -13,7 +13,7 @@ begin
     REPORT_DB = conn.db(config["database"])
     REPORT_DB.authenticate(config["username"],config["password"]) if config["password"]
   end
-rescue
+rescue Errno::ENOENT
   # no Reports menu without this REPORT_DB
 end
 

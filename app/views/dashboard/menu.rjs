@@ -36,7 +36,7 @@ page << "Application.rails_environment = '#{ Rails.env }';"
   begin
     REPORT_DB
     menu_config += "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}},"
-  rescue
+  rescue NameError
     # just do not include Reports menu
   end
 
