@@ -6,6 +6,7 @@ Talho.Dashboard.CMS.Views.OpenDashboardWindow = Ext.extend(Ext.Window, {
   layout: 'fit',
   title: 'Open Dashboard',
   modal: true,
+  cls: 'cms-open-dash-window',
   initComponent: function(){
     this.items = [
       {xtype: 'grid', itemId: 'grid', store: new Ext.data.JsonStore({

@@ -24,6 +24,8 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
         {xtype: 'combo', fieldLabel: 'Dashboard', name: 'user[dashboard_id]', hiddenName: 'user[dashboard_id]', editable: false, triggerAction: 'all', mode: 'local',
           store: new Ext.data.JsonStore({
             url: '/dashboard.json',
+            restful: true,
+            baseParams: {user_id: user_id},
             root: 'dashboards',
             fields: ['id', 'name'],
             autoLoad: true

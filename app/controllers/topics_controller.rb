@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
 
-  before_filter :non_public_role_required, :change_include_root
+  before_filter :login_required, :change_include_root
   after_filter :change_include_root_back
   app_toolbar "forums"
 

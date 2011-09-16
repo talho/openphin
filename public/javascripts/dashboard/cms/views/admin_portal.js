@@ -41,20 +41,20 @@ Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.Vie
     this.columnCount = cols;
     var width = (1.0/cols);
     
-    if(current_columns.length < cols){
-      this.add({xtype: 'portalcolumn', style: {padding: '5px'}, columnWidth: width, items: []});
+    while(current_columns.length < cols){
+      current_columns.push( this.add({xtype: 'portalcolumn', style: {padding: '5px'}, columnWidth: width, items: []}) );
     }
-    else{ // there are more current columns than 
-      while(current_columns.length > cols){
-        var last = current_columns[current_columns.length - 1];
-        current_columns.remove(last);
-        last.items.each(function(portlet, i){
-          portlet.column = (i % current_columns.length) + 1;
-          current_columns[(i % current_columns.length)].add(portlet); // mod by the remaining columns, add portlet to column 
-        });
-        this.remove(last);
-      }
+    
+    while(current_columns.length > cols){
+      var last = current_columns[current_columns.length - 1];
+      current_columns.remove(last);
+      last.items.each(function(portlet, i){
+        portlet.column = (i % current_columns.length) + 1;
+        current_columns[(i % current_columns.length)].add(portlet); // mod by the remaining columns, add portlet to column 
+      });
+      this.remove(last);
     }
+    
     
     Ext.each(current_columns, function(column){
       column.columnWidth = width;
@@ -86,3 +86,4 @@ Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.Vie
     return config;
   }
 });
+

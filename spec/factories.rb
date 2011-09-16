@@ -195,8 +195,6 @@ Factory.define :dashboard do |d|
   d.sequence(:name){|t| "Dashboard ##{t}"}
   d.columns 3
   d.draft_columns 3
-  d.dashboard_portlets_attributes {{:one => {:portlet => Factory(:portlet), :draft => false, :column => 0}}}
-  d.dashboard_audiences_attributes {{:one => {:audience => Factory(:audience), :role => "publisher"}}}
 end
 
 Factory.define :dashboard_portlet, :class => Dashboard::DashboardPortlet do |dp|

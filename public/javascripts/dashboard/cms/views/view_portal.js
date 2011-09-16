@@ -6,6 +6,9 @@ Talho.Dashboard.CMS.Views.ViewPortal = Ext.extend(Ext.ux.Portal, {
   padding: '5px',
   loadPortlets: function(data){
     this.removeAll();
+    if(!data.config){
+      return;
+    }
     this.columnCount = data.config.length;
     Ext.each(data.config, function(item, index, allItems) {
       this.add(item);

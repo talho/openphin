@@ -3,16 +3,17 @@ Ext.ns("Talho.Dashboard.CMS.Views");
 Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
   initComponent: function(){
     this.items = [
-      {text: 'Save', scope: this, handler: function(){this.fireEvent('save');}},
+      {text: 'Save', itemId: 'save', scope: this, handler: function(){this.fireEvent('save');}},
       {text: 'New', scope: this, handler: function(){this.fireEvent('new');}},
       {text: 'Open', scope: this, handler: function(){this.fireEvent('open');}},
+      {text: 'Delete', itemId: 'delete', scope: this, handler: function(){this.fireEvent('delete');}},
       '|',
       {text: 'Preview', itemId: 'preview_button', handler: this.togglePreview.createDelegate(this, ['preview_button', 'editview_button'])},
       {text: 'Edit View', itemId: 'editview_button', handler: this.togglePreview.createDelegate(this, ['editview_button', 'preview_button']), hidden: true},
       '|',
       {text: 'Columns', itemId: 'column_button', scope: this, handler: function(){this.fireEvent('showcolumnslider');}},
-      {text: 'Add Portlet', scope: this, handler: this.addPortlet},
-      {text: 'Permissions', scope: this, handler: function(){this.fireEvent('permissions');}}
+      {text: 'Add Portlet', itemId: 'add_portlet', scope: this, handler: this.addPortlet},
+      {text: 'Permissions', itemId: 'permissions', scope: this, handler: function(){this.fireEvent('permissions');}}
     ];
     
     Talho.Dashboard.CMS.Views.AdminToolbar.superclass.initComponent.apply(this, arguments);
@@ -26,6 +27,7 @@ Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
           minValue: 1,
           maxValue: 4,
           width: 100,
+          cls: 'cms-column-slider',
           value: columns,
           plugins: new Ext.slider.Tip(), 
           listeners: {
@@ -60,5 +62,19 @@ Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
       ]
     });
     menu.show(btn.getEl());
+  },
+  
+  disableEditCurrent: function(){
+    var btns = ['save', 'delete', 'preview_button', 'editview_button', 'column_button', 'add_portlet', 'permissions'];
+    Ext.each(btns, function(btn){
+      this.getComponent(btn).disable();
+    }, this);
+  },
+  
+  enableEditCurrent: function(){
+    var btns = ['save', 'delete', 'preview_button', 'editview_button', 'column_button', 'add_portlet', 'permissions'];
+    Ext.each(btns, function(btn){
+      this.getComponent(btn).enable();
+    }, this);
   }
 });

@@ -2,7 +2,7 @@ class Dashboard < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   extend ActionView::Helpers::SanitizeHelper::ClassMethods
 
-  has_many :dashboard_portlets, :dependent => :destroy do
+  has_many :dashboard_portlets, :dependent => :destroy, :order => 'dashboards_portlets.sequence' do
     def with_column(column)
       scoped :conditions => ["dashboards_portlets.column = ?", column]
     end
@@ -16,7 +16,7 @@ class Dashboard < ActiveRecord::Base
     end
   end
 
-  has_many :portlets, :through => :dashboard_portlets, :dependent => :destroy do
+  has_many :portlets, :through => :dashboard_portlets, :dependent => :destroy, :order => 'dashboards_portlets.sequence' do
     def with_column(column)
       scoped :conditions => ["dashboards_portlets.column = ?", column]
     end
@@ -84,12 +84,11 @@ class Dashboard < ActiveRecord::Base
 
   def config(options={})
     jsonConfig = []
-    columns = (options[:draft].to_s == "true" ? self.draft_columns || self.columns : self.columns)
     columnWidth = (1.0 / (columns || 3)).round(2).to_s
     1.upto(columns || 3) do |i|
       items = []
 
-      p = options[:draft] ? self.portlets(true).with_column(i) : self.portlets(true).published.with_column(i)
+      p = self.portlets(true).with_column(i)
       items = p.map do |portlet|
         if portlet.valid?
           column = self.dashboard_portlets(true).find_by_portlet_id(portlet.id).column

@@ -436,3 +436,11 @@ end
 When /^I force open the audit log tab$/ do
   force_open_tab("Audit Log","/audits/")
 end
+
+When /^I force open the "([^\"]*)" dashboard tab$/ do |dash_name|
+  force_open_tab("Forced Dashboard", "/dashboard/#{Dashboard.find_by_name(dash_name).id}.json")
+end
+
+When /^I expand the "([^\"]*)" combo box$/ do |combo_name|
+  page.find(:xpath, "//img[contains(concat(\" \", @class, \" \"), \"x-form-arrow-trigger\") and ../input[@name=\"#{combo_name}\"]]").click
+end

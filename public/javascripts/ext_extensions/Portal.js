@@ -146,46 +146,44 @@ Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
     },
 
     notifyDrop : function(dd, e, data){
-        delete this.grid;
-        if(!this.lastPos){
-            return;
-        }
-      this.portal.items.items[data.panel.column].items.remove(data.panel);
+      delete this.grid;
+      if(!this.lastPos){
+          return;
+      }      
       var c = this.lastPos.c,
-            col = this.lastPos.col,
-            pos = this.lastPos.p,
-            panel = dd.panel,
-            dropEvent = this.createEvent(dd, e, data, col, c,
-                pos !== false ? pos : c.items.getCount());
+          col = this.lastPos.col,
+          pos = this.lastPos.p,
+          panel = dd.panel,
+          dropEvent = this.createEvent(dd, e, data, col, c,
+              pos !== false ? pos : c.items.getCount());
 
-        if(this.portal.fireEvent('validatedrop', dropEvent) !== false &&
-           this.portal.fireEvent('beforedrop', dropEvent) !== false){
+      if(this.portal.fireEvent('validatedrop', dropEvent) !== false &&
+         this.portal.fireEvent('beforedrop', dropEvent) !== false){
 
-            dd.proxy.getProxy().remove();
-            //panel.el.dom.parentNode.removeChild(dd.panel.el.dom);
+          dd.proxy.getProxy().remove();
+          panel.el.dom.parentNode.removeChild(dd.panel.el.dom);
 
-            if(pos !== false){
-                c.insert(pos, panel);
-            }else{
-                c.add(panel);
-            }
-          
+          if(pos !== false){
+              c.insert(pos, panel);
+          }else{
+              c.add(panel);
+          }
+        
+          c.doLayout();
 
-            c.doLayout();
+          this.portal.fireEvent('drop', dropEvent);
 
-            this.portal.fireEvent('drop', dropEvent);
+          // scroll position is lost on drop, fix it
+          var st = this.scrollPos.top;
+          if(st){
+              var d = this.portal.body.dom;
+              setTimeout(function(){
+                  d.scrollTop = st;
+              }, 10);
+          }
 
-            // scroll position is lost on drop, fix it
-            var st = this.scrollPos.top;
-            if(st){
-                var d = this.portal.body.dom;
-                setTimeout(function(){
-                    d.scrollTop = st;
-                }, 10);
-            }
-
-        }
-        delete this.lastPos;
+      }
+      delete this.lastPos;
     },
 
     // internal cache of body and column coords
@@ -207,7 +205,6 @@ Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
 
 Ext.ux.PortalColumn = Ext.extend(Ext.Container, {
     layout : 'anchor',
-    //autoEl : 'div',//already defined by Ext.Component
     defaultType : 'portlet',
     cls : 'x-portal-column'
 });

@@ -4,16 +4,16 @@ Talho.Dashboard.CMS.Views.ManagePermissionsWindow = Ext.extend(Ext.Window, {
   width: 550,
   height: 500,
   layout: 'border',
-  title: 'Open Dashboard',
+  title: 'Permissions',
   modal: true,
   initComponent: function(){
     Ext.applyIf(this, {audience_config: {} });
     
-    var audience_panel = new Ext.ux.AudiencePanel({title: 'Viewers', itemId: 'viewers'});
+    var audience_panel = new Ext.ux.AudiencePanel({title: 'Viewers', itemId: 'viewers', cls: 'cms-audience-viewers'});
     this.items = [
       {xtype: 'tabpanel', region: 'center', activeItem: 0, itemId: 'tabpanel', items: [
         audience_panel,
-        {xtype: 'audiencepanel', title: 'Editors', itemId: 'editors', jurisdiction_store: audience_panel.jurisdictionTree.getStore(), group_store: (audience_panel.groupSelectionGrid ? audience_panel.groupSelectionGrid.getStore() : null), role_store: audience_panel.roleSelectionGrid.getStore()}
+        {xtype: 'audiencepanel', title: 'Editors', itemId: 'editors', cls: 'cms-audience-editors', jurisdiction_store: audience_panel.jurisdictionTree.getStore(), group_store: (audience_panel.groupSelectionGrid ? audience_panel.groupSelectionGrid.getStore() : null), role_store: audience_panel.roleSelectionGrid.getStore()}
       ]}
     ];
     
@@ -64,6 +64,6 @@ Talho.Dashboard.CMS.Views.ManagePermissionsWindow = Ext.extend(Ext.Window, {
   
   findAudience: function(role){
     var da = this.findDashboardAudience(role);
-    return da ? da.audience : [];
+    return da ? da.audience : {jurisdictions: [], roles: [], groups: [], users: []};
   }
 });

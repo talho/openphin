@@ -58,7 +58,7 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   toggleAdminBorder: function(){
       var el = this.getEl(),
           panel = el.child('.x-panel-body');
-      el.toggleClass('x-panel-noborder');
+      el.toggleClass('x-panel-noborder').toggleClass('portlet-admin');
       el.child('.x-panel-header').toggleClass('x-hide-display');
       panel.toggleClass('x-panel-body-noborder').setWidth(el.getWidth());
   }

@@ -17,6 +17,7 @@ Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {
           'save': this.saveDashboard,
           'new': this.showNewDashboardWindow,
           'open': this.showOpenDashboardWindow,
+          'delete': this.deleteDashboard,
           'permissions': this.showPermissionsWindow
         }
       })
@@ -36,10 +37,21 @@ Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {
       method: 'GET',
       scope: this,
       success: function(resp){
-        var data = Ext.decode(resp.responseText).dashboard;
-        this.portal.loadPortlets(data);
+        var data = Ext.decode(resp.responseText),
+            dashboard = data.dashboard;
+            
+        if(data.success === false){
+          this.clearDashboard();
+          return;
+        }
+        
+        this.portal.loadPortlets(dashboard);
         this.portal.toggleAdminBorder();
-        this.loadAudience(data);
+        this.loadAudience(dashboard);
+        this.portal.getTopToolbar().enableEditCurrent();
+      },
+      failure: function(){
+        this.clearDashboard();
       },
       callback: function(){
         this.portal.hideLoadMask();
@@ -136,6 +148,9 @@ Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {
         var data = Ext.decode(resp.responseText);
         this.loadDashboard(data.id);
       },
+      failure: function(){
+        this.clearDashboard();
+      },
       callback: function(){
         this.portal.hideSaveMask();
       }
@@ -186,6 +201,35 @@ Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {
     });
     
     win.show();
+  },
+  
+  deleteDashboard: function(){
+    Ext.Msg.confirm("Delete Dashboard", "Are you sure you want to delete this dashboard? This action cannot be undone", function(btn){
+      if(btn === 'yes'){
+        this.portal.showSaveMask();
+        Ext.Ajax.request({
+          url: '/dashboard/' + this.dashboard_id + '.json',
+          method: 'DELETE',
+          scope: this,
+          success: function(){
+            this.clearDashboard();
+          },
+          failure: function(response){
+            var data = Ext.decode(response.responseText);
+            Ext.Msg.alert("Error", data.msg);
+          },
+          callback: function(){
+            this.portal.hideSaveMask();
+          }
+        })
+      }
+    }, this);
+  },
+  
+  clearDashboard: function(){
+    this.dashboard_id = null;
+    this.portal.removeAll();
+    this.portal.getTopToolbar().disableEditCurrent();
   }
 });
 

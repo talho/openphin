@@ -6,4 +6,6 @@ class Dashboard::DashboardPortlet < ActiveRecord::Base
 
   named_scope :draft, :conditions => {:draft => true}
   named_scope :published, :conditions => {:draft => false}
+  
+  accepts_nested_attributes_for :portlet
 end

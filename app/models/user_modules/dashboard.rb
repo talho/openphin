@@ -10,7 +10,7 @@ module UserModules
     end
   
     def default_dashboard
-      self.dashboards.published.find_by_id(self.dashboard_default) || self.dashboards.published.first || ::Dashboard.application_default.published.first
+      self.dashboards.published.find_by_id(self.dashboard_default) || ::Dashboard.application_default.include?(self.dashboard_default) ? self.dashboard_default : nil || self.dashboards.published.first || ::Dashboard.application_default.published.first
     end
   end
 end
