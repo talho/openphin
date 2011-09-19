@@ -281,7 +281,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                 url: '/forums/' + forum_id + '/edit.json',
                 callback: function(options, success, response){
                     if(success){
-                        create_forum_win.loadMask.hide();
+                        create_forum_win.loadMask.hide(); // this is breaking in true ie8 installs on production possibly because ie8 is slow enough that the return from this request is beating the afterrender to the stack?
                         var forum_detail = Ext.decode(response.responseText);
                         forum_name_box.setValue(forum_detail.name);
                         create_forum_win.audience_id = forum_detail.audience.id;

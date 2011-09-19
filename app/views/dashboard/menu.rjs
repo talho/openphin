@@ -1,6 +1,8 @@
 
 page << "window.Application = window.Application ? window.Application : {};"
 page << "Application.rails_environment = '#{ Rails.env }';"
+page << "Application.current_user = #{current_user.id};"
+page << "Application.default_dashboard = #{current_user.default_dashboard.blank? ? 'undefined' : current_user.default_dashboard.id};"
 
   request_full_domain = (request.subdomains.push(request.domain)).join('.')
   menu_config = "Application.menuConfig = [ '<img width=\"#{ domain_config['logo_image_dimensions'][0]}\" height=\"#{ domain_config['logo_image_dimensions'][1]}\" src=\"#{ domain_config['logo_image'] }\">', "

@@ -14,4 +14,5 @@ class ReportLogger < Logger
     "#{timestamp.to_formatted_s(:db)} #{severity} #{msg}\n"
   end
 end
+
 REPORT_LOGGER= ReportLogger.new("#{RAILS_ROOT}/log/report.log", 3, 10 * 1024**2)

@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="/images/favicon.png" />
   <%= javascript_include_tag 'lib/dominoes-1.0-rc2.min.js'%>
   <%= javascript_tag "var FORM_AUTH_TOKEN = '#{form_authenticity_token}';" %>
-  <%# <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/Application', 'dashboard/ScriptManager', :cache => 'all'%>
+  <%# <%= javascript_include_tag 'jquery', 'ext/adapter/jquery/ext-jquery-adapter-debug', 'ext/ext-all-debug', 'dashboard/application', 'dashboard/script_manager', :cache => 'all'%>
   <%# <%= javascript_include_tag '/dashboard/menu', 'dashboard/index', :cache => 'all' %>
   <%# begin include js for openphin plugins %>
   <%# <% js_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
@@ -25,6 +25,7 @@
   <%#%><script>
     dominoes.rule('jquery', '/javascripts/jquery.js');
     dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/xtheme-Ocean.css) )) /javascripts/ext/adapter/jquery/<%= Rails.env == "production" ? "ext-jquery-adapter.js" : "ext-jquery-adapter-debug.js" %> > /javascripts/ext/<%= Rails.env == "production" ? "ext-all.js" : "ext-all-debug.js" %>');
+
     dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/admin.css) $css(/stylesheets/redesign/forum.css) $css(/stylesheets/redesign/documents.css)');
     dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/Application.js /javascripts/dashboard/ScriptManager.js /javascripts/dashboard/index.js /dashboard/menu.js /javascripts/ext_extensions/validations.js');
     dominoes.rule('phinPlugins', '<%=  javascript_include_domino( defined?($expansion_list) ? $expansion_list.dup : [] ) %>');

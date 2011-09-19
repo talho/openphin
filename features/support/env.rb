@@ -65,16 +65,19 @@ Capybara.register_driver :selenium_with_firebug do |app|
     profile['extensions.firebug.console.enableSites'] = 'true'
     profile['extensions.firebug.script.enableSites'] = 'true'
     profile['extensions.firebug.net.enableSites'] = 'true'
+    profile['extensions.firebug.allPagesActivation'] = 'on'
     profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
 
-    Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile })
+    Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile, :resynchronize => true })
   else
-    Capybara::Selenium::Driver.new(app, { :browser => :firefox })
+    Capybara::Selenium::Driver.new(app, { :browser => :firefox, :resynchronize => true })
+
   end
 end
 
 Capybara.default_driver = :selenium_with_firebug
-Capybara.default_wait_time = 2
+#Capybara.default_wait_time = 2
+
 #if File.exists?("#{Rails.root}/firebug.xpi")
 #  profile = Selenium::WebDriver::Firefox::Profile.new
 #  profile['extensions.firebug.currentVersion'] = '100.100.100'

@@ -66,6 +66,8 @@ class User < ActiveRecord::Base
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
+  include UserModules::Dashboard
+  
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
       scoped :conditions => 'documents.folder_id IS NULL'
@@ -118,7 +120,7 @@ class User < ActiveRecord::Base
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
     :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
-    :home_phone, :mobile_phone, :phone, :fax, :lock_version
+    :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id
     
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
 
@@ -244,9 +246,9 @@ class User < ActiveRecord::Base
     jurisdiction.alerting_users.include?(self)
   end
 
-  def is_sysadmin?
+ def is_sysadmin?
     return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0
-  end
+ end
 
   def is_super_admin?(app = "")
     return true if is_sysadmin?

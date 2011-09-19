@@ -27,25 +27,20 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com, harry.simon@example.com |
-    When I navigate to the ext dashboard page
-    And I navigate to "Forums"
+    When I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
     Then the "Measuring Fulfillment" tab should be open and active
-    And I wait for the "Loading..." mask to go away
     Then I should see "Add Reply"
     And I should not see "Delete"
     And I should see "Edit"
     And I should see "Quote"
 
-    When I navigate to "Jane Smith > Sign Out"
     And I am logged in as "harry.simon@example.com"
-    When I navigate to the ext dashboard page
-    And I navigate to "Forums"
+    When I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
     Then the "Measuring Fulfillment" tab should be open and active
-    And I wait for the "Loading..." mask to go away
     Then I should see "Add Reply"
     And I should not see "Delete"
     And I should not see "Edit"
@@ -57,7 +52,6 @@ I should be able to create topics to forums and place comments to these topics
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
-    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -68,8 +62,6 @@ I should be able to create topics to forums and place comments to these topics
     When I fill in "topic[comment_attributes][content]" with "Desc for my topic"
     And I press "Save"
 
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
     Then I should see "Desc for my topic"
     And I should see "Measuring Fulfillment"
     And I should see "Jane Smith"
@@ -85,8 +77,6 @@ I should be able to create topics to forums and place comments to these topics
     
     And I press "Save"
 
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
     Then I should see "This is a response" in grid row 2
 
   Scenario: Reply to someone else's topic and quote someone else's reply
@@ -96,7 +86,6 @@ I should be able to create topics to forums and place comments to these topics
       | Users | jane.smith@example.com, harry.simon@example.com |
 
     Given I am logged in as "harry.simon@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -106,26 +95,20 @@ I should be able to create topics to forums and place comments to these topics
     When I fill in "topic[comment_attributes][content]" with "This is a response"
     When I press "Save"
 
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
     Then I should see "This is a response" in grid row 2
 
-    When I navigate to "Harry Simon > Sign Out"
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
     Then the "Measuring Fulfillment" tab should be open
-    When I wait for the "Loading..." mask to go away
 
     Then I should not see "Edit" in grid row 2 within ".topic_grid"
     When I click topic-quote-comment-button on the "This is a response" grid row
     Then the "topic[comment_attributes][content]" field should contain "bq.. __Originally posted by: Harry Simon__\n\nThis is a response\n\np. "
     When I press "Save"
 
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
     Then I should see "Originally posted by: Harry Simon" in grid row 3
     Then I should see "This is a response" in grid row 3
 
@@ -136,7 +119,6 @@ I should be able to create topics to forums and place comments to these topics
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
@@ -144,7 +126,6 @@ I should be able to create topics to forums and place comments to these topics
     And I press "Add Reply"
     And I fill in "topic[comment_attributes][content]" with "*strong words* and _emphasized words_"
     And I press "Save"
-    And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
     Then I should see html "<strong>strong words</strong> and <em>emphasized words</em>"
 

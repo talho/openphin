@@ -5,6 +5,8 @@ Ext.ns("Talho");
     dominoes.property('ext_extensions', '/javascripts/ext_extensions');
     dominoes.property('js', '/javascripts');
     dominoes.property('css', '/stylesheets');
+    dominoes.property('cms', '/javascripts/dashboard/cms');
+    
     dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css($(css)/TreeGrid/css/TreeGrid.css) $css($(css)/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
     dominoes.rule('JurisdictionsTree', 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/FilterableCheckboxSelectionModel.js ( $(js)/audience/BaseSelectionGrid.js > $(js)/audience/JurisdictionsTree.js )');
@@ -42,14 +44,15 @@ Ext.ns("Talho");
       'Talho.AuditLog': {js: "AjaxPanel > $(js)/admin/AuditLog.js"},
       'Talho.ReportView': {js:'/javascripts/reports/ReportView.js'},
       'Talho.Reports': {js:'/javascripts/reports/Reports.js'},
-      'Talho.HelpWindow': {js:'$(js)/dashboard/HelpWindow.js'}
+      'Talho.HelpWindow': {js:'$(js)/dashboard/HelpWindow.js'},
+      'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js $(js)/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '$(js)/utility.js $(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js $(js)/dashboard/MenuBuilder.js');
-    dominoes.rule('Dashboard', '$(ext_extensions)/TabPanelNav.js $(js)/utility.js $(js)/dashboard/article3panel.js');
+    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/view_portal.js $(cms)/view_controller.js');
     dominoes.rule('ManageFavorites', 'RowActions $(js)/dashboard/ManageFavoritesWindow.js');
 
     var mgr = function(config){};

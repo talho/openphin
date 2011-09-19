@@ -202,3 +202,27 @@ Factory.define :report_report, :class => Report::Report do |f|
   f.association :audience, :factory => :audience
   f.incomplete :true
 end
+
+Factory.define :dashboard do |d|
+  d.sequence(:name){|t| "Dashboard ##{t}"}
+  d.columns 3
+  d.draft_columns 3
+end
+
+Factory.define :dashboard_portlet, :class => Dashboard::DashboardPortlet do |dp|
+  dp.association :dashboard
+  dp.association :portlet
+  dp.draft false
+  dp.column 0
+end
+
+Factory.define :dashboard_audience, :class => Dashboard::DashboardAudience do |da|
+  da.association :dashboard
+  da.association :audience
+  da.role "publisher"
+end
+
+Factory.define :portlet do |p|
+  p.xtype "dashboardhtmlportlet"
+  p.config "--- \nhtml: \"\"\ncolumn: 0\nxtype: dashboardhtmlportlet\n"
+end

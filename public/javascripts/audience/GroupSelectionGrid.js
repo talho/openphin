@@ -4,7 +4,7 @@ Talho.ux.GroupSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {
     title: 'Groups/Organizations',
 
     _createStore: function(config){
-        this.store = new Ext.data.GroupingStore({
+        this.store = this.store || new Ext.data.GroupingStore({
             url: '/audiences/groups',
             reader: new Ext.data.JsonReader({
                 idProperty: 'id',

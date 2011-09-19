@@ -4,7 +4,7 @@ Talho.ux.RoleSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {
     title: 'Roles',
 
     _createStore: function(config){
-        this.store = new Ext.data.JsonStore({
+        this.store = this.store || new Ext.data.JsonStore({
             url: '/roles.json',
             idProperty: 'id',
             fields: [

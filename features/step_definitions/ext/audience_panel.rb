@@ -1,8 +1,9 @@
 
 
-When /^I (?:click|select) the following in the audience panel:$/ do |table|
+When /^I (?:click|select) the following in the audience panel(?: within "([^"]*)")?:$/ do |selector, table|
   # table is a | name          | type         |  state    |
   #            | Dallas County | Jurisdiction |  Region 1 |
+
   jurisdictions = table.hashes.find_all{|hash| hash['type'] == 'Jurisdiction'}
   roles = table.hashes.find_all{|hash| hash['type'] == 'Role'}
   users = table.hashes.find_all{|hash| hash['type'] == 'User'}
@@ -10,8 +11,9 @@ When /^I (?:click|select) the following in the audience panel:$/ do |table|
 
   select_jurisdictions(jurisdictions) unless jurisdictions.count == 0
   select_roles(roles) unless roles.count == 0
-  select_users(users) unless users.count == 0
+  select_users(users, selector) unless users.count == 0
   select_groups(gos) unless gos.count == 0
+
 end
 
 def select_jurisdictions(jurisdictions)
@@ -46,16 +48,22 @@ def select_checkbox_grid_row(selector, rows)
 
 end
 
-def select_users(users)
+def select_users(users, selector = nil)
   When %Q{I click x-accordion-hd "Users"}
   users.each do |user|
-    When %Q{I fill in "User" with "#{user['name']}"}
+    with_scope(selector) do
+      When %Q{I fill in "User" with "#{user['name']}"}
+    end
     #we need to wait for the search to complete and select an item in order to fire off the result
     begin
-      page.find(:xpath, '//img[contains(concat(" ", @class, " "), "x-form-arrow-trigger") and ../input[@name="User"]]').click # click the user drop down
+      with_scope(selector) do
+        page.find(:xpath, '//img[contains(concat(" ", @class, " "), "x-form-arrow-trigger") and ../input[@name="User"]]').click # click the user drop down
+      end
       When %Q{I click x-combo-list-item "#{user['name']} - #{user['email']}"}
     rescue Capybara::TimeoutError # it couldn't find the drop down. I'm not sure why this is having problems, but for some reason on the second go, the dropdown doesn't go automatically. Repeating code because we want to only try this once before failing
-      page.find(:xpath, '//img[contains(concat(" ", @class, " "), "x-form-arrow-trigger") and ../input[@name="User"]]').click
+      with_scope(selector) do
+        page.find(:xpath, '//img[contains(concat(" ", @class, " "), "x-form-arrow-trigger") and ../input[@name="User"]]').click
+      end
       When %Q{I click x-combo-list-item "#{user['name']} - #{user['email']}"}
     end
   end

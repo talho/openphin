@@ -125,7 +125,6 @@ Feature: Invitation System
       | name | email                  |
       | Jane | jane.smith@example.com |
       | Bob  | bob.smith@example.com  |
-
   Scenario: Viewing invitation completion status by email
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |

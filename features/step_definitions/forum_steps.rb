@@ -35,6 +35,8 @@ Given 'the forum "$forum_name" has the following audience:' do |forum_name, tabl
       end
     end
   end
+
+  forum.audience.refresh_recipients(:force => true)
 end
 
 When 'I fill out the audience form with:' do |table|

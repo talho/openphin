@@ -21,6 +21,8 @@ config.logger = Logger.new(config.log_path, 3, 10 * 1024**2)
 
 config.logger = Logger.new(config.log_path, 3, 10 * 1024**2)
 
+config.logger = Logger.new(config.log_path, 3, 10 * 1024**2)
+
 # Use a different cache store in production
 # config.cache_store = :mem_cache_store
 

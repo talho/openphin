@@ -22,6 +22,18 @@ if Gem::VERSION >= '1.3.6'
   end
 end
 
+# see: http://www.redmine.org/issues/7516
+if Gem::VERSION >= '1.3.6'
+  module Rails
+    class GemDependency
+      def requirement
+      r = super
+      (r == Gem::Requirement.default) ? nil : r
+      end
+    end
+  end
+end
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers

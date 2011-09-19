@@ -29,7 +29,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
     },
 
     _createStore: function(config){
-        this.store = new Ext.ux.maximgb.tg.NestedSetStore({
+        this.store = this.store || new Ext.ux.maximgb.tg.NestedSetStore({
             leaf_field_name: 'leaf',
             right_field_name: 'right',
             left_field_name: 'left',
@@ -95,7 +95,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
                 'rowcontextmenu': this.showJurisdictionTreeContextMenu
             }
         });
-
+        
         return this.jurisdictionTreeGrid;
     },
 

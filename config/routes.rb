@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.resources :devices
     user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
+    user.is_admin "/is_admin.:format", :controller => "users", :action => "is_admin", :conditions => {:method => [:get]}
   end
 
   map.resources :alerts, :only => [:show, :update]
@@ -53,7 +54,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:get, :post]}
   map.resource :search, :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
-  map.dashboard "/dashboard", :controller => "dashboard", :action => "index"
+  map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
+  map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
+  map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
+  map.resources :dashboard, :collection => {:all => :get}
   map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
   map.root :controller => "dashboard", :action => "index", :format => "ext"
   map.about "/about", :controller => "dashboard", :action => "about"
@@ -62,10 +66,7 @@ ActionController::Routing::Routes.draw do |map|
   map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
-  map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
-  map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
-  map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
-  
+
   map.resources :user_batch, :controller => "admin/user_batch"
   map.resource :users, :controller => "admin/users", :only => [:deactivate], :member => {:deactivate => :post}
 
