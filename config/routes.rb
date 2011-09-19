@@ -74,8 +74,9 @@ ActionController::Routing::Routes.draw do |map|
     forum.resources :topics, :member => { :update_comments => :put }
   end
   
-  map.namespace "report" do |n|
-    n.resources :reports, :member => { :filters => :get, :reduce => :post }
+  map.namespace "report" do |report|
+    report.resources :reports, :member => { :filters => :get, :reduce => :post }
+    report.resources :recipes
   end
 
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"
