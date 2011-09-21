@@ -40,7 +40,6 @@ Background:
 Scenario: User can view their own profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.pub@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Potter Public > View My Profile"
   Then I should see:
    | Potter Public                         |
@@ -61,9 +60,6 @@ Scenario: User can view their own profile
 Scenario: Public user viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.pub@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
    | Potter Public                         |
@@ -83,9 +79,7 @@ Scenario: Public user viewing a public profile
 Scenario: Public user viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.pub@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
      | Potter Public                         |
@@ -106,9 +100,7 @@ Scenario: Public user viewing a private profile
 Scenario: User with a non-public, non-admin role viewing a public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
    | Potter Public                         |
@@ -128,9 +120,7 @@ Scenario: User with a non-public, non-admin role viewing a public profile
 Scenario: User with a non-public, non-admin role viewing a private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.md@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
      | Potter Public                         |
@@ -151,9 +141,6 @@ Scenario: User with a non-public, non-admin role viewing a private profile
 Scenario: Admin viewing a subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.admin@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
    | Potter Public                         |
@@ -174,42 +161,38 @@ Scenario: Admin viewing a subordinate public profile
 Scenario: Admin viewing a non-subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.admin@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
-   Then I should see:
-   | Potter Public                         |
-   | pott.pub@example.com                  |
-   | Public in Potter County               |
-   | 888-123-1111                          |
-   | 888-123-3333                          |
-   | Applied Genetics                      |
-   | Supervisor for the Genetic Laundromat |
-   | They call me Mr. Clean Genes          |
-   | I've been washing genes               |
-   | Born in Japan and Educated in Germany |
+  Then I should see:
+    | Potter Public                         |
+    | pott.pub@example.com                  |
+    | Public in Potter County               |
+    | 888-123-1111                          |
+    | 888-123-3333                          |
+    | Applied Genetics                      |
+    | Supervisor for the Genetic Laundromat |
+    | They call me Mr. Clean Genes          |
+    | I've been washing genes               |
+    | Born in Japan and Educated in Germany |
   And I should not see "Edit This Account"
 
 
 Scenario: Admin viewing a subordinate private profile
   Given pott.pub@example.com has a private profile
   And I am logged in as "pott.admin@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
-   Then I should see:
-   | Potter Public                         |
-   | pott.pub@example.com                  |
-   | Public in Potter County               |
-   | 888-123-1111                          |
-   | 888-123-3333                          |
-   | Applied Genetics                      |
-   | Supervisor for the Genetic Laundromat |
-   | They call me Mr. Clean Genes          |
-   | I've been washing genes               |
-   | Born in Japan and Educated in Germany |
+  Then I should see:
+    | Potter Public                         |
+    | pott.pub@example.com                  |
+    | Public in Potter County               |
+    | 888-123-1111                          |
+    | 888-123-3333                          |
+    | Applied Genetics                      |
+    | Supervisor for the Genetic Laundromat |
+    | They call me Mr. Clean Genes          |
+    | I've been washing genes               |
+    | Born in Japan and Educated in Germany |
 
   When I press "Edit This Account"
   Then the "Edit Account: Potter Public" tab should be open
@@ -219,9 +202,7 @@ Scenario: Admin viewing a non-subordinate private profile
   # NO edit button
   Given pott.pub@example.com has a private profile
   And I am logged in as "dall.admin@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
    Then I should see:
      | Potter Public                         |
@@ -242,9 +223,6 @@ Scenario: Admin viewing a non-subordinate private profile
 Scenario: Fields should not be visible if they do not have data
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
-  And I navigate to the ext dashboard page
-  And I should see "About TXPhin"
-
   And I view the ext profile page for "pott.pub@example.com"
     Then I should see:
       | Potter Public                         |

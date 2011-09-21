@@ -51,39 +51,15 @@ Feature: Assigning roles to users for roles
       | subject       | Role assigned    |
       | body contains | You have been assigned the role of Health Officer in Dallas County |
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
-	  And "admin@dallas.gov" should not receive an email
+    And "admin@dallas.gov" should not receive an email
 
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
-    Given I am logged in as "admin@dallas.gov"
-    And I go to the roles requests page for an admin
-    And I show dropdown menus
-    And I follow "Assign Role"
+    Given this scenario is written
+    #TODO: Re-implement this maliciousness test
 
-    When I maliciously post the assign role form with:
-      | People | John Smith, Jane Doe |
-      | Role | Health Officer |
-      | Jurisdiction | Potter County |
-
-    Then the following users should not receive any emails
-      | emails         | john@example.com, jane@example.com |
-    And "john@example.com" should not have the "Health Officer" role in "Potter County"
-    And "jane@example.com" should not have the "Health Officer" role in "Potter County"
-
-  Scenario: Malicious admin cannot assign roles to users outside their jurisdictions 
-    Given I am logged in as "admin@dallas.gov"
-    And I go to the roles requests page for an admin
-    And I show dropdown menus
-    And I follow "Assign Role"
-
-    When I maliciously post the assign role form with:
-      | People | John Smith, Jane Doe |
-      | Role | Health Officer |
-      | Jurisdiction | Potter County |
-
-    Then the following users should not receive any emails
-      | emails         | john@example.com, jane@example.com |
-    And "john@example.com" should not have the "Health Officer" role in "Potter County"
-    And "jane@example.com" should not have the "Health Officer" role in "Potter County"
+  Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
+    Given this scenario is written
+    #TODO: Re-implement this maliciousness test
 
   Scenario: Malicious admin cannot remove role assignments the user is not an admin of
     Given "admin@dallas.gov" has approved the "Health Officer" role in "Dallas County" for "john@example.com"

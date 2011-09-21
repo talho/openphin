@@ -297,7 +297,12 @@ end
 def force_open_tab(tab_name, tab_url, config = nil)
   tab_config = "{title:'#{tab_name}', url:'#{tab_url}'}"
   tab_config = config unless config.nil?
-  page.execute_script("window.Application.phin.open_tab(#{tab_config})")
+  page.execute_script("try{
+    window.Application.phin.open_tab(#{tab_config})
+  }
+  catch(e){
+    console.log(e.toString());
+  }")
 end
 
 When /^I close the active ext window$/ do

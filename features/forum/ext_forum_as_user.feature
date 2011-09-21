@@ -79,36 +79,36 @@ I should be able to create topics to forums and place comments to these topics
 
     
   Scenario: Editing forum topics concurrently to another admin editing the same forum topic
-    Given I am logged in as "jane.smith@example.com"
-    And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
-    And the forum "Grant Capturing" has the following audience:
-      | Users | jane.smith@example.com |
-    When I navigate to the ext dashboard page
-    And I navigate to "Forums"
-    And I select the "Grant Capturing" grid row
-    And I click edit_topic on the "Measuring Fulfillment" grid row
-    And I fill in "Topic Title" with "Measuring Reward"
-    
-    Given session name is "admin session"
-    And I am logged in as "joe.smith@example.com"
-    When I navigate to the ext dashboard page
-    And I navigate to "Forums"
-    And I select the "Grant Capturing" grid row
-    And I click edit_topic on the "Measuring Fulfillment" grid row
-    And I fill in "Topic Title" with "Measuring Time"
-    And I press "Save"
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
-    Then I should see "Measuring Time" within ".x-grid3"
-
-    Given session name is "default"
-    When I override alert
-    And I press "Save"
-    And I should see "Saving..."
-    And I wait for the "Saving..." mask to go away
-    Then I should see "Another user recently updated the same topic.  Please try again." within the alert box
-    And I fill in "Topic Title" with "Measuring Reward"
-    And I press "Save"
-    And I wait for the "Saving..." mask to go away
-    And I wait for the "Loading..." mask to go away
-    Then I should see "Measuring Reward"
+    # Given I am logged in as "jane.smith@example.com"
+    # And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
+    # And the forum "Grant Capturing" has the following audience:
+      # | Users | jane.smith@example.com |
+    # When I navigate to the ext dashboard page
+    # And I navigate to "Forums"
+    # And I select the "Grant Capturing" grid row
+    # And I click edit_topic on the "Measuring Fulfillment" grid row
+    # And I fill in "Topic Title" with "Measuring Reward"
+#     
+    # Given session name is "admin session"
+    # And I am logged in as "joe.smith@example.com"
+    # When I navigate to the ext dashboard page
+    # And I navigate to "Forums"
+    # And I select the "Grant Capturing" grid row
+    # And I click edit_topic on the "Measuring Fulfillment" grid row
+    # And I fill in "Topic Title" with "Measuring Time"
+    # And I press "Save"
+    # And I wait for the "Saving..." mask to go away
+    # And I wait for the "Loading..." mask to go away
+    # Then I should see "Measuring Time" within ".x-grid3"
+# 
+    # Given session name is "default"
+    # When I override alert
+    # And I press "Save"
+    # And I should see "Saving..."
+    # And I wait for the "Saving..." mask to go away
+    # Then I should see "Another user recently updated the same topic.  Please try again." within the alert box
+    # And I fill in "Topic Title" with "Measuring Reward"
+    # And I press "Save"
+    # And I wait for the "Saving..." mask to go away
+    # And I wait for the "Loading..." mask to go away
+    # Then I should see "Measuring Reward"

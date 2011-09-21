@@ -27,7 +27,7 @@
     dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/xtheme-Ocean.css) )) /javascripts/ext/adapter/jquery/<%= Rails.env == "production" ? "ext-jquery-adapter.js" : "ext-jquery-adapter-debug.js" %> > /javascripts/ext/<%= Rails.env == "production" ? "ext-all.js" : "ext-all-debug.js" %>');
 
     dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/admin.css) $css(/stylesheets/redesign/forum.css) $css(/stylesheets/redesign/documents.css)');
-    dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/Application.js /javascripts/dashboard/ScriptManager.js /javascripts/dashboard/index.js /dashboard/menu.js /javascripts/ext_extensions/validations.js');
+    dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/application.js /javascripts/dashboard/script_manager.js /javascripts/dashboard/index.js /dashboard/menu.js /javascripts/ext_extensions/validations.js');
     dominoes.rule('phinPlugins', '<%=  javascript_include_domino( defined?($expansion_list) ? $expansion_list.dup : [] ) %>');
     dominoes({
         chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad > phinPlugins >| initView',
@@ -38,7 +38,7 @@
             Ext.get('loading-message').update('Loading PHIN...');
         },
         initView: function(){
-            window.Application.phin = new PhinApplication({path: '<%= @path %>'});
+            window.Application.phin = new PhinApplication({path: '<%= @path || session[:path] %>'});
             var loading = Ext.get('loading');
             var loadingMask = Ext.get('loading-mask');
             setTimeout(function(){

@@ -41,15 +41,15 @@ I should be able to edit my profile
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
       And I navigate to the ext dashboard page
-      And I should see "About TXPhin"
+     When I wait for the "Loading PHIN..." mask to go away
       And I view the ext profile page for "john.smith@example.com"
-      Then I should not see "Edit This Account"
+     Then I should not see "Edit This Account"
     
   Scenario: editing user account information for another user as another jurisdictional admin
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
     And I am logged in as "jane.smith@example.com"
     And I navigate to the ext dashboard page
-    And I should see "About TXPhin"
+     When I wait for the "Loading PHIN..." mask to go away
     And I view the ext profile page for "john.smith@example.com"
     And I should not see "Edit This Account"
 
