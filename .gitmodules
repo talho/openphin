@@ -30,7 +30,7 @@
 	url = git://github.com/collectiveidea/exception_notification.git
 [submodule "vendor/plugins/backgroundrb"]
 	path = vendor/plugins/backgroundrb
-	url = git://github.com/gnufied/backgroundrb.git
+	url = git://github.com/talho/backgroundrb.git
 [submodule "vendor/plugins/googlecharts"]
 	path = vendor/plugins/googlecharts
 	url = git://github.com/talho/googlecharts.git
