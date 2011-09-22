@@ -54,3 +54,4 @@ vendor/plugins/vms
 spec/rollcall
 config/*.yml
 reports/*
+lib/workers/plugin_workers
