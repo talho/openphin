@@ -61,3 +61,6 @@
 [submodule "vendor/plugins/pin_cushion"]
 	path = vendor/plugins/pin_cushion
 	url = git://github.com/Dishwasha/pin_cushion.git
+[submodule "vendor/plugins/backgroundrb"]
+	path = vendor/plugins/backgroundrb
+	url = https://github.com/gnufied/backgroundrb.git
