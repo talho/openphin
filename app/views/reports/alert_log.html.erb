@@ -1,24 +1,24 @@
 <%- filtered = filters.present? ? "(FILTERED)" : "" -%>
-<%- content_tag(:table,:border=>"1") do -%>
+<%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
   <%= content_tag(:caption, "Alerts #{filtered} as of #{Time.now}", :style=>"text-align:center")%>
-  <%- content_tag(:tr) do -%>
-    <%=content_tag(:th,"Identifier")%>
-    <%=content_tag(:th,"Title")%>
-    <%=content_tag(:th,"Author")%>
-    <%=content_tag(:th,"Created At")%>
-    <%=content_tag(:th,"Severity")%>
-    <%=content_tag(:th,"Status")%>
-    <%=content_tag(:th,"Acknowledge")%>
-    <%=content_tag(:th,"Sensitive")%>
-    <%=content_tag(:th,"Delivery Time")%>
-    <%=content_tag(:th,"Cross-Jurisdictional")%>
-    <%=content_tag(:th,"Short Message")%>
-    <%=content_tag(:th,"Message")%>
-    <%# Total Recipients %>
-    <%#  Methods %>
-  <%- end -%>
-  <%- results.each do |r| -%>
+  <%- content_tag(:thead) do -%>
     <%- content_tag(:tr) do -%>
+      <%=content_tag(:th,"Identifier")%>
+      <%=content_tag(:th,"Title")%>
+      <%=content_tag(:th,"Author")%>
+      <%=content_tag(:th,"Created At")%>
+      <%=content_tag(:th,"Severity")%>
+      <%=content_tag(:th,"Status")%>
+      <%=content_tag(:th,"Acknowledge")%>
+      <%=content_tag(:th,"Sensitive")%>
+      <%=content_tag(:th,"Delivery Time")%>
+      <%=content_tag(:th,"Cross-Jurisdictional")%>
+      <%# Total Recipients %>
+      <%#  Methods %>
+    <%- end -%>
+  <%- end -%>
+  <%- results.each_with_index do |r,i| -%>
+    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd report-data-first" : "Even report-data-first"}") do -%>
       <%= content_tag(:td, r["identifier"]) %>
       <%= content_tag(:td, r["title"]) %>
       <%= content_tag(:td, r["author"]) %>
@@ -29,8 +29,14 @@
       <%= content_tag(:td, r["sensitive"].present? ? r["sensitive"]:"&nbsp;") %>
       <%= content_tag(:td, (r["delivery_time"].to_i/60).to_s + " hours") %>
       <%= content_tag(:td, r["not_cross_jurisdictional"]?"Yes":"No") %>
-      <%=content_tag(:td,r["short_message"].present? ? r["short_message"]:"&nbsp;")%>
-      <%=content_tag(:td,r["message"])%>
+    <%- end -%>
+    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
+      <%=content_tag(:th, "Short Message", :class=>"RowWrap") %>
+      <%=content_tag(:td,r["short_message"].present? ? r["short_message"]:"&nbsp;", :colspan=>"10")%>
+    <%- end -%>
+    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
+      <%=content_tag(:th,"Message", :class=>"RowWrap")%>
+      <%=content_tag(:td,r["message"], :colspan=>"10")%>
     <%- end -%>
   <%- end -%>
 <%- end -%>

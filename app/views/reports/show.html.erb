@@ -1,15 +1,20 @@
-<%= content_tag(:h1,"Users as of #{Time.now}") %>
-<%- content_tag(:table,:border=>"1") do -%>
-  <%- content_tag(:tr) do -%>
-    <%=content_tag(:th,"Name")%>
-    <%=content_tag(:th,"Email")%>
-    <%=content_tag(:th,"Roles")%> 
-  <%- end -%>
-  <%- results.each do |user| -%>
+<%- filtered = filters.present? ? "(FILTERED)" : "" -%>
+<%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
+  <%= content_tag(:caption, "Users #{filtered} as of #{Time.now}", :style=>"text-align:center")%>
+  <%- content_tag(:thead) do -%>
     <%- content_tag(:tr) do -%>
-      <%= content_tag(:td, user["display_name"]) %>
-      <%= content_tag(:td, user["email"]) %>
-      <%= content_tag(:td, to_rpt(user["role_memberships"])) %>
+      <%=content_tag(:th,"Name")%>
+      <%=content_tag(:th,"Email")%>
+      <%=content_tag(:th,"Roles")%>
     <%- end -%>
   <%- end -%>
+  <%- content_tag(:div, :class=>"nobreak") do -%>
+	  <%- results.each_with_index do |user,i| -%>
+	    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
+	      <%= content_tag(:td, user["display_name"]) %>
+	      <%= content_tag(:td, user["email"]) %>
+	      <%= content_tag(:td, to_rpt(user["role_memberships"])) %>
+	    <%- end -%>
+	  <%- end -%>
+  <%- end  -%>
 <%- end -%>

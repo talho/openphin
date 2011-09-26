@@ -75,7 +75,7 @@ class Report::Recipe < ActiveRecord::Base
    Dir.mktmpdir do |dir|
      path = File.join dir, filename
      File.open(path, 'wb') do |f|
-       rendering = view.render(:inline=>template,:type=>'html',:locals=>{:results=>results,:filters=>filters})
+       rendering = view.render(:inline=>template,:type=>'html',:locals=>{:results=>results,:filters=>filters}, :layout=>"report/layouts/report")
        f.write(rendering)
      end
      report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )

@@ -30,14 +30,14 @@ class Reporters::Reporter < Struct.new(:options)
         raise StandardError, message
       end
 
-        begin
-          view_path = Rails::Configuration.new.view_path
-          view = view_for_at_using author, view_path, recipe
-        rescue StandardError => e
-          message = %Q(Report "#{report.name}" erred in building supporting view: (#{e}))
-          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-          fatal_logging(logger,report,full_message)
-        end
+      begin
+        view_path = Rails::Configuration.new.view_path
+        view = view_for_at_using author, view_path, recipe
+      rescue StandardError => e
+        message = %Q(Report "#{report.name}" erred in building supporting view: (#{e}))
+        full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
+        fatal_logging(logger,report,full_message)
+      end
 
       unless options[:filters]
         begin

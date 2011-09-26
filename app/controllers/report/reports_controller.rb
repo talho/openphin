@@ -1,7 +1,5 @@
 class Report::ReportsController < ApplicationController
 
- require 'nokogiri'
-
  before_filter :non_public_role_required
   
  include ActionView::Helpers::DateHelper
@@ -164,19 +162,30 @@ class Report::ReportsController < ApplicationController
   end
 
   def html2csv(table_string)
-    res = ""
     doc = Nokogiri::HTML(table_string)
-    doc.xpath('//table//tr').each do |row|
-      row.xpath('th').each do |header|
-        res << '"' + header.text.gsub("\n", ' ').gsub('"', '\"').gsub(/(\s){2,}/m, '\1') + "\", "
-      end
-      row.xpath('td').each do |cell|
-        res << '"' + cell.text.gsub("\n", ' ').gsub('"', '\"').gsub(/(\s){2,}/m, '\1') + "\", "
-      end
-      res << "\n"
+    data = []
+    header = doc.xpath('//table/thead/tr/th').inject(""){|s,ele| s << %Q(\"#{ele.text}\", )}
+    embedded = []
+    idx = 0
+    doc.xpath('//table/tr').each do |tr|
+      idx += 1 if tr.xpath('./@class[contains(., "report-data-first")]').present?
+      break if idx > 1
+      tr.xpath('th').each { |embedded_th| embedded.push(embedded_th.text) }
     end
-    res
+    header += embedded.uniq.inject(""){|s,ele| s << %Q(\"#{ele}\", )}
+    idx = 0
+    data[idx] = header.sub(/, $/,"")
+    idx += 1 unless doc.xpath('//table/tr[contains(@class,"report-data-first")]').present?
+    doc.xpath('//table/tr').each do |row|
+      if row.xpath('./@class[contains(., "report-data-first")]').present?
+        idx += 1
+        data[idx] = ""
+      end
+      row.xpath('td').each do |data_obj|
+        data[idx] << '"' + data_obj.text.gsub("\n"," ").gsub('"','\"').gsub(/(\s){2,}/m, '\1') + "\", "
+      end
+    end
+    data.collect{|ele|ele.sub(/, $/,"")}.join("\n")
   end
 
 end
-

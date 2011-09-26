@@ -72,7 +72,7 @@ describe Report::Recipe do
       values["_rendering_updated_at"].should <= Time.now
       values["errors"].should be_empty
       values["instance"].should == report
-      values["instance"]["rendering_file_size"].should equal 0
+      values["instance"]["rendering_file_size"].should > 0
       values["instance"][:incomplete].should be_false
     end
 
