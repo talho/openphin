@@ -5,8 +5,7 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes
 	# GET /report/recipes.json
 	def index
-	  Report::Recipe.register_recipes
-	  @recipes = Report::Recipe.deployable.authorized(current_user).find(:all, :order=>'updated_at DESC')
+	  @recipes = Report::Recipe.deployable.find(:all, :order=>'updated_at DESC')
 	   respond_to do |format|
 	     format.html
 	     format.json do

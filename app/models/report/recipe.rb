@@ -18,13 +18,6 @@ class Report::Recipe < ActiveRecord::Base
     self.find_or_create_by_type(self.name)
   end
 
-  def after_create
-    jurisdictions = [Jurisdiction.find_by_name("Dallas"),Jurisdiction.find_by_name("Potter")]
-    aud = Audience.new( :roles=>[ Role.find_by_name("Medical Director")],:jurisdictions=>jurisdictions )
-    aud.recipients(:force => true).length if aud # apply the recipients for the audience so that the mapped joins will actually work
-    update_attribute(:audience,aud)
-  end
-
   def name
     self[:type].demodulize.split(/(?=[A-Z])/).join("-")
   end
@@ -100,25 +93,6 @@ class Report::Recipe < ActiveRecord::Base
 
   def bind_attributes(report)
     report.update_attribute(:audience,audience) if audience
-  end
-
-  def self.register_recipes
-   # create Recipe models without loading them, enabling Reports to refer to
-   report_path = File.dirname(__FILE__)
-   Dir.glob(File.join(report_path,"**","*.rb")).each do |m|
-     class_name = m.sub(report_path + File::SEPARATOR, '').sub(/\.rb$/, '').camelize
-     if class_name.end_with? 'Recipe'
-       begin
-         klass = "#{self.name.split('::').first}::#{class_name}"
-         klass.constantize.create unless Report::Recipe.find_by_type(klass)
-       rescue ActiveRecord::StatementInvalid => e
-         puts "Missing table, need to migrate (#{e})"
-       rescue ActiveRecord::AssociationTypeMismatch => e
-         # the recipe audience Jurisdiction and Role may not be defined during test
-         raise unless ["test","cucumber"].include?(Rails.env)
-       end
-     end
-   end
   end
 
   JSON_COLUMNS =  %w(id type_humanized description)
