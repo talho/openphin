@@ -1,8 +1,7 @@
 # Install hook code here
 parent_lib_dir = File.join(Rails.root, "lib")
-# Require the creation of plugin_workers under PHIN
-Dir.ensure_exists(File.join(Dir.pwd, "lib/workers/plugin_workers"))
 [ "workers" ].each { |lib_subdir|
+  Dir.ensure_exists("#{Rails.root}/lib/#{lib_subdir}/plugin_#{lib_subdir}")
   rel_path = File.join(Rails.root,"vendor","plugins","<%= file_name %>","lib",lib_subdir)
   target = File.join(parent_lib_dir, lib_subdir, "plugin_#{lib_subdir}")
   Dir["#{rel_path}/*.rb"].each do |d|

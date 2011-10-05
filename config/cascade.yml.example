@@ -1,0 +1,10 @@
+
+production:
+  url: ''
+  id: ''
+  
+development:
+  url: ''
+  id: ''
+  uname: ''
+  pass: ''

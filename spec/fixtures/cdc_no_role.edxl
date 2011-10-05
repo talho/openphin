@@ -40,7 +40,7 @@
               <ns1:value>60</ns1:value>
             </ns1:parameter>
             <ns1:parameter>
-              <ns1:valueName>JurisdictionalLevel</ns1:valueName>
+              <ns1:valueName>JurisdictionLevel</ns1:valueName>
               <ns1:value>State</ns1:value>
             </ns1:parameter>
             <ns1:parameter>

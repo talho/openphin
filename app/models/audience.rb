@@ -53,12 +53,7 @@ class Audience < ActiveRecord::Base
   end
 
   def foreign_jurisdictions
-    first_foreign = jurisdictions.foreign.first
-    if first_foreign
-      [first_foreign.root]
-    else
-      []
-    end
+    jurisdictions.foreign
   end
 
   #TODO: opportunity for optimization:  perform this function in SQL, not using map
@@ -213,6 +208,7 @@ class Audience < ActiveRecord::Base
     true
   end
 
+  protected
   def determine_primary_audience_jurisdictions  # returns an array of jurisdiction objects
     target = Target.find_by_audience_id(self.id)
     alert = target ? target.item : nil
@@ -231,6 +227,7 @@ class Audience < ActiveRecord::Base
       juris_ids = (RoleMembership.find_all_by_jurisdiction_id(jj).map(&:jurisdiction_id) + RoleMembership.find_all_by_role_id(rr).map(&:jurisdiction_id) + uu).uniq
     end
     jurs = Jurisdiction.find_all_by_id(juris_ids)
+    jurs << self.groups.map(&:determine_primary_audience_jurisdictions)
     return jurs.flatten.uniq
   end
 

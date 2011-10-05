@@ -120,7 +120,7 @@ end
 When /^I maliciously (.+) data .+ "([^"]*)"$/ do | method, url, table |
   script = "xhr = new XMLHttpRequest(); " +
           "xhr.open('#{method.upcase}','#{url}#{("?" + table.rows_hash.to_query) if method.strip.downcase == "get"}',true); " +
-          "xhr.onreadystatechange = function() {if(xhr.readyState == 4  && xhr.status == 200) { alert(xhr.responseText);}}; " +
+          "xhr.onreadystatechange = function() {if(xhr.readyState == 4) { alert(xhr.responseText);}}; " +
           "xhr.send(#{("\"" + table.rows_hash.to_query + "\"") if method.strip.downcase != "get"}); "
   page.execute_script(script)
 end

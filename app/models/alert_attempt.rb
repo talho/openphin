@@ -63,12 +63,12 @@ class AlertAttempt < ActiveRecord::Base
       deliveries.create!
       alert.sent_at = Time.zone.now
       alert.save
-      organization.deliver(alert)
+      Organization.deliver(alert)
     else
       deliveries.create!
       alert.sent_at = Time.zone.now
       alert.save
-      jurisdiction.deliver(alert)
+      Jurisdiction.deliver(alert)
     end
   end
   
@@ -81,12 +81,12 @@ class AlertAttempt < ActiveRecord::Base
       deliveries.create!
       alert.sent_at = Time.zone.now
       alert.save
-      organization.deliver(alert)
+      Organization.deliver(alert)
     else
       deliveries.create!
       alert.sent_at = Time.zone.now
       alert.save
-      jurisdiction.deliver(alert)
+      Jurisdiction.deliver(alert)
     end
   end
   

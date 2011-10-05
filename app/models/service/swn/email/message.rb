@@ -108,7 +108,7 @@ class Service::SWN::Email::Message < Service::SWN::Email::Base
 
       message.IVRTree.select{|ivr| ivr.name == provider.ivr}.each do |ivr|
         ivr.ContextNodes.select{|node| node.operation == "TTS"}.each do |node|
-          xml.swn(:gwbText, node.response)
+          xml.swn(:gwbText, node.response.value)
         end
       end unless provider.blank? || provider.ivr.blank?
     end

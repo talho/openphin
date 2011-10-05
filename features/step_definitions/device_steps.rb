@@ -5,7 +5,7 @@ end
 
 When '"$email" acknowledges the phone alert' do |email|
   a = User.find_by_email(email).alert_attempts.first
-  if a.alert.call_down_messages.first == "Please press one to acknowledge this alert."
+  if a.alert.call_down_messages.values.first == "Please press one to acknowledge this alert."
     a.acknowledge! :ack_device => "Device::PhoneDevice", :ack_response => 1
   else
     a.acknowledge! :ack_device => "Device::PhoneDevice"

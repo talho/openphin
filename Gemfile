@@ -34,12 +34,10 @@ group :default do
   gem "will_paginate", "2.3.14"
   gem "RedCloth", "4.2.3"
   gem "hoptoad_notifier", "2.3.0"
-  gem "pauldix-feedzirra", "0.0.18"
-    gem "builder", "2.1.2"
-    gem "nokogiri", "1.4.3.1"
-    gem "mdalessio-dryopteris", "0.1.2"
-    gem "pauldix-sax-machine", "0.0.14"
-    gem "taf2-curb", "0.5.4.0"
+  gem "feedzirra", "0.0.23"
+  gem "builder", "2.1.2"
+  gem "nokogiri", "1.4.3.1"
+  gem "curb", "0.7.15"
   gem "mysql", "2.8.1"
   gem "happymapper", :git => 'git://github.com/kayakyakr/happymapper.git' #"0.3.2"
   gem "libxml-ruby", "1.1.3"
@@ -53,6 +51,8 @@ group :default do
     gem "bson_ext", "1.3.1"
     gem "SystemTimer", "1.2.3"
   gem "base32-crockford", "0.1.0"
+  gem 'savon', '0.9.7'
+  gem "httpclient", "~> 2.2.1"
 end
 
 group :development do
