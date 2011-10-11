@@ -36,7 +36,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :users, :dashboard_id
+    remove_column :users, :dashboard_id
     drop_table :audiences_dashboards
     drop_table :dashboards_portlets
     drop_table :portlets
