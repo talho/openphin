@@ -63,7 +63,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
     findRecordIndexInSelectedItems: function(record, type){
         return this.selectedItemsStore.findBy(function(record, type, check, id){
             return record.get('id') === check.get('id') && check.get('type') === type;
-        }.createDelegate(this, [record, type], 0));
+        }.bind(this, [record, type], 0));
     },
 
     createTransferableRecord: function(){
@@ -250,7 +250,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
 
         this.selectedItemsStore.applyFilter = function(store){
             store.filterBy(store.filterFn, this);
-        }.createDelegate(this, [this.selectedItemsStore]);
+        }.bind(this, [this.selectedItemsStore]);
         
         this.selectedItemsStore.on('add', this.selectedItemsStore.applyFilter, this, {delay: 50});
         this.selectedItemsStore.on('remove', this.selectedItemsStore.applyFilter, this, {delay: 50});
@@ -278,7 +278,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
                             }
                         }
                         return value;
-                    }.createDelegate(this)},
+                    }.bind(this)},
                     {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true},
                     {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', iconCls: 'removeBtn', scope: this, handler: function(grid, row){
                         var record = grid.getStore().getAt(row);
@@ -402,4 +402,4 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
     }
 });
                                                        
-Ext.reg('audiencepanel', Ext.ux.AudiencePanel);
+Ext.reg('audiencepanel', 'Ext.ux.AudiencePanel');

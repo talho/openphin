@@ -124,7 +124,7 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 	 *   {Function} <b>callback</b> (optional). Function to call if the action icon is clicked.
 	 *   This function is called with same signature as action event and in its original scope.
 	 *   If you need to call it in different scope or with another signature use 
-	 *   createCallback or createDelegate functions. Works for statically defined actions. Use
+	 *   createCallback or bind functions. Works for statically defined actions. Use
 	 *   callbacks configuration options for store bound actions.
 	 * </li>
 	 * <li style="list-style-position:outside">
@@ -339,7 +339,7 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 			this.renderer = function(value, cell, record, row, col, store) {
 				cell.css += (cell.css ? ' ' : '') + 'ux-row-action-cell';
 				return this.tpl.apply(this.getData(value, cell, record, row, col, store));
-			}.createDelegate(this);
+			}.bind(this);
 		}
 
 		// actions in grouping grids support
@@ -509,6 +509,6 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 });
 
 // registre xtype
-Ext.reg('rowactions', Ext.ux.grid.RowActions);
+Ext.reg('rowactions', 'Ext.ux.grid.RowActions');
 
 // eof

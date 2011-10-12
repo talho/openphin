@@ -192,7 +192,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
     },
 
     showContextMenu: function(elem, recordId){
-        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [recordId]));
+        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.bind(this, [recordId]));
 
         this.contextMenu.show(elem);
     },

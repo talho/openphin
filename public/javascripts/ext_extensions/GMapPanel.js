@@ -72,17 +72,17 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
           }
         }
 
-        google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.createDelegate(this));
+        google.maps.event.addListener(this.gmap, 'mousemove', this.trackMouse.bind(this));
         this.fireEvent('mapready', this);
         this.map_ready = true;
-      }.createDelegate(this));
+      }.bind(this));
     },
     
     centerMap: function(lat, lng){
       if(Ext.isString(lat)){
         this.geocoder.geocode({address: lat}, function(results, status){
           this.gmap.setCenter(results[0].geometry.location);
-        }.createDelegate(this));
+        }.bind(this));
       }
       else if(Ext.isObject(lat)){
         this.gmap.setCenter(lat);
@@ -97,7 +97,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       if(Ext.isString(lat)){
         this.geocoder.geocode({address: lat}, function(results, status){
           this.gmap.panTo(results[0].geometry.location);
-        }.createDelegate(this));
+        }.bind(this));
       }else if(Ext.isObject(lat)){
         this.gmap.panTo(lat);
       }else{
@@ -137,11 +137,11 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       var add_marker = function(){
         var marker = new google.maps.Marker({position: latLng, title: title, map: this.gmap, data: data});
         this.markers.push(marker);
-        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.createDelegate(this, [marker], true));
-        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.createDelegate(this, [marker], true));
-        google.maps.event.addListener(marker, 'click', this.onMarkerClick.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.bind(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.bind(this, [marker], true));
+        google.maps.event.addListener(marker, 'click', this.onMarkerClick.bind(this, [marker], true));
         return marker;        
-      }.createDelegate(this);
+      }.bind(this);
       var defined = false;
       try{
         defined = Ext.isDefined(google) && Ext.isDefined(google.maps) && Ext.isDefined(google.maps.Map);
@@ -171,11 +171,11 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
           map: this.gmap
         });
         this.markers.push(marker);
-        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.createDelegate(this, [marker], true));
-        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.createDelegate(this, [marker], true));
-        google.maps.event.addListener(marker, 'click', this.onMarkerClick.createDelegate(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseover', this.trackObjectEnter.bind(this, [marker], true));
+        google.maps.event.addListener(marker, 'mouseout', this.trackObjectLeave.bind(this, [marker], true));
+        google.maps.event.addListener(marker, 'click', this.onMarkerClick.bind(this, [marker], true));
         return marker;
-      }.createDelegate(this);
+      }.bind(this);
       var defined = false;
       try{
         defined = Ext.isDefined(google) && Ext.isDefined(google.maps) && Ext.isDefined(google.maps.Map) && Ext.isDefined(StyledMarker);
@@ -197,7 +197,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
       this.open_window.open(this.gmap, marker);
       google.maps.event.addListener(this.open_window, 'closeclick', function(){
         this.open_window = null;
-      }.createDelegate(this));
+      }.bind(this));
       return this.open_window;
     },
     
@@ -251,7 +251,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
 
         google.maps.addDomListener(this.gmap, 'load', function(){
             this.onMapReady();
-        }.createDelegate(this));
+        }.bind(this));
 
     },
     onMapReady : function(){
@@ -369,7 +369,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     geoCodeLookup : function(addr) {
         
         this.geocoder = new GClientGeocoder();
-        this.geocoder.getLocations(addr, this.addAddressToMap.createDelegate(this));
+        this.geocoder.getLocations(addr, this.addAddressToMap.bind(this));
         
     },
     addAddressToMap : function(response) {
@@ -398,4 +398,4 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
  */
 });
 
-Ext.reg('gmappanel', Ext.ux.GMapPanel); 
+Ext.reg('gmappanel', 'Ext.ux.GMapPanel'); 

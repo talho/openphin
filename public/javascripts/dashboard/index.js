@@ -46,7 +46,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
               Application.fireEvent('opentab', {title: 'Email Link', url: config.path});
             }
 
-        }.createDelegate(this));
+        }.bind(this));
 
         Ext.each(Ext.query('#hiddenflash .error'), function(item, index, allItems) {
           Ext.Msg.alert("Error", item.innerHTML);
@@ -220,7 +220,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             if(Talho.ScriptManager.exists(config.initializer))
             {
                 panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
-                Talho.ScriptManager.getInitializer(config.initializer, this.getInitializer_callback.createDelegate(this, [config, panel], true));
+                Talho.ScriptManager.getInitializer(config.initializer, this.getInitializer_callback.bind(this, [config, panel], true));
                 return;
             }
             else if(Ext.isFunction(config.initializer))
@@ -250,7 +250,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 else if(xtype == 'centeredajaxpanel')
                 {
                     panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
-                    Talho.ScriptManager.loadOtherLibrary('AjaxPanel', this.loadOtherLibrary_callback.createDelegate(this, [config, panel], true));
+                    Talho.ScriptManager.loadOtherLibrary('AjaxPanel', this.loadOtherLibrary_callback.bind(this, [config, panel], true));
                     return;
                 }
             }
@@ -274,7 +274,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
           var win = initializer(config);
           win.show();
         };
-        Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.createDelegate(this, [config], true));
+        Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.bind(this, [config], true));
         return;
       }
     },
@@ -326,7 +326,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 title: "Manage Bookmarks",
                 store: this.favoritesToolbar.getStore()
         })).show();
-        }.createDelegate(this));
+        }.bind(this));
     }
 
 });

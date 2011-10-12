@@ -109,4 +109,4 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   title: 'HTML Portlet'
 });
 
-Ext.reg('dashboardhtmlportlet', Talho.Dashboard.Portlet.HTML);
+Ext.reg('dashboardhtmlportlet', 'Talho.Dashboard.Portlet.HTML');

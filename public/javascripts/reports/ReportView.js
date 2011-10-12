@@ -139,7 +139,7 @@ Ext.ux.SliderWithTip = Ext.extend(Ext.slider.MultiSlider, {
      Ext.ux.SliderWithTip.superclass.initComponent.apply(this, arguments);
    }
 });
-Ext.reg('reportsliderwithtip', Ext.ux.SliderWithTip);
+Ext.reg('reportsliderwithtip', 'Ext.ux.SliderWithTip');
 
 //Ext.ux.ComboBoxWithTypeAheadMultiSelect = Ext.extend(Ext.form.ComboBox, {
 //  intiComponent: function(){

@@ -29,10 +29,10 @@ Talho.ManageGroups = Ext.extend(Ext.util.Observable, {
             title: "Manage Groups"
         });
 
-        this.primary_panel.canGoBack = this.canGoBack.createDelegate(this);
-        this.primary_panel.canGoForward = this.canGoForward.createDelegate(this);
-        this.primary_panel.back = this.back.createDelegate(this);
-        this.primary_panel.forward = this.forward.createDelegate(this);
+        this.primary_panel.canGoBack = this.canGoBack.bind(this);
+        this.primary_panel.canGoForward = this.canGoForward.bind(this);
+        this.primary_panel.back = this.back.bind(this);
+        this.primary_panel.forward = this.forward.bind(this);
         
         this.primary_panel.addEvents('afternavigation');
 

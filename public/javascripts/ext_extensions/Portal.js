@@ -34,7 +34,7 @@ Ext.ux.Portal = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('portal', Ext.ux.Portal);
+Ext.reg('portal', 'Ext.ux.Portal');
 
 Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
 
@@ -209,7 +209,7 @@ Ext.ux.PortalColumn = Ext.extend(Ext.Container, {
     cls : 'x-portal-column'
 });
 
-Ext.reg('portalcolumn', Ext.ux.PortalColumn);
+Ext.reg('portalcolumn', 'Ext.ux.PortalColumn');
 
 Ext.ux.Portlet = Ext.extend(Ext.Panel, {
     anchor : '100%',
@@ -219,4 +219,4 @@ Ext.ux.Portlet = Ext.extend(Ext.Panel, {
     cls : 'x-portlet'
 });
 
-Ext.reg('portlet', Ext.ux.Portlet);
+Ext.reg('portlet', 'Ext.ux.Portlet');

@@ -111,7 +111,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
             }
         });
         grid.getColumnModel().on('hiddenchange', this.verifyLayout, this, {delay:1});
-        grid.getView().on('refresh', this.stopEditing.createDelegate(this, []));
+        grid.getView().on('refresh', this.stopEditing.bind(this, []));
         grid.getSelectionModel().on('beforerowselect', function(sm, rowIndex, keepExisting, record){
           if(sm.getCount() > 0 && this.editing && this.isDirty()) return false;
           return sm.getCount() == 0 || (sm.getCount() > 0 && this.isValid());
@@ -363,12 +363,12 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
                 xtype: 'button',
                 text: this.saveText,
                 width: this.minButtonWidth,
-                handler: this.stopEditing.createDelegate(this, [true])
+                handler: this.stopEditing.bind(this, [true])
             }, {
                 xtype: 'button',
                 text: this.cancelText,
                 width: this.minButtonWidth,
-                handler: this.stopEditing.createDelegate(this, [false])
+                handler: this.stopEditing.bind(this, [false])
             }]
         });
         this.btns.render(this.bwrap);

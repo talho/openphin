@@ -155,7 +155,7 @@
                             if(row === -1) row = store.indexOfId(sel.id);
                             if(row >= -1) this.onRowSelect(row);
                         }, this);
-                }.createDelegate(this), 1);
+                }.bind(this), 1);
             }
 
             return ret;

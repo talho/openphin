@@ -31,4 +31,4 @@ Ext.ux.ImageDisplayField = Ext.extend(Ext.BoxComponent,  {
     }
 });
 
-Ext.reg('imagedisplayfield', Ext.ux.ImageDisplayField);
+Ext.reg('imagedisplayfield', 'Ext.ux.ImageDisplayField');

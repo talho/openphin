@@ -1000,7 +1000,7 @@ Ext.ux.maximgb.tg.AdjacencyListStore = Ext.extend(Ext.ux.maximgb.tg.AbstractTree
     }
 });
 
-Ext.reg('Ext.ux.maximgb.tg.AdjacencyListStore', Ext.ux.maximgb.tg.AdjacencyListStore);
+Ext.reg('Ext.ux.maximgb.tg.AdjacencyListStore', 'Ext.ux.maximgb.tg.AdjacencyListStore');
 
 /**
  * Tree store for nested set tree representation.
@@ -2021,7 +2021,7 @@ Ext.ux.maximgb.tg.PagingToolbar = Ext.extend(Ext.PagingToolbar,
     }
 });
 
-Ext.reg('Ext.ux.maximgb.tg.GridPanel', Ext.ux.maximgb.tg.GridPanel);
-Ext.reg('Ext.ux.maximgb.tg.EditorGridPanel', Ext.ux.maximgb.tg.EditorGridPanel);
-Ext.reg('Ext.ux.maximgb.tg.PagingToolbar', Ext.ux.maximgb.tg.PagingToolbar);
+Ext.reg('Ext.ux.maximgb.tg.GridPanel', 'Ext.ux.maximgb.tg.GridPanel');
+Ext.reg('Ext.ux.maximgb.tg.EditorGridPanel', 'Ext.ux.maximgb.tg.EditorGridPanel');
+Ext.reg('Ext.ux.maximgb.tg.PagingToolbar', 'Ext.ux.maximgb.tg.PagingToolbar');
 

@@ -412,21 +412,21 @@ Ext.ux.data.PagingDirectStore = Ext.extend(Ext.ux.data.PagingStore, {
       Ext.data.DirectStore.prototype.constructor.apply(this, arguments);
     }
 });
-Ext.reg('pagingdirectstore', Ext.ux.data.PagingDirectStore);
+Ext.reg('pagingdirectstore', 'Ext.ux.data.PagingDirectStore');
 
 Ext.ux.data.PagingJsonStore = Ext.extend(Ext.ux.data.PagingStore, {
     constructor: function(){
       Ext.data.JsonStore.prototype.constructor.apply(this, arguments);
     }
 });
-Ext.reg('pagingjsonstore', Ext.ux.data.PagingJsonStore);
+Ext.reg('pagingjsonstore', 'Ext.ux.data.PagingJsonStore');
 
 Ext.ux.data.PagingXmlStore = Ext.extend(Ext.ux.data.PagingStore, {
     constructor: function(){
       Ext.data.XmlStore.prototype.constructor.apply(this, arguments);
     }
 });
-Ext.reg('pagingxmlstore', Ext.ux.data.PagingXmlStore);
+Ext.reg('pagingxmlstore', 'Ext.ux.data.PagingXmlStore');
 
 Ext.ux.data.PagingArrayStore = Ext.extend(Ext.ux.data.PagingStore, {
     constructor: function(){
@@ -443,10 +443,10 @@ Ext.ux.data.PagingArrayStore = Ext.extend(Ext.ux.data.PagingStore, {
         Ext.ux.data.PagingArrayStore.superclass.loadData.call(this, data, append);
     }
 });
-Ext.reg('pagingarraystore', Ext.ux.data.PagingArrayStore);
+Ext.reg('pagingarraystore', 'Ext.ux.data.PagingArrayStore');
 
 Ext.ux.data.PagingSimpleStore = Ext.ux.data.PagingArrayStore;
-Ext.reg('pagingsimplestore', Ext.ux.data.PagingSimpleStore);
+Ext.reg('pagingsimplestore', 'Ext.ux.data.PagingSimpleStore');
 /*
 Ext.ux.data.PagingGroupingStore = Ext.extend(Ext.ux.data.PagingStore, Ext.copyTo({}, Ext.data.GroupingStore.prototype, [
     'constructor',
@@ -460,7 +460,7 @@ Ext.ux.data.PagingGroupingStore = Ext.extend(Ext.ux.data.PagingStore, Ext.copyTo
     'applyGrouping',
     'getGroupState'
 ]));
-Ext.reg('paginggroupingstore', Ext.ux.data.PagingGroupingStore);*/
+Ext.reg('paginggroupingstore', 'Ext.ux.data.PagingGroupingStore');*/
 
 Ext.ux.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
     onLoad: function (store, r, o) {
@@ -558,4 +558,4 @@ Ext.ux.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
         }
     }
 });
-Ext.reg('ux.paging', Ext.ux.PagingToolbar);
+Ext.reg('ux.paging', 'Ext.ux.PagingToolbar');

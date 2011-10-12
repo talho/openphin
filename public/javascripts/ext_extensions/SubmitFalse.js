@@ -36,4 +36,4 @@ Ext.ux.form.SubmitFalse = Ext.extend(function(config){
     }
 });
 
-Ext.reg('checkboxsubmitfalse', Ext.ux.form.SubmitFalse);
+Ext.reg('checkboxsubmitfalse', 'Ext.ux.form.SubmitFalse');

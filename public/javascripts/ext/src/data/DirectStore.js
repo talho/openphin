@@ -1,14 +1,22 @@
-/*!
- * Ext JS Library 3.3.0
- * Copyright(c) 2006-2010 Ext JS, Inc.
- * licensing@extjs.com
- * http://www.extjs.com/license
- */
+/*
+
+This file is part of Ext JS 4
+
+Copyright (c) 2011 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
+
+*/
 /**
  * @class Ext.data.DirectStore
  * @extends Ext.data.Store
  * <p>Small helper class to create an {@link Ext.data.Store} configured with an
- * {@link Ext.data.DirectProxy} and {@link Ext.data.JsonReader} to make interacting
+ * {@link Ext.data.proxy.Direct} and {@link Ext.data.reader.Json} to make interacting
  * with an {@link Ext.Direct} Server-side {@link Ext.direct.Provider Provider} easier.
  * To create a different proxy/reader combination create a basic {@link Ext.data.Store}
  * configured as needed.</p>
@@ -19,36 +27,50 @@
  * <div class="sub-desc"><ul class="mdetail-params">
  *
  * </ul></div>
- * <li><b>{@link Ext.data.JsonReader JsonReader}</b></li>
+ * <li><b>{@link Ext.data.reader.Json JsonReader}</b></li>
  * <div class="sub-desc"><ul class="mdetail-params">
- * <li><tt><b>{@link Ext.data.JsonReader#root root}</b></tt></li>
- * <li><tt><b>{@link Ext.data.JsonReader#idProperty idProperty}</b></tt></li>
- * <li><tt><b>{@link Ext.data.JsonReader#totalProperty totalProperty}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.reader.Json#root root}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.reader.Json#idProperty idProperty}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.reader.Json#totalProperty totalProperty}</b></tt></li>
  * </ul></div>
  *
- * <li><b>{@link Ext.data.DirectProxy DirectProxy}</b></li>
+ * <li><b>{@link Ext.data.proxy.Direct DirectProxy}</b></li>
  * <div class="sub-desc"><ul class="mdetail-params">
- * <li><tt><b>{@link Ext.data.DirectProxy#directFn directFn}</b></tt></li>
- * <li><tt><b>{@link Ext.data.DirectProxy#paramOrder paramOrder}</b></tt></li>
- * <li><tt><b>{@link Ext.data.DirectProxy#paramsAsHash paramsAsHash}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.proxy.Direct#directFn directFn}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.proxy.Direct#paramOrder paramOrder}</b></tt></li>
+ * <li><tt><b>{@link Ext.data.proxy.Direct#paramsAsHash paramsAsHash}</b></tt></li>
  * </ul></div>
  * </ul></div>
- *
- * @xtype directstore
- *
- * @constructor
- * @param {Object} config
  */
-Ext.data.DirectStore = Ext.extend(Ext.data.Store, {
+
+Ext.define('Ext.data.DirectStore', {
+    /* Begin Definitions */
+    
+    extend: 'Ext.data.Store',
+    
+    alias: 'store.direct',
+    
+    requires: ['Ext.data.proxy.Direct'],
+   
+    /* End Definitions */
+
+    /**
+     * @param {Object} config (optional) Config object.
+     */
     constructor : function(config){
-        // each transaction upon a singe record will generate a distinct Direct transaction since Direct queues them into one Ajax request.
-        var c = Ext.apply({}, {
-            batchTransactions: false
-        }, config);
-        Ext.data.DirectStore.superclass.constructor.call(this, Ext.apply(c, {
-            proxy: Ext.isDefined(c.proxy) ? c.proxy : new Ext.data.DirectProxy(Ext.copyTo({}, c, 'paramOrder,paramsAsHash,directFn,api')),
-            reader: (!Ext.isDefined(c.reader) && c.fields) ? new Ext.data.JsonReader(Ext.copyTo({}, c, 'totalProperty,root,idProperty'), c.fields) : c.reader
-        }));
-    }
+        config = Ext.apply({}, config);
+        if (!config.proxy) {
+            var proxy = {
+                type: 'direct',
+                reader: {
+                    type: 'json'
+                }
+            };
+            Ext.copyTo(proxy, config, 'paramOrder,paramsAsHash,directFn,api,simpleSortMode');
+            Ext.copyTo(proxy.reader, config, 'totalProperty,root,idProperty');
+            config.proxy = proxy;
+        }
+        this.callParent([config]);
+    }    
 });
-Ext.reg('directstore', Ext.data.DirectStore);
+

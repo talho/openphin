@@ -111,7 +111,7 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
             });
 
             var completeCb = function(form, action){
-                this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.createDelegate(this));
+                this.update(action.response.responseText, false, function(){this.handleAJAXLoad(this.getEl(), true);}.bind(this));
                 this.findParentByType('panel').doLayout();
             };
             var failedCb = function(form, action){
@@ -187,4 +187,4 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
     }
 });
 
-Ext.reg('ajaxpanel', Ext.AjaxPanel);
+Ext.reg('ajaxpanel', 'Ext.AjaxPanel');

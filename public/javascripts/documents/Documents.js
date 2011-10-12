@@ -26,7 +26,7 @@ Talho.Documents = Ext.extend(function(){}, {
                 ]},
                 {xtype: 'container', itemId: 'file_grid_holder', region: 'center', layout: 'card', margins: '5 5 5 0', activeItem: 0, items: [this._createFileIconView(blank_store), this._createFileGrid(blank_store)] }
             ],
-            reset: this._refresh.createDelegate(this)
+            reset: this._refresh.bind(this)
         };
 
         Ext.apply(panelConfig, config);
@@ -343,7 +343,7 @@ Talho.Documents = Ext.extend(function(){}, {
         var items = [{itemId:'add', text:'Add New Folder', iconCls: 'documents-add-folder-icon', handler: this.file_actions.createNewFolder, scope: this.file_actions}];
 
         if(record.get('id') != null && record.get('id') != 'null'){
-            items.push({itemId:'edit', text:'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.createDelegate(this.file_actions, ['edit'])});
+            items.push({itemId:'edit', text:'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.bind(this.file_actions, ['edit'])});
             if(record.get('ftype') == 'folder')
                 items.push({itemId: 'move', text: 'Move Folder', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem, scope: this.file_actions});
             items.push({itemId: 'delete', text: 'Delete Folder', iconCls: 'documents-delete-folder-icon', handler: this.file_actions.deleteItem, scope: this.file_actions});

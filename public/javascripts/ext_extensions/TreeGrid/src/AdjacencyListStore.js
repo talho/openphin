@@ -62,4 +62,4 @@ Ext.ux.maximgb.tg.AdjacencyListStore = Ext.extend(Ext.ux.maximgb.tg.AbstractTree
     }
 });
 
-Ext.reg('Ext.ux.maximgb.tg.AdjacencyListStore', Ext.ux.maximgb.tg.AdjacencyListStore);
+Ext.reg('Ext.ux.maximgb.tg.AdjacencyListStore', 'Ext.ux.maximgb.tg.AdjacencyListStore');

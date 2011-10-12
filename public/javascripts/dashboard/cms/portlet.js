@@ -64,4 +64,4 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   }
 });
 
-Ext.reg('dashboardportlet', Talho.Dashboard.Portlet);
+Ext.reg('dashboardportlet', 'Talho.Dashboard.Portlet');

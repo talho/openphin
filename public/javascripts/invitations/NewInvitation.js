@@ -227,7 +227,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         pressed: true,
         style: { marginLeft: '5px', marginRight: '5px' },
         text: '&laquo; Previous',
-        handler: topCardNav.createDelegate(this, [-1]),
+        handler: topCardNav.bind(this, [-1]),
         disabled: true
       },'->',{
         id: 'top-card-next',
@@ -236,7 +236,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         allowDepress: false,
         pressed: true,
         text: 'Next &raquo;',
-        handler: topCardNav.createDelegate(this, [1])
+        handler: topCardNav.bind(this, [1])
       }],
       bbar: [{
         id: 'bottom-card-prev',
@@ -245,7 +245,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         allowDepress: false,
         pressed: true,
         text: '&laquo; Previous',
-        handler: bottomCardNav.createDelegate(this, [-1]),
+        handler: bottomCardNav.bind(this, [-1]),
         disabled: true
       },'->',{
         id: 'bottom-card-next',
@@ -254,7 +254,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         allowDepress: false,
         pressed: true,
         text: 'Next &raquo;',
-        handler: bottomCardNav.createDelegate(this, [1])
+        handler: bottomCardNav.bind(this, [1])
       }],
       items: [{
         id: 'card-0',

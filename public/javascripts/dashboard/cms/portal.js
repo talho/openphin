@@ -6,7 +6,7 @@ Talho.Dashboard.PortalColumn = Ext.extend(Ext.ux.PortalColumn, {
   cls: ''
 });
 
-Ext.reg('dashboardportalcolumn', Talho.Dashboard.PortalColumn);
+Ext.reg('dashboardportalcolumn', 'Talho.Dashboard.PortalColumn');
 
 Talho.Dashboard.Record = Ext.data.Record.create([
   {name: 'id'},
@@ -349,7 +349,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             this.getBottomToolbar().items.each(function(item, index, allItems) {
               if(item != b) item.setVisible(!item.isVisible());
             });
-          }.createDelegate(this);
+          }.bind(this);
 
           var revertItems = function() {
             this.items.each(function(column, columnIndex, allColumnItems) {
@@ -363,7 +363,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
               }, this);
             }, this);
             return true;
-          }.createDelegate(this);
+          }.bind(this);
 
           if(this.adminMode) {
             this.items.each(function(item, index, allItems) {
