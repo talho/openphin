@@ -25,6 +25,7 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
       qtip: 'Edit',
       handler: function(event, toolEl, panel, tc){
         var htmleditor = new Ext.form.HtmlEditor({
+          linksInNewWindow: true,
           name: 'htmlportlet',
           fieldLabel: 'Edit HTML Portlet',
           html: panel.el.child('.x-portlet-html').dom.innerHTML,
