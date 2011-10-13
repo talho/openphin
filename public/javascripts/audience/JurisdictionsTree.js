@@ -109,8 +109,8 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
 
         var row = grid.getView().getRow(index);
 
-        this.jurisdictionContextMenu.get('selectAll').setHandler(this.selectChildrenOfNode.bind(this, [record, index]));
-        this.jurisdictionContextMenu.get('selectNone').setHandler(this.unselectChildrenOfNode.bind(this, [record, index]));
+        this.jurisdictionContextMenu.get('selectAll').setHandler(this.selectChildrenOfNode.createDelegate(this, [record, index]));
+        this.jurisdictionContextMenu.get('selectNone').setHandler(this.unselectChildrenOfNode.createDelegate(this, [record, index]));
 
         this.jurisdictionContextMenu.show(row);
     },

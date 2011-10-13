@@ -1,6 +1,9 @@
 
 
-Ext.layout.MaxWidthHBoxLayout = Ext.extend(Ext.layout.HBoxLayout, {
+Ext.define('Ext.layout.container.MaxWidthHBox', {
+    extend: 'Ext.layout.container.HBox',
+    alias: ['layout.mwhbox'],
+    alternateClassName: 'Ext.layout.MaxWidthHBoxLayout',
     calculateChildBoxes: function(visibleItems, targetSize)
     {
         for (i = 0; i < visibleItems.length; i++) {
@@ -26,5 +29,3 @@ Ext.layout.MaxWidthHBoxLayout = Ext.extend(Ext.layout.HBoxLayout, {
         return Ext.layout.MaxWidthHBoxLayout.superclass.calculateChildBoxes.call(this, visibleItems, targetSize);
     }
 });
-
-Ext.Container.LAYOUTS.mwhbox = Ext.layout.MaxWidthHBoxLayout;

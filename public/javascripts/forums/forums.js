@@ -19,7 +19,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                 this._create_forum_list_grid(),
                 {xtype: 'container', itemId: 'topic_grid_holder', region: 'center', layout: 'fit', margins: '5 5 5 0', items: {xtype: 'panel', title:'Topics', frame: true}}
             ],
-            reset: this.refresh.bind(this)
+            reset: this.refresh.createDelegate(this)
         });
 
         this.getPanel = function() {

@@ -1,6 +1,19 @@
-Ext.ns('Talho.ux');
 
-Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
+Ext.define('Favorite', {
+  extend: 'Ext.data.Model',
+  fields: ['id', 'tab_config'],
+  proxy: {
+    type: 'rest',
+    url: '/favorites.json',
+    reader: {
+      type: 'json',
+      root: ''
+    }
+  }
+});
+
+Ext.define('Talho.ux.FavoritesPanel', {
+    extend: 'Ext.panel.Panel',
     constructor: function(config){
         config = config || {};
 
@@ -62,30 +75,22 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
 
     getStore: function(){
         if(!this.store){
-            var writer = new Ext.data.JsonWriter({
-                encode: false,
-                createRecord: function(record){
-                    return {
-                       tab_config: record.get('tab_config')
-                    };
-                },
-                render: function(params, baseParams, data) {
-                    var jdata = Ext.apply({}, baseParams);
-                    jdata['favorite'] = data;
-                    params.jsonData = jdata;
-                }
-            });
-
-            var reader = new Ext.data.ux.RailsJsonReader({
-                idProperty: 'id',
-                fields: [{name: 'id', mapping:'id'}, {name:'tab_config', mapping:'tab_config'}]
-            });
+            // var writer = new Ext.data.JsonWriter({
+                // encode: false,
+                // createRecord: function(record){
+                    // return {
+                       // tab_config: record.get('tab_config')
+                    // };
+                // },
+                // render: function(params, baseParams, data) {
+                    // var jdata = Ext.apply({}, baseParams);
+                    // jdata['favorite'] = data;
+                    // params.jsonData = jdata;
+                // }
+            // });
             
-            this.store = new Ext.data.Store({
-                url: '/favorites.json',
-                restful: true,
-                writer: writer,
-                reader: reader,
+            this.store = Ext.create('Ext.data.Store', {
+                model: 'Favorite',
                 listeners:{
                     scope:this,
                     'save': this.renderFavorites,
@@ -192,7 +197,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
     },
 
     showContextMenu: function(elem, recordId){
-        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.bind(this, [recordId]));
+        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [recordId]));
 
         this.contextMenu.show(elem);
     },

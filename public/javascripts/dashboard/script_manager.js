@@ -52,7 +52,7 @@ Ext.ns("Talho");
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js $(js)/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '$(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js $(js)/dashboard/menu_builder.js');
-    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/view_portal.js $(cms)/view_controller.js');
+    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > $(cms)/Portlet.js $(cms)/portlets/HTML.js $(cms)/views/view_portal.js $(cms)/view_controller.js');
     dominoes.rule('ManageFavorites', 'RowActions $(js)/dashboard/manage_favorites_window.js');
 
     var mgr = function(config){};
@@ -101,14 +101,14 @@ Ext.ns("Talho");
             if(!Ext.isEmpty(regList[name])){
               dominoes([regList[name].js], function(name, callback){
                   callback(regList[name].initializer);
-              }.bind(this, [name, callback]));
+              }.bind(this, name, callback));
             }
         },
 
         loadOtherLibrary: function(name, callback){
             try
             {
-                dominoes(name, function(name, callback){callback(name);}.bind(this, [name, callback]));
+                dominoes(name, function(name, callback){callback(name);}.bind(this, name, callback));
             }
             catch(e){
                 callback(name); // maybe send an error message here at some point

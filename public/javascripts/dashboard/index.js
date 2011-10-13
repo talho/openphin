@@ -1,15 +1,16 @@
 
 Ext.onReady(function(evt){
-    //TODO: remove after beta period
-    document.cookie="phin2beta=true;path=/";
+  Ext.Loader.setConfig({enabled:true});
 
-    if(PhinApplication) window.Application.phin = new PhinApplication();
+  if(Talho.PhinApplication) window.Application.phin = new Talho.PhinApplication();
 });
 
-var PhinApplication = Ext.extend(Ext.util.Observable, {
+Ext.define('Talho.PhinApplication', {
+    extend: 'Ext.util.Observable', 
     constructor: function(config)
     {
-        PhinApplication.superclass.constructor.call(this, config);
+      Ext.Compat.showErrors = true;
+        Talho.PhinApplication.superclass.constructor.call(this, config);
 
         Ext.QuickTips.init();
         Ext.apply(Ext.QuickTips.getQuickTip(),{
@@ -82,7 +83,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                  '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
                  '</em></a></li>'
             ),
-            items: [Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
+            items: [],//Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
             listeners:{
                 'beforetabchange': function(tab_panel, new_tab, old_tab){
                     if(old_tab)
@@ -220,7 +221,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             if(Talho.ScriptManager.exists(config.initializer))
             {
                 panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
-                Talho.ScriptManager.getInitializer(config.initializer, this.getInitializer_callback.bind(this, [config, panel], true));
+                Talho.ScriptManager.getInitializer(config.initializer, this.getInitializer_callback.bind(this, config, panel));
                 return;
             }
             else if(Ext.isFunction(config.initializer))
@@ -250,7 +251,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                 else if(xtype == 'centeredajaxpanel')
                 {
                     panel = this.tabPanel.add({title: config.title, listeners:{'render':{fn: function(panel){new Ext.LoadMask(panel.getEl());}, delay: 10 }} }).show();
-                    Talho.ScriptManager.loadOtherLibrary('AjaxPanel', this.loadOtherLibrary_callback.bind(this, [config, panel], true));
+                    Talho.ScriptManager.loadOtherLibrary('AjaxPanel', this.loadOtherLibrary_callback.bind(this, config, panel));
                     return;
                 }
             }
@@ -270,16 +271,16 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
     open_window: function(config){
       if(Talho.ScriptManager.exists(config.initializer))
       {
-        var initializer_callback = function(initializer, config){
+        var initializer_callback = function(config, initializer){
           var win = initializer(config);
           win.show();
         };
-        Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.bind(this, [config], true));
+        Talho.ScriptManager.getInitializer(config.initializer, initializer_callback.bind(this, config));
         return;
       }
     },
 
-    loadOtherLibrary_callback: function(name, config, tempPanel){
+    loadOtherLibrary_callback: function(config, tempPanel, name){
         this.tabPanel.remove(tempPanel);
 
          panel = this.tabPanel.add({
@@ -295,7 +296,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         this.newTabPropertiesAndEvents(panel, config);
     },
 
-    getInitializer_callback: function(initializer, config, tempPanel){
+    getInitializer_callback: function(config, tempPanel, initializer){
         this.tabPanel.remove(tempPanel);
         var panel = this.tabPanel.add(initializer(config)).show();
         panel.initializer = initializer;

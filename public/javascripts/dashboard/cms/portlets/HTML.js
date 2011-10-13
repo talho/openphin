@@ -1,8 +1,7 @@
-Ext.namespace('Talho');
-Ext.namespace('Talho.Dashboard');
-Ext.namespace('Talho.Dashboard.Portlet');
 
-Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
+Ext.define('Talho.Dashboard.Portlet.HTML', {
+  extend: 'Talho.Dashboard.Portlet',
+  alias: ['widget.dashboardhtmlportlet'],
   fields: {
     //border: true,
     column: true,
@@ -109,4 +108,3 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   title: 'HTML Portlet'
 });
 
-Ext.reg('dashboardhtmlportlet', 'Talho.Dashboard.Portlet.HTML');

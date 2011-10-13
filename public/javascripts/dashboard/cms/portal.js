@@ -349,7 +349,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
             this.getBottomToolbar().items.each(function(item, index, allItems) {
               if(item != b) item.setVisible(!item.isVisible());
             });
-          }.bind(this);
+          }.createDelegate(this);
 
           var revertItems = function() {
             this.items.each(function(column, columnIndex, allColumnItems) {
@@ -363,7 +363,7 @@ Talho.Dashboard.Portal = Ext.extend(Ext.ux.Portal, {
               }, this);
             }, this);
             return true;
-          }.bind(this);
+          }.createDelegate(this);
 
           if(this.adminMode) {
             this.items.each(function(item, index, allItems) {

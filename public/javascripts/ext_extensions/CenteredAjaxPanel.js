@@ -3,17 +3,19 @@
  * @param {object}    config        the Panel configuration
  * @config {string}   url           the url of the html document that will be loaded into this panel
  */
-Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
+Ext.define('Ext.CenteredAjaxPanel',
     /**
      * @lends Ext.AjaxPanel.prototype
      */
 {
+    extend: 'Ext.panel.Panel',
+    alias: ['widget.centeredajaxpanel'],
     initComponent: function()
     {
         // We don't really care what they sent in, we're going to redefine the items and layout and a bunch of other config options
         this.ajaxPanel = new Ext.AjaxPanel({
             maxWidth: 1024,
-            bodyCssClass: 'content',
+            bodyCls: 'content',
             listeners:{
                 'ajaxloadcomplete': function(){ this.fireEvent('ajaxloadcomplete', this.ajaxPanel);},
                 'afternavigation': function(){ this.fireEvent('afternavigation', this);},
@@ -65,5 +67,3 @@ Ext.CenteredAjaxPanel = Ext.extend(Ext.Panel,
     canGoForward: function(){return this.ajaxPanel.canGoForward();},
     getFormPanels: function(){return this.ajaxPanel.getFormPanels();}
 });
-
-Ext.reg('centeredajaxpanel', 'Ext.CenteredAjaxPanel');

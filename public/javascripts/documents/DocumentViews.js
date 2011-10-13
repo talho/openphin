@@ -310,12 +310,12 @@ Ext.ns('Talho.ux.Documents');
                     ]},
                     { itemId: 'file_action_container', hidden: true, items:[
                             new file_control_button({text: 'Download File', iconCls: 'documents-download-icon', handler: this.file_actions.downloadFile, scope: this.file_actions}),
-                            new file_control_button({text: 'Replace File', iconCls: 'documents-replace-icon', handler: this.file_actions.uploadFile.bind(this.file_actions, ['replace'])}),
+                            new file_control_button({text: 'Replace File', iconCls: 'documents-replace-icon', handler: this.file_actions.uploadFile.createDelegate(this.file_actions, ['replace'])}),
                             new file_control_button({text: 'Delete File', iconCls: 'documents-delete-file-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
                             new Ext.menu.Separator({})
                     ]},
                     { itemId: 'folder_action_container', hidden: true, items:[
-                            new file_control_button({text: 'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.bind(this.file_actions, ['edit'])}),
+                            new file_control_button({text: 'Edit Folder', iconCls: 'documents-edit-folder-icon', handler: this.file_actions.createNewFolder.createDelegate(this.file_actions, ['edit'])}),
                             new file_control_button({text: 'Delete Folder', iconCls: 'documents-delete-folder-icon', handler: this.file_actions.deleteItem, scope: this.file_actions}),
                             new Ext.menu.Separator({})
                     ]},
@@ -323,7 +323,7 @@ Ext.ns('Talho.ux.Documents');
                         new file_control_button({itemId: 'move_selection', text: 'Move Selection', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem, scope: this.file_actions})
                     ]},
                     { itemId: 'copy_action_container', hidden: true, items: [
-                        new file_control_button({itemId: 'copy_file', text: 'Copy to My Folders', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem.bind(this.file_actions, ['copy'])})
+                        new file_control_button({itemId: 'copy_file', text: 'Copy to My Folders', iconCls: 'documents-move-icon', handler: this.file_actions.moveItem.createDelegate(this.file_actions, ['copy'])})
                     ]}
                 ]},
                 { itemId: 'base_actions', hidden: true, items: [

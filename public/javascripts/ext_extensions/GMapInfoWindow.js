@@ -34,8 +34,8 @@ Ext.ux.GMap.GMapInfoWindow = Ext.extend(Ext.Container, {
     
     this.map.open_window = this.info_window = new google.maps.InfoWindow({ content: this.getEl().dom });
     
-    google.maps.event.addListener(this.info_window, 'domready', this.domReady.bind(this));
-    google.maps.event.addListener(this.info_window, 'closeclick', function(){ this.map.open_window = null; this.destroy(); }.bind(this));
+    google.maps.event.addListener(this.info_window, 'domready', this.domReady.createDelegate(this));
+    google.maps.event.addListener(this.info_window, 'closeclick', function(){ this.map.open_window = null; this.destroy(); }.createDelegate(this));
     
     this.info_window.open(this.map, this.marker);
   },

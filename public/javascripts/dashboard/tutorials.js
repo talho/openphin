@@ -17,7 +17,7 @@ Talho.Tutorials = Ext.extend(Ext.util.Observable, {
         'ajaxloadcomplete': this.panelLoaded
       }
     });
-    panel.reset = this.scroll_to_element.bind(this);
+    panel.reset = this.scroll_to_element.createDelegate(this);
     this.getPanel = function(){ return panel; }
   },
   panelLoaded: function(panel){

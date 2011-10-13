@@ -1,8 +1,7 @@
-Ext.namespace('Talho');
-Ext.namespace('Talho.Dashboard');
-Ext.namespace('Talho.Dashboard.Portlet');
 
-Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
+Ext.define('Talho.Dashboard.Portlet', {
+  extend: 'Ext.ux.Portlet',
+  alias: ['widget.dashboardportlet'],
   // Used to restrict which properties can be used when creating a portlet from the json data
   fields: {
     //border: true,
@@ -63,5 +62,3 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
       panel.toggleClass('x-panel-body-noborder').setWidth(el.getWidth());
   }
 });
-
-Ext.reg('dashboardportlet', 'Talho.Dashboard.Portlet');

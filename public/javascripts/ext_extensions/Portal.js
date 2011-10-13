@@ -4,7 +4,9 @@
 * licensing@extjs.com
 * http://www.extjs.com/license
 */
-Ext.ux.Portal = Ext.extend(Ext.Panel, {
+Ext.define('Ext.ux.Portal', {
+    extend: 'Ext.panel.Panel',
+    alias: ['widget.panel'],
     layout : 'column',
     autoScroll : true,
     cls : 'x-portal',
@@ -34,14 +36,14 @@ Ext.ux.Portal = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('portal', 'Ext.ux.Portal');
 
-Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
+Ext.define('Ext.ux.Portal.DropZone', {
+    extend: 'Ext.dd.DropTarget',
 
     constructor : function(portal, cfg){
         this.portal = portal;
         Ext.dd.ScrollManager.register(portal.body);
-        Ext.ux.Portal.DropZone.superclass.constructor.call(this, portal.bwrap.dom, cfg);
+        Ext.ux.Portal.DropZone.superclass.constructor.call(this, portal.body.dom, cfg);
         portal.body.ddScrollConfig = this.ddScrollConfig;
     },
 
@@ -203,20 +205,20 @@ Ext.ux.Portal.DropZone = Ext.extend(Ext.dd.DropTarget, {
     }
 });
 
-Ext.ux.PortalColumn = Ext.extend(Ext.Container, {
+Ext.define('Ext.ux.PortalColumn', {
+    extend: 'Ext.Container',
+    alias: ['widget.portalcolumn'],
     layout : 'anchor',
     defaultType : 'portlet',
     cls : 'x-portal-column'
 });
 
-Ext.reg('portalcolumn', 'Ext.ux.PortalColumn');
-
-Ext.ux.Portlet = Ext.extend(Ext.Panel, {
+Ext.define('Ext.ux.Portlet', {
+    extend: 'Ext.Panel',
+    alias: ['widget.portlet'],
     anchor : '100%',
     frame : true,
     collapsible : true,
     draggable : true,
     cls : 'x-portlet'
 });
-
-Ext.reg('portlet', 'Ext.ux.Portlet');

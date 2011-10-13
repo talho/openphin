@@ -339,7 +339,7 @@ Ext.extend(Ext.ux.grid.RowActions, Ext.util.Observable, {
 			this.renderer = function(value, cell, record, row, col, store) {
 				cell.css += (cell.css ? ' ' : '') + 'ux-row-action-cell';
 				return this.tpl.apply(this.getData(value, cell, record, row, col, store));
-			}.bind(this);
+			}.createDelegate(this);
 		}
 
 		// actions in grouping grids support

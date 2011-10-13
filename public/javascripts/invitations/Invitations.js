@@ -73,7 +73,7 @@ Talho.Invitations = Ext.extend(function(){}, {
                   }
                 });
                 invitationGrid.reconfigure(newstore,invitationGrid.colModel);
-                invitationToolbar.bind(newstore);
+                invitationToolbar.createDelegate(newstore);
                 invitationStore = newstore;
                 content.show();
               }

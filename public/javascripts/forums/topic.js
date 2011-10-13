@@ -154,7 +154,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
             ],
             reset: function(){
                 this.getPanel().getComponent('topic_grid').getStore().load();
-            }.bind(this)
+            }.createDelegate(this)
         });
         
         var panel = new Ext.Panel(panel_config);

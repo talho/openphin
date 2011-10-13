@@ -3,60 +3,64 @@
  * @param {object}    config        the Panel configuration
  * @config {string}   url           the url of the html document that will be loaded into this panel
  */
-Ext.AjaxPanel = Ext.extend(Ext.Panel,
+Ext.define('Ext.AjaxPanel',
     /**
      * @lends Ext.AjaxPanel.prototype
      */
 {
+    extend: 'Ext.Panel',
+    alias: ['widget.ajaxpanel'],
     initComponent: function()
     {
-        Ext.AjaxPanel.superclass.initComponent.call(this);
+      this.loader = {
+        ajaxOptions: {method: 'GET'},
+        callback: this.handleAJAXLoad,
+        scope: this,
+        renderer: 'html'
+      };
+      
+      Ext.AjaxPanel.superclass.initComponent.call(this);
 
-        this.addEvents(
-            /**
-             * @event ajaxloadcomplete
-             * Fires after the ajax document has loaded
-             * @param {Ext.Component} this
-             */
-                'ajaxloadcomplete',
-                'fatalerror',
-                'afternavigation'
-                );
+      this.addEvents(
+          /**
+           * @event ajaxloadcomplete
+           * Fires after the ajax document has loaded
+           * @param {Ext.Component} this
+           */
+              'ajaxloadcomplete',
+              'fatalerror',
+              'afternavigation'
+              );
 
-        this.addListener('afterrender', this.loadAJAX, this);
-        // do any special initialization events here
-        this.url = this.initialUrl = this.url || '';
-        this.history = [];
-        this.forward_stack = [];
-        this.formPanels = [];
+      this.addListener('afterrender', this.loadAJAX, this);
+      // do any special initialization events here
+      this.url = this.initialUrl = this.url || '';
+      this.history = [];
+      this.forward_stack = [];
+      this.formPanels = [];
     },
 
     loadAJAX: function()
     {
-        var updater = this.getUpdater();
-
-        if (this.renderer != null)
+        if (this.url === '')
         {
-            updater.setRenderer(this.renderer);
+          return;
         }
-
-        if (this.url !== '')
-        {
-            updater.update({
-                url: this.url,
-                method: 'GET',
-                callback: this.handleAJAXLoad,
-                scope: this
-            });
-        }
+        
+        var updater = this.getLoader();
+        
+        updater.load({
+          url: this.url
+        });
     },
 
    /**
      * This is called after the updater completes. It should parse and hookup links
      * and forms and should call the specific callback
      */
-    handleAJAXLoad: function(el, success, response, options)
+    handleAJAXLoad: function(loader, success, response, options)
     {
+        var el = this.getEl();
         if(!success)
         {
             (new Ext.Window({title: 'Error', html: response.responseText})).show();
@@ -186,5 +190,3 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
       return this.formPanels;
     }
 });
-
-Ext.reg('ajaxpanel', 'Ext.AjaxPanel');
