@@ -1,6 +1,6 @@
-Ext.ns('TALHO');
 
-Talho.Tutorials = Ext.extend(Ext.util.Observable, {
+Ext.define('Talho.Tutorials', {
+  extend: 'Ext.util.Observable',
   constructor: function(config)
   {
     Ext.apply(this, config);
@@ -17,7 +17,7 @@ Talho.Tutorials = Ext.extend(Ext.util.Observable, {
         'ajaxloadcomplete': this.panelLoaded
       }
     });
-    panel.reset = this.scroll_to_element.createDelegate(this);
+    panel.reset = this.scroll_to_element.bind(this);
     this.getPanel = function(){ return panel; }
   },
   panelLoaded: function(panel){

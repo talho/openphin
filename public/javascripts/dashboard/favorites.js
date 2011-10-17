@@ -4,7 +4,8 @@ Ext.define('Favorite', {
   fields: ['id', 'tab_config'],
   proxy: {
     type: 'rest',
-    url: '/favorites.json',
+    url: '/favorites',
+    format: 'json',
     reader: {
       type: 'json',
       root: ''
@@ -65,7 +66,7 @@ Ext.define('Talho.ux.FavoritesPanel', {
         this.contextMenu = new Ext.menu.Menu({
             defaultAlign: 'tl-b?',
             defaultOffsets: [0, 2],
-            items:[{id:'removeFavoriteItem', text:'Remove', icon: '/images/x.png'}]
+            items:[{itemId:'removeFavoriteItem', text:'Remove', icon: '/images/x.png'}]
         });
 
         this.getStore();
@@ -75,22 +76,9 @@ Ext.define('Talho.ux.FavoritesPanel', {
 
     getStore: function(){
         if(!this.store){
-            // var writer = new Ext.data.JsonWriter({
-                // encode: false,
-                // createRecord: function(record){
-                    // return {
-                       // tab_config: record.get('tab_config')
-                    // };
-                // },
-                // render: function(params, baseParams, data) {
-                    // var jdata = Ext.apply({}, baseParams);
-                    // jdata['favorite'] = data;
-                    // params.jsonData = jdata;
-                // }
-            // });
-            
             this.store = Ext.create('Ext.data.Store', {
                 model: 'Favorite',
+                autoSync: true,
                 listeners:{
                     scope:this,
                     'save': this.renderFavorites,
@@ -113,7 +101,7 @@ Ext.define('Talho.ux.FavoritesPanel', {
             canDrop: function(tab_config)
             {
                 // require a tab_config and a tab_config.id to save a favorite
-                return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.find('targetId', tab_config.id).length > 0)
+                return !Ext.isEmpty(tab_config) && !Ext.isEmpty(tab_config.id) && !(this.parent.items.findIndex('targetId', tab_config.id) >= 0)
             },
             gettab_config: function(data){
               if (data.item) {
@@ -144,7 +132,7 @@ Ext.define('Talho.ux.FavoritesPanel', {
                 {
                     this.lock();
                     this.parent.saveMask.show();
-                    this.parent.store.add(new this.parent.store.recordType({tab_config:tab_config}), true);
+                    this.parent.store.add(Ext.create('Favorite', {tab_config:tab_config}));
                     //this.parent.store.save();
                     return true;
                 }
@@ -176,9 +164,8 @@ Ext.define('Talho.ux.FavoritesPanel', {
             text: tab_config.title,
             tab_config: tab_config,
             targetId: tab_config.id,
-            recordId: record.id,
-            template: new Ext.Template('<span id="{4}" class="favorite_button {3}" ><span></span></span>'),
-            buttonSelector: 'span',
+            recordId: record.getId(),
+            cls: 'favorite_button',
             listeners:{
                 'click': function(b, e){
                    this.fireEvent('favoriteclick', b.tab_config);
@@ -197,9 +184,9 @@ Ext.define('Talho.ux.FavoritesPanel', {
     },
 
     showContextMenu: function(elem, recordId){
-        this.contextMenu.get('removeFavoriteItem').setHandler(this.removeItem.createDelegate(this, [recordId]));
+        this.contextMenu.getComponent('removeFavoriteItem').setHandler(this.removeItem.bind(this, recordId));
 
-        this.contextMenu.show(elem);
+        this.contextMenu.showBy(elem);
     },
 
     removeItem: function(recordId){

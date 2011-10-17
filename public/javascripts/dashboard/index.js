@@ -71,44 +71,13 @@ Ext.define('Talho.PhinApplication', {
     },
 
     body: function(){
-        this.tabPanel = new Ext.TabPanel({
+        this.tabPanel = Ext.create('Ext.tab.Panel', {
             id: 'tabpanel',
             border:false,
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
-            enableTabScroll: true,
-            itemTpl: new Ext.Template(
-                 '<li class="{cls}" id="{id}"><a class="x-tab-strip-close" tabindex="0" alt="Close tab {text}" href="#"></a>', 
-                 '<a class="x-tab-right" href="#"><em class="x-tab-left">',
-                 '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
-                 '</em></a></li>'
-            ),
+            plugins: [Ext.create('Ext.plugin.DragDropTabs')],
             items: [],//Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
-            listeners:{
-                'beforetabchange': function(tab_panel, new_tab, old_tab){
-                    if(old_tab)
-                        old_tab.un('afternavigation', this.setTabControls, this);
-                    new_tab.on('afternavigation', this.setTabControls, this);
-                    this.setTabControls(new_tab);
-                    return true;
-                },
-                'back': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.back)
-                        comp.back();
-                },
-                'forward': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.forward)
-                        comp.forward();
-                },
-                'refresh': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.reset)
-                        comp.reset(true);
-                },
-                scope: this
-            }
         });
 
         return new Ext.Panel({
@@ -127,7 +96,7 @@ Ext.define('Talho.PhinApplication', {
         plugins: [new Ext.ux.plugin.ToolBarNav]
       });
 
-      var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
+      var builder = new Talho.MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, redirect: this.redirect_to});
 
       Ext.each(Application.menuConfig, function(item, index){
         var menu = this.top_toolbar.add(builder.buildMenu(item));
@@ -163,7 +132,7 @@ Ext.define('Talho.PhinApplication', {
             plugins: [new Ext.ux.plugin.ToolBarNav]
         });
 
-        var builder = new MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, tip: this.open_tip, redirect: this.redirect_to});
+        var builder = new Talho.MenuBuilder({parent: this, tab: this.open_tab, win: this.open_window, tip: this.open_tip, redirect: this.redirect_to});
 
         Ext.each(Application.bbarConfig, function(item, index){
             tb.add(builder.buildMenu(item));

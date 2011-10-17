@@ -14,7 +14,7 @@ class FavoritesController < ApplicationController
 
   # we're not defining a new here because this is only intended to be used with an AJAX call. Same for edit
   def create
-    fav = Favorite.new(:user_id => current_user.id, :tab_config => params[:favorite][:tab_config])
+    fav = Favorite.new(:user_id => current_user.id, :tab_config => params[:tab_config])
 
     original_included_root = ActiveRecord::Base.include_root_in_json
     ActiveRecord::Base.include_root_in_json = false
@@ -40,8 +40,8 @@ class FavoritesController < ApplicationController
         format.xml {render :xml => "Could not destroy favorite: not owned by current user.", :status => :forbidden}
         format.json {render :json => "Could not destroy favorite: not owned by current user.", :status => :forbidden}
       elsif fav.destroy
-        format.xml {render :xml => nil}
-        format.json {render :json => nil}
+        format.xml {render :xml => ''}
+        format.json {render :json => ''}
       else
         format.xml {render :xml => fav.errors, :status => 500}
         format.json {render :json => fav.errors, :status => 500}

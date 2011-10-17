@@ -5,7 +5,8 @@
  * @config     {Object}   parent  the calling object, used to look for custom handlers as specified in the menu config
  * @config     {Function} tab      the function used to open new tabs
  */
-var MenuBuilder = Ext.extend(Ext.util.Observable, {
+Ext.define('Talho.MenuBuilder', {
+    extend: 'Ext.util.Observable',
     constructor: function(config)
     {
         Ext.apply(this, config);
@@ -39,19 +40,19 @@ var MenuBuilder = Ext.extend(Ext.util.Observable, {
         var handler;
         if(!Ext.isEmpty(menuConfig.tab))
         {
-            handler = this.tab.createDelegate(this.parent, [menuConfig.tab]);
+            handler = this.tab.bind(this.parent, menuConfig.tab);
         }
         else if(!Ext.isEmpty(menuConfig.win))
         {
-            handler = this.win.createDelegate(this.parent, [menuConfig.win]);
+            handler = this.win.bind(this.parent, menuConfig.win);
         }
         else if(!Ext.isEmpty(menuConfig.handler) && Ext.isFunction(this.parent[menuConfig.handler]))
         {
-            handler = this.parent[menuConfig.handler].createDelegate(this.parent, [menuConfig]);
+            handler = this.parent[menuConfig.handler].bind(this.parent, menuConfig);
         }
         else if(!Ext.isEmpty(menuConfig.redirect))
         {
-            handler = this.redirect.createDelegate(this.parent, [menuConfig.redirect]);
+            handler = this.redirect.bind(this.parent, menuConfig.redirect);
         }
         else
         {
