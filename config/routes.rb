@@ -52,7 +52,7 @@ ActionController::Routing::Routes.draw do |map|
   map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
 
   map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:get, :post]}
+  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:post]}
   map.resource :search, :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
   map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
   map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
@@ -78,7 +78,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace "report" do |report|
     report.resources :reports, :member => { :filters => :get, :reduce => :post }
-    report.resources :recipes
+    report.resources :recipes, :only => [:index,:show], :requirements => {:id =>  /Report::([A-Z][a-z]+)+Recipe/}
   end
 
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"

@@ -629,6 +629,13 @@ class User < ActiveRecord::Base
     display_name    
   end
 
+  def within_jurisdictions
+    jurs=jurisdictions.sort_by(&:lft)
+    jurs=jurs.map{|j1| jurs.detect{|j2| j2.is_ancestor_of?(j1)} || j1}.uniq
+    return "" if jurs.empty?
+    ors=jurs.map{|j| "(jurisdictions.lft >= #{j.lft} AND jurisdictions.lft <= #{j.rgt})"}.join(" OR ")
+  end
+
 private
 
   def assign_public_role

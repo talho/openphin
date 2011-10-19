@@ -8,7 +8,8 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       url: '/report/recipes.json',
       restful: true,
       root: 'recipes',
-      fields: ['id','type','type_humanized','description'],
+      idProperty: 'id',
+      fields: ['id','name_humanized'],
       autoLoad: true
     });
 
@@ -37,7 +38,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       deferEmptyText: true,
       hideHeaders: true,
       style: { 'background-color': 'white'},
-      columns: [{ dataIndex: 'type_humanized', cls: 'recipe-list-item'}],
+      columns: [{ dataIndex: 'name_humanized', cls: 'recipe-list-item'}],
       listeners: {
       	scope:this,
       	'selectionchange': function(d,r){
@@ -103,7 +104,6 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
         columns: [
           { id: 'report-id', dataIndex: 'id', header: 'Report ID' },
           { id: 'report-recipe', dataIndex: 'recipe', header: 'Recipe' },
-          { id: 'generated-at', dataIndex: 'dataset_updated_at', header: 'Generated at' },
           { id: 'rendered-at', dataIndex: 'rendering_updated_at', header: 'Rendered at' },
           { id: 'render-size', dataIndex: 'rendering_file_size', header: 'Render size' }
          ]
@@ -193,9 +193,17 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
 
   recipeSelected: function(selected_rows){
   	if (selected_rows.length > 0) {
-	  this.recipeDescriptor.update( this.recipeList.getRecord(selected_rows[0]).data.description );
-      this.generateReportButton.setText('Generate Report');
-      this.generateReportButton.enable();
+      Ext.Ajax.request({
+         url: '/report/recipes/'+this.recipeList.getSelectedRecords()[0].json.id+'.json',
+         method: 'GET',
+         scope:  this,
+         success: function(responseObj){
+           this.recipeDescriptor.update( Ext.decode(responseObj["responseText"])["recipe"]["description"] );
+           this.generateReportButton.setText('Generate Report');
+           this.generateReportButton.enable();
+         },
+         failure: function(){this.ajax_err_cb}
+      });
   	} else {
 	    this.recipeDescriptor.update( 'recipe description' );
   	  this.generateReportButton.disable();
@@ -226,7 +234,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
   	   url: '/report/reports.json',
   	   method: 'POST',
   	   scope:  this,
-  	   params: { 'recipe_type': this.recipeList.getSelectedRecords()[0].json.type },
+  	   params: { 'recipe_id': this.recipeList.getSelectedRecords()[0].json.id },
        success: function(){this.reportsStore.load();this.generateReportButton.setText('Generate Report');this.generateReportButton.enable();},
   	   failure: function(){this.ajax_err_cb}
   	});  	

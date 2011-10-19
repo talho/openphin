@@ -2,12 +2,13 @@ class Report::ReportsController < ApplicationController
 
  before_filter :non_public_role_required
   
+ include SearchModules::Search
  include ActionView::Helpers::DateHelper
 
   #  GET /report/reports(.:format)
   def index
 #      @reports = Report::Report.paginate_for(:all,current_user,params[:page] || 1)
-   params[:sort] = 'recipe_id' if params[:sort] == 'recipe'
+#   params[:sort] = 'recipe_id' if params[:sort] == 'recipe'
    order = params[:sort].nil? ? 'created_at DESC' : "#{params[:sort]} #{params[:dir]}"
     respond_to do |format|
       format.html
@@ -65,17 +66,20 @@ class Report::ReportsController < ApplicationController
   #  POST /report/reports(.:format)
   def create
     begin
-      report = nil
       unless params[:report_url]
         # capture the resultset and generate the html rendering in delayed-job
-        # before sending to delayed job, assure that the recipe exist in this Rails environment
-        recipe = params[:recipe_type].constantize.find_or_create
-
-        report = current_user.reports.create(:recipe=>recipe,:incomplete=>true)
+        # assure that the recipe exist in this Rails environment before sending to delayed job
+        if params[:conditions] || params[:with]
+          normalize_reports_params(params)
+          criteria = params
+        else
+          criteria = {}
+        end
+        report = current_user.reports.create(:recipe=>params[:recipe_id],:criteria=>criteria,:incomplete=>true)
         unless Rails.env == 'development'
           Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>report[:id]) )
         else
-          Reporters::Reporter.new(:report_id=>report[:id]).perform  # for debugging
+          Reporters::Reporter.new(:report_id=>report[:id]).perform  # for development
         end
         respond_to do |format|
           format.html {}
@@ -98,6 +102,7 @@ class Report::ReportsController < ApplicationController
         end
       end
     rescue StandardError => error
+      debugger
       respond_to do |format|
         format.html {}
         format.json {render :json => {:success => false, :msg => error.as_json}, :content_type => 'text/html', :status => 406}
@@ -150,7 +155,6 @@ class Report::ReportsController < ApplicationController
   protected
 
   def copy_to_documents(content,filename)
-    document = nil
     folder = current_user.folders.find_by_name('Reports') || current_user.folders.create(:name=>'Reports')
     Dir.mktmpdir do |dir|
       path = File.join(dir,filename)

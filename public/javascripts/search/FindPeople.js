@@ -90,6 +90,12 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       items: [this.jurisList]
     });
 
+    this.generateReportButton = new Ext.Button({
+        text: 'Report', scope: this,
+        handler: function(){
+          this.generateReportResults()}
+    });
+
     this.searchSidebar = new Ext.FormPanel({
       labelAlign: 'top',
       frame: true,
@@ -121,7 +127,8 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       buttonAlign : 'center',
       buttons: [
         {text: 'Reset', scope: this, handler: this.resetSearchSidebar},
-        { text: 'Search', scope: this, handler: this.displaySearchResults }
+        {text: 'Search', scope: this, handler: this.displaySearchResults },
+        this.generateReportButton
       ],
         keys: [{key: Ext.EventObject.RETURN, shift: false, fn: this.displaySearchResults, scope: this}]
     });
@@ -208,9 +215,26 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         displayInfo: true,
         displayMsg: 'Displaying results {0} - {1} of {2}',
         emptyMsg: "No results",
-        items: (this.admin_mode) ? admin_mode_buttons : []
+        items: [
+        {xtype: 'tbtext', text: 'Please place a copy in MyDocuments as: '},
+        {xtype: 'button', text: 'HTML', scope: this, handler: function(button,event){ this.createDocument(button); } },
+        {xtype: 'button', text: 'PDF', scope: this, handler: function(button,event){ this.createDocument(button); } },
+        {xtype: 'button', text: 'CSV', scope: this, handler: function(button,event){ this.createDocument(button); } }
+//          (this.admin_mode) ? admin_mode_buttons : []
+      ]
       })
     });
+
+    this.createDocument = function(button) {
+      Ext.Ajax.request({
+         url: '/report/reports.json',
+         method: 'POST',
+         scope:  this,
+         params: { 'document_format': button.text, 'report_url': this.url },
+         success: function(){},
+         failure: function(){this.mask("Server error.  Please try again.");}
+      });
+    };
 
     this.searchResultsContainer = new Ext.Panel({
       region: 'center',
@@ -301,6 +325,20 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     return true;
   },
 
+  reportSearchResults: function(form, action) {
+    var searchData = this.searchSidebar.getForm().getValues();
+    this.applyFilters(searchData);
+    for (var derp in searchData ){
+      this.searchResults.store.setBaseParam( derp, searchData[derp] );
+    }
+//    this.searchResults.store.load();
+//    url: '/search/show_advanced.json' + ((this.admin_mode) ? '?admin_mode=1' : ''),
+//    method: 'POST',
+//    root: 'results',
+//    fields: [ 'user_id', 'display_name','first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
+//    baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
+  },
+
   displaySearchResults: function(form, action) {
     var searchData = this.searchSidebar.getForm().getValues();
     this.applyFilters(searchData);
@@ -341,11 +379,13 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       this.show_err_message(json);
     }
   },
+
   ajax_err_cb: function(response, opts) {
     var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
       '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
     Ext.Msg.show({title: 'Error', msg: msg, minWidth: 900, maxWidth: 900, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
   },
+
   show_err_message: function(json) {
     var w = 300;
     var msg = '<b>Server Error:</b> ' + json.error + '<br>';
@@ -358,6 +398,24 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       msg += '<\div>';
     }
     Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+  },
+
+  generateReportResults: function(form, action) {
+    this.generateReportButton.setText('Scheduled');
+    this.generateReportButton.disable();
+    var searchData = this.searchSidebar.getForm().getValues();
+    this.applyFilters(searchData);
+    searchData['recipe_type'] = 'Report::UserAllWithinJurisdictionsRecipe'
+  	Ext.Ajax.request({
+  	   url: '/report/reports.json',
+  	   method: 'POST',
+  	   scope:  this,
+  	   params: searchData,
+       success: function(){
+         this.generateReportButton.setText('Report');
+         this.generateReportButton.enable();},
+  	   failure: function(){this.ajax_err_cb}
+  	});
   }
 });
 

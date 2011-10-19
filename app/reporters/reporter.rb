@@ -1,4 +1,4 @@
-class Reporters::Reporter < Struct.new(:options)
+class Reporters::Reporter < Struct.new(:params)
 
   class Logger  # default dummy logger
     def info(t); end
@@ -6,8 +6,8 @@ class Reporters::Reporter < Struct.new(:options)
   end
 
   def perform
-
-    report_id = options[:report_id]
+    report_id = params[:report_id]
+    report_options = params[:options]
     logger = REPORT_LOGGER || Logger.new
     begin
       begin
@@ -23,10 +23,10 @@ class Reporters::Reporter < Struct.new(:options)
         message = %Q(Report "#{report.name}" could not find author with id of #{report[:author_id]})
         raise StandardError, message
       end
-      if ( recipe = report.recipe )
-        logger.info %Q(Report "#{report.name}", recipe is "#{report.recipe.class.name})
+      if ( recipe = report.recipe.constantize )
+        logger.info %Q(Report "#{report.name}", recipe is "#{recipe.name})
       else
-        message = %Q(Report "#{report.name}" could not find recipe with id of #{report[:recipe_id]})
+        message = %Q(Report "#{report.name}" could not find "#{recipe.name}")
         raise StandardError, message
       end
 
@@ -39,17 +39,17 @@ class Reporters::Reporter < Struct.new(:options)
         fatal_logging(logger,report,full_message)
       end
 
-      unless options[:filters]
-        begin
-          start_time = Time.now
-            recipe.bind_attributes( report )
-          logger.info %Q(Report "#{report.name}", Bind Attributes #{Time.now-start_time} seconds)
-          logger.info %Q(Report "#{report.name}" completed\n)
-        rescue StandardError => e
-          message = %Q(Report "#{report.name}" erred in binding attributes: (#{e}))
-          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-          fatal_logging(logger,report,full_message)
-        end
+      unless params[:filters]
+#        begin
+#          start_time = Time.now
+#            recipe.bind_attributes( report )
+#          logger.info %Q(Report "#{report.name}", Bind Attributes #{Time.now-start_time} seconds)
+#          logger.info %Q(Report "#{report.name}" completed\n)
+#        rescue StandardError => e
+#          message = %Q(Report "#{report.name}" erred in binding attributes: (#{e}))
+#          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
+#          fatal_logging(logger,report,full_message)
+#        end
 
         begin
           start_time = Time.now
@@ -65,7 +65,7 @@ class Reporters::Reporter < Struct.new(:options)
 
       begin
         start_time = Time.now
-          recipe.generate_rendering_of_on_with  report, view, File.read(recipe.template_path), options[:filters]
+          recipe.generate_rendering_of_on_with  report, view, File.read(recipe.template_path), params[:filters]
         logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
         ReportMailer.deliver_report_generated(report.author.email,report.name)
       rescue StandardError => e
