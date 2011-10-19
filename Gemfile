@@ -39,7 +39,7 @@ group :default do
   gem "nokogiri", "1.4.3.1"
   gem "curb", "0.7.15"
   gem "mysql", "2.8.1"
-  gem "happymapper", :git => 'git://github.com/kayakyakr/happymapper.git' #"0.3.2"
+  gem "happymapper", :git => 'git://github.com/talho/happymapper.git' #"0.3.2"
   gem "libxml-ruby", "1.1.3"
   gem "daemons", "1.1.0"
   gem "pg", "0.10.1"
@@ -52,7 +52,8 @@ group :default do
     gem "SystemTimer", "1.2.3"
   gem "base32-crockford", "0.1.0"
   gem 'savon', '0.9.7'
-  gem "httpclient", "~> 2.2.1"
+  gem 'httpi', :git => 'git://github.com/talho/httpi.git'
+  gem "httpclient", :git => 'git://github.com/talho/httpclient.git'
 end
 
 group :development do

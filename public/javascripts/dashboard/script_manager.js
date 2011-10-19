@@ -52,7 +52,7 @@ Ext.ns("Talho");
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js $(js)/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '$(js)/utility.js $(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js $(js)/dashboard/menu_builder.js');
-    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > $(cms)/portlet.js $(cms)/portlets/html.js $(cms)/views/view_portal.js $(cms)/view_controller.js');
+    dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > ( $(cms)/portlet.js > $(cms)/portlets/html.js ) $(cms)/views/view_portal.js $(cms)/view_controller.js');
     dominoes.rule('ManageFavorites', 'RowActions $(js)/dashboard/manage_favorites_window.js');
 
     var mgr = function(config){};
