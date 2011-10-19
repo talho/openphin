@@ -1,6 +1,9 @@
 development:
   enable_star: true
   min_infix_len: 2
+  indexed_models:
+    - User
+    - Document
 
 test: &TEST
   port: 3313

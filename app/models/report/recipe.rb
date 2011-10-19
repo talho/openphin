@@ -6,6 +6,7 @@ class Report::Recipe < ActiveRecord::Base
   has_many :reports, :class_name => 'Report::Report'
   belongs_to :audience
   named_scope :deployable, :conditions => "report_recipes.type <> 'Report::Recipe'"
+  attr_accessor :report_options
 
   named_scope :authorized, lambda {|user|
     {:joins => "INNER JOIN audiences_recipients AS ar ON report_recipes.audience_id = ar.audience_id",
@@ -45,7 +46,8 @@ class Report::Recipe < ActiveRecord::Base
     report.update_attributes(:dataset_updated_at=>now,:dataset_size=>size)
   end
 
-# Overwriteable Infrastructure
+# vvvvvvvvv Overwriteable Infrastructure below vvvvvvvvvv
+
   def type_humanized
     self.class.name.demodulize.split(/(?=[A-Z])/).join(" ")
   end
@@ -102,6 +104,41 @@ class Report::Recipe < ActiveRecord::Base
    json = super(:only => json_columns)
    options[:inject].each {|key,value| json[key] = value} if options[:inject]
    json
+  end
+
+private
+
+  def self.register
+    return unless Report::Recipe.find_by_type(nil).registered_at.nil?
+    # delete perished recipes
+    present = "'"+send(:subclasses).reject{|s| !s.name.end_with? 'Recipe'}.map(&:name).join("','")+"'"
+    puts "vvvv keep during delete vvvvvvv"
+    puts present
+    puts "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    connection.delete( "delete from #{table_name} where type not in (#{present})" )
+    # recreate recipes that have changed
+    report_path = File.dirname(__FILE__)
+    Report::Recipe.deployable.all.each do |recreatee|
+      filename = File.join(report_path,recreatee.name.underscore+'.rb')
+      if ( File.mtime(filename) > recreatee.created_at)
+        puts "vvvvvvvv recreate vvv"
+        puts recreatee.name
+        puts "^^^^^^^^^^^^^^^^^^^"
+        recreatee.destroy
+        recreatee.name.constantize.create
+      end
+    end
+    # install new recipes
+    present = send(:subclasses).reject{|s| !s.name.end_with? 'Recipe'}.map(&:name)
+    present.each do |klass|
+      unless find_by_type(klass)
+        klass.constantize.create
+        puts "vvvvvvvv install vvv"
+        puts klass
+        puts "^^^^^^^^^^^^^^^^^^^"
+      end
+    end
+    Report::Recipe.find_by_type(nil).update_attribute(:registered_at,Time.now)
   end
 
 end
