@@ -85,6 +85,10 @@ protected
     end
   end
 
+  def self.destroy
+    # purposely do nothing
+  end
+
 private
 
   def self.as_json(options={})

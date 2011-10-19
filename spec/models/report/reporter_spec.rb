@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe Reporters::Reporter do
   before(:each) do
     @current_user = Factory(:user)
-    @recipe = Factory(:report_recipe,:type=>"Report::UserAllRecipe")
+    @recipe = Report::Recipe.find("Report::UserAllWithinJurisdictionsRecipe")
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
@@ -25,7 +25,7 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report_id).perform
     end
     it "on a non-existent author" do
-      report = @current_user.reports.complete.create(:recipe=>@recipe,:incomplete=>true)
+      report = @current_user.reports.complete.create(:recipe=>@recipe.name,:incomplete=>true)
       @current_user.destroy
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}" started.)
       message = %Q(Report "#{report.name}" could not find author with id of #{report.author_id})
@@ -34,11 +34,10 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report[:id]).perform
     end
     it "on a non-existent recipe" do
-      report = @current_user.reports.complete.create(:recipe=>@recipe,:incomplete=>true)
-      @recipe.destroy
+      report = @current_user.reports.complete.create(:recipe=>"Report::CocktailRecipe",:incomplete=>true)
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}" started.)
       REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}", Author is #{report.author.display_name})
-      message = %Q(Report "#{report.name}" could not find recipe with id of #{report[:recipe_id]})
+      message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
       REPORT_LOGGER.should_receive(:fatal).with message
 #      message_params = {:email=>report.author.email,:report_name=>report.name,:exception_message=>message}
       ReportMailer.should_receive(:deliver_report_error).with(report.author.email, report.name, message)

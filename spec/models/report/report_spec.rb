@@ -9,8 +9,6 @@ describe Report::Report do
 #      report.audience.should be_an_instance_of Audience
 #      report.audience.users.should have(1).user
       report.author.last_name.should match(/FactoryUser.*/)
-      report.recipe.should be_an_instance_of Report::Recipe
-      report.recipe.reports.should == [report]
     end
     it "form the recipe's json for the gui" do
       report = Factory(:report_report)

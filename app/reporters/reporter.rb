@@ -23,10 +23,11 @@ class Reporters::Reporter < Struct.new(:params)
         message = %Q(Report "#{report.name}" could not find author with id of #{report[:author_id]})
         raise StandardError, message
       end
-      if ( recipe = report.recipe.constantize )
+      begin
+        recipe = Report::Recipe.find(report.recipe)
         logger.info %Q(Report "#{report.name}", recipe is "#{recipe.name})
-      else
-        message = %Q(Report "#{report.name}" could not find "#{recipe.name}")
+      rescue
+        message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
         raise StandardError, message
       end
 
