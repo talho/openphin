@@ -1,8 +1,12 @@
 
 Ext.onReady(function(evt){
   Ext.Loader.setConfig({enabled:true});
-
-  if(Talho.PhinApplication) window.Application.phin = new Talho.PhinApplication();
+  Ext.Loader.setPath('Talho', '/javascripts')
+  Ext.Loader.setPath('Ext', '/javascripts/ext')
+  
+  Ext.require('Talho.audience.Panel');
+  
+  window.Application.phin = Ext.create('Talho.PhinApplication', {path: window.Application.path });
 });
 
 Ext.define('Talho.PhinApplication', {
@@ -77,7 +81,7 @@ Ext.define('Talho.PhinApplication', {
             region: 'center', // a center region is ALWAYS required for border layout
             activeTab: 0,     // first tab initially active
             plugins: [Ext.create('Ext.plugin.DragDropTabs')],
-            items: [],//Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
+            items: [{xtype: 'audiencepanel'}],//Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
         });
 
         return new Ext.Panel({

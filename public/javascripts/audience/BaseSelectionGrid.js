@@ -1,22 +1,21 @@
-Ext.ns('Talho.ux');
 
-Talho.ux.BaseSelectionGrid = Ext.extend(Ext.Panel,{
+Ext.define('Talho.audience.BaseSelectionGrid', {
+    alternateClassName: 'Talho.ux.BaseSelectionGrid',
+    extend: 'Ext.Panel',
+    layout: 'fit',
     constructor: function(config){
         Ext.apply(this, config);
         
-        this.layout = 'fit';
-
         this._createStore(config);
         this._createSelectionModel(config);
 
         var grid = this.items = this._createSelectionGrid();
-        this.sm.grid = grid;
         
-        this.bbar = {items: ['->', 'Search:', this._createFilterField(), {text:'Clear Search', scope: this, handler: this.clearFilter}]};
+        //this.bbar = {items: ['->', 'Search:', this._createFilterField(), {text:'Clear Search', scope: this, handler: this.clearFilter}]};
 
         // fix a problem of the store config being overwritten
         delete config.store;
-        Talho.ux.BaseSelectionGrid.superclass.constructor.call(this, config);
+        this.callParent(config);
     },
 
     getStore: function(){

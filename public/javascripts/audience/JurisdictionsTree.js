@@ -1,16 +1,11 @@
-Ext.ns('Talho.ux');
+Ext.require('Talho.model.Jurisdiction');
+Ext.require('Talho.store.Jurisdictions');
 
-Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
+Ext.define('Talho.audience.JurisdictionsTree', {
+    extend: 'Talho.audience.BaseSelectionGrid',
     title: 'Jurisdictions',
-    
-    constructor: function(){
-      Talho.ux.JurisdictionsTree.superclass.constructor.apply(this, arguments);
-      this.on('afterrender', function(){
-        this.jurisdictionTreeGrid.setWidth(1)
-        this.setWidth(1);
-        this.ownerCt.doLayout();
-      }, this, {delay: 1});
-    },
+    alias: ['widget.jurisdictionstree'],
+    uses: ['Talho.ux.xActionColumn', 'Talho.model.Jurisdiction', 'Talho.store.Jurisdictions'],
     
     destroy: function(){
         this.jurisdictionContextMenu.destroy();
@@ -20,7 +15,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
         var sm = this.getSelectionModel();
         sm.suspendEvents();
         
-        Talho.ux.JurisdictionsTree.superclass.load.call(this, data);
+        Talho.audience.JurisdictionsTree.superclass.load.call(this, data);
 
         sm.resumeEvents();
         var records = sm.getSelections();
@@ -29,41 +24,13 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
     },
 
     _createStore: function(config){
-        this.store = this.store || new Ext.ux.maximgb.tg.NestedSetStore({
-            leaf_field_name: 'leaf',
-            right_field_name: 'right',
-            left_field_name: 'left',
-            level_field_name: 'level',
-            root_node_level: 0,
-            url: '/audiences/jurisdictions_flat',
-            autoLoad: true,
-            reader: new Ext.data.JsonReader({
-                idProperty: 'id',
-                fields: ['name', 'id', 'left', 'right', 'leaf', 'level', 'parent_id']
-            }),
-            viewConfig: {hi: 'there'},
-            listeners:{
-                scope:this,
-                'load': function(store){
-                    var fed = store.findExact('name', 'Federal');
-                    if(Ext.isNumber(fed))
-                    {
-                        store.expandNode(store.getAt(fed));
-                        var tex = store.findExact('name', 'Texas');
-                        if(Ext.isNumber(tex))
-                        {
-                            store.expandNode(store.getAt(tex));
-                        }
-                    }                   
-                }
-            }
-        });
-
-        Talho.ux.JurisdictionsTree.superclass._createStore.call(this, config);
+        this.store = this.store || Ext.StoreMgr.lookup('jurisdictionTree') || Ext.create('Talho.store.Jurisdictions');
+        Talho.audience.JurisdictionsTree.superclass._createStore.call(this, config);
     },
 
     _createSelectionModel: function(config){
-        Talho.ux.JurisdictionsTree.superclass._createSelectionModel.call(this, config);
+        //Talho.audience.JurisdictionsTree.superclass._createSelectionModel.call(this, config);
+        this.sm = Ext.create('Ext.selection.CheckboxModel', {mode: 'SIMPLE', injectCheckbox: 0 })
         this.sm.addEvents('massselectionchange');
     },
 
@@ -76,24 +43,22 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
                 {id: 'selectNone', text: 'Select No Sub-jurisdictions'}]
         });
 
-
-        this.jurisdictionTreeGrid = new Ext.ux.maximgb.tg.GridPanel({
-            store: this.store,
-            bodyCssClass: 'jurisdictions',
-            master_column_id : 'name',
-            columns: [ this.sm,
-                {id:'name', header: "Jurisdiction", sortable: true, dataIndex: 'name', menuDisabled: true},
-                {xtype:'xactioncolumn', icon: '/images/arrow_down2.png', iconCls:'contextArrow', hideField: 'leaf', scope: this, handler: function(grid, index){ this.showJurisdictionTreeContextMenu(grid, index);}}
+        this.jurisdictionTreeGrid = Ext.create('Ext.tree.Panel', {
+            store: 'jurisdictionTree',
+            columns: [ 
+                {xtype: 'treecolumn', dataIndex: 'name', flex: 1}//,
+               // {xtype:'xactioncolumn', icon: '/images/arrow_down2.png', iconCls:'contextArrow', hideField: 'leaf', scope: this, handler: function(grid, index){ this.showJurisdictionTreeContextMenu(grid, index);}}
             ],
-            autoExpandColumn: 'name',
-            sm: this.sm,
+            selModel: {mode: 'SIMPLE'},
+            selType: 'checkboxmodel',
             border:false,
             loadMask: true,
-            hideHeaders: true,
-            listeners:{
-                'scope': this,
-                'rowcontextmenu': this.showJurisdictionTreeContextMenu
-            }
+         //   hideHeaders: true,
+            rootVisible: false
+           // listeners:{
+          //      'scope': this,
+           //     'rowcontextmenu': this.showJurisdictionTreeContextMenu
+          //  }
         });
         
         return this.jurisdictionTreeGrid;

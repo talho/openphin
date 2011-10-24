@@ -3,29 +3,29 @@ Ext.ns("Talho");
 // We're going to create a singleton manager here that is an observable
 (function(){
     dominoes.property('ext_extensions', '/javascripts/ext_extensions');
+    dominoes.property('ux', '/javascripts/ux');
     dominoes.property('js', '/javascripts');
     dominoes.property('css', '/stylesheets');
     dominoes.property('cms', '/javascripts/dashboard/cms');
     
-    dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css($(css)/TreeGrid/css/TreeGrid.css) $css($(css)/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
-    dominoes.rule('JurisdictionsTree', 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/FilterableCheckboxSelectionModel.js ( $(js)/audience/BaseSelectionGrid.js > $(js)/audience/JurisdictionsTree.js )');
+    dominoes.rule('JurisdictionsTree', 'TreeGrid $(ux)/xActionColumn.js $(ext_extensions)/FilterableCheckboxSelectionModel.js ( $(js)/audience/BaseSelectionGrid.js > $(js)/audience/JurisdictionsTree.js )');
     dominoes.rule('RoleSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( $(js)/audience/BaseSelectionGrid.js > $(js)/audience/RoleSelectionGrid.js )');
     dominoes.rule('GroupSelectionGrid', '$(ext_extensions)/FilterableCheckboxSelectionModel.js ( $(js)/audience/BaseSelectionGrid.js > $(js)/audience/GroupSelectionGrid.js )');
-    dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ext_extensions)/xActionColumn.js $(js)/audience/UserSelectionGrid.js');
-    dominoes.rule('AudiencePanel', '$(ext_extensions)/xActionColumn.js $(ext_extensions)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid $(js)/audience/AudiencePanel.js');
+    dominoes.rule('UserSelectionGrid', '$(ext_extensions)/DataTip.js $(ux)/xActionColumn.js $(js)/audience/UserSelectionGrid.js');
+    dominoes.rule('AudiencePanel', '$(ux)/xActionColumn.js $(ux)/DoNotCollapseActive.js JurisdictionsTree RoleSelectionGrid GroupSelectionGrid UserSelectionGrid $(js)/audience/Panel.js');
     dominoes.rule('AudienceDisplayPanel', '$(js)/audience/AudienceDisplayPanel.js $(ext_extensions)/PagingStore.js');
     dominoes.rule('NewInvitation', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/invitations/NewInvitationBase.js');
     dominoes.rule('ProfileBase', '(( $css($(css)/redesign/profile.css) )) $(js)/profile/ProfileBase.js');
     dominoes.rule('BatchUsers', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
-    dominoes.rule('EditUsers', '(( $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/xActionColumn.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
+    dominoes.rule('EditUsers', '(( $css($(css)/ux/RowEditor.css) )) $(ux)/xActionColumn.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
     dominoes.rule('GMap', '$(ext_extensions)/GMapPanel.js $(ext_extensions)/GMapInfoWindow.js');
 
     var regList = {
       'Talho.FindPeople': {js:'$(js)/search/FindPeople.js'},
-      'Talho.ManageGroups': {js:'AudienceDisplayPanel $(ext_extensions)/xActionColumn.js AudiencePanel > $(js)/groups/view/list.js $(js)/groups/view/create_edit.js $(js)/groups/view/detail.js $(js)/groups/ManageGroups.js'},
+      'Talho.ManageGroups': {js:'AudienceDisplayPanel $(ux)/xActionColumn.js AudiencePanel > $(js)/groups/view/list.js $(js)/groups/view/create_edit.js $(js)/groups/view/detail.js $(js)/groups/ManageGroups.js'},
       'Talho.Tutorials': {js: 'AjaxPanel > $(js)/dashboard/tutorials.js'},
-      'Talho.Forums': {js: "AudiencePanel $(ext_extensions)/SubmitFalse.js $(ext_extensions)/xActionColumn.js $(js)/forums/forums.js"},
+      'Talho.Forums': {js: "AudiencePanel $(ux)/SubmitFalse.js $(ux)/xActionColumn.js $(js)/forums/forums.js"},
       'Talho.Topic': {js: "$(js)/forums/topic.js"},
       'Talho.EditProfile': {js:'ProfileBase $(js)/profile/DevicesControl.js $(js)/profile/RolesControl.js $(js)/profile/OrganizationsControl.js > $(js)/profile/EditProfile.js'},
       'Talho.ShowProfile': {js:'$(js)/profile/ShowProfile.js'},
@@ -33,8 +33,8 @@ Ext.ns("Talho");
       'Talho.EditDevices': {js:'ProfileBase $(js)/profile/DevicesControl.js > $(js)/profile/EditDevices.js'},
       'Talho.ManageRoles': {js:'ProfileBase $(js)/profile/RolesControl.js > $(js)/profile/ManageRoles.js'},
       'Talho.ManageOrganizations': {js:'ProfileBase $(js)/profile/OrganizationsControl.js > $(js)/profile/ManageOrganizations.js'},
-      'Talho.Documents': {js: 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/SubmitFalse.js $(ext_extensions)/ImageDisplayField.js AudiencePanel $(js)/documents/AddEditFolderWindow.js $(js)/documents/DocumentViews.js $(js)/documents/Documents.js'},
-      'Talho.DocumentSearch': {js: '$(ext_extensions)/ImageDisplayField.js $(js)/documents/DocumentViews.js $(js)/documents/DocumentSearch.js'},
+      'Talho.Documents': {js: 'TreeGrid $(ux)/xActionColumn.js $(ux)/SubmitFalse.js $(ux)/ImageDisplayField.js AudiencePanel $(js)/documents/AddEditFolderWindow.js $(js)/documents/DocumentViews.js $(js)/documents/Documents.js'},
+      'Talho.DocumentSearch': {js: '$(ux)/ImageDisplayField.js $(js)/documents/DocumentViews.js $(js)/documents/DocumentSearch.js'},
       'Talho.NewInvitation': {js:'NewInvitation $(js)/ext/src/widgets/grid/EditorGrid.js > $(js)/invitations/NewInvitation.js'},
       'Talho.Invitations': {js:'$(js)/invitations/Invitations.js'},
       'Talho.AddUser': {js:'ProfileBase $(js)/profile/DevicesControl.js $(js)/profile/RolesControl.js $(js)/profile/OrganizationsControl.js > $(js)/admin/AddUser.js'},
@@ -50,10 +50,10 @@ Ext.ns("Talho");
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
-    dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js $(js)/dashboard/favorites.js');
+    dominoes.rule('Favorites', '$(ux)/DragDropTabs.js $(js)/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '$(ext_extensions)/ToolBarNav.js /dashboard/menu.js $(js)/dashboard/menu_builder.js');
     dominoes.rule('Dashboard', '$(ext_extensions)/Portal.js > ( $(cms)/Portlet.js > $(cms)/portlets/HTML.js ) $(cms)/views/view_portal.js $(cms)/view_controller.js');
-    dominoes.rule('ManageFavorites', 'RowActions $(js)/dashboard/manage_favorites_window.js');
+    dominoes.rule('ManageFavorites', '$(js)/dashboard/manage_favorites_window.js');
 
     var mgr = function(config){};
     Ext.extend(mgr, Ext.util.Observable, {

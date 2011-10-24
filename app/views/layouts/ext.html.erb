@@ -38,7 +38,7 @@
             Ext.get('loading-message').update('Loading PHIN...');
         },
         initView: function(){
-            window.Application.phin = new Talho.PhinApplication({path: '<%= @path || session[:path] %>'});
+            window.Application.path = '<%= @path || session[:path] %>';
             var loading = Ext.get('loading');
             var loadingMask = Ext.get('loading-mask');
             setTimeout(function(){
@@ -46,6 +46,7 @@
                 loading.fadeOut({ duration: 400, remove: true });
                 loadingMask.fadeOut({ duration: 400, remove: true });
             }, 200);
+            Ext.EventManager.fireDocReady(); // have to manually fire Ext's docReady event because we're not loading ext in the traditional way.
         }
     });
   </script>

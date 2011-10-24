@@ -57,13 +57,16 @@ class AudiencesController < ApplicationController
 
   private
 
+  # Use a single array loop to build a hierarchical tree from a root jurisdiction
   def build_jurisdiction_hash(jurisdiction, level = 0)
-    jur_hash = {:text => jurisdiction.name, :id => jurisdiction.id, :leaf => jurisdiction.leaf?}
-
-    unless jurisdiction.leaf? || level == 1
-      jur_hash[:children] = jurisdiction.children.map{|child| build_jurisdiction_hash(child, level == 0 ? 0 : level - 1)}
+    jur_hash = {:name => jurisdiction.name, :id => jurisdiction.id, :leaf => jurisdiction.leaf?, :children => [], :rgt => jurisdiction.rgt}
+    working_arr = [jur_hash]
+    Jurisdiction.each_with_level(jurisdiction.descendants) do |j, level|
+      working_arr.pop while j.lft > working_arr.last[:rgt]
+      jh = {:name => j.name, :id => j.id, :leaf => j.leaf?, :children => [], :rgt => j.rgt, :depth => level}
+      working_arr.last[:children] << jh
+      working_arr << jh unless j.leaf?
     end
-
     jur_hash
   end
 end
