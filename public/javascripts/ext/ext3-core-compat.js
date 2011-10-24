@@ -1,55 +1,22 @@
-
 /*========================================================================
  * 
- * This section contains stuff that should be in Ext4, or stuff that
- * is up for discussion. It should be removed prior to Ext 4 final.
- *
- *========================================================================*/
-
-// Beefed up getDockedItems to make it easier to find specific items like top toolbars only
-//Ext.apply(Ext.panel.AbstractPanel.prototype, {
-//    /**
-//     * Retrieve an array of all currently docked components, optionally matching a
-//     * specific docked side and/or component type.
-//     * @param {Array} options
-//     * @return {Array} An array of matching components
-//     */
-//    // ex: {dock: 'top', alias: 'widget.toolbar'}
-//    getDockedItems : function(options) {
-//        var me = this,
-//            items = [];
-//        
-//        if (me.dockedItems && me.dockedItems.items.length) {
-//            items = me.dockedItems.items.slice();
-//        }
-//        
-//        if (options && items.length > 0) {
-//            var i = 0,
-//                ln = items.length,
-//                matches = [],
-//                item;
-//            
-//            for (; i < ln; i++) {
-//                item = items[i];
-//                if (options.dock && options.dock !== item.dock){
-//                    continue;
-//                }
-//                if (options.alias && options.alias !== item.alias){
-//                    continue;
-//                }
-//                matches.push(item);
-//            }
-//            return matches;
-//        }
-//        return items;
-//    }
-//});
-
-
-/*========================================================================
+ * Ext JS 3 -> 4 Compatibility Layer: Core
+ * Copyright (c) 2011 Sencha Inc.
  * 
- * This section contains the Ext.Compat object definition.
- * Also shared by ext3-compat.js.
+ * Contains the Ext.Compat class definition.
+ * This file is required for ext3-compat.js to work but
+ * could be used by itself along with Ext Core if needed.
+ * 
+ * Author: Brian Moeskau
+ * Sencha Inc.
+ * 
+ * Contributors:
+ * - Zach Garder, Nicholas Howard, and Bryce Minter of
+ *   AllofE Solutions, Inc. (AllofE.com)
+ * 
+ * Revision History:
+ * - 2011-04-26: Initial release
+ * - 2011-08-31: Incorporated changes from AllofE.com contributors
  *
  *========================================================================*/
 
@@ -82,7 +49,7 @@ Ext.Compat = function(){
     },
     
     // private
-    consoleOut = function(type, msg){
+    consoleOut = function(type, msg, inSkipDebugger){
         if (Ext.Compat.silent === true) {
             return;
         }
@@ -99,13 +66,22 @@ Ext.Compat = function(){
         if(Ext.Array.indexOf(notificationCache, '__initMsg') == -1){
             notificationCache.push('__initMsg');
             con.info('#### Ext 3 compatibility mode active. See the Migration Guide included with the Ext 4 download for details.');
-            if(!Ext.Compat.showErrors){
+            if(!Ext.Compat.showErrors && Ext.isGecko){
                 var errMsg = '#### Set "Ext.Compat.showErrors = true;" in your code to include a stack trace with each warning.';
                 con.info(con.firebug ? errMsg : errMsg + ' (Firebug required)');
             }
-            con.log(' ');
+            if(document.location.href.indexOf("COMPAT_DEBUG=1") == -1)  {
+                con.info('#### Add COMPAT_DEBUG=1 to your url to break on errors.');
+            }
+            if(document.location.href.indexOf("COMPAT_STYLE_REPLACE=1") == -1)  {
+                con.info("#### Add COMPAT_STYLE_REPLACE=1 to your url to automatically replace deprecated CSS rules.");
+            }
+            con.log(" ");
         }
         con[Ext.Compat.showErrors ? 'error' : type](msg);
+        if(Ext.Compat.debugErrors && !inSkipDebugger && (type != 'info' || document.location.href.split("COMPAT_DEBUG=10").length == 2))    {
+            debugger;
+        }
     };
     
     return {
@@ -175,6 +151,8 @@ Ext.Compat = function(){
          */
         deprecate: function(o) {
             var msg = getMsg(o, o.tag || 'DEPRECATED');
+            //consoleOut("warn", "Deprecated arguments:", true);
+            //consoleOut("warn", arguments.callee.caller.caller.arguments, true);
             showMsg(msg, 'warn', o.single);
         },
         

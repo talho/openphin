@@ -1,6 +1,7 @@
 Ext.require('Talho.ux.DoNotCollapseActive');
 Ext.require('Talho.model.Jurisdiction');
 Ext.require('Talho.store.Jurisdictions');
+Ext.require('Talho.audience.JurisdictionsTree');
 /**
  * An Ext.Panel that represents the Audience selection form. Will be able to output users, juridictions, and roles from its 3 "public" stores
  * Note: To put in a FormPanel, needs to be contained inside a panel in the form. Not sure why, but I blame the form panel

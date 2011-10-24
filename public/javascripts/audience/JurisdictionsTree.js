@@ -53,7 +53,7 @@ Ext.define('Talho.audience.JurisdictionsTree', {
             selType: 'checkboxmodel',
             border:false,
             loadMask: true,
-         //   hideHeaders: true,
+            hideHeaders: true,
             rootVisible: false
            // listeners:{
           //      'scope': this,

@@ -15,20 +15,15 @@ Ext.define('Favorite', {
 
 Ext.define('Talho.ux.FavoritesPanel', {
     extend: 'Ext.panel.Panel',
+    region:'north',
+    height: 29,
+    collapseMode: 'mini',
+    id: 'favoritestoolbar',
+    cls: 'favorites_bar',
+    successProperty: 'success',
+    layout: {type: 'hbox', defaultMargins:'3 2 1 3'},
     constructor: function(config){
         config = config || {};
-
-        Ext.applyIf(config, {
-            region:'north',
-            height: 29,
-            collapseMode: 'mini',
-            id: 'favoritestoolbar',
-            layout: 'hbox',
-            cls: 'favorites_bar',
-            successProperty: 'success',
-            layoutConfig: {defaultMargins:'3 2 1 3'},
-            listeners: {}
-        });
 
         Ext.apply(config.listeners, {
             'render': {fn: this.setupDropZone, scope: this},
@@ -39,7 +34,8 @@ Ext.define('Talho.ux.FavoritesPanel', {
                    panel.saveMask = new Ext.LoadMask(panel.getEl(), {msg:'Saving Bookmarks...'});
                 },
                 single: true,
-                scope: this
+                scope: this,
+                delay: 1
             }
         });
 
@@ -59,7 +55,7 @@ Ext.define('Talho.ux.FavoritesPanel', {
            'favoriteloadcomplete'
         );
 
-        Talho.ux.FavoritesPanel.superclass.constructor.call(this, config);
+        this.callParent(config);
     },
 
     initComponent: function(){         

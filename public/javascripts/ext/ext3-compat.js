@@ -1,45 +1,76 @@
-//
-// TODO: Add GridPanel.getView() to the lib
-// TODO: Rename Ext.ux.PreviewPlugin -> Ext.grid.RowPreviewPlugin
-// TODO: Move CSS styles from paging.html into grid.css
-// TODO: Move JsonStore fix into the lib
-//
 /*========================================================================
  * 
- * This section contains stuff that should be in Ext4, or stuff that
- * is up for discussion. It should be removed prior to Ext 4 final.
+ * Ext JS 3 -> 4 Compatibility Layer
+ * Copyright (c) 2011 Sencha Inc.
+ * 
+ * Requires ext3-core-compat.js
+ * 
+ * Author: Brian Moeskau
+ * Sencha Inc.
+ * 
+ * Contributors:
+ * - Zach Garder, Nicholas Howard, and Bryce Minter of
+ *   AllofE Solutions, Inc. (AllofE.com)
+ * 
+ * Revision History:
+ * - 2011-04-26: Initial release
+ * - 2011-05-27: Bug fixes for Ext 4.0.1 release
+ * - 2011-08-31: Incorporated changes from AllofE.com contributors
  *
  *========================================================================*/
 
 // This should be working as the alternateClassName but doesn't for some reason
-Ext.toolbar.Toolbar.SplitButton = Ext.button.Split;
-
+if (Ext.toolbar && Ext.toolbar.Toolbar) {
+	Ext.toolbar.Toolbar.SplitButton = Ext.button.Split;
+}
 // DomHelper does not currently go through the ClassManager so there is no alternateClassName
-Ext.DomHelper = Ext.core.DomHelper;
+if (!Ext.DomHelper) {
+    Ext.DomHelper = Ext.core.DomHelper;
+}
 
 Ext.apply(Ext.panel.Panel.prototype, {
-    getToolbars : function(){
-        return this.getDockedItems('toolbar');
+    getToolbars : function(dock){
+        Ext.Compat.deprecate({pkg:"Ext.panel.Panel", member:"getToolbars",
+            msg:"This function only exists in the compatibility layer. Use panel.dockedItems.findBy(function(inItem) { return inItem.alias == 'widget.toolbar' && inItem.dock == '" + dock + "'; })"});
+    
+        return this.dockedItems.findBy(function(inItem) {
+            return inItem.alias == "widget.toolbar" && inItem.dock == dock;
+        });
     }
 });
 
 // Not sure if these are intended to be deprecated or they just haven't been moved over
 Ext.apply(Ext.menu.Menu.prototype, {
     addSeparator : function() {
+        Ext.Compat.deprecate({pkg:"Ext.menu.Menu", member:"addSeparator",
+            msg:"Use this.add(Ext.create('Ext.menu.Separator')) instead."});
+    
         return this.add(Ext.create('Ext.menu.Separator'));
     },
     addElement : function(el) {
+        Ext.Compat.deprecate({pkg:"Ext.menu.Menu", member:"addElement",
+            msg:"Use this.add(Ext.create('Ext.menu.Item', {el:el})) instead."});
+    
         return this.add(Ext.create('Ext.menu.Item', {
             el: el
         }));
     },
     addItem : function(item) {
+        Ext.Compat.deprecate({pkg:"Ext.menu.Menu", member:"addItem",
+            msg:"Use this.add(item) instead."});
+    
         return this.add(item);
     },
     addMenuItem : function(config) {
+        Ext.Compat.deprecate({pkg:"Ext.menu.Menu", member:"addMenuItem",
+            msg:"Use this.add(this.lookupComponent(config)) instead."});
+    
         return this.add(this.lookupComponent(config));
     },
     addText : function(text){
+        Ext.Compat.deprecate({pkg:"Ext.menu.Menu", member:"addText",
+            msg:"Use this.add(Ext.create('Ext.menu.Item', {plain:true, text:text})) instead."});
+    
         return this.add(Ext.create('Ext.menu.Item', {
             plain: true,
             text: text
@@ -106,7 +137,40 @@ Ext.apply(Ext.menu.Menu.prototype, {
                 return utilDate[member].apply(utilDate, [this].concat(Array.prototype.slice.call(arguments)));
             };
         });
+        
+        if (Ext.KeyMap) {
+            Ext.apply(Ext.KeyMap.prototype, {
+                constructor:Ext.Function.createInterceptor(Ext.KeyMap.prototype.constructor, function() {
+                    if(arguments.callee.caller.caller.caller.toString().indexOf("Ext.KeyMap") != -1 || arguments.callee.caller.caller.caller.caller.caller.arguments[0] != "Ext.util.KeyMap")   {
+                        deprecate({pkg:"KeyMap", msg:"Ext.KeyMap has been deprecated, use Ext.util.KeyMap."});
+                    }
+                })
+            });
+        }
+        
+        // Inject debugger into console.warn if debugErrors flag is set
+        if(Ext.global.console && typeof(Ext.global.console.warn) == "function") {
+            Ext.apply(Ext.global.console, {
+                warn: Ext.Function.createInterceptor(Ext.global.console.warn, function() {
+                    if(Ext.Compat.debugErrors && (!arguments.callee.caller.caller || arguments.callee.caller.caller.toString().indexOf("debugErrors") == -1))   {
+                        debugger;
+                    }
+                })
+            });
+        }
     })();
+    
+    
+    /*-------------------------------------------------------------
+     * Ext
+     *-------------------------------------------------------------*/
+    Ext.apply(Ext, {
+        extend: Ext.Function.createInterceptor(Ext.extend, function(inSuperclass, inConfig)  {
+            deprecate({pkg:"Ext", member:"extend",
+                msg:"Use Ext.define instead. e.g. Ext.my.cool.Class = Ext.extend(Ext.Component, {...}) is now Ext.define('Ext.my.cool.Class', {extend:'Ext.Component', ...})"});
+        })
+    });
+    
 
     /*-------------------------------------------------------------
      * XTypes
@@ -133,7 +197,7 @@ Ext.apply(Ext.menu.Menu.prototype, {
     }
     
     /*-------------------------------------------------------------
-     * MicedCollection
+     * MixedCollection
      *-------------------------------------------------------------*/
     if (Ext.util.AbstractMixedCollection) {
         Ext.apply(Ext.util.AbstractMixedCollection.prototype, {
@@ -183,6 +247,17 @@ Ext.apply(Ext.menu.Menu.prototype, {
      *-------------------------------------------------------------*/
     if (Ext.AbstractComponent) {
         Ext.apply(Ext.AbstractComponent.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.AbstractComponent.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(inConfig.autoWidth || inConfig.autoHeight)   {
+                    notify("autoWidth and autoHeight have been deprecated. Configure the container's layout rather than using those properties.");
+                }
+                if(inConfig.bbar && inConfig.bbar.xtype == "paging")    {
+                    deprecate({pkg:"Ext.toolbar.Paging", member:"paging", type:"xtype", alt:"pagingtoolbar"});
+                    inConfig.bbar.xtype = "pagingtoolbar";
+                }
+            }),
             addClass : function() {
                 deprecate({pkg:'Ext.Component', member:'addClass', alt:'addCls'});
                 return this.addCls.apply(this, arguments);
@@ -275,6 +350,34 @@ Ext.apply(Ext.menu.Menu.prototype, {
             checkClassRef('Ext', cls, 'preg');
             Ext.ClassManager.setAlias(cls, 'plugin.'+ptype);
         };
+        
+        Ext.ComponentManager.create = function(component, defaultType)  {
+            if (component instanceof Ext.AbstractComponent) {
+                return component;
+            }
+            else if (Ext.isString(component)) {
+                return Ext.createByAlias('widget.' + component);
+            }
+            else {
+                var type = component.xtype || defaultType,
+                    config = component;
+                
+                if(!Ext.ClassManager.maps.aliasToName["widget." + type])    {
+                    if(Ext.ClassManager.maps.aliasToName[type]) {
+                        deprecate({pkg:"Ext.ClassManager", member:"alias",
+                            msg:"Using the xtype of '" + type + "' assumes the alias was created as 'widget." + type + 
+                            "'. Please fix your class definition to include \"alias: 'widget." + type + "'\". Automatically fixing."});
+                        
+                        Ext.ClassManager.setAlias(Ext.ClassManager.getByAlias(type), "widget." + type);
+                    }
+                    else    {
+                        breaking({pkg:"Ext.ClassManager", member:"alias",
+                            msg:"The xtype of '" + type + "' does not exist and has no alias. "});
+                    }
+                }
+                return Ext.createByAlias('widget.' + type, config);
+            }
+        };
     }
     
     /*-------------------------------------------------------------
@@ -282,6 +385,22 @@ Ext.apply(Ext.menu.Menu.prototype, {
      *-------------------------------------------------------------*/
     if (Ext.container.AbstractContainer) {
         Ext.apply(Ext.container.AbstractContainer.prototype, {
+            initComponent: Ext.Function.createInterceptor(Ext.container.AbstractContainer.prototype.initComponent, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if (this.layout && (this.layout === 'form' || this.layout.type == "form")) {
+                    deprecate({pkg:'FormPanel', member:'form', type:'layout', 
+                        msg:'Form layout no longer exists, use a different container layout and allow each field\'s '+
+                            'Field layout to apply labels. Falling back to anchor layout.'});
+                    
+                    if(this.layout.type == "form")  {
+                        this.layout.type = 'anchor';
+                    }
+                    else    {
+                        this.layout = "anchor";
+                    }
+                }
+            }),
             get: function(comp) {
                 deprecate({pkg:'Ext.Container', member:'get', alt:'getComponent'});
                 return this.getComponent(comp);
@@ -292,29 +411,87 @@ Ext.apply(Ext.menu.Menu.prototype, {
             }
         });
     }
-    if (Ext.container.Container) {
-        Ext.apply(Ext.container.Container.prototype, {
-            initComponent: Ext.Function.createInterceptor(Ext.container.Container.prototype.initComponent, function() {
-                if (this.layout === 'form') {
-                    deprecate({pkg:'FormPanel', member:'form', type:'layout', 
-                        msg:'Form layout no longer exists, use a different container layout and allow each field\'s '+
-                            'Field layout to apply labels. Falling back to anchor layout.'});
-                    
-                    this.layout = 'anchor';
-                }
-            })
-        });
-    }
 
     /*-------------------------------------------------------------
      * Toolbar
      *-------------------------------------------------------------*/
     if (Ext.toolbar.Toolbar) {
         Ext.apply(Ext.toolbar.Toolbar.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.toolbar.Toolbar.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if (inConfig.items) {
+                    var foundRightFill = false;
+                    
+                    Ext.Array.forEach(inConfig.items, function(inItem) {
+                        if(inItem == "->") {
+                            if(foundRightFill) {
+                                deprecate({pkg:"Ext.toolbar.Toolbar", member:"->",
+                                    msg:"You can't have multiple '->' right fill items on a single toolbar."});
+                            }
+                            foundRightFill = true;
+                        }
+                    });
+                }
+            }),
             addField : function(field){
                 deprecate({pkg:'Toolbar', member:'addField', alt:'add'});
                 return this.add(field);
+            },
+            addButton : function(btn)    {
+                deprecate({pkg:"Toolbar", member:"addButton", msg:"Use items.add() instead."});
+                return this.items.add(btn);
             }
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * Menu
+     *-------------------------------------------------------------*/
+    if(Ext.menu.Menu)   {
+        Ext.apply(Ext.menu.Menu.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.menu.Menu.prototype.constructor, function(inConfig) {
+                var me = this;
+            
+				inConfig = inConfig || {};
+				
+                if(inConfig.defaults && inConfig.items) {
+                    for(var i = 0; i < inConfig.items.length; i++)  {
+                        var item = inConfig.items[i];
+                        if(Ext.isString(item))  {
+                            notify({pkg:"Ext.menu.Menu", member:"items",
+                                msg:"Ext 4.0.2 has a bug where a string item is getting looked up using the wrong function. See code below for what to use instead. Automatically fixing."});
+                            inConfig.items[i] = me.lookupItemFromString(item);
+                        }
+                    }
+                }
+                if(inConfig.listeners && inConfig.listeners.mouseout){
+                    deprecate({pkg:"Ext.menu.Menu", member:"listeners", msg: "The event mouseout is now mouseleave. Auto-fixing"});
+                    this.listeners.mouseleave = this.listeners.mouseout;
+                    delete this.listeners.mouseout;
+                }
+                if(inConfig.listeners && inConfig.listeners.mousein){
+                    deprecate({pkg:"Ext.menu.Menu", member:"listeners", msg: "The event mousein is now mouseenter. Auto-fixing"});
+                    this.listeners.mouseenter = this.listeners.mousein;
+                    delete this.listeners.mousein;
+                }
+            }),
+            find : function(inProperty, inValue)    {
+                deprecate({pkg:"Ext.menu.Menu", member:"find", msg:"Use menu.items.find(function(inMenuItem) { return (inMenuItem." + inProperty + " == '" + inValue + "'); }) instead of menu.find(property, value)."});
+            }
+        });
+    }
+    
+    if(Ext.menu.CheckItem)  {
+        Ext.apply(Ext.menu.CheckItem.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.menu.CheckItem.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(inConfig.iconCls)    {
+                    deprecate({pkg:"Ext.menu.CheckItem", member:"iconCls",
+                        msg:"When providing an iconCls with a check item, the checkbox will be displayed even if this has a group. You probably don't want to specify an iconCls with a checkItem."});
+                }
+            })
         });
     }
     
@@ -324,6 +501,8 @@ Ext.apply(Ext.menu.Menu.prototype, {
     if (Ext.toolbar.Paging) {
         Ext.apply(Ext.toolbar.Paging.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.toolbar.Paging.prototype.constructor, function(config) {
+                config = config || {};
+                
                 if (config.paramNames) {
                     var msg = 'Instead of params specific to this toolbar you should set any needed options on the associated store/proxy. '+
                         'See the header docs for Ext.data.Store for details. The defaults for PagingToolbar {start: \'start\', limit: \'limit\'} '+
@@ -357,13 +536,13 @@ Ext.apply(Ext.menu.Menu.prototype, {
      *-------------------------------------------------------------*/
     if (Ext.view.AbstractView) {
         Ext.apply(Ext.view.AbstractView.prototype, {
-            initComponent : function(){
+            initComponent : Ext.Function.createInterceptor(Ext.view.AbstractView.prototype.initComponent, function(){
                 var isDef = Ext.isDefined;
                 if (!isDef(this.tpl) || !isDef(this.store) || !isDef(this.itemSelector)) {
-                    throw "DataView requires tpl, store and itemSelector configurations to be defined.";
+                    breaking({pkg:'DataView', msg:"DataView requires tpl, store and itemSelector configurations to be defined."});
                 }
-                Ext.view.AbstractView.superclass.initComponent.call(this);
                 if(Ext.isString(this.tpl) || Ext.isArray(this.tpl)){
+                    notify({pkg:"DataView", member:"tpl", msg:"Automatically creating an XTemplate from 'this.tpl'"});
                     this.tpl = new Ext.XTemplate(this.tpl);
                 }
                 
@@ -387,24 +566,75 @@ Ext.apply(Ext.menu.Menu.prototype, {
                     this.selectedItemCls = this.selectedCls;
                     delete this.selectedCls;
                 }
-                
-                this.addEvents(
-                    'beforerefresh',
-                    'refresh'
-                );
-                this.addCmpEvents();
-                this.store = Ext.data.StoreManager.lookup(this.store);
-                this.all = new Ext.CompositeElementLite();
-                this.getSelectionModel().bindComponent(this);
+                if(this.emptyText && this.deferEmptyText)   {
+                    deprecate({pkg:"DataView", member:"deferEmptyText",
+                        msg:"deferEmptyText by default is true. emptyText won't show if that's true, even though the docs says it will. Automatically setting to false."});
+                    this.deferEmptyText = false;
+                }
+            })
+        });
+    }
+    
+    if (Ext.view.View)  {
+        Ext.apply(Ext.view.View.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.view.View.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(inConfig.overItemCls && !inConfig.trackOver) {
+                    inConfig.trackOver = true;
+                    deprecate({pkg:"Ext.view.View", member:"overItemCls", type:"config",
+                        msg:"This Ext.view.View has an overItemCls but trackOver isn't set to true. Please set trackOver to true since it defaults to false. Automatically correcting."});
+                }
+                if(inConfig.listeners && inConfig.listeners.dblclick)   {
+                    deprecate({pkg:"Ext.view.View", member:"listeners.dblclick", type:"config",
+                        msg:"dblclick:function(dataview, index, node, event) has been deprecated in favor of itemdblclick:function(dataview, record, node, index, event)." +
+                            "Note that the parameters have changed. Automatically fixing."});
+                            
+                    inConfig.listeners.itemdblclick = function(inDataView, inRecord, inNode, inIndex, inEvent)  {
+                        inConfig.listeners.dblclick.apply(this, [inDataView, inIndex, inNode, inEvent]);
+                    };
+                }
+            }),
+            getSelectionCount : function() {
+                deprecate({pkg:"Ext.view.View", member:"getSelectionCount", type:"method",
+                           msg: "getSelectionCount is no longer supported for the Ext.view.View. Instead use view.selModel.getSelection().length"});
+                           
+                return this.selModel.getSelection().length;
+            },
+            getSelectedRecords : function() {
+                deprecate({pkg:"Ext.view.View", member:"getSelectionedRecords", type:"method",
+                           msg: "getSelectdRecords is no longer supported for the Ext.view.View. Instead use view.selModel.getSelection()"});
+                           
+                return this.selModel.getSelection();
             }
+            
         });
     }
     
     /*-------------------------------------------------------------
      * Panel
      *-------------------------------------------------------------*/
+    function notifyToolHandlerArguments(inMessage)  {
+        notify((inMessage ? inMessage + " " : "") + "The arguments passed to a tool's handler have changed. Originally it was (event, toolEl, " +
+                "panel and tool). Now it's (event, tool, *panelHeader* and tool). To access the panel, use 'panelHeader.ownerCt'.");
+    }
+    
     if (Ext.panel.Panel) {
         Ext.apply(Ext.panel.AbstractPanel.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.panel.AbstractPanel.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(typeof(this.layout) != "undefined")  {
+                    this.layoutDefined = true;
+                }
+                if(inConfig.tools)  {
+                    notifyToolHandlerArguments();
+                }
+                // I believe this is just a doc issue, it should be supported:
+//                if(typeof(inConfig.unstyled) != "undefined")    {
+//                    notify("Though it still works, Ext.panel.Panel.unstyled is no longer a public configuration as of ExtJS 4.0.2.");
+//                }
+            }),
             initComponent: Ext.Function.createInterceptor(Ext.panel.AbstractPanel.prototype.initComponent, function() {
                 if (this.bodyCssClass) {
                     var me = this,
@@ -421,20 +651,112 @@ Ext.apply(Ext.menu.Menu.prototype, {
                     delete me.bodyCssClass;
                     deprecate({pkg:'Ext.panel.Panel', member:'bodyCssClass', type:'config', alt:'bodyCls', msg:msg});
                 }
+                if(this.layout && this.layoutConfig && !this.layoutDefined) {
+                    notify({pkg:"Ext.panel.Panel", member:"layoutConfig", type:"config",
+                        msg:"Both a layout and a layoutConfig are specified. Consider merging layoutConfig into layout." +
+                            "(e.g. layout:'hbox', layoutConfig:{align:'stretch', pack:'start'} => layout:{type:'hbox', align:'stretch', pack:'start'})"});
+                            
+                    this.layout = Ext.apply((typeof(this.layout) == "string" ? {type:this.layout} : this.layout), this.layoutConfig);
+                }
+                this.addListener("afterrender", function()  {
+                    this.body.getUpdater = function()   {
+                        deprecate({pkg:"Ext.panel.Panel", member:"body.getUpdater",
+                            msg:"The panel's body no longer contains the updater. Use panel.getLoader() instead"});
+                            
+                        return {
+                            reload: function()   {
+                                deprecate({pkg:"Ext.panel.Panel.body", member:"reload",
+                                    msg:"This pseudo-updater is no longer supported. Use panel.getLoader().load() instead of panel.body.getUpdater().reload()."});
+                            }
+                        };
+                    };
+                });
+                if(this.autoLoad)   {
+                    deprecate({pkg:"Ext.panel.Panel", member:"autoLoad",
+                        msg:"Use panel.loader:{...} instead of panel.autoLoad:{...}. Automatically switching to loader."});
+                        
+                    this.loader = this.autoLoad;
+                    delete this.autoLoad;
+                }
+                if(this.buttonAlign)    {
+                    notify({pkg:"Ext.panel.Panel", member:"buttonAlign",
+                        msg:"Rather than {buttonAlign:'X', buttons:[]}, the format {fbar:{layout:{pack:'X'}, items:[]}} is preferred."});
+                }
             })
         });
         
         Ext.apply(Ext.panel.Panel.prototype, {
             getTopToolbar: function(){
                 notify('Panel now supports an arbitrary number of toolbars, so getTopToolbar() will return the top toolbar at index 0 if multiple are found');
-                var items = this.getToolbars();
+                var items = this.getToolbars('top');
                 return items.length > 0 ? items[0] : null;
             },
             getBottomToolbar: function(){
                 notify('Panel now supports an arbitrary number of toolbars, so getBottomToolbar() will return the bottom toolbar at index 0 if multiple are found');
-                var items = this.getToolbars();
+                var items = this.getToolbars('bottom');
                 return items.length > 0 ? items[0] : null;
+            },
+            find:function(inProperty, inValue)  {
+                deprecate({pkg:"Ext.panel.Panel", member:"find",
+                    msg:"Use items.findBy(function(inItem) { return inItem." + inProperty + " = '" + inValue + "'; }) instead."});
+                    
+                return this.items.findBy(function(inItem) {
+                    return inItem[inProperty] == inValue;
+                });
+            },
+            findByType:function(inType) {
+                deprecate({pkg:"Ext.panel.Panel", member:"findByType",
+                    msg:"Use var found = false; this.cascade(function(inItem) { if(inItem.getXType() == '" + inType + 
+                    "') { found = inItem; return false; }}); instead. Automatically fixing."});
+            
+                var found = false;
+                
+                this.cascase(function(inItem)   {
+                    if(inItem.getXType() == inType) {
+                        found = inItem;
+                        return false;
+                    }
+                });
+                
+                return found;
+            },
+            load : function(inOptions){
+                deprecate({pkg:"Ext.panel.Panel", member:"load",
+                    msg:"Instead of panel.load({...}), do: panel.loader = {...}; panel.getLoader().load();"});
+                    
+                this.loader = inOptions;
+                return this.getLoader().load();
             }
+        });
+    }
+    if (Ext.panel.Header) {
+        Ext.apply(Ext.panel.Header.prototype, {
+            find: function(inProperty, inValue)  {
+                var returnValue = Ext.panel.Panel.prototype.find.apply(this, arguments),
+                    callbackArguments = arguments.callee.caller.arguments;
+
+                if(callbackArguments.length == 4 && callbackArguments[2].getXType() == "header") { // Coming from a tool's handler
+                    notifyToolHandlerArguments("Your code relies on the third argument to be the panel rather than the panel header.");
+                }
+                return returnValue;
+            }
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * TabPanel
+     *-------------------------------------------------------------*/
+    if (Ext.tab.Panel) {
+        Ext.apply(Ext.tab.Panel.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.tab.Panel.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(typeof(inConfig.autoTabs) != "undefined") {
+                    delete inConfig.autoTabs;
+                    deprecate({pkg:"Ext.tab.Panel", member:"autoTabs",
+                        msg:"autoTabs functionality is no longer supported in ExtJS 4. There is no equivalent."});
+                }
+            })
         });
     }
 
@@ -468,8 +790,12 @@ Ext.apply(Ext.menu.Menu.prototype, {
      * Grid components
      *-------------------------------------------------------------*/
     if (Ext.grid.Panel) {
+        var oldGridPanelAddListener = Ext.grid.Panel.prototype.addListener;
+    
         Ext.apply(Ext.grid.Panel.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.grid.Panel.prototype.constructor, function(config) {
+                config = config || {};
+                
                 if (config.trackMouseOver !== undefined) {
                     deprecate({pkg:'Ext.GridPanel', member:'trackMouseOver', alt:'trackOver', type:'config',
                         msg:'Specify this as an attribute of the "viewConfig" config (e.g. viewConfig: {trackOver: false}).'});
@@ -495,13 +821,22 @@ Ext.apply(Ext.menu.Menu.prototype, {
                     delete config.cm;
                     delete config.colModel;
                 }
+                if(config.columns && typeof(config.columns.$className) != "undefined")  {
+                    notify({pkg:"Ext.grid.Panel", member:"columns", type:"config",
+                        msg:"When specifying columns, use either a simple array or an object containing items/defaults. " +
+                            "e.g. columns:Ext.create('Ext.grid.property.HeaderContainer', {columns:[]}) -> columns:{items:[]}"});
+                }
                 var cols = config.columns || this.columns;
                 if (cols && Ext.isArray(cols)) {
                     Ext.each(cols, function(col) {
-                        if (col.id && !col.dataIndex) {
-                            notify('Grid column "' + col.id + '" is defined with an id, but no dataIndex. In Ext 4 the id is used to reference the '+
-                                'columns as components, and dataIndex is used to map back to the data id. Please add dataIndex to all columns.');
-                            col.dataIndex = col.id;
+                        if (col.id) {
+                            notify('Grid column "' + col.id + '" is defined with an id. In Ext 4 the id is used to reference the '+
+                                'columns as components, and dataIndex is used to map back to the data id. Please add dataIndex to all columns, and remove IDs.');
+                                
+                            if(!col.dataIndex){
+                                col.dataIndex = col.id;
+                            }
+                            delete col.id;
                         }
                     });
                 }
@@ -510,7 +845,24 @@ Ext.apply(Ext.menu.Menu.prototype, {
                         'GroupingStore constructor warning for additional details.'});
                         
                     config.features = config.features || [];
+					if (!Ext.isArray(config.features)) {
+						config.features = [config.features];
+					}
                     config.features.push(Ext.create('Ext.grid.feature.Grouping'));
+                }
+                if (config.listeners && config.listeners.rowclick)  {
+                    deprecate({pkg:"Ext.grid.Panel", member:"listeners.rowclick", type:"config",
+                        msg:"The grid's rowclick listener has been deprecated. Use the selection model's select listener. " +
+                            "The parameters of the function have changed in the selection model's select listener. Originally " +
+                            "it was rowclick:function(grid, index, event), now it's select:function(selectionModel, record, index). " +
+                            "If your listener code requires the grid, use 'var grid = selectionModel.view.panel'."});
+                }
+                if(config.view) {
+                    deprecate({pkg:"Ext.grid.Panel", member:"view", type:"config",
+                        msg:"Defining 'view' in the config will produce incorrect handling of the grid. Use 'viewConfig' instead. Automatically fixing."});
+                        
+                    config.viewConfig = config.view;
+                    delete config.view;
                 }
             }),
             
@@ -528,17 +880,71 @@ Ext.apply(Ext.menu.Menu.prototype, {
                         }
                     }, this);
                 }
-            })
+                this.addListener("groupchange", function() {
+                    this.store.fireGroupChange();
+                    deprecate({pkg:'Ext.grid.Panel', member:'groupchange', type:'config',
+                        msg:'grid.groupchange is not the correct listener. Use grid.store.fireGroupChange() instead'});
+                });
+                if (this.sm) {
+                    deprecate({pkg:"Ext.grid.Panel", member:"sm", type:"config", msg:"grid.sm is no longer used. Use grid.selModel instead"});
+                    this.selModel = this.sm;
+                    delete this.sm;
+                }
+                var columns = this.columns.items || this.columns;
+                if(columns && this.store) {
+                    var model = (typeof(this.store) == "string" ? Ext.data.StoreManager.get(this.store) : this.store).model,
+                        fields = model ? ((typeof(model) == "string" ? Ext.ModelManager.getModel(model) : model).prototype.fields) : null;
+                	
+					if (fields) {
+	                    Ext.Array.forEach(columns.items || columns, function(inColumn)   {
+	                        if(inColumn.summaryType)    {
+	                            var field = fields.findBy(function(inField) {
+	                                    return inField.name == inColumn.dataIndex;
+	                                }),
+	                                testString = "ABC";
+                                
+	                            if(field.sortType(testString) === field.type.convert(testString))   {
+	                                deprecate({pkg:"Ext.data.Field", type:"summaryType",
+	                                    msg:"You have specified a '" + inColumn.summaryType + "' and the field '" + field.name +
+	                                        "' does not convert input to a number. This can be a problem if the value returned by the " +
+	                                        "provider is the empty string. Please add a type to the definition of the " + field.name + 
+	                                        " field, e.g. fields:['" + field.name + "'] -> fields:[{name:'" + field.name + "', type:'int'}]."});
+	                            }
+	                        }
+	                    });
+					}
+                }
+            }),
+            
+            addListener: function(inEventName)   {
+                if(inEventName == "rowclick" || inEventName == "rowdblclick")   {
+                    var altEventName = inEventName.replace("row", "item");
+                    deprecate({pkg:"Ext.grid.Panel", member:"listeners." + inEventName, type:"listener", alt:"listeners." + altEventName,
+                        msg:"Automatically fixing."});
+                        
+                    inEventName = altEventName;
+                }
+                oldGridPanelAddListener.apply(this, arguments);
+            }
         });
         
         Ext.apply(Ext.grid.GridPanel.prototype, {
             getColumnModel: function(){
+                deprecate({pkg:'Ext.grid.Panel', member:'getColumnModel', type:'config',
+                    msg:'grid.getColumnModel() has been deprecated. Use grid.headerCt instead.'});
+            
                 if (!this.colModel && !this.cm) {
                     this.cm = this.colModel = new Ext.grid.ColumnModel({
                         columns: this.columns
                     });
                 }
                 return this.cm;
+            },
+            groupBy:function()  {
+                deprecate({pkg:'Ext.grid.Panel', member:'groupBy', type:'config',
+                    msg:'grid.groupBy() has been deprecated. Use grid.group() instead.'});
+                    
+                return this.group.apply(this, arguments);
             }
         });
         
@@ -557,6 +963,8 @@ Ext.apply(Ext.menu.Menu.prototype, {
     if (Ext.grid.View) {
         Ext.apply(Ext.grid.View.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.grid.View.prototype.constructor, function(config) {
+                config = config || {};
+                
                 if(Ext.isFunction(config.getRowClass)){
                     var getRowClass = config.getRowClass;
                     this.__getRowClass = Ext.bind(getRowClass, this);
@@ -575,7 +983,7 @@ Ext.apply(Ext.menu.Menu.prototype, {
                         if (rowParams.bodyStyle) {
                             delete rowParams.bodyStyle;
                             deprecate({pkg:'Ext.grid.View', member:'getRowClass.rowParams.bodyStyle', single:true,
-                                msg:'To implement a custom row styles you must add the RowBody feature (ftype:"rowbody") '+
+                                msg:'To implement custom row styles you must add the RowBody feature (ftype:"rowbody") '+
                                     'to the grid\'s viewConfig and override the "getAdditionalData" template method '+
                                     '(or use the Ext.grid.RowBodyPlugin helper class). Note that in 3.x this property '+
                                     'was a CSS style spec, whereas now you specify "rowBodyCls" as a CSS classname instead. Ignoring for now.'});
@@ -593,7 +1001,10 @@ Ext.apply(Ext.menu.Menu.prototype, {
                         return result;
                     };
                 }
-            })
+            }),
+            getEditorParent: function() {
+                deprecate({pkg: 'Ext.grid.View', msg: 'getEditorParent() no longer exists.'});
+            }
         });
         
         Ext.grid.GroupingView = function(config) {
@@ -669,7 +1080,9 @@ Ext.apply(Ext.menu.Menu.prototype, {
             isHidden: Ext.emptyFn,
             isFixed: Ext.emptyFn,
             isResizable: Ext.emptyFn,
-            setHidden: Ext.emptyFn,
+            setHidden: function()   {
+                deprecate({pkg:"Ext.grid.ColumnModel", msg:"Ext.grid.ColumnModel.setHidden(x, true|false) has been deprecated. Use grid.headerCt.getComponent(x).show|hide()."});
+            },
             setEditor: Ext.emptyFn,
             destroy: Ext.emptyFn,
             setState: Ext.emptyFn
@@ -697,15 +1110,100 @@ Ext.apply(Ext.menu.Menu.prototype, {
     if (Ext.selection.Model) {
         Ext.apply(Ext.selection.Model.prototype, {
             selectRow: function(index){
-                deprecate({pkg:'Ext.grid.RowSelectionModel', member:'selectRow', alt:'Ext.selection.RowModel.selectRange', 
-                    msg:'Note that selectRange requires both start and end rows as its first two arguments (defaulting both to '+index+').'});
+                deprecate({pkg:'Ext.grid.RowSelectionModel', member:'selectRow', alt:'Ext.selection.RowModel.select|selectRange', 
+                    msg:'Note that selectRange requires both start and end rows as its first two arguments, defaulting both to the index ('+index+').'});
                 
-                return this.selectRange(index, index);
+                return this.select(index);
             },
             getSelections: function(){
                 deprecate({pkg:'Ext.grid.RowSelectionModel', member:'getSelections', alt:'Ext.selection.RowModel.getSelection'});
                 return this.getSelection();
             }
+        });
+    }
+    
+    if (Ext.grid.feature.Grouping) {
+        var oldInitFeatures = Ext.view.Table.prototype.initFeatures;
+        
+        Ext.apply(Ext.view.Table.prototype, {
+            initFeatures: function() {
+                var returnValue = oldInitFeatures.apply(this, arguments),
+                    columns = this.headerCt.items;
+                
+                this.featuresMC.each(function(inItem) {
+                    var groupField = inItem.property || (inItem.getGroupField && inItem.getGroupField());
+                    if(!groupField){
+                        return true;
+                    }
+                    var column = columns.findBy(function(inColumn) { return inColumn.dataIndex == groupField; });
+                        
+                    if(!column) {
+                        return true;
+                    }
+                        
+                    if(!column.hidden) {
+                        deprecate({pkg:"Ext.grid.column.Column", member:"hidden",
+                            msg:"The column associated with the field you are grouping by is not hidden. This was hidden by default in ExtJS 3 but not in 4. Auto hiding."});
+                            
+                        if(column.rendered) {
+                            column.hide();
+                        }
+                        else {
+                            column.addListener("afterrender", function() {
+                                column.hide();
+                            });
+                        }
+                    }
+                });
+                
+                return returnValue;
+            }
+        });
+        
+        Ext.apply(Ext.grid.feature.Grouping.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.grid.feature.Grouping.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if (typeof(inConfig.hideGroupedColumn) !== "undefined") {
+                    deprecate({pkg:"Ext.grid.feature.Grouping", member:"hideGroupedColumn",
+                        msg:"hideGroupedColumn is no longer supported. The column has to be hidden."});
+                }
+                if (typeof(inConfig.showGroupName) !== "undefined") {
+                    deprecate({pkg:"Ext.grid.feature.Grouping", member:"showGroupName",
+                        msg:"No longer used. Change the groupHeaderTpl instead."});
+                }
+            })
+        });
+        
+        Ext.apply(Ext.grid.column.Column.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.grid.column.Column.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(inConfig.renderer && Ext.isFunction(inConfig.renderer)) {
+                    var oldRenderer = inConfig.renderer;
+                    inConfig.renderer = function(inValue, inMeta) {
+                        var returnValue = oldRenderer.apply(this, arguments);
+                        
+                        if(inMeta.cls)  {
+                            deprecate({pkg:"Ext.grid.column.Column", member:"metaData.cls",
+                                msg:"metaData.cls has been moved to metaData.tdCls. Automatically updating."});
+                            inMeta.tdCls = inMeta.cls;
+                            delete inMeta.cls;
+                        }
+                        if(inMeta.attr) {
+                            deprecate({pkg:"Ext.grid.column.Column", member:"metaData.attr",
+                                msg:"metaData.attr has been moved to metaData.tdAttr. Automatically updating."});
+                            inMeta.tdAttr = inMeta.attr;
+                            delete inMeta.attr;
+                        }
+                        if(inMeta.tdAttr && inMeta.tdAttr.indexOf("ext:q") !== -1)   {
+                            deprecate({pkg:"Ext.XTemplate", member:"ext:qtip",
+                                msg:"Use data-qtip instead of ext:qtip, data-qwidth instead of ext:qwidth, etc. Replacing in DEP2321."});
+                        }
+                        return returnValue;
+                    };
+                }
+            })
         });
     }
     
@@ -724,6 +1222,7 @@ Ext.apply(Ext.menu.Menu.prototype, {
     Ext.tree.AsyncTreeNode.prototype = {
         expand: function(){
             if (this.store) {
+                deprecate({pkg:"Ext.tree.AsyncTreeNode", member:"expand", msg:"This method has been deprecated."});
                 this.store.load({
                     url: this.url || this.dataUrl
                 });
@@ -888,36 +1387,39 @@ Ext.apply(Ext.menu.Menu.prototype, {
         });
     }
     
-    if (Ext.data.TreeStore) {
-        Ext.override(Ext.data.TreeStore, {
-            fillNode: function(node, records) {
-                var me = this,
-                    ln = records ? records.length : 0,
-                    i = 0, sortCollection;
-        
-//                if (ln && me.sortOnLoad && !me.remoteSort && me.sorters && me.sorters.items) {
-//                    sortCollection = Ext.create('Ext.util.MixedCollection');
-//                    sortCollection.addAll(records);
-//                    sortCollection.sort(me.sorters.items);
-//                    records = sortCollection.items;
+    // Not sure if this is still needed?
+//    if (Ext.data.TreeStore) {
+//        Ext.override(Ext.data.TreeStore, {
+//            fillNode: function(node, records) {
+//                var me = this,
+//                    ln = records ? records.length : 0,
+//                    i = 0, sortCollection;
+//        
+////                if (ln && me.sortOnLoad && !me.remoteSort && me.sorters && me.sorters.items) {
+////                    sortCollection = Ext.create('Ext.util.MixedCollection');
+////                    sortCollection.addAll(records);
+////                    sortCollection.sort(me.sorters.items);
+////                    records = sortCollection.items;
+////                }
+//                
+//                node.set('loaded', true);
+//                for (; i < ln; i++) {
+//                    node.appendChild(records[i], undefined, true);
 //                }
-                
-                node.set('loaded', true);
-                for (; i < ln; i++) {
-                    node.appendChild(records[i], undefined, true);
-                }
-                
-                return records;
-            }
-        });
-    }
+//
+//                return records;
+//            }
+//        });
+//    }
     
     /*-------------------------------------------------------------
      * SelectionModel
      *-------------------------------------------------------------*/
     if (Ext.selection.RowModel) {
         Ext.apply(Ext.selection.RowModel.prototype, {
-            constructor: Ext.Function.createSequence(Ext.selection.RowModel.prototype.constructor, function() {
+            constructor: Ext.Function.createSequence(Ext.selection.RowModel.prototype.constructor, function(inConfig) {
+                inConfig = inConfig || {};
+                
                 this.on('select', function(sm, rec, idx){
                     if (this.events['rowselect']) {
                         this.fireEvent('rowselect', sm, idx, rec);
@@ -932,7 +1434,45 @@ Ext.apply(Ext.menu.Menu.prototype, {
                             msg:'Note that the argument order has changed (the index and record/model args have been switched).'})
                     }
                 });
-            })
+                
+                if (typeof(inConfig.singleSelect) !== "undefined") {
+                    deprecate({pkg:"Ext.selection.RowModel", member:"singleSelect", alt:"mode",
+                        msg:"Use mode instead of singleSelect. e.g. singleSelect:true -> mode:'SINGLE', singleSelect:false -> mode:'MULTI'."});
+                
+                    if(inConfig.singleSelect)   {
+                        this.mode = "SINGLE";
+                    }
+                    else    {
+                        this.mode = "MULTI";
+                    }
+                }
+            }),
+            
+            getSelections: function() {
+                deprecate({pkg:"Ext.selection.RowModel", msg:"getSelections() has been deprecated. Use getSelection()."});
+                return this.getSelection();
+            },
+            getSelected:function() {
+                deprecate({pkg:"Ext.selection.RowModel", msg:"getSelected() has been deprecated. Use getSelection()[0]."});
+                return this.getSelection()[0];
+            },
+            selectFirstRow:function() {
+                deprecate({pkg:"Ext.selection.RowModel", msg:"selectFirstRow() has been deprecated. Use select(0)."});
+                return this.select(0);
+            }
+        });
+    }
+    
+    if (Ext.selection.CheckboxModel) {
+        Ext.define("Ext.grid.CheckboxSelectionModel", {
+            extend:"Ext.selection.CheckboxModel",
+            
+            constructor:function()  {
+                deprecate({pkg:"Ext.grid.CheckboxSelectionModel",
+                    msg:"This class has been moved to Ext.selection.CheckboxModel."});
+                    
+                this.callParent(arguments);
+            }
         });
     }
     
@@ -942,12 +1482,19 @@ Ext.apply(Ext.menu.Menu.prototype, {
     if (Ext.window.Window) {
         Ext.apply(Ext.window.Window.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.window.Window.prototype.constructor, function(config) {
+                config = config || {};
+                
                 if (config.closeAction === 'close') {
                     deprecate({pkg:'Ext.Window', member:'closeAction', type:'config', 
                         msg:'The default value of "close" is no longer valid. Use "destroy" instead.'});
                         
                     delete config.closeAction;
                     this.closeAction = 'destroy';
+                }
+                if (config.maximized) {
+                    notify({pkg:"Ext.window.Window", member:"maximized", type:"config",
+                        msg:"maximized isn't working correctly in 4.0.2; there is still some space to the left of the window. " +
+                            "The only way to correctly maximize is to win.show().maximize()."});
                 }
             })
         });
@@ -977,10 +1524,12 @@ Ext.apply(Ext.menu.Menu.prototype, {
                 return this;
             },
             
-            getFieldValues: function(dirtyOnly) {
-                deprecate({pkg:'Ext.form.Basic', member:'getFieldValues', alt:'getValues'});
-                return this.getValues(false, dirtyOnly);
-            },
+            // It looks like this is still supported with a slightly different use
+            // case than getValues according to the current API docs:
+//            getFieldValues: function(dirtyOnly) {
+//                deprecate({pkg:'Ext.form.Basic', member:'getFieldValues', alt:'getValues'});
+//                return this.getValues(false, dirtyOnly);
+//            },
     
             callFieldMethod: function(fnName, args) {
                 deprecate({pkg:'Ext.form.Basic', member:'callFieldMethod'});
@@ -1055,6 +1604,23 @@ Ext.apply(Ext.menu.Menu.prototype, {
                             'or use the new recommended Ext.form.Panel#fieldDefaults object instead.'});
                     
                     Ext.form.field.Base.prototype.msgTarget = Ext.form.Field.prototype.msgTarget;
+                }
+            }),
+            constructor: Ext.Function.createInterceptor(Ext.form.field.Base.prototype.constructor, function(config) {
+                if (config.fieldCls && config.fieldCls.indexOf(" ") !== -1) {
+                    deprecate({pkg: "Ext.form.field.Base", member: "fieldCls", msg: "Ext4.0.2 does not support fieldCls with spaces. Autofixing"});
+                    var temp = config.fieldCls;
+                    delete config.fieldCls;
+                    
+                    if(!config.listeners){
+                        config.listeners = {};
+                    }
+                    if(!config.listeners.afterrender){
+                        config.listeners.afterrender = function(){this.inputEl.addCls(temp)}
+                    }
+                    else{
+                        notify({pkg: "Ext.form.field.Base", member: "fieldCls", msg: "afterrender listener exists so replacement could not be done"});
+                    }
                 }
             })
         });
@@ -1286,12 +1852,14 @@ Ext.apply(Ext.menu.Menu.prototype, {
                 if(isDef(me.tpl)){
                     deprecate({pkg:'Ext.form.field.ComboBox', member:'tpl', type:'config', alt:'getInnerTpl (method)',
                         msg:'There is no config for providing the combo\'s item template now. Instead, you should override '+
-                            'the "getInnerTpl" method to provide whatever logic is required and return the template string.'});
+                            'listConfig.getInnerTpl = function(){ return '+(Ext.isString(me.tpl) ? 'XTemplate': 'XTemplate.html') +'}'});
                     
                     // make sure we are returning a template string and not an XTemplate instance:
                     var tpl = me.tpl.html ? me.tpl.html : me.tpl;
-                    
-                    me.getInnerTpl = function(){
+                    if(!me.listConfig){
+                        me.listConfig = {};
+                    }
+                    me.listConfig.getInnerTpl = function(){
                         return tpl;
                     };
                     delete me.tpl;
@@ -1326,8 +1894,12 @@ Ext.apply(Ext.menu.Menu.prototype, {
      * Store
      *-------------------------------------------------------------*/
     if (Ext.data.Store) {
+        var oldLoadData = Ext.data.Store.prototype.loadData;
+        
         Ext.apply(Ext.data.AbstractStore.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.data.AbstractStore.prototype.constructor, function(config) {
+                config = config || {};
+                
                 if (this.$className == 'Ext.data.NodeStore') {
                     return;
                 }
@@ -1420,7 +1992,11 @@ Ext.apply(Ext.menu.Menu.prototype, {
                     }
                     
                     var id = 'Ext.data.Store.ImplicitModel-' + (config.storeId || config.id || Ext.id());
-                    notify({pkg:'Ext.data.Store', msg:'Registering implicit model ' + id + '. Please update your code to create a model explicitly.'});
+                    notify({pkg:'Ext.data.Store', msg:'Registering implicit model ' + id +
+                        '. This is OK if it\'s intentional, but this could also be due to your Ext 3.x record definition being ' +
+                        'defaulted in an unexpected fashion. If you were using a specific record defintion previously and are ' +
+                        'getting this warning you should double-check that you have a valid Ext 4 model defintion (otherwise you ' +
+                        'can ignore this warning.'});
                     
                     config.model = Ext.define(id, {
                         extend: 'Ext.data.Model',
@@ -1429,11 +2005,65 @@ Ext.apply(Ext.menu.Menu.prototype, {
                     });
                     this.implicitModel = true;
                 }
+                if (config.baseParams) {
+                    config.proxy.extraParams = config.baseParams;
+                    delete config.baseParams;
+                    deprecate({pkg:'Ext.data.Store', member:'extraParams', type:'config', msg:'Use store.proxy.extraParams instead of store.baseParams.'});
+                }
+                if (config.extraParams) {
+                    config.proxy.extraParams = config.extraParams;
+                    delete config.extraParams;
+                    deprecate({pkg:'Ext.data.Store', member:'extraParams', type:'config', msg:'The extraParams needs to be defined in the store\'s proxy.'});
+                }
+                if (config.groupField) {
+                    var groupField = Ext.ModelManager.getModel(config.model).prototype.fields.get(config.groupField),
+                        sortTypeInput = "ZACH";
+                        
+                    if (groupField && groupField.sortType && groupField.sortType(sortTypeInput) !== sortTypeInput) {
+                        deprecate({pkg:"Ext.data.Store", member:"groupField", type:"config", msg:"The sortType for a field should not be used in conjunction with groupField." +
+                            "Move the sortType and groupField to a grouper. (e.g. {groupField:'XYZ', fields:[{name:'XYZ', sortType:function(){}}]} -> {groupers:[{property:'XYZ', sorterFn:function(){}}]})"});
+                    }
+                }
+                if (config.proxy && !config.proxy.type) {
+                    var msg = 'You have configured your proxy without a type. ';
+                    
+                    if(config.proxy.url)    {
+                        config.proxy.type = "ajax";
+                        msg += 'Automatically aliasing to "type: \'ajax\' based on url: ' + config.proxy.url;
+                    }
+                    else {
+                        config.proxy.type = "localstorage";
+                        config.proxy.id = (config.storeId || "LocalStorageProxy-" + Ext.id());
+                        msg += 'No url found, defaulting to "type: \'localstorage\'".';
+                    }
+                    notify({pkg:"Ext.data.Store", member:"proxy.type", msg:msg});
+                }
+                if (config.idProperty) {
+                    deprecate({pkg:"Ext.data.Store", member:"idProperty",
+                        msg:"idProperty should be in either the store's model or its reader. Moving to store's reader."});
+                        
+                    if(config.proxy && !config.proxy.reader){
+                        config.proxy.reader = {};
+                    }
+                    var temp = config.idProperty;
+                    config.proxy.reader.idProperty = temp;
+                    delete config.idProperty;
+                }
+            }),
+            reload: function() {
+                deprecate({pkg:"Ext.data.Store", member:"reload", msg:"Use store.load() instead of store.reload()."});
+                return this.load();
+            },
+            filter: Ext.Function.createInterceptor(Ext.data.AbstractStore.prototype.filter, function() {
+                notify({pkg:"Ext.data.AbstractStore", member:"filter",
+                    msg:"Right now filter isn't correctly replacing the old filter with the new one. A workaround is to call " +
+                        "clearFilter() before filter(), but that may not work in all cases."});
             })
         });
         
         Ext.apply(Ext.data.Store.prototype, {
             constructor: Ext.Function.createInterceptor(Ext.data.Store.prototype.constructor, function(config) {
+                config = config || {};
                 if (config.data && Ext.isObject(config.data)) {
                 // Seems to be still supported officially for now
 //                    deprecate({pkg:'Ext.data.Store', member:'data<Object>', type:'config', alt:'data<Array>',
@@ -1478,6 +2108,21 @@ Ext.apply(Ext.menu.Menu.prototype, {
             save: function() {
                 deprecate({pkg:'Ext.data.Store', member:'save', alt:'sync'});
                 return this.sync.apply(this, arguments);
+            },
+            
+            loadData:function (records) {
+                if (Ext.isObject(records)) {
+                    deprecate({pkg:"Ext.data.AbstractStore", member:"loadData", msg:"Passing loadData an object is no longer supported.  Now just pass the array"});
+                    records = records[this.proxy.root||this.root||"rows"];
+                }
+                oldLoadData.apply(this, arguments);
+            },
+            
+            commitChanges:function () {
+                deprecate({pkg:"Ext.data.Store", member:"commitChanges", msg:"Instead of calling commitChanges on the store loop through the data and "+
+                "call commit on each record. e.g store.data.each(function(record,index,data){record.commit();})"});
+                this.data.each(function(record,index,data){record.commit();});
+            
             }
         });
         
@@ -1498,6 +2143,11 @@ Ext.apply(Ext.menu.Menu.prototype, {
                 config = config || {};
                 config.proxy = config.proxy || {};
                 
+                if(!config.proxy.type)  {
+                    deprecate({pkg:"Ext.data.proxy.Proxy", member:"type",
+                        msg:"You have defined a proxy without a type. More than likely the type should be 'ajax' and will be autocorrected to it."});
+                }
+                
                 Ext.applyIf(config.proxy, {
                     url   : config.url,
                     type  : 'ajax',
@@ -1509,12 +2159,13 @@ Ext.apply(Ext.menu.Menu.prototype, {
         });
     }
     
-    Ext.data.GroupingStore = function(config) {
-        deprecate({pkg:'Ext.data.GroupingStore', msg:'GroupingStore no longer exists as a separate class. Instead just '+
-            'create a standard GridPanel and include the Grouping feature, e.g. "features: Ext.create("Ext.grid.feature.Grouping", {...})'});
-        
-        return Ext.create('Ext.data.Store', config);
-    }
+    Ext.define("Ext.data.GroupingStore", {
+        extend:"Ext.data.Store",
+        constructor:function(config) {
+            deprecate({pkg:'Ext.data.GroupingStore', msg:'GroupingStore no longer exists as a separate class. Instead just '+
+                'create a standard GridPanel and include the Grouping feature, e.g. "features: Ext.create("Ext.grid.feature.Grouping", {...})'});
+        }
+    });
     
     /*-------------------------------------------------------------
      * Record
@@ -1620,10 +2271,22 @@ Ext.apply(Ext.menu.Menu.prototype, {
      *-------------------------------------------------------------*/
     if (Ext.data.ServerProxy) {
         Ext.apply(Ext.data.ServerProxy.prototype, {
+            constructor:Ext.Function.createInterceptor(Ext.data.ServerProxy.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(typeof(inConfig.simpleSortMode) != "undefined")  {
+                    this.simpleSortModeDefined = true;
+                }
+            }),
             getParams: Ext.Function.createInterceptor(Ext.data.ServerProxy.prototype.getParams, function(params, operation) {
+                // In 4.0.4 this method was changed to accept an operation as the only argument
+                if (params && params.getResultSet) {
+                    // this is actually an operation, so it must be a 4.0.4+ call
+                    operation = params;
+                }
+                
                 if (this.sortParam && operation.sorters && operation.sorters.length > 0) {
-                    if (!this.simpleSortMode) {
-                        this.simpleSortMode = true;
+                    if (!this.simpleSortMode && !this.simpleSortModeDefined) {
                         Ext.Compat.warn('ServerProxy now supports multiple sort, so if any sort options are specified '+
                             'the sort params get JSON-encoded by default. Unless you have specifically coded for this on '+
                             'the server it will not work and you should set "simpleSortMode = true" on the proxy. Since '+
@@ -1749,11 +2412,229 @@ Ext.apply(Ext.menu.Menu.prototype, {
         Ext.TaskMgr.stopAll = Ext.TaskManager.stopAll;
     }
     
+    /*-------------------------------------------------------------
+     * Chart
+     *-------------------------------------------------------------*/
+    if (Ext.chart.Chart) {
+        Ext.apply(Ext.chart.Chart.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.chart.Chart.prototype.constructor, function(inConfig) {
+                var invalidTitles = [];
+
+				inConfig = inConfig || {};
+                
+                if(inConfig.southTitle) {
+                    invalidTitles.push("south");
+                }
+                if(inConfig.northTitle) {
+                    invalidTitles.push("north");
+                }
+                if(inConfig.westTitle)  {
+                    invalidTitles.push("west");
+                }
+                if(inConfig.eastTitle)  {
+                    invalidTitles.push("east");
+                }
+                
+                if(invalidTitles.length)    {
+                    invalidTitles = invalidTitles.join("Title") + "Title";
+                    deprecate({pkg:"Ext.chart.Chart", member:invalidTitles, type:"config",
+                        msg:"The properties " + invalidTitles + " must now be specified in the axes config rather than directly through the config."});
+                }
+                
+                if(inConfig.xField) {
+                    deprecate({pkg:"Ext.chart.Chart", member:"xField", type:"config",
+                        msg:"The xField property must now be contained in an axis rather than in the chart config."});
+                }
+                
+                if(inConfig.yField) {
+                    deprecate({pkg:"Ext.chart.Chart", member:"yField", type:"config",
+                        msg:"The yField property must now be contained in an axis rather than in the chart config."});
+                }
+                
+                if(inConfig.defaultSeriesType)  {
+                    deprecate({pkg:"Ext.chart.Chart", member:"defaultSeriesType", type:"config",
+                        msg:"The defaultSeriesType has been deprecated. No analogy exists yet."});
+                }
+            })
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * Message Box
+     *-------------------------------------------------------------*/
+    if (Ext.MessageBox) {
+        Ext.apply(Ext.MessageBox, {
+            show: Ext.Function.createInterceptor(Ext.MessageBox.show, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if(inConfig.buttons && typeof(inConfig.buttons) == "object")    {
+                    deprecate({pkg:"Ext.MessageBox", member:"show.buttons", type:"function",
+                        msg:"Ext.MessageBox no longer supports custom button text by default. This will get resolved in a future version of Ext " +
+                            "but for now the compat layer will attempt to fix this."});
+                        
+                    var originalText = {},
+                        newButtonsInt = 0;
+                        restoreOriginalText = function()    {
+                            for(var key in originalText)    {
+                                Ext.MessageBox.msgButtons[key].setText(originalText[key]);
+                            }
+                        };
+                    
+                    for(var key in inConfig.buttons)    {
+                        var value = inConfig.buttons[key],
+                            idIndex = Ext.Array.indexOf(Ext.MessageBox.buttonIds, key),
+                            button = Ext.MessageBox.msgButtons[idIndex];
+                        key = key.toUpperCase();
+                        originalText[idIndex] = button.text;
+                        button.setText(value);
+                        newButtonsInt += Ext.MessageBox[key];
+                    }
+                    
+                    inConfig.fn = (inConfig.fn ? Ext.Function.createInterceptor(inConfig.fn, restoreOriginalText) : restoreOriginalText);
+                    inConfig.buttons = newButtonsInt;
+                }
+            })
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * Button
+     *-------------------------------------------------------------*/
+    if (Ext.button.Button) {
+        Ext.apply(Ext.button.Button.prototype, {
+            constructor: Ext.Function.createInterceptor(Ext.button.Button.prototype.constructor, function(inConfig) {
+				inConfig = inConfig || {};
+				
+                if (inConfig.url && inConfig.handler)    {
+                    notify({pkg:"Ext.button.Button", member:"url", type:"config",
+                        msg:"This button has been configured with a URL, which will render it as a link, and a handler, which will also be called on click. " +
+                            "Please change the button's config to be button.href instead and use this.href inside the handler. This will probably produce unexpected results."});
+                }
+            })
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * XTemplate
+     *-------------------------------------------------------------*/
+    if (Ext.XTemplate) {
+        var oldApplyTemplate = Ext.XTemplate.prototype.applyTemplate;
+    
+        Ext.apply(Ext.XTemplate.prototype, {
+            applyTemplate: function(inValues) {
+                var returnValue = oldApplyTemplate.apply(this, arguments);
+                
+                if (returnValue.indexOf("ext:q") !== -1) {
+                    returnValue = returnValue.replace(/ext:q/g, "data-q");
+                    deprecate({pkg:"Ext.XTemplate", member:"ext:qtip",
+                        msg:"Use data-qtip instead of ext:qtip, data-qwidth instead of ext:qwidth, etc. This error is often hard to trace back, " +
+                            "so search for 'ext:q' in your code. This may be being set by a column's renderer."});
+                }
+                return returnValue;
+            }
+        });
+    }
+    
+    /*-------------------------------------------------------------
+     * util.JSON
+     *-------------------------------------------------------------*/
+    if (Ext.JSON) {
+        Ext.util.JSON = {};
+        for(var key in Ext.JSON)    {
+            var value = Ext.JSON[key];
+            
+            if(typeof(value) == "function") {
+                Ext.util.JSON[key] = function() {
+                    deprecate({pkg:"Ext.util.JSON", member:key,
+                        msg:"Use Ext.JSON." + key + " instead. Automatically fixing."});
+                        
+                    return value.apply(Ext.JSON, arguments);
+                };
+            }
+        }
+    }
+    
+    /*-------------------------------------------------------------
+     * util.Function
+     *-------------------------------------------------------------*/
+    if (!Ext.util.Functions) {
+        Ext.util.Functions = {
+            createDelegate:function()   {
+                deprecate({pkg:"Ext.util.Functions", member:"createDelegate",
+                    msg:"Use Ext.Function.bind instead. Automatically fixing."});
+                return Ext.Function.bind.apply(Ext.Function, arguments);
+            },
+            createInterceptor:function()    {
+                deprecate({pkg:"Ext.util.Functions", member:"createInterceptor",
+                    msg:"Use Ext.Function.createInterceptor instead. Automatically fixing."});
+                return Ext.Function.createInterceptor.apply(Ext.Function, arguments);
+            },
+            createSequence:function()   {
+                deprecate({pkg:"Ext.util.Functions", member:"createSequence",
+                    msg:"Use Ext.Function.createSequence instead. Automatically fixing."});
+                return Ext.Function.createSequence.apply(Ext.Function, arguments);
+            },
+            defer:function()    {
+                deprecate({pkg:"Ext.util.Functions", member:"defer",
+                    msg:"Use Ext.Function.defer instead. Automatically fixing."});
+                return Ext.Function.defer.apply(Ext.Function, arguments);
+            }
+        };
+    }
+    
+    /*-------------------------------------------------------------
+     * Unsupported CSS Rules
+     *-------------------------------------------------------------*/
+    Ext.onReady(function() {
+        var cssRules = Ext.util.CSS.getRules(),
+            getCssText = function(inStyle) {
+                if(inStyle.cssText) {
+                    return inStyle.cssText;
+                }
+                return inStyle.selectorText + " {" + inStyle.style.cssText + "}";
+            },
+            updatedRules = "";
+        
+        for (var key in cssRules) {
+            if (key.indexOf(".ext-") != -1) {
+                var matches = key.match(/(ie6|ie7|ie8|ie|gecko2|gecko3|gecko|opera|webkit)/g);
+                
+                if (matches) {
+                    notify("Browser version classes on the body have different prefixes now, e.g. '.ext-ie' is now '.x-ie'. Automatically fixing.");
+                    
+                    var cssText = getCssText(cssRules[key]);
+                    for (var i = 0; i < matches.length; i++) {
+                        var match = matches[i];
+                        cssText = cssText.replace(new RegExp("\\.ext-" + match, "g"), ".x-" + match);
+                    }
+                    updatedRules += cssText;
+                }
+            }
+        
+            if (key.indexOf("x-grid3") != -1) {
+                var notifyMessage = "The grid panel's class has changed from x-grid3 to just x-grid. Please update the " + key + " rule in your stylesheet. Automatically fixing.",
+                    cssText = getCssText(cssRules[key]).replace(/x-grid3/g, "x-grid");
+                    
+                if (key.indexOf("x-grid-summary-row") != -1) { // x-grid3-summary-row -> x-grid-row-summary
+                    cssText = cssText.replace(/x-grid-summary-row/g, "x-grid-row-summary");
+                    notifyMessage += " (Note: x-grid3-summary-row -> x-grid-row-summary)";
+                }
+                
+                notify(notifyMessage);
+                
+                updatedRules += cssText;
+            }
+        }
+        
+        if (updatedRules) {
+            if (document.location.href.indexOf("COMPAT_STYLE_REPLACE=1") !== -1) {
+                Ext.util.CSS.createStyleSheet(updatedRules, "compatLayerUnsupportedRules");
+            }
+        }
+    });
 })();
 
-//
-// TODO: Remove this once the plugin is integrated into the lib
-//
+
 Ext.define('Ext.ux.PreviewPlugin', {
     extend: 'Ext.AbstractPlugin',
     alias: 'plugin.preview',
@@ -1806,3 +2687,21 @@ Ext.define('Ext.ux.PreviewPlugin', {
         view.refresh();
     }
 });
+
+Ext.chart.Chart.prototype.getFunctionRef = function(val){
+    if(Ext.isFunction(val)){
+        return {
+            fn: val,
+            scope: this
+        };
+    }else{
+        return {
+            fn: val.fn,
+            scope: val.scope || this
+        };
+    }
+};
+
+Ext.chart.Chart.prototype.setTipRenderer = Ext.emptyFn;
+
+Ext.Compat.debugErrors = (document.location.href.split("COMPAT_DEBUG=1").length > 1);
