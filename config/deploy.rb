@@ -37,6 +37,7 @@ task :production do
 end
 
 task :staging do
+  set :branch, 'messaging'
   role :app, "staging.txphin.org"
   role :web, "staging.txphin.org"
   role :jobs, "staging.txphin.org"
