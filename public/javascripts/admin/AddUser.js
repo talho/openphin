@@ -2,7 +2,7 @@ Ext.ns("Talho");
 
 Talho.AddUser = Ext.extend(Talho.ProfileBase, {
   constructor: function(config){
-    var jurisdictions_store = new Ext.data.JsonStore({
+    this.jurisdictions_store = new Ext.data.JsonStore({
       url: '/admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
       fields: [{name: 'name', mapping: 'name'}]
     });
@@ -38,7 +38,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         { width: 420, defaults: {anchor: '100%'}, items: [
           {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:420}, items:[
             {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all', allowBlank: false,
-              store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;', tabIndex: 14},
+              store: this.jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;', tabIndex: 14},
             {xtype: 'container', style: {'padding-top': '10px'}, html: 'Roles:'},
             this.roles_control,
             {xtype: 'container', style: {'padding-top': '10px'}, html: 'Alerting Devices:'},

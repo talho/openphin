@@ -16,8 +16,3 @@ Role.admin
 Role.superadmin
 Role.sysadmin
 Role.org_admin
-Role.find_or_create_by_name(:name => "Rollcall") { |role|
-  role.approval_required = true
-  role.user_role = false
-  role.application = 'rollcall'
-}

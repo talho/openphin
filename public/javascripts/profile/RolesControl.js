@@ -140,7 +140,9 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
 
   _loadJurisdictionsAndRoles: function(){
     this.jurisdictions_store = new Ext.data.JsonStore({
-      url: '/audiences/jurisdictions_flat?ns=nonforeign', autoLoad: true, autoSave: false,
+      url: (this.ancestor.jurisdictions_store ? this.ancestor.jurisdictions_store.url : '/audiences/jurisdictions_flat') +'?ns=nonforeign',
+      autoLoad: true,
+      autoSave: false,
       fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}]
     });
     this.roles_store = new Ext.data.JsonStore({

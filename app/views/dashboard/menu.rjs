@@ -16,7 +16,11 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
     plugin_config_items = []
       Phin::Application.eval_if_plugin_present(:rollcall) do
         if current_user.has_app?("rollcall")
-          plugin_config_items << $menu_config[:rollcall] unless $menu_config[:rollcall].nil?
+          if current_user.is_rollcall_admin?
+            plugin_config_items << $menu_config[:rollcall_admin] unless $menu_config[:rollcall_admin].nil?
+          else
+            plugin_config_items << $menu_config[:rollcall] unless $menu_config[:rollcall].nil?
+          end
         end
       end
       Phin::Application.eval_if_plugin_present(:vms) do
@@ -79,7 +83,7 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
                     {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
                     {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
                     {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
-                    {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
+                    {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', admin_mode: #{current_user.is_admin?}, initializer: 'Talho.ManageRoles'}},
                     {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
                       initializer: 'Talho.ManageOrganizations'}},
                     {name: 'Sign Out', icon: '/images/logoff.png', redirect: '#{sign_out_path}'}
