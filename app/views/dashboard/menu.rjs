@@ -16,11 +16,7 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
     plugin_config_items = []
       Phin::Application.eval_if_plugin_present(:rollcall) do
         if current_user.has_app?("rollcall")
-          if current_user.is_rollcall_admin?
-            plugin_config_items << $menu_config[:rollcall_admin] unless $menu_config[:rollcall_admin].nil?
-          else
-            plugin_config_items << $menu_config[:rollcall] unless $menu_config[:rollcall].nil?
-          end
+          plugin_config_items << eval($menu_config[:rollcall]) unless $menu_config[:rollcall].nil?
         end
       end
       Phin::Application.eval_if_plugin_present(:vms) do
