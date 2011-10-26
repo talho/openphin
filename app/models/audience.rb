@@ -19,8 +19,6 @@ class Audience < ActiveRecord::Base
   validate :doesnt_contain_self_as_group
   
   has_many :folders
-  has_one :report_reports, :class_name => 'Report::Report'
-  has_one :report_recipes, :class_name => 'Report::Recipe'
 
   has_and_belongs_to_many :jurisdictions, :uniq => true
   has_and_belongs_to_many :roles, :uniq => true

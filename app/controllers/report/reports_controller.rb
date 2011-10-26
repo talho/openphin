@@ -7,8 +7,6 @@ class Report::ReportsController < ApplicationController
 
   #  GET /report/reports(.:format)
   def index
-#      @reports = Report::Report.paginate_for(:all,current_user,params[:page] || 1)
-#   params[:sort] = 'recipe_id' if params[:sort] == 'recipe'
    order = params[:sort].nil? ? 'created_at DESC' : "#{params[:sort]} #{params[:dir]}"
     respond_to do |format|
       format.html
@@ -68,14 +66,8 @@ class Report::ReportsController < ApplicationController
     begin
       unless params[:report_url]
         # capture the resultset and generate the html rendering in delayed-job
-        # assure that the recipe exist in this Rails environment before sending to delayed job
-        if params[:conditions] || params[:with]
-          normalize_reports_params(params)
-          criteria = params
-        else
-          criteria = {}
-        end
-        report = current_user.reports.create(:recipe=>params[:recipe_id],:criteria=>criteria,:incomplete=>true)
+        normalize_reports_params(params[:criteria]) if params[:criteria]
+        report = current_user.reports.create!(:recipe=>params[:recipe_id],:criteria=>params[:criteria],:incomplete=>true)
         unless Rails.env == 'development'
           Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>report[:id]) )
         else

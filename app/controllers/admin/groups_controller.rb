@@ -1,6 +1,7 @@
 class Admin::GroupsController < ApplicationController
   before_filter :admin_required
   app_toolbar "admin"
+  include Report::CreateDataSet
 
   def index
     page = params[:page].blank? ? "1" : params[:page]
@@ -33,21 +34,21 @@ class Admin::GroupsController < ApplicationController
   def show
     group = Group.find_by_id(params[:id])
     @group = current_user.viewable_groups.include?(group) ? group : nil
-    @recipients = @group ? (params[:no_page] == 'true' ? @group.recipients : @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name") ) : [] 
 
     respond_to do |format|
       if @group
-        format.html do
-        end
-        format.pdf do
-          prawnto :inline => false, :filename => "#{@group.name.gsub(/\s/, '_')}.pdf"
-        end
-        format.csv do
-          @csv_options = { :col_sep => ',', :row_sep => "\r\n" }
-          @filename = "#{@group.name.gsub(/\s/, '_')}.csv"
-          @output_encoding = 'UTF-8'
+        format.html
+        format.any(:csv,:pdf) do
+          criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
+          report = create_data_set("Report::GroupWithRecipientsRecipeInternal",criteria)
+          render :json => {:success => true, :report_name=> report.name}
         end
         format.json do
+          @recipients = @group ? (
+            params[:no_page] == 'true' ?
+            @group.recipients :
+            @group.recipients.paginate(:page => params[:page] || 1, :per_page => params[:per_page] || 30, :order => "last_name")
+          ) : []
           render :json => group_hash_for_display(@group, @recipients)
         end
       else
@@ -211,6 +212,8 @@ class Admin::GroupsController < ApplicationController
       :users => group.users.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } },
       :jurisdictions => group.jurisdictions.map {|jurisdiction| {:name => jurisdiction.name, :id => jurisdiction.id } },
       :roles => group.roles.map {|role| {:name => role.name, :id => role.id } },
+      :html_path => admin_group_path(group, :format=>:html),
+      :pdf_path => admin_group_path(group, :format=>:pdf),
       :recipients => recipients.map { |user| {:name => user.display_name, :id => user.id, :profile_path => user_profile_path(user) } }
     }
   end

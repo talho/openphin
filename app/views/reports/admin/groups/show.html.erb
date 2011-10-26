@@ -1,0 +1,50 @@
+<%- unless result -%>
+  The group does not exist or you do not have authorization to view this group.
+<%- else -%>
+  <%- filtered = filters.present? ? "(FILTERED)" : "" -%>
+  <%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
+    <%- content_tag(:caption, :style=>"text-align:center") do -%>
+      <%= content_tag(:h2, h( header["name"] ), :class=>"name", :style=>"text-align:center") %>
+      <%- content_tag(:div) do -%>
+        <%= content_tag(:h5, "Scope", :class=>"group_header") %>
+        <%- content_tag(:ul, :class=>"group_scope") do -%>
+          <%= content_tag(:li, h( header["scope"] ) + " of " + s( header["owner_jurisdiction"] )) %>
+          <%= content_tag(:li, "Users #{filtered} as of #{header["created_at"]}" ) %>
+        <%- end -%>
+      <%- end -%>
+      <%- content_tag(:div) do -%>
+        <%= content_tag(:h5, "Jurisdictions:", :class=>"group_header") %>
+        <%- content_tag(:ul, :class=>"group_jurisdictions") do -%>
+          <%- jurs = (jurs = header["jurisdictions"]).empty? ? "&lt;unspecified&gt;" : jurs.join(', ') -%>
+          <%= content_tag(:li, jurs, :class=>"group_jurisdiction") %>
+        <%- end -%>
+      <%- end -%>
+      <%- content_tag(:div) do -%>
+        <%= content_tag(:h5, "Roles:", :class=>"group_header") %>
+        <%- content_tag(:ul, :class=>"group_roles") do -%>
+          <%- roles = (roles = header["roles"]).empty? ? "&lt;unspecified&gt;" : roles.join(', ') -%>
+          <%= content_tag(:li, roles, :class=>"group_role") %>
+        <%- end -%>
+      <%- end -%>
+    <%- end -%>
+    <%- content_tag(:thead) do -%>
+      <%- content_tag(:tr) do -%>
+        <%=content_tag(:th,"Name")%>
+        <%=content_tag(:th,"Email")%>
+        <%=content_tag(:th,"Roles")%>
+      <%- end -%>
+    <%- end -%>
+    <%- content_tag(:div, :class=>"nobreak") do -%>
+      <%- result.each_with_index do |user,i| -%>
+        <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
+          <%= content_tag(:td, user["display_name"]) %>
+          <%= content_tag(:td, user["email"]) %>
+          <%= content_tag(:td, to_rpt(user["role_memberships"])) %>
+        <%- end -%>
+      <%- end -%>
+    <%- end  -%>
+  <%- end -%>
+
+<%- end -%>
+
+

@@ -405,17 +405,27 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     this.generateReportButton.disable();
     var searchData = this.searchSidebar.getForm().getValues();
     this.applyFilters(searchData);
-    searchData['recipe_type'] = 'Report::UserAllWithinJurisdictionsRecipe'
+    searchData['recipe'] = 'Report::UserAllWithinJurisdictionsRecipe';
+    var a = {'criteria[term]': searchData['term']};
   	Ext.Ajax.request({
   	   url: '/report/reports.json',
   	   method: 'POST',
   	   scope:  this,
-  	   params: searchData,
+  	   params: this.rewriteHash('criteria',searchData),
        success: function(){
          this.generateReportButton.setText('Report');
          this.generateReportButton.enable();},
   	   failure: function(){this.ajax_err_cb}
   	});
+  },
+
+  rewriteHash:function(root,in_hash){
+    var out_hash = {};
+    var label = root + '[';
+    for(var k in in_hash){
+      out_hash[label + k.match(/[^[]*/) + ']' + (k.match(/\[[^\]]*\](?:\[\])?$/)||'')] = in_hash[k]
+    }
+    return out_hash;
   }
 });
 

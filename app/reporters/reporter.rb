@@ -41,16 +41,6 @@ class Reporters::Reporter < Struct.new(:params)
       end
 
       unless params[:filters]
-#        begin
-#          start_time = Time.now
-#            recipe.bind_attributes( report )
-#          logger.info %Q(Report "#{report.name}", Bind Attributes #{Time.now-start_time} seconds)
-#          logger.info %Q(Report "#{report.name}" completed\n)
-#        rescue StandardError => e
-#          message = %Q(Report "#{report.name}" erred in binding attributes: (#{e}))
-#          full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
-#          fatal_logging(logger,report,full_message)
-#        end
 
         begin
           start_time = Time.now
