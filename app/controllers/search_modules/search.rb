@@ -29,8 +29,10 @@ module SearchModules
       hsh.delete_if{|k,v| v.to_s.blank?} if hsh
     end
 
-    def clean_phone_number(conditions={})
-      conditions[:phone].gsub!(/([^0-9*])/,"") if conditions[:phone].present?
+    def clean_phone_number(conditions)
+      unless conditions.blank?
+        conditions[:phone].gsub!(/([^0-9*])/,"") if conditions[:phone].present?  
+      end
     end
 
     def build_options(params)

@@ -219,8 +219,8 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
         {xtype: 'tbtext', text: 'Please place a copy in MyDocuments as: '},
         {xtype: 'button', text: 'HTML', scope: this, handler: function(button,event){ this.createDocument(button); } },
         {xtype: 'button', text: 'PDF', scope: this, handler: function(button,event){ this.createDocument(button); } },
-        {xtype: 'button', text: 'CSV', scope: this, handler: function(button,event){ this.createDocument(button); } }
-//          (this.admin_mode) ? admin_mode_buttons : []
+        {xtype: 'button', text: 'CSV', scope: this, handler: function(button,event){ this.createDocument(button); } },
+          (this.admin_mode) ? admin_mode_buttons : []
       ]
       })
     });
