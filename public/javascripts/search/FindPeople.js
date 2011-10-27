@@ -411,21 +411,13 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
   	   url: '/report/reports.json',
   	   method: 'POST',
   	   scope:  this,
-  	   params: this.rewriteHash('criteria',searchData),
+       params: Ext.encode({'criteria': searchData}),
+       headers: {"Content-Type":"application/json","Accept":"application/json"},
        success: function(){
          this.generateReportButton.setText('Report');
          this.generateReportButton.enable();},
-  	   failure: function(){this.ajax_err_cb}
+  	   failure: function(){this.ajax_err_cb();}
   	});
-  },
-
-  rewriteHash:function(root,in_hash){
-    var out_hash = {};
-    var label = root + '[';
-    for(var k in in_hash){
-      out_hash[label + k.match(/[^[]*/) + ']' + (k.match(/\[[^\]]*\](?:\[\])?$/)||'')] = in_hash[k]
-    }
-    return out_hash;
   }
 });
 

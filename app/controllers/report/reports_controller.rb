@@ -66,8 +66,12 @@ class Report::ReportsController < ApplicationController
     begin
       unless params[:report_url]
         # capture the resultset and generate the html rendering in delayed-job
-        normalize_reports_params(params[:criteria]) if params[:criteria]
-        report = current_user.reports.create!(:recipe=>params[:recipe_id],:criteria=>params[:criteria],:incomplete=>true)
+        recipe = params[:recipe_id]
+        if params[:criteria]
+          normalize_reports_params(params[:criteria])
+          recipe = params[:criteria][:recipe]
+        end
+        report = current_user.reports.create!(:recipe=>recipe,:criteria=>params[:criteria],:incomplete=>true)
         unless Rails.env == 'development'
           Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>report[:id]) )
         else
@@ -94,7 +98,6 @@ class Report::ReportsController < ApplicationController
         end
       end
     rescue StandardError => error
-      debugger
       respond_to do |format|
         format.html {}
         format.json {render :json => {:success => false, :msg => error.as_json}, :content_type => 'text/html', :status => 406}
