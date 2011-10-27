@@ -11,7 +11,7 @@ class Report::GroupWithRecipientsRecipeInternal < Report::Recipe
     end
 
     def template_path
-      File.join(Rails.root,'app','views','reports','admin','groups','show.html.erb')
+      File.join('reports','admin','groups','show.html.erb')
     end
 
     def capture_to_db(report)
@@ -54,7 +54,7 @@ class Report::GroupWithRecipientsRecipeInternal < Report::Recipe
        path = File.join dir, filename
        File.open(path, 'wb') do |f|
          rendering = view.render(:inline=>template,:type=>'html',
-                                 :locals=>{:header=>header,:result=>result,:filters=>filters}, :layout=>"report/layouts/report")
+                                 :locals=>{:header=>header,:result=>result,:filters=>filters}, :layout=>"reports/layouts/report")
          f.write(rendering)
        end
        report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )

@@ -14,7 +14,7 @@ class Report::Recipe < ActiveRecord::Base
     end
 
     def template_path
-      File.join(Rails.root,'app','views','reports','report.html.erb')
+      File.join('reports','report.html.erb')
     end
 
     def capture_to_db(report)
@@ -50,7 +50,7 @@ protected
    Dir.mktmpdir do |dir|
      path = File.join dir, filename
      File.open(path, 'wb') do |f|
-       rendering = view.render(:inline=>template,:type=>'html',:locals=>{:results=>results,:filters=>filters}, :layout=>"report/layouts/report")
+       rendering = view.render(:inline=>template,:type=>'html',:locals=>{:results=>results,:filters=>filters}, :layout=>"reports/layouts/report")
        f.write(rendering)
      end
      report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )

@@ -11,7 +11,7 @@ class Report::HanAlertLogRecipe < Report::Recipe
     end
 
     def template_path
-      File.join(Rails.root,'app','views','reports','alert_log.html.erb')
+      File.join('reports','alert_log.html.erb')
     end
 
     def capture_to_db(report)

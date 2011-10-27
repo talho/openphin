@@ -18,7 +18,7 @@ class Report::UserAllWithinJurisdictionsRecipe < Report::Recipe
     end
 
     def template_path
-      File.join(Rails.root,'app','views','reports','show.html.erb')
+      File.join('reports','show.html.erb')
     end
 
     def capture_to_db(report)

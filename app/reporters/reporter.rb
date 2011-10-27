@@ -56,7 +56,11 @@ class Reporters::Reporter < Struct.new(:params)
 
       begin
         start_time = Time.now
-          recipe.generate_rendering_of_on_with  report, view, File.read(recipe.template_path), params[:filters]
+        template_path = recipe.template_path
+        unless Pathname(template_path).absolute?
+          template_path = File.join(view_path,recipe.template_path)
+        end
+        recipe.generate_rendering_of_on_with  report, view, File.read(template_path), params[:filters]
         logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
         ReportMailer.deliver_report_generated(report.author.email,report.name)
       rescue StandardError => e
