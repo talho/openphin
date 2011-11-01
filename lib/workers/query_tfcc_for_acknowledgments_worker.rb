@@ -6,8 +6,8 @@ class QueryTfccForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
 	end
 
 	def query(args = nil)
-		Service::Phone::TFCC::CampaignActivationResponse.active.acknowledge.each do |car|
-			result = Service::Phone::TFCC::DetailedActivationResults.build(car, Service::Phone.configuration.options)
+		Service::Phone::Tfcc::CampaignActivationResponse.active.acknowledge.each do |car|
+			result = Service::Phone::Tfcc::DetailedActivationResults.build(car, Service::Phone.configuration.options)
 			detail = result['ucsxml']['response']['activation_detail']
 			results_returned = detail['results_returned']
 

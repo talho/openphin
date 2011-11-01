@@ -1,6 +1,6 @@
 class Admin::InvitationsController < ApplicationController
   
-  require 'fastercsv'
+  require 'csv'
   before_filter :admin_required
   before_filter :force_json_as_html, :only => :import
   app_toolbar "admin"
@@ -107,12 +107,12 @@ class Admin::InvitationsController < ApplicationController
     error = nil
 
     begin
-      FasterCSV.open(newfile, :col_sep => ",", :headers => true) do |records|
+      CSV.open(newfile, :col_sep => ",", :headers => true) do |records|
         records.each do |record|
           invitees.push({:name => record["name"].delete(","), :email => record["email"]})
         end
       end
-    rescue FasterCSV::MalformedCSVError => detail
+    rescue CSV::MalformedCSVError => detail
       error = "CSV file was malformed or corrupted.<br/><br/>Error:<br/>#{detail.message}"
     rescue
       error = "This does not appear to be a CSV file."
@@ -309,7 +309,7 @@ class Admin::InvitationsController < ApplicationController
 
      begin
        lineno = 2
-      FasterCSV.open(newfile, :col_sep => ",", :headers => true, :skip_blanks => true, :header_converters => :symbol) do |records|
+      CSV.open(newfile, :col_sep => ",", :headers => true, :skip_blanks => true, :header_converters => :symbol) do |records|
         records.each do |record|
           params[:invitation][:invitees_attributes] = [] if params[:invitation][:invitees_attributes].blank?
           params[:invitation][:invitees_attributes]["#{next_index}"] = {}

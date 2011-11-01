@@ -21,7 +21,7 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   #destroy not necessary since forum deletion is not an option
   
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
-  alias :_destroy :_delete unless respond_to? '_destroy'
+  #alias :_destroy :_delete unless respond_to? '_destroy'
   
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
 

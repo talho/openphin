@@ -43,22 +43,14 @@ FeatureHelpers
        "Preferred language"=> "English"
       }
       
-      if table.is_a?(Hash)
-        fields.merge!(table)
-      elsif !table.nil?
-        fields.merge!(table.rows_hash)
-      end
+      table = table.nil? ? {} : table.is_a?(Hash) ? table : table.rows_hash 
+      table.merge!(fields){|k, v1, v2| v1 || v2 } # merge into table so we can maintain the order of insertion
       
-      fill_in_signup_form(fields)
+      fill_in_signup_form(table)
     end
     
-    def fill_in_signup_form(table = nil)
-      fields = {}
-      if table.is_a?(Hash)
-        fields.merge!(table)
-      elsif !table.nil?
-        fields.merge!(table.rows_hash)
-      end
+    def fill_in_signup_form(fields = {})
+      fields = fields.is_a?(Hash) ? fields : fields.rows_hash
 
       fields.each do |field, value|
         value = "" if value == "<blank>"

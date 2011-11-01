@@ -26,11 +26,14 @@ module SearchModules
 
     def strip_blank_arrays(hsh)
       return if hsh.blank?
-      hsh.delete_if{|k,v| v.to_s.blank?} if hsh
+      hsh.delete_if do |k,v| 
+        v.delete_if{|av| av.blank? } if v.is_a?(Array)
+        v.blank? 
+      end if hsh
     end
 
     def clean_phone_number(conditions={})
-      conditions[:phone].gsub!(/([^0-9*])/,"") if conditions[:phone].present?
+      conditions[:phone].gsub!(/([^0-9*])/,"") if conditions && conditions[:phone].present?
     end
 
     def build_options(params)

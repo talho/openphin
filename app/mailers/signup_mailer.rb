@@ -7,7 +7,7 @@ class SignupMailer < ActionMailer::Base
       recipients user.email
       from DO_NOT_REPLY
       subject "Confirm your email"
-      body :confirm_link => user_confirmation_url(user, user.token, :host => HOST)
+      body :confirm_link => user_confirmation_url(user, user.confirmation_token, :host => HOST)
     end
   end
 
@@ -18,7 +18,7 @@ class SignupMailer < ActionMailer::Base
       recipients user.email
       from DO_NOT_REPLY
       subject "TxPhin: Welcome & Password setting"
-      body :set_pw_link => edit_user_password_url(user, :token => user.token, :escape => false)
+      body :set_pw_link => edit_user_password_url(user, :token => user.confirmation_token, :escape => false)
     end
   end
   

@@ -1,7 +1,7 @@
-class Service::TALHO::Message < Service::TALHO::Base
+class Service::Talho::Message < Service::Talho::Base
   property :message
 
-  SUPPORTED_DEVICES = {"E-mail" => Service::TALHO::Email::Message}
+  SUPPORTED_DEVICES = {"E-mail" => Service::Talho::Email::Message}
 
   def deliver
     # Need to find the messages that are being sent via a supported device
@@ -20,7 +20,7 @@ class Service::TALHO::Message < Service::TALHO::Base
   end
   
   def self.deliver message
-    talho_msg = Service::TALHO::Message.new :message => message
+    talho_msg = Service::Talho::Message.new :message => message
     talho_msg.deliver
   end
   

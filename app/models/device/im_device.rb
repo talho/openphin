@@ -13,7 +13,7 @@
 #  options       :text
 #
 
-class Device::IMDevice < Device
+class Device::ImDevice < Device
 
   option_accessor :im
 

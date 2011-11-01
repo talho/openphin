@@ -40,7 +40,6 @@
 class User < ActiveRecord::Base
   extend Clearance::User::ClassMethods
   include Clearance::User::InstanceMethods
-  include Clearance::User::AttrAccessible
   include Clearance::User::AttrAccessor
   include Clearance::User::Callbacks
   
@@ -120,7 +119,7 @@ class User < ActiveRecord::Base
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
     :organization_ids, :role_requests_attributes, :organization_membership_requests_attributes, :credentials, 
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
-    :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id
+    :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id, :email, :password, :password_confirmation
     
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
 
@@ -131,7 +130,6 @@ class User < ActiveRecord::Base
   end
     
   before_create :generate_oid
-  before_create :set_confirmation_token
   before_create :create_default_email_device
   before_create :set_display_name
 
@@ -182,9 +180,9 @@ class User < ActiveRecord::Base
     indexes email,          :sortable => true
     indexes phone,          :sortable => true
     indexes title,          :sortable => true
-    has user(:id),          :as => :user_id
+    has id,          :as => :user_id
     has roles(:id),         :as => :role_ids
-    has "array_to_string(array_accum(DISTINCT CRC32(roles.application)), ',')", :type => :multi, :as => :applications
+    has "array_to_string(array_agg(DISTINCT CRC32(roles.application)), ',')", :type => :multi, :as => :applications
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
@@ -325,7 +323,7 @@ class User < ActiveRecord::Base
   end
   
   def has_uploaded?
-    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{token}.wav"
+    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{confirmation_token}.wav"
     return File.exists?(filename)
   end
 
@@ -410,7 +408,7 @@ class User < ActiveRecord::Base
     rescue
       errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
     end
-    unless User.find_by_id(self.id)
+    if User.find_by_id(self.id)
       errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
     end
   end
@@ -459,7 +457,7 @@ class User < ActiveRecord::Base
   def to_json_profile
     roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
     orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
-    device_defuddler = {"Device::EmailDevice" => "email", "Device::BlackberryDevice" => "blackberry", "Device::PhoneDevice" => "phone", "Device::SMSDevice" => "sms"}
+    device_defuddler = {"Device::EmailDevice" => "email", "Device::BlackberryDevice" => "blackberry", "Device::PhoneDevice" => "phone", "Device::SmsDevice" => "sms"}
   # devs = devices.collect{ |d| {"type" => device_defuddler[d].type], "address" => d.options.values.first} }
     {
       'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
@@ -520,7 +518,7 @@ class User < ActiveRecord::Base
     deviceOptionMap = {
       'Device::EmailDevice' =>      'email_address',
       'Device::PhoneDevice' =>      'phone',
-      'Device::SMSDevice' =>        'sms',
+      'Device::SmsDevice' =>        'sms',
       'Device::FaxDevice' =>        'fax',
       'Device::BlackberryDevice' => 'blackberry'
     }
@@ -680,15 +678,11 @@ private
     self[:phin_oid] = email.to_phin_oid
   end
   
-  def create_default_email_device  
+  def create_default_email_device
     email = Device::EmailDevice.new(:email_address => self.email)
     devices << email
   end
     
-  def set_confirmation_token
-    self.token = ActiveSupport::SecureRandom.hex
-  end
-
   def set_display_name
     self.display_name = "#{self.first_name.strip} #{self.last_name.strip}" if self.display_name.nil? || self.display_name.strip.blank?
   end

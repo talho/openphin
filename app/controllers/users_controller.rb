@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   #app_toolbar "han"
 
-  skip_before_filter :login_required, :only => [:new, :create, :confirm]
+  skip_before_filter :authenticate, :only => [:new, :create, :confirm]
   before_filter(:only => [:edit, :update, :destroy]) do |controller|
     controller.admin_or_self_required(:id)
   end
@@ -70,7 +70,6 @@ class UsersController < ApplicationController
     if (defined? params[:user][:role_requests_attributes]['0']['role_id']).nil? && (defined? params[:user][:role_requests_attributes]['0']['jurisdiction_id']).nil?
       params[:user].delete(:role_requests_attributes)
     end
-
 
     @user = User.new params[:user]
     @user.email = @user.email.downcase
@@ -141,7 +140,7 @@ class UsersController < ApplicationController
   end
   
   def confirm
-    if u=User.find_by_id_and_token(params[:user_id], params[:token])
+    if u=User.find_by_id_and_confirmation_token(params[:user_id], params[:token])
       unless u.email_confirmed?
         u.confirm_email!
         u.role_requests.each do |role_request|

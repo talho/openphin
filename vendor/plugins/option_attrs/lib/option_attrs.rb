@@ -16,7 +16,7 @@ module MutuallyHuman
 
       def option_writer(name, options)
         define_method("#{name}=") do |arg| 
-          writer = options[:writer] || lambda { arg }
+          writer = options[:writer] || lambda { |arg| arg }
           self.options ||= {}
           self.options[name.to_sym] = writer.call arg
         end

@@ -1,4 +1,4 @@
-class Service::SWN::SMS::Base
+class Service::Swn::Sms::Base
   extend PropertyObject::ClassMethods
   include PropertyObject::InstanceMethods
   include Validatable

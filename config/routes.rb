@@ -84,7 +84,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"
 
   map.connect "/session.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-
+  map.resources :session, :controller => 'sessions', :only => [:new, :create, :destroy]
+  map.sign_out '/sign_out', :controller => 'sessions', :action => 'destroy', :method => :delete
+  map.sign_in '/sign_in', :controller => 'sessions', :action => 'new' 
+  Clearance::Routes.draw(map)
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

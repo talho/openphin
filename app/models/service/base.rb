@@ -25,7 +25,7 @@ class Service::Base
   #   Service::Sms.deliveries # => array of delivered messages
   # 
   # The default delivery method is +deliver+
-  PROVIDERS = {:swn => Service::SWN::Message, :talho => Service::TALHO::Message}
+  PROVIDERS = {:swn => Service::Swn::Message, :talho => Service::Talho::Message}
   
   def self.dispatch message
     providers = []

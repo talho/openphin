@@ -14,7 +14,7 @@ Feature: Sign in
       Given I signed up with "email@person.com/Password1"
       When I go to the sign in page
       And I sign in as "email@person.com/Password1"
-      Then I should see "Your account is unconfirmed"
+      Then I should see "User has not confirmed email. Confirmation email will be resent."
       And I should be signed out
 
    Scenario: User enters wrong password

@@ -103,7 +103,7 @@ end
 
 Given 'I have confirmed my account for "$email"' do |email|
   user = User.find_by_email!(email)
-  visit user_confirmation_path(user.id, user.token)
+  visit user_confirmation_path(user.id, user.confirmation_token)
 end
 
 Given "the following administrators exist:" do |table|
@@ -202,9 +202,9 @@ end
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   user = User.find_by_email!(user_email)
-  link = user_confirmation_url(user, user.token, :host => HOST)
+  link = user_confirmation_url(user, user.confirmation_token, :host => HOST)
   email.body.include?(link).should be_true
-  link = user_confirmation_url(user, user.token, :host => "#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
+  link = user_confirmation_url(user, user.confirmation_token, :host => "#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   visit link
 end
 

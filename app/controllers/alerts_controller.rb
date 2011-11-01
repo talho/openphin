@@ -1,5 +1,5 @@
 class AlertsController < ApplicationController
-  skip_before_filter :login_required, :only => [:show_with_token, :update_with_token]
+  skip_before_filter :authenticate, :only => [:show_with_token, :update_with_token]
   before_filter :find_alert
   before_filter :can_view_alert, :only => [:show, :update]
   
@@ -51,7 +51,7 @@ class AlertsController < ApplicationController
   private
   
   def set_view_variables
-    @console_message = Service::TALHO::Console::Message.new(:message => MessageApi.parse(@alert.to_xml), :user => @current_user)
+    @console_message = Service::Talho::Console::Message.new(:message => MessageApi.parse(@alert.to_xml), :user => @current_user)
     if @alert.acknowledge && @alert.methods.include?('call_downs')
       @call_downs = @alert.call_downs(@current_user)
     end

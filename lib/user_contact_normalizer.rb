@@ -2,7 +2,7 @@
 #
 
 require 'rubygems'
-require 'fastercsv'
+require 'csv'
 require 'activesupport'
 
 filename=ARGV[0]
@@ -149,7 +149,7 @@ ci=ContactNormalizer.new
 ui=UserNormalizer.new
 
 puts "email|first_name|last_name|display_name|jurisdiction|mobile|fax|phone"
-FasterCSV.open(filename, :headers => true) do |records|
+CSV.open(filename, :headers => true) do |records|
   records.each do |rec|
     case rec['objectClass']
       when 'contact'

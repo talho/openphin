@@ -67,7 +67,6 @@ Feature: Signing up for an account
       | Preferred language | English      |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Are you a public health professional? | <unchecked> |
-
     Then I should see "Thanks for signing up!"
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should not have the "Health Alert and Communications Coordinator" role request for "Dallas County"
@@ -190,7 +189,7 @@ Feature: Signing up for an account
   Scenario: User tries to log in without confirming email address
     Given "john@example.com" is an unconfirmed user
     When I log in as "john@example.com"
-    Then I should see "Your account is unconfirmed"
+    Then I should see "User has not confirmed email. Confirmation email will be resent."
     And "john@example.com" should receive the email:
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |

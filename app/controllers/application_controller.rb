@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   helper_method :toolbar
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter :login_required, :set_locale, :except => :options
+  before_filter :authenticate, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
   layout :choose_layout
@@ -62,6 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Exception, :with => :render_error
+  rescue_from ActionController::Forbidden, :with => :render_password_error
   
   protected
 
@@ -225,6 +226,18 @@ private
     end
     
     super user
+  end
+
+  def render_password_error(exception)
+    if exception.message == "missing token"
+      flash[:error] = "The token from your link is missing"
+      redirect_to '/'
+    elsif exception.message == "non-existent user"
+      flash[:error] = "The token from your link is incorrect"
+      redirect_to '/'
+    else
+      render_error(exception)
+    end
   end
 
   def render_error(exception)

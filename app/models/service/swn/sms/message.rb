@@ -1,4 +1,4 @@
-class Service::SWN::SMS::Message < Service::SWN::SMS::Base
+class Service::Swn::Sms::Message < Service::Swn::Sms::Base
   property :message
   property :username
   property :password

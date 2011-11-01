@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  skip_before_filter :login_required, :only => [:about]
+  skip_before_filter :authenticate, :only => [:about]
   before_filter :non_public_role_required, :only => [:new, :create, :edit, :update, :delete]
   require 'feedzirra'
 

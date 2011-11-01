@@ -1,5 +1,5 @@
 class ForumsController < ApplicationController
-  before_filter :login_required
+  #before_filter :authenticate
   app_toolbar "forums"
 
   # GET /forums

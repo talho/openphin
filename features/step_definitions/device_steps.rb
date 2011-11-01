@@ -177,7 +177,7 @@ end
 
 Then /^the following phone calls should be made:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Message.deliveries.detect do |phone_call|
+    call = Service::Swn::Message.deliveries.detect do |phone_call|
       xml = Nokogiri::XML(phone_call.body)
       if row["recording"].blank?
         phone = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Voice"]/swn:address',
@@ -201,7 +201,7 @@ Then /^the following phone calls should be made:$/ do |table|
     call.should_not be_nil
 
     unless row["call_down"].blank?
-      call = Service::SWN::Message.deliveries.detect do |phone_call|
+      call = Service::Swn::Message.deliveries.detect do |phone_call|
         xml = Nokogiri::XML(phone_call.body)
         call_down = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                                 {"swn" => "http://www.sendwordnow.com/notification"})).children.map(&:inner_text).flatten
@@ -213,7 +213,7 @@ Then /^the following phone calls should be made:$/ do |table|
 end
 
 Then /^the phone call should have (\d+) calldowns$/ do |number|
-  Service::SWN::Message.deliveries.detect do |phone_call|
+  Service::Swn::Message.deliveries.detect do |phone_call|
     xml = Nokogiri::XML(phone_call.body)
     call_down_size = (xml.search('//swn:SendNotificationInfo/swn:gwbText',
                             {"swn" => "http://www.sendwordnow.com/notification"})).children.map{|child| child unless child.inner_text.strip.blank?}.compact.length
@@ -223,7 +223,7 @@ end
 
 Then /^the following Emails should be broadcasted:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Message.deliveries.detect do |email_call|
+    call = Service::Swn::Message.deliveries.detect do |email_call|
       xml = Nokogiri::XML(email_call.body)
       email = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Email"]/swn:address',
                           {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
@@ -237,7 +237,7 @@ end
 
 Then /^the following invitation Emails should be broadcasted:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Invitation.deliveries.detect do |email_call|
+    call = Service::Swn::Invitation.deliveries.detect do |email_call|
       xml = Nokogiri::XML(email_call.body)
       email = (xml.search('//swn:rcpts/swn:rcpt/swn:contactPnts/swn:contactPntInfo[@type="Email"]/swn:address',
                           {"swn" => "http://www.sendwordnow.com/notification"})).map(&:inner_text)
@@ -251,7 +251,7 @@ end
 
 Then /^the following SMS calls should be made:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Message.deliveries.detect do |sms_call|
+    call = Service::Swn::Message.deliveries.detect do |sms_call|
       xml = Nokogiri::XML(sms_call.body)
       body = xml.xpath('.//soap-env:Envelope/soap-env:Body')
       note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})
@@ -267,7 +267,7 @@ end
 
 Then /^the following Fax calls should be made:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Message.deliveries.detect do |fax_call|
+    call = Service::Swn::Message.deliveries.detect do |fax_call|
       xml = Nokogiri::XML(fax_call.body)
       message = (xml / 'ucsxml/request/activation/campaign/program/*/slot[@id="1"]').inner_text
       fax = (xml / "ucsxml/request/activation/campaign/audience/contact/*[@type='phone']").inner_text
@@ -279,7 +279,7 @@ end
 
 Then /^the following Blackberry calls should be made:$/ do |table|
   table.hashes.each do |row|
-    call = Service::SWN::Message.deliveries.detect do |blackberry_call|
+    call = Service::Swn::Message.deliveries.detect do |blackberry_call|
       xml = Nokogiri::XML(blackberry_call.body)
       body = xml.xpath('.//soap-env:Envelope/soap-env:Body')
       note = body.xpath('.//swn:sendNotification/swn:pSendNotificationInfo/swn:SendNotificationInfo', {'swn' => 'http://www.sendwordnow.com/notification'})

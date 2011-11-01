@@ -3,6 +3,7 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file 
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
+$: << File.join(File.dirname(__FILE__),'..','..')
 
 ENV["RAILS_ENV"] ||= "cucumber"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
@@ -19,8 +20,8 @@ require 'capybara/session'
 #require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
 require "#{Rails.root}/spec/factories"
-require 'spec/mocks'
-require 'features/support/patches/send_key'
+require 'rspec/mocks'
+require File.join(File.dirname(__FILE__),'patches','send_key')
 
 require 'db/migrate/20110314145442_create_my_sql_compatible_functions_for_postgres'
 
@@ -109,8 +110,8 @@ Spork.each_run do
    FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
    ActionMailer::Base.deliveries = []
 
-   Service::SWN::Message.instance_eval do
-     Service::SWN::Message.clearDeliveries
+   Service::Swn::Message.instance_eval do
+     Service::Swn::Message.clearDeliveries
    end
 
     # load application-wide fixtures
@@ -126,7 +127,7 @@ Spork.each_run do
 
    ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 
-    $rspec_mocks ||= Spec::Mocks::Space.new
+    $rspec_mocks ||= RSpec::Mocks::Space.new
   end
 
   if defined?(ActiveRecord::Base)

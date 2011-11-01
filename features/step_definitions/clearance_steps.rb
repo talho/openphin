@@ -56,32 +56,32 @@ Then /^a confirmation message should be sent to "(.*)"$/ do |email|
   sent = ActionMailer::Base.deliveries.first
   assert_equal [user.email], sent.to
   assert_match /confirm/i, sent.subject
-  assert !user.token.blank?
-  assert_match /#{user.token}/, sent.body
+  assert !user.confirmation_token.blank?
+  assert_match /#{user.confirmation_token}/, sent.body
 end
 
 When /^I follow the confirmation link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit new_user_confirmation_path(:user_id => user, :token => user.token)
+  visit new_user_confirmation_path(:user_id => user, :token => user.confirmation_token)
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
   find_email(email, Cucumber::Ast::Table.new([
     ['subject', 'password'],
-    ['body contains', user.token]
+    ['body contains', user.confirmation_token]
   ])).should_not be_nil
-  assert !user.token.blank?
+  assert !user.confirmation_token.blank?
 end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email.downcase)
-  visit edit_user_password_path(:user_id => user, :token => user.token)
+  visit edit_user_password_path(:user_id => user, :token => user.confirmation_token)
 end
 
 When /^I follow the password reset link with a damaged token sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user, :token => user.token<<"*")
+  visit edit_user_password_path(:user_id => user, :token => user.confirmation_token<<"*")
 end
 
 

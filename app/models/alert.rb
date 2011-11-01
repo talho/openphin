@@ -43,8 +43,6 @@
 #  not_cross_jurisdictional       :boolean(1)     default(true)
 #
 
-require 'ftools'
-
 class Alert < ActiveRecord::Base
   acts_as_MTI
 
@@ -236,7 +234,7 @@ class Alert < ActiveRecord::Base
                   if options[:Delivery][:Providers][:override]
                     options[:Delivery][:Providers][:override].call(providers)
                   else
-                    (self.alert_device_types.map{|device| device.device_type.display_name} || Service::SWN::Message::SUPPORTED_DEVICES.keys).each do |device|
+                    (self.alert_device_types.map{|device| device.device_type.display_name} || Service::Swn::Message::SUPPORTED_DEVICES.keys).each do |device|
                       device_options = {:name => "swn", :device => device}
                       device_options[:ivr] = "alert_responses" if self.acknowledge?
                       providers.Provider(device_options)
