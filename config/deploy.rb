@@ -116,7 +116,7 @@ after 'deploy:migrate', :seed
 after 'deploy:migrations', :seed
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
-  run "cd #{current_path}; #{rake} db:seed RAILS_ENV=#{rails_env}"
+  run "cd #{release_path}; #{rake} db:seed RAILS_ENV=#{rails_env}"
 end
 
 # useful for testing on_rollback actions
