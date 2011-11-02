@@ -1,10 +1,10 @@
-require 'spec/rake/spectask'
+require "rspec/core/rake_task"
 
 PLUGIN = "vendor/plugins/<%= file_name %>"
 
 namespace :spec do
-  desc "Run the <%= class_name %> spec tests"
-  Spec::Rake::SpecTask.new(:<%= file_name %>) do |t|
-    t.spec_files = FileList["#{PLUGIN}/spec/**/*_spec.rb"]
+  desc "Run the <%= class_name %> spec tests"  
+  RSpec::Core::RakeTask.new(:<%= file_name %>) do |spec|
+    spec.pattern = "#{PLUGIN}/spec/**/*_spec.rb"
   end
 end

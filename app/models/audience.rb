@@ -36,7 +36,7 @@ class Audience < ActiveRecord::Base
   def recipients(options={})
     refresh_recipients(options)
     options.delete(:force)
-    recipients_default.scoped(options)
+    recipients_default#.scoped(options)
   end
 
   belongs_to :forum

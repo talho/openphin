@@ -78,22 +78,22 @@ class ApplicationController < ActionController::Base
   def folder_or_inbox_path(document)
     document.folder ? folder_documents_path(document.folder) : folder_inbox_path
   end
-
-  def login_required
-    store_location
-    unless signed_in?
-      respond_to do |format|
-        format.html{ redirect_to sign_in_path }
-        format.ext{ redirect_to sign_in_path }
-        format.json{ redirect_to sign_in_path }
-        format.iphone do
-          headers["Access-Control-Allow-Origin"] = "*"
-          render :json => ['SESSION' => 'EXPIRED']
-        end
-      end
-      false
-    end
-  end
+# 
+  # def login_required
+    # store_location
+    # unless signed_in?
+      # respond_to do |format|
+        # format.html{ redirect_to sign_in_path }
+        # format.ext{ redirect_to sign_in_path }
+        # format.json{ redirect_to sign_in_path }
+        # format.iphone do
+          # headers["Access-Control-Allow-Origin"] = "*"
+          # render :json => ['SESSION' => 'EXPIRED']
+        # end
+      # end
+      # false
+    # end
+  # end
 
   def admin_required
     unless current_user.role_memberships.count(:conditions => {:role_id => (Role.admins | Role.superadmins).map(&:id) }) > 0
