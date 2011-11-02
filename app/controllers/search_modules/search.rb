@@ -30,9 +30,7 @@ module SearchModules
     end
 
     def clean_phone_number(conditions)
-      unless conditions.blank?
-        conditions[:phone].gsub!(/([^0-9*])/,"") if conditions[:phone].present?  
-      end
+        conditions[:phone].gsub!(/([^0-9*])/,"") if conditions && conditions[:phone].present?
     end
 
     def build_options(params)
