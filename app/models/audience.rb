@@ -92,6 +92,28 @@ class Audience < ActiveRecord::Base
     name.nil? ? 'anonymous' : name
   end
 
+  def determine_primary_audience_jurisdictions  # returns an array of jurisdiction objects
+    target = Target.find_by_audience_id(self.id)
+    alert = target ? target.item : nil
+    jj = jurisdictions.map(&:id)    # ids of every specified jurisdiction
+    rr = roles.map(&:id)            # ids of every specified role
+    au = if alert && (alert.class == Alert || alert.superclass == Alert) && defined?(alert.from_jurisdiction) && alert.from_jurisdiction
+      users.map{|user| user.role_memberships.find_by_jurisdiction_id(alert.from_jurisdiction.id).nil? ? user : nil}.compact.map(&:id) # Don't include users that are in the same jurisdiction that the alert was sent from
+    else
+      users.map(&:id)
+    end
+    uu = RoleMembership.find_all_by_user_id(au).map(&:jurisdiction).map(&:id)           # ids of every jurisdiction that every manually-specified user has a role in
+
+    if ( jj.size > 0 && rr.size > 0 )
+      juris_ids = (RoleMembership.find_all_by_role_id_and_jurisdiction_id(rr,jj).map(&:jurisdiction_id) + uu).uniq   # an array of every role <-> juris association that matches plus userjuris
+    else
+      juris_ids = (RoleMembership.find_all_by_jurisdiction_id(jj).map(&:jurisdiction_id) + RoleMembership.find_all_by_role_id(rr).map(&:jurisdiction_id) + uu).uniq
+    end
+    jurs = Jurisdiction.find_all_by_id(juris_ids)
+    jurs << self.groups.map(&:determine_primary_audience_jurisdictions)
+    return jurs.flatten.uniq
+  end
+  
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
@@ -206,29 +228,6 @@ class Audience < ActiveRecord::Base
       return false
     end
     true
-  end
-
-  protected
-  def determine_primary_audience_jurisdictions  # returns an array of jurisdiction objects
-    target = Target.find_by_audience_id(self.id)
-    alert = target ? target.item : nil
-    jj = jurisdictions.map(&:id)    # ids of every specified jurisdiction
-    rr = roles.map(&:id)            # ids of every specified role
-    au = if alert && (alert.class == Alert || alert.superclass == Alert) && defined?(alert.from_jurisdiction) && alert.from_jurisdiction
-      users.map{|user| user.role_memberships.find_by_jurisdiction_id(alert.from_jurisdiction.id).nil? ? user : nil}.compact.map(&:id) # Don't include users that are in the same jurisdiction that the alert was sent from
-    else
-      users.map(&:id)
-    end
-    uu = RoleMembership.find_all_by_user_id(au).map(&:jurisdiction).map(&:id)           # ids of every jurisdiction that every manually-specified user has a role in
-
-    if ( jj.size > 0 && rr.size > 0 )
-      juris_ids = (RoleMembership.find_all_by_role_id_and_jurisdiction_id(rr,jj).map(&:jurisdiction_id) + uu).uniq   # an array of every role <-> juris association that matches plus userjuris
-    else
-      juris_ids = (RoleMembership.find_all_by_jurisdiction_id(jj).map(&:jurisdiction_id) + RoleMembership.find_all_by_role_id(rr).map(&:jurisdiction_id) + uu).uniq
-    end
-    jurs = Jurisdiction.find_all_by_id(juris_ids)
-    jurs << self.groups.map(&:determine_primary_audience_jurisdictions)
-    return jurs.flatten.uniq
   end
 
   private
