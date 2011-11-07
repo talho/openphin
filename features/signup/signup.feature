@@ -177,7 +177,8 @@ Feature: Signing up for an account
       | subject       | Confirm your email    |
       | body contains | Thanks for signing up |
     When "john@example.com" clicks the confirmation link in the email
-    Then I should see "Your account has been confirmed."
+    Then I should be on the ext dashboard page
+    And "john@example.com" should be confirmed
 
   Scenario: User signs up with invalid data
     When I signup for an account with the following info:

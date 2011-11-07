@@ -31,7 +31,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.resources :devices
-    user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
     user.is_admin "/is_admin.:format", :controller => "users", :action => "is_admin", :conditions => {:method => [:get]}
   end
 

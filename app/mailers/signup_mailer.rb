@@ -1,16 +1,5 @@
 class SignupMailer < ActionMailer::Base
 
-  def confirmation(user)
-    if user.email.blank?
-      logger.info "Tried to send an email confirmation notification for a user with no email address"
-    else
-      recipients user.email
-      from DO_NOT_REPLY
-      subject "Confirm your email"
-      body :confirm_link => user_confirmation_url(user, user.confirmation_token, :host => HOST)
-    end
-  end
-
   def signup_notification(user)
     if user.email.blank?
       logger.info "Tried to send an email signup notification for a user with no email address"

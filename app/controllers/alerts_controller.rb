@@ -52,7 +52,7 @@ class AlertsController < ApplicationController
   
   def set_view_variables
     @console_message = Service::Talho::Console::Message.new(:message => MessageApi.parse(@alert.to_xml), :user => @current_user)
-    if @alert.acknowledge && @alert.methods.include?('call_downs')
+    if @alert.acknowledge && @alert.respond_to?(:call_downs)
       @call_downs = @alert.call_downs(@current_user)
     end
   end 
