@@ -58,6 +58,9 @@ group :default do
   gem 'ts-delayed-delta'
   gem 'awesome_nested_set', '1.4.4'
   gem "delayed_job", "~> 2.0.7"
+  gem 'option_attrs', :git => 'git://github.com/talho/option_attrs.git'
+  gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
+  gem 'smurf', :git => 'git://github.com/Dishwasha/smurf.git'
 end
 
 group :development do

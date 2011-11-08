@@ -1,15 +1,6 @@
-[submodule "vendor/plugins/auto_complete_jquery"]
-	path = vendor/plugins/auto_complete_jquery
-	url = git://github.com/chris/auto_complete_jquery.git
-[submodule "vendor/plugins/webrat"]
-	path = vendor/plugins/webrat
-	url = git://github.com/collectiveidea/webrat.git
 [submodule "vendor/plugins/no-peeping-toms"]
 	path = vendor/plugins/no-peeping-toms
 	url = git://github.com/patmaddox/no-peeping-toms.git
-[submodule "vendor/plugins/happymapper"]
-	path = vendor/plugins/happymapper
-	url = git://github.com/talho/happymapper.git
 [submodule "vendor/plugins/caching_presenter"]
 	path = vendor/plugins/caching_presenter
 	url = git://github.com/mhs/caching_presenter.git
@@ -25,30 +16,12 @@
 [submodule "vendor/plugins/rails_indexes"]
 	path = vendor/plugins/rails_indexes
 	url = git://github.com/eladmeidar/rails_indexes.git
-[submodule "vendor/plugins/rack-bug"]
-	path = vendor/plugins/rack-bug
-	url = git://github.com/brynary/rack-bug.git
 [submodule "vendor/plugins/serial"]
 	path = vendor/plugins/serial
 	url = git://github.com/karmajunkie/serial.git
-[submodule "public/javascripts/FCBKcomplete"]
-	path = public/javascripts/FCBKcomplete
-	url = git://github.com/Dishwasha/FCBKcomplete.git
 [submodule "vendor/plugins/prawnto"]
 	path = vendor/plugins/prawnto
 	url = git://github.com/thorny-sun/prawnto.git
-[submodule "vendor/plugins/csv_builder"]
-	path = vendor/plugins/csv_builder
-	url = git://github.com/Dishwasha/csv_builder.git
-[submodule "vendor/plugins/smurf"]
-	path = vendor/plugins/smurf
-	url = git://github.com/Dishwasha/smurf.git
-[submodule "vendor/plugins/citiesforrails"]
-	path = vendor/plugins/citiesforrails
-	url = git://github.com/altrabio/CITIEsForRAILS.git
-[submodule "vendor/plugins/pin_cushion"]
-	path = vendor/plugins/pin_cushion
-	url = git://github.com/Dishwasha/pin_cushion.git
 [submodule "vendor/plugins/backgroundrb"]
 	path = vendor/plugins/backgroundrb
 	url = https://github.com/gnufied/backgroundrb.git
