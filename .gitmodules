@@ -22,6 +22,3 @@
 [submodule "vendor/plugins/prawnto"]
 	path = vendor/plugins/prawnto
 	url = git://github.com/thorny-sun/prawnto.git
-[submodule "vendor/plugins/backgroundrb"]
-	path = vendor/plugins/backgroundrb
-	url = https://github.com/gnufied/backgroundrb.git

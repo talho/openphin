@@ -61,6 +61,7 @@ group :default do
   gem 'option_attrs', :git => 'git://github.com/talho/option_attrs.git'
   gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
   gem 'smurf', :git => 'git://github.com/Dishwasha/smurf.git'
+  gem 'backgroundrb', :git => 'git://github.com/talho/backgroundrb.git'
 end
 
 group :development do
