@@ -90,10 +90,10 @@ class Forum < ActiveRecord::Base
   def self.accessible_to(result,user)
     # if no audience is specified then this forum is open to anyone
     # if a audience is specified for this forum, am I in the audeience?
-    unless (audience = result.audience)
+    if result.audience.nil?
       forum = result
     else
-      forum = ( user.is_super_admin? || audience.recipients(:conditions => ["id = ?", user.id]).first ) ? result : nil
+      forum = ( user.is_super_admin? || result.audience.recipients(:conditions => ["id = ?", user.id]).first ) ? result : nil
     end
   end
   

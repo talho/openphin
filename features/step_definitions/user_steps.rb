@@ -183,6 +183,7 @@ When /^I create a user account with the following info:$/ do |table|
 end
 
 When 'I signup for an account with the following info:' do |table|
+  When %Q{I sign out}
   visit new_user_path
   fill_in_user_signup_form(table)  
   click_button 'Sign Up'

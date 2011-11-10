@@ -506,7 +506,7 @@ private
   end
   
   def create_default_email_device
-    email = Device::EmailDevice.new(:email_address => self.email)
+    email = (Device::EmailDevice.new :email_address => self.email)
     devices << email
   end
     

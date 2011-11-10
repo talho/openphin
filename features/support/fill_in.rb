@@ -51,11 +51,11 @@ FeatureHelpers
     
     def fill_in_signup_form(fields = {})
       fields = fields.is_a?(Hash) ? fields : fields.rows_hash
-
+When %Q{I suspend cucumber}
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field
-        when 'Email', 'Password', 'Password Confirmation', 'First Name', 'Last Name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
+        when 'Email', 'Password', 'Password Confirmation', 'First Name', 'Last Name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Office Phone', 'Mobile Phone', 'Home Phone', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
           fill_in field, :with => value
         when 'Preferred language'
           find_field(field).select(value.strip)

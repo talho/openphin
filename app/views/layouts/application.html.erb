@@ -7,12 +7,12 @@
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
-  <% css_list.concat [ 'jquery.crossSelect','jquery.ui.autocomplete', '/javascripts/FCBKcomplete/style', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css' ] %>
+  <% css_list.concat [ 'jquery.crossSelect','jquery.ui.autocomplete', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css' ] %>
   <% css_list.push({:cache => 'all'}) %>
   <%= stylesheet_link_tag(*css_list) %>
 
   <% js_list = [] %>
-  <% js_list.concat [ 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'FCBKcomplete/jquery.fcbkcomplete.js', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum' ] %>
+  <% js_list.concat [ 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum' ] %>
   <% js_list.push({:cache => 'all'}) %>
   <%= javascript_include_tag(*js_list) %>
   <!--[if IE 6]>
