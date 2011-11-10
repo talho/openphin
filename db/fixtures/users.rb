@@ -151,7 +151,6 @@ if u.new_record? && u.save
   u.confirm_email!
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.admin.id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
-  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Harris').id, :role_id => Role.find_by_name('Rollcall').id) if Role.find_by_name('Rollcall')
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
 end
 

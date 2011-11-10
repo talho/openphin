@@ -21,7 +21,7 @@ class Admin::UserBatchController < ApplicationController
         data << {:name => j.name, :id => j.id, :leaf => j.leaf?, :left => j.left, :right => j.right, :level => level, :parent_id => j.parent_id}
       }
     else
-      data = current_user.jurisdictions.admin
+      data = current_user.jurisdictions.admin.map{|j| j.self_and_descendants.flatten.uniq}.flatten.uniq
     end   
     render :json => data
   end
