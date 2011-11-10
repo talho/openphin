@@ -30,7 +30,7 @@ task :phin_plugins do
     cmds << "cd vendor/plugins/#{name}"
     if pp.has_key?("commit")
       cmds << "git checkout #{pp["commit"]}"
-    else
+    elsif File.exists?("vendor/plugins/#{name}")
       cmds << "git checkout #{branch}"
       cmds << "git pull"
     end
