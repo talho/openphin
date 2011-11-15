@@ -48,6 +48,7 @@ group :default do
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'
   gem 'bullet'
+  gem 'rollcall', :path=>'vendor/plugins/rollcall' if File.exists?('vendor/plugins/rollcall')
 end
 
 group :development do
