@@ -97,8 +97,8 @@ When /^"([^\"]*)" performs all notifications$/ do |fname|
 end
 
 When /^backgroundrb has processed the nightly documents$/ do
-  require 'vendor/plugins/backgroundrb/server/lib/bdrb_server_helper.rb'
-  require 'vendor/plugins/backgroundrb/server/lib/meta_worker.rb'
+  require 'bdrb_server_helper'
+  require 'meta_worker'
   require 'lib/workers/document_daily_cleanup_worker.rb'
   DocumentDailyCleanupWorker.new.clean
 end

@@ -1,15 +1,15 @@
-class Service::SWN::Message < Service::SWN::Base
+class Service::Swn::Message < Service::Swn::Base
   load_configuration_file RAILS_ROOT+"/config/swn.yml"
   load_configuration_file RAILS_ROOT+"/config/email.yml"
 
   property :message
 
 
-  SUPPORTED_DEVICES = {"Blackberry PIN" => Service::SWN::Blackberry::Message, "E-mail" => Service::SWN::Email::Message, "Fax" => Service::SWN::Fax::Message, "Phone" => Service::SWN::Phone::Message, "SMS" => Service::SWN::SMS::Message}
+  SUPPORTED_DEVICES = {"Blackberry PIN" => Service::Swn::Blackberry::Message, "E-mail" => Service::Swn::Email::Message, "Fax" => Service::Swn::Fax::Message, "Phone" => Service::Swn::Phone::Message, "SMS" => Service::Swn::Sms::Message}
 
   def deliver
-    raise "Service::SWN::Message: Message property is blank" if @message.blank?
-    config = Service::SWN::Message.configuration
+    raise "Service::Swn::Message: Message property is blank" if @message.blank?
+    config = Service::Swn::Message.configuration
     initialize_fake_delivery(config) if config.fake_delivery?
     devices = []
     
@@ -41,7 +41,7 @@ class Service::SWN::Message < Service::SWN::Base
         |  message: #{message}
       EOT
       
-      config = Service::SWN::Message.configuration
+      config = Service::Swn::Message.configuration
       body = SUPPORTED_DEVICES[key].new(:message => message,
         :username => config['username'],
         :password => config['password'],
@@ -66,9 +66,9 @@ class Service::SWN::Message < Service::SWN::Base
   private
 
   def initialize_fake_delivery(config) # :nodoc:
-    Service::SWN::Message.instance_eval do
+    Service::Swn::Message.instance_eval do
       define_method(:perform_delivery) do |body|
-        Service::SWN::Message.deliveries << OpenStruct.new(:body => body)
+        Service::Swn::Message.deliveries << OpenStruct.new(:body => body)
         config.options[:default_response] ||= "200 OK"
       end
     end

@@ -20,14 +20,14 @@ class Device < ActiveRecord::Base
 
   named_scope :email, :conditions => "type = 'Device::EmailDevice'"
   named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
-  named_scope :sms, :conditions => "type = 'Device::SMSDevice'"
+  named_scope :sms, :conditions => "type = 'Device::SmsDevice'"
   named_scope :fax, :conditions => "type = 'Device::FaxDevice'"
   named_scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
-  named_scope :im, :conditions => "type = 'Device::IMDevice'"
+  named_scope :im, :conditions => "type = 'Device::ImDevice'"
 
   serialize :options, Hash
 
-  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SMSDevice, Device::FaxDevice, Device::BlackberryDevice] #, Device::IMDevice]
+  Types = [Device::EmailDevice, Device::PhoneDevice, Device::SmsDevice, Device::FaxDevice, Device::BlackberryDevice] #, Device::ImDevice]
 
   validate :check_uniq_device
 

@@ -170,7 +170,7 @@ class AuditsController < ApplicationController
 
   def sanitize_and_beautify_for_your_comfort(version_attributes)
     # strip the data, but still report as changed.
-    hidden_attributes = ['encrypted_password', 'salt', 'token', 'phin_oid']
+    hidden_attributes = ['encrypted_password', 'salt', 'token', 'phin_oid', 'confirmation_token']
     date_attributes = ['created_at', 'updated_at', 'file_updated_at']
     lookup_attributes = {'alert_id' => Alert, 'alert_attempt_id' => AlertAttempt, 'approver_id' => User, 'audience_id' => Audience, 'author_id' => User,
                          'device_id' => Device, 'folder_id' => Folder, 'forum_id' => Forum, 'from_jurisdiction_id' => Jurisdiction, 'group_id' => Group,

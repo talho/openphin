@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
-require 'fastercsv'
+require 'csv'
 
 class GroupNormalizer
   @ou2jur = {
@@ -100,7 +100,7 @@ class GroupNormalizer
     options = {:col_sep => ",", :row_sep => :auto}.merge(options)
     file = File.open("new#{filename}", "w")
     file.write("email|jurisdiction|group_name\n")
-    FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
+    CSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
         email = rec['mail'].strip unless rec['mail'].blank?
         memberof = rec['memberOf'].strip unless rec['memberOf'].blank?

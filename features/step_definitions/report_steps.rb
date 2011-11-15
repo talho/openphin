@@ -1,7 +1,6 @@
 Given 'the report derived from recipe "$recipe" by the author with email "$email"' do |recipe, email|
   author = User.find_by_email(email)
-  type = "Report::#{recipe}"
-  recipe =  Report::Recipe.find_by_type(type) || type.constantize.create
+  recipe = "Report::#{recipe}"
   Factory(:report_report, :author => author, :recipe => recipe)
 end
 

@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  skip_before_filter :login_required, :only => [:about]
+  skip_before_filter :authenticate, :only => [:about]
   before_filter :non_public_role_required, :only => [:new, :create, :edit, :update, :delete]
   require 'feedzirra'
 
@@ -204,7 +204,7 @@ class DashboardController < ApplicationController
       format.ext
       format.json do
         unless @alerts.nil? || @alerts.empty? || ( @alerts.map(&:id) == [nil] ) # for dummy default alert
-          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_han_alert_path(alert),alert.acknowledged_by_user?) }
+          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_han_alert_path(alert.id),alert.acknowledged_by_user?) }
           headers["Access-Control-Allow-Origin"] = "*"
           render :json => jsonObject
         else

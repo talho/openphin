@@ -1,4 +1,4 @@
-class Service::SWN::Base
+class Service::Swn::Base
   extend PropertyObject::ClassMethods
   include PropertyObject::InstanceMethods
 

@@ -1,6 +1,6 @@
 include ActionView::Helpers::TextHelper
 
-class Service::TFCC::SMS::Alert < Service::TFCC::SMS::Base
+class Service::Tfcc::Sms::Alert < Service::Tfcc::Sms::Base
   property :alert
   property :users
   property :client_id

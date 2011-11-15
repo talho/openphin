@@ -1,4 +1,4 @@
-require 'fastercsv'
+require 'csv'
 
 class DshsDataImporter
   @ou2jur = {
@@ -80,9 +80,9 @@ class DshsDataImporter
     abort "You did not specify a file to import or file does not exist, please call as rake dshs_data_migrate file=<filename_and_path>" if filename.blank? || !File.exists?(filename)
     rows = []
     finalrows = []
-    csv = FasterCSV.open(filename, :headers => false)
+    csv = CSV.open(filename, :headers => false)
     #puts csv.shift().to_csv
-    FasterCSV.open(filename, :headers => true) do |records|
+    CSV.open(filename, :headers => true) do |records|
       records.each do |row|
         unless self.check_email(row['mail']) && !row['displayName'].blank?
           #puts row

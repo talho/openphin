@@ -4,12 +4,12 @@
 class ApplicationController < ActionController::Base
   include CachingPresenter::InstantiationMethods
   include Clearance::Authentication
-  #include ExceptionNotifiable
+
   helper :all # include all helpers, all the time
   helper_method :toolbar
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter :login_required, :set_locale, :except => :options
+  before_filter :authenticate, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
   layout :choose_layout
@@ -62,6 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Exception, :with => :render_error
+  rescue_from ActionController::Forbidden, :with => :render_password_error
   
   protected
 
@@ -77,22 +78,22 @@ class ApplicationController < ActionController::Base
   def folder_or_inbox_path(document)
     document.folder ? folder_documents_path(document.folder) : folder_inbox_path
   end
-
-  def login_required
-    store_location
-    unless signed_in?
-      respond_to do |format|
-        format.html{ redirect_to sign_in_path }
-        format.ext{ redirect_to sign_in_path }
-        format.json{ redirect_to sign_in_path }
-        format.iphone do
-          headers["Access-Control-Allow-Origin"] = "*"
-          render :json => ['SESSION' => 'EXPIRED']
-        end
-      end
-      false
-    end
-  end
+# 
+  # def login_required
+    # store_location
+    # unless signed_in?
+      # respond_to do |format|
+        # format.html{ redirect_to sign_in_path }
+        # format.ext{ redirect_to sign_in_path }
+        # format.json{ redirect_to sign_in_path }
+        # format.iphone do
+          # headers["Access-Control-Allow-Origin"] = "*"
+          # render :json => ['SESSION' => 'EXPIRED']
+        # end
+      # end
+      # false
+    # end
+  # end
 
   def admin_required
     unless current_user.role_memberships.count(:conditions => {:role_id => (Role.admins | Role.superadmins).map(&:id) }) > 0
@@ -225,6 +226,18 @@ private
     end
     
     super user
+  end
+
+  def render_password_error(exception)
+    if exception.message == "missing token"
+      flash[:error] = "The token from your link is missing"
+      redirect_to '/'
+    elsif exception.message == "non-existent user"
+      flash[:error] = "The token from your link is incorrect"
+      redirect_to '/'
+    else
+      render_error(exception)
+    end
   end
 
   def render_error(exception)

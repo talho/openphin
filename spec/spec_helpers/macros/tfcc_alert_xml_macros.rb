@@ -1,5 +1,5 @@
 module SpecHelpers
-  module TFCCAlertMacros
+  module TfccAlertMacros
     def should_return_valid_tfcc_xml
       it "should return valid XML" do
         xml = subject.build!

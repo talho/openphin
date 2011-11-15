@@ -103,7 +103,7 @@ end
 
 Given 'I have confirmed my account for "$email"' do |email|
   user = User.find_by_email!(email)
-  visit user_confirmation_path(user.id, user.token)
+  visit new_user_confirmation_path(:user_id => user.id, :token => user.confirmation_token, :encode => false)
 end
 
 Given "the following administrators exist:" do |table|
@@ -183,6 +183,7 @@ When /^I create a user account with the following info:$/ do |table|
 end
 
 When 'I signup for an account with the following info:' do |table|
+  When %Q{I sign out}
   visit new_user_path
   fill_in_user_signup_form(table)  
   click_button 'Sign Up'
@@ -202,9 +203,9 @@ end
 When /^"([^\"]*)" clicks the confirmation link in the email$/ do |user_email|
   email = ActionMailer::Base.deliveries.last
   user = User.find_by_email!(user_email)
-  link = user_confirmation_url(user, user.token, :host => HOST)
+  link = new_user_confirmation_url(:user_id => user.id, :token => user.confirmation_token, :encode => false, :host => HOST)
   email.body.include?(link).should be_true
-  link = user_confirmation_url(user, user.token, :host => "#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
+  link = new_user_confirmation_url(:user_id => user.id, :token => user.confirmation_token, :encode => false, :host => "#{page.driver.rack_server.host}:#{page.driver.rack_server.port}")
   visit link
 end
 
@@ -284,4 +285,8 @@ When /^I maliciously post a destroy user "([^\"]*)"$/ do |user_email|
     "f.appendChild(u); " +
     "f.submit();"
   page.execute_script(script)
+end
+
+Then /^"([^"]*)" should be confirmed$/ do |email|
+  User.find_by_email(email).email_confirmed?.should be_true
 end

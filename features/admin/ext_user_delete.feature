@@ -61,6 +61,7 @@ Feature: An admin deleting users
     Then I should not see "Thanks for signing up"
 
     When delayed jobs are processed
+    And I am logged in as "bob.jones@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I click x-grid3-row "Greg Brown"

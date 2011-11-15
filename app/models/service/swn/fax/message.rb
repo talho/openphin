@@ -1,4 +1,4 @@
-class Service::SWN::Fax::Message < Service::SWN::Fax::Base
+class Service::Swn::Fax::Message < Service::Swn::Fax::Base
   property :message
   property :username
   property :password

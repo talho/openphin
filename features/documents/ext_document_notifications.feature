@@ -21,7 +21,6 @@ Feature: Receiving notifications to different events
     And I log in as "atticus@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     When I click documents-folder-item "invitees.csv"
@@ -37,7 +36,6 @@ Feature: Receiving notifications to different events
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
     When I click documents-folder-item "invitees.csv"
@@ -55,14 +53,12 @@ Feature: Receiving notifications to different events
     And "Folder1" performs all notifications
     When I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
-    And I wait for the "Saving" mask to go away
-    And I wait for the "Loading" mask to go away
+    And I wait for the "Saving..." mask to go away
     Then "atticus@example.com" should receive the email:
       | subject       | A document has been added to the shared folder "Folder1" |
       | body contains | A document "invitees.csv" has been added to the shared folder "Folder1" by Bartleby Scrivener. |
@@ -76,14 +72,11 @@ Feature: Receiving notifications to different events
     And I log in as "atticus@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
-    And I wait for the "Saving" mask to go away
-    And I wait for the "Loading" mask to go away
     Then "bartleby@example.com" should receive the email:
       | subject       | A document has been added to the shared folder "Folder1" |
       | body contains | A document "invitees.csv" has been added to the shared folder "Folder1" by Atticus Finch. |
@@ -95,15 +88,12 @@ Feature: Receiving notifications to different events
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders ""
     And I select the "Folder1" grid row
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Replace File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
-    And I wait for the "Saving" mask to go away
-    And I wait for the "Loading" mask to go away
     Then "atticus@example.com" should receive the email:
       | subject       | The document "invitees.csv" has been updated. |
       | body contains | A document "invitees.csv" in the shared folder "Folder1" has been updated by Bartleby Scrivener. |
@@ -118,15 +108,12 @@ Feature: Receiving notifications to different events
     And I log in as "atticus@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
-    And I wait for the "Loading" mask to go away
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     When I click documents-folder-item "invitees.csv"
     And I click inlineLink "Replace File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
-    And I wait for the "Saving" mask to go away
-    And I wait for the "Loading" mask to go away
     Then "bartleby@example.com" should receive the email:
       | subject       | The document "invitees.csv" has been updated. |
       | body contains | A document "invitees.csv" in the shared folder "Folder1" has been updated by Atticus Finch. |
@@ -144,7 +131,6 @@ Feature: Receiving notifications to different events
       | name          | type |
       | Atticus Finch | User |
     And I press "Save"
-    And I wait for the "Saving" mask to go away
     Then "atticus@example.com" should receive the email:
       | subject       | Bartleby Scrivener has added you to the shared folder "Folder1" |
       | body contains | Bartleby Scrivener has given you access to the shared folder "Folder1" |
@@ -163,7 +149,6 @@ Feature: Receiving notifications to different events
       | name            | type |
       | Sybil Carpenter | User |
     And I press "Save"
-    And I wait for the "Saving" mask to go away
     Then "sybil@example.com" should receive the email:
       | subject       | Bartleby Scrivener has added you to the shared folder "Folder1" |
       | body contains | Bartleby Scrivener has given you access to the shared folder "Folder1" |     

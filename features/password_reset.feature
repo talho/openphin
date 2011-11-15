@@ -55,16 +55,14 @@ Feature: Password reset
   Scenario: User responses to reset password email
     Given I signed up with "email@person.com/Password1"
     Given I try to change the password of "email@person.com" without token
-    Then I should see " The token from your link is missing"
+    Then I should see "missing token"
 
   Scenario: User responses to password reset by linking to edit action without a token
     Given I signed up with "email@person.com/Password1"
     And I try to change the password of "email@person.com" without token
-    Then I should see "The token from your link is missing"
-    And I should see "is an online portal containing"
+    Then I should see "missing token"
 
   Scenario: User responses to password reset by linking to edit action with a incorrect token
     Given I signed up with "email@person.com/Password1"
     And I follow the password reset link with a damaged token sent to "email@person.com"
-    Then I should see "The token from your link is incorrect"
-    And I should see "is an online portal containing"
+    Then I should see "non-existent user"

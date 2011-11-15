@@ -38,14 +38,12 @@ class Role < ActiveRecord::Base
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
   named_scope :for_app, lambda { |app| { :conditions => { :application => app } } }
   
-  named_scope :admins, lambda {|*app| app = app.to_s
-                                      conditions = {:name => Defaults[:admin]}
-                                      conditions[:application] = app unless app.blank?
-                                      {:conditions => conditions} }
-  named_scope :superadmins, lambda {|*app| app = app.to_s 
-                                           conditions = {:name => Defaults[:superadmin]}
-                                           conditions[:application] = app unless app.blank?
-                                           {:conditions => conditions} }
+  named_scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
+                                       conditions[:application] = app.to_s unless app.blank?
+                                       {:conditions => conditions} }
+  named_scope :superadmins, ->(app = nil) { conditions = {:name => Defaults[:superadmin]}
+                                            conditions[:application] = app.to_s unless app.blank?
+                                            {:conditions => conditions} }
   
   def self.latest_in_secs
     recent(1).first.updated_at.utc.to_i

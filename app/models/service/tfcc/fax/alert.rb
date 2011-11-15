@@ -1,4 +1,4 @@
-class Service::TFCC::Fax::Alert < Service::TFCC::Fax::Base
+class Service::Tfcc::Fax::Alert < Service::Tfcc::Fax::Base
   property :alert
   property :users
   property :client_id

@@ -70,7 +70,7 @@ class Admin::UserBatchController < ApplicationController
           flash[:error] = "Authentication error, please contact your administrator."
         when "bad-jurisdiction"
           flash[:error] = "You do not have permission to add users to that jurisdiction."
-        when "bad-file"
+        when "bad-file", 'empty-file-data'
           flash[:error] = "Problem with file.  Please check that it is valid CSV."
         else        
           if @user_batch.save
@@ -102,12 +102,12 @@ class Admin::UserBatchController < ApplicationController
     users = []
     error = nil
     begin
-      FasterCSV.new(csvfile, :col_sep => ",", :headers => true).each { |record|
+      CSV.new(csvfile, :col_sep => ",", :headers => true).each { |record|
         new_user = Hash.new
         fields.each_with_index { |field,i| new_user[field] = record[field.to_s] }
         users.push(new_user)
       }
-    rescue FasterCSV::MalformedCSVError => detail
+    rescue CSV::MalformedCSVError => detail
       error = "CSV file was malformed or corrupted.<br/><br/>Error:<br/>#{detail.message}"
     rescue => e
       error = "This does not appear to be a CSV file."

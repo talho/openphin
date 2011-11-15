@@ -12,7 +12,7 @@
 #  updated_at      :datetime
 #
 
-class Service::SWN::Invitation < Service::SWN::Base
+class Service::Swn::Invitation < Service::Swn::Base
   load_configuration_file RAILS_ROOT+"/config/swn.yml"
   load_configuration_file RAILS_ROOT+"/config/email.yml"
 
@@ -30,7 +30,7 @@ class Service::SWN::Invitation < Service::SWN::Base
 
     initialize_fake_delivery(@config) if @config.fake_delivery?
 
-    body = Service::SWN::Email::Invitation.new(
+    body = Service::Swn::Email::Invitation.new(
       :invitation => @invitation,
       :users => @users,
       :username => @config['username'],
@@ -53,7 +53,7 @@ class Service::SWN::Invitation < Service::SWN::Base
     
     @invitation.body = "You have been made a member of the organization #{@invitation.default_organization.name}."
 
-    body = Service::SWN::Email::Invitation.new(
+    body = Service::Swn::Email::Invitation.new(
       :invitation => @invitation,
       :users => @users,
       :username => @config['username'],
@@ -67,9 +67,9 @@ class Service::SWN::Invitation < Service::SWN::Base
   private
 
   def initialize_fake_delivery(config) # :nodoc:
-    Service::SWN::Invitation.instance_eval do
+    Service::Swn::Invitation.instance_eval do
       define_method(:perform_delivery) do |body|
-        Service::SWN::Invitation.deliveries << OpenStruct.new(:body => body)
+        Service::Swn::Invitation.deliveries << OpenStruct.new(:body => body)
         config.options[:default_response] ||= "200 OK"
       end
     end

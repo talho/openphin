@@ -33,6 +33,9 @@ class UserBatch
     if binary?
       return "bad-file"
     end
+    if file_data.blank?
+      return 'empty-file-data'
+    end
     return "valid"
   end
   
@@ -43,11 +46,13 @@ class UserBatch
         save_file
         pre_verify_csv(path)
         @file_data = nil
-        self.send_later(:create_users,path)
+        self.delay.create_users(path)
         true
-      rescue FasterCSV::MalformedCSVError => msg
+      rescue CSV::MalformedCSVError => msg
         false
-      rescue
+      rescue Exception => e
+        p e
+        pp e.backtrace
         false
       end
     end
@@ -91,8 +96,8 @@ class UserBatch
 private
 
   def pre_verify_csv(path)
-     FasterCSV.open(path) do |records|
-       records.each do |rec|  # This will error if FasterCSV doesn't understand the file.
+     CSV.open(path) do |records|
+       records.each do |rec|  # This will error if CSV doesn't understand the file.
        end
      end
   end  

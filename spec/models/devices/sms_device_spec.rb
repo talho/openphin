@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Device::SMSDevice do
+describe Device::SmsDevice do
 
   describe 'validations' do
     before(:each) do

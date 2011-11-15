@@ -11,7 +11,7 @@
 <div class="aside">
   <h2>Sign In to Your Account</h2>
 
-  <% form_for :session, :url => session_path, :html => {:id => 'sign_in_form'} do |form| %>
+  <% form_for :session, :url => session_index_path, :html => {:id => 'sign_in_form'} do |form| %>
     <p class="text_field">
       <%= form.label :email %>
       <%= form.text_field :email, :value => flash[:email_address] %>

@@ -1,4 +1,4 @@
-class Service::TALHO::Console::Message
+class Service::Talho::Console::Message
   extend PropertyObject::ClassMethods
   include PropertyObject::InstanceMethods
   include Validatable

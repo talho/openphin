@@ -1,28 +1,11 @@
 class Report::Report < ActiveRecord::Base
 
-#  create_table "report_reports", :force => true do |t|
-#    t.integer  "author_id"
-#    t.boolean  "incomplete"
-#    t.string   "rendering_file_name"
-#    t.string   "rendering_content_type"
-#    t.integer  "rendering_file_size"
-#    t.datetime "rendering_updated_at"
-#    t.datetime "created_at"
-#    t.datetime "updated_at"
-#    t.integer  "audience"
-#    t.integer  "recipe_id"
-#    t.string   "name"
-#    t.integer  "dataset_size"
-#    t.datetime "dataset_updated_at"
-#  end
-  
   set_table_name :report_reports
 
   include ActionView::Helpers::DateHelper
 
   belongs_to :author, :class_name => 'User'
-  belongs_to :recipe, :class_name => 'Report::Recipe'
-  belongs_to :audience, :class_name => 'Audience'
+  serialize :criteria
 
   has_many   :filters
   has_one    :dataset
@@ -30,7 +13,7 @@ class Report::Report < ActiveRecord::Base
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
   validates_presence_of     :author
-  validates_presence_of     :recipe_id
+  validates_format_of :recipe, :with => /Report::([A-Z][a-z]+)*Recipe/, :message => "Only recipe names allowed"
   validates_inclusion_of    :incomplete, :in => [false,true]
 
   named_scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
@@ -52,19 +35,12 @@ class Report::Report < ActiveRecord::Base
     json
   end
 
-#  def dataset_updated_at
-#    date = dataset.find_one().present? ? dataset.find_one()["created_at"] : nil
-#    date ? time_ago_in_words(date) : "Generating...Click Refresh"
-#  end
-#
-#  protected
-
   def rendering_updated_at
     self[:rendering_updated_at] ? time_ago_in_words(self[:rendering_updated_at]) : "Generating...Click Refresh"
   end
 
   def after_create
-    update_attribute(:name,"#{recipe.name}-#{id}")
+    update_attribute(:name,"#{recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-')}#{id}")
   end
 
   def before_destroy

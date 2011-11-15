@@ -1,56 +1,38 @@
 class Report::Recipe < ActiveRecord::Base
-  # create_table :report, :force => true do |t|
-  require 'base32/crockford'
 
-  set_table_name  :report_recipes
-  has_many :reports, :class_name => 'Report::Report'
-  belongs_to :audience
-  named_scope :deployable, :conditions => "report_recipes.type <> 'Report::Recipe'"
+  set_table_name :report_recipes
+  require 'base32/crockford'  # for naming the filtered file
 
-  named_scope :authorized, lambda {|user|
-    {:joins => "INNER JOIN audiences_recipients AS ar ON report_recipes.audience_id = ar.audience_id",
-    :select => '*',
-    :conditions => "ar.user_id = #{user[:id]}"
-    }
-  }
+  class << self
 
-  def self.find_or_create
-    self.find_or_create_by_type(self.name)
-  end
-
-  def name
-    self[:type].demodulize.split(/(?=[A-Z])/).join("-")
-  end
-
-  def description
-    "Base Recipe that creates the recipe infrastructure including defaults.  Supports unit test with using defaults."
-  end
-  
-  def helpers
-    []
-  end
-
-  def template_path
-    File.join(Rails.root,'app','views','reports','report.html.erb')
-  end
-
-  def capture_to_db(report)
-    now = Time.now.utc
-    report.dataset.insert({"created_at"=>now})
-    begin
-      size = report.dataset.stats["size"]
-    rescue Mongo::OperationFailure
-      size = 0
+    def description
+      "Base Recipe that creates the recipe infrastructure including defaults.  Supports unit test with using defaults."
     end
-    report.update_attributes(:dataset_updated_at=>now,:dataset_size=>size)
+
+    def helpers
+      []
+    end
+
+    def template_path
+      File.join(Rails.root,'app','views','reports','report.html.erb')
+    end
+
+    def capture_to_db(report)
+      now = Time.now.utc
+      report.dataset.insert({"created_at"=>now})
+      begin
+        size = report.dataset.stats["size"]
+      rescue Mongo::OperationFailure
+        size = 0
+      end
+      report.update_attributes(:dataset_updated_at=>now,:dataset_size=>size)
+    end
+
   end
 
-# Overwriteable Infrastructure
-  def type_humanized
-    self.class.name.demodulize.split(/(?=[A-Z])/).join(" ")
-  end
+protected
 
-  def generate_rendering_of_on_with( report, view, template, filters=nil )
+  def self.generate_rendering_of_on_with( report, view, template, filters=nil )
    filtered_at = nil
    pre_where = {"i"=>{'$exists'=>true}}
    if filters.present?
@@ -75,7 +57,7 @@ class Report::Recipe < ActiveRecord::Base
    end
   end
 
-  def filters_for_query(filters)
+  def self.filters_for_query(filters)
     # [{"display_name"=>"Bob Dole"}, {"email"=>"jason@example.com"}, {"i"=>{"minValue"=>25, "maxValue"=>54}}]
     f = filters.inject({}) do |res,item|
       if item.kind_of? Hash
@@ -91,17 +73,30 @@ class Report::Recipe < ActiveRecord::Base
     end
   end
 
-  def bind_attributes(report)
-    report.update_attribute(:audience,audience) if audience
+  def self.all
+    send(:subclasses).reject{|s| !s.name.end_with? 'Recipe'}.map(&:name)
   end
 
-  JSON_COLUMNS =  %w(id type_humanized description)
+  def self.find(param)
+    begin
+      param.constantize
+    rescue
+       raise ActiveRecord::RecordNotFound
+    end
+  end
 
-  def as_json(options={})
-   json_columns = JSON_COLUMNS.map(&:to_sym)
-   json = super(:only => json_columns)
-   options[:inject].each {|key,value| json[key] = value} if options[:inject]
-   json
+  def self.destroy
+    # purposely do nothing
+  end
+
+private
+
+  def self.as_json(options={})
+    {:id=>name,:description=>description}
+  end
+
+  def self.humanized(name)
+    name.demodulize.split(/(?=[A-Z])/).join(" ")
   end
 
 end

@@ -1,4 +1,4 @@
-class Service::SWN::Blackberry::Message < Service::SWN::Blackberry::Base
+class Service::Swn::Blackberry::Message < Service::Swn::Blackberry::Base
   property :message
   property :username
   property :password

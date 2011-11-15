@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  before_filter :login_required
+  #before_filter :authenticate
   app_toolbar "forums"
 
   before_filter :find_forum

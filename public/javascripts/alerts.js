@@ -73,7 +73,7 @@
                 alert("You must provide a Caller ID number for a phone alert.");
               }
               break;
-            case "Device::SMSDevice":
+            case "Device::SmsDevice":
               if (jQuery.trim($('.short_message').val()) == "") {
                 cont = false;
                 alert("You must provide a short message for an SMS alert.");

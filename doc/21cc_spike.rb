@@ -24,7 +24,7 @@ module Builder
   end
 end
 
-class TFCC
+class Tfcc
   include HTTParty
   basic_auth "tdh_talho", "qtvu71uu" 
   base_uri "https://ucstest.tfcci.com/ucsxml"

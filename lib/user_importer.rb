@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
-require 'fastercsv'
+require 'csv'
 
 class UserImporter
   FIELDS = [ :email, :first_name, :last_name, :display_name, :jurisdiction, :mobile, :fax, :phone ].freeze
@@ -26,7 +26,7 @@ class UserImporter
   def self.import_users(filename, options={})
     options = {:col_sep => ",", :row_sep => :auto, :update => false, :create => true,
                :default_jurisdiction => nil, :default_password => self.generate_random_password}.merge(options)
-    FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
+    CSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
         if email.blank?
@@ -94,7 +94,7 @@ class UserImporter
 
   def self.jurisdiction_transform(filename, options = {})
     options = {:col_sep => ",", :row_sep => :auto, :default_jurisdiction => "Texas"}.merge(options)
-    FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
+    CSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       puts records.first.headers.join(",")
       records.each do |rec|
         email, first_name, last_name, display_name, jurisdiction, mobile, fax, phone = FIELDS.collect { |f| rec[f.to_s] }
