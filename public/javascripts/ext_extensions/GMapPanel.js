@@ -11,7 +11,7 @@
  */
  
  // use dominoes to load google maps. give a callback to application.js
- dominoes('http://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
+ dominoes('https://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
  
 Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     constructor: function(){
