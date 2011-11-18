@@ -55,3 +55,4 @@ spec/rollcall
 config/*.yml
 reports/*
 lib/workers/plugin_workers
+app/models/report/rollcall

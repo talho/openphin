@@ -51,7 +51,6 @@ FeatureHelpers
     
     def fill_in_signup_form(fields = {})
       fields = fields.is_a?(Hash) ? fields : fields.rows_hash
-When %Q{I suspend cucumber}
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field

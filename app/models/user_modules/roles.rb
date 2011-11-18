@@ -50,7 +50,7 @@ module UserModules
         return role_memberships.count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
       end
      
-      def is_admin?(app = "")
+    def is_admin?(app = "")
       # TODO: Should be app agnostic
       return true if is_sysadmin?
       return true if is_super_admin?(app)
@@ -75,12 +75,12 @@ module UserModules
       return role_memberships(true).count(:conditions => { :role_id => Role.org_admin(app).id } ) > 0
     end
   
-    def has_role?(role_sym)
-      roles.any? { |r| r.name.underscore.to_sym == role_sym }
+    def has_role?(role_sym, app = '')
+      roles.any? { |r| r.name.to_s.titleize == role_sym.to_s.titleize && (app == '' || r.application.to_s.titleize == app.to_s.titleize) }
     end
   
     def has_application?(app_sym)
-      roles.any? { |r| r.application.to_sym == app_sym }
+      roles.any? { |r| r.application.to_s.titleize == app_sym.to_s.titleize }
     end
   
     def enabled_applications

@@ -93,7 +93,7 @@ class Forum < ActiveRecord::Base
     if result.audience.nil?
       forum = result
     else
-      forum = ( user.is_super_admin? || result.audience.recipients(:conditions => ["id = ?", user.id]).first ) ? result : nil
+      forum = ( user.is_super_admin? || result.audience.recipients(:conditions => ["audiences_recipients.user_id = ?", user.id]).first ) ? result : nil
     end
   end
   

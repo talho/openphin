@@ -144,6 +144,7 @@ Scenario: Admin viewing a subordinate public profile
   And I view the ext profile page for "pott.pub@example.com"
   # wait a bit for the UI to catch up
   And I wait for 2 seconds
+  And I wait for the "Loading..." mask to go away
   Then I should see:
    | Potter Public                         |
    | pott.pub@example.com                  |
@@ -226,8 +227,6 @@ Scenario: Fields should not be visible if they do not have data
   Given pott.pub@example.com has a public profile
   And I am logged in as "dall.md@example.com"
   And I view the ext profile page for "pott.pub@example.com"
-  # wait a bit for the UI to catch up
-  And I wait for 1 second
   Then I should see:
       | Potter Public                         |
       | pott.pub@example.com                  |
