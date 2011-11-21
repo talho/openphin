@@ -9,3 +9,5 @@
   branch: ext_adst
 - url: "ssh://git@git.talho.org/home/git/repositories/vms"
   branch: master
+- url: ssh://git@git.talho.org/home/git/repositories/talho
+  branch: master
