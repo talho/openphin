@@ -69,15 +69,15 @@ group :test do
 end
 
 group :cucumber do
-  gem "cucumber", "0.9.2"
+  gem "cucumber"#, "0.9.2"
     gem "json", "1.4.6"
     gem "diff-lcs", "1.1.2"
     gem "trollop", "1.16.2"
-    gem "gherkin", "2.2.9"
+    gem "gherkin", "2.4.21"
     gem "term-ansicolor", "1.0.5"
-  gem "cucumber-rails", "0.3.2"
+  gem "cucumber-rails"#, "0.3.2"
   gem "database_cleaner", "0.5.0"
-  gem "spork", "0.8.4"
+  gem "spork"#, "0.8.4"
 
   gem "culerity", "0.2.4"
   gem "mime-types", "1.16"
