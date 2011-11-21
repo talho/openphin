@@ -44,6 +44,7 @@ public/rrd
 firebug.xpi
 public/*/han
 public/*/vms
+public/*/talho
 lib/workers/han
 lib/workers/vms
 lib/workers/rollcall
@@ -51,6 +52,7 @@ public/*/rollcall
 vendor/plugins/han
 vendor/plugins/rollcall
 vendor/plugins/vms
+vendor/plugins/talho
 spec/rollcall
 config/*.yml
 reports/*
