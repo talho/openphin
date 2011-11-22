@@ -24,6 +24,11 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
           plugin_config_items << eval($menu_config[:vms]) unless $menu_config[:vms].nil?
         end
       end
+      Phin::Application.eval_if_plugin_present(:talho) do
+        if current_user.has_app?("talho")
+          plugin_config_items << eval($menu_config[:talho]) unless $menu_config[:talho].nil?
+        end
+      end
     app_menu_config += plugin_config_items.join(',')
     app_menu_config += "]},"
     # Remove the app menu if it's empty
