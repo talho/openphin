@@ -21,24 +21,23 @@
   <%# end include stylesheets for openphin plugins %>
   
   <%# Experimental loading of resources, on the fly %>
-  <%#%><%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => 'preloadMask' %>
-  <%#%><script>
-    dominoes.rule('jquery', '/javascripts/jquery.js');
-    dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) $css(/stylesheets/resources/css/ext3-compat.css) )) /javascripts/ext/<%= Rails.env == "production" ? "ext-all.js" : "ext-all-debug.js" %> > /javascripts/ext/ext3-core-compat.js /javascripts/ext/ext3-compat.js /javascripts/ext_extensions/overrides.js');
+  <%#%>
+  <%= stylesheet_link_tag 'redesign/preloadMask.css', :cache => 'preloadMask' %>
+  <%#%>
+  <script>
+    dominoes.rule('ext', '(( $css(/stylesheets/resources/css/ext-all.css) )) /javascripts/ext/<%= Rails.env == "production" ? "ext-all.js" : "ext-all-debug.js" %> >');
 
     dominoes.rule('phinCSS', '$css(/stylesheets/redesign/ext_extensions.css) $css(/stylesheets/redesign/master.css) $css(/stylesheets/redesign/dashboard.css) $css(/stylesheets/redesign/admin.css) $css(/stylesheets/redesign/forum.css) $css(/stylesheets/redesign/documents.css)');
-    dominoes.rule('phinInitialLoad', '(( phinCSS )) /javascripts/dashboard/application.js /javascripts/dashboard/script_manager.js /javascripts/dashboard/index.js /dashboard/menu.js /javascripts/ext_extensions/validations.js');
+    dominoes.rule('phinInitialLoad', '(( phinCSS )) /dashboard/menu.js > /javascripts/Application.js');
     dominoes.rule('phinPlugins', '<%=  javascript_include_domino( defined?($expansion_list) ? $expansion_list.dup : [] ) %>');
     dominoes({
-        chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad > phinPlugins >| initView',
-        preExtMessage: function(){
-            $('#loading-message').html('Loading Ext...');
-        },
+        chain: 'ext > prePhinMessage > phinInitialLoad > phinPlugins >| initView',
         prePhinMessage: function(){
             Ext.get('loading-message').update('Loading PHIN...');
         },
         initView: function(){
-            window.Application.path = '<%= @path || session[:path] %>';
+            Ext.syncRequire('Ext.fx.Manager');
+            RAILS_PATH = '<%= @path || session[:path] %>';
             var loading = Ext.get('loading');
             var loadingMask = Ext.get('loading-mask');
             setTimeout(function(){
@@ -46,7 +45,6 @@
                 loading.fadeOut({ duration: 400, remove: true });
                 loadingMask.fadeOut({ duration: 400, remove: true });
             }, 200);
-            Ext.EventManager.fireDocReady(); // have to manually fire Ext's docReady event because we're not loading ext in the traditional way.
         }
     });
   </script>
@@ -60,7 +58,7 @@
 
     <div id="loading-mask"></div>
     <div id="loading">
-        <span id="loading-message">Loading jQuery...</span>
+        <span id="loading-message">Loading Ext...</span>
     </div> <%#%>
   <%= yield %>
 </body>

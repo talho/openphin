@@ -11,7 +11,7 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
   end
 
   if current_user.has_non_public_role?
-    app_menu_config = "{name: 'Apps', items: ["
+    app_menu_config = "{text: 'Apps', menu: ["
 
     plugin_config_items = []
       Phin::Application.eval_if_plugin_present(:rollcall) do
@@ -27,68 +27,72 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
     app_menu_config += plugin_config_items.join(',')
     app_menu_config += "]},"
     # Remove the app menu if it's empty
-    unless app_menu_config == "{name: 'Apps', items: []},"
+    unless app_menu_config == "{text: 'Apps', menu: []},"
       menu_config += app_menu_config
     end
   end
 
-  menu_config += "{name: 'FAQs', items:[
-                    {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
+  menu_config += "{text: 'FAQs', menu:[
+                    {text: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
 
   begin
     REPORT_DB
-    menu_config += "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}},"
+    menu_config += "{text: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}},"
   rescue NameError
     # just do not include Reports menu
   end
 
-  menu_config += "{name: 'Tutorials', items:[
-                    {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'#{ tutorials_path }', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
-                    {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'#{ tutorials_path }', anchor: 'HAN', initializer: 'Talho.Tutorials'}},
-                    {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'#{ tutorials_path }', anchor: 'Documents', initializer: 'Talho.Tutorials'}}]},
+  menu_config += "{text: 'Tutorials', menu:[
+                    {text: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'#{ tutorials_path }', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
+                    {text: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'#{ tutorials_path }', anchor: 'HAN', initializer: 'Talho.Tutorials'}},
+                    {text: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'#{ tutorials_path }', anchor: 'Documents', initializer: 'Talho.Tutorials'}}]},
                   '->',"
-#{name: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'#{ tutorials_path }', anchor: 'Forums', initializer: 'Talho.Tutorials'}},
-#{name: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'#{ tutorials_path }', anchor: 'Rollcall', initializer: 'Talho.Tutorials'}}]},
+#{text: 'Forums', tab:{id: 'tutorials', title:'Forums tutorial', url:'#{ tutorials_path }', anchor: 'Forums', initializer: 'Talho.Tutorials'}},
+#{text: 'Rollcall', tab:{id: 'tutorials', title:'Rollcall Tutorial', url:'#{ tutorials_path }', anchor: 'Rollcall', initializer: 'Talho.Tutorials'}}]},
 
   if signed_in?
 
     if current_user.has_non_public_role?
-      menu_config += "{name: 'Find People', tab: {id: 'find_people', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.FindPeople'}},"
+      menu_config += "{text: 'Find People', tab: {id: 'find_people', title:'Find People', url:'#{ show_advanced_search_path }', initializer: 'Talho.FindPeople'}},"
     end
 
     if current_user.is_admin?
-      menu_config += "{name: 'Admin', items:[
-                      {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'#{ admin_role_requests_path }', initializer: 'Talho.PendingRoleRequests'}},
-                      {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }', initializer: 'Talho.ManageGroups'}},
-                      {name: 'Manage Users', items: [
-                          {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},
-                          {name: 'Batch Add Users', tab: {id: 'batch_new_users', title:'Batch Add Users', url:'#{ new_user_batch_path }', initializer: 'Talho.BatchUsers'}},
-                          {name: 'Edit Users', tab: {id: 'edit_users', title:'Edit Users', url:'#{ show_advanced_search_path }', admin_mode: true, initializer: 'Talho.FindPeople'}}]},
-                      {name: 'Manage Invitations', items:[
-                          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
-                          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]}"
+      menu_config += "{text: 'Admin', menu:[
+                      {text: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'#{ admin_role_requests_path }', initializer: 'Talho.PendingRoleRequests'}},
+                      {text: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'#{ admin_groups_path }', initializer: 'Talho.ManageGroups'}},
+                      {text: 'Manage Users', menu: [
+                          {text: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'#{ new_admin_user_path }', initializer: 'Talho.AddUser'}},
+                          {text: 'Batch Add Users', tab: {id: 'batch_new_users', title:'Batch Add Users', url:'#{ new_user_batch_path }', initializer: 'Talho.BatchUsers'}},
+                          {text: 'Edit Users', tab: {id: 'edit_users', title:'Edit Users', url:'#{ show_advanced_search_path }', admin_mode: true, initializer: 'Talho.FindPeople'}}]},
+                      {text: 'Manage Invitations', menu:[
+                          {text: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'#{ admin_invitations_path }', initializer: 'Talho.NewInvitation'}},
+                          {text: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'#{ admin_invitations_path }', initializer: 'Talho.Invitations'}}]}"
       if current_user.is_super_admin?
-         menu_config += ", {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}"
+         menu_config += ", {text: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}"
       end
       menu_config += "]},"
     end
 
-    menu_config += "{name: '#{ domain_config['about_button_label'] }', tab: {id: 'about_phin', title:'#{ domain_config['about_button_label'] }', url:'#{ domain_config['about_button_url'] }'}},"
-    menu_config += "{name: '#{current_user.display_name}', itemId: 'My Account', items:[
-                    {name:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
-                    {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
-                    {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
-                    {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
-                    {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
-                    {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
+    menu_config += "{text: '#{ domain_config['about_button_label'] }', tab: {id: 'about_phin', title:'#{ domain_config['about_button_label'] }', url:'#{ domain_config['about_button_url'] }'}},"
+    menu_config += "{text: '#{current_user.display_name}', itemId: 'My Account', menu:[
+                    {text:'View My Profile', tab:{id: 'user_profile_for_#{current_user.id}', title:'My Profile', user_id: #{current_user.id}, initializer: 'Talho.ShowProfile'}},
+                    {text:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'#{ user_profile_path(current_user) }', user_id: #{current_user.id}, initializer: 'Talho.EditProfile'}},
+                    {text:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditPassword'}},
+                    {text:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.EditDevices'}},
+                    {text: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'#{ user_profile_path(current_user) }', initializer: 'Talho.ManageRoles'}},
+                    {text: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'#{ user_profile_path(current_user) }',
                       initializer: 'Talho.ManageOrganizations'}},
-                    {name: 'Sign Out', icon: '/images/logoff.png', redirect: '#{sign_out_path}'}
+                    {text: 'Bookmarks', itemId: 'bookmark_button', menu: [
+                      {itemId: 'bookmark_toggle', text: 'Hide the Bookmarks Toolbar'},
+                      {itemId: 'bookmark_manage', text: 'Manage Bookmarks'}
+                    ]},
+                    {text: 'Sign Out', icon: '/images/logoff.png', redirect: '#{sign_out_path}'}
                   ]}"
 
   else
-    menu_config += "{name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
-                   {name:  'Sign Up', redirect: '#{new_user_path}'},
-                   {name: 'Sign In', redirect: '#{sign_in_path}'}"
+    menu_config += "{text: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'#{ about_path }'}},
+                   {text:  'Sign Up', redirect: '#{new_user_path}'},
+                   {text: 'Sign In', redirect: '#{sign_in_path}'}"
   end
 
   menu_config += "];"
@@ -100,14 +104,14 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
   user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_application(item)}.compact.empty?
 
   bbar_config =  "Application.bbarConfig = ["
-                     #{name: 'Calendar'},
-                     #{name: 'Chat'},
+                     #{text: 'Calendar'},
+                     #{text: 'Chat'},
 
   if current_user.has_non_public_role?
-    bbar_config += "{name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },"
+    bbar_config += "{text: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },"
   end
-  bbar_config += "{name: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
-                  {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
+  bbar_config += "{text: 'Forums', tab: {id: 'forums', title:'Forums', url:'#{ forums_path }', initializer: 'Talho.Forums'}},
+                  {text: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
                   '->',
                   'Need Help? Email: <a style=\"color: #ffffff; text-decoration: none;\" href=\"mailto:#{ domain_config['help_email'] }\" target=\"_blank\">#{ domain_config['help_email'] }</a>'
                 ];"
