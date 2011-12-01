@@ -6,7 +6,7 @@ module UserModules
     end
   
     def dashboards
-      ::Dashboard.scoped :include => :dashboard_portlets, :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN audiences_recipients ON (audiences_recipients.audience_id = audiences_dashboards.audience_id)", :conditions => "audiences_recipients.user_id = #{self.id}"
+      ::Dashboard.scoped :include => :dashboard_portlets, :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN sp_audiences_for_user(#{self.id}) au ON (au.id = audiences_dashboards.audience_id)"
     end
   
     def default_dashboard

@@ -49,11 +49,9 @@ class Doc::FoldersController < ApplicationController
       end
       return
     end
-
-    folder.audience.recipients(:force => true).length if folder.audience # apply the recipients for the audience so that the mapped joins will actually work
-
+    
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients(:force => true) } ) unless folder.audience.nil? || folder.audience.recipients(:force => true).empty?
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients } ) unless folder.audience.nil? || folder.audience.recipients.empty?
     end
 
     respond_to do |format|
@@ -89,7 +87,7 @@ class Doc::FoldersController < ApplicationController
   def update
     folder = Folder.find(params[:id])
 
-    original_recipients = folder.audience ? Array.new(folder.audience.recipients(:force => true)) : []
+    original_recipients = folder.audience ? Array.new(folder.audience.recipients) : []
 
     folder.attributes = params[:folder]
 
@@ -99,11 +97,9 @@ class Doc::FoldersController < ApplicationController
       end
       return
     end
-
-    folder.audience.recipients(:force => true).length if folder.audience # apply the recipients for the audience so that the mapped joins will actually work
     
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.nil? ? [] : (folder.audience.recipients(:force => true) - original_recipients) } )
+      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.nil? ? [] : (folder.audience.recipients(true) - original_recipients) } )
     end
 
     respond_to do |format|

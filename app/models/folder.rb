@@ -43,7 +43,7 @@ class Folder < ActiveRecord::Base
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def users
-    User.scoped :joins => ', audiences_recipients, folders', :conditions => ['audiences_recipients.user_id = users.id and audiences_recipients.audience_id = folders.audience_id and folders.id = ?', self.id]
+    User.scoped :joins => ', folders', :conditions => ['folders.audience_id IN (select * from sp_audiences_for_user(users.id)) and folders.id = ?', self.id]
   end
 
   acts_as_nested_set :scope => :user_id

@@ -31,8 +31,8 @@ class Document < ActiveRecord::Base
   belongs_to :owner, :class_name => 'User'
 
   named_scope :shared_with_user, lambda{|user|
-    {:joins => ', folders, audiences_recipients',
-     :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ? and documents.folder_id = folders.id', user.id, user.id],
+    {:joins => ', folders',
+     :conditions => ['folders.audience_id IN (select * from sp_audiences_for_user(?)) and folders.user_id != ? and documents.folder_id = folders.id', user.id, user.id],
      :include => [:owner]
     }
   }
@@ -160,7 +160,7 @@ class Document < ActiveRecord::Base
     has owner_id
     has folder(:id), :as => :folder_id
     has folder.audience(:id), :as => :audience_id
-    has folder.audience.recipients_default(:id), :as => :shared_with_ids
+    has folder.audience.recipients(:id), :as => :shared_with_ids
 
     set_property :delta => :delayed
   end

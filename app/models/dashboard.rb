@@ -44,12 +44,13 @@ class Dashboard < ActiveRecord::Base
   
   named_scope :with_user, lambda { |user|
     user_id = user.class == User ? user.id : user
-    { :joins => "JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN audiences_recipients ON (audiences_recipients.audience_id = audiences_dashboards.audience_id)", 
-      :conditions => {"audiences_recipients.user_id" => user_id} }
-  } do
-    def with_roles(*roles)
-      scoped :conditions => {"audiences_dashboards.role" => roles.to_a.flatten.map{|r| Dashboard::DashboardAudience::ROLES[r.to_sym] } }
-    end
+    { :joins => send(:sanitize_sql_array,
+      ["JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN sp_audiences_for_user(?) au ON (au.id = audiences_dashboards.audience_id)", 
+       user_id])
+     }} do
+      def with_roles(*roles)
+        scoped :conditions => {"audiences_dashboards.role" => roles.to_a.flatten.map{|r| Dashboard::DashboardAudience::ROLES[r.to_sym] } }
+      end
   end
 
   named_scope :draft, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
@@ -72,7 +73,7 @@ class Dashboard < ActiveRecord::Base
       audience = created.audiences.first
       if audience
         audience.user_ids = [author.id]
-        audience.refresh_recipients(:force => true)
+        #audience.refresh_recipients(:force => true)
       end
     end
     created

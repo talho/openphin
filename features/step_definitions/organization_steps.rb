@@ -3,7 +3,7 @@ Given /^"([^\"]*)" is a member of the organization "([^\"]*)"$/ do |email, org_n
 	org = Organization.find_by_name(org_name) || Factory(:organization, :name => org_name)
   org << user
   org.save!
-  org.group.refresh_recipients(:force => true)
+  #org.group.refresh_recipients(:force => true)
 end
 
 Given /^there is an unapproved "([^\"]*)" organization with "([^\"]*)" as the contact$/ do |name, email|

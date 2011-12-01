@@ -32,12 +32,9 @@ class Target < ActiveRecord::Base
     user_ids = if block_given?
       yield
     end
-
-    user_ids = if ["Channel", "Document"].include?(item_type)
-      audience.recipients(:force => true, :select => "id", :conditions => ["role_memberships.role_id <> ? AND users.deleted_at IS NULL", Role.public.id], :include => :role_memberships).map(&:id)
-    else
-      audience.recipients(:force => true, :select => "id", :conditions => "users.deleted_at IS NULL").map(&:id)
-    end if user_ids.blank?
+    
+    user_ids = audience.recipients.map(&:id) if user_ids.blank?
+    user_ids << item.author_id if item.is_a?(Alert) # add the alert user, this is a hack because this most belongs in alert, but there's no good spot for it there. Alert is the only thing that uses Target, so it works out.
     self.user_ids = user_ids.uniq unless user_ids.empty?
   end
 

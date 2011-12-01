@@ -88,14 +88,14 @@ class User < ActiveRecord::Base
   has_many :folder_permissions
   has_many :authoring_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 1']
   has_many :admin_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 2']
-  has_and_belongs_to_many :audiences, :join_table => 'audiences_recipients'
+  has_and_belongs_to_many :audiences, :finder_sql => 'SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id'
 
   def shares
-    Folder.scoped :joins => ', audiences_recipients', :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder_permissions]
+    Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder_permissions]
   end
 
   def shared_documents
-    Document.scoped :joins => ', folders, audiences_recipients', :conditions => ['audiences_recipients.audience_id = folders.audience_id and audiences_recipients.user_id = ? and folders.user_id != ? and documents.folder_id = folders.id', self.id, self.id], :include => [:owner]
+    Document.scoped :joins => ', folders', :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ? and documents.folder_id = folders.id', self.id, self.id], :include => [:owner]
   end
 
   has_many :favorites

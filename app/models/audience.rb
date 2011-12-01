@@ -28,10 +28,14 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :parent_audiences, :foreign_key => 'sub_audience_id', :association_foreign_key => 'audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
+  
+  has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => 'select distinct u.*
+    from users u
+    join sp_recipients(#{self.id}) r on u.id = r.id'
 
-  after_create {|audience| audience.refresh_recipients(:force => true)}
+  #after_create {|audience| audience.refresh_recipients(:force => true)}
 
-  def recipients(options={})
+  def recipients_manual(options={})
     refresh_recipients(options)
     options.delete(:force)
     recipients_default.scoped(options)
@@ -90,6 +94,11 @@ class Audience < ActiveRecord::Base
     name.nil? ? 'anonymous' : name
   end
 
+  def has_user?(user)
+    user_id = user.class == User ? user.id : user
+    !Audience.find_by_sql(["SELECT id FROM sp_audiences_for_user(?) where id = ?", user, self.id]).empty?
+  end
+  
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
