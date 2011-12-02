@@ -21,7 +21,6 @@ class Target < ActiveRecord::Base
   after_create :update_item_type
   after_create :save_snapshot_of_users
 
-  # A block can be used to pass custom functionality to refresh_recipients (See HAN plugin)
   def save_snapshot_of_users &block
 #    ActiveRecord::Base.connection.execute(
 #        "insert into targets_users (target_id, user_id)

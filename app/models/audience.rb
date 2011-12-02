@@ -26,20 +26,11 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :groups, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :sub_audiences, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Audience'
   has_and_belongs_to_many :parent_audiences, :foreign_key => 'sub_audience_id', :association_foreign_key => 'audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
-  has_and_belongs_to_many :recipients_default, :join_table => 'audiences_recipients', :class_name => "User", :uniq => true
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
   has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => 'select distinct u.*
     from users u
     join sp_recipients(#{self.id}) r on u.id = r.id'
-
-  #after_create {|audience| audience.refresh_recipients(:force => true)}
-
-  def recipients_manual(options={})
-    refresh_recipients(options)
-    options.delete(:force)
-    recipients_default.scoped(options)
-  end
 
   belongs_to :forum
   named_scope :with_forum, :conditions => "forum_id is not NULL"
@@ -73,23 +64,6 @@ class Audience < ActiveRecord::Base
     a
   end
 
-  # A block can be used to pass custom functionality to refresh_recipients (See HAN plugin)
-  def refresh_recipients(options = {}, &block)
-    return true unless options[:force] || self.recipients_expires.nil? || Time.now > self.recipients_expires
-    
-    self.update_attribute('recipients_expires', Time.now + 1.minute)
-    ActiveRecord::Base.transaction do
-      clear_recipients ? true : raise(ActiveRecord::Rollback)
-      (update_users_recipients ? true : raise(ActiveRecord::Rollback)) unless self.users.empty?
-      (update_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) if self.roles.empty?
-      (update_roles_recipients ? true : raise(ActiveRecord::Rollback)) if self.jurisdictions.empty?
-      (update_roles_jurisdictions_recipients ? true : raise(ActiveRecord::Rollback)) unless self.roles.empty? && self.jurisdictions.empty?
-      (update_groups_recipients ? true : raise(ActiveRecord::Rollback)) unless self.groups.empty?
-      yield if block_given?
-    end
-    return true
-  end
-
   def to_s
     name.nil? ? 'anonymous' : name
   end
@@ -104,138 +78,6 @@ class Audience < ActiveRecord::Base
     if roles.empty? & jurisdictions.empty? & users.empty?
       errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
     end
-  end
-
-  private
-  def clear_recipients
-    db = ActiveRecord::Base.connection()
-    sql = "DELETE FROM audiences_recipients WHERE audience_id = #{id}"
-
-    begin
-      db.execute sql
-    rescue
-      return false
-    end
-    true
-  end
-
-  def update_jurisdictions_recipients
-    db = ActiveRecord::Base.connection()
-    jurisdictions.each do |j|
-      sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
-      sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
-      sql += " WHERE rm.jurisdiction_id = #{j.id} AND ar.user_id IS NULL"
-
-      begin
-        db.execute sql
-      rescue
-        return false
-      end
-    end
-    true
-  end
-
-  def update_roles_recipients
-    db = ActiveRecord::Base.connection()
-    roles.each do |r|
-      sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
-      sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
-      sql += " WHERE rm.role_id = #{r.id} AND ar.user_id IS NULL"
-
-      begin
-        db.execute sql
-      rescue
-        return false
-      end
-    end
-    true
-  end
-
-  def update_roles_jurisdictions_recipients
-    db = ActiveRecord::Base.connection()
-    jurisdictions.each do |j|
-      roles.each do |r|
-        sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
-        sql += " SELECT DISTINCT #{id}, rm.user_id FROM role_memberships AS rm LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = rm.user_id AND ar.audience_id = #{id}"
-        sql += " WHERE rm.jurisdiction_id = #{j.id} AND rm.role_id = #{r.id} AND ar.user_id IS NULL"
-
-        begin
-          db.execute sql
-        rescue
-          return false
-        end
-      end
-    end
-    true
-  end
-
-  def update_users_recipients
-    # force the author to receive the alert
-    db = ActiveRecord::Base.connection()
-    target = Target.find_by_audience_id(self.id)
-    unless target.nil?
-      alert = target.item
-      unless alert.nil?
-        author_id = alert.author_id
-        if author_id
-          sql = "INSERT INTO audiences_recipients (audience_id, user_id) VALUES (#{id}, #{author_id}) "
-          begin
-            db.execute sql
-          rescue
-            return false
-          end
-        end
-      end
-    end
-
-    sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
-    sql += " SELECT DISTINCT #{id}, au.user_id FROM audiences_users AS au LEFT OUTER JOIN audiences_recipients AS ar ON ar.user_id = au.user_id AND ar.audience_id = #{id}"
-    sql += " WHERE au.audience_id = #{id} AND ar.user_id IS NULL"
-
-    begin
-      db.execute sql
-    rescue
-      return false
-    end
-    true
-  end
-
-  def update_groups_recipients
-    db = ActiveRecord::Base.connection()
-    self.groups.map(&:refresh_recipients)
-    sql = "INSERT INTO audiences_recipients (audience_id, user_id)"
-    sql += " SELECT DISTINCT #{self.id}, audiences_recipients.user_id FROM audiences_sub_audiences JOIN audiences_recipients ON audiences_sub_audiences.sub_audience_id = audiences_recipients.audience_id"
-    sql += " WHERE audiences_sub_audiences.audience_id = #{self.id}"
-    
-    begin
-      db.execute sql
-    rescue
-      return false
-    end
-    true
-  end
-
-  protected
-  def determine_primary_audience_jurisdictions  # returns an array of jurisdiction objects
-    target = Target.find_by_audience_id(self.id)
-    alert = target ? target.item : nil
-    jj = jurisdictions.map(&:id)    # ids of every specified jurisdiction
-    rr = roles.map(&:id)            # ids of every specified role
-    au = if alert && (alert.class == Alert || alert.superclass == Alert) && defined?(alert.from_jurisdiction) && alert.from_jurisdiction
-      users.map{|user| user.role_memberships.find_by_jurisdiction_id(alert.from_jurisdiction.id).nil? ? user : nil}.compact.map(&:id) # Don't include users that are in the same jurisdiction that the alert was sent from
-    else
-      users.map(&:id)
-    end
-    uu = RoleMembership.find_all_by_user_id(au).map(&:jurisdiction).map(&:id)           # ids of every jurisdiction that every manually-specified user has a role in
-
-    if ( jj.size > 0 && rr.size > 0 )
-      juris_ids = (RoleMembership.find_all_by_role_id_and_jurisdiction_id(rr,jj).map(&:jurisdiction_id) + uu).uniq   # an array of every role <-> juris association that matches plus userjuris
-    else
-      juris_ids = (RoleMembership.find_all_by_jurisdiction_id(jj).map(&:jurisdiction_id) + RoleMembership.find_all_by_role_id(rr).map(&:jurisdiction_id) + uu).uniq
-    end
-    jurs = Jurisdiction.find_all_by_id(juris_ids)
-    jurs << self.groups.map(&:determine_primary_audience_jurisdictions)
-    return jurs.flatten.uniq
   end
 
   private

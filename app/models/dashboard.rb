@@ -73,7 +73,6 @@ class Dashboard < ActiveRecord::Base
       audience = created.audiences.first
       if audience
         audience.user_ids = [author.id]
-        #audience.refresh_recipients(:force => true)
       end
     end
     created

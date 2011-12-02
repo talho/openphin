@@ -147,8 +147,6 @@ class DashboardController < ApplicationController
         Dashboard.find_all_by_application_default(true, :conditions => ["id != ?", dashboard.id]).each{|d| d.update_attributes :application_default => false } 
       end
       
-      #dashboard.dashboard_audiences.each{|da| da.audience.refresh_recipients(:force => true)}
-      
       portlet_ids << 0 if portlet_ids.empty? # fix an issue where NOT IN *empty array* was coming across as NOT IN (NULL) which was never returning anything anyway. id's are 1 indexed, so there will never be a 0 id.
       dashboard.dashboard_portlets.find(:all, :conditions => ["\"dashboards_portlets\".portlet_id NOT IN (?)", portlet_ids]).map(&:destroy)
 
