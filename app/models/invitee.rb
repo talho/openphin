@@ -31,7 +31,11 @@ class Invitee < ActiveRecord::Base
   end
 
   def is_member?
-    invitation.default_organization.members.include?(user) ? "Yes" : "No"
+    if invitation.default_organization
+      invitation.default_organization.members.include?(user) ? "Yes" : "No"
+    else
+      'N/A'
+    end
   end
 
   def to_s

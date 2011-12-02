@@ -14,17 +14,26 @@ class Report::UserAllBatchRecipe < Report::Recipe
       File.join('reports','show.html.erb')
     end
 
+    def template_directives
+      [['display_name','Name'],['email','Email Address'],['role_memberships','Roles','to_rpt']]
+    end
+
+    def current_user
+      @current_user
+    end
+
     def capture_to_db(report)
-      dataset = report.dataset
-      dataset.insert({"created_at"=>Time.now.utc})
+      @current_user = report.author
+      data_set = report.dataset
+      data_set.insert({:report=>{:created_at=>Time.now.utc}})
+      data_set.insert( {:meta=>{:template_directives=>template_directives}}.as_json )
       i = 1
       User.find_each(:batch_size=>10000) do |u|
-        doc = Hash["i",i,"display_name",u.display_name,"email",u.email,"role_memberships",
-          u.role_memberships.map(&:as_hash)]
-        dataset.insert(doc)
+        doc = {"i"=>i,"display_name"=>u.display_name,"email"=>u.email,"role_memberships"=>u.role_memberships.map(&:as_hash)}
+        data_set.insert(doc)
         i = i + 1
       end
-      dataset.create_index("i")
+      data_set.create_index("i")
     end
 
   end

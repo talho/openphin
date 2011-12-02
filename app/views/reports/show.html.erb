@@ -1,6 +1,6 @@
 <%- filtered = filters.present? ? "(FILTERED)" : "" -%>
 <%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
-  <%= content_tag(:caption, "Users #{filtered} as of #{Time.now}", :style=>"text-align:center")%>
+  <%= content_tag(:caption, "Users #{filtered} as of #{report['created_at']}", :style=>"text-align:center")%>
   <%- content_tag(:thead) do -%>
     <%- content_tag(:tr) do -%>
       <%=content_tag(:th,"Name")%>
@@ -9,7 +9,7 @@
     <%- end -%>
   <%- end -%>
   <%- content_tag(:div, :class=>"nobreak") do -%>
-	  <%- results.each_with_index do |user,i| -%>
+	  <%- entries.each_with_index do |user,i| -%>
 	    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
 	      <%= content_tag(:td, user["display_name"]) %>
 	      <%= content_tag(:td, user["email"]) %>
@@ -18,3 +18,4 @@
 	  <%- end -%>
   <%- end  -%>
 <%- end -%>
+<%= content_tag(:p,"Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}") %>

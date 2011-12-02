@@ -1,8 +1,8 @@
 class Reporters::Reporter < Struct.new(:params)
 
   class Logger  # default dummy logger
-    def info(t); end
-    def fatal(t); end
+    def info(t) end
+    def fatal(t) end
   end
 
   def perform
@@ -60,7 +60,7 @@ class Reporters::Reporter < Struct.new(:params)
         unless Pathname(template_path).absolute?
           template_path = File.join(view_path,recipe.template_path)
         end
-        recipe.generate_rendering_of_on_with  report, view, File.read(template_path), params[:filters]
+        recipe.generate_rendering report, view, File.read(template_path), params[:filters]
         logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
         ReportMailer.deliver_report_generated(report.author.email,report.name)
       rescue StandardError => e

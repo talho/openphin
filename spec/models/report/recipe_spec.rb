@@ -7,7 +7,8 @@ describe "Released" do
   before(:each) do
     User.all.map(&:destroy)
   end
-  Report::Recipe.all.each do |id|
+  Report::Recipe.all.map(&:name).grep(/Recipe$/).each do |id|
+#    puts "Testing #{id} for basic structual aspects"
     it "#{id} holds a empty helper array" do
       recipe = id.constantize
       recipe.helpers.present? == true
@@ -20,6 +21,10 @@ describe "Released" do
       recipe = id.constantize
       recipe.template_path.should match(/html\.erb$/)
     end
+    it "#{id} holds a layout path" do
+      recipe = id.constantize
+      recipe.layout_path.should be_an_instance_of String
+    end
     it "#{id} humanizes its class name" do
       recipe = id.constantize
       recipe.humanized(recipe.name).should match("Recipe")
@@ -31,14 +36,21 @@ describe "Released" do
       json.should have_key(:id)
       json[:id].should == recipe.name
     end
+  end
+
+  Report::Recipe.selectable.map(&:name).grep(/Recipe$/).each do |id|
+#    puts "Testing #{id} for data capturing operations"
     it "#{id} captures data to a file" do
-      recipe = id.constantize
       report = Factory(:report_report,:recipe=>id)
       report.dataset.should_receive(:insert).at_least(:once).with(any_args())
+      recipe = id.constantize
       recipe.capture_to_db report
     end
     it "#{id} captures data to the report as a resultset and generates the html to the report as a rendering" do
-      report = Factory(:report_report)
+#      report = Factory(:report_report)
+      current_user = Factory(:user)
+      report = current_user.reports.create!(:recipe=>id,:incomplete=>true)
+#      Reporters::Reporter.new(:report_id=>report[:id]).perform
       recipe = id.constantize
 
       recipe.capture_to_db report
@@ -47,7 +59,6 @@ describe "Released" do
       values = dataset.instance_values
       values["name"].should match /Recipe-/
       values.find().should be_an_instance_of Enumerable::Enumerator
-      report.incomplete.should be_false
 
       # Reporter does this
 #      view = ActionView::Base.new( Rails::Configuration.new.view_path )

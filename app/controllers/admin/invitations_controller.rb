@@ -4,6 +4,8 @@ class Admin::InvitationsController < ApplicationController
   before_filter :admin_required
   before_filter :force_json_as_html, :only => :import
   app_toolbar "admin"
+  include Report::CreateDataSet
+  extend ActiveSupport::Memoizable
 
   def index
     @invitations = Invitation.all
@@ -92,7 +94,36 @@ class Admin::InvitationsController < ApplicationController
       end
     end
   end
-  
+
+  def reports
+    begin
+      @invitation = Invitation.find(params[:id])
+      respond_to do |format|
+        format.html
+        format.any(:csv,:pdf) do
+          criteria = {:model=>"Invitation",:method=>:find_by_id,:params=>@invitation[:id]}
+          report = create_data_set(params[:report_id],criteria)
+          render :json => {:success => true, :report_name=> report.name}
+        end
+      end
+    rescue ActiveRecord::RecordInvalid => error
+      render :json => {:success => false, :report_name => params[:report_id], :error => error }
+    end
+  end
+
+  def recipe_types
+    recipe_names = Report::Recipe.unselectable.map(&:name).grep(/^Report::Invitation/).grep(/Recipe$/)
+    selection = recipe_names.collect{|r| { :id => r, :name_humanized => Report::Recipe.humanized(r) } }
+    respond_to do |format|
+      format.json do
+        render :json => {:success=>true, :recipes=>selection  }
+      end
+    end
+  rescue StandardError => error
+    render :json => {:success => false, :error => error}
+  end
+  memoize :recipe_types
+
   def new
     @invitation = Invitation.new
   end
@@ -167,134 +198,11 @@ class Admin::InvitationsController < ApplicationController
     end
   end
 
-  def reports
-    invitation = Invitation.find(params[:id])
-    report_options = [["By Email","by_email"], ["By Registrations","by_registrations"]]
-    report_options << ["By Organization","by_organization"] unless invitation.default_organization.nil?
-    report_options << ["By Pending Requests","by_pendingRequests"]
-    report_options << ["By Profile Update","by_profileUpdated"]
-
-    @reverse = params[:reverse] == "1" ? nil : "1"
-
-    @csv_options = { :col_sep => ',', :row_sep => :auto }
-    @output_encoding = 'LATIN1'
-    @timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
-    respond_to do |format|
-      
-      case params[:report_type]
-      when "by_profileUpdated"
-        results = inviteeStatusByProfileUpdate
-        format.html do
-          render :partial => "report_#{params[:report_type]}", 
-                 :locals => {:results => results, :report_type => params[:report_type],
-                   :invitation => invitation, :report_options => report_options}, 
-                 :layout => "application"
-        end
-        format.pdf do
-          render :partial => "report_#{params[:report_type]}", 
-                 :locals => {:results => results, :invitation => invitation}
-        end
-        format.csv do
-          @filename = "org_rpt_by_profile_update_#{@timestamp}.csv"
-          render :partial => "report_#{params[:report_type]}", 
-                 :locals => {:results => results, :invitation => invitation}
-        end
-        when "by_registrations"
-          results = inviteeStatus
-          format.html do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :report_type => params[:report_type],
-                     :invitation => invitation, :report_options => report_options}, 
-                   :layout => "application"
-          end
-          format.pdf do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-          format.csv do
-            @filename = "org_rpt_by_registration_#{@timestamp}.csv"
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-        when "by_organization"
-          results = inviteeStatusByOrganization
-          format.html do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :report_type => params[:report_type],
-                     :invitation => invitation, :report_options => report_options}, 
-                   :layout => "application"
-          end
-          format.pdf do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-          format.csv do
-            @filename = "org_rpt_by_organization_#{@timestamp}.csv"
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-        when "by_pendingRequests"
-          results = inviteeStatusByPendingRequests
-          format.html do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :report_type => params[:report_type],
-                     :invitation => invitation, :report_options => report_options}, 
-                   :layout => "application"
-          end
-          format.pdf do
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-          format.csv do
-            @filename = "org_rpt_by_pending_request_#{@timestamp}.csv"
-            render :partial => "report_#{params[:report_type]}", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-        else # Also by email
-          options = {}
-          case params[:sort]
-            when 'email'
-              options[:order] = 'invitees.email'
-            when 'name'
-              options[:order] = 'invitees.name'
-            else
-              options[:order] = 'invitees.name'
-          end
-          if params[:reverse]
-            options[:order] += ' DESC'
-          else
-            options[:order] += ' ASC'
-          end
-
-          options[:per_page] = params[:per_page] || 20
-          options[:page] = params[:page] || 1
-
-          results = invitation.invitees.paginate(options)
-
-          format.html do
-            render :partial => "report_by_email", 
-                   :locals => {:results => results, :report_type => params[:report_type],
-                     :invitation => invitation, :report_options => report_options}, 
-                   :layout => "application"
-          end
-          format.pdf do
-            render :partial => "report_by_email", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-          format.csv do
-            @filename = "org_rpt_by_email_#{@timestamp}.csv"
-            render :partial => "report_by_email", 
-                   :locals => {:results => results, :invitation => invitation}
-          end
-        end
-    end
-
-  end
-
   def destroy
   end
 
   private
+
   def paramsWithCSVInvitees
     csvfile = params[:invitation][:csvfile]
     newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
@@ -340,7 +248,7 @@ class Admin::InvitationsController < ApplicationController
                                           :joins => "LEFT JOIN users ON invitees.email = users.email",
                                           :order => "users.email_confirmed #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
-  
+
   def inviteeStatusByOrganization
     order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
     order_by = params[:sort] != nil && params[:sort] != 'organizationMembership' ? params[:sort] : 'email'
@@ -365,7 +273,7 @@ class Admin::InvitationsController < ApplicationController
     Invitee.paginate_by_invitation_id params[:id], :select => "DISTINCT invitees.*, users.updated_at > '#{invitation_time}' AS users_updated_at", :joins => "LEFT JOIN users ON invitees.email = users.email",
                                       :order => "users_updated_at #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
   end
-  
+
   def csv_download
     send_file Rails.root.join("tmp","invitee.csv"), :type=>"application/xls" 
   end

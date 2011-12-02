@@ -57,7 +57,6 @@ class Report::ReportsController < ApplicationController
     respond_to do |format|
       format.html {}
       format.json {render :json => {:success => true, :id => report[:id], :filtered_at => filters["filtered_at"]}}
-      1==1
     end
   end
 
@@ -66,12 +65,7 @@ class Report::ReportsController < ApplicationController
     begin
       unless params[:report_url]
         # capture the resultset and generate the html rendering in delayed-job
-        recipe = params[:recipe_id]
-        if params[:criteria]
-          normalize_reports_params(params[:criteria])
-          recipe = params[:criteria][:recipe]
-        end
-        report = current_user.reports.create!(:recipe=>recipe,:criteria=>params[:criteria],:incomplete=>true)
+        report = current_user.reports.create!(:recipe=>params[:recipe_id],:criteria=>params,:incomplete=>true)
         unless Rails.env == 'development'
           Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>report[:id]) )
         else
@@ -79,7 +73,7 @@ class Report::ReportsController < ApplicationController
         end
         respond_to do |format|
           format.html {}
-          format.json {render :json => {:success => true, :id => report[:id]}}
+          format.json {render :json => {:success => true, :report => {:name=>report.name}}}
         end
       else
         # copy/generate the supported format documents
@@ -88,13 +82,13 @@ class Report::ReportsController < ApplicationController
         basename = File.basename(filepath)
         case params[:document_format]
           when 'HTML': copy_to_documents File.read(filepath), basename
-          when 'PDF':  copy_to_documents WickedPdf.new.pdf_from_string(File.read(filepath)), basename.sub(/html$/,'pdf')
-          when 'CSV':  copy_to_documents html2csv(File.read(filepath)), basename.sub(/html$/,'csv')
+          when 'PDF':  copy_to_documents WickedPdf.new.pdf_from_string(File.read(filepath)), basename.sub!(/html$/,'pdf')
+          when 'CSV':  copy_to_documents data2csv(report), basename.sub!(/html$/,'csv')
           else raise "Unsupported format (#{params[:document_format]}) for file #{filepath}"
         end
         respond_to do |format|
           format.html {}
-          format.json {render :json => {:success => true, :id => report[:id]}}
+          format.json {render :json => {:success => true, :report =>{:file=>{:name=>basename}}}}
         end
       end
     rescue StandardError => error
@@ -185,6 +179,40 @@ class Report::ReportsController < ApplicationController
       end
     end
     data.collect{|ele|ele.sub(/, $/,"")}.join("\n")
+  end
+
+  def data2csv(report)
+    # uses the view helpers just as the html templates would
+    begin
+      meta = report.dataset.find({:meta=>{:$exists=>true}}).first["meta"]
+      raise "Report #{report.name} is missing meta component" unless meta
+#     ex: [['name','Name'],['email','Email Address'],['role_requests','Pending Role Requests','to_rpt']]
+      directives = meta["template_directives"]
+      raise "Report #{report.name} is missing column directives" unless directives
+    # setup supporting view
+      helper_expected = directives.detect{|e| e.size > 2}
+      if helper_expected
+        view = ActionView::Base.new
+        recipe = report.recipe.constantize
+        helpers = recipe.respond_to?(:helpers) ? (recipe.helpers || []) : []
+        helpers.each {|h| view.extend(h.constantize)}
+      end
+    # generate csv
+      headers = directives.collect{|col| col.first}
+      raise "Report #{report.name} has malformed the csv header" unless headers.kind_of? Array
+      entries = report.dataset.find(:i=>{:$exists=>true})
+      FasterCSV.generate(:force_quotes=>true,:headers=>headers,:write_headers=>true) do |row|
+        entries.each do |entry|
+          rr = directives.inject([]) do |memo,column|
+            memo << ( (column.size > 2) ? view.send(column[2],entry[column[0]]) : entry[column[0]] )
+          end
+          row << rr
+        end
+      end
+    rescue StandardError => error
+      debugger
+      raise error
+    end
   end
 
 end

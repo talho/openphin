@@ -136,14 +136,14 @@ Scenario: Initiate the viewing of a report contents
     Then the "Render size" grid header is sorted descending
 
   When reports derived from the following recipes and authored by exist:
-    | UserFirstHundredRecipe | dall.md@example.com |
-    | UserAllRecipe          | dall.md@example.com |
-    | UserAllRecipe          | dall.md@example.com |
-    | UserFirstHundredRecipe | dall.md@example.com |
-    | UserAllRecipe          | dall.md@example.com |
-    | UserAllRecipe          | dall.md@example.com |
-    | UserAllRecipe          | dall.md@example.com |
-    | UserFirstHundredRecipe | dall.md@example.com |
+    | UserAllBatchRecipe               | dall.md@example.com |
+    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | UserAllBatchRecipe               | dall.md@example.com |
+    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | HanAlertLogRecipe                | dall.md@example.com |
+    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | HanAlertLogRecipe                | dall.md@example.com |
   And I close the active tab
   And I navigate to "Reports"
   Then I should see "Displaying results 1 - 10 of 11"

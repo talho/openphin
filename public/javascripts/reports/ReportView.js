@@ -40,23 +40,9 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
       padding: '0',
       items: [{autoLoad:{url: this.url},autoScroll: true}],
       tbar: new Ext.Toolbar( { items: [
-        {xtype: 'tbtext', text: 'Please place a copy in MyDocuments as: '},
-        {xtype: 'button', text: 'HTML', scope: this, handler: function(button,event){ this.createDocument(button); } },
-        {xtype: 'button', text: 'PDF', scope: this, handler: function(button,event){ this.createDocument(button); } },
-        {xtype: 'button', text: 'CSV', scope: this, handler: function(button,event){ this.createDocument(button); } }
+        {xtype: 'button', text: 'Copy', iconCls: 'reportFile', scope: this, handler: function(){ this.copy_report(); } }
       ] } )
 	});
-
-    this.createDocument = function(button) {
-      Ext.Ajax.request({
-         url: '/report/reports.json',
-         method: 'POST',
-         scope:  this,
-         params: { 'document_format': button.text, 'report_url': this.url },
-         success: function(){},
-         failure: function(){this.mask("Server error.  Please try again.");}
-      });
-    };
 
     this.primary_panel = new Ext.Panel({
       layout:'border',
@@ -93,6 +79,67 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
         failure: function(){ this.mask("Server error.  Please try again.");  }
       });
     };
+
+    this.copy_request = function(button) {
+      Ext.Ajax.request({
+         url: '/report/reports.json',
+         method: 'POST',
+         scope:  this,
+         params: { 'document_format': button.text, 'report_url': this.url },
+         success: function(){},
+         failure: function(){this.mask("Server error.  Please try again.");}
+      });
+    };
+
+  },
+
+  copy_report: function(){
+    var win = new Ext.Window({
+      title: "Copy To Documents",
+      padding: '10',
+      width: 450,
+      modal: true,
+      items: [
+        {xtype: 'form',
+        itemId: 'format-form',
+        items: [
+            {xtype: 'radio', boxLabel: 'HTML Copy', name: 'document_format', inputValue: 'HTML', checked: true, hideLabel: true},
+            {xtype: 'radio', boxLabel: 'PDF Copy', name: 'document_format', inputValue: 'PDF', hideLabel: true},
+            {xtype: 'radio', boxLabel: 'CSV Copy', name: 'document_format', inputValue: 'CSV', hideLabel: true}
+        ]},
+        {xtype: 'displayfield', itemId: 'document-display', value: ''}
+      ],
+      buttons: [
+        {text: 'Copy', itemId: 'ok-to-copy', scope: this, width:'auto',
+          handler: function(){
+            var form = win.getComponent('format-form').getForm();
+            var document_format = form.getValues()['document_format'];
+            form.submit({
+              url: '/report/reports.json',
+              method: 'POST',
+              scope: this,
+              waitMsg: 'Copy is being scheduled...',
+              params: { 'document_format': document_format, 'report_url': this.url },
+              success: function(form,responseObj){
+                var footer = win.getFooterToolbar();
+                footer.getComponent('ok-to-copy').hide();
+                footer.getComponent('cancel').setText('OK');
+                var response = Ext.decode(responseObj.response.responseText);
+                win.getComponent('document-display').setValue(this.report_msg(response.report.file['name']));
+              },
+              failure: function(form,responseObj){}
+            });
+          }
+        },
+        {text: 'Cancel', itemId: 'cancel', scope: this, width:'auto', handler: function(){ win.close(); } }
+      ]
+    });
+    win.show();
+  },
+
+  report_msg: function(report_name, opts) {
+    return '<br>Copying of <b>' + report_name + '</b><br><br>' +
+      '<div style="height:40px;">' + 'has been scheduled. Please check your Reports document folder for this file.' + '<\div>';
   },
 
   updateReportView: function() {

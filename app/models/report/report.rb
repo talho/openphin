@@ -10,23 +10,22 @@ class Report::Report < ActiveRecord::Base
   has_many   :filters
   has_one    :dataset
 
-  has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
-  
-  validates_presence_of     :author
-  validates_format_of :recipe, :with => /Report::([A-Z][a-z]+)*Recipe/, :message => "Only recipe names allowed"
-  validates_inclusion_of    :incomplete, :in => [false,true]
-
   named_scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
   named_scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
   named_scope :complete, :conditions => ['incomplete = ?', false]
 
-  public
+  has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
+  
+  validates_presence_of     :author
+  validates_inclusion_of    :incomplete, :in => [false,true]
+
+  def validate_on_create
+    errors.add_to_base "#{recipe} is not found on the system" unless Report::Recipe.all.map(&:name).include? recipe
+  end
 
   def dataset
     @collection ||= REPORT_DB.collection(name)
   end
-
-  JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
   def as_json(options={})
     json_columns = JSON_COLUMNS.map(&:to_sym)
@@ -42,6 +41,10 @@ class Report::Report < ActiveRecord::Base
   def after_create
     update_attribute(:name,"#{recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-')}#{id}")
   end
+
+private
+
+  JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
   def before_destroy
     dataset.drop

@@ -54,6 +54,7 @@ group :default do
   gem 'savon', '0.9.7'
   gem 'httpi', :git => 'git://github.com/talho/httpi.git'
   gem "httpclient", :git => 'git://github.com/talho/httpclient.git'
+  gem "fake_arel", '0.9.9'
 end
 
 group :development do
