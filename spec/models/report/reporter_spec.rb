@@ -2,6 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Reporters::Reporter do
   before(:each) do
+    User.all.map(&:destroy)
     @current_user = Factory(:user)
     @recipe = Report::Recipe.find("Report::UserAllWithinJurisdictionsRecipe")
     ActionMailer::Base.delivery_method = :test
@@ -34,29 +35,8 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report[:id]).perform
     end
     it "on a non-existent recipe" do
-      report = @current_user.reports.complete.create(:recipe=>"Report::CocktailRecipe",:incomplete=>true)
-      REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}" started.)
-      REPORT_LOGGER.should_receive(:info).with %Q(Report "#{report.name}", Author is #{report.author.display_name})
-      message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
-      REPORT_LOGGER.should_receive(:fatal).with message
-#      message_params = {:email=>report.author.email,:report_name=>report.name,:exception_message=>message}
-      ReportMailer.should_receive(:deliver_report_error).with(report.author.email, report.name, message)
-      Reporters::Reporter.new(:report_id=>report[:id]).perform
-    end
-  end
-
-  context "succeed" do
-    it "at building the supporting view" do
-      pending "is verified at base recipe internals test"
-    end
-    it "at capturing the report data" do
-      pending "is verified at base recipe internals test"
-    end
-    it "at generating the html renderings" do
-      pending "is verified at base recipe internals test"
-    end
-    it "at marking the report complete" do
-      pending "is verified at the base recipe internals test"
+      report = @current_user.reports.create(:recipe=>"Report::CocktailRecipe",:incomplete=>true)
+      report.should_not be_valid
     end
   end
 

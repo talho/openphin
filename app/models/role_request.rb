@@ -71,7 +71,11 @@ class RoleRequest < ActiveRecord::Base
     user_name + ' for ' + role_name + ' in ' + jur_name
   end
 
-private
+  def as_hash
+    {"role"=>role.name,"jurisdiction"=>jurisdiction.name}
+  end
+
+  private
 
   def auto_approve_if_public_role
     approve!(user) unless role.approval_required?

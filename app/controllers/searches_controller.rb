@@ -62,7 +62,7 @@ class SearchesController < ApplicationController
        @results.compact!  # it is possible for sphinx to return nil elements in this array
        render :json => { 'success' => true,
                          'results' => @results.collect {|u| u.to_json_results(current_user.is_admin?)},
-                         'total' => @results.total_entries}
+                         'total' => (total = @results.total_entries) > 1000 ? 1000 : total } # set to sphinx config max
      end
    end
   end

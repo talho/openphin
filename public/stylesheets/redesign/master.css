@@ -129,6 +129,10 @@ body{
   background-image: url(/stylesheets/images/page_edit.png) !important;
   background-position: center;
 }
+.reportFile{
+  background-image: url(/stylesheets/images/file.gif) !important;
+  background-position: center;
+}
 .overflow-visible {
   overflow: visible;
 }

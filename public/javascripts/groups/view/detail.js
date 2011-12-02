@@ -21,7 +21,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
         new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel', hideLabel: true, anchor: '100%', height: 400})
       ],
       buttons: [
-        {xtype: 'button', text:'Create Report', scope: this, handler: function(button){this.handle_create_report(button);}},
+        {xtype: 'button', text:'Create Report', scope: this, handler: function(button){this.create_report(button);}},
         {xtype: 'button', text: 'Back to Groups', scope: this, handler: function(){this.fireEvent('back');}}
       ]
     });
@@ -42,7 +42,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
     Talho.Groups.View.Detail.superclass.initComponent.apply(this, arguments);
   },
 
-  handle_create_report:function(button){
+  create_report_old:function(button){
     button.disable();
     Ext.Ajax.request({
       url: '/admin_groups/' + this.group_id + '.pdf',
@@ -54,6 +54,27 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
         button.enable();
       },
       scope: this
+    });
+  },
+
+//  criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
+//  report = create_data_set("Report::GroupWithRecipientsRecipeInternal",criteria)
+
+  create_report: function(button){
+    button.disable();
+    var criteria = {'recipe': 'Report::GroupWithRecipientsRecipe', 'model': 'Group', 'method': 'find_by_id', 'params': this.group_id};
+    Ext.Ajax.request({
+      url: '/report/reports.json',
+      method: 'POST',
+      params: Ext.encode({'criteria': criteria}),
+      headers: {"Content-Type":"application/json","Accept":"application/json"},
+      scope:  this,
+      success: function(responseObj, options){
+        var response = Ext.decode(responseObj.responseText);
+        this.report_msg(response.report['name']);
+        button.enable();
+      },
+      failure: function(){this.ajax_err_cb();}
     });
   },
 

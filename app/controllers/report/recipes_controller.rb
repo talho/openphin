@@ -6,13 +6,13 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes
 	# GET /report/recipes.json
 	def index
-    @recipes = Report::Recipe.all
+    recipes = Report::Recipe.selectable
+    recipe_names = recipes.map(&:name).grep(/Recipe$/)
     respond_to do |format|
      format.html
      format.json do
        ActiveRecord::Base.include_root_in_json = false
-       render :json => { "recipes"=> @recipes.collect{|r| { :id => r, :name_humanized => humanized(r) } }  }
-#     all.each { |sub| json << {:name=>sub.name,:name_humanized=>humanized(sub.name)} }
+       render :json => { "recipes"=> recipe_names.collect{|r| { :id => r, :name_humanized => humanized(r) } }  }
      end
     end
   end

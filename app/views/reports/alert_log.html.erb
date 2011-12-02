@@ -1,6 +1,6 @@
 <%- filtered = filters.present? ? "(FILTERED)" : "" -%>
 <%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
-  <%= content_tag(:caption, "Alerts #{filtered} as of #{Time.now}", :style=>"text-align:center")%>
+  <%= content_tag(:caption, "Alerts #{filtered} as of #{report['created_at']}", :style=>"text-align:center")%>
   <%- content_tag(:thead) do -%>
     <%- content_tag(:tr) do -%>
       <%=content_tag(:th,"Identifier")%>
@@ -13,11 +13,9 @@
       <%=content_tag(:th,"Sensitive")%>
       <%=content_tag(:th,"Delivery Time")%>
       <%=content_tag(:th,"Cross-Jurisdictional")%>
-      <%# Total Recipients %>
-      <%#  Methods %>
     <%- end -%>
   <%- end -%>
-  <%- results.each_with_index do |r,i| -%>
+  <%- entries.each_with_index do |r,i| -%>
     <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd report-data-first" : "Even report-data-first"}") do -%>
       <%= content_tag(:td, r["identifier"]) %>
       <%= content_tag(:td, r["title"]) %>
@@ -40,3 +38,4 @@
     <%- end -%>
   <%- end -%>
 <%- end -%>
+<%= content_tag(:p,"Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}") %>

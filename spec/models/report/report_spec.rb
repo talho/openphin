@@ -2,16 +2,16 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Report::Report do
 
+  id = Report::Recipe.selectable.map(&:name).grep(/Recipe$/).first
+
   context "can" do
     it "associate with author and recipe" do
-      report = Factory(:report_report)
+      report = Factory(:report_report,:recipe=>id)
       report.author.should be_an_instance_of User
-#      report.audience.should be_an_instance_of Audience
-#      report.audience.users.should have(1).user
       report.author.last_name.should match(/FactoryUser.*/)
     end
     it "form the recipe's json for the gui" do
-      report = Factory(:report_report)
+      report = Factory(:report_report,:recipe=>id)
       json = report.as_json
       json.should be_kind_of(Hash)
       json.should have_key("id")
@@ -19,4 +19,16 @@ describe Report::Report do
     end
   end
 
+  context "can not" do
+    it "create a report with using a non-existent recipe" do
+#      report = Factory(:report_report,:recipe=>"Report::MartiniRecipe")
+      @current_user = Factory(:user)
+      report = @current_user.reports.create(:recipe=>"Report::MartiniRecipe",:incomplete=>true)
+      report[:id].should be_nil
+    end
+  end
+
+
 end
+
+

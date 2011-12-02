@@ -33,4 +33,14 @@ class Group < Audience
    scope + ': ' + name
   end
 
+  def as_report(options={})
+    only = [:name,:scope]
+    json = as_json(:only => only)
+    json["jurisdictions"] = jurisdictions.map(&:name)
+    json["roles"] = roles.map(&:name)
+    json["owner_jurisdiction"] = owner_jurisdiction.name || ''
+    options[:inject].each {|key,value| json[key] = value} if options[:inject]
+    json
+  end
+
 end

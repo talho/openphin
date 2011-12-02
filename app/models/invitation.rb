@@ -76,4 +76,15 @@ class Invitation < ActiveRecord::Base
   end
 
   handle_asynchronously :deliver
+
+  def as_report(options={})
+    hidden = [:created_at,:updated_at,:lock_version,:author_id,:organization_id]
+    json_columns = attributes.keys.map(&:to_sym) - hidden
+    json = as_json(:only => json_columns)
+    json["author"] = author.name
+    json["default_organization"] = default_organization.name
+    options[:inject].each {|key,value| json[key] = value} if options[:inject]
+    json
+  end
+
 end

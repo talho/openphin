@@ -17,8 +17,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organization_assignments, :controller => "admin/organization_assignments"
   map.resources :admin_pending_requests, :controller => "admin/pending_requests"
   map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
+  map.recipe_types_admin_invitation "admin_invitations/recipe_types.:format", :controller => "admin/invitations", :action => "recipe_types", :conditions=>{:method=>:get}
   map.resources :admin_invitations, :controller => "admin/invitations", :member => [:download], :collection => {:import => [:post]}
-  map.reports_admin_invitation "admin_invitations/:id/reports.:format", :controller => "admin/invitations", :action => "reports", :method => [:get,:put]
   map.resources :admin_organization_requests, :member => [:approve, :deny], :controller => "admin/organization_requests"
   map.resources :admin_organization_membership_requests, :member => [:approve, :deny], :controller => "admin/organization_membership_requests"
   map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete
