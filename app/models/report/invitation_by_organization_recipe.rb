@@ -35,7 +35,7 @@ class Report::InvitationByOrganizationRecipe < Report::Recipe
          rendering = view.render(
            :inline=>template,:type=>'html',
            :locals=>{:report=>invitation,:entries=>@entries,:directives=>template_directives,:filters=>filters},
-           :layout=>"reports/layouts/report")
+           :layout=>layout_path)
          f.write(rendering)
        end
        report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )

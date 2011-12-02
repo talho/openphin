@@ -21,6 +21,10 @@ describe "Released" do
       recipe = id.constantize
       recipe.template_path.should match(/html\.erb$/)
     end
+    it "#{id} holds a layout path" do
+      recipe = id.constantize
+      recipe.layout_path.should be_an_instance_of String
+    end
     it "#{id} humanizes its class name" do
       recipe = id.constantize
       recipe.humanized(recipe.name).should match("Recipe")

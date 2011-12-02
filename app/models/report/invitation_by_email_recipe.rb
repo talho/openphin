@@ -41,7 +41,7 @@ class Report::InvitationByEmailRecipe < Report::Recipe
               :directives=>meta["template_directives"],
               :stats=>meta["stats"],
               :filters=>filters},
-           :layout=>"reports/layouts/report")
+           :layout=>layout_path)
          f.write(rendering)
        end
        report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )
