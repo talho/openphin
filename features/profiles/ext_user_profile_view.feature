@@ -141,8 +141,9 @@ Scenario: User with a non-public, non-admin role viewing a private profile
 Scenario: Admin viewing a subordinate public profile
   Given pott.pub@example.com has a public profile
   And I am logged in as "pott.admin@example.com"
+  When I wait for the "Loading PHIN..." mask to go away
   And I view the ext profile page for "pott.pub@example.com"
-   Then I should see:
+  Then I should see:
    | Potter Public                         |
    | pott.pub@example.com                  |
    | Public in Potter County               |
