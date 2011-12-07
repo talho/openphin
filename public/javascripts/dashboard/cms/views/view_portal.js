@@ -3,7 +3,7 @@ Ext.ns("Talho.Dashboard.CMS.Views");
 Talho.Dashboard.CMS.Views.ViewPortal = Ext.extend(Ext.ux.Portal, {
   columnCount: 3,
   buttonAlign: 'left',
-  padding: '5px',
+  padding: '0px 5px',
   loadPortlets: function(data){
     this.removeAll();
     if(!data.config){
