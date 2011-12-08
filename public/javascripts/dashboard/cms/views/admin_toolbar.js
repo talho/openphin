@@ -58,7 +58,8 @@ Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
     var menu = new Ext.menu.Menu({
       plain: true,
       items: [
-        {text: 'HTML', scope: this, handler: function(){this.fireEvent('addportlet', 'html');}}
+        {text: 'HTML', scope: this, handler: function(){this.fireEvent('addportlet', 'html');}},
+        {text: 'PHIN-aware HTML', scope: this, handler: function(){this.fireEvent('addportlet', 'phin');}}
       ]
     });
     menu.show(btn.getEl());

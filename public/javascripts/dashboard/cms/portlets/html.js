@@ -1,17 +1,7 @@
-Ext.namespace('Talho');
-Ext.namespace('Talho.Dashboard');
 Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
-  fields: {
-    //border: true,
-    column: true,
-    data: true,
-    //headerCssClass: true,
-    itemId: true,
-    //ownerCt: true,
-    xtype: true
-  },
+  fields: ['data'],
 
   constructor: function(config) {
     if(config.html) {
@@ -19,73 +9,56 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
       if(config.data.html === undefined) config.data.html = config.html;
       delete config.html;
     }
-
-    this.tools.unshift({
-      id:'gear',
-      qtip: 'Edit',
-      handler: function(event, toolEl, panel, tc){
-        var htmleditor = new Ext.form.HtmlEditor({
-          linksInNewWindow: true,
-          name: 'htmlportlet',
-          fieldLabel: 'Edit HTML Portlet',
-          html: panel.el.child('.x-portlet-html').dom.innerHTML,
-          enableSourceEdit: true,
-          width: 680,
-          height: 510
-        });
-
-        var window = new Ext.Window({
-          layout: 'fit',
-          title: 'Edit HTML Portlet',
-          cls: 'html-portlet-window',
-          constrain: true,
-          modal: true,
-          style: {
-            opacity: 100
-          },
-          headerCfg: {
-            style: {
-              valign: 'middle',
-              padding: 3,
-              opacity: 100
-            }
-          },
-          items: [htmleditor],
-          buttons: ['->',{
-            text: 'OK',
-            handler: function() {
-              panel.el.child('.x-portlet-html').update(htmleditor.getRawValue());
-              window.close();
-            }
-          },{
-            text: 'Cancel',
-            handler: function() {
-              window.close();
-            }
-          }],
-          tools: [{
-            id:'help'
-          }]
-        });
-        window.show();
-      }
-    });
     
-
-    Ext.apply(this, config);
-    Talho.Dashboard.Portlet.HTML.superclass.constructor.call(this);
-
-    this.initialConfig = config;
+    Talho.Dashboard.Portlet.HTML.superclass.constructor.apply(this, arguments);
   },
   
-  initComponent: function(config) {
-    Ext.apply(this, config);
+  initComponent: function() {
     this.tpl = new Ext.XTemplate('<div id="{[Ext.id()]}" class="x-portlet-html">{html}</div>')
-    Talho.Dashboard.Portlet.HTML.superclass.initComponent.call(this, config);
+    Talho.Dashboard.Portlet.HTML.superclass.initComponent.apply(this, arguments);
+  },
+  
+  showEditWindow: function(){
+    var htmleditor = new Ext.form.HtmlEditor({
+      linksInNewWindow: true,
+      name: 'htmlportlet',
+      region: 'center',
+      html: this.getEl().child('.x-portlet-html').dom.innerHTML,
+      enableSourceEdit: true
+    });
+
+    var win = new Ext.Window({
+      layout: 'border',
+      width: 680,
+      height: 510,
+      title: 'Edit HTML Portlet',
+      cls: 'html-portlet-window',
+      constrain: true,
+      modal: true,
+      items: [{xtype: 'container', region: 'north', itemId: 'otherFields', layout: 'form', style: {padding: '5px'}, height: 35, items: [
+        {xtype: 'textfield', fieldLabel: 'Title', itemId: 'titleField', value: this.title, anchor: '100%'}
+      ]}, htmleditor],
+      buttons: [{
+        text: 'OK',
+        scope: this,
+        handler: function() {
+          this.getEl().child('.x-portlet-html').update(htmleditor.getRawValue());
+          this.setTitle(win.getComponent('otherFields').getComponent('titleField').getValue());
+          win.close();
+        }
+      },{
+        text: 'Cancel',
+        handler: function() {
+          win.close();
+        }
+      }]
+    });
+    
+    win.show();
   },
 
   isModified: function() {
-    return this.itemId == undefined || this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML
+    return this.itemId == undefined || this.initialConfig["column"] != this.column || this.initialConfig["data"]["html"] != this.el.child('.x-portlet-html').dom.innerHTML || this.initialConfig["title"] != this.title
   },
 
   revert: function() {
@@ -100,9 +73,10 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   buildConfig: function() {
     var config = {};
     config["column"] = this.column;
-    config["xtype"] = "dashboardhtmlportlet";
+    config["xtype"] = this.constructor.xtype;
     config["itemId"] = this.itemId;
     config["html"] = this.el.child('.x-portlet-html').dom.innerHTML;
+    config["title"] = this.title;
     return config;
   },
 

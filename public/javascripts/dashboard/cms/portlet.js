@@ -1,33 +1,35 @@
-Ext.namespace('Talho');
-Ext.namespace('Talho.Dashboard');
 Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   // Used to restrict which properties can be used when creating a portlet from the json data
-  fields: {
-    //border: true,
-    column: true,
-    //headerCssClass: true,
-    itemId: true,
-    //ownerCt: true,
-    xtype: true
-  },
+  fields: ['title', 'column', 'itemId', 'xtype'],
 
   constructor: function(config) {
-    approvedConfig = {}
-    for(var property in config) {
-      if(property in this.fields && this.fields[property])
-      approvedConfig[property] = config[property];
+    var approvedConfig = {},
+        superclass = this.constructor.superclass;
+    while(superclass && superclass.fields){
+      this.fields = Ext.unique(this.fields.concat(superclass.fields || []));
+      superclass = superclass.constructor.superclass;
     }
-
-    Ext.apply(this, approvedConfig);
-    Talho.Dashboard.Portlet.superclass.constructor.call(this);
+    Ext.copyTo(approvedConfig, config, this.fields);
+    Talho.Dashboard.Portlet.superclass.constructor.call(this, approvedConfig);
   },
 
   initComponent: function(config) {
+    this.tools = [
+      { id:'gear', qtip: 'Edit', handler: this.showEditWindow, scope: this},
+      { id:'close', handler: function(e, target, panel){ panel.ownerCt.remove(panel, true); } }
+    ];
     Ext.ux.Portlet.superclass.initComponent.call(this);
+    this.on('afterrender', function(){
+      this.dd.lock();
+    }, this);
   },
-
+  
+  showEditWindow: function(){
+    
+  },
+  
   isModified: function() {
     return true;
   },
@@ -40,27 +42,20 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
     return {};
   },
 
-  border: false,
+  border: true,
   header: true,
-  frame: false,
-  closable: false,
-  collapsible : false,
-  draggable : true,
-  headerCssClass: 'x-hide-display',
-  cls: '',
-  tools: [{
-    id:'close',
-    handler: function(e, target, panel){
-      panel.ownerCt.remove(panel, true);
-    }
-  }],
+  frame: true,
+  collapsible: false,
+  cls: 'portlet user-mode',
   
   toggleAdminBorder: function(){
-      var el = this.getEl(),
-          panel = el.child('.x-panel-body');
-      el.toggleClass('x-panel-noborder').toggleClass('portlet-admin');
-      el.child('.x-panel-header').toggleClass('x-hide-display');
-      panel.toggleClass('x-panel-body-noborder').setWidth(el.getWidth());
+      this.getEl().toggleClass('user-mode').toggleClass('admin-mode');
+      if(this.dd.locked){
+        this.dd.unlock();
+      }
+      else{
+        this.dd.lock();
+      }
   }
 });
 
