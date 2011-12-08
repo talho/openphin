@@ -35,14 +35,14 @@ Feature: Dashboard Administration
     Then I should see "Edit Dashboards"
     When I press "Edit Dashboards"
     Then the "Edit Dashboards" tab should be open
-    Then I should see "Welcome to openPHIN" within ".portlet-admin"
+    Then I should see "Welcome to openPHIN" within ".portlet"
 
   Scenario: Admin cannot edit default dashboard
     Given I am logged in as "bartleby@example.com"
     Then I should see "Edit Dashboards"
     When I press "Edit Dashboards"
     Then the "Edit Dashboards" tab should be open
-     And I should not see "Welcome to openPHIN" within ".portlet-admin"
+     And I should not see "Welcome to openPHIN" within ".portlet"
 
   Scenario: Creating new dashboard
     Given I am logged in as "bartleby@example.com"
@@ -61,7 +61,7 @@ Feature: Dashboard Administration
      And I press "Create"
     When I press "Add Portlet"
      And I click x-menu-item "HTML"
-    Then I should see "HTML Portlet" within ".portlet-admin"
+    Then I should see "HTML Portlet" within ".portlet"
     When I click x-tool-gear ""
      And I fill in the htmleditor "htmlportlet" with "My Dashboard Element"
      And I press "OK"
@@ -85,7 +85,7 @@ Feature: Dashboard Administration
     Then the "Open Dashboard" window should be open
     When I select the "My Dashboard" grid row
      And I press "Open" within ".cms-open-dash-window"
-    Then I should see "This is a custom dashboard" within ".portlet-admin"
+    Then I should see "This is a custom dashboard" within ".portlet"
 
   Scenario: Deleting a dashboard
     Given the following dashboard exists:
@@ -120,10 +120,10 @@ Feature: Dashboard Administration
       | xtype  | dashboardhtmlportlet                      |
       | config | {html: "<h1>second welcome portlet</h1>"} |
     When I edit a dashboard as "atticus@example.com"
-     And I click x-tool-close "" within ".portlet-admin"
+     And I click x-tool-close "" within ".portlet"
      And I press "Save"
     Then "Application Default" should not have a portlet with "Welcome to openPHIN"
-     And I click x-tool-close "" within ".portlet-admin"
+     And I click x-tool-close "" within ".portlet"
      And I press "Save"
     Then "Application Default" should not have a portlet with "second welcome portlet"
 
@@ -204,10 +204,10 @@ Feature: Dashboard Administration
 
   Scenario: Switching to and from preview mode
     When I edit a dashboard as "atticus@example.com"
-     And I press "Preview"
-    Then I should not see "HTML Portlet"
+    And I press "Preview"
+    Then I should see "HTML Portlet" within ".user-mode"
     When I press "Edit View"
-    Then I should see "HTML Portlet"
+    Then I should see "HTML Portlet" within ".admin-mode"
 
   Scenario: Giving viewer privilege to dashboard
     Given the following dashboard exists:
@@ -265,7 +265,7 @@ Feature: Dashboard Administration
     When I am logged in as "bartleby@example.com"
     Then I should see "other dashboard this is"
     When I press "Edit Dashboards"
-     And I should see "other dashboard this is" within ".portlet-admin"
+     And I should see "other dashboard this is" within ".portlet"
 
   Scenario: Setting a default dashboard on another user
     Given the following dashboard exists:

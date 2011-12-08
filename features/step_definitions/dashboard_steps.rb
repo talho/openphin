@@ -68,7 +68,7 @@ end
 
 When /^I move the "([^\"]*)" portlet to position ([0-9]) in column ([1-4])$/ do |portlet_content, pos, col|
   # find the portlet using capybara finder
-  portlet = page.find('.portlet-admin', :text => portlet_content)
+  portlet = page.find('.portlet', :text => portlet_content)
 
   # now use JS to fire a node drop
   begin
