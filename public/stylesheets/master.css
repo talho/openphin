@@ -13,7 +13,7 @@ h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}abbr,acronym{border-bottom:1px dotted
  * REDECLARATIONS
  */
 html 																				      	{height:100%; background:#fff; margin-bottom:1px;} /* force scrollbar */
-body																				      	{height:100%; overflow:hidden; background:#fff; font-size:13px; min-height:100%; color:#666; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
+body																				      	{height:100%; background:#fff; font-size:13px; min-height:100%; color:#666; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
 a:link, a:visited														      	{color:#039AC5; text-decoration:none;}
 a:hover																				      {text-decoration:underline;}
 strong																				      {color:#333;}
@@ -37,9 +37,9 @@ table td 																			      {padding:5px 20px 5px 0;}
 #current_user																	      {height:24px; text-align:right; color:#fff; line-height:24px; font-size:11px; padding:0 10px;}
 #current_user a																      {color:#fff;}
 #current_user > .info														      {float:left;}
-#content																			      {/*padding:15px 25px 1px;*/padding:15px 0px 1px; width:650px; float:left;}
+#content																			      {padding:15px 0px 1px; width:650px; margin:0px auto;}
 
-#application                                        {position:absolute; top:0; bottom:31px; left:0; right:0; overflow:auto;}
+#application                                        {position:absolute; top:0; left:0; right:0; overflow:auto;}
 .ie7 div#application                                {overflow-y:auto;overflow-x:hidden;}
 #portal_toolbar                                     {height:32px; background:url(images/app_header.png) repeat-x; line-height:32px;}
 #portal_toolbar ul.actions                          {float:right; margin:0 20px 0 0;padding:0 0 0 0; font-weight:normal; display:inline;}
@@ -127,7 +127,7 @@ div.help a                                          {color:#fff}
 #news_articles p.less a,
 #news_articles p.article_link a                     {float: right;}
 
-#feature 																			      {width:680px; height:260px; margin:20px -15px 20px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
+#feature 																			      {width:650px; height:260px; margin:20px 0px; text-indent:-9999px; overflow:hidden; background:url(images/home_graphic.png) no-repeat;}
 #content p																		      {margin:0 0 15px; line-height:1.6;}
 #content > .han_alert                                   {float: left;}
 #content div.details													      {width:410px; float:left;}
@@ -417,7 +417,7 @@ table#groups td.sortby                              {border: none;}
 table#groups td.editdestroy                         {border: none;}
 
 /* Alerts and notifications */
-div.flash                                           {margin: .8em .8em .4em;}
+/*div.flash                                           {margin: .8em .8em .4em;}*/
 p.completed, p.error, p.notice, p.instructions      {font-size: 12px;padding: .8em;margin-top: 0px;border: 2px solid #ddd;}
 p.completed                                         {background: #E6EFC2; color: #264409; border-color: #C6D880; }
 p.error                                             {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
@@ -463,46 +463,6 @@ table.search                                        {border: 1px solid;}
 table.search tr                                     {border: 1px solid;}
 table.search td                                     {border: 1px solid; padding-left: 5px;}
 
-/*TEMP HURRICANECLOCK START */
-
-.topheader{
-background-color:red;
-color:white;
-font: bold 60px tahoma,arial,verdana,sans-serif;
-padding: 4px;
-border:solid 5px;
-border-top-color:#283f5a;
-border-right-color:#304257;
-border-left-color:#385d8a;
-border-bottom-color:#6299dd;
-}
-
-.jeffstyle{
-background-color:white;
-color:red;
-font: bold 14px tahoma,arial,verdana,sans-serif;
-padding: 5px;
-border:solid 5px;
-border-top-color:#283f5a;
-border-right-color:#304257;
-border-left-color:#385d8a;
-border-bottom-color:#6299dd;
-}
-
-
-.jeffstyle2{
-color:black;
-font: bold 14px arial,verdana,sans-serif;
-padding: 0px;
-}
-
-.jeffstyle3{
-color:red;
-font: bold 30px arial,verdana,sans-serif;
-padding: 0px;
-}
-/* TEMP HURRICANECLOCK END */
-
 /*Three Column Layout Declaration */
 
 .middle_column {float:left;width:30%;margin-left:50px;}
@@ -516,5 +476,4 @@ clear:right;
 margin:0px 20px 0px 0px;
 width: 25%;
 }
-
 /* Three Column Layout End */

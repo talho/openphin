@@ -1,46 +1,54 @@
-<%= f.error_messages %>
-<%= f.label(:first_name, "First Name *") %><br/>
-<%= f.text_field(:first_name) %><br/>
-<%= f.label(:last_name, "Last Name *") %><br/>
-<%= f.text_field(:last_name) %><br/>
-<%= f.label(:display_name, "Preferred name to be displayed") %><br/>
-<%= f.text_field(:display_name) %><br/>
-<%= f.label(:email, "Email address *") %><br/>
-<%= f.text_field(:email) %><br/>
-<%= f.label :password, "Password *" %><b> (6 chars minimum with no special characters, at least 1 digit and at least 1 capital letter.)</b><br/>
-<%= f.password_field(:password) %><br/>
-<%= f.label(:password_confirmation,"Password Confirmation") %><br/>
-<%= f.password_field(:password_confirmation) %><br/>
-<%= f.label(:preferred_language, "Preferred language") %><br/>
-<%= f.select(:preferred_language, ["English","Spanish"]) %><br/>
-<%= f.label(:title, "Job title") %><br/>
-<%= f.text_field(:title) %><br/>
-<%= f.label(:fax, "Office Fax") %><br/>
-<%= f.text_field(:fax, :class => "fax") %><br/>
-<%= f.label(:phone, "Office Phone") %><br/>
-<%= f.text_field(:phone, :class => "phone") %><br/>
-<%= f.label(:home_phone, "Home Phone") %><br/>
-<%= f.text_field(:home_phone, :class => "home_phone") %><br/>
-<%= f.label(:mobile_phone, "Mobile Phone") %><br/>
-<%= f.text_field(:mobile_phone, :class => "mobile_phone") %><br/>
-
-<% user.role_requests.build if user.role_requests.empty? %>
-<% f.fields_for :role_requests do |r| %>
-  <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %><br/>
-  <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %><br/>
-  <%= label_tag "health_professional", "Are you a public health professional?" %>
-  <%= check_box_tag "health_professional", 1, params[:health_professional] %>
-  <fieldset id='health_professional_fields'>
-    <legend>Health Professional Information</legend>
-    <%= r.label :role_id, "What is your primary role in public health or emergency response?" %><br/>
-    <%= label_tag "(Your role will be 'Public' if you do not check that you are a public health professional)" %>
-    <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, {:include_blank => false, :selected => @selected_role} %><br/>
-    <%= label_tag "user_organization_membership_requests_attributes_0_organization_id", "Are you with any of these organizations?" %>
-    <%= select_tag "user[organization_membership_requests_attributes][0][organization_id]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name, :selected => @selected_org), :id => "user_organization_membership_requests_attributes_0_organization_id" %>
-
-    <p>
-      <%= f.label(:description, "Please describe your role within your organization") %><br/>
-      <%= f.text_area(:description, :rows => "8") %><br/>
-    </p>
-  </fieldset>
+<% unless f.error_messages.blank? %>
+  <div class="alert-message block-message error">
+    <%= f.error_messages %>
+  </div>
 <% end %>
+
+<div class="well">
+  <%= f.label(:first_name, "First Name") %>
+  <%= f.text_field(:first_name) %> <span class="label important">Required</span>
+  <%= f.label(:last_name, "Last Name") %>
+  <%= f.text_field(:last_name) %> <span class="label important">Required</span>
+  <%= f.label(:display_name, "Preferred name to be displayed") %>
+  <%= f.text_field(:display_name) %> <span class="label important">Required</span>
+  <%= f.label(:email, "Email address") %>
+  <%= f.text_field(:email) %> <span class="label important">Required</span>
+  <%= f.label :password, "Password" %> <b>(6 chars minimum, no special characters, at least 1 digit, and at least 1 capital letter.)</b>
+  <%= f.password_field(:password) %> <span class="label important">Required</span>
+  <%= f.label(:password_confirmation,"Password Confirmation") %>
+  <%= f.password_field(:password_confirmation) %> <span class="label important">Required</span>
+  <%= f.label(:preferred_language, "Preferred language") %>
+  <%= f.select(:preferred_language, ["English","Spanish"]) %>
+  <%= f.label(:title, "Job title") %>
+  <%= f.text_field(:title) %>
+  <%= f.label(:fax, "Office Fax") %>
+  <%= f.text_field(:fax, :class => "fax") %>
+  <%= f.label(:phone, "Office Phone") %>
+  <%= f.text_field(:phone, :class => "phone") %>
+  <%= f.label(:home_phone, "Home Phone") %>
+  <%= f.text_field(:home_phone, :class => "home_phone") %>
+  <%= f.label(:mobile_phone, "Mobile Phone") %>
+  <%= f.text_field(:mobile_phone, :class => "mobile_phone") %>
+
+  <% user.role_requests.build if user.role_requests.empty? %>
+  <% f.fields_for :role_requests do |r| %>
+    <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %>
+    <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %> <span class="label important">Required</span>
+    <label for="health_professional">
+      <input id="health_professional" type="checkbox" value="1" name="health_professional">
+      <span>Are you a public health professional?</span>
+    </label><br/>
+    <fieldset id='health_professional_fields'>
+      <legend>Health Professional Information</legend>
+      <%= r.label :role_id, "What is your primary role in public health or emergency response?" %>
+      <%= label_tag "(Your role will be 'Public' if you do not check that you are a public health professional)" %>
+      <%= r.collection_select :role_id, (signed_in? && current_user.is_super_admin? ? Role.all : Role.user_roles), :id, :display_name, {:include_blank => false, :selected => @selected_role} %>
+      <%= label_tag "user_organization_membership_requests_attributes_0_organization_id", "Are you with any of these organizations?" %>
+      <%= select_tag "user[organization_membership_requests_attributes][0][organization_id]", options_from_collection_for_select(Organization.all.dup.unshift(Organization.new), :id, :name, :selected => @selected_org), :id => "user_organization_membership_requests_attributes_0_organization_id" %>
+      <p>
+        <%= f.label(:description, "Please describe your role within your organization") %>
+        <%= f.text_area(:description, :rows => "8", :style => "width: 400px") %>
+      </p>
+    </fieldset>
+  <% end %>
+</div>

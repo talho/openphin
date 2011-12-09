@@ -1,10 +1,9 @@
-<h1>New user (* = Required field)</h1><br/>
-
-<% form_for @user do |f| %>
-  <%= render 'new_user_form', :f => f, :user => @user %>
-  <p>
-    <%= f.submit 'Sign Up' %> or <%= link_to 'Cancel', sign_in_path %>
-  </p>
-<% end %>
-
-
+<div class="t_boot">
+  <h2>New User</h2>
+  <% form_for @user, :html => {:class => "form-stacked"}  do |f| %>
+    <%= render 'new_user_form', :f => f, :user => @user %>
+    <div>
+      <%= f.submit 'Sign Up', :disable_with => "Please wait...", :class => "btn large primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn large" %>
+    </div>
+  <% end %>
+</div>
