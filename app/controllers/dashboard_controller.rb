@@ -215,32 +215,6 @@ class DashboardController < ApplicationController
   
 	def faqs
     DashboardController.app_toolbar "faqs"
-    end
-
-  def feed_articles
-    feed_urls = [
-      "http://www.nhc.noaa.gov/gtwo.xml",
-      "http://www.nhc.noaa.gov/nhc_at2.xml",
-      "http://www.weather.gov/alerts-beta/tx.php?x=1"
-     ]
-    @entries = []
-    begin
-      feed_urls.each do |url|
-        @entries += Feedzirra::Feed.fetch_and_parse(url).entries
-      end
-      @entries = @entries.sort{|a,b| b.published <=> a.published}[0..9]
-    rescue
-      @entries = nil
-    end
-
-    respond_to do |format|
-      format.html {render :partial => 'feed_articles', :locals => {:entries => @entries}}
-      format.json {render :json => @entries}
-    end
-  end
-
-  def news_articles
-    render :partial => 'news_articles.html'
   end
 
   def menu

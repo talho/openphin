@@ -16,10 +16,9 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   },
 
   initComponent: function(config) {
-    this.tools = [
-      { id:'gear', qtip: 'Edit', handler: this.showEditWindow, scope: this},
-      { id:'close', handler: function(e, target, panel){ panel.ownerCt.remove(panel, true); } }
-    ];
+    this.tools = this.tools || [];
+    this.tools.push({ id:'gear', qtip: 'Edit', handler: this.showEditWindow, scope: this});
+    this.tools.push({ id:'close', handler: function(e, target, panel){ panel.ownerCt.remove(panel, true); } });
     Ext.ux.Portlet.superclass.initComponent.call(this);
     this.on('afterrender', function(){
       this.dd.lock();
@@ -39,7 +38,9 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   },
 
   buildConfig: function() {
-    return {};
+    var conf = {};
+    Ext.copyTo(conf, this, this.fields);
+    return conf;
   },
 
   border: true,

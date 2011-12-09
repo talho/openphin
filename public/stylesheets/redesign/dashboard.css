@@ -38,3 +38,26 @@
 .portlet.user-mode .x-tool{
   display: none;
 }
+
+.portlet.user-mode .x-tool-refresh{
+  display: block;
+}
+
+.rss-node{
+  margin: 2px 0px;
+}
+
+.rss-title{
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rss-launch{
+  height: 16px;
+  width: 16px;
+  margin: 0px 0px 0px 4px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  background-image:url(/images/edit-copy-5.png)
+}

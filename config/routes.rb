@@ -54,12 +54,14 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:post]}
   map.resource :search, :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
-  map.dashboard_feed_articles "/dashboard/feed_articles.:format", :controller => "dashboard", :action => "feed_articles"
-  map.dashboard_news_articles "/dashboard/news_articles", :controller => "dashboard", :action => "news_articles"
+  
   map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
   map.resources :dashboard, :collection => {:all => :get}
-  map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
   map.root :controller => "dashboard", :action => "index", :format => "ext"
+  
+  map.rss_feed '/rss_feed.:format', :controller => 'rss_feed', :action => 'index', :conditions => {:method => [:get, :post]}
+  
+  map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
   map.about "/about", :controller => "dashboard", :action => "about"
   map.about_talhophin "/about_talhophin", :controller=> "dashboard", :action=> "about_talhophin"
   map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}

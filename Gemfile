@@ -36,7 +36,7 @@ group :default do
   gem "hoptoad_notifier", "2.3.0"
   gem "feedzirra", "0.0.23"
   gem "builder", "2.1.2"
-  gem "nokogiri", "1.4.3.1"
+  gem "nokogiri", "1.4.4"
   gem "curb", "0.7.15"
   gem "mysql", "2.8.1"
   gem "happymapper", :git => 'git://github.com/talho/happymapper.git' #"0.3.2"
@@ -82,7 +82,7 @@ group :cucumber do
 
   gem "culerity", "0.2.4"
   gem "mime-types", "1.16"
-  gem "nokogiri", "1.4.3.1"
+  gem "nokogiri", "1.4.4"
   gem "rack-test", "0.5.4"
   gem "rspec", "1.3.2"
   gem "childprocess"
