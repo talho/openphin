@@ -42,7 +42,7 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
 
   begin
     REPORT_DB
-    menu_config += "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}},"
+    menu_config += "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}," if current_user.has_non_public_role?
   rescue NameError
     # just do not include Reports menu
   end
@@ -99,10 +99,6 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
   menu_config += "];"
 
   page << menu_config
-
-  # user_has_app_roles will be true if current_user has any of these roles:
-  role_list = ["rollcall","vms"]
-  user_has_app_roles = !role_list.map{|item| current_user.roles.find_by_application(item)}.compact.empty?
 
   bbar_config =  "Application.bbarConfig = ["
                      #{name: 'Calendar'},
