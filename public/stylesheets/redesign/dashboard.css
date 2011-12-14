@@ -61,3 +61,16 @@
   vertical-align: text-bottom;
   background-image:url(/images/edit-copy-5.png)
 }
+
+.dash-twitter-entry{
+  background: white;
+  border: 1px solid #D0D0D0;
+  border-radius: 3px;
+  margin: 2px 0px;
+  padding: 3px;
+}
+
+.dash-twitter-image{
+  margin: 0px 3px 0px 0px;
+  float: left;
+}

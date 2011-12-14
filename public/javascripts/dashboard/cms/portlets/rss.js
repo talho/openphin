@@ -1,17 +1,18 @@
 Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
-  fields: ['num_entries', 'urls'],
+  fields: ['numEntries', 'urls'],
+  numEntries: 10,
 
   initComponent: function() {
-    //this.num_entries = 10;
+    //this.numEntries = 10;
     //this.urls = ['xkcd.com/rss.xml', 'www.statesman.com/section-rss.do?source=news&includeSubSections=true'];
     
     this.rss_store = new Ext.data.JsonStore({
       url: '/rss_feed.json',
       baseParams: {
         'urls[]': this.urls,
-        'num_entries': this.num_entries
+        'num_entries': this.numEntries
       },
       autoLoad: true,
       fields: ['content', 'summary', 'title', {name: 'date', type: 'date'}, 'url', 'feed_title']
@@ -34,7 +35,7 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
       }}
     ]
     
-    this.tools = [{ id:'refresh', qtip: 'Refresh', handler: function(){this.rss_store.load({params:{'urls[]': this.urls,'num_entries': this.num_entries}});}, scope: this}]
+    this.tools = [{ id:'refresh', qtip: 'Refresh', handler: function(){this.rss_store.load({params:{'urls[]': this.urls,'num_entries': this.numEntries}});}, scope: this}]
     
     Talho.Dashboard.Portlet.RSS.superclass.initComponent.apply(this, arguments);
   },
@@ -68,8 +69,9 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     var win = new Ext.Window({
       title: 'Edit RSS Portlet',
       layout: 'border',
-      items: [{ xtype: 'container', region: 'north', layout: 'form', itemId: 'north', height: 30, items: [
-          {xtype: 'numberfield', fieldLabel: 'Entries to show', itemId: 'num_entries', anchor: '100%', value: this.num_entries}
+      items: [{ xtype: 'container', region: 'north', layout: 'form', itemId: 'north', height: 30, margins: '5px 5px 0px', items: [
+          {xtype: 'textfield', fieldLabel: 'Portlet title', itemId: 'titleField', value: this.title, anchor: '100%'},
+          {xtype: 'numberfield', fieldLabel: 'Entries to show', itemId: 'num_entries', anchor: '100%', value: this.numEntries}
         ]},
         {xtype: 'editorgrid',
          itemId: 'grid',
@@ -77,7 +79,7 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
          title: 'Feed URLs. (Do not include http://)',
          store: new Ext.data.ArrayStore({
            fields: [{name: 'url', type: 'string', convert: function(v, r){return r;}}],
-           data: this.urls
+           data: this.urls || []
          }),
          hideHeaders: true,
          columns: [{dataIndex: 'url', name: 'URL', id: 'url', editor: Ext.form.TextField}, 
@@ -111,7 +113,8 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
   },
 
   editWindow_save: function(win){
-    this.num_entires = win.getComponent('north').getComponent('num_entries');
+    this.numEntries = win.getComponent('north').getComponent('num_entries').getValue();
+    this.title = win.getComponent('north').getComponent('titleField').getValue();
     this.urls = []
     win.getComponent('grid').getStore().each(function(r){
       this.urls.push(r.get('url').replace('http://', ''));

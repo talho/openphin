@@ -69,7 +69,9 @@ Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.Vie
     switch(portlet_type){
       case 'phin': portlet_config = {xtype: 'dashboardphinportlet', column: 1, html: '&nbsp;'};
         break;
-      case 'rss': portlet_config = {xtype: 'dashboardrssportlet', column: 1, html: '&nbsp;'};
+      case 'twitter': portlet_config = {xtype: 'dashboardtwitterportlet', column: 1};
+        break;
+      case 'rss': portlet_config = {xtype: 'dashboardrssportlet', column: 1};
         break;
       case 'html':
       default: portlet_config = {xtype: 'dashboardhtmlportlet', column: 1, html: '&nbsp;'};
