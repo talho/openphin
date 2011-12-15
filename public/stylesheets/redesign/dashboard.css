@@ -47,8 +47,21 @@
   margin: 2px 0px;
 }
 
+.rss-node table{
+  width: 100%;
+}
+.rss-node table tr td.tf{
+  width: 20%;
+}
+.rss-node table tr td.ts{
+  width: 70%;
+}
+.rss-node table tr td.tt{
+  width: 10%;
+  text-align: right;
+}
 .rss-title{
-  color: blue;
+  color: #0069D6;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -62,7 +75,8 @@
   background-image:url(/images/edit-copy-5.png)
 }
 
-.dash-twitter-entry{
+.dash-twitter-entry,
+.dash-rss-entry{
   background: white;
   border: 1px solid #D0D0D0;
   border-radius: 3px;
@@ -73,4 +87,19 @@
 .dash-twitter-image{
   margin: 0px 3px 0px 0px;
   float: left;
+}
+.t_boot .x-tip-header-text{
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 18px;
+}
+.x-tip-body .dash-rss-entry{
+  margin: 0px !important;
+}
+.x-tip-body .t_boot p{
+  font-size: 11px !important;
+}
+.x-tip-body .t_boot img{
+  width: 30%;
+  height: 30%;
 }

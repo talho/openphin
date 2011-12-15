@@ -21,14 +21,27 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     this.items = [{
       xtype: 'dataview',
       store: this.rss_store,
+//      tpl: [
+//        '<tpl for=".">',
+//          '<div class="rss-node dash-rss-entry">',
+//            '<div>{feed_title}: </div><span class="rss-title">{title}</span> ({[fm.date(values.date, "n/d/y, g:i A")]})<a href="{url}" target="_blank" qtip="Open in New Tab" class="rss-launch"></a>',
+//          '</div>',
+//        '</tpl>'
+//      ],
       tpl: [
         '<tpl for=".">',
-          '<div class="rss-node">',
-            '<span>{feed_title}: <span class="rss-title">{title}</span> ({[fm.date(values.date, "n/d/y, g:i A")]})</span><a href="{url}" target="_blank" qtip="Open in New Tab" class="rss-launch"></a>',
-          '</div>',
+        '<div class="rss-node dash-rss-entry t_boot">',
+          '<table>',
+            '<tr>',
+              '<td class="tf">{feed_title}:</td>',
+              '<td class="ts rss-title">{title} ({[fm.date(values.date, "n/d/y, g:i A")]})</td>',
+              '<td class="tt"><a href="{url}" target="_blank" qtip="Open in New Tab" class="rss-launch"></a></td>',
+            '</tr>',
+          '</table>',
+        '</div>',
         '</tpl>'
       ],
-      itemSelector: 'span.rss-title',
+      itemSelector: 'td.rss-title',
       listeners: {
         scope: this,
         'click': this.feed_click
@@ -49,8 +62,10 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     this.tip = new Ext.Tip({
       defaultAlign: 'tl-bl?',
       tpl: [
-        '<a href="{url}" target="_blank">Open original item in new tab</a>',
-        '<div style="overflow:auto;">{[values.content || values.summary || ""]}</div>'
+        '<div class="t_boot dash-rss-entry">',
+          '<a href="{url}" target="_blank">Open original item in new tab</a>',
+          '<div style="overflow:auto;">{[values.content || values.summary || ""]}</div>',
+        '</div>'
       ],
       data: {
         url: r.get('url'),
@@ -58,6 +73,7 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
         summary: r.get('summary')
       },
       title: r.get('title'),
+      cls: "t_boot",
       closable: true,
       maxWidth: 500,
       constrainPosition: true

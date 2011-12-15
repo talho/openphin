@@ -16,7 +16,7 @@ Talho.Dashboard.Portlet.Twitter = Ext.extend(Talho.Dashboard.Portlet, {
         store: this.tweet_store,
         tpl: [
           '<tpl for=".">',
-            '<div class="dash-twitter-entry">',
+            '<div class="dash-twitter-entry t_boot">',
               '<img src="{profile_image_url}" class="dash-twitter-image" height="32" width="32"/>',
               '<a href="http://twitter.com/#!/{user}/status/{id_str}" target="_blank">@{user}</a>: {text}',
               '<div class="x-clear"></div>',

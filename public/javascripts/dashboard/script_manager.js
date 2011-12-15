@@ -46,14 +46,14 @@ Ext.ns("Talho");
       'Talho.ReportView': {js:'/javascripts/reports/ReportView.js'},
       'Talho.Reports': {js:'/javascripts/reports/Reports.js'},
       'Talho.HelpWindow': {js:'$(js)/dashboard/help_window.js'},
-      'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/PhinHtmlEditor.js Portlets $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'}
+      'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/PhinHtmlEditor.js Portlets > $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '$(ext_extensions)/MaxWidthHBox.js $(ext_extensions)/HtmlFormPanel.js $(ext_extensions)/AjaxPanel.js $(ext_extensions)/CenteredAjaxPanel.js');
     dominoes.rule('Favorites', '$(ext_extensions)/DragDropTabs.js $(ext_extensions)/RailsJsonReader.js $(js)/dashboard/favorites.js');
     dominoes.rule('PhinLayout', '$(js)/utility.js $(ext_extensions)/ToolBarNav.js $(ext_extensions)/NavigableTabPanel.js /dashboard/menu.js $(js)/dashboard/menu_builder.js');
-    dominoes.rule('Dashboard', 'Portlets $(cms)/views/view_portal.js $(cms)/view_controller.js');
+    dominoes.rule('Dashboard', 'Portlets > $(cms)/views/view_portal.js $(cms)/view_controller.js');
     dominoes.rule('ManageFavorites', 'RowActions $(js)/dashboard/manage_favorites_window.js');
 
     var mgr = function(config){};
