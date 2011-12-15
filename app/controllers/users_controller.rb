@@ -146,7 +146,16 @@ class UsersController < ApplicationController
         u.confirm_email!
         u.role_requests.each do |role_request|
           next if role_request.approved?
-          role_request.jurisdiction.admins.each do |admin|
+          application          = role_request.role.application
+          current_jurisdiction = role_request.jurisdiction
+          admins               = current_jurisdiction.admins(application)
+          if admins.blank?
+            while current_jurisdiction.super_admins(application).blank?
+              current_jurisdiction = current_jurisdiction.parent
+            end
+            admins = current_jurisdiction.super_admins(application)
+          end
+          admins.each do |admin|
             SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
           end
         end
