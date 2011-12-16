@@ -5,9 +5,6 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
   numEntries: 10,
 
   initComponent: function() {
-    //this.numEntries = 10;
-    //this.urls = ['xkcd.com/rss.xml', 'www.statesman.com/section-rss.do?source=news&includeSubSections=true'];
-    
     this.rss_store = new Ext.data.JsonStore({
       url: '/rss_feed.json',
       baseParams: {
@@ -21,13 +18,6 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     this.items = [{
       xtype: 'dataview',
       store: this.rss_store,
-//      tpl: [
-//        '<tpl for=".">',
-//          '<div class="rss-node dash-rss-entry">',
-//            '<div>{feed_title}: </div><span class="rss-title">{title}</span> ({[fm.date(values.date, "n/d/y, g:i A")]})<a href="{url}" target="_blank" qtip="Open in New Tab" class="rss-launch"></a>',
-//          '</div>',
-//        '</tpl>'
-//      ],
       tpl: [
         '<tpl for=".">',
         '<div class="rss-node dash-rss-entry t_boot">',
@@ -41,10 +31,11 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
         '</div>',
         '</tpl>'
       ],
+      loadingText: 'Loading RSS Feed...',
       itemSelector: 'td.rss-title',
       listeners: {
         scope: this,
-        'click': this.feed_click
+        click: this.feed_click
       }}
     ]
     
@@ -62,9 +53,11 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     this.tip = new Ext.Tip({
       defaultAlign: 'tl-bl?',
       tpl: [
-        '<div class="t_boot dash-rss-entry">',
+        '<div class="t_boot">',
           '<a href="{url}" target="_blank">Open original item in new tab</a>',
-          '<div style="overflow:auto;">{[values.content || values.summary || ""]}</div>',
+          '<div class="dash-rss-entry">',
+            '<div class="dash-rss-body">{[values.content || values.summary || ""]}</div>',
+          '</div>',
         '</div>'
       ],
       data: {
@@ -74,9 +67,9 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
       },
       title: r.get('title'),
       cls: "t_boot",
-      closable: true,
       maxWidth: 500,
-      constrainPosition: true
+      constrainPosition: true,
+      closable: true
     });
     this.tip.showBy(n);
   },

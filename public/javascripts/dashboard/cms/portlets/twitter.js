@@ -22,7 +22,8 @@ Talho.Dashboard.Portlet.Twitter = Ext.extend(Talho.Dashboard.Portlet, {
               '<div class="x-clear"></div>',
             '</div>',
           '</tpl>'
-        ]
+        ],
+        loadingText: 'Loading Twitter Feed...'
       }
     ];
     
