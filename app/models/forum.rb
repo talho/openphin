@@ -9,7 +9,24 @@ class Forum < ActiveRecord::Base
             :reject_if => lambda { |a| a[:content].blank? }, 
             :allow_destroy => true   
 
-  has_one   :audience, :autosave => true
+  belongs_to :audience, :autosave => true
+  has_many :users, :finder_sql => 'SELECT u.* 
+                                   FROM users u 
+                                   JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id'
+  
+  named_scope :for_user, lambda { |user|
+    user_id = user.class == User ? user.id : user
+    user = user.class == User ? user : User.find(user)
+    if user.is_super_admin?
+      {}
+    else
+      { :joins => send(:sanitize_sql_array,
+        ["JOIN sp_audiences_for_user(?) au ON (au.id = audience_id)", 
+         user_id]), :conditions => "hidden_at IS NULL"
+       }
+    end
+  }
+  
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
   def audiences

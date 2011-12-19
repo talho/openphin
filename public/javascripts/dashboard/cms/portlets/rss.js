@@ -78,7 +78,7 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
     var win = new Ext.Window({
       title: 'Edit RSS Portlet',
       layout: 'border',
-      items: [{ xtype: 'container', region: 'north', layout: 'form', itemId: 'north', height: 30, margins: '5px 5px 0px', items: [
+      items: [{ xtype: 'container', region: 'north', layout: 'form', itemId: 'north', height: 60, margins: '5px 5px 0px', items: [
           {xtype: 'textfield', fieldLabel: 'Portlet title', itemId: 'titleField', value: this.title, anchor: '100%'},
           {xtype: 'numberfield', fieldLabel: 'Entries to show', itemId: 'num_entries', anchor: '100%', value: this.numEntries}
         ]},

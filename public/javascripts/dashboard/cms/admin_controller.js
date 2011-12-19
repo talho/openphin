@@ -45,7 +45,7 @@ Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {
           return;
         }
         
-        this.portal.loadPortlets(dashboard);
+        this.portal.loadPortlets(dashboard, true);
         this.portal.toggleAdminBorder();
         this.loadAudience(dashboard);
         this.portal.getTopToolbar().enableEditCurrent();

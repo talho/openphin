@@ -147,7 +147,7 @@ Talho.Dashboard.Portlet.Twitter = Ext.extend(Talho.Dashboard.Portlet, {
          }),
          hideHeaders: true,
          columns: [{dataIndex: 'term', name: 'Term', id: 'term', editor: Ext.form.TextField},
-                   {dataIndex: 'type', name: 'Type', id: 'type', editor: {xtype: 'combo', editable: false, mode: 'local', store: [['user', 'User'], ['hashtag', 'Hashtag']]}}, 
+                   {dataIndex: 'type', name: 'Type', id: 'type', editor: {xtype: 'combo', editable: false, mode: 'local', triggerAction: 'all', store: [['user', 'User'], ['hashtag', 'Hashtag']]}}, 
                    {xtype: 'xactioncolumn', icon: '/images/cross-circle.png', handler: function(grid, row){
                      grid.getStore().removeAt(row);
                    }, scope: this}],

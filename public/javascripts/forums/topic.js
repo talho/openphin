@@ -75,18 +75,17 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
 
         Ext.apply(panel_config, {
             closable: true,
-            padding: '5 100 5 100',
-            layout: 'hbox',
-            autoScroll: true,
+            layout: 'border',
+            title: this.tab_config.title,
             items: [
                 {
+                    title: this.tab_config.title,
+                    region: 'center',
+                    margins: '20 50',
                     xtype: 'grid',
                     itemId: 'topic_grid',
-                    autoHeight: true,
-                    flex: 1,
                     store: store,
-                    title: this.tab_config.title,
-                    frame: true,
+                    hideHeaders: true,
                     bodyCssClass: 'topic_grid',
                     columns: [
                         {xtype:'templatecolumn', width: 165,
@@ -97,42 +96,11 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
                     ],
                     autoExpandColumn: 'post_content_column',
                     autoExpandMax: 5000,
-                    tbar: {
-                        items:[
-                            '->',
-                            {itemId: 'add_comment_button', text: 'Add Reply', iconCls: 'topic-add-comment-button', scope: this,
-                                handler: function(){
-                                    if(!this.comment_window_open){
-                                        this.show_comment_window();
-                                    }
-                                }
-                            }
-                        ]
-                    },
                     bbar: ptoolbar,
                     loadMask: true,
                     viewConfig:{
-                        scrollOffset: 0,
                         headersDisabled: true,
                         enableRowBody: true,
-                        masterTpl: new Ext.Template(
-                            '<div class="x-grid3" hidefocus="true">',
-                                '<div class="x-grid3-viewport">',
-                                    '<div class="x-grid3-header" style="display:none;">',
-                                        '<div class="x-grid3-header-inner">',
-                                            '<div class="x-grid3-header-offset" style="{ostyle}">{header}</div>',
-                                        '</div>',
-                                        '<div class="x-clear"></div>',
-                                    '</div>',
-                                    '<div class="x-grid3-scroller">',
-                                        '<div class="x-grid3-body" style="{bstyle}">{body}</div>',
-                                        '<a href="#" class="x-grid3-focus" tabIndex="-1"></a>',
-                                    '</div>',
-                                '</div>',
-                                '<div class="x-grid3-resize-marker">&#160;</div>',
-                                '<div class="x-grid3-resize-proxy">&#160;</div>',
-                            '</div>'
-                        ),
                         getRowClass: function(record, index, rowParams, store){
                             var locked = store.reader.getBaseProperty('locked');
                             var is_super_admin = store.reader.getBaseProperty('is_super_admin');

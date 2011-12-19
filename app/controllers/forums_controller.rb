@@ -1,13 +1,15 @@
 class ForumsController < ApplicationController
   before_filter :login_required
-  app_toolbar "forums"
 
   # GET /forums
   # GET /forums.xml
   # GET /forums.json
   def index
     page = params[:page] || (params[:start].nil? ? nil : (params[:start].to_i/(params[:per_page]||10).to_i) + 1) || 1
-    @forums = Forum.paginate_for(:all,current_user, page, params[:per_page]||10)
+    
+    @forums = Forum.for_user(current_user)
+    @forums = @forums.paginate(:page => page, :per_page => params[:per_page]||10) unless params[:per_page].to_i == 0
+    
     respond_to do |format|
       format.html
       format.json  {render :json => {
@@ -15,9 +17,9 @@ class ForumsController < ApplicationController
           f[:is_moderator] = true unless !current_user.moderator_of?(f)
           f[:threads]      = f.topics.length
         end,
-        :current_page        => @forums.current_page,
-        :per_page            => @forums.per_page,
-        :total_entries       => @forums.total_entries,
+        :current_page        => @forums.respond_to?(:current_page) ? @forums.current_page : 0,
+        :per_page            => @forums.respond_to?(:per_page) ? @forums.per_page : 0,
+        :total_entries       => @forums.respond_to?(:total_entries) ? @forums.total_entries : 0,
         :is_super_admin      => current_user.is_super_admin?
       }}
     end
@@ -26,7 +28,7 @@ class ForumsController < ApplicationController
   # GET /forums/1
   # GET /forums/1.json
   def show
-    @forum = Forum.find_for(params[:id],current_user)
+    @forum = Forum.for_user(current_user).find(params[:id])
     respond_to do |format|
       format.html
       format.json {render :json => @forum}
@@ -47,7 +49,7 @@ class ForumsController < ApplicationController
   # POST /forums/new.json
   def create
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
-    @forum = Forum.new(params[:forum])
+    @forum = Forum.new(params[:forum]) if current_user.is_super_admin?
     if @forum.save
       respond_to do |format|
         format.html do
@@ -67,7 +69,7 @@ class ForumsController < ApplicationController
   # GET /forums/1/edit
   # GET /forums/1/edit.json
   def edit
-    @forum = Forum.find_for(params[:id],current_user)
+    @forum = Forum.find(params[:id]) if current_user.is_super_admin?
     respond_to do |format|
       format.html
       format.json {render :json => @forum.as_json(:include => {:audience => {:include => {:users => {:only => [:id, :display_name, :email, :title ]},
@@ -82,7 +84,7 @@ class ForumsController < ApplicationController
   # PUT /forums/1
   # PUT /forums/1.json
   def update
-    @forum = Forum.find_for(params[:id],current_user)
+    @forum = Forum.for_user(current_user).find(params[:id])
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
 
     # The nested attribute audience has habtm associations that don't play nicely with optimistic locking
@@ -140,7 +142,7 @@ class ForumsController < ApplicationController
   # DELETE /forums/1
   # DELETE /forums/1.json
   def destroy
-    @forum = Forum.find_for(params[:id],current_user)
+    @forum = Forum.for_user(current_user).find(params[:id])
     @forum.destroy
     flash[:notice] = "Forum was successfully removed."
     redirect_to forums_url

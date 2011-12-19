@@ -49,6 +49,9 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
                         this.forum_grid.getBottomToolbar().getComponent('add_forum_button').show();
                         this.forum_grid.doLayout();
                     }
+                    if(this.forum_id){
+                      this.forum_grid.getSelectionModel().selectRow(this.forum_grid.getStore().indexOfId(this.forum_id));
+                    }
                 }
             }
         });

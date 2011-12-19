@@ -122,7 +122,7 @@ Feature: Creating a forum (room)
       | name           | type         |
       | Potter County  | Jurisdiction |
     And I press "Save"
-
+    
     When I navigate to "Joe Smith > Sign Out"
     And I am logged in as "joe.black@example.com"
     And I navigate to the ext dashboard page

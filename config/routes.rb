@@ -77,6 +77,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :forums do |forum|
     forum.resources :topics, :member => { :update_comments => :put }
   end
+  map.connect "/forums/topics/active_topics.:format", :controller => 'topics', :action => 'active_topics', :method => :get
+  map.connect "/forums/topics/recent_posts.:format", :controller => 'topics', :action => 'recent_posts', :method => :get
   
   map.namespace "report" do |report|
     report.resources :reports, :member => { :filters => :get, :reduce => :post }

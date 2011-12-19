@@ -32,7 +32,7 @@ class Audience < ActiveRecord::Base
     from users u
     join sp_recipients(#{self.id}) r on u.id = r.id'
 
-  belongs_to :forum
+  has_one :forum
   named_scope :with_forum, :conditions => "forum_id is not NULL"
   named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 

@@ -12,6 +12,7 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
       superclass = superclass.constructor.superclass;
     }
     Ext.copyTo(approvedConfig, config, this.fields);
+    Ext.copyTo(approvedConfig, config, ['admin']); // local fields that we don't want copied to the server but are redefining'
     Talho.Dashboard.Portlet.superclass.constructor.call(this, approvedConfig);
   },
 

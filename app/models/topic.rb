@@ -11,9 +11,22 @@ class Topic < ActiveRecord::Base
                       :reject_if => lambda { |a| a[:content].blank? }, 
                       :allow_destroy => true
 
+  belongs_to :thread, :class_name => 'Topic', :foreign_key => :comment_id
+
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  
+  named_scope :recent_topics, lambda{|limit| {
+    :select => "topics.id, topics.forum_id, topics.comment_id, topics.sticky, topics.locked_at, topics.name, topics.content, 
+                topics.poster_id, topics.created_at, topics.updated_at, topics.hidden_at, topics.lock_version, 
+                COALESCE(MAX(c.created_at), topics.created_at) as sortable_created_at",  
+    :joins => "left join topics c on topics.id = c.comment_id",
+    :conditions => "topics.comment_id IS NULL",
+    :group => "topics.id, topics.forum_id, topics.comment_id, topics.sticky, topics.locked_at, topics.name, topics.content, 
+               topics.poster_id, topics.created_at, topics.updated_at, topics.hidden_at, topics.lock_version",
+    :order => "sortable_created_at DESC",
+    :limit => limit}}
   
   named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 

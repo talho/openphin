@@ -2,7 +2,7 @@ class TopicsController < ApplicationController
   before_filter :login_required
   app_toolbar "forums"
 
-  before_filter :find_forum
+  before_filter :find_forum, :except => [:active_topics, :recent_posts]
   before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
   
   # GET /topics
@@ -23,8 +23,6 @@ class TopicsController < ApplicationController
       topic[:posts] = topic.comments.length
       topic[:user_avatar] = User.find_by_id(topic.poster_id).photo.url(:tiny)
     end
-    original_included_root = ActiveRecord::Base.include_root_in_json
-    ActiveRecord::Base.include_root_in_json = false
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @topics }
@@ -35,7 +33,6 @@ class TopicsController < ApplicationController
         :total_entries       => @topics.total_entries
       }}
     end
-    ActiveRecord::Base.include_root_in_json = original_included_root
   end
 
   # GET /topics/1
@@ -54,8 +51,6 @@ class TopicsController < ApplicationController
         comments.concat(@comments)
         @comments = comments.paginate(options)
 
-        original_included_root = ActiveRecord::Base.include_root_in_json
-        ActiveRecord::Base.include_root_in_json = false
         render :json => {:comments => @comments.map do |x|
                             x[:user_avatar] = x.poster.photo.url(:thumb)
                             x[:is_moderator] = current_user.moderator_of?(x)
@@ -68,7 +63,6 @@ class TopicsController < ApplicationController
                          :total_entries => @comments.total_entries,
                          :locked => !@topic.locked_at.nil?
         }
-        ActiveRecord::Base.include_root_in_json = original_included_root
       end
     end
   end
@@ -111,11 +105,8 @@ class TopicsController < ApplicationController
         end
         format.xml  { render :xml => @topic, :status => :created, :location => forum_topics_url }
         format.json do
-          original_included_root = ActiveRecord::Base.include_root_in_json
-          ActiveRecord::Base.include_root_in_json = false
-          render :json => {:topic => @topic, :success => true}, :status => :created, :location => forum_topics_url          
-          ActiveRecord::Base.include_root_in_json = original_included_root
-         end
+          render :json => {:topic => @topic, :success => true}, :status => :created, :location => forum_topics_url
+        end
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
@@ -215,10 +206,56 @@ class TopicsController < ApplicationController
     end
   end
 
+  def active_topics
+    params[:forums].delete('')
+    forums = if params[:forums].blank?
+      Forum.for_user(current_user)
+    else
+      Forum.for_user(current_user).find(:all, :conditions => {:id => params[:forums]})
+    end
+    
+    topics = Topic.recent_topics(params[:num_entries] || 10).find(:all, :conditions => {:forum_id => forums.map(&:id)}, :include => {:comments => [:poster], :forum => {} })
+    
+    respond_to do |format|
+      format.json {render :json => topics.map {|topic| topic.as_json(:only => [:name, :id]).merge({
+                                                :forum_name => topic.forum.name,
+                                                :forum_id => topic.forum.id,
+                                                :last_comment_time => topic.comments.blank? ? topic.created_at : topic.comments.last.created_at, 
+                                                :last_comment_poster_name => topic.comments.blank? ? topic.poster.display_name : topic.comments.last.poster.display_name,
+                                                :last_comment_poster_id => topic.comments.blank? ? topic.poster.id : topic.comments.last.poster.id })
+                                               }
+                   }
+    end
+  end
+  
+  def recent_posts
+    params[:forums].delete('')
+    forums = if params[:forums].blank?
+      Forum.for_user(current_user)
+    else
+      Forum.for_user(current_user).find(:all, :conditions => {:id => params[:forums]})
+    end
+    
+    topics = Topic.recent(params[:num_entries] || 10).find(:all, :conditions => {:forum_id => forums.map(&:id)}, :include => {:comments => [:poster], :forum => {}, :thread => {} })
+    
+    respond_to do |format|
+      format.json {render :json => topics.map {|topic| topic.as_json(:only => [:content, :created_at]).merge({
+                                                :id => topic.thread.nil? ? topic.id : topic.thread.id,
+                                                :name => topic.thread.nil? ? topic.name : topic.thread.name,
+                                                :poster_avatar => topic.poster.photo.url(:thumb),
+                                                :poster_name => topic.poster.display_name,
+                                                :poster_id => topic.poster.id,
+                                                :forum_name => topic.forum.name,
+                                                :forum_id => topic.forum.id })
+                                               }
+                   }
+    end
+  end
+
 protected
 
   def find_forum
-    @forum = Forum.find_for(params[:forum_id],current_user)
+    @forum = Forum.for_user(current_user).find(params[:forum_id])
   end
 
   def find_topic

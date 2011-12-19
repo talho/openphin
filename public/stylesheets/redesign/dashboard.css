@@ -60,7 +60,9 @@
   width: 10%;
   text-align: right;
 }
-.rss-title{
+.rss-title,
+.dash-forum-name, 
+.dash-forum-topic-name{
   color: #0069D6;
   text-decoration: underline;
   cursor: pointer;
@@ -76,7 +78,9 @@
 }
 
 .dash-twitter-entry,
-.dash-rss-entry{
+.dash-rss-entry,
+.dash-forum-post, 
+.dash-forum-topic{
   background: white;
   border: 1px solid #D0D0D0;
   border-radius: 3px;
@@ -84,6 +88,7 @@
   padding: 3px;
 }
 
+.dash-forum-image,
 .dash-twitter-image{
   margin: 0px 3px 0px 0px;
   float: left;
@@ -108,4 +113,17 @@
 .x-tip-body .t_boot img{
   width: 30%;
   height: 30%;
+}
+
+.dash-forum-post-details{
+  padding: 0px 0px 3px;
+  border-bottom: 1px solid #D0D0D0;
+}
+
+.dash-forum-post{
+  clear: both;
+}
+
+.dash-forum-content{
+  padding: 5px 10px 2px;
 }
