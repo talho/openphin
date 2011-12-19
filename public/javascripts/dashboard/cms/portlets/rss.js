@@ -69,7 +69,8 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
       cls: "t_boot",
       maxWidth: 500,
       constrainPosition: true,
-      closable: true
+      closable: true,
+      renderTo: dv.ownerCt.ownerCt.getEl()
     });
     this.tip.showBy(n);
   },
