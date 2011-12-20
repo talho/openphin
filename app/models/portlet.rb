@@ -7,6 +7,6 @@ class Portlet < ActiveRecord::Base
 
   private
   def valid_xtype?
-    errors.add_to_base("Invalid portlet xtype") unless ["dashboardhtmlportlet", "dashboardphinportlet", "dashboardrssportlet", "dashboardtwitterportlet", "dashboardforumportlet"].include?(self.xtype)
+    errors.add_to_base("Invalid portlet xtype") unless ["dashboardhtmlportlet", "dashboardphinportlet", "dashboardrssportlet", "dashboardtwitterportlet", "dashboardforumportlet", "dashboarddocportlet"].include?(self.xtype)
   end
 end

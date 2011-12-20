@@ -166,4 +166,19 @@ class Doc::DocumentsController < ApplicationController
       } }
     end
   end
+  
+  def recent_documents
+    @documents = current_user.shared_documents.limit(params[:num_documents].blank? ? 5 : params[:num_documents].to_i)
+    
+    respond_to do |format|
+      format.json {
+        render :json => @documents.map { 
+          |doc| doc.as_json(:only => [:name, :created_at], 
+                            :include => {:folder => {:only => [:name, :id]}, 
+                            :owner => {:only => [:id, :display_name]}
+                          }).merge({:url => document_path(doc)})
+        }
+      }
+    end
+  end
 end

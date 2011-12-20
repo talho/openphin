@@ -62,7 +62,9 @@
 }
 .rss-title,
 .dash-forum-name, 
-.dash-forum-topic-name{
+.dash-forum-topic-name,
+.dash-doc-filename,
+.dash-doc-folder-name{
   color: #0069D6;
   text-decoration: underline;
   cursor: pointer;
@@ -79,6 +81,7 @@
 
 .dash-twitter-entry,
 .dash-rss-entry,
+.dash-doc-node,
 .dash-forum-post, 
 .dash-forum-topic{
   background: white;

@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
   end
 
   def shared_documents
-    Document.scoped :joins => ', folders', :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ? and documents.folder_id = folders.id', self.id, self.id], :include => [:owner]
+    Document.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder]
   end
 
   has_many :favorites

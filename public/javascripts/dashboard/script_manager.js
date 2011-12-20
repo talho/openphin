@@ -20,7 +20,7 @@ Ext.ns("Talho");
     dominoes.rule('BatchUsers', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
     dominoes.rule('EditUsers', '(( $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/xActionColumn.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
     dominoes.rule('GMap', '$(ext_extensions)/GMapPanel.js $(ext_extensions)/GMapInfoWindow.js');
-    dominoes.rule('Portlets', '$(ext_extensions)/Portal.js > ( $(cms)/portlet.js > ( $(cms)/portlets/html.js > $(cms)/portlets/phin.js ) $(cms)/portlets/rss.js $(cms)/portlets/forum.js ( $(ext_extensions)/jsonp.js $(cms)/portlets/twitter.js ) )')
+    dominoes.rule('Portlets', '$(ext_extensions)/Portal.js > ( $(cms)/portlet.js > ( $(cms)/portlets/html.js > $(cms)/portlets/phin.js ) $(cms)/portlets/rss.js $(cms)/portlets/documents.js $(cms)/portlets/forum.js ( $(ext_extensions)/jsonp.js $(cms)/portlets/twitter.js ) )')
 
     var regList = {
       'Talho.FindPeople': {js:'$(js)/search/FindPeople.js'},

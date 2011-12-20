@@ -75,6 +75,8 @@ Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.Vie
         break;
       case 'forum': portlet_config = {xtype: 'dashboardforumportlet', column: 1};
         break;
+      case 'doc': portlet_config = {xtype: 'dashboarddocportlet', column: 1};
+        break;
       case 'html':
       default: portlet_config = {xtype: 'dashboardhtmlportlet', column: 1, html: '&nbsp;'};
         break;
