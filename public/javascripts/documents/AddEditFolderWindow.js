@@ -102,7 +102,7 @@ Talho.ux.documents.AddEditFolderWindow = Ext.extend(Ext.Window,  {
                                 }
                             }
                         ]},
-                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: false, showGroups: true}
+                        {itemId: 'ap', xtype: 'audiencepanel', flex: 1, disabled: true, showJurisdictions: false, showRoles: true, showGroups: true}
                     ]},
                     {title: 'Permissions', itemId: 'per', padding: '5', autoScroll: true, items:[
                         {itemId: 'perlabel', xtype: 'box', html: 'To set per-user permissions, users must be added individually on the Sharing tab.'},

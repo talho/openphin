@@ -40,7 +40,9 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions],
      :include => [:user, :role, :jurisdiction]}
   }
-
+  named_scope :for_apps, lambda { |applications|
+    {:include => [:user, :role], :conditions => ["roles.application in (?)", applications]}
+  }
   before_create :set_requester_if_nil
   after_create :auto_approve_if_public_role
   after_create :auto_approve_if_approver_is_specified

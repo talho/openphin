@@ -107,10 +107,7 @@ Feature: Audit Log
     And I click model-selector-list-item "Topics"
     When I click model-selector-list-item "Audiences"
     And I wait for the "Loading..." mask to go away for 1 second
-    And I should see "anonymous" in column "Descriptor" within "grid-version-results"
-    And I explicitly click x-grid3-cell-inner "anonymous"
-    And I wait for the "Fetching Version Data..." mask to go away
-    Then I should see "TEST FORUM" in column "Current Version" within "panel-version-display"
+    Then I should see "anonymous" in column "Descriptor" within "grid-version-results"
 
   Scenario: Audit log for Editing Profile and Devices
     Given the user "TEST USER" with the email "TESTUSER@EXAMPLE.COM" has the role "Lackey" in "Dallas County"
