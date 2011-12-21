@@ -1,14 +1,14 @@
 class DocumentMailer < ActionMailer::Base
   
   def document(document, target)
-    bcc target.users.reject{|user| user.roles.length == 1 && user.roles.include?(Role.public)}.map(&:formatted_email)
+    bcc target.users.reject{|user| user.roles.length == 1 && user.roles.include?(Role.public)}.map(&:formatted_email).compact
     from DO_NOT_REPLY
     subject "#{target.creator.name} sent a document to you"
     body :document => document, :target => target
   end
   
   def share_invitation(folder, target)
-    bcc target[:users].reject{|user| user.roles.length == 1 && user.roles.include?(Role.public)}.map(&:formatted_email)
+    bcc target[:users].reject{|user| user.roles.length == 1 && user.roles.include?(Role.public)}.map(&:formatted_email).compact
     from DO_NOT_REPLY
     subject "#{target[:creator].name} has added you to the shared folder \"#{folder.name}\""
     body :folder => folder, :target => target
@@ -26,7 +26,7 @@ class DocumentMailer < ActionMailer::Base
     users << document.folder.owner
     users.delete(user)
 
-    bcc users.map(&:formatted_email)
+    bcc users.map(&:formatted_email).compact
     from DO_NOT_REPLY
     subject %Q{A document has been added to the shared folder "#{document.folder.name}"}
     body :share => document.folder, :document => document, :current_user => user
@@ -37,7 +37,7 @@ class DocumentMailer < ActionMailer::Base
     users << document.folder.owner
     users.delete(user)
 
-    bcc users.map(&:formatted_email)
+    bcc users.map(&:formatted_email).compact
     from DO_NOT_REPLY
     subject %Q{The document "#{document.file_file_name}" has been updated.}
     body :document => document, :share => document.folder, :current_user => user

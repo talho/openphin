@@ -32,7 +32,6 @@ class Folder < ActiveRecord::Base
     end
   end
 
-  validates_length_of :name, :in => 1..32, :allow_blank => false, :message => "Folder name cannot exceed 32 characters in length."
   validates_uniqueness_of :name, :scope => [:parent_id, :user_id]
 
   belongs_to :owner, :class_name => 'User', :foreign_key => 'user_id'
