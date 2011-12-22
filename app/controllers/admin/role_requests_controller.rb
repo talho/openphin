@@ -5,8 +5,12 @@ class Admin::RoleRequestsController < ApplicationController
   # GET /role_requests
   # GET /role_requests.xml
   def index
-    @role_requests = RoleRequest.unapproved.in_jurisdictions(current_user.jurisdictions)
-
+    apps = current_user.roles.map(&:application).uniq
+    if current_user.is_admin_for? Jurisdiction.state.nonforeign.first
+      @role_requests = RoleRequest.unapproved.for_apps(apps)
+    else
+      @role_requests = RoleRequest.unapproved.for_apps(apps).in_jurisdictions(current_user.jurisdictions)
+    end
     respond_to do |format|
       format.html
       format.ext

@@ -1,7 +1,8 @@
 Given /^I view the ext profile page for "([^"]*)"$/ do |email|
+  sleep 1
   u = User.find_by_email(email)
-  tab_config = "{title:'View Profile:#{u.first_name} #{u.last_name}', user_id:'#{u.id}', id: 'user_profile_for_#{u.id}', initializer: 'Talho.ShowProfile'}"
-  force_open_tab("hello", "","#{tab_config}")
+  tab_config = "{title:'View Profile:#{u.first_name} #{u.last_name}', user_id:#{u.id}, id: 'user_profile_for_#{u.id}', initializer: 'Talho.ShowProfile'}"
+  force_open_tab("", "",tab_config)
 end
 
 Given /^I visit the Edit Profile page for "([^"]*)"$/ do |email|

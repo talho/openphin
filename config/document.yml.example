@@ -39,6 +39,8 @@ permitted_mimes:
     - application/vnd.ms-works
     - application/vnd.oasis.opendocument.text
     - application/x-mswrite
+    - application/vnd.openxmlformats-officedocument.presentationml.presentation
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.template   
 rejected_extensions:
     - .applescript
     - .as
