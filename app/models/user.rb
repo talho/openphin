@@ -205,7 +205,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def is_admin_for?(other, app = "phin")
+  def is_admin_for?(other, app = "")
     # TODO: Role.admin should check on role/app for the jurisdiction
     return true if self.is_sysadmin? || self.is_super_admin?
     if other.class == Jurisdiction
@@ -250,7 +250,7 @@ class User < ActiveRecord::Base
     return role_memberships(true).count(:conditions => { :role_id => Role.sysadmin.id } ) > 0
  end
 
-  def is_super_admin?(app = "phin")
+  def is_super_admin?(app = "")
     return true if is_sysadmin?
     begin
       jid = Jurisdiction.state.nonforeign.blank? ? 0 : Jurisdiction.state.nonforeign.first.id # Should be Texas
@@ -262,7 +262,7 @@ class User < ActiveRecord::Base
     return role_memberships(true).count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
   end
  
-  def is_admin?(app = "phin")
+  def is_admin?(app = "")
     # TODO: Should be app agnostic
     return true if is_sysadmin?
     return true if is_super_admin?(app)
