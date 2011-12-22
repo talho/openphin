@@ -63,6 +63,7 @@ Talho.Dashboard.CMS.Views.AdminToolbar = Ext.extend(Ext.Toolbar, {
         {text: 'RSS', scope: this, handler: function(){this.fireEvent('addportlet', 'rss');}},
         {text: 'Recent Forum Posts', scope: this, handler: function(){this.fireEvent('addportlet', 'forum');}},
         {text: 'Recent Documents', scope: this, handler: function(){this.fireEvent('addportlet', 'doc');}},
+        {text: 'Recent Alerts', scope: this, handler: function(){this.fireEvent('addportlet', 'alert');}},
         {text: 'Twitter', scope: this, handler: function(){this.fireEvent('addportlet', 'twitter');}}
       ]
     });

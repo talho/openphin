@@ -1,6 +1,6 @@
 class AlertsController < ApplicationController
   skip_before_filter :login_required, :only => [:show_with_token, :update_with_token]
-  before_filter :find_alert
+  before_filter :find_alert, :except => [:recent_alerts]
   before_filter :can_view_alert, :only => [:show, :update]
   
   def show
@@ -46,6 +46,14 @@ class AlertsController < ApplicationController
     @current_user = @alert_attempt.user
     
     self.update
+  end
+  
+  def recent_alerts
+    @alerts = current_user.alert_attempts.order('created_at desc').limit(5).map(&:alert)
+    
+    respond_to do |format|
+      format.json {render :json => @alerts.map{|a| a.as_json(:only => [:title, :message, :alert_type, :id, :created_at])}}
+    end
   end
   
   private

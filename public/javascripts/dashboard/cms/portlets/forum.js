@@ -62,7 +62,7 @@ Talho.Dashboard.Portlet.Forum = Ext.extend(Talho.Dashboard.Portlet, {
               '<span class="dash-forum-poster-name">{poster_name}</span> posted to <span class="dash-forum-name">{forum_name}</span> - <span class="dash-forum-topic-name">{name}</span> on {[fm.date(values.created_at, "n/d/y, g:i A")]}',
             '</div>',
             '<div class="dash-forum-content">',
-              '{[values.content.substring(0,160) + (values.content.length > 160 ? "..." : "")]}',
+              '{[values.content.summarizeHtml(250) + (values.content.length > 250 ? "..." : "")]}',
             '</div>',
           '</div>',
           '</div>',

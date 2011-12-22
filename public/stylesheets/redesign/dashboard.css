@@ -82,6 +82,7 @@
 .dash-twitter-entry,
 .dash-rss-entry,
 .dash-doc-node,
+.dash-alert-node,
 .dash-forum-post, 
 .dash-forum-topic{
   background: white;
@@ -118,7 +119,8 @@
   height: 30%;
 }
 
-.dash-forum-post-details{
+.dash-forum-post-details,
+.dash-alert-title{
   padding: 0px 0px 3px;
   border-bottom: 1px solid #D0D0D0;
 }

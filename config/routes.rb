@@ -35,7 +35,7 @@ ActionController::Routing::Routes.draw do |map|
     user.is_admin "/is_admin.:format", :controller => "users", :action => "is_admin", :conditions => {:method => [:get]}
   end
 
-  map.resources :alerts, :only => [:show, :update]
+  map.resources :alerts, :only => [:show, :update], :collection => [:recent_alerts]
   map.alert_with_token '/alerts/:id/show_with_token/:token.:format', :controller => 'alerts', :action => 'show_with_token', :method => :get
   map.update_alert_with_token '/alerts/:id/update_with_token/:token.:format', :controller => 'alerts', :action => 'update_with_token', :method => :put
 
