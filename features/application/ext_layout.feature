@@ -31,7 +31,7 @@ Feature: Application layout should have communications, portal & application too
     When I navigate to the ext dashboard page
     Then I should see the following toolbar items in "top_toolbar":
       | HAN                  |
-      | FAQs                 |
+#      | FAQs                 |
       | Tutorials            |
       | Martin Fowler        |
       | About                |
@@ -39,10 +39,10 @@ Feature: Application layout should have communications, portal & application too
       | Documents            |
       | Forums               |
       | Links                |
-    When I press "FAQs" within "#top_toolbar"
-    Then I should see the following ext menu items:
-      | name                            |
-      | H1N1 Frequently Asked Questions |
+#    When I press "FAQs" within "#top_toolbar"
+#    Then I should see the following ext menu items:
+#      | name                            |
+#      | H1N1 Frequently Asked Questions |
     When I press "Tutorials" within "#top_toolbar"
     Then I should see the following ext menu items:
       | name            |

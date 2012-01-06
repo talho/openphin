@@ -25,7 +25,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       listeners: {
         scope: this,
         'exception': function(){this.handleError;},
-		'load': function(store){this.reportsStoreRefresher(store);}
+		    'load': function(store){if(this.report_refresher == undefined)this.reportsStoreRefresher(store);}
       }
     });
 

@@ -6,7 +6,7 @@ audio:not([controls]){display:none;}
 .t_boot sub,.t_boot sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}
 .t_boot sup{top:-0.5em;}
 .t_boot sub{bottom:-0.25em;}
-.t_boot img{border:0;-ms-interpolation-mode:bicubic;}
+.t_boot img{border:0; -ms-interpolation-mode:bicubic;}
 .t_boot button,.t_boot input,.t_boot select,.t_boot textarea{font-size:100%;margin:0;vertical-align:baseline;*vertical-align:middle;}
 .t_boot button,.t_boot input{line-height:normal;*overflow:visible;}
 .t_boot button::-moz-focus-inner,.t_boot input::-moz-focus-inner{border:0;padding:0;}
@@ -248,6 +248,212 @@ audio:not([controls]){display:none;}
   word-wrap: break-word;
 }
 
+/*
+ * Tables.less
+ * Tables for, you guessed it, tabular data
+ * ---------------------------------------- */
+.t_boot table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.t_boot table {
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 0;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.t_boot table th, .t_boot table td {
+  padding: 10px 10px 9px;
+  line-height: 18px;
+  text-align: left;
+}
+.t_boot table th {
+  padding-top: 9px;
+  font-weight: bold;
+  vertical-align: middle;
+}
+.t_boot table td {
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+.t_boot table tbody th {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+.condensed-table th, .condensed-table td {
+  padding: 5px 5px 4px;
+}
+.bordered-table {
+  border: 1px solid #ddd;
+  border-collapse: separate;
+  *border-collapse: collapse;
+  /* IE7, collapse table to remove spacing */
+
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.bordered-table th + th, .bordered-table td + td, .bordered-table th + td {
+  border-left: 1px solid #ddd;
+}
+.bordered-table thead tr:first-child th:first-child, .bordered-table tbody tr:first-child td:first-child {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+}
+.bordered-table thead tr:first-child th:last-child, .bordered-table tbody tr:first-child td:last-child {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+}
+.bordered-table tbody tr:last-child td:first-child {
+  -webkit-border-radius: 0 0 0 4px;
+  -moz-border-radius: 0 0 0 4px;
+  border-radius: 0 0 0 4px;
+}
+.bordered-table tbody tr:last-child td:last-child {
+  -webkit-border-radius: 0 0 4px 0;
+  -moz-border-radius: 0 0 4px 0;
+  border-radius: 0 0 4px 0;
+}
+.t_boot table .span1 {
+  width: 20px;
+}
+.t_boot table .span2 {
+  width: 60px;
+}
+.t_boot table .span3 {
+  width: 100px;
+}
+.t_boot table .span4 {
+  width: 140px;
+}
+.t_boot table .span5 {
+  width: 180px;
+}
+.t_boot table .span6 {
+  width: 220px;
+}
+.t_boot table .span7 {
+  width: 260px;
+}
+.t_boot table .span8 {
+  width: 300px;
+}
+.t_boot table .span9 {
+  width: 340px;
+}
+.t_boot table .span10 {
+  width: 380px;
+}
+.t_boot table .span11 {
+  width: 420px;
+}
+.t_boot table .span12 {
+  width: 460px;
+}
+.t_boot table .span13 {
+  width: 500px;
+}
+.t_boot table .span14 {
+  width: 540px;
+}
+.t_boot table .span15 {
+  width: 580px;
+}
+.t_boot table .span16 {
+  width: 620px;
+}
+.zebra-striped tbody tr:nth-child(odd) td, .zebra-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+.zebra-striped tbody tr:hover td, .zebra-striped tbody tr:hover th {
+  background-color: #f5f5f5;
+}
+.t_boot table .header {
+  cursor: pointer;
+}
+.t_boot table .header:after {
+  content: "";
+  float: right;
+  margin-top: 7px;
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: #000 transparent;
+  visibility: hidden;
+}
+.t_boot table .headerSortUp, .t_boot table .headerSortDown {
+  background-color: rgba(141, 192, 219, 0.25);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+.t_boot table .header:hover:after {
+  visibility: visible;
+}
+.t_boot table .headerSortDown:after, .t_boot table .headerSortDown:hover:after {
+  visibility: visible;
+  filter: alpha(opacity=60);
+  -khtml-opacity: 0.6;
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+}
+.t_boot table .headerSortUp:after {
+  border-bottom: none;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000;
+  visibility: visible;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  filter: alpha(opacity=60);
+  -khtml-opacity: 0.6;
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+}
+.t_boot table .blue {
+  color: #049cdb;
+  border-bottom-color: #049cdb;
+}
+.t_boot table .headerSortUp.blue, .t_boot table .headerSortDown.blue {
+  background-color: #ade6fe;
+}
+.t_boot table .green {
+  color: #46a546;
+  border-bottom-color: #46a546;
+}
+.t_boot table .headerSortUp.green, .t_boot table .headerSortDown.green {
+  background-color: #cdeacd;
+}
+.t_boot table .red {
+  color: #9d261d;
+  border-bottom-color: #9d261d;
+}
+.t_boot table .headerSortUp.red, .t_boot table .headerSortDown.red {
+  background-color: #f4c8c5;
+}
+.t_boot table .yellow {
+  color: #ffc40d;
+  border-bottom-color: #ffc40d;
+}
+.t_boot table .headerSortUp.yellow, .t_boot table .headerSortDown.yellow {
+  background-color: #fff6d9;
+}
+.t_boot table .orange {
+  color: #f89406;
+  border-bottom-color: #f89406;
+}
+.t_boot table .headerSortUp.orange, .t_boot table .headerSortDown.orange {
+  background-color: #fee9cc;
+}
+.t_boot table .purple {
+  color: #7a43b6;
+  border-bottom-color: #7a43b6;
+}
+.t_boot table .headerSortUp.purple, .t_boot table .headerSortDown.purple {
+  background-color: #e2d5f0;
+}
 
 /* Forms.less
  * Base styles for various input types, form layouts, and states
@@ -931,3 +1137,4 @@ button.btn::-moz-focus-inner,input[type=submit].btn::-moz-focus-inner{padding:0;
 .media-grid li{display:inline;}
 .media-grid a{float:left;padding:4px;margin:0 0 18px 20px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075);-moz-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075);box-shadow:0 1px 1px rgba(0, 0, 0, 0.075);}.media-grid a img{display:block;}
 .media-grid a:hover{border-color:#0069d6;-webkit-box-shadow:0 1px 4px rgba(0, 105, 214, 0.25);-moz-box-shadow:0 1px 4px rgba(0, 105, 214, 0.25);box-shadow:0 1px 4px rgba(0, 105, 214, 0.25);}
+.t_boot .x-form-cb-label{float:none;}

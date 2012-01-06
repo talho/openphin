@@ -37,8 +37,8 @@ page << "Application.default_dashboard = #{current_user.default_dashboard.blank?
     end
   end
 
-  menu_config += "{name: 'FAQs', items:[
-                    {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
+ # menu_config += "{name: 'FAQs', items:[
+ #                   {name: 'H1N1 Frequently Asked Questions', tab:{id: 'h1n1_faq', title:'H1N1 FAQ', url:'#{ faqs_path }'}}]},"
 
   begin
     REPORT_DB

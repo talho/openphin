@@ -1,25 +1,27 @@
+<div class='t_boot'>
 <h1>Pending Role Requests</h1>
-<br>
-<table class='pending_role_requests'>
-  <tr>
-    <th>Requester</th>
-    <th>Role</th>
-    <th>Jurisdiction</th>
-    <th>Actions</th>
-  </tr>
-
-<% @role_requests.each do |role_request| %>
-  <tr class='pending_role_requests'>
-    <% if role_request.user.nil? %>
-    <td class='requester_email'>unknown user</td>
-    <% else %>
-    <td class='requester_email'><%= link_to role_request.user.email, user_profile_path(role_request.user) %></td>
+<table class='bordered-table'>
+  <thead>
+    <tr>
+      <th>Requester</th>
+      <th>Role</th>
+      <th>Jurisdiction</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @role_requests.each do |role_request| %>
+      <tr class='pending_role_requests'>
+        <% if role_request.user.nil? %>
+        <td class='requester_email'>unknown user</td>
+        <% else %>
+        <td class='requester_email'><%= link_to role_request.user.email, user_profile_path(role_request.user) %></td>
+        <% end %>
+        <td class='role'><%=h role_request.role.name %></td>
+        <td class='jurisdiction'><%=h role_request.jurisdiction.name %></td>
+        <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link btn danger'>Deny</a> &nbsp; <a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link btn success'>Approve</a></td>
+      </tr>
     <% end %>
-    <td class='role'><%=h role_request.role.name %></td>
-    <td class='jurisdiction'><%=h role_request.jurisdiction.name %></td>
-    <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link'>Deny</a> | <a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link'>Approve</a></td>
-  </tr>
-<% end %>
+  </tbody>
 </table>
-
-<br />
+</div>
