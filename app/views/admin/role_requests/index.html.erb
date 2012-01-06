@@ -19,7 +19,7 @@
         <% end %>
         <td class='role'><%=h role_request.role.name %></td>
         <td class='jurisdiction'><%=h role_request.jurisdiction.name %></td>
-        <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link btn danger'>Deny</a> &nbsp; <a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link btn success'>Approve</a></td>
+        <td><a href='<%=deny_admin_role_request_path(role_request) %>' class='deny_link btn danger'>Deny</a> | <a href='<%=approve_admin_role_request_path(role_request) %>' class='approve_link btn success'>Approve</a></td>
       </tr>
     <% end %>
   </tbody>
