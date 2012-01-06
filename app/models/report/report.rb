@@ -42,7 +42,41 @@ class Report::Report < ActiveRecord::Base
     update_attribute(:name,"#{recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-')}#{id}")
   end
 
-private
+  def to_csv
+    # uses the view helpers just as the html templates would
+    begin
+      meta = dataset.find({:meta=>{:$exists=>true}}).first["meta"]
+      raise "Report #{name} is missing meta component" unless meta
+#     ex: [['name','Name'],['email','Email Address'],['role_requests','Pending Role Requests','to_rpt']]
+      directives = meta["template_directives"]
+      raise "Report #{name} is missing column directives" unless directives
+    # setup supporting view
+      helper_expected = directives.detect{|e| e.size > 2}
+      if helper_expected
+        view = ActionView::Base.new
+        recipe_instance = recipe.constantize
+        helpers = recipe_instance.respond_to?(:helpers) ? (recipe_instance.helpers || []) : []
+        helpers.each {|h| view.extend(h.constantize)}
+      end
+    # generate csv
+      headers = directives.collect{|col| col.first}
+      raise "Report #{name} has malformed the csv header" unless headers.kind_of? Array
+      entries = dataset.find(:i=>{:$exists=>true})
+      FasterCSV.generate(:force_quotes=>true,:headers=>headers,:write_headers=>true) do |row|
+        entries.each do |entry|
+          rr = directives.inject([]) do |memo,column|
+            memo << ( (column.size > 2) ? view.send(column[2],entry[column[0]]) : entry[column[0]] )
+          end
+          row << rr
+        end
+      end
+    rescue StandardError => error
+      debugger
+      raise error
+    end
+  end
+
+  private
 
   JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
