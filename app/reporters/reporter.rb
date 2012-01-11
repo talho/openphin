@@ -7,7 +7,6 @@ class Reporters::Reporter < Struct.new(:params)
 
   def perform
     report_id = params[:report_id]
-    report_options = params[:options]
     logger = REPORT_LOGGER || Logger.new
     begin
       begin
@@ -40,7 +39,7 @@ class Reporters::Reporter < Struct.new(:params)
         fatal_logging(logger,report,full_message)
       end
 
-      unless params[:filters]
+      unless params[:filters] || params[:render_only]
 
         begin
           start_time = Time.now

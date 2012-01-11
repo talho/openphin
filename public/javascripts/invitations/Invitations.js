@@ -461,7 +461,7 @@ Talho.Invitations = Ext.extend(function(){}, {
   ajax_err_cb: function(response, opts) {
     return '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
       '<div style="height:400px;overflow:scroll;">' + response.responseText + '<\div>';
-  },
+  }
 
 });
 

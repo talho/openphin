@@ -215,7 +215,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
     var item_list = [{
       id: 'card-wizard-panel',
       layout: 'card',
-      defaults: { border: true, height: 470 },
+      defaults: { border: true, height: 450 },
       autoHeight: true,
       autoWidth: true,
       activeItem: 0,
@@ -266,7 +266,7 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
         items: [
           {xtype: 'textfield', fieldLabel: 'Invitation Name', name: 'invitation[name]', maxLength: '46', width: 550, allowBlank: false},
           {xtype: 'textfield', fieldLabel: 'Email Subject', name: 'invitation[subject]', maxLength: '46', width: 550, allowBlank: false},
-          {xtype: 'htmleditor', fieldLabel: 'Email Body', name: 'invitation[body]', allowBlank: false, width: 550, height: 300, enableSourceEdit: false, enableAlignments: false, enableColors: false, enableFont: false, enableFontSize: false, enableFormat: false, enableLinks: false, enableLists: false},
+          {xtype: 'htmleditor', fieldLabel: 'Email Body', name: 'invitation[body]', allowBlank: false, width: 550, height: 225, enableSourceEdit: false, enableAlignments: false, enableColors: false, enableFont: false, enableFontSize: false, enableFormat: false, enableLinks: false, enableLists: false},
           {xtype: 'combo', mode: 'local', fieldLabel: 'Default Organization', emptyText: 'Select an Organization...', typeAhead: false, triggerAction: 'all',
             lazyRender: true, hiddenName: 'invitation[organization_id]', allowBlank: true, editable: false, mode: 'local', valueField: 'id',
             displayField: 'name', forceSelection: true, store: new Ext.data.JsonStore({autoLoad: true, autoDestroy: true, url: '/organizations.json', root: 'organizations', fields: ['id','name']})}

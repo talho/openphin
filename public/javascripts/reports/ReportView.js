@@ -38,7 +38,14 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
       bodyBorder: false,
       margins: '5 5 5 0',
       padding: '0',
-      items: [{autoLoad:{url: this.url},autoScroll: true}],
+      items: {
+        autoLoad:{
+          url: this.url,
+          scope: this,
+          callback: function(ele,success,response,options){
+            if (!success && response.status != 0) {this.show_err_message(response, this.primary_panel)}
+          }
+      }},
       tbar: new Ext.Toolbar( { items: [
         {xtype: 'button', text: 'Copy', iconCls: 'reportFile', scope: this, handler: function(){ this.copy_report(); } }
       ] } )
@@ -77,17 +84,6 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
           }
         },
         failure: function(){ this.mask("Server error.  Please try again.");  }
-      });
-    };
-
-    this.copy_request = function(button) {
-      Ext.Ajax.request({
-         url: '/report/reports.json',
-         method: 'POST',
-         scope:  this,
-         params: { 'document_format': button.text, 'report_url': this.url },
-         success: function(){},
-         failure: function(){this.mask("Server error.  Please try again.");}
       });
     };
 
@@ -142,6 +138,14 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
       '<div style="height:40px;">' + 'has been scheduled. Please check your Reports document folder for this file.' + '<\div>';
   },
 
+  show_err_message: function(response, panel_to_destroy) {
+    var msg = '<b>Status: ' + response.status + ' => ' + response.statusText + '</b><br><br>' +
+      '<div style="height:200px;overflow:scroll;">' + (Ext.decode(response.responseText)).error +
+            '. Consider regenerating the report.' + '<\div>';
+    Ext.Msg.show({title: 'Error', msg: msg, minWidth: 600, maxWidth: 600, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+    if (panel_to_destroy) {panel_to_destroy.destroy();}
+  },
+
   updateReportView: function() {
     var params1 = [];
     var params = this.sidebarPanel.getForm().getFieldValues();
@@ -187,14 +191,6 @@ Ext.ux.SliderWithTip = Ext.extend(Ext.slider.MultiSlider, {
    }
 });
 Ext.reg('reportsliderwithtip', Ext.ux.SliderWithTip);
-
-//Ext.ux.ComboBoxWithTypeAheadMultiSelect = Ext.extend(Ext.form.ComboBox, {
-//  intiComponent: function(){
-//    this.typeAhead = true;
-//    this.multiSelect = true;
-//    Ext.ux.ComboBoxWithTypeAheadMultiSelect.superclass.initComponent.apply(this, arguments);
-//  }
-//});
 
 var updateSliderLabel = function(slider){
   var baseLabel = slider.label.dom.innerHTML.split(":");

@@ -25,7 +25,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       listeners: {
         scope: this,
         'exception': function(){this.handleError;},
-		'load': function(store){this.reportsStoreRefresher(store);}
+		    'load': function(store){if(this.report_refresher == undefined)this.reportsStoreRefresher(store);}
       }
     });
 
@@ -223,7 +223,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       url: record.get('report_path'), 
       id: 'report_view_for_' + record.get('id'),
       report_id: record.get('id'),
-      initializer: 'Talho.ReportView' 
+      initializer: 'Talho.ReportView'
      });
   },
 
@@ -238,9 +238,6 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
        success: function(){this.reportsStore.load();this.generateReportButton.setText('Generate Report');this.generateReportButton.enable();},
   	   failure: function(){this.ajax_err_cb}
   	});  	
-//	this.reportResults.getView().refresh();
-//	var selection = this.reportResults.getView().getRowSelectionModel().getSelections()[0];
-//	this.reportResults.getView().getRowSelectionModel().selectRecords(selection);
   }
 
 });

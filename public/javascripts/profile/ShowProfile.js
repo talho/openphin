@@ -28,10 +28,10 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
       autoScroll: true,
       padding: 5,
       itemId: config.id,
-      cls: 'primary-panel',
+      cls: 'primary-panel t_boot',
       closable: true,
       title: this.title,
-      items: [{xtype: 'container', html: '&nbsp;', columnWidth:0.5}, this.inner_panel, {xtype: 'container', html: '&nbsp;', columnWidth:0.5}]
+      items: [{xtype:'container',html:'&nbsp;',columnWidth:0.5},this.inner_panel,{xtype:'container',html:'&nbsp;',columnWidth:0.5}]
     });  
 
     this.getPanel = function(){
@@ -41,28 +41,48 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
 
     buildLeftColumn: function(){
       var singleDataBox = Ext.extend(Ext.BoxComponent, {
-        tpl: '<tpl if="dataPoint"><fieldset style="margin-bottom: 20px; border: none; border-top: 1px solid #EEEEEE;"><legend style="color: #999999;">{label}</legend>' +
-         '<span style="font-size: 130%;"> {dataPoint} </span></fieldset></tpl>'
+        tpl: '<tpl if="dataPoint">' +
+              '<fieldset style="margin-bottom: 20px; border: none; border-top: 1px solid #EEEEEE;">' +
+                '<legend style="color: #999999;padding-left:0px;">{label}</legend>' +
+                '<span style="font-size: 130%;"> {dataPoint} </span>' +
+             '</fieldset></tpl>'
       });
 
-      var assembledItems = [ {xtype: 'box', data: this.userdata, tpl: '<span style="font-weight: bold; font-size: 300%; line-height: 100%;"> {display_name} </span>'} ];
+      var assembledItems = [{
+        xtype: 'box',
+        data: this.userdata,
+        tpl: '<h2> {display_name} </h2>'}];
 
       if (this.userdata.can_edit){
         assembledItems.push([
           new Ext.Container({
-            items:[{xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;"> ({first_name} {last_name}) </span></tpl>'}, new Ext.Button({ scope: this, handler: this.openEditUserTab, text: "Edit This Account" })]
+            items:[{
+              xtype: "box",
+              data: this.userdata,
+              tpl: '<tpl if="(first_name +\' \' + last_name) != display_name">' +
+                   '<small>({first_name} {last_name})</small></tpl>'
+            },
+            new Ext.Button({ scope: this, width: 100, handler: this.openEditUserTab,text: "Edit This Account" })]
           })
         ]);
       } else {
-        assembledItems.push({xtype: "box", data: this.userdata, tpl: '<tpl if="(first_name +\' \' + last_name) != display_name"><span style="font-weight: bold; margin-bottom: 10px; padding-left: 5px;> ({first_name} {last_name}) </span></tpl>'});
+        assembledItems.push({
+          xtype: "box",
+          data: this.userdata,
+          tpl: '<tpl if="(first_name +\' \' + last_name) != display_name">' +
+               '<small>({first_name} {last_name})</small></tpl>'});
       }
 
       if (this.userdata.privateProfile){
-        assembledItems.push({ xtype: 'box', tpl: '<span style="font-size: 150%;">This profile information is private.</span>'  });
+        assembledItems.push({xtype:'box',tpl:'<span>This profile information is private.</span>'});
       } else {
-        assembledItems.push([
-          {xtype: 'box', data: this.userdata, tpl: '<fieldset style="margin-bottom: 20px; margin-top: 20px; border:none; border-top: 1px solid #EEEEEE;"><legend style="color: #999999;">Roles</legend><tpl for="role_memberships"><p style="font-size: 130%;">{role} in {jurisdiction}</p></tpl></fieldset>'},
-          new singleDataBox({data:{ label: "Employer",        dataPoint: this.userdata.employer} }),
+        assembledItems.push([{
+          xtype: 'box',
+          data: this.userdata,
+          tpl: '<fieldset style="margin-bottom: 20px; border: none; border-top: 1px solid #EEEEEE;">' +
+               '<legend style="color: #999999;padding-left:0px;">Roles</legend>' +
+               '<tpl for="role_memberships"><p style="font-size: 130%;">{role} in {jurisdiction}</p></tpl></fieldset>'
+          },new singleDataBox({data:{ label: "Employer",        dataPoint: this.userdata.employer} }),
           new singleDataBox({data:{ label: "Occupation",      dataPoint: this.userdata.occupation} }),
           new singleDataBox({data:{ label: "Job Description", dataPoint: this.userdata.job_description} }),
           new singleDataBox({data:{ label: "Bio",             dataPoint: this.userdata.bio} }),
@@ -78,13 +98,18 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
       for (var i=0; i < this.userdata.contacts.length; i++ ) { // create nicer labels for display
         this.userdata.contacts[i]['label'] = deviceMap[this.userdata.contacts[i]['type']]; 
       }
-      return [{xtype: 'box', data: this.userdata, tpl: '<img src="{photo}" />', height: 200},
-      {xtype: 'box', data: this.userdata, tpl: '<fieldset style="margin-bottom: 20px; margin-top: 20px; border:none; border-top: 1px solid #EEEEEE;">'+
-                                               '<legend style="color: #999999;">Contact Information</legend><tpl for="contacts">'+
-                                               '<tpl if="address"><div style="margin-bottom: 10px;"><span style="color: #555555">{label}:</span>'+
-                                               '<p style="font-size: 130%; ">{address}</p></div></tpl></tpl></fieldset>'},
-      {xtype: 'box', data: this.userdata, tpl: '<tpl if="!Ext.isEmpty(organizations)"><fieldset style="margin-bottom: 20px; border: none; border-top: 1px solid #EEEEEE;">' +
-                                               '<legend style="color: #999999;">Organizations</legend><tpl for="organizations"><p style="font-size: 130%;">{name}</p></tpl></fieldset></tpl>'}];
+      return [{xtype: 'box', data: this.userdata, tpl: '<ul class="media-grid"><li><a><img class="thumbnail" src="{photo}" /></a></li></ul>', height: 200},
+      {xtype: 'box', data: this.userdata,
+        tpl: '<fieldset style="margin-bottom: 20px; margin-top: 30px; border:none; border-top: 1px solid #EEEEEE;">'+
+             '<legend style="color: #999999;padding-left:0px">Contact Information</legend><tpl for="contacts">'+
+             '<tpl if="address"><div style="margin-bottom: 10px;"><span style="color: #555555">{label}:</span>'+
+             '<p style="font-size: 130%; ">{address}</p></div></tpl></tpl></fieldset>'},
+      {xtype: 'box', data: this.userdata,
+        tpl: '<tpl if="!Ext.isEmpty(organizations)">' +
+             '<fieldset style="margin-bottom: 20px; border: none; border-top: 1px solid #EEEEEE;">' +
+             '<legend style="color: #999999;padding-left:0px;">Organizations</legend><tpl for="organizations">' +
+             '<p style="font-size: 130%;">{name}</p></tpl></fieldset></tpl>'
+      }];
     },
 
     renderProfile: function(){

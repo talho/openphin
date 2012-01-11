@@ -35,6 +35,28 @@ Ext.apply(Ext.form.VTypes, {
   image : function(value){
      return /^.*.(jpe?g|png|gif)$/i.test(value);
    },
-  imageText : 'Must be a JPG, PNG, or GIF file'
+  imageText : 'Must be a JPG, PNG, or GIF file',
+
+  // Usage:
+  //{xtype: 'timefield', fieldLabel: 'Start Time', itemId: 'start', vtype: 'timerange', endTimeField:    'totime',  id: 'fromtime' },
+  //{xtype: 'timefield', fieldLabel: 'End Time',   itemId: 'end',   vtype: 'timerange', startTimeField: 'fromtime', id: 'totime'},
+  timerange : function(time, field) {
+    if (field.startTimeField) {
+      var start = Ext.getCmp(field.startTimeField);
+      if (!start.maxValue || (time != start.maxValue.getValue())) {
+        start.setMaxValue(time);
+        start.validate();
+      }
+    }
+    else if (field.endTimeField) {
+      var end = Ext.getCmp(field.endTimeField);
+      if (!end.minValue || (time != end.minValue.getValue())) {
+        end.setMinValue(time);
+        end.validate();
+      }
+    }
+    return true;
+  }
+
 });
 

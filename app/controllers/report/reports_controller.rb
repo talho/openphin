@@ -29,11 +29,12 @@ class Report::ReportsController < ApplicationController
     rendering_path.sub!(/\.html$/,"-#{params[:filter_at]}.html") if params[:filter_at]
     begin
       @rendering = File.read rendering_path
-      respond_to do |format|
-        format.json {render :json => @rendering}
-      end
     rescue Errno::ENOENT
-      REPORT_LOGGER.error "\nMissing #{rendering_path} rendering file"
+      Reporters::Reporter.new(:report_id=>report[:id],:render_only=>true).perform
+      @rendering = File.read rendering_path
+    end
+    respond_to do |format|
+      format.json {render :json => @rendering}
     end
   end
 
@@ -42,18 +43,13 @@ class Report::ReportsController < ApplicationController
   def reduce
     # before sending to delayed job, assure that report and recipe exist
     report = Report::Report.find_by_id(params[:id])
-    recipe = report.recipe
     # before sending to delayed job, assure that filters can be decoded
     filters = nil
     if params[:filters]
       filters = {"elements" => ActiveSupport::JSON.decode(params[:filters])}
       filters["filtered_at"] = Base32::Crockford.encode(Time.now.to_i)
     end
-    unless Rails.env == 'development'
-      Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>params[:report_id], :filters=>filters) )
-    else
-      Reporters::Reporter.new(:report_id=>report[:id], :filters=>filters).perform  # for debugging
-    end
+    run_reporter(:report_id=>report[:id],:filters=>filters)
     respond_to do |format|
       format.html {}
       format.json {render :json => {:success => true, :id => report[:id], :filtered_at => filters["filtered_at"]}}
@@ -66,11 +62,7 @@ class Report::ReportsController < ApplicationController
       unless params[:report_url]
         # capture the resultset and generate the html rendering in delayed-job
         report = current_user.reports.create!(:recipe=>params[:recipe_id],:criteria=>params,:incomplete=>true)
-        unless Rails.env == 'development'
-          Delayed::Job.enqueue( Reporters::Reporter.new(:report_id=>report[:id]) )
-        else
-          Reporters::Reporter.new(:report_id=>report[:id]).perform  # for development
-        end
+        run_reporter(:report_id=>report[:id])
         respond_to do |format|
           format.html {}
           format.json {render :json => {:success => true, :report => {:name=>report.name}}}
@@ -143,6 +135,15 @@ class Report::ReportsController < ApplicationController
 
   protected
 
+   def run_reporter(options)
+     reporter = Reporters::Reporter.new(options)
+     if Rails.env == 'development'
+       reporter.perform  # for debugging
+     else
+       Delayed::Job.enqueue( reporter )
+     end
+   end
+
   def copy_to_documents(content,filename)
     folder = current_user.folders.find_by_name('Reports') || current_user.folders.create(:name=>'Reports')
     Dir.mktmpdir do |dir|
@@ -213,6 +214,20 @@ class Report::ReportsController < ApplicationController
       debugger
       raise error
     end
+  end
+
+  def mimic_file
+    file = StringIO.new(part.body) #mimic a real upload file
+    file.class.class_eval { attr_accessor :original_filename, :content_type } #add attr's that paperclip needs
+    file.original_filename = part.filename #assign filename in way that paperclip likes
+    file.content_type = part.mime_type # you could set this manually as well if needed e.g 'application/pdf'
+
+    # now just use the file object to save to the Paperclip association.
+
+    a = Asset.new
+    a.asset = file
+    a.save!
+
   end
 
 end
