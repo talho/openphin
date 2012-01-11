@@ -98,7 +98,7 @@ Talho.ShowProfile = Ext.extend(Ext.util.Observable, {
       for (var i=0; i < this.userdata.contacts.length; i++ ) { // create nicer labels for display
         this.userdata.contacts[i]['label'] = deviceMap[this.userdata.contacts[i]['type']]; 
       }
-      return [{xtype: 'box', data: this.userdata, tpl: '<ul class="media-grid"><li><a><img class="thumbnail" src="{photo}" /></a></li></ul>', height: 200},
+      return [{xtype: 'box', data: this.userdata, tpl: '<ul class="media-grid"><li><a style="margin:0px;"><img class="thumbnail" src="{photo}" /></a></li></ul>', height: 200},
       {xtype: 'box', data: this.userdata,
         tpl: '<fieldset style="margin-bottom: 20px; margin-top: 30px; border:none; border-top: 1px solid #EEEEEE;">'+
              '<legend style="color: #999999;padding-left:0px">Contact Information</legend><tpl for="contacts">'+
