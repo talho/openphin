@@ -120,7 +120,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
 
     var jurisdictions_store = new Ext.data.JsonStore({
       url: '/admin_user_batch/admin_jurisdictions', autoLoad: true, autoSave: false,
-      fields: [{name: 'name', mapping: 'jurisdiction.name'}]
+      fields: [{name: 'name', mapping: 'name'}]
     });
 
     this.infobox = new Ext.Container({
@@ -153,7 +153,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
              items: [
             this.grid,
             {xtype: 'spacer', height: '10'},
-            {xtype: 'combo', fieldLabel: 'Default Jurisdiction for this batch', name: 'user_batch[jurisdiction]', editable: false, triggerAction: 'all',
+            {xtype: 'combo', fieldLabel: 'Default Jurisdiction for this batch', name: 'user_batch[jurisdiction]', typeAhead: true, triggerAction: 'all',
                 store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 90px 0 0'}
             ]}
           ]}

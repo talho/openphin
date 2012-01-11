@@ -7,23 +7,10 @@ class Admin::UserBatchController < ApplicationController
   end
 
   def admin_jurisdictions
-    jurisdictions = Array.new
-    if params[:ns] == "nonforeign"
-      current_user.jurisdictions.admin.each{|j|
-        j.self_and_descendants.each{|s| jurisdictions.push(s)} if j.self_and_descendants.length > 1
-      }
-      if jurisdictions.blank?
-        current_user.jurisdictions.admin.each{|j| j.self_and_descendants.each{|s| jurisdictions.push(s)} }  
-      end
-      jurisdictions.delete_if { |j| j.foreign } if params[:ns] == "nonforeign"
-      data = Array.new
-      Jurisdiction.each_with_level(jurisdictions){|j,level|
-        data << {:name => j.name, :id => j.id, :leaf => j.leaf?, :left => j.left, :right => j.right, :level => level, :parent_id => j.parent_id}
-      }
-    else
-      data = current_user.jurisdictions.admin.map{|j| j.self_and_descendants.flatten.uniq}.flatten.uniq
-    end   
-    render :json => data
+    jurisdictions = current_user.jurisdictions.admin.find(:all, :conditions => {:foreign => ( params[:ns] == "nonforeign" ? [false] : [false, true] )}).map(&:self_and_descendants).flatten.uniq
+    js = []
+    Jurisdiction.each_with_level(jurisdictions){|j, level| js << j.as_json.merge(:level => level) }
+    render :json => js
   end
   
   def create_from_json
