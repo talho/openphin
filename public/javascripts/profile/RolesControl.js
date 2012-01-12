@@ -52,12 +52,12 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
       items: [
         {xtype: 'container', layout: 'column', anchor: '100%', padding: '10', items: [
           {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.6, items: [
-            {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: false, triggerAction: 'all',
+            {xtype: 'combo', fieldLabel: 'Role', name: 'rq[role]', editable: true, typeAhead: true, forceSelection: true, triggerAction: 'all',
               anchor: '100%', store: this.roles_store, mode: 'local', displayField: 'name'}
           ]},
           {xtype: 'container', layout: 'form', width: 10, items: [ {xtype: 'spacer', height: 10} ]},
           {xtype: 'container', layout: 'form', labelAlign: 'top', columnWidth: 0.4, items: [
-            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: false, triggerAction: 'all',
+            {xtype: 'combo', fieldLabel: 'Jurisdiction', name: 'rq[jurisdiction]', editable: true, typeAhead: true, forceSelection: true, triggerAction: 'all',
               anchor: '100%', store: this.jurisdictions_store, mode: 'local', tpl: template, displayField: 'name'}
           ]}
         ]},

@@ -153,7 +153,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
              items: [
             this.grid,
             {xtype: 'spacer', height: '10'},
-            {xtype: 'combo', fieldLabel: 'Default Jurisdiction for this batch', name: 'user_batch[jurisdiction]', typeAhead: true, triggerAction: 'all',
+            {xtype: 'combo', fieldLabel: 'Default Jurisdiction for this batch', name: 'user_batch[jurisdiction]', typeAhead: true, forceSelection: true, triggerAction: 'all',
                 store: jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;padding:0 90px 0 0'}
             ]}
           ]}
