@@ -16,7 +16,7 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
         { columnWidth: 1, defaults: {anchor: '100%', border: false}, items: [
           {xtype: 'panel', layout: 'column', bodyStyle:'background-color: white;', defaults: {layout: 'form', labelAlign: 'top', border: false, xtype: 'panel'}, items: [
             {columnwidth: 0.5, bodyStyle:'padding-right: 20px; background-color: white;', defaults: {anchor: '100%'}, items: [
-              {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', allowBlank: false, tabIndex: 1},
+              {xtype: 'textfield', fieldLabel: 'First name', name: 'user[first_name]', maxLength: '46', width: 100, allowBlank: false, tabIndex: 1},
               {xtype: 'textfield', fieldLabel: 'Display name', name: 'user[display_name]', maxLength: '46', allowBlank: true, tabIndex: 3},
               {xtype: 'textfield', inputType: 'password', fieldLabel: 'Password', name: 'user[password]', itemId: 'initialPass', maxLength: '46', allowBlank: false, vtype: 'password', tabIndex: 5},
               {xtype: 'textfield', fieldLabel: 'Job title', name: 'user[title]', maxLength: '46', allowBlank: true, tabIndex: 7},
@@ -32,11 +32,11 @@ Talho.AddUser = Ext.extend(Talho.ProfileBase, {
               {xtype: 'textfield', fieldLabel: 'Mobile phone', name: 'user[mobile_phone]', maxLength: '46', allowBlank: true, tabIndex: 12}
             ]}
           ]},
-          {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', editable: false, triggerAction: 'all', store: ['English', 'Spanish'], value: 'English', tabIndex: 13}
+          {xtype: 'combo', fieldLabel: 'Language', name: 'user[preferred_language]', anchor: '90%', editable: false, triggerAction: 'all', store: ['English', 'Spanish'], value: 'English', tabIndex: 13}
         ]},
       //Right column
-        { width: 420, defaults: {anchor: '100%'}, items: [
-          {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:420}, items:[
+        { width: 320, defaults: {anchor: '100%'}, items: [
+          {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', defaults:{width:320}, items:[
             {xtype: 'combo', fieldLabel: 'Home Jurisdiction', name: 'user[jurisdiction]', editable: false, triggerAction: 'all', allowBlank: false,
               store: this.jurisdictions_store, mode: 'local', displayField: 'name', labelStyle: 'white-space:nowrap;', tabIndex: 14},
             {xtype: 'container', style: {'padding-top': '10px'}, html: 'Roles:'},
