@@ -55,17 +55,27 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
 
     render_layout: function(){
         var viewport = new Ext.Viewport({
-          autoScroll: true,
-		    layout: 'fit',
-            renderTo: Ext.getBody(),
-            items:[{
-          boxMinWidth: 1024,
-                layout: 'border',
-                border: false,
-                items: [this.body()],
-                tbar: this.topbar(),
-                bbar: this.bottombar()
-            }]
+		      layout: 'fit',
+          renderTo: Ext.getBody(),
+          items:[{
+              boxMinWidth: 800,
+              layout: 'border',
+              border: false,
+              items: [this.body()],
+              tbar: this.topbar(),
+              bbar: this.bottombar()
+          }],
+          listeners: {
+            // Only set the overflow to auto if the width is under 800 px. Everything renders ok down to 800 px. But c'mon people get new monitors already.
+            'resize': function(vp, aw, ah, rw, rh){
+              if(rw < 800){
+                vp.getEl().setStyle('overflow', 'auto');
+              }
+              else{
+                vp.getEl().setStyle('overflow', 'hidden');
+              }
+            }
+          }
 	    });
     },
 
