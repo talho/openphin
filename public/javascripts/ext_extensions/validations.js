@@ -40,22 +40,20 @@ Ext.apply(Ext.form.VTypes, {
   // Usage:
   //{xtype: 'timefield', fieldLabel: 'Start Time', itemId: 'start', vtype: 'timerange', endTimeField:    'totime',  id: 'fromtime' },
   //{xtype: 'timefield', fieldLabel: 'End Time',   itemId: 'end',   vtype: 'timerange', startTimeField: 'fromtime', id: 'totime'},
-  timerange : function(time, field) {
-    if (field.startTimeField) {
-      var start = Ext.getCmp(field.startTimeField);
-      if (!start.maxValue || (time != start.maxValue.getValue())) {
-        start.setMaxValue(time);
-        start.validate();
+  timerange : function(val, field) {
+      var time = field.parseDate(val);
+      if(!time){
+          return;
       }
-    }
-    else if (field.endTimeField) {
-      var end = Ext.getCmp(field.endTimeField);
-      if (!end.minValue || (time != end.minValue.getValue())) {
-        end.setMinValue(time);
-        end.validate();
+      if (field.startTimeField ) {
+          var start = Ext.getCmp(field.startTimeField);
+          start.setMaxValue(time);
       }
-    }
-    return true;
+      else if (field.endTimeField ) {
+          var end = Ext.getCmp(field.endTimeField);
+          end.setMinValue(time);
+      }
+      return true;
   }
 
 });
