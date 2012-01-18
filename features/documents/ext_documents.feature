@@ -12,13 +12,14 @@ Feature: Document upload, download, and view
     And I navigate to the ext dashboard page
     And I create a folder outline with "Folder1"
     And I navigate to "Documents"
-
+      
   Scenario Outline: Upload a document to folder
     When I expand the folders ""
     And I select the "<destination>" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "<file>" to "File"
-    And I press "Save"
+    And I attach the file "<file>" to "file"
+    And I wait for 1 second
+    And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
     And I select the "<negcheck>" grid row

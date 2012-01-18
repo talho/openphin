@@ -34,7 +34,7 @@ Ext.ns("Talho");
       'Talho.EditDevices': {js:'ProfileBase $(js)/profile/DevicesControl.js > $(js)/profile/EditDevices.js'},
       'Talho.ManageRoles': {js:'ProfileBase $(js)/profile/RolesControl.js > $(js)/profile/ManageRoles.js'},
       'Talho.ManageOrganizations': {js:'ProfileBase $(js)/profile/OrganizationsControl.js > $(js)/profile/ManageOrganizations.js'},
-      'Talho.Documents': {js: 'TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/SubmitFalse.js $(ext_extensions)/ImageDisplayField.js AudiencePanel $(js)/documents/AddEditFolderWindow.js $(js)/documents/DocumentViews.js $(js)/documents/Documents.js'},
+      'Talho.Documents': {js: '$(js)/lib/fileuploader.js $css($(css)/fileuploader.css) TreeGrid $(ext_extensions)/xActionColumn.js $(ext_extensions)/SubmitFalse.js $(ext_extensions)/ImageDisplayField.js AudiencePanel $(js)/documents/AddEditFolderWindow.js $(js)/documents/DocumentViews.js $(js)/documents/Documents.js'},
       'Talho.DocumentSearch': {js: '$(ext_extensions)/ImageDisplayField.js $(js)/documents/DocumentViews.js $(js)/documents/DocumentSearch.js'},
       'Talho.NewInvitation': {js:'NewInvitation $(js)/ext/src/widgets/grid/EditorGrid.js > $(js)/invitations/NewInvitation.js'},
       'Talho.Invitations': {js:'$(js)/invitations/Invitations.js'},

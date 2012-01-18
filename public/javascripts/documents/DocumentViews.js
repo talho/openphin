@@ -138,40 +138,63 @@ Ext.ns('Talho.ux.Documents');
         },
 
         uploadFile: function(mode){
-            var sel = this.current_selections[0];
-            var folder = this.folder_tree.getSelectionModel().getSelected();
-
-            var fields = [];
-            if(mode === 'replace')
-                fields.push({xtype: 'hidden', name: '_method', value: 'PUT'});
-            else
-                fields.push({xtype: 'hidden', name: 'document[folder_id]', value: folder.get('id')});
-            fields.push({xtype: 'textfield', inputType: 'file', fieldLabel: 'File', name: 'document[file]', anchor: '100%'});
-
-            var win = new Ext.Window({width: 470, height: 120, title: mode == 'replace' ? 'Replace Document' : 'New Document', modal: true,
-                items:[{itemId: 'upload_form', xtype: 'form', fileUpload: true, padding: '5', labelWidth: 30, baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, items: fields,
-                    buttons: [
-                        {text: 'Save', scope: this, handler: function(){
-                            var form = win.getComponent('upload_form').getForm();
-                            form.waitMsgTarget = win.getLayoutTarget();
-                            form.submit({
-                                waitMsg: 'Saving...',
-                                url: '/documents' + (mode == 'replace' ? '/' + sel.get('id') : '') + '.json',
-                                method: mode == 'replace' ? 'PUT' : 'POST',
-                                scope: this,
-                                success: function(){
-                                    win.close();
-                                    this.refresh();
-                                },
-                                failure: function(form, action){
-                                    Ext.Msg.alert("Error", action.result && action.result.msg ? action.result.msg : "There was a problem saving this file");
-                                }
-                            })
-                        }},
-                        {text: 'Cancel', handler: function(){win.close();}}
-                    ]}
-                ]
-            });
+            var sel = this.current_selections[0],
+                folder = this.folder_tree.getSelectionModel().getSelected(),
+                win;
+            
+            if(mode === 'replace'){
+              fields = [{xtype: 'hidden', name: '_method', value: 'PUT'},
+                        {xtype: 'textfield', inputType: 'file', fieldLabel: 'File', name: 'document[file]', anchor: '100%'}
+              ];
+                       
+              win = new Ext.Window({width: 470, height: 120, title: 'Replace Document', modal: true,
+                  items:[{itemId: 'upload_form', xtype: 'form', fileUpload: true, padding: '5', labelWidth: 30, baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, items: fields,
+                      buttons: [
+                          {text: 'Save', scope: this, handler: function(){
+                              var form = win.getComponent('upload_form').getForm();
+                              form.waitMsgTarget = win.getLayoutTarget();
+                              form.submit({
+                                  waitMsg: 'Saving...',
+                                  url: '/documents/' + sel.get('id') + '.json',
+                                  method: 'PUT',
+                                  scope: this,
+                                  success: function(){
+                                      win.close();
+                                      this.refresh();
+                                  },
+                                  failure: function(form, action){
+                                      Ext.Msg.alert("Error", action.result && action.result.msg ? action.result.msg : "There was a problem saving this file");
+                                  }
+                              })
+                          }},
+                          {text: 'Cancel', handler: function(){win.close();}}
+                      ]}
+                  ]
+              });
+            }
+            else{
+              win = new Ext.Window({width: 400, height: 200, autoScroll: true, title: 'New Documents', modal: true, items:{xtype:'box'},
+                buttons:[{text: 'OK', scope: this, handler: function(){
+                  win.close();
+                  this.refresh();
+                }}],
+                listeners: {
+                  'afterrender': {
+                    scope: this,
+                    delay: 1,
+                    fn: function(){
+                      var uploader = new qq.FileUploader({
+                        element: win.getComponent(0).getEl().dom,
+                        params: {
+                          folder_id: folder.get('id')
+                        },
+                        action: '/documents.json'
+                      });
+                    }
+                  }
+                }
+              });
+            }
             win.show();
         },
 

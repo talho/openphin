@@ -12,9 +12,9 @@ class Doc::DocumentsController < ApplicationController
 
   def create
     begin
-      params[:document][:folder_id] = nil if params[:document][:folder_id] == 'null' || params[:document][:folder_id] == '' || params[:document][:folder_id] == '0'
+      params[:folder_id] = nil if params[:folder_id] == 'null' || params[:folder_id] == '' || params[:folder_id] == '0'
 
-      @parent_folder = params[:document][:folder_id] ?  Folder.find(params[:document][:folder_id].to_i) : nil
+      @parent_folder = params[:folder_id] ?  Folder.find(params[:folder_id].to_i) : nil
 
       #check to make sure the user can write to this folder here
       unless @parent_folder.nil? || @parent_folder.author?(current_user)
@@ -24,8 +24,8 @@ class Doc::DocumentsController < ApplicationController
         return
       end
 
-      unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == params[:document][:file].original_filename}
-        @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(params[:document])
+      unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == URI.decode(params[:file].original_filename)}
+        @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(:file => params[:file], :folder => @parent_folder)
         @document.owner_id = current_user.id
         if @document.valid?
           @document.save!

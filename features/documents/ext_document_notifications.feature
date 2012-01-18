@@ -59,8 +59,8 @@ Feature: Receiving notifications to different events
     And I expand the folders ""
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "spec/fixtures/invitees.csv" to "File"
-    And I press "Save"
+    And I attach the file "spec/fixtures/invitees.csv" to "file"
+    And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
     Then "atticus@example.com" should receive the email:
@@ -80,8 +80,8 @@ Feature: Receiving notifications to different events
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "spec/fixtures/invitees.csv" to "File"
-    And I press "Save"
+    And I attach the file "spec/fixtures/invitees.csv" to "file"
+    And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
     Then "bartleby@example.com" should receive the email:

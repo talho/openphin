@@ -156,7 +156,7 @@ Feature: Create a folder tree in documents
     Then the "Add Folder" window should be open
     When I close the active ext window
     And I click inlineLink "Upload New File"
-    Then the "New Document" window should be open
+    Then the "New Documents" window should be open
     When I close the active ext window
     And I click inlineLink "Move Selection"
     Then the "Move Folder" window should be open

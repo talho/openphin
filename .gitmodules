@@ -34,9 +34,6 @@
 [submodule "vendor/plugins/rails_indexes"]
 	path = vendor/plugins/rails_indexes
 	url = git://github.com/eladmeidar/rails_indexes.git
-[submodule "vendor/plugins/rack-bug"]
-	path = vendor/plugins/rack-bug
-	url = git://github.com/brynary/rack-bug.git
 [submodule "vendor/plugins/serial"]
 	path = vendor/plugins/serial
 	url = git://github.com/karmajunkie/serial.git
