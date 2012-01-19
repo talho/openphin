@@ -7,7 +7,7 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes.json
 	def index
     recipes = Report::Recipe.selectable
-    recipe_names = recipes.map(&:name).grep(/Recipe$/)
+    recipe_names = current_user.is_admin? ? recipes.map(&:name).grep(/Recipe$/) : []
     respond_to do |format|
      format.html
      format.json do
