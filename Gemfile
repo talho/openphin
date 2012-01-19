@@ -66,13 +66,13 @@ group :test do
 end
 
 group :cucumber do
-  gem "cucumber"#, "0.10.3"
+  gem "cucumber", "1.1.0"
     gem "json"#, "1.4.6"
     gem "diff-lcs"#, "1.1.2"
     gem "trollop"#, "1.16.2"
     gem "gherkin"#, "2.5.4"
     gem "term-ansicolor"#, "1.0.5"
-  gem "cucumber-rails"#, "0.3.2"
+  gem "cucumber-rails", "0.3.2"
   gem "database_cleaner"#, "0.5.0"
   gem "spork"#, "0.8.4"
 

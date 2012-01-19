@@ -24,7 +24,7 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
     And I navigate to the ext dashboard page
     And I navigate to "Phin User > Manage Roles"
     And I press "Request Role"
-    When I open ext combo "Role"
+    When I click x-form-trigger ""
     Then I should see "Public" within ".x-combo-list"
     And I should see "Average Guy" within ".x-combo-list"
     And I should not see "School Nurse" within ".x-combo-list"
@@ -35,7 +35,7 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
     And I navigate to the ext dashboard page
     And I navigate to "Phin SuperAdmin > Manage Roles"
     And I press "Request Role"
-    When I open ext combo "Role"
+    When I click x-form-trigger ""
     Then I should see "Public" within ".x-combo-list"
     And I should see "SuperAdmin" within ".x-combo-list"
     And I should see "Average Guy" within ".x-combo-list"
@@ -47,7 +47,7 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
     And I navigate to the ext dashboard page
     And I navigate to "Sys Admin > Manage Roles"
     And I press "Request Role"
-    When I open ext combo "Role"
+    When I click x-form-trigger ""
     Then I should see "Public" within ".x-combo-list"
     And I should see "SuperAdmin" within ".x-combo-list"
     And I should see "Average Guy" within ".x-combo-list"

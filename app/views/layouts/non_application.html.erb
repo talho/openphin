@@ -44,7 +44,7 @@
   <div id="wrapper">
     <div id="content">
       <div class="flash">
-        <%- [:notice, :instructions, :completed, :error].each do |type| -%>
+        <%- [:notice, :instructions, :completed, :error, :failure].each do |type| -%>
           <%- if flash[type] -%>
             <div class="alert-message block-message <%= type %>"><%= flash[type] %></div>
           <%- end -%>

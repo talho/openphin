@@ -56,16 +56,10 @@ Feature: Receiving notifications to different events
     And I expand the folders ""
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-<<<<<<< HEAD
     And I attach the file "spec/fixtures/invitees.csv" to "file"
     And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-=======
-    And I attach the file "spec/fixtures/invitees.csv" to "File"
-    And I press "Save"
-    And I wait for the "Saving..." mask to go away
->>>>>>> rails_2_3_14_upgrade
     Then "atticus@example.com" should receive the email:
       | subject       | A document has been added to the shared folder "Folder1" |
       | body contains | A document "invitees.csv" has been added to the shared folder "Folder1" by Bartleby Scrivener. |
@@ -82,15 +76,10 @@ Feature: Receiving notifications to different events
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-<<<<<<< HEAD
     And I attach the file "spec/fixtures/invitees.csv" to "file"
     And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
-=======
-    And I attach the file "spec/fixtures/invitees.csv" to "File"
-    And I press "Save"
->>>>>>> rails_2_3_14_upgrade
     Then "bartleby@example.com" should receive the email:
       | subject       | A document has been added to the shared folder "Folder1" |
       | body contains | A document "invitees.csv" has been added to the shared folder "Folder1" by Atticus Finch. |

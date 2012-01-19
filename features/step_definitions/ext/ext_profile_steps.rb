@@ -42,7 +42,9 @@ end
 
 When /^I request the role "([^"]*)" for "([^"]*)" in the RolesControl$/ do |role,jurisdiction|
   When %Q{I press "Request Role"}
+  When %Q{I fill in "rq[role]" with "#{role}"}
   When %Q{I select "#{role}" from ext combo "rq[role]"}
+  When %Q{I fill in "rq[jurisdiction]" with "#{jurisdiction}"}
   When %Q{I select "#{jurisdiction}" from ext combo "rq[jurisdiction]"}
   When %Q{I press "Add"}
 end

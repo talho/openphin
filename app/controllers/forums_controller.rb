@@ -98,10 +98,6 @@ class ForumsController < ApplicationController
           # Once we're sure that forums and the audience itself isn't stale, we update the audience
           @audience = Audience.find_by_id(non_ids[:id])
           @audience.update_attributes(ids)
-<<<<<<< HEAD
-=======
-          @audience.refresh_recipients(:force => true)
->>>>>>> rails_2_3_14_upgrade
           
           # Force a lock_version increment for stale object detection on the audience itself
           Audience.update_counters params[:forum][:audience_attributes][:id], {}

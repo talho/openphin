@@ -102,14 +102,8 @@ Feature: Audit Log
     And I should see "TEST TOPIC" in column "Descriptor" within "grid-version-results"
     And I click model-selector-list-item "Topics"
     When I click model-selector-list-item "Audiences"
-<<<<<<< HEAD
     And I wait for the "Loading..." mask to go away for 1 second
     Then I should see "anonymous" in column "Descriptor" within "grid-version-results"
-=======
-    And I should see "anonymous" in column "Descriptor" within "grid-version-results"
-    And I explicitly click x-grid3-cell-inner "anonymous"
-    Then I should see "TEST FORUM" in column "Current Version" within "panel-version-display"
->>>>>>> rails_2_3_14_upgrade
 
   Scenario: Audit log for Editing Profile and Devices
     Given the user "TEST USER" with the email "TESTUSER@EXAMPLE.COM" has the role "Lackey" in "Dallas County"
