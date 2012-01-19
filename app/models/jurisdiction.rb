@@ -35,18 +35,17 @@ class Jurisdiction < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
-
-  named_scope :admin, lambda{ |*app| {:include => :role_memberships,
-    :conditions => { :role_memberships => { :role_id => (Role.admins(app).map(&:id) | Role.superadmins(app).map(&:id)) } }}}
-  named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}
-  named_scope :state, lambda {{:conditions => root ? "parent_id = #{root.id}" : "0=1"}}
-  named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
-  named_scope :parents, :conditions => "rgt - lft > 1", :order => :name
-  named_scope :foreign, :conditions => { :foreign => true }
-  named_scope :nonforeign, :conditions => { :foreign => false }, :order => :name
-  named_scope :alphabetical, :order => 'name'
-
-  named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
+ 
+   named_scope :admin, lambda{ |*app| {:include => :role_memberships,
+      :conditions => { :role_memberships => { :role_id => (Role.admins(app).map(&:id) | Role.superadmins(app).map(&:id)) } }}}
+   named_scope :federal, lambda{{ :conditions => "parent_id IS NULL" }}
+   named_scope :state, lambda {{:conditions => root ? "parent_id = #{root.id}" : "0=1"}}
+   named_scope :nonroot, :conditions => "parent_id IS NOT NULL", :order => :name
+   named_scope :foreign, :conditions => { :foreign => true }
+   named_scope :nonforeign, :conditions => { :foreign => false }, :order => :name
+   named_scope :alphabetical, :order => 'name'
+ 
+   named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
   
   validates_uniqueness_of :fips_code, :allow_nil => true, :allow_blank => true
 

@@ -49,7 +49,7 @@ class Doc::FoldersController < ApplicationController
       end
       return
     end
-    
+
     if(folder.notify_of_audience_addition)
       DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients } ) unless folder.audience.nil? || folder.audience.recipients.empty?
     end

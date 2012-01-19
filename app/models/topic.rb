@@ -35,7 +35,7 @@ class Topic < ActiveRecord::Base
 
 
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
-  alias :_destroy :_delete unless respond_to? '_destroy'
+  #alias :_destroy :_delete unless respond_to? '_destroy'
     
   def locked=(lock_string)
     self.locked_at = lock_string == "1" ? Time.now : nil 

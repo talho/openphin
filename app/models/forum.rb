@@ -38,7 +38,7 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   #destroy not necessary since forum deletion is not an option
   
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
-  alias :_destroy :_delete unless respond_to? '_destroy'
+  #alias :_destroy :_delete unless respond_to? '_destroy'
   
   named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
 
@@ -107,7 +107,7 @@ class Forum < ActiveRecord::Base
   def self.accessible_to(result,user)
     # if no audience is specified then this forum is open to anyone
     # if a audience is specified for this forum, am I in the audeience?
-    unless (audience = result.audience)
+    if result.audience.nil?
       forum = result
     else
       forum = ( user.is_super_admin? || audience.has_user?(user) ) ? result : nil

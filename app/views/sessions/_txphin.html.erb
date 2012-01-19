@@ -11,7 +11,7 @@
 <div class="aside">
   <h2>Sign In to Your Account</h2>
   <div class="t_boot">
-    <% form_for :session, :url => session_path, :html => {:id => 'sign_in_form', :class => "form-stacked"} do |form| %>
+    <% form_for :session, :url => session_index_path, :html => {:id => 'sign_in_form', :class => "form-stacked"} do |form| %>
       <div class="well">
         <div>
           <%= form.label :email %>
@@ -24,9 +24,8 @@
         <ul class="inputs-list">
           <li>
             <label for="session_remember_me">
-              <input type="hidden" value="0" name="session[remember_me]">
-              <input id="session_remember_me" type="checkbox" value="1" name="session[remember_me]">
-              <span>Remember me</span>
+              <%= form.check_box :remember_me %>
+              <%= form.label :remember_me %>
             </label>
           </li>
         </ul>

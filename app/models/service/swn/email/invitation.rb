@@ -1,4 +1,4 @@
-class Service::SWN::Email::Invitation < Service::SWN::Email::Base
+class Service::Swn::Email::Invitation < Service::Swn::Email::Base
   property :invitation
   property :users
   property :username

@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -40,7 +40,7 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory are automatically loaded.
 
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W(
+  config.autoload_paths += %W(
     #{Rails.root}/app/mailers
     #{Rails.root}/app/observers
     #{Rails.root}/app/presenters
@@ -55,7 +55,6 @@ Rails::Initializer.run do |config|
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
-  # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
   config.reload_plugins = true if RAILS_ENV == 'development'
 
   # Skip frameworks you're not going to use. To use Rails without a database,
@@ -80,6 +79,8 @@ end
 ActionController::Base.cache_store = :file_store, "#{Rails.root}/tmp/cache"
 ActiveRecord::Base.lock_optimistically = true
 
+require 'yaml' # a fix for delayed_job which is built for the semi-deprecated syck rather than the replacement psyck
+YAML::ENGINE.yamler = "syck"
 
 PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')
 PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues", 'archive')

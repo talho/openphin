@@ -1,4 +1,4 @@
-class Service::TALHO::Base
+class Service::Talho::Base
   extend PropertyObject::ClassMethods
   include PropertyObject::InstanceMethods
 

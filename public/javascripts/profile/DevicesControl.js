@@ -7,7 +7,7 @@ Talho.ux.DevicesControl = Ext.extend(Ext.Panel, {
     this.device_types = [
       ['Device::EmailDevice',      'E-mail'],
       ['Device::PhoneDevice',      'Phone'],
-      ['Device::SMSDevice',        'SMS'],
+      ['Device::SmsDevice',        'SMS'],
       ['Device::FaxDevice',        'Fax'],
       ['Device::BlackberryDevice', 'Blackberry PIN']
     ];

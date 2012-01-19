@@ -87,7 +87,7 @@ Ext.ux.grid.xActionColumn = Ext.extend(Ext.grid.ActionColumn, {
     /**
      * @cfg {Number} widthExtra Adds extra pixels to the width of the column. Defaults to <tt>8</tt>
      */
-    widthExtra: 8,
+    widthExtra: 12,
 
     /**
      * @cfg {Number} widthScope The default width of each button image. Defaults to <tt>16</tt>

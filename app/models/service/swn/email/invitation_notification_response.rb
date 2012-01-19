@@ -1,4 +1,4 @@
-class Service::SWN::Email::InvitationNotificationResponse < ActiveRecord::Base
+class Service::Swn::Email::InvitationNotificationResponse < ActiveRecord::Base
   set_table_name "swn_notification_response"
   belongs_to :alert, :polymorphic => true
 

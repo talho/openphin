@@ -26,6 +26,7 @@ class Audience < ActiveRecord::Base
   has_and_belongs_to_many :groups, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
   has_and_belongs_to_many :sub_audiences, :foreign_key => 'audience_id', :association_foreign_key => 'sub_audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Audience'
   has_and_belongs_to_many :parent_audiences, :foreign_key => 'sub_audience_id', :association_foreign_key => 'audience_id', :uniq => true, :join_table => 'audiences_sub_audiences', :class_name => 'Group'
+
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
   has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => 'select distinct u.*
@@ -33,6 +34,7 @@ class Audience < ActiveRecord::Base
     join sp_recipients(#{self.id}) r on u.id = r.id'
 
   has_one :forum
+
   named_scope :with_forum, :conditions => "forum_id is not NULL"
   named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 
@@ -81,6 +83,7 @@ class Audience < ActiveRecord::Base
   end
 
   private
+
   def doesnt_contain_self_as_group
     def check_recursion(group)
       if group.id == self.id

@@ -1,15 +1,16 @@
 # Add your own tasks in files placed in lib/tasks ending in .rake,
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+$: << File.dirname(__FILE__)
 
 require(File.join(File.dirname(__FILE__), 'config', 'boot'))
 
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 require 'tasks/rails'
-require 'hydra'
-require 'hydra/tasks'
+# require 'hydra'
+# require 'hydra/tasks'
 
 require 'jslint/tasks'
 JSLint.config_path = "config/jslint.yml"
@@ -37,22 +38,28 @@ task :phin_plugins do
   end
 end
 
-Hydra::TestTask.new('hydra' => ['environment']) do |t|
-  t.add_files 'features/**/*.feature'
-  t.verbose = true
-  t.environment = 'cucumber'
+# Hydra::TestTask.new('hydra' => ['environment']) do |t|
+  # t.add_files 'features/**/*.feature'
+  # t.verbose = true
+  # t.environment = 'cucumber'
+# end
+
+# Hydra::GlobalTask.new('db:killall')
+# 
+# Hydra::GlobalTask.new('db:migrate:reset')
+# 
+# Hydra::GlobalTask.new('firefox:killall')
+# 
+# Hydra::GlobalTask.new('ruby:killall')
+# 
+# Hydra::GlobalTask.new('sphinx:killall')
+# 
+# Hydra::SyncTask.new('hydra:sync')
+# 
+# Hydra::GlobalTask.new('ts:in')
+
+begin
+  require 'thinking_sphinx/tasks'
+rescue LoadError
+  puts "You can't load Thinking Sphinx tasks unless the thinking-sphinx gem is installed."
 end
-
-Hydra::GlobalTask.new('db:killall')
-
-Hydra::GlobalTask.new('db:migrate:reset')
-
-Hydra::GlobalTask.new('firefox:killall')
-
-Hydra::GlobalTask.new('ruby:killall')
-
-Hydra::GlobalTask.new('sphinx:killall')
-
-Hydra::SyncTask.new('hydra:sync')
-
-Hydra::GlobalTask.new('ts:in')

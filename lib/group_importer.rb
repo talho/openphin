@@ -18,14 +18,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =end
-require 'fastercsv'
+require 'csv'
 
 class GroupImporter
   def self.import_groups(filename, options = {})
     options = {:col_sep => ",", :row_sep => :auto}.merge(options)
     file = File.open('log/group.log', "w")
     log = Logger.new(file)
-    FasterCSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
+    CSV.open(filename, :headers => true, :col_sep => options[:col_sep], :row_sep => options[:row_sep]) do |records|
       records.each do |rec|
         email = rec['email'].strip unless rec['email'].blank?
         jurisdiction = rec['jurisdiction'].strip unless rec['email'].blank?

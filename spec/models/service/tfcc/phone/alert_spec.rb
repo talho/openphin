@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../../spec_helper')
 
-describe Service::TFCC::Phone::Alert do
+describe Service::Tfcc::Phone::Alert do
   include Webrat::Matchers
-  extend SpecHelpers::TFCCAlertMacros
+  extend SpecHelpers::TfccAlertMacros
   
   def self.should_validate_presence_of(*fields)
     fields.each do |f|
@@ -20,7 +20,7 @@ describe Service::TFCC::Phone::Alert do
     @user_id = "BBB2"
     @retry_duration = "6 hours"
 
-    @tfcc_alert = Service::TFCC::Phone::Alert.new(
+    @tfcc_alert = Service::Tfcc::Phone::Alert.new(
       :alert => @alert,
       :client_id => @client_id,
       :users => [@user], 

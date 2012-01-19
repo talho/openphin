@@ -73,9 +73,9 @@ class Report::ReportsController < ApplicationController
         filepath = report.rendering.path
         basename = File.basename(filepath)
         case params[:document_format]
-          when 'HTML': copy_to_documents File.read(filepath), basename
-          when 'PDF':  copy_to_documents WickedPdf.new.pdf_from_string(File.read(filepath)), basename.sub!(/html$/,'pdf')
-          when 'CSV':  copy_to_documents data2csv(report), basename.sub!(/html$/,'csv')
+          when 'HTML' then copy_to_documents File.read(filepath), basename
+          when 'PDF' then  copy_to_documents WickedPdf.new.pdf_from_string(File.read(filepath)), basename.sub!(/html$/,'pdf')
+          when 'CSV' then  copy_to_documents data2csv(report), basename.sub(/html$/,'csv')
           else raise "Unsupported format (#{params[:document_format]}) for file #{filepath}"
         end
         respond_to do |format|

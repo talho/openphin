@@ -7,7 +7,7 @@ end
 
 Then /^I reindex sphinx$/ do
   begin
-    output = `rake ts:index`
+    output = `rake ts:reindex`
   end
   assert output =~ /SIGHUP/
 end

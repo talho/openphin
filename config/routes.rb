@@ -31,7 +31,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
     user.resources :devices
-    user.confirmation "/confirm/:token", :controller => "users", :action => "confirm"
     user.is_admin "/is_admin.:format", :controller => "users", :action => "is_admin", :conditions => {:method => [:get]}
   end
 
@@ -88,7 +87,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"
 
   map.connect "/session.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-
+  map.resources :session, :controller => 'sessions', :only => [:new, :create, :destroy]
+  map.sign_out '/sign_out', :controller => 'sessions', :action => 'destroy', :method => :delete
+  map.sign_in '/sign_in', :controller => 'sessions', :action => 'new' 
+  Clearance::Routes.draw(map)
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

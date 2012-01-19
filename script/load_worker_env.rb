@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 RAILS_HOME = File.expand_path(File.join(File.dirname(__FILE__),".."))
-BDRB_HOME = File.join(RAILS_HOME,"vendor","plugins","backgroundrb")
+#BDRB_HOME = File.join(RAILS_HOME,"vendor","plugins","backgroundrb")
 
-["server","server/lib","lib","lib/backgroundrb"].each { |x| $LOAD_PATH.unshift(BDRB_HOME + "/#{x}")}
+#["server","server/lib","lib","lib/backgroundrb"].each { |x| $LOAD_PATH.unshift(BDRB_HOME + "/#{x}")}
 
 $LOAD_PATH.unshift(File.join(RAILS_HOME,"lib","workers"))
 

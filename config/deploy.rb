@@ -1,4 +1,4 @@
-require 'vendor/plugins/thinking-sphinx/lib/thinking_sphinx/deploy/capistrano'
+require 'thinking_sphinx/deploy/capistrano'
 load 'lib/testjour.rb'
 load 'lib/deploy_app.rb'
 load 'lib/deploy_jobs.rb'
@@ -38,10 +38,10 @@ end
 
 task :staging do
   set :branch, 'messaging'
-  role :app, "staging.txphin.org"
-  role :web, "staging.txphin.org"
-  role :jobs, "staging.txphin.org"
-  role :db,  "staging.txphin.org", :primary => true
+  role :app, '192.168.30.97' #"staging.txphin.org"
+  role :web, '192.168.30.97' #"staging.txphin.org"
+  role :jobs, '192.168.30.97' #"staging.txphin.org"
+  role :db, '192.168.30.97', :primary => true #"staging.txphin.org"
 end
  
 task :talhostaging do

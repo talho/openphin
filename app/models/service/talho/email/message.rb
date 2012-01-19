@@ -1,4 +1,4 @@
-class Service::TALHO::Email::Message < Service::TALHO::Email::Base
+class Service::Talho::Email::Message < Service::Talho::Email::Base
   property :message
   # this is going to handle the email format. Should build 1 email for each "message" under role names and apply recipients to each
   # send emails for each message to the proper recipients.

@@ -7,10 +7,9 @@ class SearchesController < ApplicationController
   def show
     if !params[:tag].blank?
       search_size = 20
-      tags = params[:tag].split(/\s/).map{|x| x+'*'}.join(' ')
-      @results = User.search("*" + tags, :match_mode => :all, :with => {:applications => current_user_applications}, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
+      @results = User.search(params[:tag], :star => true, :match_mode => :all, :with => {:applications => current_user_applications}, :per_page => search_size, :page => params[:page]||1, :retry_stale => true, :sort_mode => :expr, :order => "@weight") 
       @paginated_results = @results;
-      @results = sort_by_tag(@results, tags)
+      @results = sort_by_tag(@results, params[:tag])
     end
 
     respond_to do |format|
@@ -28,10 +27,9 @@ class SearchesController < ApplicationController
       without = params[:without_ids].nil? || params[:without_ids].empty? || params[:without_ids][0].blank? ? {} : {:user_id => params[:without_ids]}
       search_size = (params[:limit]||20).to_i
       page = (params[:start]||0).to_i/search_size + 1
-      tags = params[:tag].split(/\s/).map{|x| '*' + x + '*'}.join(' ')
-      @results = User.search(tags, :match_mode => :all, :without => without, :with => {:applications => current_user_applications}, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
+      @results = User.search(params[:tag], :star => true, :match_mode => :all, :without => without, :with => {:applications => current_user_applications}, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
       total = @results.total_entries
-      @results = sort_by_tag(@results, tags)
+      @results = sort_by_tag(@results, params[:tag])
     end
 
     @results = [] if @results.blank?
@@ -45,7 +43,7 @@ class SearchesController < ApplicationController
       @results = []
     else
       normalize_search_params(params)
-      @results = User.search(params)
+      @results = User.search(params.with_indifferent_access)
     end
     respond_to do |format|
       format.html
