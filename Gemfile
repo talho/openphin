@@ -60,28 +60,27 @@ group :test do
   gem "rspec"#, "1.3.2", :require => "spec"
   gem "rspec-rails"#, "1.3.4"
   gem "factory_girl"#, "1.3.3", :require => "factory_girl"
-  gem "webrat", "0.7.1"
-  gem "rack-test", "0.5.4"
+  gem "webrat"#, "0.7.1"
+  gem "rack-test"#, "0.5.4"
   gem 'test-unit'
 end
 
 group :cucumber do
   gem "cucumber"#, "0.10.3"
     gem "json"#, "1.4.6"
-    gem "diff-lcs", "1.1.2"
-    gem "trollop", "1.16.2"
+    gem "diff-lcs"#, "1.1.2"
+    gem "trollop"#, "1.16.2"
     gem "gherkin"#, "2.5.4"
-    gem "term-ansicolor", "1.0.5"
+    gem "term-ansicolor"#, "1.0.5"
   gem "cucumber-rails"#, "0.3.2"
-  gem "database_cleaner", "0.5.0"
+  gem "database_cleaner"#, "0.5.0"
   gem "spork"#, "0.8.4"
 
   gem "culerity"#, "0.2.4"
-  gem "mime-types", "1.16"
-  gem "nokogiri", "1.4.4"
-  gem "rack-test", "0.5.4"
+  gem "mime-types"#, "1.16"
+  gem "rack-test"#, "0.5.4"
   gem "childprocess"
-  gem "selenium-webdriver", '2.8.0'
+  gem "selenium-webdriver"#, '2.8.0'
   gem "xpath" #, "0.1.3"
   gem "capybara" #, "0.4.1.2"
   #gem "hydra", "0.23.3"
