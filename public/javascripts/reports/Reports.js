@@ -34,7 +34,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       singleSelect: true,
       columnSort: false,
       loadingText: 'Fetching recipe list...',
-      emptyText: 'Error:  Could not retrieve Recipes',
+      emptyText: 'Recipes are only accessible by Administrators',
       deferEmptyText: true,
       hideHeaders: true,
       style: { 'background-color': 'white'},
