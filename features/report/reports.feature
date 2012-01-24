@@ -46,7 +46,7 @@ Scenario: Public-only user can not navigate to Reports
       | Reports |
 
 Scenario: View report recipes and their description
-  Given I am logged in as "pott.md@example.com"
+  Given I am logged in as "pott.admin@example.com"
   When I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then I should see "Recipes"
@@ -64,7 +64,7 @@ Scenario: View report recipes and their description
   And I should not see "Generate Report"
 
 Scenario: Generate a report from a report-recipe
-  Given I am logged in as "pott.md@example.com"
+  Given I am logged in as "pott.admin@example.com"
   When I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then I should see "Recipes"
@@ -76,7 +76,7 @@ Scenario: Generate a report from a report-recipe
   And I should see "Generate Report"
 
 Scenario: Initiate the viewing of a report contents
-  Given I am logged in as "pott.md@example.com"
+  Given I am logged in as "pott.admin@example.com"
   And I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then the "Reports" tab should be open
