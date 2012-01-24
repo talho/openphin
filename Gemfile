@@ -99,5 +99,5 @@ group :tools do
   gem "git"
   gem "git_remote_branch"
   gem "ruby-debug19"
-  gem "rcov"
+  gem "simplecov"
 end
