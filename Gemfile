@@ -57,7 +57,7 @@ group :development do
 end
 
 group :test do
-  gem "rspec"#, "1.3.2", :require => "spec"
+  gem "rspec", "2.1.0"
   gem "rspec-rails"#, "1.3.4"
   gem "factory_girl"#, "1.3.3", :require => "factory_girl"
   gem "webrat"#, "0.7.1"
@@ -99,5 +99,5 @@ group :tools do
   gem "git"
   gem "git_remote_branch"
   gem "ruby-debug19"
-  gem "rcov"
+  gem "simplecov"
 end
