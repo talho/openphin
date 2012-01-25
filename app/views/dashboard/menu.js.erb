@@ -1,0 +1,67 @@
+
+window.Application = window.Application ? window.Application : {};
+Application.rails_environment = '<%= Rails.env %>';
+Application.current_user = <%= current_user.id %>;
+Application.default_dashboard = <%= current_user.default_dashboard.blank? ? 'undefined' : current_user.default_dashboard.id %>;
+
+Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions'][0] %>" height="<%= domain_config['logo_image_dimensions'][1] %>" src="<%= domain_config['logo_image'] %>">', 
+  <%= @han_menu + ',' if defined? @han_menu %>
+  <%= @app_menu + ',' if defined? @app_menu %>
+  <%= @report_menu + ',' if defined? @report_menu %>
+  {name: 'Tutorials', items:[
+    {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'<%= tutorials_path %>', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
+    {name: 'HAN', tab:{id: 'tutorials', title:'HAN Tutorials', url:'<%= tutorials_path %>', anchor: 'HAN', initializer: 'Talho.Tutorials'}},
+    {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'<%= tutorials_path %>', anchor: 'Documents', initializer: 'Talho.Tutorials'}}
+  ]},
+  '->', 
+  <% if signed_in? %>
+    <% if current_user.has_non_public_role? %>
+       {name: 'Find People', tab: {id: 'find_people', title:'Find People', url:'<%= show_advanced_search_path %>', initializer: 'Talho.FindPeople'}},
+    <% end %>
+
+    <% if current_user.is_admin? %>
+      {name: 'Admin', items:[
+        {name: 'Pending Role Requests', tab: {id: 'pending_role_requests', title:'Pending Role Requests', url:'<%= admin_role_requests_path %>', initializer: 'Talho.PendingRoleRequests'}},
+        {name: 'Manage Groups', tab: {id: 'manage_groups', title:'Manage Groups', url:'<%= admin_groups_path %>', initializer: 'Talho.ManageGroups'}},
+        {name: 'Manage Users', items: [
+          {name: 'Add a User', tab: {id: 'add_new_user', title:'Add A User', url:'<%= new_admin_user_path %>', initializer: 'Talho.AddUser'}},
+          {name: 'Batch Add Users', tab: {id: 'batch_new_users', title:'Batch Add Users', url:'<%= new_user_batch_path %>', initializer: 'Talho.BatchUsers'}},
+          {name: 'Edit Users', tab: {id: 'edit_users', title:'Edit Users', url:'<%= show_advanced_search_path %>', admin_mode: true, initializer: 'Talho.FindPeople'}}]},
+          {name: 'Manage Invitations', items:[
+          {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'<%= admin_invitations_path %>', initializer: 'Talho.NewInvitation'}},
+          {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'<%= admin_invitations_path %>', initializer: 'Talho.Invitations'}}]}
+      <% if current_user.is_super_admin? %>
+          , {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}
+      <% end %>
+      ]},
+    <% end %>
+
+    {name: '<%= domain_config['about_button_label'] %>', tab: {id: 'about_phin', title:'<%= domain_config['about_button_label'] %>', url:'<%= domain_config['about_button_url'] %>'}},
+    {name: '<%= current_user.display_name %>', itemId: 'My Account', items:[
+      {name:'View My Profile', tab:{id: 'user_profile_for_<%= current_user.id %>', title:'My Profile', user_id: <%= current_user.id %>, initializer: 'Talho.ShowProfile'}},
+      {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'<%= user_profile_path(current_user) %>', user_id: <%= current_user.id %>, initializer: 'Talho.EditProfile'}},
+      {name:'Change Password', tab:{id: 'change_pw', title:'Change Password', url:'<%= user_profile_path(current_user) %>', initializer: 'Talho.EditPassword'}},
+      {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'<%= user_profile_path(current_user) %>', initializer: 'Talho.EditDevices'}},
+      {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'<%= user_profile_path(current_user) %>', admin_mode: <%= current_user.is_admin? %>, initializer: 'Talho.ManageRoles'}},
+      {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'<%= user_profile_path(current_user) %>', initializer: 'Talho.ManageOrganizations'}},
+      {name: 'Sign Out', icon: '/images/logoff.png', redirect: '<%= sign_out_path %>'}
+    ]}
+
+  <% else %>
+    {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_path %>'}},
+    {name:  'Sign Up', redirect: '<%= new_user_path %>'},
+    {name: 'Sign In', redirect: '<%= sign_in_path %>'}
+  <% end %>
+  ];
+  
+Application.bbarConfig = [
+  <% if current_user.has_non_public_role? %>
+    {name: 'Documents', tab: {id: 'documents', title:'Documents', initializer:'Talho.Documents'} },
+  <% end %>
+  {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'<%= forums_path %>', initializer: 'Talho.Forums'}},
+  {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
+  '->',
+  'Need Help? Email: <a style="color: #ffffff; text-decoration: none;" href="mailto:<%= domain_config['help_email'] %>" target="_blank"><%= domain_config['help_email'] %></a>'
+];
+                  
+
