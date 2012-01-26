@@ -197,3 +197,6 @@ p.instructions {
 a.x-tab-strip-close:focus, a.x-tab-right:focus{
   outline: 1px dotted black;
 }
+#favoritestoolbar-xcollapsed{
+  background-color: #596988;
+}
