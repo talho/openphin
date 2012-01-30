@@ -1,6 +1,0 @@
-<ul class="extra">
-  <%= "<li>#{ user.title }</li>" unless user.title.blank? %>
-  <% user.role_memberships.each do | rm | %>
-    <li><%= rm.role.name %> in <%= rm.jurisdiction.name %></li>
-  <% end %>
-</ul>
