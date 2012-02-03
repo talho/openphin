@@ -1,5 +1,0 @@
-<%- in_form ||= false -%>
-<% content_tag_for :p, sms_device do %>
-  <%= sms_device.class.display_name %>: <%=h sms_device.sms %>
-  <%= link_to 'Delete SMS', device_path(sms_device), :class => 'destroy' if in_form %>
-<% end %>

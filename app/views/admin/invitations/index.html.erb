@@ -1,7 +1,0 @@
-<h2>Existing Invitations</h2>
-
-<ul>  
-  <% @invitations.each do |invitation| %>
-    <li><%= link_to invitation.name,admin_invitation_path(invitation) %> <%= link_to "View Reports", reports_admin_invitation_path(invitation) %></li>
-  <% end %>
-</ul>

@@ -44,7 +44,7 @@
 jQuery(function($) {
   $('#health_professional').toggleCheckbox('#health_professional_fields').click(function() {
     $('#health_professional_fields').toggle();
-    if($('#health_professional:checked').lenght > 0){
+    if($('#health_professional:checked').length > 0){
       $('fieldset#health_professional_fields *:input').val('');
     }
 
@@ -57,9 +57,6 @@ jQuery(function($) {
     $('fieldset#health_professional_fields select#user_role_requests_attributes_0_role_id').selectedIndex = $(pub).val();
   });
 
-  $('select.crossSelect[multiple="multiple"]').crossSelect({
-    clickSelects : true
-  });
 });
 
 $(document).ready(function() {
