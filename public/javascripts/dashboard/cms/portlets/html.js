@@ -71,12 +71,8 @@ Talho.Dashboard.Portlet.HTML = Ext.extend(Talho.Dashboard.Portlet, {
   },
 
   buildConfig: function() {
-    var config = {};
-    config["column"] = this.column;
-    config["xtype"] = this.constructor.xtype;
-    config["itemId"] = this.itemId;
+    var config = Talho.Dashboard.Portlet.HTML.superclass.buildConfig.call(this);
     config["html"] = this.el.child('.x-portlet-html').dom.innerHTML;
-    config["title"] = this.title;
     return config;
   },
 

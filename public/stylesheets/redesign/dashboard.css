@@ -39,7 +39,7 @@
   display: none;
 }
 
-.portlet.user-mode .x-tool-refresh{
+.portlet.user-mode .x-tool-refresh, .portlet.user-mode .x-tool-toggle{
   display: block;
 }
 
