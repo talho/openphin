@@ -1,4 +1,4 @@
-class GenerateAuthTokens < ActiveRecord::Migration
+class GenerateRememberTokens < ActiveRecord::Migration
   def self.up
     User.find(:all, :conditions => {:remember_token => nil}).each do |u|
       u.send(:generate_remember_token)
