@@ -25,7 +25,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
 
     Talho.ux.RolesControl.superclass.initComponent.call(this);
 
-    this.addListener('afterrender', this._loadJurisdictionsAndRoles, this);
+    this._loadJurisdictionsAndRoles();
   },
 
   add_role: function(){
@@ -141,14 +141,17 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
   _loadJurisdictionsAndRoles: function(){
     this.jurisdictions_store = new Ext.data.JsonStore({
       url: (this.ancestor.jurisdictions_store ? this.ancestor.jurisdictions_store.url : '/audiences/jurisdictions_flat') +'?ns=nonforeign',
-      autoLoad: true,
+      data: [{name: 'Loading...'}],
       autoSave: false,
       fields: [{name: 'name'}, {name: 'id'}, {name: 'leaf'}, {name: 'level'}]
     });
+    this.jurisdictions_store.load();
     this.roles_store = new Ext.data.JsonStore({
-      url: '/roles.json', autoLoad: true, autoSave: false,
+      url: '/roles.json', autoSave: false,
+      data: [{name: 'Loading...'}],
       fields: [{name: 'name'}, {name: 'id'}]
     });
+    this.roles_store.load();
   },
 
   _destroy_handler: function(dv,index,node,e){
