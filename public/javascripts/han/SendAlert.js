@@ -112,7 +112,7 @@ Talho.SendAlert = Ext.extend(function(){}, {
                 ]},
                 {xtype: 'container', itemId:'right_side_form', layout: 'form', defaults: {anchor: '100%'}, items:[
                     {xtype: 'combo', itemId: 'alert_jurisdiction', fieldLabel: 'Jurisdiction', hiddenName:'han_alert[from_jurisdiction_id]', store: jurisdiction_store, mode: 'local', valueField: 'id', displayField: 'name', triggerAction: 'all', autoSelect: true, editable: false, allowBlank: false, blankText: 'Please select a jurisdiction'},
-                    {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'han_alert[status]', store: ['Actual', 'Excercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
+                    {xtype: 'combo', itemId: 'alert_status', fieldLabel: 'Status', name: 'han_alert[status]', store: ['Actual', 'Exercise', 'Test'], editable: false, value: 'Actual', triggerAction: 'all'},
                     {xtype: 'combo', itemId: 'alert_severity', fieldLabel: 'Severity', name: 'han_alert[severity]', store: ['Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown'], editable: false, value: 'Minor', triggerAction: 'all'},
                     {xtype: 'combo', itemId: 'alert_delivery_time', fieldLabel: 'Delivery Time', hiddenName: 'han_alert[delivery_time]', valueField:'value', displayField:'display', mode: 'local', editable: false, triggerAction: 'all', value: 4320, store: new Ext.data.ArrayStore({
                         data: [[15], [30], [45], [60], [75], [90], [1440], [4320]],
