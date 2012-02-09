@@ -111,3 +111,5 @@ Ext.plugin.DragDropTabs = (function() {
         }
     };
 })();
+
+Ext.preg('dragdroptabs', Ext.plugin.DragDropTabs);

@@ -31,6 +31,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
         Talho.ScriptManager.loadOtherLibrary('Favorites PhinLayout Dashboard', function(){
             this.favoritesToolbar = new Talho.ux.FavoritesPanel({
                 parent: this,
+                collapsed: true,
                 listeners:{
                     scope:this,
                     'favoriteclick': this.open_tab,
@@ -93,31 +94,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
                  '</em></a></li>'
             ),
             items: [Talho.Dashboard.CMS.ViewController.initialize({itemId:'dashboard_home'})],
-            listeners:{
-                'beforetabchange': function(tab_panel, new_tab, old_tab){
-                    if(old_tab)
-                        old_tab.un('afternavigation', this.setTabControls, this);
-                    new_tab.on('afternavigation', this.setTabControls, this);
-                    this.setTabControls(new_tab);
-                    return true;
-                },
-                'back': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.back)
-                        comp.back();
-                },
-                'forward': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.forward)
-                        comp.forward();
-                },
-                'refresh': function(){
-                    var comp = this.tabPanel.getActiveTab();
-                    if(comp.reset)
-                        comp.reset(true);
-                },
-                scope: this
-            }
+            plugins: ['dragdroptabs']
         });
 
         return new Ext.Panel({
@@ -323,13 +300,7 @@ var PhinApplication = Ext.extend(Ext.util.Observable, {
             scope: this
         });
     },
-
-    setTabControls: function(panel){
-        //this.tabPanel.backButton.setDisabled(panel.canGoBack && panel.canGoBack() ? false : true);
-        //this.tabPanel.forwardButton.setDisabled(panel.canGoForward && panel.canGoForward() ? false : true);
-        //this.tabPanel.refreshButton.setDisabled(panel.reset ? false : true);
-    },
-
+    
     manage_favorites: function(){
         Talho.ScriptManager.loadOtherLibrary('ManageFavorites', function(){
             (new Ext.ux.ManageFavoritesWindow({

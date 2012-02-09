@@ -2,8 +2,7 @@ Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   // Used to restrict which properties can be used when creating a portlet from the json data
-  fields: ['title', 'column', 'itemId', 'xtype'],
-
+  fields: ['title', 'column', 'itemId', 'xtype', 'collapsed'],
   constructor: function(config) {
     var approvedConfig = {},
         superclass = this.constructor.superclass;
@@ -47,7 +46,6 @@ Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {
   border: true,
   header: true,
   frame: true,
-  collapsible: false,
   cls: 'portlet user-mode',
   
   toggleAdminBorder: function(){

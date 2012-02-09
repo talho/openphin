@@ -11,7 +11,7 @@ Feature: User should be able to set values as favorites
     And I am on the dashboard page
     And I am logged in as "martin@example.com"
     And I have a favorite named "Test Favorite"
-    And I am on the ext dashboard page
+    And I click x-layout-collapsed ""
 
   Scenario: User Creates Favorite
     When I navigate to "Tutorials > PHIN"

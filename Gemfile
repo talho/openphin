@@ -6,6 +6,7 @@ source "http://gems.github.com"
 group :default do
   gem "rails", "2.3.14"
     gem 'rdoc'
+  gem "exception_notification", "~> 2.3.3.0"
   gem "sinatra", "1.0"
   gem "clearance", "0.8.8"
   gem "prawn", "0.8.4"

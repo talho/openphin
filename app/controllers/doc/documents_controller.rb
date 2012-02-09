@@ -1,7 +1,9 @@
 class Doc::DocumentsController < ApplicationController
   before_filter :non_public_role_required
   before_filter :can_edit_document, :only => [:edit, :move, :destroy]
-
+  
+  skip_before_filter :verify_authenticity_token, :only => [:create]
+  
   def show
     @document = Document.find(params[:id]).viewable_by(current_user)
 
@@ -23,7 +25,7 @@ class Doc::DocumentsController < ApplicationController
         end
         return
       end
-
+      
       unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == URI.decode(params[:file].original_filename)}
         @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(:file => params[:file], :folder => @parent_folder)
         @document.owner_id = current_user.id

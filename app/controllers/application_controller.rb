@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
   include CachingPresenter::InstantiationMethods
   include Clearance::Authentication
+  include ExceptionNotification::Notifiable
 
   helper :all # include all helpers, all the time
   helper_method :toolbar
