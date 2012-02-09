@@ -87,6 +87,11 @@ Capybara.default_driver = :selenium_with_firebug
 #  Selenium::WebDriver.for :firefox, :profile => profile
 #end
 
+if ENV["HEADLESS"] != 'false'
+  @headless = Headless.new
+  @headless.start
+end
+
 Spork.prefork do
   World ActionController::RecordIdentifier
 

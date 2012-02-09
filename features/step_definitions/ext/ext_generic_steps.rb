@@ -222,8 +222,10 @@ When /^I close the active tab$/ do
 end
 
 When /^I open ext combo "([^\"]*)"$/ do |select_box|
-  field = find_field(select_box)
-  field.click
+  if page.has_no_css?('.x-layer.x-combo-list', :visible => true)
+    field = find_field(select_box)
+    field.find(:xpath, '../img').click
+  end
 end
 
 # Must have editable: false property set to work properly if not typing in value to combobox

@@ -19,13 +19,13 @@ Feature: Receiving notifications to different events
 
 Scenario: Bookmarking folders by dragging a tab
   Given I am logged in as "bosshogg@example.com"
-  And I navigate to the ext dashboard page
   And I create a folder outline with "Warrants"
   And I navigate to "Documents"
   Then I should see "Warrants"
 
   When I select the "Warrants" grid row
   And I wait for the "Loading" mask to go away
+  When I click x-layout-collapsed ""
   And I drag the "Documents: Warrants" tab to "#favoritestoolbar"
   And I wait for the "Saving" mask to go away
   And I should see "Documents: Warrants" within "#favoritestoolbar"
@@ -42,11 +42,11 @@ Scenario: Bookmarking folders by dragging a tab
 
 Scenario: Bookmarking folders by dragging the folder icon 
   Given I am logged in as "bo@example.com"
-  And I navigate to the ext dashboard page
   And I create a folder outline with "Jorts"
   And I navigate to "Documents"
   Then I should see "Jorts"
 
+  When I click x-layout-collapsed ""
   When I drag the "Jorts" folder to "#favoritestoolbar"
   And I wait for the "Saving" mask to go away
   And I should see "Documents: Jorts" within "#favoritestoolbar"
@@ -63,7 +63,6 @@ Scenario: Bookmarking folders by dragging the folder icon
 
 Scenario: Bookmarking another user's share
   Given I am logged in as "bo@example.com"
-  And I navigate to the ext dashboard page
   And I create a folder outline with "Moonshine"
   And I navigate to "Documents"
   Then I should see "Moonshine"
@@ -79,12 +78,12 @@ Scenario: Bookmarking another user's share
   And I sign out
 
   When I am logged in as "bosshogg@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Documents"
   And I expand the folders "Bo Duke"
   Then I should see "Moonshine"
   When I select the "Moonshine" grid row
   And I wait for the "Loading" mask to go away
+  When I click x-layout-collapsed ""
   And I drag the "Documents: Moonshine" tab to "#favoritestoolbar"
   And I wait for the "Saving" mask to go away
   And I should see "Documents: Moonshine" within "#favoritestoolbar"
