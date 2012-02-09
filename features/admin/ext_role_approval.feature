@@ -15,6 +15,7 @@ Feature: Approving users for roles
     And the following users exist:
       | John Smith | john@example.com | Public | Texas |
 
+  @role_request @index_ext_erb @index_html_erb
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction via View Pending Requests
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
@@ -31,6 +32,7 @@ Feature: Approving users for roles
     And I should see "John Smith has been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
 
+  @role_request @index_ext_erb @index_html_erb
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
@@ -46,6 +48,7 @@ Feature: Approving users for roles
     And I should see "John Smith has been approved for the role Health Officer in Dallas County"
     And "john@example.com" should have the "Health Officer" role in "Dallas County"
 
+  @role_request @index_ext_erb @index_html_erb
   Scenario: Jurisdiction Admin approving role requests outside their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@potter.gov"
@@ -53,6 +56,7 @@ Feature: Approving users for roles
     And I navigate to "Admin > Pending Role Requests"
     Then I should not see "john@example.com"
 
+  @role_request @index_ext_erb @index_html_erb
   Scenario: Jurisdiction Admin denying role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
@@ -68,6 +72,7 @@ Feature: Approving users for roles
     And I should not see "john@example.com"
     And "john@example.com" should not have the "Health Officer" role in "Dallas County"
 
+  @malicious @role_request @index_ext_erb @index_html_erb
   Scenario: Malicious admin cannot remove role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"
@@ -81,6 +86,7 @@ Feature: Approving users for roles
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
 
+  @malicious
   Scenario: Malicious admin cannot approve role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"
@@ -88,6 +94,7 @@ Feature: Approving users for roles
     Then I should see "This resource does not exist or is not available."
     And I should be on the dashboard page
 
+  @malicious
   Scenario: Malicious admin cannot deny role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"

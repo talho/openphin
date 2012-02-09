@@ -28,6 +28,7 @@ Feature: Assigning roles to users for roles
     When the sphinx daemon is running
     And delayed jobs are processed
 
+  @role @reindex
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
     And I reindex sphinx
@@ -40,6 +41,7 @@ Feature: Assigning roles to users for roles
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
 	  And "admin@dallas.gov" should not receive an email
 
+  @role
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile when a role request already exists
     Given I am logged in as "admin@state.tx.us"
     And "jane@example.com" has requested to be a "Health Officer" for "Dallas County"
@@ -53,14 +55,17 @@ Feature: Assigning roles to users for roles
     And "jane@example.com" should have the "Health Officer" role in "Dallas County"
     And "admin@dallas.gov" should not receive an email
 
+  @malicious
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
     Given this scenario is written
     #TODO: Re-implement this maliciousness test
 
+  @malicious
   Scenario: Malicious admin cannot assign roles to users outside their jurisdictions
     Given this scenario is written
     #TODO: Re-implement this maliciousness test
 
+  @malicious
   Scenario: Malicious admin cannot remove role assignments the user is not an admin of
     Given "admin@dallas.gov" has approved the "Health Officer" role in "Dallas County" for "john@example.com"
     And I am logged in as "admin@potter.gov"
@@ -69,6 +74,7 @@ Feature: Assigning roles to users for roles
     #Then I should see "This resource does not exist or is not available."
     And I should be on the homepage
 
+  @role
   Scenario: Assigning system roles to a user in my jurisdiction
     Given I am logged in as "admin@potter.gov"
     When I navigate to the ext dashboard page
@@ -77,6 +83,7 @@ Feature: Assigning roles to users for roles
     Then "bob@example.com" should have the "Admin" role in "Potter County"
     And I should see "Phin: Admin" within ".role-title"
 
+  @role
   Scenario: Superadmin can assign system roles to a user in child jurisdiction
     Given I am logged in as "super@example.com"
     When I navigate to the ext dashboard page
@@ -85,6 +92,7 @@ Feature: Assigning roles to users for roles
     Then "bob@example.com" should have the "Admin" role in "Potter County"
     And I should see "Phin: Admin" within ".role-title"
 
+  @role
   Scenario: Assigning system roles to a user in a child of my jurisdiction
     Given I am logged in as "admin@state.tx.us"
     When I navigate to the ext dashboard page

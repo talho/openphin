@@ -17,6 +17,7 @@ I should be able to remove all but one public role from my profile
       | John Smith    | john.smith@example.com   | Public | Texas         |
     And I am logged in as "john.smith@example.com"
 
+  @role
   Scenario: Adding and removing public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -31,6 +32,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Potter County | Public |
 
+  @role
   Scenario: Cannot remove all public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -43,6 +45,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Dallas County | Public |
 
+  @role
   Scenario: Removing the all public roles from user profile and adding a new public role
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -63,6 +66,7 @@ I should be able to remove all but one public role from my profile
     And I should not see "Texas" within ".role-item"
     And I should not see "Dallas County" within ".role-item"
 
+  @role
   Scenario: Adding and removing non-public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -75,6 +79,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
+  @role
   Scenario: Add and remove a role then save
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -87,6 +92,7 @@ I should be able to remove all but one public role from my profile
     Then I should not see any errors
     And I should see "Profile information saved"
 
+  @role
   Scenario: Adding a duplicate role
     BioTerrorism Coordinator
     When I navigate to the ext dashboard page
@@ -100,6 +106,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
+  @role
   Scenario: Add and remove a role then save
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -112,6 +119,7 @@ I should be able to remove all but one public role from my profile
     And I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
+  @role_request
   Scenario: Adding a duplicate role request
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -121,6 +129,7 @@ I should be able to remove all but one public role from my profile
     And I press "Apply Changes"
     Then I should see "Role has already been requested for this jurisdiction"
 
+  @role_request
   Scenario: Adding a role request duplicating an existing role membership
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
@@ -129,6 +138,7 @@ I should be able to remove all but one public role from my profile
     And I press "Apply Changes"
     Then I should see "User is already a member of this role and jurisdiction"
   
+  @role_request
   Scenario: As a user the request role window should not display system-roles or foreign jurisdictions
     Given there is an system only Admin role
     When I navigate to the ext dashboard page
@@ -143,9 +153,11 @@ I should be able to remove all but one public role from my profile
     Then I should see "Dallas County"
     And I should not see "Federal"
 
+  @role_request
   Scenario: Role request window should not show roles for applications the user does not have
     When this scenario is written
 
+  @role_request
   Scenario: Role Requests should not cross-pollinate
     Given the following users exist:
       | Awesome Blossoms | awesome@example.com      | SuperAdmin | Texas     |
