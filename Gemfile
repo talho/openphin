@@ -18,7 +18,7 @@ group :default do
   gem "validatable", "1.6.7"
   gem "will_paginate", "2.3.14"
   gem "RedCloth", "4.2.8"
-  gem "hoptoad_notifier", "2.3.0"
+  gem "hoptoad_notifier", "2.4.11"
   gem "feedzirra", "0.0.23"
   gem "builder", "2.1.2"
   gem "nokogiri", "1.4.4"
