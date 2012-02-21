@@ -58,10 +58,12 @@ class Admin::RoleRequestsController < ApplicationController
     respond_to do |format|
       if @role_request && current_user.is_admin_for?(@role_request.jurisdiction)
         @role_request.destroy
+        format.json { render :json => {:success => true } }
         format.html { redirect_to(admin_role_requests_path) }
         format.xml  { head :ok }
       else
         flash[:error] = "This resource does not exist or is not available."
+        format.json { render :json => {:success => false, :msg => "This resource does not exist or is not available."}, :status => :unprocessable_entity }
         format.html { redirect_to(admin_role_requests_path) }
         format.xml { render :xml => @role_request.errors, :status => :unprocessable_entity }
       end

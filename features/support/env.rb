@@ -23,45 +23,11 @@ require "#{Rails.root}/spec/factories"
 require 'rspec/mocks'
 require File.join(File.dirname(__FILE__),'patches','send_key')
 
-require 'db/migrate/20110314145442_create_my_sql_compatible_functions_for_postgres'
-
-# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-# order to ease the transition to Capybara we set the default here. If you'd
-# prefer to use XPath just remove this line and adjust any selectors in your
-# steps to use the XPath syntax.
-Capybara.default_selector = :css
-
-# If you set this to false, any error raised from within your app will bubble 
-# up to your step definition and out to cucumber unless you catch it somewhere
-# on the way. You can make Rails rescue errors and render error pages on a
-# per-scenario basis by tagging a scenario or feature with the @allow-rescue tag.
-#
-# If you set this to true, Rails will rescue all errors and render error
-# pages, more or less in the same way your application would behave in the
-# default production environment. It's not recommended to do this for all
-# of your scenarios, as this makes it hard to discover errors in your application.
-ActionController::Base.allow_rescue = false
-
-# If you set this to true, each scenario will run in a database transaction.
-# You can still turn off transactions on a per-scenario basis, simply tagging 
-# a feature or scenario with the @no-txn tag. If you are using Capybara,
-# tagging with @culerity or @javascript will also turn transactions off.
-#
-# If you set this to false, transactions will be off for all scenarios,
-# regardless of whether you use @no-txn or not.
-#
-# Beware that turning transactions off will leave data in your database 
-# after each scenario, which can lead to hard-to-debug failures in 
-# subsequent scenarios. If you do this, we recommend you create a Before
-# block that will explicitly put your database in a known state.
-Cucumber::Rails::World.use_transactional_fixtures = false
-# How to clean your database when transactions are turned off. See
-# http://github.com/bmabey/database_cleaner for more info.
+#require 'db/migrate/20110314145442_create_my_sql_compatible_functions_for_postgres'
 
 Capybara.register_driver :selenium_with_firebug do |app|
-  Capybara::Selenium::Driver
-  profile = Selenium::WebDriver::Firefox::Profile.new
   if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+    profile = Selenium::WebDriver::Firefox::Profile.new
     profile['extensions.firebug.currentVersion'] = '100.100.100'
     profile['extensions.firebug.console.enableSites'] = 'true'
     profile['extensions.firebug.script.enableSites'] = 'true'
@@ -72,27 +38,23 @@ Capybara.register_driver :selenium_with_firebug do |app|
     Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile, :resynchronize => true })
   else
     Capybara::Selenium::Driver.new(app, { :browser => :firefox, :resynchronize => true })
-
   end
-end
+end if ENV['HEADLESS'] == 'false' 
 
-Capybara.default_driver = :selenium_with_firebug
-#Capybara.default_wait_time = 2
-
-#if File.exists?("#{Rails.root}/firebug.xpi")
-#  profile = Selenium::WebDriver::Firefox::Profile.new
-#  profile['extensions.firebug.currentVersion'] = '100.100.100'
-#  profile.add_extension("#{Rails.root}/firebug.xpi")
-#
-#  Selenium::WebDriver.for :firefox, :profile => profile
-#end
-
-if ENV["HEADLESS"] != 'false'
-  @headless = Headless.new
-  @headless.start
+Capybara.register_driver :selenium_with_chrome do |app|
+  Capybara::Selenium::Driver.new(app, { :browser => :chrome, :resynchronize => true })
 end
 
 Spork.prefork do
+  # Make it act like webrat to make conversion easier
+  Capybara.default_selector = :css
+  
+  # Deliver exceptions like dev instead of production
+  ActionController::Base.allow_rescue = false
+  
+  # Use database cleaner so selenium can work.
+  Cucumber::Rails::World.use_transactional_fixtures = false
+
   World ActionController::RecordIdentifier
 
   ts = ThinkingSphinx::Configuration.instance
@@ -106,18 +68,28 @@ Spork.prefork do
   at_exit do
     ts.controller.stop
   end
-  CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+  #CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+
+  Capybara.default_driver = case ENV['BROWSER']
+    when 'chrome' then :selenium_with_chrome
+    else ENV['HEADLESS'] == 'false' ? :selenium_with_firebug : :selenium
+  end
+    
+  if ENV["HEADLESS"] != 'false'
+    @headless = Headless.new
+    @headless.start
+  end
 end
 
 Spork.each_run do
- Before do
-   # Clear out PHIN_MS queue
-   FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
-   ActionMailer::Base.deliveries = []
-
-   Service::Swn::Message.instance_eval do
-     Service::Swn::Message.clearDeliveries
-   end
+  Before do
+    # Clear out PHIN_MS queue
+    FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
+    ActionMailer::Base.deliveries = []
+  
+    Service::Swn::Message.instance_eval do
+      Service::Swn::Message.clearDeliveries
+    end
 
     # load application-wide fixtures
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
@@ -130,7 +102,7 @@ Spork.each_run do
     ts.build
     ts.controller.index
 
-   ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+    ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 
     $rspec_mocks ||= RSpec::Mocks::Space.new
   end
@@ -139,17 +111,17 @@ Spork.each_run do
     begin
       require 'database_cleaner'
       DatabaseCleaner.strategy = :truncation
-      rescue LoadError => ignore_if_database_cleaner_not_present
-      end
-    end
-
-    After do
-      begin
-        visit '/sign_out'
-        unset_current_user
-        $rspec_mocks.verify_all
-      ensure
-        $rspec_mocks.reset_all
-      end
+    rescue LoadError => ignore_if_database_cleaner_not_present
     end
   end
+
+  After do
+    begin
+      visit '/sign_out'
+      unset_current_user
+      $rspec_mocks.verify_all
+    ensure
+      $rspec_mocks.reset_all
+    end
+  end
+end

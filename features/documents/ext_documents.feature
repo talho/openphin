@@ -17,7 +17,7 @@ Feature: Document upload, download, and view
     When I expand the folders ""
     And I select the "<destination>" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "<file>" to "file"
+    And I upload the file "<file>"
     And I wait for 1 second
     And I press "OK"
     And I wait for the "Saving" mask to go away

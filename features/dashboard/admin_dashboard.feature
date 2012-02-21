@@ -32,6 +32,7 @@ Feature: Dashboard Administration
 
   Scenario: Superadmin editing default dashboard
     Given I am logged in as "atticus@example.com"
+    And I wait for the "Loading..." mask to go away
     Then I should see "Edit Dashboards"
     When I press "Edit Dashboards"
     Then the "Edit Dashboards" tab should be open
@@ -39,6 +40,7 @@ Feature: Dashboard Administration
 
   Scenario: Admin cannot edit default dashboard
     Given I am logged in as "bartleby@example.com"
+    And I wait for the "Loading..." mask to go away
     Then I should see "Edit Dashboards"
     When I press "Edit Dashboards"
     Then the "Edit Dashboards" tab should be open
@@ -46,6 +48,7 @@ Feature: Dashboard Administration
 
   Scenario: Creating new dashboard
     Given I am logged in as "bartleby@example.com"
+    And I wait for the "Loading..." mask to go away
     When I press "Edit Dashboards"
      And I press "New"
     Then the "Create New Dashboard" window should be open
@@ -55,6 +58,7 @@ Feature: Dashboard Administration
 
   Scenario: Create new dashboard and ensure we're now editing that dashboard
     Given I am logged in as "bartleby@example.com"
+    And I wait for the "Loading..." mask to go away
     When I press "Edit Dashboards"
      And I press "New"
     When I fill in "Dashboard Name" with "My Dashboard"
@@ -80,6 +84,7 @@ Feature: Dashboard Administration
       | Dashboard Role | editor        |
       | Users          | Atticus Finch |
      And I am logged in as "atticus@example.com"
+    And I wait for the "Loading..." mask to go away
     When I press "Edit Dashboards"
      And I press "Open"
     Then the "Open Dashboard" window should be open
@@ -232,10 +237,12 @@ Feature: Dashboard Administration
     When I am logged in as "bartleby@example.com"
     Then I should see "other dashboard this is"
     When I navigate to "Bartleby Scrivener > Edit My Account"
+     And I wait for the "Loading..." mask to go away
      And I select "My Dashboard" from ext combo "Dashboard"
      And I press "Apply Changes"
      And I wait for the "Saving..." mask to go away
      And I navigate to the ext dashboard page
+     And I wait for the "Loading..." mask to go away
     Then I should see "other dashboard this is"
     When I press "Edit Dashboards"
      And I press "Open"
@@ -285,6 +292,7 @@ Feature: Dashboard Administration
       | Users          | Atticus Finch |
      And I am logged in as "atticus@example.com"
     When I edit the user profile for "Bartleby Scrivener"
+     And I wait for the "Loading..." mask to go away
      And I expand the "user[dashboard_id]" combo box
     Then I should not see "Not Bartleby"
     When I click x-combo-list-item "Application Default"
@@ -317,8 +325,9 @@ Feature: Dashboard Administration
 
   Scenario: Maliciously attempting to modify dashboard without appropriate permission
     # And I try to post the server while not logged in
-    When I navigate to the ext dashboard page
+    When I go to the dashboard page
     And I load ExtJs
+    And I wait for 2 seconds
     And I maliciously try to create a dashboard
     Then The maliciousness response should contain "TXPhin: sessions/new"
     And I maliciously try to edit a dashboard

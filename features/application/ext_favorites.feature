@@ -8,9 +8,9 @@ Feature: User should be able to set values as favorites
   Background:
     Given the following users exist:
           | Martin Fowler      | martin@example.com   | Health Official | Dallas County |
-    And I am on the dashboard page
     And I am logged in as "martin@example.com"
     And I have a favorite named "Test Favorite"
+    And I navigate to the ext dashboard page
     And I click x-layout-collapsed ""
 
   Scenario: User Creates Favorite

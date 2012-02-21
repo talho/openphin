@@ -104,9 +104,9 @@ When /^(?:|I )navigate to ([^\"]*)$/ do |path|
     "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations"
   }
 
-  When %Q{I go to the ext dashboard page}
   if path_lookup[path.to_sym].blank?
-    When %Q{I wait for the "Loading PHIN" mask to go away}
+    When %Q{I go to the ext dashboard page}
+    Then %Q{I am logged in}
   else
     When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
   end
@@ -241,7 +241,7 @@ Then /^the "([^\"]*)" field should be invalid$/ do |field_name|
     # handle the checkbox group case where it is a div and not an input or text area or other form of field
     field = page.find(:xpath, "//div[@id=//label[contains(text(), '#{field_name}')]/@for]")
   end
-  field.find(:xpath, ".[contains(concat(' ', @class, ' '), 'x-form-invalid')]").should_not be_nil
+  field.find(:xpath, "../*[contains(concat(' ', @class, ' '), 'x-form-invalid')]").should_not be_nil
 end
 
 Then /^the following fields should be invalid:$/ do |table|
@@ -270,13 +270,9 @@ end
 
 When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do |mask_text, wait_seconds|
   begin
-    mask = page.find('.loading-indicator', :text => mask_text)
-    end_time = Time.now + (wait_seconds.blank? ? 5.seconds : wait_seconds.to_i.seconds) # wait a max of 5 seconds for the mask to disappear
-    while !mask.blank? and Time.now < end_time
-      mask = page.find('.loading-indicator', :text => mask_text)
-    end
-    mask.should be_nil
-  rescue Selenium::WebDriver::Error::ObsoleteElementError, Capybara::ElementNotFound
+    page.has_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true) # let's wait for the loading mask to appear. this is to fix a speed issue in chrome (it passes the step before the load mask shows)
+    page.has_no_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true).should be_true
+  rescue Selenium::WebDriver::Error::ObsoleteElementError
     # this is perfect, the element has gone from the dom.  Or it hasn't appeared yet.  Then this isn't perfect.
   end
 end

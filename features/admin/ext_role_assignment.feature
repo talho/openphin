@@ -30,7 +30,6 @@ Feature: Assigning roles to users for roles
 
   Scenario: Admin can assign roles to users in their jurisdictions via the user profile
     Given I am logged in as "admin@dallas.gov"
-    And I reindex sphinx
     When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Doe"
     And I add the role "Health Officer" for "Dallas County" from EditProfile

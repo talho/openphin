@@ -20,7 +20,7 @@ Feature: User documents managed through shares
     And I expand the folders ""
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "spec/fixtures/invitees.csv" to "file"
+    And I upload the file "spec/fixtures/invitees.csv"
     And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away
@@ -72,7 +72,7 @@ Feature: User documents managed through shares
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
     And I click inlineLink "Upload New File"
-    And I attach the file "spec/fixtures/invitees.csv" to "file"
+    And I upload the file "spec/fixtures/invitees.csv"
     And I press "OK"
     And I wait for the "Saving" mask to go away
     And I wait for the "Loading" mask to go away

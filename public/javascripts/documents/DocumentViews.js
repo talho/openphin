@@ -173,7 +173,7 @@ Ext.ns('Talho.ux.Documents');
               });
             }
             else{
-              win = new Ext.Window({width: 400, height: 200, autoScroll: true, title: 'New Documents', modal: true, items:{xtype:'box'},
+              win = new Ext.Window({width: 400, height: 200, autoScroll: true, title: 'New Documents', folder_id: folder.get('id'), modal: true, items:{xtype:'box'},
                 buttons:[{text: 'OK', scope: this, handler: function(){
                   win.close();
                   this.refresh();

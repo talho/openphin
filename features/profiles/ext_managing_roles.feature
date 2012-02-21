@@ -21,6 +21,7 @@ I should be able to remove all but one public role from my profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "Public" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | Public | needs to be saved |
@@ -34,7 +35,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Cannot remove all public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I click profile-destroy "Texas"
     When I click profile-destroy "Dallas County"
     Then I should not see "Dallas County"
@@ -46,7 +47,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Removing the all public roles from user profile and adding a new public role
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     And I click profile-destroy "Texas"
     And I click profile-destroy "Dallas County"
     Then I should see "No roles to display"
@@ -66,7 +67,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Adding and removing non-public roles from user profile
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
@@ -78,6 +79,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Add and remove a role then save
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
@@ -91,7 +93,7 @@ I should be able to remove all but one public role from my profile
     BioTerrorism Coordinator
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
@@ -103,7 +105,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Add and remove a role then save
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
@@ -115,7 +117,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Adding a duplicate role request
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     And I press "Apply Changes"
@@ -124,7 +126,7 @@ I should be able to remove all but one public role from my profile
   Scenario: Adding a role request duplicating an existing role membership
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
-    Then the "Manage Roles" tab should be open
+    And I wait for the "Loading..." mask to go away
     When I request the role "Public" for "Dallas County" in the RolesControl
     And I press "Apply Changes"
     Then I should see "User is already a member of this role and jurisdiction"
@@ -133,11 +135,12 @@ I should be able to remove all but one public role from my profile
     Given there is an system only Admin role
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
+    And I wait for the "Loading..." mask to go away
     And I press "Request Role"
     And I open ext combo "rq[role]"
     Then I should see "BioTerrorism Coordinator"
     And I should not see "Admin"
-
+    And I close the active ext window
     When I press "Request Role"
     And I open ext combo "Jurisdiction"
     Then I should see "Dallas County"
@@ -152,6 +155,7 @@ I should be able to remove all but one public role from my profile
       | Fred Smith       | fred.smith@example.com   | Public     | Texas     |
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     Then I should see the following within ".role-item":
       | Potter County | BioTerrorism Coordinator | needs to be saved |
@@ -163,6 +167,7 @@ I should be able to remove all but one public role from my profile
     When I am logged in as "awesome@example.com"
     When I navigate to the ext dashboard page
     And I visit the Edit Profile page for "fred.smith@example.com"
+    And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
     When I press "Apply Changes"
     Then I should not see any errors

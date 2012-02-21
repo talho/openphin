@@ -82,6 +82,7 @@ group :cucumber do
   gem "rack-test"#, "0.5.4"
   gem "childprocess"
   gem "selenium-webdriver"#, '2.8.0'
+  gem "chromedriver-helper"
   gem "headless"
   gem "xpath" #, "0.1.3"
   gem "capybara" #, "0.4.1.2"

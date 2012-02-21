@@ -122,7 +122,7 @@ I should be able to create topics to forums and place comments to these topics
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"
-
+    And I wait for the "Loading..." mask to go away
     And I press "Add Reply"
     And I fill in "topic[comment_attributes][content]" with "*strong words* and _emphasized words_"
     And I press "Save"

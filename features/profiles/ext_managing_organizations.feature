@@ -39,6 +39,7 @@ I should be able to edit my profile
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Jane Smith > Manage Organizations"
+    And I wait for the "Loading..." mask to go away
     Then I should see "Organizations"
     When I press "Request Organization"
     And I select "DSHS" from ext combo "Organization:"
