@@ -90,6 +90,17 @@ end
 Given /^I am logged in as "([^\"]*)"$/ do |email|
   user = User.find_by_email!(email)
   login_as user
+  Then %Q{I am logged in}
+end
+
+Then /^I am logged in$/ do
+  @current_user.should_not be_nil
+  begin
+    page.has_no_css?('#loading-mask', :visible => true).should be_true
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    # this is a stale element error meaning between us finding the element and us processing, it disappeared. In this case, it's good
+    true
+  end
 end
 
 Given /^"([^\"]*)" is allowed to send alerts$/ do |email|
@@ -190,7 +201,7 @@ When 'I signup for an account with the following info:' do |table|
 end
 
 When /^I log in as "([^\"]*)"$/ do |user_email|
-  login_as User.find_by_email!(user_email)
+  Given %Q{I am logged in as "#{user_email}"}
 end
 
 When /^I sign in with "([^\"]*)" and "([^\"]*)"$/ do |email, password|

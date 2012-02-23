@@ -27,7 +27,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
             fieldLabel: 'Group Membership',
             layout: 'accordion',
             flex: 3,
-            layoutConfig: { hideCollapseTool: true, animate: true },
+            layoutConfig: { hideCollapseTool: true, animate: Application.rails_environment !== 'cucumber' ? true : false },
             items: items,
             margins: '0 20 0 0',
             activeItem: 0,

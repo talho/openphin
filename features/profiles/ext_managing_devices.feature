@@ -25,6 +25,7 @@ Feature: Managing devices when editing user profiles
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I press "Add device"
     Then I should see "Address / Number:"
     When I select "E-mail" from ext combo "Device type"
@@ -45,6 +46,7 @@ Feature: Managing devices when editing user profiles
     And I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     When I click profile-destroy "5552345678"
     Then I should not see "5552345678"
     When I press "Apply Changes"
@@ -57,6 +59,7 @@ Feature: Managing devices when editing user profiles
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I press "Add device"
     And I select "E-mail" from ext combo "Device type"
     And I press "Add"
@@ -70,6 +73,7 @@ Feature: Managing devices when editing user profiles
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I press "Add device"
     Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
@@ -86,6 +90,7 @@ Feature: Managing devices when editing user profiles
     And I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I press "Add device"
     Then I should see "Address / Number:"
     And I select "Phone" from ext combo "Device type"
@@ -98,6 +103,7 @@ Feature: Managing devices when editing user profiles
     Given I am logged in as "john.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I press "Add device"
     Then I should see "Address / Number:"
     And I select "SMS" from ext combo "Device type"
@@ -115,6 +121,7 @@ Feature: Managing devices when editing user profiles
     Given I am logged in as "admin@potter.gov"
     When I navigate to the ext dashboard page
     And I navigate to "Default FactoryUser > Manage Devices"
+    And I wait for the "Loading..." mask to go away
     And I will confirm on next step
     And I maliciously post a destroy for a device for "john.smith@example.com"
     And delayed jobs are processed

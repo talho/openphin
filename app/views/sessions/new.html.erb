@@ -1,1 +1,38 @@
 <%= render 'sessions/' + domain_config['sign_in_partial'] %>
+
+<div class="aside">
+  <h2>Sign In to Your Account</h2>
+  <div class="t_boot">
+    <% form_for :session, :url => session_index_path, :html => {:id => 'sign_in_form', :class => "form-stacked"} do |form| %>
+      <div class="well">
+        <div>
+          <%= form.label :email %>
+          <%= form.text_field :email, :value => flash[:email_address], :style => 'width: 160px;', :size => "25" %>
+        </div>
+        <div>
+          <%= form.label :password %>
+          <%= form.password_field :password, :style => 'width: 160px;', :size => "25" %>
+        </div>
+        <ul class="inputs-list">
+          <li>
+            <label for="session_remember_me">
+              <%= form.check_box :remember_me %>
+              <%= form.label :remember_me %>
+            </label>
+          </li>
+        </ul>
+        <div>
+          <%= link_to "Forgot password?", new_password_path %>
+        </div>
+        <span class="help-block">
+          <strong>Need an account?</strong> <%= link_to "Sign up", new_user_path %>.
+        </span>
+      </div>
+      <div>
+        <%= form.submit "Sign in", :disable_with => "Please wait...", :class => "btn primary large"  %>
+      </div>
+    <% end %>
+  </div>
+  <ul id="associations">
+  </ul>
+</div>

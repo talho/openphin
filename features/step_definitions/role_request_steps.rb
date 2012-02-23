@@ -65,13 +65,14 @@ end
 When /^I maliciously post a delete for a role request for "([^\"]*)"$/ do |user_email|
   user = User.find_by_email!(user_email)
   role_request = user.role_requests.first
-  script = "elem = document.createElement('a'); " +
-    "elem.setAttribute('href','#{admin_role_request_path(role_request)}'); " +
-    destroy_link_onclick("confirm('Are you sure you want to delete this group?')") +
-    "elem.innerHTML = 'Remove Role Request'; " +
-    "$('body').append(elem);"
+  script = %Q[Ext.Ajax.request({
+    url: "#{admin_role_request_path(role_request, :format => 'json')}",
+    method: 'DELETE',
+    callback: function(o, s, r){
+      Ext.Msg.alert('complete', r.responseText);
+    }
+  });]
   page.execute_script(script)
-  page.click_link("Remove Role Request")
 end
 
 When /^I maliciously post an approve for a role request for "([^\"]*)"$/ do |user_email|
@@ -127,7 +128,7 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
 
-  visit admin_role_requests_path
+  When %Q{I navigate to "Admin > Pending Role Requests"}
   page.should have_css(".pending_role_requests .requester_email", :content => user_email)
   page.should have_css(".pending_role_requests .role", :content => role_name)
   page.should have_css(".pending_role_requests .jurisdiction", :content => current_user.jurisdictions.first.name )

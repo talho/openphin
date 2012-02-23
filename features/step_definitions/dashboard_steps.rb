@@ -1,12 +1,15 @@
 
 When /^I edit (?:a|the "([^"]*)") dashboard (?:on|as) "([^\"]*)"$/ do |dash_name, user_email|
   Then %{I am logged in as "#{user_email}"}
+   And %{I wait for the "Loading..." mask to go away}
    And %{I press "Edit Dashboards"}
   if dash_name
+     And %{I wait for the "Loading..." mask to go away}
     Then %{I press "Open"}
      And %{I select the "#{dash_name}" grid row}
      And %{I press "Open" within ".cms-open-dash-window"}
   end
+  And %{I wait for the "Loading..." mask to go away}
 end
 
 Given /^the following dashboard exists:$/ do |table|

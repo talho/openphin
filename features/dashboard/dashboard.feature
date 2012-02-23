@@ -64,6 +64,7 @@ Feature: Dashboard
     And I am logged in as "pott.pub@example.com"
     Then I should see "This is a jurisdictional dashboard"
     When I navigate to "Potter Public > Edit My Account"
+    And I wait for the "Loading..." mask to go away
     And I select "Application Default" from ext combo "Dashboard"
     And I press "Apply Changes"
     And I wait for the "Saving..." mask to go away

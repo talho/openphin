@@ -128,3 +128,19 @@ Given /^I uploaded ([0-9]*) files into each folder ([0-9]*) days ago$/ do |num, 
     end
   end
 end
+
+When /^I upload the file "([^"]*)"$/ do |file|
+  if Capybara.current_driver == :selenium_with_chrome
+    page.execute_script("
+      var win = Ext.WindowMgr.getActive();
+      win.insert(0, {id: 'chrome_upload_hack', xtype: 'form', fileUpload: true, padding: '5', method:'POST', url:'/documents.json', labelWidth: 30, baseParams: {'authenticity_token': FORM_AUTH_TOKEN, folder_id: win.folder_id}, items: [
+        {xtype: 'textfield', inputType: 'file', fieldLabel: 'File', name: 'file', anchor: '100%'}
+      ]});
+      win.doLayout();
+    ");
+    And %Q{I attach the file "#{file}" to "File"}
+    page.execute_script("Ext.getCmp('chrome_upload_hack').getForm().submit()");
+  else
+    And %Q{I attach the file "#{file}" to "file"}
+  end
+end

@@ -21,6 +21,7 @@ When /^I edit the user profile for "([^"]*)"$/ do |user_name|
   When %Q{I click x-grid3-cell "#{user_name}"}
   Then %Q{I should see "Edit User"}
   When %Q{I press "Edit User"}
+  When %Q{I wait for the "Loading..." mask to go away}
 end
 
 When /^I request the org "([^"]*)" in the OrgsControl$/ do |org|

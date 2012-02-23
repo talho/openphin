@@ -64,6 +64,7 @@ Feature: Document Sharing
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
+    And I wait for the "Loading..." mask to go away
     And I click x-tab-strip-text "Sharing"
     And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:
@@ -89,6 +90,7 @@ Feature: Document Sharing
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
     And I click x-menu-item "Edit Folder"
+    And I wait for the "Loading..." mask to go away
     And I click x-tab-strip-text "Sharing"
     And I choose "Shared - Accessible to the audience specified below"
     And I select the following in the audience panel:

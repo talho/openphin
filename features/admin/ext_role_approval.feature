@@ -19,9 +19,7 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction via View Pending Requests
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    Then I should see "john@example.com" is awaiting approval for "Health Officer"
-    When I navigate to the ext dashboard page
-    And I navigate to "Admin > Pending Role Requests"
+    When I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
     When I click approve_link "Approve" within "tr.pending_role_requests"
@@ -76,12 +74,9 @@ Feature: Approving users for roles
   Scenario: Malicious admin cannot remove role requests the user is not an admin of
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     And I am logged in as "admin@potter.gov"
-    And I will confirm on next step
     When I maliciously post a delete for a role request for "john@example.com"
     Then I should see "This resource does not exist or is not available."
-    And I should see "Assign Roles"
     When I log in as "admin@dallas.gov"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
