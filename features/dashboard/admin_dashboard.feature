@@ -102,6 +102,7 @@ Feature: Dashboard Administration
     When I edit the "My Dashboard" dashboard as "atticus@example.com"
      And I press "Delete"
      And I press "Yes"
+    And I wait for 1 seconds
     Then the "My Dashboard" dashboard should not exist
 
   Scenario: Cannot delete the application default dashboard
@@ -127,9 +128,11 @@ Feature: Dashboard Administration
     When I edit a dashboard as "atticus@example.com"
      And I click x-tool-close "" within ".portlet"
      And I press "Save"
+    And I wait for 1 seconds
     Then "Application Default" should not have a portlet with "Welcome to openPHIN"
      And I click x-tool-close "" within ".portlet"
      And I press "Save"
+    And I wait for 1 seconds
     Then "Application Default" should not have a portlet with "second welcome portlet"
 
   Scenario: Re-ordering portlets in a single column on dashboard
@@ -152,6 +155,7 @@ Feature: Dashboard Administration
      And I set cms-column-slider to 3
      And I move the "second welcome portlet" portlet to position 0 in column 2
      And I press "Save"
+     And I wait for 1 seconds
     Then "Application Default" should have a portlet with "second welcome portlet" in column 2
 
   Scenario: Adding HTML portlet to dashboard
@@ -188,6 +192,7 @@ Feature: Dashboard Administration
      And I move the "For Another Column" portlet to position 0 in column 2
      And I move the "For Column 3" portlet to position 0 in column 3
      And I press "Save"
+    And I wait for 1 seconds
     Then "Application Default" should have a portlet with "My Dashboard Element" in column 1
      And "Application Default" should have a portlet with "Welcome to openPHIN" in column 1
      And "Application Default" should have a portlet with "For Another Column" in column 2
@@ -268,6 +273,7 @@ Feature: Dashboard Administration
       | Bartleby Scrivener | User |
      And I press "OK"
      And I press "Save"
+    And I wait for 1 seconds
     Then "Bartleby Scrivener" should be a "editor" for the "My Dashboard" dashboard
     When I am logged in as "bartleby@example.com"
     Then I should see "other dashboard this is"
@@ -308,9 +314,11 @@ Feature: Dashboard Administration
      And the "My Dashboard" dashboard has the following audience:
       | Dashboard Role | editor        |
       | Users          | Atticus Finch |
+    And I wait for 1 seconds
     When I edit the "My Dashboard" dashboard on "atticus@example.com"
      And I check application default in the dashboard permission window
      And I press "Save"
+    And I wait for 1 seconds
     Then "My Dashboard" should be the default dashboard
 
   Scenario: Non SuperAdmin should not see "Application Default" checkbox in permission window
