@@ -63,3 +63,9 @@ begin
 rescue LoadError
   puts "You can't load Thinking Sphinx tasks unless the thinking-sphinx gem is installed."
 end
+
+begin
+  require 'delayed/tasks'
+rescue LoadError
+   STDERR.puts "Run `rake gems:install` to install delayed_job"
+end
