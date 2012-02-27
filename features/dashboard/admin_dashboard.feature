@@ -143,6 +143,7 @@ Feature: Dashboard Administration
     When I edit a dashboard as "atticus@example.com"
      And I move the "second welcome portlet" portlet to position 0 in column 1
      And I press "Save"
+    And I wait for 1 seconds
     Then "second welcome portlet" should come before the "Welcome to openPHIN" for the "Application Default" dashboard
 
   Scenario: Moving portlets to a different column
@@ -155,7 +156,7 @@ Feature: Dashboard Administration
      And I set cms-column-slider to 3
      And I move the "second welcome portlet" portlet to position 0 in column 2
      And I press "Save"
-     And I wait for 1 seconds
+    And I wait for 1 seconds
     Then "Application Default" should have a portlet with "second welcome portlet" in column 2
 
   Scenario: Adding HTML portlet to dashboard
@@ -166,6 +167,7 @@ Feature: Dashboard Administration
      And I fill in the htmleditor "htmlportlet" with "My Dashboard Element"
      And I press "OK"
      And I press "Save"
+    And I wait for 1 seconds
     Then "Application Default" should have a portlet with "My Dashboard Element" in column 1
     Then "Application Default" should have a portlet with "Welcome to openPHIN" in column 1
 
@@ -238,6 +240,7 @@ Feature: Dashboard Administration
       | Bartleby Scrivener | User |
      And I press "OK"
      And I press "Save"
+    And I wait for 1 seconds
     Then "Bartleby Scrivener" should be a "viewer" for the "My Dashboard" dashboard
     When I am logged in as "bartleby@example.com"
     Then I should see "other dashboard this is"
