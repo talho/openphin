@@ -22,8 +22,6 @@ Given /^a new organization named (.*)$/ do |name|
   org = Factory(:organization, :name => name)
   user = Factory(:user)
   RoleMembership.create(:user => user, :role => Role.admin, :jurisdiction => Jurisdiction.root || Factory(:jurisdiction))
-  org.organization_requests << OrganizationRequest.create(:jurisdiction => Jurisdiction.root)
-  org.organization_requests.first.approve!(user)
   org
 end
 

@@ -29,7 +29,7 @@ module ApplicationHelper
       <ul>
         <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
         <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("RollCall"), roll_calls_path %></li>
-        <li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
+        <li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_dashboard_path %></li>
       </ul>
 =end
   def portal_toolbar

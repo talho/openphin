@@ -74,6 +74,7 @@ I should be able to edit my profile
     And I press "Jane Smith"
     And I follow "My Account"
     Then I should see "Organizations"
+    When I wait for the "Loading..." mask to go away
     And I press "Request Organization"
     When I select "DSHS - National Organization" from ext combo "Organization:"
     And I maliciously post an approver id

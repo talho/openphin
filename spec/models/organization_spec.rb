@@ -107,9 +107,7 @@ describe Organization do
       it "should return only approved organizations " do
         unapproved_org = Factory(:organization, :approved => false)
         organization1 = Factory(:organization)
-        OrganizationRequest.create!(:approved => true, :jurisdiction => Factory(:jurisdiction), :organization => organization1)
         organization2 = Factory(:organization)
-        OrganizationRequest.create!(:approved => true, :jurisdiction => Factory(:jurisdiction), :organization => organization2)
         approved_orgs = [organization1, organization2]
         Organization.approved.should include(*approved_orgs)
         Organization.approved.should_not include(unapproved_org)

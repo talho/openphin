@@ -39,7 +39,7 @@
             <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
           <% end %>
         <% end %>
-  	<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_path %></li>
+  	<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_dashboard_path %></li>
   	<% if current_user.has_non_public_role? %>
           <li<%= ' class="current"' if toolbar == 'forums' %>><%= link_to s("Forums"), forums_path %></li>
         <% end -%>
@@ -51,7 +51,7 @@
           <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), show_advanced_search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'accounts' %>><%= link_to s('My Account'), edit_user_profile_path(current_user), :class => '.edit_profile' %></li><li>&nbsp;|&nbsp;</li>
           <li<%= ' class="current"' if toolbar == 'admin' %>><%= link_to s('Admin'), admin_role_requests_path if current_user.is_admin? %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= tab_me about_path %>><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'], :class => '.about' %></li><li>&nbsp;|&nbsp;</li>
+          <li<%= tab_me about_dashboard_path %>><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'], :class => '.about' %></li><li>&nbsp;|&nbsp;</li>
           <li><%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></li>
       <%- else -%>
           <li><%= link_to 'Sign In', sign_in_path %></li>

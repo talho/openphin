@@ -119,7 +119,7 @@ Talho.ux.OrganizationsControl = Ext.extend(Ext.Panel, {
     this.organizations_store = new Ext.data.JsonStore({
       url: '/organizations.json', autoLoad: true, autoSave: false,
       root: 'organizations',
-      fields: [{name: 'name'}, {name: 'id'}, {name: 'desc'}, {name: 'long_desc'}]
+      fields: [{name: 'name'}, {name: 'id'}, {name: 'desc', mapping: 'description'}, {name: 'long_desc', mapping: 'long_description'}]
     });
   },
 

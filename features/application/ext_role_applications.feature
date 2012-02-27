@@ -48,6 +48,7 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
     Given I am logged in as "sysadmin@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Sys Admin > Manage Roles"
+    And I wait for the "Loading..." mask to go away
     And I press "Request Role"
     When I click x-form-trigger ""
     Then I should see "Public" within ".x-combo-list"

@@ -3,8 +3,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :shares, :member => {:unsubscribe => :delete, :edit_audience => :get, :update_audience => :put}
 
-#  map.resources :user_profiles, :as => "profile"
-  map.connect "/jurisdictions.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :devices
   map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
 
@@ -12,21 +10,22 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :folders, :controller => 'doc/folders', :collection => [:target_folders], :member => {:move => [:post, :put] }
 
   map.resources :role_requests, :controller => "role_requests"
-  map.resources :organization_requests, :controller => "organization_requests"
   map.resources :role_assignments, :controller => "admin/role_assignments"
-  map.resources :organization_assignments, :controller => "admin/organization_assignments"
-  map.resources :admin_pending_requests, :controller => "admin/pending_requests"
-  map.resources :admin_role_requests, :member => [:approve, :deny], :controller => "admin/role_requests"
-  map.recipe_types_admin_invitation "admin_invitations/recipe_types.:format", :controller => "admin/invitations", :action => "recipe_types", :conditions=>{:method=>:get}
-  map.resources :admin_invitations, :controller => "admin/invitations", :member => [:download], :collection => {:import => [:post]}
-  map.resources :admin_organization_requests, :member => [:approve, :deny], :controller => "admin/organization_requests"
-  map.resources :admin_organization_membership_requests, :member => [:approve, :deny], :controller => "admin/organization_membership_requests"
-  map.admin_organization_membership_requests "admin/organization_membership_requests/:id/:user_id", :controller => "admin/organization_membership_requests", :method => :delete
-  #map.approve_admin_organization "/admin_organizations/:id/approve", :controller => "admin/organizations", :action => "approve"
-  #map.deny_admin_organization    "/admin_organizations/:id/deny",    :controller => "admin/organizations", :action => "deny"
-  map.resources :admin_users, :controller => "admin/users" #, :member => {:deactivate => :post}
-  map.resources :admin_user_batch, :controller => "admin/user_batch", :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
-  map.resources :admin_edit_users, :controller => "admin/edit_users", :collection => {:admin_users => [:get]}
+  
+  map.namespace(:admin) do |admin|
+    admin.resources :organizations, :collection => {:confirmation => [:post]}
+    admin.resources :groups do |groups|
+      groups.dismember "/dismember/:member_id(.:format)", :action => "dismember", :conditions => {:method => :post}
+    end
+    admin.resources :pending_requests
+    admin.resources :role_requests, :member => {:approve => :post, :deny => :post}
+    admin.resources :invitations, :member => {:download => :get}, :collection => {:import => :post, :recipe_types => :get }
+    admin.resources :users
+    admin.resources :user_batch, :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
+    admin.resources :edit_users, :collection => {:admin_users => [:get]}
+  end
+  
+  map.resources :organizations, :only => [:index]
 
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles"
@@ -38,33 +37,22 @@ ActionController::Routing::Routes.draw do |map|
   map.alert_with_token '/alerts/:id/show_with_token/:token.:format', :controller => 'alerts', :action => 'show_with_token', :method => :get
   map.update_alert_with_token '/alerts/:id/update_with_token/:token.:format', :controller => 'alerts', :action => 'update_with_token', :method => :put
 
-  map.connect "/audits/models.:format", :controller => "audits", :action => "models"
+  map.connect "/audits/models(.:format)", :controller => "audits", :action => "models"
   map.resources :audits
 
-  map.connect "/roles.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :roles
-
-  map.resources :organizations do |organization|
-    organization.confirmation "/confirmation/:token", :controller => 'organizations', :action => 'confirmation'
-  end
-  map.resources :admin_groups, :controller => "admin/groups"
-  map.dismember_admin_groups "/admin_groups/:group_id/dismember/:member_id", :controller => "admin/groups", :action => "dismember"
-
-  map.connect "/search/show_advanced.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.show_advanced_search "/search/show_advanced.:format", :controller => "searches", :action => "show_advanced", :conditions => {:method => [:post]}
-  map.resource :search, :member => {:show_advanced => [:get, :post], :show_clean => [:get, :post]}
   
-  map.dashboard_menu "/dashboard/menu.js", :controller => "dashboard", :action => "menu"
-  map.resources :dashboard, :collection => {:all => :get}
+  map.resource :search, :member => {:show_advanced => [:post, :get], :show_clean => [:get, :post]}
+  
+  map.resources :dashboard, :collection => {:all => :get, :menu => :get, :faqs => :get}
   map.root :controller => "dashboard", :action => "index", :format => "ext"
   
   map.rss_feed '/rss_feed.:format', :controller => 'rss_feed', :action => 'index', :conditions => {:method => [:get, :post]}
   
   map.resources :audiences, :controller => 'audiences', :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
+  
   map.about "/about", :controller => "dashboard", :action => "about"
   map.about_talhophin "/about_talhophin", :controller=> "dashboard", :action=> "about_talhophin"
-  map.connect "/han.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
-  map.faqs "/faqs", :controller => "dashboard", :action => "faqs"
   map.hud "/han.:format", :controller => "dashboard", :action => "hud"
   map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
 
@@ -74,19 +62,18 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :favorites, :only => ['create', 'index', 'destroy']
   
   map.resources :forums do |forum|
-    forum.resources :topics, :member => { :update_comments => :put }
+    forum.resources :topics, :collection => {:active_topics => :get, :recent_posts => :get}, :member => { :update_comments => :put }
   end
-  map.connect "/forums/topics/active_topics.:format", :controller => 'topics', :action => 'active_topics', :method => :get
-  map.connect "/forums/topics/recent_posts.:format", :controller => 'topics', :action => 'recent_posts', :method => :get
   
   map.namespace "report" do |report|
     report.resources :reports, :member => { :filters => :get, :reduce => :post }
     report.resources :recipes, :only => [:index,:show], :requirements => {:id =>  /Report::([A-Z][a-z]+)+Recipe/}
   end
+  
+  map.connect '/*path(.:format)', :controller => 'application', :action => 'options', :conditions => {:method => :options}
 
   map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"
 
-  map.connect "/session.:format", :controller => "application", :action => "options", :conditions => {:method => [:options]}
   map.resources :session, :controller => 'sessions', :only => [:new, :create, :destroy]
   map.sign_out '/sign_out', :controller => 'sessions', :action => 'destroy', :method => :delete
   map.sign_in '/sign_in', :controller => 'sessions', :action => 'new' 

@@ -9,7 +9,7 @@ Talho.Groups.View.List = Ext.extend(Ext.Container, {
   initComponent: function(){
     this.addEvents('newgroup', 'groupdetail');
     
-    var store = new Ext.data.JsonStore({ restful: true, url: '/admin_groups.json', root: 'groups', idProperty: 'id', remoteSort: 'true',
+    var store = new Ext.data.JsonStore({ restful: true, url: '/admin/groups.json', root: 'groups', idProperty: 'id', remoteSort: 'true',
       totalProperty: 'count', per_page: 10, paramNames:{
           limit: 'per_page'
       },

@@ -34,10 +34,8 @@ class Organization < ActiveRecord::Base
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
   belongs_to :contact, :class_name => "User"
-  has_many :organization_requests, :dependent => :destroy
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  validates_presence_of :phone, :postal_code, :distribution_email, :street, :state 
   def validate
     errors.add_to_base("Organization name can't be blank") if self.name.blank?
     errors.add_to_base("Description of organization can't be blank") if self.description.blank?
@@ -48,13 +46,6 @@ class Organization < ActiveRecord::Base
 
   default_scope :order => :name
   
-  named_scope :approved, :include => :organization_requests, :conditions => [ 'organization_requests.approved = ?', true ]
-  named_scope :unapproved, :include => :organization_requests, :conditions => ["organization_requests.approved is null or organization_requests.approved = ?" , false ]
-  named_scope :requests_in_jurisdictions, lambda { |jurs|
-    { :include => 'organization_requests',
-      :conditions => [ 'organization_requests.jurisdiction_id IN (?)', jurs.map(&:id) ]
-    }
-  }
   named_scope :with_user, lambda {|user|
     { :conditions => ["audiences.id = organizations.group_id AND  (audiences.type = 'Group' ) AND audiences.id = audiences_users.audience_id AND audiences_users.user_id = users.id AND (users.id = ?)", user.id], :joins => ", audiences, audiences_users, users", :order => 'organizations.name'}
   }
@@ -67,6 +58,10 @@ class Organization < ActiveRecord::Base
     group.users.scoped options
   end
   
+  def long_description
+    "#{self.description}\n#{self.street}\n#{self.locality} #{self.state}, #{self.postal_code}\n#{self.phone}"
+  end
+  
   def <<(user)
     group.users << user unless group.users.include?(user)
   end
@@ -75,9 +70,6 @@ class Organization < ActiveRecord::Base
     group.users.delete(user)
   end
 
-  def approved?
-    organization_requests.any?(&:approved)
-  end
 
   def to_dsml(builder=nil)
     builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?

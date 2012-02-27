@@ -31,6 +31,7 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
           {name: 'Invite Users', tab: {id: 'invite_users', title:'Invite Users', url:'<%= admin_invitations_path %>', initializer: 'Talho.NewInvitation'}},
           {name: 'View Invitations', tab: {id: 'view_user_invitations', title:'View Invitations', url:'<%= admin_invitations_path %>', initializer: 'Talho.Invitations'}}]}
       <% if current_user.is_super_admin? %>
+          , {name: 'Manage Organizations', tab: {id: 'manage_org', title: 'Manage Organizations', initializer: 'Talho.Admin.Organizations'}}
           , {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}
       <% end %>
       ]},
@@ -48,7 +49,7 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
     ]}
 
   <% else %>
-    {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_path %>'}},
+    {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_dashboard_path %>'}},
     {name:  'Sign Up', redirect: '<%= new_user_path %>'},
     {name: 'Sign In', redirect: '<%= sign_in_path %>'}
   <% end %>

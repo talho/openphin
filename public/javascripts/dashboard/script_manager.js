@@ -6,6 +6,7 @@ Ext.ns("Talho");
     dominoes.property('js', '/javascripts');
     dominoes.property('css', '/stylesheets');
     dominoes.property('cms', '/javascripts/dashboard/cms');
+    dominoes.property('admin', '$(js)/admin');
     
     dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css($(css)/TreeGrid/css/TreeGrid.css) $css($(css)/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
@@ -38,15 +39,16 @@ Ext.ns("Talho");
       'Talho.DocumentSearch': {js: '$(ext_extensions)/ImageDisplayField.js $(js)/documents/DocumentViews.js $(js)/documents/DocumentSearch.js'},
       'Talho.NewInvitation': {js:'NewInvitation $(js)/ext/src/widgets/grid/EditorGrid.js > $(js)/invitations/NewInvitation.js'},
       'Talho.Invitations': {js:'$(js)/invitations/Invitations.js'},
-      'Talho.AddUser': {js:'ProfileBase $(js)/profile/DevicesControl.js $(js)/profile/RolesControl.js $(js)/profile/OrganizationsControl.js > $(js)/admin/AddUser.js'},
-      'Talho.BatchUsers': {js:'BatchUsers ProfileBase > $(js)/admin/BatchUsers.js'},
-      'Talho.EditUsers': {js:'EditUsers ProfileBase $(js)/profile/RolesControl.js > $(js)/admin/EditUsers.js'},
-      'Talho.PendingRoleRequests': {js: "AjaxPanel > $(js)/admin/PendingRoleRequests.js"},
-      'Talho.AuditLog': {js: "AjaxPanel > $(js)/admin/AuditLog.js"},
+      'Talho.AddUser': {js:'ProfileBase $(js)/profile/DevicesControl.js $(js)/profile/RolesControl.js $(js)/profile/OrganizationsControl.js > $(admin)/AddUser.js'},
+      'Talho.BatchUsers': {js:'BatchUsers ProfileBase > $(admin)/BatchUsers.js'},
+      'Talho.EditUsers': {js:'EditUsers ProfileBase $(js)/profile/RolesControl.js > $(admin)/EditUsers.js'},
+      'Talho.PendingRoleRequests': {js: "AjaxPanel > $(admin)/PendingRoleRequests.js"},
+      'Talho.AuditLog': {js: "AjaxPanel > $(admin)/AuditLog.js"},
       'Talho.ReportView': {js:'/javascripts/reports/ReportView.js'},
       'Talho.Reports': {js:'/javascripts/reports/Reports.js'},
       'Talho.HelpWindow': {js:'$(js)/dashboard/help_window.js'},
-      'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/PhinHtmlEditor.js Portlets > $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'}
+      'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/PhinHtmlEditor.js Portlets > $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'},
+      'Talho.Admin.Organizations': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/BootstrapBreadcrumbContainer.js $(admin)/organizations/Controller.js $(admin)/organizations/view/Layout.js $(admin)/organizations/view/Index.js $(admin)/organizations/view/Show.js $(admin)/organizations/view/New.js '}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

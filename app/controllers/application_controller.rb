@@ -112,6 +112,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def super_admin_required
+    unless current_user.role_memberships.count(:conditions => {:role_id => (Role.superadmins).map(&:id) }) > 0
+      message = "That resource does not exist or you do not have access to it."
+      if request.xhr?
+        respond_to do |format|
+          format.html {render :text => message, :status => 404}
+          format.json {render :json => {:message => message}, :status => 404}
+        end
+      else
+        flash[:error] = message
+        redirect_to root_path
+      end
+      false
+    end
+  end
+  
   def super_admin_in_texas_required
     return true if current_user.is_sysadmin?
     unless current_user.role_memberships.count(:conditions => {:role_id => Role.superadmins.map(&:id), :jurisdiction_id => Jurisdiction.find_by_name("Texas") }) > 0

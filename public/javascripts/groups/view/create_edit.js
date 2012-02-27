@@ -14,7 +14,7 @@ Talho.Groups.View.CreateEdit = Ext.extend(Ext.Container, {
 
     this.audience_panel = new Ext.ux.AudiencePanel({ anchor: '100%', height: 400, showJurisdictions: true });
 
-    this.create_group_form_panel = new Ext.form.FormPanel({ itemId: 'create_group_form', border:false, method: 'POST', url: '/admin_groups.json', editing: false,
+    this.create_group_form_panel = new Ext.form.FormPanel({ itemId: 'create_group_form', border:false, method: 'POST', url: '/admin/groups.json', editing: false,
       width: 600, padding: '10 0 0 0', items:[
         { fieldLabel: 'Group Name', itemId: 'group_name', xtype:'textfield', name: 'group[name]' },
         { fieldLabel: 'Scope', itemId: 'group_scope', xtype:'combo', name: 'group[scope]', store:[], 
@@ -46,7 +46,7 @@ Talho.Groups.View.CreateEdit = Ext.extend(Ext.Container, {
     var options = {};
 
     if(this.create_group_form_panel.editing) {
-      options.url = '/admin_groups/' + this.create_group_form_panel.groupId + '.json';
+      options.url = '/admin/groups/' + this.create_group_form_panel.groupId + '.json';
       options.method = 'PUT';
     }
 
@@ -93,7 +93,7 @@ Talho.Groups.View.CreateEdit = Ext.extend(Ext.Container, {
       this.create_group_form_panel.mask = true;
     }
     Ext.Ajax.request({
-      url: '/admin_groups/new.json',
+      url: '/admin/groups/new.json',
       method: 'GET',
       scope: this,
       success: function(response, options){
@@ -131,7 +131,7 @@ Talho.Groups.View.CreateEdit = Ext.extend(Ext.Container, {
     }
 
     Ext.Ajax.request({
-      url: '/admin_groups/' + groupId + '/edit.json',
+      url: '/admin/groups/' + groupId + '/edit.json',
       method: 'GET',
       success: function(response, options){
         var group_detail = Ext.decode(response.responseText);

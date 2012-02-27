@@ -4,7 +4,7 @@ Talho.Invitations = Ext.extend(function(){}, {
   constructor: function(config){
 
     this.recipesStore = new Ext.data.JsonStore({
-      url: '/admin_invitations/recipe_types.json',
+      url: '/admin/invitations/recipe_types.json',
       restful: true,
       root: 'recipes',
       fields: ['name_humanized','id'],
@@ -15,7 +15,7 @@ Talho.Invitations = Ext.extend(function(){}, {
     var store = new Ext.data.JsonStore({
       autoDestroy: true,
       autoLoad: true,
-      url: '/admin_invitations.json',
+      url: '/admin/invitations.json',
       root: 'invitations',
       idProperty: 'id',
       fields: ['id','name']
@@ -47,7 +47,7 @@ Talho.Invitations = Ext.extend(function(){}, {
                   autoLoad: {params:{start: 0, limit: 20}},
                   remoteSort: true,
                   proxy: new Ext.data.HttpProxy({
-                    url: '/admin_invitations/' + this.currentInvitationId + '.json',
+                    url: '/admin/invitations/' + this.currentInvitationId + '.json',
                     method: 'GET'
                   }),
                   root: 'invitees',

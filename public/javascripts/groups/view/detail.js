@@ -45,7 +45,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
   create_report_old:function(button){
     button.disable();
     Ext.Ajax.request({
-      url: '/admin_groups/' + this.group_id + '.pdf',
+      url: '/admin/groups/' + this.group_id + '.pdf',
       params: {no_page: true},
       method: 'GET',
       success: function(response, options){
@@ -121,7 +121,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
       }
 
       Ext.Ajax.request({
-        url: '/admin_groups/' + group + '.json',
+        url: '/admin/groups/' + group + '.json',
         params: {no_page: true},
         method: 'GET',
         success: function(response, options){

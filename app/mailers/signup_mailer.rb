@@ -21,19 +21,7 @@ class SignupMailer < ActionMailer::Base
       body :confirm_link => organization_confirmation_url(organization, organization.token)
     end
   end
-  
-  def admin_notification_of_organization_request(organization)
-    users = organization.organization_requests.map(&:jurisdiction).map(&:admins).flatten.map(&:email)
-    if users.empty?      
-      logger.info "Tried to send an admin notification for an organization request and there are no organization admins"
-    else
-      recipients users
-      from DO_NOT_REPLY
-      subject "User requesting organization signup"
-      body :organization => organization
-    end
-  end
-  
+    
   def admin_notification_of_role_request(role_request, admin)
     if admin.formatted_email.blank?
       logger.info "Tried to send an admin notification for a role request and there are no role admins"

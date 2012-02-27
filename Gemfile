@@ -38,7 +38,7 @@ group :default do
   gem "httpclient", :git => 'git://github.com/talho/httpclient.git'
   gem "fake_arel", '0.9.9'
   gem 'thinking-sphinx', '1.4.9', :require => 'thinking_sphinx/deltas/delayed_delta'
-    gem 'ts-delayed-delta'
+    gem 'ts-delayed-delta', '1.1.1'
     gem 'riddle', '1.4.0' # last version of rails 2.3 thinking sphinx, when using a delta ts plugin gem, requires riddle 1.4
   gem 'awesome_nested_set', '1.4.4'
   gem "delayed_job", "~> 2.0.7"
@@ -51,6 +51,7 @@ group :default do
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'
   gem 'bullet'
+  gem 'rabl'
 end
 
 group :development do
@@ -102,5 +103,6 @@ group :tools do
   gem "git"
   gem "git_remote_branch"
   gem "ruby-debug19"
+  gem "linecache19", '0.5.12'
   gem "simplecov"
 end

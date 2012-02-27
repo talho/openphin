@@ -341,19 +341,19 @@ Then /^I should( not)? see the image "([^\"]*)"$/ do |neg, file_name|
 end
 
 When /^I force open the manage groups tab$/ do
-  force_open_tab("Manage Groups", "/admin_groups")
+  force_open_tab("Manage Groups", "/admin/groups")
 end
 
 When /^I force open the new group tab$/ do
-  force_open_tab( "Create New Group", "/admin_groups/new")
+  force_open_tab( "Create New Group", "/admin/groups/new")
 end
 
 When /^I force open the group detail tab$/ do
-  force_open_tab("Group Detail","/admin_groups/#{Group.find(:all).first[:id]}")
+  force_open_tab("Group Detail","/admin/groups/#{Group.find(:all).first[:id]}")
 end
 
 When /^I force open the edit group tab$/ do
-  force_open_tab("Edit Group","/admin_groups/#{Group.find(:all).first[:id]}/edit")
+  force_open_tab("Edit Group","/admin/groups/#{Group.find(:all).first[:id]}/edit")
 end
 
 When /^I force open the audit log tab$/ do
