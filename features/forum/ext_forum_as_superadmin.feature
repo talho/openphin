@@ -1,4 +1,3 @@
-
 Feature: Creating a forum (room)
 
   In order to allow for discussion of various and possibly arbitrary topics

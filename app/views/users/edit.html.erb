@@ -1,6 +1,0 @@
-<h1>Editing user</h1>
-<% form_for(@user) do |form| %>
-  <%= render :partial => "edit_user_form", :locals => {:form => form, :user => @user}  %>
-<% end %>
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>

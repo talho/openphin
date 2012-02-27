@@ -12,7 +12,7 @@
   <%= stylesheet_link_tag(*css_list) %>
 
   <% js_list = [] %>
-  <% js_list.concat [ 'jquery', 'jQuery.crossSelect-0.5', 'jquery.templating', 'jquery.ui', 'jquery.form', 'jquery.livequery', 'application', 'alerts', 'profile', 'labeled-input', 'quicksilver', 'jquery.livefilter', 'recorder', 'css_browser_selector', 'search', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'jquery.dimensions', 'forum' ] %>
+  <% js_list.concat [ 'jquery', 'application', 'alerts', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'forum' ] %>
   <% js_list.push({:cache => 'all'}) %>
   <%= javascript_include_tag(*js_list) %>
   <!--[if IE 6]>
@@ -23,8 +23,7 @@
 </script>
 <script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
 <![endif]-->
-  <script type="text/javascript" src="/javascripts/swfobject.js"></script>
-  
+
 </head>
 <body>
 <div id="application">

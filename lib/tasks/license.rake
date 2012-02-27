@@ -3,7 +3,7 @@ begin
   task :license => :environment do
     def excluded?(file)
       directoryExclusions = ['./vendor','./attachments','./doc','./externals','./doc','./message_recordings','./public/javascripts/FCBKcomplete','./public/javascripts/jquery-tooltip','./public/system']
-      fileExclusions = ['schema.rb','jQuery.crossSelect-0.5.js','all.js','jquery.dimensions.js','jquery.form.js','jquery.js','jquery.livefilter.js','jquery.livequery.js','jquery.templating.js','jquery.ui.autocomplete.ext.js','jquery.ui.autocomplete.js','jquery.ui.js']
+      fileExclusions = ['schema.rb','all.js','jquery.js']
 
       file.sub!(Rails.root.to_s,'')
 

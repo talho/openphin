@@ -29,6 +29,7 @@ if u.new_record? && u.save
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id, :role_id => Role.admin.id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
+  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
 end
 
 u = User.find_by_email("eddie@talho.org") || User.new(

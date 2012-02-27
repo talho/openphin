@@ -1,5 +1,0 @@
-<% form_for @group, :url => admin_group_path(@group), :method => :put do |form| %>
-  <%= render form %>
-  <%= form.hidden_field :lock_version %>
-  <%= form.submit "Save" %>
-<% end %>

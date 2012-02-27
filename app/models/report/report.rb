@@ -71,7 +71,6 @@ class Report::Report < ActiveRecord::Base
         end
       end
     rescue StandardError => error
-      debugger
       raise error
     end
   end

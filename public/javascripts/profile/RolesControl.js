@@ -10,7 +10,7 @@ Talho.ux.RolesControl = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     this.layout = 'form';
-    this.cls = 'roles-control',
+    this.cls = 'roles-control';
     this.frame = false;
     this.labelAlign = 'top';
     this.padding = 10;

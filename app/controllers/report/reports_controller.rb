@@ -211,7 +211,6 @@ class Report::ReportsController < ApplicationController
         end
       end
     rescue StandardError => error
-      debugger
       raise error
     end
   end

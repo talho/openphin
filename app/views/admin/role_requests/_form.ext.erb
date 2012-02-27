@@ -1,0 +1,20 @@
+<p class="select rel_2">
+  <%= f.label :role_id, "Role" %>
+  <%= f.collection_select :role_id, current_user.is_admin? ? Role.all : Role.user_roles, :id, :display_name, {:include_blank => true}, :class => "role_select" %>
+</p>
+<p class="select rel_1">
+  <%= f.label :jurisdiction_id,  "Jurisdiction" %>
+  <%= f.collection_select :jurisdiction_id, Jurisdiction.nonroot, :id, :name, {:include_blank => true}, :class => "jurisdiction_select" %>
+</p>
+<p class='clear'>
+	Roles ensure that you receive health alerts in the jurisdictions you work in with the role that you have been assigned.
+</p>
+<p>
+	The Public role will allow you to receive general announcements about health issues in your jurisdiction.
+	You may choose to have a Public role in more than one jurisdiction.
+</p>
+<p>
+	All roles besides Public will require authorization from an administrator in that Jurisdiction.
+	You may request the role by selecting the jurisdiction and role above, and an appropriate administrator will be notified to approve the role.
+	Once the role has been approved or denied, you will receive an email notifying you of this.
+</p>

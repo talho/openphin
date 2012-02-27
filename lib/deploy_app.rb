@@ -45,13 +45,14 @@ namespace :app do
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"
     run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
     run "ln -fs #{shared_path}/domain.yml #{release_path}/config/domain.yml"
+    run "ln -fs #{shared_path}/mongo_database.yml #{release_path}/config/mongo_database.yml"
     if_plugin_present(:han){
       run "ln -fs #{shared_path}/cascade.yml #{release_path}/config/cascade.yml"
       run "ln -fs #{shared_path}/certificates/cdc.pem #{release_path}/config/cdc.pem"
     }
     # For the PHIN plugins
     if_plugin_present(:rollcall) {
-      run "ln -fs #{shared_path}/phin_plugins/rrdtool.yml #{release_path}/vendor/plugins/rollcall/config/rrdtool.yml"
+      run "ln -fs #{shared_path}/phin_plugins/interface_fields.yml #{release_path}/vendor/plugins/rollcall/config/interface_fields.yml"
     }
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"

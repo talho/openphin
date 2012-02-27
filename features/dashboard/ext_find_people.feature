@@ -428,7 +428,7 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
   When I click x-grid3-cell "Dallas MD"
   Then the "Profile: Dallas MD" tab should be open
 
-@people
+@people @reindex
 Scenario: User cannot search for users in a different app
   Given the following users exist:
     | Notin Myapp | notinmyapp@example.com | Public | Dallas County | vms |
