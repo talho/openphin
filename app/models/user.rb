@@ -88,11 +88,11 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :audiences, :finder_sql => 'SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id'
 
   def shares
-    Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder_permissions]
+    Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder_permissions]
   end
 
   def shared_documents
-    Document.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and folders.user_id != ?', self.id, self.id], :include => [:owner, :folder]
+    Document.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder]
   end
 
   has_many :favorites

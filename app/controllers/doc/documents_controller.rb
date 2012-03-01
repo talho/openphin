@@ -27,7 +27,7 @@ class Doc::DocumentsController < ApplicationController
       end
       
       unless (@parent_folder ? @parent_folder.documents : current_user.documents.inbox).detect{|x| x.file_file_name == URI.decode(params[:file].original_filename)}
-        @document = (@parent_folder ? @parent_folder.owner.documents : current_user.documents).build(:file => params[:file], :folder => @parent_folder)
+        @document = (@parent_folder && @parent_folder.owner ? @parent_folder.owner.documents : current_user.documents).build(:file => params[:file], :folder => @parent_folder)
         @document.owner_id = current_user.id
         if @document.valid?
           @document.save!

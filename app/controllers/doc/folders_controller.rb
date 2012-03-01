@@ -40,9 +40,10 @@ class Doc::FoldersController < ApplicationController
         return
       end
       owner = parent.owner
+      parms[:folder][:user_id] = owner.id unless owner.nil?
     end
 
-    folder = owner.folders.build(params[:folder])
+    folder = Folder.new params[:folder]
     unless folder.save
       respond_to do |format|
         format.json {render :json => {:success => false, :errors => folder.errors.as_json }, :status => 400}

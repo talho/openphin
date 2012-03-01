@@ -39,10 +39,13 @@ class Organization < ActiveRecord::Base
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   validates_presence_of :name, :message => "Organization name can't be blank"
+  validates_uniqueness_of :name, :message => "organization name must be unique"
   validates_presence_of :description, :message => "Description of organization can't be blank"
   validates_presence_of :locality, :message => "City can't be blank"
   
   before_create :set_token, :create_group
+  before_save :set_before_save_var
+  after_save :ensure_folder
 
   default_scope :order => :name
   
@@ -99,7 +102,7 @@ class Organization < ActiveRecord::Base
       #   end
       # else
       #   entry.dsml(:attr, :name => :alertingJurisdictions) {|a| a.dsml :value, alertingJurisdictions}
-      # end
+      # end 
     end
 
   end
@@ -128,5 +131,32 @@ class Organization < ActiveRecord::Base
   
   def create_group
     self.group = Group.create!(:scope => "Organization", :name => self.name)
+  end
+  
+  def set_before_save_var
+    @bs_name = self.name
+  end
+  
+  # Ensure that there is a folder associated with this organization by
+  # 1. Locating the folder by name, if one exists, creating one if not
+  # 1. Ensuring that the audience holds the organization's audience and the contact is set as an admin
+  def ensure_folder
+    folder = Folder.first(:conditions => {:name => self.name == @bs_name ? self.name : @bs_name, :user_id => nil})
+    if folder.nil?
+      folder = Folder.new
+    end
+    
+    folder.audience = Audience.new if folder.audience.nil?
+    folder.audience.sub_audiences << self.group unless folder.audience.sub_audiences.include?(self.group)
+    
+    folder.name = self.name
+    
+    if self.contact
+      folder.audience.users << self.contact unless folder.audience.user_ids.include?(self.contact.id)
+      folder.folder_permissions.build(:user_id => self.contact.id, :permission => ::FolderPermission::PERMISSION_TYPES[:admin]) unless folder.admins.include?(self.contact)
+    end
+    
+    folder.save
+    true
   end
 end

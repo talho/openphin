@@ -66,10 +66,7 @@ class Folder < ActiveRecord::Base
     if self.owner == user
       true
     else
-      perms = permissions
-      perm = perms.empty? ? nil : perms.find_by_user_id(user.id)
-
-      perm.nil? ? false : perm.permission == FolderPermission::PERMISSION_TYPES[:admin]
+      !self.permissions.first(:conditions => {:user_id => user.id, :permission => FolderPermission::PERMISSION_TYPES[:admin]}).nil?
     end
   end
 
@@ -77,10 +74,7 @@ class Folder < ActiveRecord::Base
     if self.owner == user
       true
     else
-      perms = permissions
-      perm = perms.empty? ? nil : perms.find_by_user_id(user.id)
-
-      perm.nil? ? false : perm.permission == FolderPermission::PERMISSION_TYPES[:author] || perm.permission == FolderPermission::PERMISSION_TYPES[:admin]
+      !self.permissions.first(:conditions => {:user_id => user.id, :permission => [FolderPermission::PERMISSION_TYPES[:admin], FolderPermission::PERMISSION_TYPES[:author]]}).nil?
     end
   end
 
@@ -163,20 +157,23 @@ class Folder < ActiveRecord::Base
     shares = current_user.shares
     shares = shares.sort_by {|s| s.name.downcase}
 
+
     shares |= shares.map do |share|
-      user = {:name => share.owner.display_name, :id => nil, :safe_id => share.owner.id.to_s + share.owner.display_name.gsub(/ /, ''), :safe_parent_id => nil, :parent_id => nil, :leaf => false, :ftype => 'share', :level => 0}
-      share[:safe_parent_id] = share.parent_id.nil? || shares.select { |s| s.id == share.parent_id}.empty? ? user[:safe_id] : 'share' + share.parent_id.to_s
-      share[:safe_id] = 'share' + share[:id].to_s
       leaf = share.leaf?
       leaf = shares.select { |s| s.parent_id == share.id}.empty? unless leaf
       share[:leaf] = leaf
       share[:ftype] = 'share'
-
+      share[:safe_id] = 'share' + share[:id].to_s
+      share[:safe_parent_id] = share.parent_id.nil? || shares.select { |s| s.id == share.parent_id}.empty? ? nil : 'share' + share.parent_id.to_s
       share[:is_owner] = share.owner?(current_user)
       share[:is_author] = share.author?(current_user)
-
-      user
-    end
+      
+      unless share.owner.nil?
+        user = {:name => share.owner.display_name, :id => nil, :safe_id => share.owner.id.to_s + share.owner.display_name.gsub(/ /, ''), :safe_parent_id => nil, :parent_id => nil, :leaf => false, :ftype => 'share', :level => 0}
+        share[:safe_parent_id] = user[:safe_id] if share[:safe_parent_id].nil?
+        return user
+      end
+    end.compact
 
     shares
   end
