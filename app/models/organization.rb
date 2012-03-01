@@ -31,16 +31,16 @@
 class Organization < ActiveRecord::Base
 
   belongs_to :group
+  accepts_nested_attributes_for :group
+  
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-  belongs_to :contact, :class_name => "User"
+  belongs_to :contact, :class_name => "User", :foreign_key => :user_id
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  def validate
-    errors.add_to_base("Organization name can't be blank") if self.name.blank?
-    errors.add_to_base("Description of organization can't be blank") if self.description.blank?
-    errors.add_to_base("City can't be blank") if self.locality.blank?
-  end
+  validates_presence_of :name, :message => "Organization name can't be blank"
+  validates_presence_of :description, :message => "Description of organization can't be blank"
+  validates_presence_of :locality, :message => "City can't be blank"
   
   before_create :set_token, :create_group
 

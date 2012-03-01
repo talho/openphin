@@ -14,43 +14,38 @@ class Admin::OrganizationsController < ApplicationController
 
   def new
     @organization = Organization.new(:contact => User.new)
-    render 'show'
   end
   
   def create
-    jurisdiction_ids = params[:organization][:jurisdiction_ids]
-    params[:organization].delete('jurisdiction_ids')
+    # set up group
+    params[:organization][:group_attributes] ||= {}
+    params[:organization][:group_attributes].merge!({:name => params[:organization][:name], :scope => "Organization"})
     @organization = Organization.new(params[:organization])
 
-    if @organization.save
-      respond_to do |format|
-        format.html redirect_to :action => 'show'
-        format.json render 'show'
+    respond_to do |format|
+      if @organization.save
+        format.json {render :json => {:success => true}}
+      else
+        format.json {render :json => {:success => false, :errors => @organization.errors }, :status => 400}
       end
-      
-    else
-      render 'new'
     end
   end
   
   def edit
     @organization = Organization.find(params[:id])
-    render 'show'
   end
   
   def update
     @organization = Organization.find(params[:id])
     
-    unless @organization.update_attributes params[:organization]
-      respond_to do |format|
-        format.html do 
-          flash[:message] = "Could not save organization. Errors: #{@organization.errors.join(', ')}"
-          render :html
-        end
+    params[:organization][:group_attributes][:id] = @organization.group_id if params[:organization][:group_attributes]
+    
+    respond_to do |format|
+      unless @organization.update_attributes params[:organization]
         format.json {render :json => {:success => false, :errors => @organization.errors }, :status => 400}
+      else
+        format.json {render :json => {:success => true}} 
       end
-    else
-      render 'show'
     end
   end
     

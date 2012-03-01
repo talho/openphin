@@ -48,7 +48,7 @@ Ext.ns("Talho");
       'Talho.Reports': {js:'/javascripts/reports/Reports.js'},
       'Talho.HelpWindow': {js:'$(js)/dashboard/help_window.js'},
       'Talho.Dashboard.CMS.Admin': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/PhinHtmlEditor.js Portlets > $(cms)/views/admin_toolbar.js $(cms)/views/view_portal.js $(cms)/views/admin_portal.js $(cms)/views/new_dashboard_window.js $(cms)/views/open_dashboard_window.js AudiencePanel $(cms)/views/manage_permissions_window.js $(cms)/admin_controller.js'},
-      'Talho.Admin.Organizations': {js: '$(ext_extensions)/xActionColumn.js $(ext_extensions)/BootstrapBreadcrumbContainer.js $(admin)/organizations/Controller.js $(admin)/organizations/view/Layout.js $(admin)/organizations/view/Index.js $(admin)/organizations/view/Show.js $(admin)/organizations/view/New.js '}
+      'Talho.Admin.Organizations': {js: '$(ext_extensions)/xActionColumn.js AudiencePanel $(ext_extensions)/BootstrapBreadcrumbContainer.js $(admin)/organizations/Controller.js $(admin)/organizations/view/Layout.js $(admin)/organizations/view/Index.js $(admin)/organizations/view/Show.js $(admin)/organizations/view/New.js '}
     };
 
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call

@@ -53,7 +53,11 @@ class ApplicationController < ActionController::Base
   def choose_layout
     if signed_in?
       if request.xhr? || request.format.ext?
-        "ext_panel"
+        if request.format.json? 
+          false
+        else
+          "ext_panel"
+        end
       else
         "application"
       end

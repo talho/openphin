@@ -8,7 +8,7 @@ Talho.Admin.Organizations.view.Layout = Ext.extend(Ext.Panel, {
     var items = this.items;
     var card_panel = new Ext.Container({itemId: 'container', layout: 'card', width: 940, style: 'margin: auto;', activeItem: 0, items: items});
     this.items = [{xtype: 'bootstrapbreadcrumb', region: 'north', panel: card_panel},
-      {xtype: 'panel', border: false, itemId: 'centering', region: 'center', items: [
+      {xtype: 'panel', border: false, autoScroll: true, itemId: 'centering', region: 'center', items: [
         card_panel
       ]}
     ];

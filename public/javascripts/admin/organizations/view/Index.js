@@ -10,11 +10,11 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
     if(!this.items){
       this.items = [];
     }
-    this.items.push({xtype: 'grid', header: false, border: true, store: new Ext.data.JsonStore({
+    this.items.push({xtype: 'grid', itemId: 'grid', header: false, border: true, store: new Ext.data.JsonStore({
         url: '/admin/organizations.json',
         root: 'organizations',
         restful: true,
-        autoLoad: true,
+        autoLoad: false,
         fields: ['name', 'locality', 'state', 'id']
       }),
       columns: [
@@ -30,11 +30,29 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
       ],
       loadMask: true,
       height: 400,
-      autoExpandColumn: 'name' 
+      autoExpandColumn: 'name',
+      listeners: {
+        scope: this,
+        'rowclick': function(grid, i, e){
+          var tar = e.getTarget('.x-action-col-cell');
+          if(!tar){
+            this.fireEvent('showorg', grid.getStore().getAt(i).get('id'));
+          }
+        }
+      }
     });
-    this.items.push({xtype: 'button', text: 'New', handler: function(){this.fireEvent('neworg', 1);}, scope: this});
+    this.items.push({xtype: 'button', text: 'New', handler: function(){this.fireEvent('neworg');}, scope: this});
     
     Talho.Admin.Organizations.view.Index.superclass.initComponent.apply(this, arguments);
+  },
+  reload: function(){
+    this.getComponent('grid').getStore().load();
+  },
+  mask: function(){
+    this.getComponent('grid').loadMask.show();
+  },
+  unmask: function(){
+    this.getComponent('grid').loadMask.hide();
   },
   border: false,
   title: 'Organization List',

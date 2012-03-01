@@ -4,18 +4,21 @@ Talho.Admin.Organizations.Controller = Ext.extend(Ext.util.Observable, {
   constructor: function(config){
     Ext.apply(this, config);
     
-    var index = new Talho.Admin.Organizations.view.Index();
+    this.index = new Talho.Admin.Organizations.view.Index({itemId: 'index'});
     var layout = new Talho.Admin.Organizations.view.Layout({
       title: this.title || 'Manage Organizations',
       itemId: this.itemId,
       items: [
-        index
+        this.index
       ]
     });
     
-    index.on('activate', this.clearOtherCards, this);
-    index.on('showorg', this.showOrg, this);
-    index.on('neworg', this.newOrg, this);
+    this.index.on('activate', this.index.reload, this.index);
+    this.index.on('activate', this.clearOtherCards, this);
+    this.index.on('showorg', this.showOrg, this);
+    this.index.on('neworg', this.newOrg, this);
+    this.index.on('editorg', this.newOrg, this);
+    this.index.on('delorg', this.deleteOrg, this);
     
     this.getPanel = function(){
       return layout;
@@ -32,14 +35,35 @@ Talho.Admin.Organizations.Controller = Ext.extend(Ext.util.Observable, {
   
   showOrg: function(id){
     var ic = this.getPanel().innerContainer;
-    ic.add(new Talho.Admin.Organizations.view.Show());
+    var show = ic.add(new Talho.Admin.Organizations.view.Show({orgId: id}));
     ic.layout.setActiveItem(ic.items.getCount() - 1);
   },
   
   newOrg: function(id){
     var ic = this.getPanel().innerContainer;
-    ic.add(new Talho.Admin.Organizations.view.New({orgId: id}));
+    var ne = ic.add(new Talho.Admin.Organizations.view.New({orgId: id}));
     ic.layout.setActiveItem(ic.items.getCount() - 1);
+    
+    ne.on('cancel', function(){ic.layout.setActiveItem(0);}, this);
+    ne.on('savecomplete', function(){ic.layout.setActiveItem(0);}, this);
+  },
+  
+  deleteOrg: function(id){
+    if(confirm("Are you sure you would like to delete this organization?")){
+      this.index.mask();
+      Ext.Ajax.request({
+        url: String.format("/admin/organizations/{0}.json", id),
+        method: 'DELETE',
+        scope: this,
+        success: function(){
+          this.index.reload();
+        },
+        failure: function(){
+          this.index.reload();
+          alert('Something went wrong, unable to delete the chosen org');
+        }
+      });
+    }
   }
 });
 

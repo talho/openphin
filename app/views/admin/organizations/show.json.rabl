@@ -1,3 +1,3 @@
 
 object @organization
-extends 'organizations/_organization'
+extends 'admin/organizations/_organization'
