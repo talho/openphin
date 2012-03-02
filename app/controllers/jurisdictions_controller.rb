@@ -1,19 +1,8 @@
 class JurisdictionsController < ApplicationController
   before_filter :non_public_role_required
-  before_filter :admin_required, :except => [:mapping, :index, :user_alerter]
+  before_filter :admin_required, :except => [:index, :user_alerter]
   
   app_toolbar "han"
-
-
-  def mapping
-    jurisdictions = fetch_jurisdictions(params[:request])
-    respond_to do |format|
-      # this header is a must for CORS
-      headers["Access-Control-Allow-Origin"] = "*"
-      json = "{\"jurisdictions\": #{jurisdictions.to_json(params[:request])},\"latest_in_secs\": #{Jurisdiction.latest_in_secs} }"
-      format.json {render :json => json }
-    end
-  end
 
   # GET /jurisdictions
   # GET /jurisdictions.xml
