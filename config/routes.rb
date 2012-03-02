@@ -1,11 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :devices, :only => [:create,:destroy]
+  map.resources :roles
   map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
   map.resources :audiences, :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
-
-  map.resources :roles
-  map.resources :role_requests, :only => [:new,:create]
 
   map.resources :users do |user|
     user.resource :profile, :as => "profile", :controller => "user_profiles", :except => [:destroy]
@@ -19,28 +16,28 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :groups do |groups|
       groups.dismember "/dismember/:member_id(.:format)", :action => "dismember", :conditions => {:method => :post}
     end
-#    admin.resources :pending_requests
     admin.resources :role_requests, :except => [:edit,:update], :member => {:approve => :get, :deny => :get}
     admin.resources :invitations, :only => [:index,:show,:create], :member => {:download => :get}, :collection => {:import => :post, :recipe_types => :get }
     admin.resources :users, :only => [:new,:create], :collection => {:deactivate => :post}
     admin.resources :edit_users, :only => [:update], :collection => {:admin_users => [:get]}
     admin.resources :user_batch, :only => [:new,:create], :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
+    admin.resources :delayed_job_checks
   end
-  map.resources :role_assignments, :controller => "admin/role_assignments"  # malicious testing
-
-# vvvvvv
-  map.resources :user_batch, :controller => "admin/user_batch"
-  map.resources :delayed_job_checks, :controller => "admin/delayed_job_checks"
+  map.resources :role_assignments, :controller => "admin/role_assignments"  # malicious testing prevents being in admin namespace for now
 
   map.resources :alerts, :only => [:show, :update], :collection => [:recent_alerts]
   map.alert_with_token '/alerts/:id/show_with_token/:token.:format', :controller => 'alerts', :action => 'show_with_token', :method => :get
   map.update_alert_with_token '/alerts/:id/update_with_token/:token.:format', :controller => 'alerts', :action => 'update_with_token', :method => :put
 
+  map.resources :organizations, :only => [:index]
+  map.resources :role_requests, :only => [:new,:create]
+  map.resources :devices, :only => [:create,:destroy]
   map.resources :favorites, :only => [:create, :index, :destroy]
+
   map.resources :documents, :controller => 'doc/documents', :except => [:index], :collection => [:search, :recent_documents], :member => {:move => [:post, :put], :copy => [:post, :put]}
   map.resources :folders, :controller => 'doc/folders', :collection => [:target_folders], :member => {:move => [:post, :put] }
   map.resources :shares, :member => {:unsubscribe => :delete, :edit_audience => :get, :update_audience => :put}
-  map.resources :organizations, :only => [:index]
+
   map.resources :forums do |forum|
     forum.resources :topics, :collection => {:active_topics => :get, :recent_posts => :get}, :member => { :update_comments => :put }
   end
