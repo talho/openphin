@@ -50,15 +50,19 @@ class Organization < ActiveRecord::Base
   default_scope :order => :name
   
   named_scope :with_user, lambda {|user|
-    { :conditions => ["audiences.id = organizations.group_id AND  (audiences.type = 'Group' ) AND audiences.id = audiences_users.audience_id AND audiences_users.user_id = users.id AND (users.id = ?)", user.id], :joins => ", audiences, audiences_users, users", :order => 'organizations.name'}
+    { :conditions => ["organizations.group_id IN (SELECT * FROM sp_audiences_for_user(?))", user.id], :order => 'organizations.name'}
   }
   named_scope :foreign, :conditions => ["organizations.foreign = true"]
   named_scope :non_foreign, :conditions => ["organizations.foreign = false"]
 
   validates_inclusion_of :foreign, :in => [true, false]
 
-  def members(options={})
-    group.users.scoped options
+  def users
+    group.recipients
+  end
+  
+  def has_user?(user)
+    !user.audiences.find(self.id).nil?
   end
   
   def long_description

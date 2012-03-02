@@ -2,6 +2,8 @@
 Ext.ns('Talho.Admin.Organizations.view');
 
 Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
+  layout: 'fit',
+  height: 400,
   constructor: function(){
     this.addEvents('showorg', 'neworg', 'editorg', 'delorg');
     Talho.Admin.Organizations.view.Index.superclass.constructor.apply(this, arguments);
@@ -29,7 +31,6 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
         }
       ],
       loadMask: true,
-      height: 400,
       autoExpandColumn: 'name',
       listeners: {
         scope: this,
@@ -41,7 +42,8 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
         }
       }
     });
-    this.items.push({xtype: 'button', text: 'New', handler: function(){this.fireEvent('neworg');}, scope: this});
+    this.buttons = this.buttons || ['->'];
+    this.buttons.push({xtype: 'button', text: 'New Organization', handler: function(){this.fireEvent('neworg');}, scope: this});
     
     Talho.Admin.Organizations.view.Index.superclass.initComponent.apply(this, arguments);
   },

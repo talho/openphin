@@ -52,10 +52,11 @@ Talho.Admin.Organizations.view.New = Ext.extend(Ext.form.FormPanel, {
         scope: this,
         success: function(){this.fireEvent('savecomplete');},
         failure: function(form, action){
-          if(action.result){
-            var errors = {};
-            for(var k in action.result.errors){
-              errors['organization['+ k + ']'] = action.result.errors[k];
+          if(action.response && action.response.responseText){
+            var errors = {},
+                res = Ext.decode(action.response.responseText);
+            for(var i = 0; i < res.errors.length; i++){
+              errors['organization['+ res.errors[i][0] + ']'] = res.errors[i][1];
             }
             form.markInvalid(errors);
           }

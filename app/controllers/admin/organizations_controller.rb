@@ -1,6 +1,5 @@
 class Admin::OrganizationsController < ApplicationController
   before_filter :super_admin_required
-
   def index
     @organizations = Organization.all
     respond_to do |format|
@@ -66,24 +65,6 @@ class Admin::OrganizationsController < ApplicationController
         end
         format.json {render :json => {:success => false, :errors => @organization.errors }, :status => 400}
       end
-    end
-  end
-  
-  def approve_request
-    request = OrganizationMembershipRequest.find(params[:id])
-    request.approve!(current_user)
-    
-    respond_to do |format|
-      format.json render :json => {:success => true}
-    end
-  end
-
-  def deny_request
-    request = OrganizationMembershipRequest.find(params[:id])
-    request.destroy
-    
-    respond_to do |format|
-      format.json render :json => {:success => true}
     end
   end
 end

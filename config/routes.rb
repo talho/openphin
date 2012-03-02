@@ -13,7 +13,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :role_assignments, :controller => "admin/role_assignments"
   
   map.namespace(:admin) do |admin|
-    admin.resources :organizations, :collection => {:confirmation => [:post]}
+    admin.resources :organizations, :collection => {:confirmation => [:post], :requests => :get}
+    admin.resources :organization_membership_requests, :only => [:index, :update, :destroy]
     admin.resources :groups do |groups|
       groups.dismember "/dismember/:member_id(.:format)", :action => "dismember", :conditions => {:method => :post}
     end

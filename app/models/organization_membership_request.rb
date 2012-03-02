@@ -21,7 +21,7 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   validates_uniqueness_of :user_id, :scope => [:organization_id]
 
   before_create :set_requester_if_nil
-  after_create :auto_approve_if_admin
+  after_create :auto_approve_if_super_admin
 
   named_scope :unapproved, :conditions => ["approver_id is null"]
   
@@ -30,11 +30,10 @@ class OrganizationMembershipRequest < ActiveRecord::Base
   end
 
   def approve!(approving_user)
-    unless approved? || !approving_user.is_admin?
+    if !approved? && can_approve?(approving_user)
       organization.group.users << user
       self.approver=approving_user
       self.save
-      OrganizationMembershipRequestMailer.deliver_user_notification_of_organization_membership_approval(organization, user, approver) unless user == approver
     end
   end
 
@@ -60,10 +59,14 @@ class OrganizationMembershipRequest < ActiveRecord::Base
     requester = user if requester.blank?
   end
 
-  def auto_approve_if_admin
+  def can_approve?(user)
+    return user.is_super_admin? || (user.is_admin?  && self.organization.has_user?(user))
+  end
+
+  def auto_approve_if_super_admin
     unless requester.nil?
       approver = User.find(requester_id)
-      if approver.is_admin?
+      if approver.is_super_admin?
         approve!(approver)
       end
     end
