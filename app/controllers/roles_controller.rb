@@ -2,18 +2,8 @@ class RolesController < ApplicationController
 	app_toolbar "han"
 	
   before_filter :non_public_role_required, :except => [:index]
-  before_filter :admin_required, :except => [:mapping, :index]
+  before_filter :admin_required, :except => [:index]
  
-  def mapping
-    roles = fetch_roles(params[:request])
-    respond_to do |format|
-      # this header is a must for CORS
-      headers["Access-Control-Allow-Origin"] = "*"
-      json = "{\"roles\": #{roles.to_json(params[:request])},\"latest_in_secs\": #{Role.latest_in_secs} }"
-      format.json {render :json => json }
-    end
-  end
-
   # GET /roles
   # GET /roles.xml
   def index
