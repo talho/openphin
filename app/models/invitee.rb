@@ -32,7 +32,7 @@ class Invitee < ActiveRecord::Base
 
   def is_member?
     if invitation.default_organization
-      invitation.default_organization.members.include?(user) ? "Yes" : "No"
+      invitation.default_organization.group.recipients.include?(user) ? "Yes" : "No"
     else
       'N/A'
     end

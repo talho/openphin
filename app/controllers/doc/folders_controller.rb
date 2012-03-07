@@ -40,9 +40,10 @@ class Doc::FoldersController < ApplicationController
         return
       end
       owner = parent.owner
-      parms[:folder][:user_id] = owner.id unless owner.nil?
     end
 
+    params[:folder][:user_id] = owner.id unless owner.nil?
+    
     folder = Folder.new params[:folder]
     unless folder.save
       respond_to do |format|

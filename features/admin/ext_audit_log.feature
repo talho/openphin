@@ -173,23 +173,6 @@ Feature: Audit Log
     And I wait for the "Fetching Version Data..." mask to go away
     Then I should see "TEST INVITATION" in column "Current Version" within "panel-version-display"
 
-  Scenario: Audit log for Organizations
-    Given there is an unapproved "SILLY HATS ONLY" organization with "fredsmith@example.com" as the contact
-    And the organization "SILLY HATS ONLY" has been approved
-    And I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
-    And "janesmith@example.com" has requested membership in organization "SILLY HATS ONLY"
-    And I navigate to "Admin > Audit Log"
-    Then the "Audit Log" tab should be open
-    And I wait for the "Loading..." mask to go away for 1 second
-    When I click model-selector-list-item "Organizations"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see "SILLY HATS ONLY" in column "Descriptor" within "grid-version-results"
-    And I click model-selector-list-item "Organizations"
-    When I click model-selector-list-item "Organization Membership Requests"
-    And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see "Jane Smith for SILLY HATS ONLY" in column "Descriptor" within "grid-version-results"
-
   Scenario: Audit log for Favorites
     Given I am logged in as "billsmith@example.com"
     And I navigate to the ext dashboard page

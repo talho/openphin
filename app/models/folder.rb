@@ -157,7 +157,6 @@ class Folder < ActiveRecord::Base
     shares = current_user.shares
     shares = shares.sort_by {|s| s.name.downcase}
 
-
     shares |= shares.map do |share|
       leaf = share.leaf?
       leaf = shares.select { |s| s.parent_id == share.id}.empty? unless leaf
@@ -171,7 +170,9 @@ class Folder < ActiveRecord::Base
       unless share.owner.nil?
         user = {:name => share.owner.display_name, :id => nil, :safe_id => share.owner.id.to_s + share.owner.display_name.gsub(/ /, ''), :safe_parent_id => nil, :parent_id => nil, :leaf => false, :ftype => 'share', :level => 0}
         share[:safe_parent_id] = user[:safe_id] if share[:safe_parent_id].nil?
-        return user
+        user
+      else
+        nil
       end
     end.compact
 

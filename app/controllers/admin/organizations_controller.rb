@@ -22,7 +22,8 @@ class Admin::OrganizationsController < ApplicationController
     @organization = Organization.new(params[:organization])
 
     respond_to do |format|
-      if @organization.save
+      # ensure the group data gets saved proper while we're here
+      if @organization.save && @organization.group.update_attributes(params[:organization][:group_attributes])
         format.json {render :json => {:success => true}}
       else
         format.json {render :json => {:success => false, :errors => @organization.errors }, :status => 400}

@@ -67,5 +67,11 @@ Then /^I should see user role attributes with the following\:$/ do |table|
   end
 end
 
+Given /^a few roles$/ do
+  3.times do |i|
+    Factory.create(:role)
+  end
+end
+
 
  

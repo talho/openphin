@@ -22,7 +22,7 @@ require 'factory_girl'
 
 Factory.define :user do |pp|
   pp.first_name "Default"
-  pp.last_name "FactoryUser"
+  pp.sequence(:last_name) {|i| "FactoryUser#{i}"}
   pp.display_name {|p| "#{p.first_name} #{p.last_name}"}
   pp.sequence(:email) {|i| "user#{i}@example.com" }
   pp.password              { "Password1" }

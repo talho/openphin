@@ -25,6 +25,7 @@ Talho.Admin.Organizations.view.New = Ext.extend(Ext.form.FormPanel, {
         {xtype: 'textfield', fieldLabel: 'State', name: 'organization[state]'},
         {xtype: 'textfield', fieldLabel: 'Postal Code', name: 'organization[postal_code]'},
         {xtype: 'textfield', fieldLabel: 'Phone', name: 'organization[phone]'},
+        {xtype: 'textfield', fieldLabel: 'Fax', name: 'organization[fax]'},
         {xtype: 'textfield', fieldLabel: 'E-mail', name: 'organization[distribution_email]'},
         {xtype: 'textarea', fieldLabel: 'Description', name: 'organization[description]', allowBlank: false},
         {xtype: 'combo', fieldLabel: 'Contact', hiddenName: 'organization[user_id]', itemId: 'contact', 

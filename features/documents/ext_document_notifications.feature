@@ -134,6 +134,7 @@ Feature: Receiving notifications to different events
       | name          | type |
       | Atticus Finch | User |
     And I press "Save"
+    And I wait for the "Saving..." mask to go away
     Then "atticus@example.com" should receive the email:
       | subject       | Bartleby Scrivener has added you to the shared folder "Folder1" |
       | body contains | Bartleby Scrivener has given you access to the shared folder "Folder1" |

@@ -97,7 +97,7 @@ Then /^I am logged in$/ do
   @current_user.should_not be_nil
   begin
     page.has_no_css?('#loading-mask', :visible => true).should be_true
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+  rescue Selenium::WebDriver::Error::ObsoleteElementError
     # this is a stale element error meaning between us finding the element and us processing, it disappeared. In this case, it's good
     true
   end
@@ -300,4 +300,34 @@ end
 
 Then /^"([^"]*)" should be confirmed$/ do |email|
   User.find_by_email(email).email_confirmed?.should be_true
+end
+
+Given /^I am logged in as a superadmin$/ do
+  Given %Q{the following entities exists:}, table([
+    %w{ Jurisdiction Texas}
+  ])
+  Given %Q{the following users exist:}, table(%{
+    | Its Me |  me@example.com | SuperAdmin | Texas |
+  })
+  Given %Q{I am logged in as "me@example.com"}  
+end
+
+Given /^I am logged in as an admin$/ do
+  Given %Q{the following entities exists:}, table([
+    %w{ Jurisdiction Texas}
+  ])
+  Given %Q{the following users exist:}, table(%{
+    | Its Me |  me@example.com | Admin | Texas |
+  })
+  Given %Q{I am logged in as "me@example.com"}  
+end
+
+
+Given /^a few users with various roles$/ do
+  3.times do |i|
+    u = Factory.create(:user)
+    u.role_memberships << RoleMembership.new(:role => Role.all[i], :jurisdiction => Jurisdiction.all[i]) 
+    u.save
+  end
+  And "delayed jobs are processed"
 end

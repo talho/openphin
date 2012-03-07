@@ -147,9 +147,9 @@ Feature: Document Sharing
     When I log in as "atticus@example.com"
     And I navigate to the ext dashboard page
     And I navigate to "Documents"
-    Then I should see "Bartleby Scrivener" in grid row 2
+    Then I should see "Bartleby Scrivener" in grid row 3
     When I expand the folders "Bartleby"
-    Then I should see "Folder1" in grid row 3
+    Then I should see "Folder1" in grid row 4
 
     When I sign out
     And I log in as "bartleby@example.com"

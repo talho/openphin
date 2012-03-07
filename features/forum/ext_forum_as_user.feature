@@ -63,7 +63,6 @@ I should be able to create topics to forums and place comments to these topics
 
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
-    And I wait for 1 seconds
     Then I should see "Locating Grants in todays economy"
     And I should see "Jane Smith"
 
@@ -73,7 +72,6 @@ I should be able to create topics to forums and place comments to these topics
 
     And I wait for the "Saving..." mask to go away
     And I wait for the "Loading..." mask to go away
-    And I wait for 2 seconds
     Then I should see "todays economic impact on grants"
 
     

@@ -12,7 +12,7 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
     if(!this.items){
       this.items = [];
     }
-    this.items.push({xtype: 'grid', itemId: 'grid', header: false, border: true, store: new Ext.data.JsonStore({
+    this.items.push({xtype: 'grid', itemId: 'grid', cls: 'org-list-grid', header: false, border: true, store: new Ext.data.JsonStore({
         url: '/admin/organizations.json',
         root: 'organizations',
         restful: true,
@@ -26,7 +26,7 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
         {xtype: 'xactioncolumn', items: [
             {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: function(grid, row){ this.fireEvent('editorg', grid.getStore().getAt(row).get('id'));}, scope: this},
             {xtype: 'spacer', width: 10},
-            {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row){ this.fireEvent('delorg', grid.getStore().getAt(row).get('id'));}, scope: this}
+            {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row){ this._del = true; this.fireEvent('delorg', grid.getStore().getAt(row).get('id'));}, scope: this}
           ]
         }
       ],
@@ -36,9 +36,11 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
         scope: this,
         'rowclick': function(grid, i, e){
           var tar = e.getTarget('.x-action-col-cell');
-          if(!tar){
+          if(!tar && !this._del){
             this.fireEvent('showorg', grid.getStore().getAt(i).get('id'));
           }
+          // undo the short-circuit
+          this._del = false;
         }
       }
     });

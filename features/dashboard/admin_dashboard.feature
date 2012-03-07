@@ -54,6 +54,7 @@ Feature: Dashboard Administration
     Then the "Create New Dashboard" window should be open
     When I fill in "Dashboard Name" with "My Dashboard"
      And I press "Create"
+     And I wait for the "Saving..." mask to go away
     Then the "My Dashboard" dashboard should exist
 
   Scenario: Create new dashboard and ensure we're now editing that dashboard
@@ -70,6 +71,7 @@ Feature: Dashboard Administration
      And I fill in the htmleditor "htmlportlet" with "My Dashboard Element"
      And I press "OK"
      And I press "Save"
+     And I wait for the "Saving..." mask to go away
     Then "My Dashboard" should have a portlet with "My Dashboard Element" in column 1
 
   Scenario: Select another dashboard to edit
@@ -118,6 +120,7 @@ Feature: Dashboard Administration
     Then I should see "Columns: 1" within ".x-menu-list"
     When I set cms-column-slider to 3
      And I press "Save"
+     And I wait for the "Saving..." mask to go away
     Then the "Application Default" dashboard should have 3 columns
 
   Scenario: Removing portlets from dashboard
@@ -211,6 +214,7 @@ Feature: Dashboard Administration
      And I fill in the htmleditor "htmlportlet" with "editing dashboard element"
      And I press "OK"
      And I press "Save"
+     And I wait for the "Saving..." mask to go away
     Then "Application Default" should have a portlet with "editing dashboard element" in column 1
      And "Application Default" should have a portlet with "Welcome to openPHIN" in column 1
 

@@ -36,6 +36,7 @@ I should be able to edit my profile
   Scenario: Adding a user to an organization as a user
     Given the following entities exist:
       | Organization | DSHS |
+    And "bob.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
     And I navigate to "Jane Smith > Manage Organizations"
@@ -54,10 +55,9 @@ I should be able to edit my profile
       | subject       | Request submitted for organization membership in DSHS |
       | body contains | DSHS |
 
-    Given I am logged in as "bob.smith@example.com"
-    When I click the organization membership request approval link in the email for "jane.smith@example.com"
-    And I click inlineLink "Approve"
-    Then I should see "Jane Smith is now a member of DSHS"
+    Given I am logged in as "bob.smith@example.com"    
+    When I navigate to the organization membership request tab
+     And I press "Approve"
 
     And I am logged in as "jane.smith@example.com"
     When I navigate to the ext dashboard page
@@ -66,27 +66,27 @@ I should be able to edit my profile
     Then I should see the following within ".org-item":
       | DSHS |
 
-  Scenario: Adding a user to an organization as a user who maliciously posts an approver id
-    Given the following entities exist:
-      | Organization | DSHS |
-    And I am logged in as "jane.smith@example.com"
-    When I go to the dashboard page
-    And I press "Jane Smith"
-    And I follow "My Account"
-    Then I should see "Organizations"
-    When I wait for the "Loading..." mask to go away
-    And I press "Request Organization"
-    When I select "DSHS - National Organization" from ext combo "Organization:"
-    And I maliciously post an approver id
-    And I press "Add"
-    And I press "Apply Changes"
-    #Then I should be specifically on the user profile page for "jane.smith@example.com"
-    And I should see "Profile information saved."
-    And I should see "Organizations"
-    And the "org-pending" class selector should contain "waiting for approval"
-    And "bob.smith@example.com" should receive the email:
-      | subject       | Request submitted for organization membership in DSHS |
-      | body contains | DSHS |
+  # Scenario: Adding a user to an organization as a user who maliciously posts an approver id
+    # Given the following entities exist:
+      # | Organization | DSHS |
+    # And I am logged in as "jane.smith@example.com"
+    # When I go to the dashboard page
+    # And I press "Jane Smith"
+    # And I follow "My Account"
+    # Then I should see "Organizations"
+    # When I wait for the "Loading..." mask to go away
+    # And I press "Request Organization"
+    # When I select "DSHS - National Organization" from ext combo "Organization:"
+    # And I maliciously post an approver id
+    # And I press "Add"
+    # And I press "Apply Changes"
+    # #Then I should be specifically on the user profile page for "jane.smith@example.com"
+    # And I should see "Profile information saved."
+    # And I should see "Organizations"
+    # And the "org-pending" class selector should contain "waiting for approval"
+    # And "bob.smith@example.com" should receive the email:
+      # | subject       | Request submitted for organization membership in DSHS |
+      # | body contains | DSHS |
 
   Scenario: Removing a user from an organization as an admin
     Given the following entities exist:
@@ -106,26 +106,27 @@ I should be able to edit my profile
       | Organization | DSHS |
     And "jane.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "jane.smith@example.com"
-    When I specifically go to the user edit profile page for "jane.smith@example.com"
-    Then I should see "Organizations"
-    And I should see "DSHS"
-    When I will confirm on next step
-    And I follow "Remove Organization Membership" within ".organizations"
-    Then I should be specifically on the user edit profile page for "jane.smith@example.com"
-    And I should see "Organizations"
-    And I should not see "DSHS" within ".organizations"
+    When I navigate to "Jane Smith > Manage Organizations"
+    And I wait for the "Loading..." mask to go away
+    Then the "Manage Organizations" tab should be open and active
+    And I should see "DSHS" within ".orgs-control"
+    And I click profile-destroy "Del DSHS"
+    And I press "Apply Changes"
+    And I wait for the "Saving..." mask to go away
+    And I wait for the "Loading..." mask to go away
+    And I should not see "DSHS" within ".orgs-control"
     And "jane.smith@example.com" should not receive an email
 
-  Scenario: Removing a user from an organization as another user
-    Given the following entities exist:
-      | Organization | DSHS |
-    And "jane.smith@example.com" is a member of the organization "DSHS"
-    And I am logged in as "jill.smith@example.com"
-    When I specifically go to the user edit profile page for "jane.smith@example.com"
-    Then I should see "Organizations"
-    And I should see "DSHS"
-    When I will confirm on next step
-    And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
-    Then I should see "You do not have permission to carry out this action."
-    And "jane.smith@example.com" should not receive an email
-    And "bob.smith@example.com" should not receive an email
+  # Scenario: Removing a user from an organization as another user
+    # Given the following entities exist:
+      # | Organization | DSHS |
+    # And "jane.smith@example.com" is a member of the organization "DSHS"
+    # And I am logged in as "jill.smith@example.com"
+    # When I specifically go to the user edit profile page for "jane.smith@example.com"
+    # Then I should see "Organizations"
+    # And I should see "DSHS"
+    # When I will confirm on next step
+    # And I maliciously attempt to remove "jane.smith@example.com" from "DSHS"
+    # Then I should see "You do not have permission to carry out this action."
+    # And "jane.smith@example.com" should not receive an email
+    # And "bob.smith@example.com" should not receive an email

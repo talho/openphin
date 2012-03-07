@@ -147,3 +147,6 @@ Given /^ClamAV is loaded$/ do
   CLAM_AV.loaddb()
 end
 
+Then /^my folder should have some recipients$/ do
+  pending # express the regexp above with the code you wish you had
+end
