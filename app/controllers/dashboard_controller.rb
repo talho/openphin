@@ -190,6 +190,9 @@ class DashboardController < ApplicationController
     DashboardController.app_toolbar "application"
   end
 
+  def about_talhophin  # stub for about_talhophin path used in toolbar and set in domain.yml
+  end
+
   def hud
     DashboardController.app_toolbar "han"
     @user = current_user
