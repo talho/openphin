@@ -58,3 +58,7 @@ config/*.yml
 reports/*
 lib/workers/plugin_workers
 app/models/report/rollcall
+app/models/report/attendance_all_recipe.rb
+app/models/report/ili_all_recipe.rb
+app/models/report/nurse_assistance_recipe.rb
+*~
