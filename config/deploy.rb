@@ -24,9 +24,8 @@ set :root_path, "/var/www"
 set :deploy_to, "#{root_path}/#{application}"
 
 # Unicorn configuration
-#set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
-set :unicorn_config, "#{current_path}/config/unicorn.rb"
-set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
+set :unicorn_binary, "unicorn_rails"
+set :unicorn_env, rails_env
 
 task :production do
   require 'hoptoad_notifier/capistrano'
@@ -62,15 +61,15 @@ task :talhoapps_production do
   role :db,  "talhoapps.talho.org", :primary => true  
 end
 
+require 'bundler/capistrano'
+
 # Setup dependencies
 before 'deploy', 'backgroundrb:stop'
 before 'deploy', 'delayed_job:stop'
 before 'deploy', 'sphinx:start_if_not'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'app:phin_plugins', 'app:symlinks'
-after 'app:symlinks', 'app:bundle_install'
-before 'deploy:start', 'app:phin_plugins_install'
-before 'deploy:restart', 'app:phin_plugins_install'
+after 'app:phin_plugins', 'app:phin_plugins_install'
 after "deploy", "deploy:cleanup"
 after 'deploy', "sphinx:rebuild"
 after 'deploy:cold', "sphinx:rebuild"
@@ -93,23 +92,6 @@ namespace :deploy do
       }
     end
   end
-
-  desc "unicorn start"
-  task :start, :roles => [:app, :web] do
-    run "cd #{release_path}; bundle exec unicorn --daemonize --env production -c #{unicorn_config}"
-  end
-
-  desc "unicorn restart"
-  task :restart, :roles => [:app, :web] do 
-    begin
-      run "kill -s USR2 `cat #{unicorn_pid}`"
-    rescue Capistrano::CommandError => e
-      puts "Rescue: #{e.class} #{e.message}"
-      puts "Rescue: It appears that unicorn is not running, starting ..."
-      run "sh #{release_path}/config/kill_server_processes unicorn"
-      run "cd #{release_path}; bundle exec unicorn --daemonize --env production -c #{unicorn_config}"
-    end
-  end
 end
 
 after 'deploy:migrate', :seed
@@ -118,6 +100,8 @@ desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
   run "cd #{release_path}; #{rake} db:seed RAILS_ENV=#{rails_env}"
 end
+
+require 'capistrano-unicorn'
 
 # useful for testing on_rollback actions
 task :raise_exc do
