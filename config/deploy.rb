@@ -64,41 +64,41 @@ end
 require 'bundler/capistrano'
 
 # Setup dependencies
-before 'deploy', 'backgroundrb:stop'
-before 'deploy', 'delayed_job:stop'
+# before 'deploy', 'backgroundrb:stop'
+# before 'deploy', 'delayed_job:stop'
 before 'deploy', 'sphinx:start_if_not'
 after 'deploy:update_code', 'app:phin_plugins'
-after 'app:phin_plugins', 'app:symlinks'
-after 'app:phin_plugins', 'app:phin_plugins_install'
+after 'deploy:create_symlink', 'app:symlinks'
+after 'deploy:create_symlink', 'app:phin_plugins_install'
 after "deploy", "deploy:cleanup"
 after 'deploy', "sphinx:rebuild"
 after 'deploy:cold', "sphinx:rebuild"
 after 'sphinx:rebuild', 'backgroundrb:restart'
 after 'sphinx:rebuild', 'delayed_job:restart'
 
-namespace :deploy do
-  # Overriding the built-in task to add our rollback actions
-  task :default, :roles => [:app, :web, :jobs] do
-    unless rails_env == "test"
-      transaction {
-        on_rollback do
-          puts "  PERFORMING ROLLBACK, restarting jobs daemons"
-          find_and_execute_task("backgroundrb:restart")
-          find_and_execute_task("delayed_job:restart")
-          puts "  END ROLLBACK"
-        end
-        update
-        restart
-      }
-    end
-  end
-end
+# namespace :deploy do
+  # # Overriding the built-in task to add our rollback actions
+  # task :default, :roles => [:app, :web, :jobs] do
+    # unless rails_env == "test"
+      # transaction {
+        # on_rollback do
+          # puts "  PERFORMING ROLLBACK, restarting jobs daemons"
+          # find_and_execute_task("backgroundrb:restart")
+          # find_and_execute_task("delayed_job:restart")
+          # puts "  END ROLLBACK"
+        # end
+        # update
+        # restart
+      # }
+    # end
+  # end
+# end
 
 after 'deploy:migrate', :seed
 after 'deploy:migrations', :seed
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
-  run "cd #{release_path}; #{rake} db:seed RAILS_ENV=#{rails_env}"
+  run "cd #{release_path}; RAILS_ENV=#{rails_env} #{rake} db:seed"
 end
 
 require 'capistrano-unicorn'
