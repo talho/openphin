@@ -1,4 +1,4 @@
-gitclass Report::Report < ActiveRecord::Base
+class Report::Report < ActiveRecord::Base
 
   set_table_name :report_reports
 

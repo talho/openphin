@@ -23,9 +23,6 @@ set :root_path, "/var/www"
 # via the :deploy_to variable:
 set :deploy_to, "#{root_path}/#{application}"
 
-# Unicorn configuration
-set :unicorn_binary, "unicorn_rails"
-set :unicorn_env, rails_env
 
 task :production do
   require 'hoptoad_notifier/capistrano'
@@ -101,6 +98,9 @@ task :seed, :roles => :db, :only => {:primary => true} do
   run "cd #{release_path}; RAILS_ENV=#{rails_env} #{rake} db:seed"
 end
 
+# Unicorn configuration
+set :unicorn_bin, "unicorn_rails"
+set :unicorn_env, rails_env
 require 'capistrano-unicorn'
 
 # useful for testing on_rollback actions

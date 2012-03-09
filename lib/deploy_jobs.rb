@@ -15,7 +15,7 @@ namespace :sphinx do
   task :rebuild, :roles => :jobs do
     unless rails_env == "test"
       begin
-        run "cd #{previous_release}; RAILS_ENV=#{rails_env} bundle exec rake ts:stop"
+        run "cd #{previous_release}; RAILS_ENV=#{rails_env} bundle exec rake ts:stop --trace"
       rescue Capistrano::CommandError => e
         puts "Rescue: #{e.class} #{e.message}"
         puts "Rescue: sphinx stop failed, ignoring ..."

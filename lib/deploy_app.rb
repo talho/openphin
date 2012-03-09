@@ -23,7 +23,7 @@ namespace :app do
     YAML.load_file("config/phin_plugins.yml").each { |pp|
       name = File.basename(pp["url"]).sub(/\.git$/, "")
       run "cd #{release_path} && RAILS_ENV=production ./script/runner vendor/plugins/#{name}/install.rb"
-      run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name} --trace"
+      run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name}"
     }
   end
 
