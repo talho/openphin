@@ -23,7 +23,7 @@ namespace :app do
     YAML.load_file("config/phin_plugins.yml").each { |pp|
       name = File.basename(pp["url"]).sub(/\.git$/, "")
       run "cd #{release_path} && RAILS_ENV=production ./script/runner vendor/plugins/#{name}/install.rb"
-      run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name}"
+      run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name} --trace"
     }
   end
 
@@ -61,14 +61,5 @@ namespace :app do
       run "ln -fs #{shared_path}/system.yml#{release_path}/config/system.yml"
     end
     run "mkdir #{release_path}/tmp/cache"
-  end
-
-  desc "run bundle install for gem dependencies"
-  task :bundle_install, :roles => [:app, :web, :jobs] do
-    if rails_env == "test"
-      run "cd #{release_path}; bundle install --without=tools"
-    else
-      run "cd #{release_path}; bundle install --without=test --without=cucumber --without=tools"
-    end
   end
 end

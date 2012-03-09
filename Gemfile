@@ -56,6 +56,7 @@ end
 
 group :development do
   gem "jslint_on_rails"
+  gem "capistrano-unicorn"
 end
 
 group :test do

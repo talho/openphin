@@ -59,7 +59,6 @@ after_fork do |server, worker|
   # Redis and Memcached would go here but their connections are established
   # on demand, so the master never opens a socket
 
-
   ##
   # Unicorn master is started as root, which is fine, but let's
   # drop the workers to git:git
