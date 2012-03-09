@@ -6,8 +6,7 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes
 	# GET /report/recipes.json
 	def index
-    recipes = Report::Recipe.selectable
-    recipe_names = current_user.is_admin? ? recipes.map(&:name).grep(/Recipe$/) : []
+    recipe_names = current_user.is_admin? ? Report::Recipe.recipe_names : []
     respond_to do |format|
      format.html
      format.json do
@@ -18,12 +17,17 @@ class Report::RecipesController < ApplicationController
   end
 
   def show
-    @recipe = Report::Recipe.find(params[:id])
+    begin
+      json = {}
+      json["recipe"] = Report::Recipe.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      json["error_msg"] = "This recipe is malformed. Please inform administrator."
+    end
     respond_to do |format|
       format.html
       format.json do
         ActiveRecord::Base.include_root_in_json = false
-        render :json => {"recipe"=>@recipe}
+        render :json => json
       end
     end
 

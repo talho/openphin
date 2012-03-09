@@ -62,7 +62,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
 
   create_report: function(button){
     button.disable();
-    var criteria = {'recipe': 'Report::GroupWithRecipientsRecipe', 'model': 'Group', 'method': 'find_by_id', 'params': this.group_id};
+    var criteria = {'recipe': 'Report::GroupWithRecipientsRecipeInternal', 'model': 'Group', 'method': 'find_by_id', 'params': this.group_id};
     Ext.Ajax.request({
       url: '/report/reports.json',
       method: 'POST',

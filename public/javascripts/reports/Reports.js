@@ -198,11 +198,21 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
          method: 'GET',
          scope:  this,
          success: function(responseObj){
-           this.recipeDescriptor.update( Ext.decode(responseObj["responseText"])["recipe"]["description"] );
-           this.generateReportButton.setText('Generate Report');
-           this.generateReportButton.enable();
+           var response = Ext.decode(responseObj["responseText"]);
+           if (response["error_msg"]) {
+             this.recipeDescriptor.update( response["error_msg"] );
+           } else {
+             this.recipeDescriptor.update( response["recipe"]["description"] );
+             this.generateReportButton.setText('Generate Report');
+             this.generateReportButton.enable();
+           }
          },
-         failure: function(){this.ajax_err_cb}
+         failure: function(responseObj){
+           this.ajax_err_cb(responseObj);
+           this.recipeDescriptor.update( 'recipe description' );
+           this.generateReportButton.disable();
+            this.generateReportButton.setText('No Recipe Selected');
+         }
       });
   	} else {
 	    this.recipeDescriptor.update( 'recipe description' );

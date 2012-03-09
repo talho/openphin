@@ -20,7 +20,6 @@ class Admin::InvitationsController < ApplicationController
   
   def show
     @invitation = Invitation.find(params[:id])
-    
     respond_to do |format|
       format.html
       format.json do
@@ -112,7 +111,7 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def recipe_types
-    recipe_names = Report::Recipe.unselectable.map(&:name).grep(/^Report::Invitation/).grep(/Recipe$/)
+    recipe_names = Report::Recipe.internal_recipe_names.grep(/^Report::Invitation/).sub(/Internal$/,'')
     selection = recipe_names.collect{|r| { :id => r, :name_humanized => Report::Recipe.humanized(r) } }
     respond_to do |format|
       format.json do

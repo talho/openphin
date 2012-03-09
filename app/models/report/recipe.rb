@@ -4,7 +4,6 @@ class Report::Recipe < ActiveRecord::Base
   require 'base32/crockford'  # for naming the filtered file
 
   class << self
-    include Report::Select::Base
     extend ActiveSupport::Memoizable
 
     def description
@@ -63,6 +62,18 @@ class Report::Recipe < ActiveRecord::Base
     def humanized(name)
       name.demodulize.split(/(?=[A-Z])/).join(" ")
     end
+
+    def recipe_names
+      dirname = File.dirname(__FILE__)
+      recipe_names = Dir.glob(dirname+'/*_recipe.rb').collect{|f| 'Report::' + File.basename(f).sub(/\.rb/,'').camelize}
+    end
+    memoize :recipe_names
+
+    def internal_recipe_names
+      dirname = File.dirname(__FILE__)
+      recipe_names = Dir.glob(dirname+'/*_recipe_internal.rb').collect{|f| 'Report::' + File.basename(f).sub(/\.rb/,'').camelize}
+    end
+    memoize :internal_recipe_names
 
   end
 

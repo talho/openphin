@@ -1,4 +1,4 @@
-class Report::Report < ActiveRecord::Base
+gitclass Report::Report < ActiveRecord::Base
 
   set_table_name :report_reports
 
@@ -20,7 +20,11 @@ class Report::Report < ActiveRecord::Base
   validates_inclusion_of    :incomplete, :in => [false,true]
 
   def validate_on_create
-    errors.add_to_base "#{recipe} is not found on the system" unless Report::Recipe.all.map(&:name).include? recipe
+    begin
+      recipe.constantize
+    rescue StandardError
+      errors.add_to_base "#{recipe} is not found on the system"
+    end
   end
 
   def dataset

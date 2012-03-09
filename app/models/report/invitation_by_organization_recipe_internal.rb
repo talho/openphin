@@ -1,5 +1,4 @@
-class Report::InvitationByOrganizationRecipe < Report::Recipe
-  include Report::Select::UnSelectable  # do not display in recipe selection list
+class Report::InvitationByOrganizationRecipeInternal < Report::Recipe
 
   class << self
 

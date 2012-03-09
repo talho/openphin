@@ -1,5 +1,4 @@
-class Report::GroupWithRecipientsRecipe < Report::Recipe
-  include Report::Select::UnSelectable  # do not display in recipe selection list
+class Report::GroupWithRecipientsRecipeInternal < Report::Recipe
 
   class << self
 
