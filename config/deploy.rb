@@ -24,7 +24,7 @@ set :root_path, "/var/www"
 set :deploy_to, "#{root_path}/#{application}"
 
 # Unicorn configuration
-set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
+#set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2010.02/bin/unicorn_rails"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
@@ -96,7 +96,7 @@ namespace :deploy do
 
   desc "unicorn start"
   task :start, :roles => [:app, :web] do
-    run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
+    run "cd #{release_path}; bundle exec unicorn --daemonize --env production -c #{unicorn_config}"
   end
 
   desc "unicorn restart"
@@ -107,7 +107,7 @@ namespace :deploy do
       puts "Rescue: #{e.class} #{e.message}"
       puts "Rescue: It appears that unicorn is not running, starting ..."
       run "sh #{release_path}/config/kill_server_processes unicorn"
-      run "cd #{release_path}; #{unicorn_binary} --daemonize --env production -c #{unicorn_config}"
+      run "cd #{release_path}; bundle exec unicorn --daemonize --env production -c #{unicorn_config}"
     end
   end
 end
