@@ -19,6 +19,7 @@ class OpenphinPluginGenerator < Rails::Generator::NamedBase
       m.directory "features/step_definitions"
       m.directory "lib"
       m.directory "lib/models"
+      m.directory "lib/tasks"
       m.directory "lib/workers"
       m.directory "public/javascripts"
       m.directory "public/stylesheets"
@@ -27,7 +28,6 @@ class OpenphinPluginGenerator < Rails::Generator::NamedBase
       m.directory "vendor/plugins"
 
       m.template "README", "README"
-      m.template "MIT-LICENSE", "MIT-LICENSE"
       m.template "Rakefile", "Rakefile"
       m.template "init.rb", "init.rb"
       m.template "install.rb", "install.rb"
@@ -36,9 +36,9 @@ class OpenphinPluginGenerator < Rails::Generator::NamedBase
       m.template "gitignore", ".gitignore"
       m.template "lib/PLUGIN.rb", "lib/#{file_name}.rb"
       m.template "spec/factories.rb", "spec/factories.rb"
-      m.template "tasks/PLUGIN_tasks.rake", "tasks/#{file_name}_tasks.rake"
-      m.template "tasks/cucumber.rake", "tasks/cucumber.rake"
-      m.template "tasks/rspec.rake", "tasks/rspec.rake"
+      m.template "lib/tasks/PLUGIN_tasks.rake", "lib/tasks/#{file_name}_tasks.rake"
+      m.template "lib/tasks/cucumber.rake", "lib/tasks/cucumber.rake"
+      m.template "lib/tasks/rspec.rake", "lib/tasks/rspec.rake"
       m.readme "../../../../vendor/plugins/#{file_name}/README"
 
     end
