@@ -48,10 +48,12 @@ lib/workers/han
 lib/workers/vms
 lib/workers/rollcall
 public/*/rollcall
+public/*/facho
 vendor/plugins/han
 vendor/plugins/rollcall
 vendor/plugins/vms
 vendor/plugins/talho
+vendor/plugins/facho
 spec/rollcall
 config/*.yml
 reports/*
