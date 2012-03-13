@@ -77,6 +77,21 @@ class RoleRequest < ActiveRecord::Base
     {"role"=>role.name,"jurisdiction"=>jurisdiction.name}
   end
 
+  def notify_admin_of_request
+    application          = self.role.application
+    current_jurisdiction = self.jurisdiction
+    admins               = []
+    begin 
+      admins = current_jurisdiction.admins(application)
+      admins = current_jurisdiction.super_admins(application) if admins.blank?
+      current_jurisdiction = current_jurisdiction.parent if admins.blank?
+    end while admins.blank? && !current_jurisdiction.nil?
+    
+    admins.each do |admin|
+      SignupMailer.deliver_admin_notification_of_role_request(self, admin)
+    end
+  end
+  
   private
 
   def auto_approve_if_public_role

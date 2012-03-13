@@ -482,21 +482,7 @@ class User < ActiveRecord::Base
 
   def confirm_email!
     unless email_confirmed?
-      role_requests.each do |role_request|
-          next if role_request.approved?
-          application          = role_request.role.application
-          current_jurisdiction = role_request.jurisdiction
-          admins               = current_jurisdiction.admins(application)
-          if admins.blank?
-            while current_jurisdiction.super_admins(application).blank?
-              current_jurisdiction = current_jurisdiction.parent
-            end
-            admins = current_jurisdiction.super_admins(application)
-          end
-          admins.each do |admin|
-            SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
-          end
-      end
+      role_requests.unapproved.each(&:notify_admin_of_request)
 
       organization_membership_requests.each do |omr|
         if omr.has_invitation?
