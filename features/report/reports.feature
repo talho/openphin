@@ -25,9 +25,9 @@ Background:
     | Potter Public   | pott.pub@example.com     | Public           | Potter         |
   And delayed jobs are processed
   And reports derived from the following recipes and authored by exist:
-    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | HanAlertLogRecipe                | dall.md@example.com |
-    | UserAllBatchRecipe               | dall.md@example.com |
+    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
+    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
 
 Scenario: Public-only user can not navigate to Reports
   Given I am logged in as "dall.pub@example.com"
@@ -88,6 +88,7 @@ Scenario: Initiate the viewing of a report contents
   And I press "Generate Report"
   And delayed jobs are processed
   And I wait for 8 seconds
+  And I click x-tbar-loading ""
   And I should see "Han-Alert-Log-Recipe" in grid row 1 within ".report-results"
   When I click x-grid3-cell "Han-Alert-Log-Recipe"
   Then the "Report: Han-Alert-Log-Recipe" tab should be open
@@ -136,14 +137,14 @@ Scenario: Initiate the viewing of a report contents
     Then the "Render size" grid header is sorted descending
 
   When reports derived from the following recipes and authored by exist:
-    | UserAllBatchRecipe               | dall.md@example.com |
-    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | UserAllBatchRecipe               | dall.md@example.com |
-    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | HanAlertLogRecipe                | dall.md@example.com |
-    | UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | HanAlertLogRecipe                | dall.md@example.com |
+    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
+    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
   And I close the active tab
   And I navigate to "Reports"
   Then I should see "Displaying results 1 - 10 of 11"

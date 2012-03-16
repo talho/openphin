@@ -7,7 +7,7 @@ describe "Released" do
   before(:each) do
     User.all.map(&:destroy)
   end
-  Report::Recipe.all.map(&:name).grep(/Recipe$/).each do |id|
+  Recipe::Recipe.all.map(&:name).grep(/Recipe$/).each do |id|
 #    puts "Testing #{id} for basic structual aspects"
     it "#{id} holds a empty helper array" do
       recipe = id.constantize
@@ -38,7 +38,7 @@ describe "Released" do
     end
   end
 
-  Report::Recipe.selectable.map(&:name).grep(/Recipe$/).each do |id|
+  Recipe::Recipe.selectable.map(&:name).grep(/Recipe$/).each do |id|
 #    puts "Testing #{id} for data capturing operations"
     it "#{id} captures data to a file" do
       report = Factory(:report_report,:recipe=>id)
@@ -78,7 +78,7 @@ describe "Released" do
 
   after(:all) do
     # this assures the deletion of the paperclip files
-    Report::Report.all.map(&:destroy)
+    Recipe::Report.all.map(&:destroy)
   end
 
 end

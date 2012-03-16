@@ -1,4 +1,4 @@
-class Report::UserAllBatchRecipe < Report::Recipe
+class Recipe::UserAllBatchRecipe < Recipe
   
   class << self
 

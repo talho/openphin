@@ -111,8 +111,8 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def recipe_types
-    recipe_names = Report::Recipe.internal_recipe_names.grep(/^Report::Invitation/).sub(/Internal$/,'')
-    selection = recipe_names.collect{|r| { :id => r, :name_humanized => Report::Recipe.humanized(r) } }
+    recipe_names = RecipeInternal::Recipe.recipe_names.grep(/^Report::Invitation/)
+    selection = recipe_names.collect{|r| { :id => r, :name_humanized => Recipe.humanized(r) } }
     respond_to do |format|
       format.json do
         render :json => {:success=>true, :recipes=>selection  }

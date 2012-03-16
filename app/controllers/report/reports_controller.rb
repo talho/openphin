@@ -155,6 +155,7 @@ class Report::ReportsController < ApplicationController
     end
   end
 
+  # DEPRECATE
   def html2csv(table_string)
     doc = Nokogiri::HTML(table_string)
     data = []
@@ -215,6 +216,7 @@ class Report::ReportsController < ApplicationController
     end
   end
 
+  # DEPRECATE
   def mimic_file
     file = StringIO.new(part.body) #mimic a real upload file
     file.class.class_eval { attr_accessor :original_filename, :content_type } #add attr's that paperclip needs

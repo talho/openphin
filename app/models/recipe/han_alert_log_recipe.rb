@@ -1,4 +1,4 @@
-class Report::HanAlertLogRecipe < Report::Recipe
+class Recipe::HanAlertLogRecipe < Recipe
 
   class << self
 

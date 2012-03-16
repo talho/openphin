@@ -44,7 +44,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.namespace :report do |report|
     report.resources :reports, :member => { :filters => :get, :reduce => :post }
-    report.resources :recipes, :only => [:index,:show], :requirements => {:id =>  /Report::([A-Z][a-z]+)+Recipe/}
+    report.resources :recipes, :only => [:index,:show] #, :requirements => {:id =>  /::([A-Z][a-z]+)+Recipe/}
   end
 
   map.resources :audits, :collection => [:models]
