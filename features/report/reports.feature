@@ -92,6 +92,7 @@ Scenario: Initiate the viewing of a report contents
   And I should see "Han-Alert-Log-Recipe" in grid row 1 within ".report-results"
   When I click x-grid3-cell "Han-Alert-Log-Recipe"
   Then the "Report: Han-Alert-Log-Recipe" tab should be open
+  And I should see "Alerts as of"
 
   Scenario: View, sort and paginate previously generated reports
   Given I am logged in as "dall.md@example.com"

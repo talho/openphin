@@ -206,7 +206,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
   openViewTab: function(record){
     Application.fireEvent('opentab', {
       title:       'Report: '+record.get('recipe'),
-      url:         record.get('report_reports_path'),
+      url:         record.get('report_path'),
       id:          'report_view_for_' + record.get('id'),
       report_id:   record.get('id'),
       initializer: 'Talho.ReportView'

@@ -64,7 +64,7 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
     this.addFilters = function(panel){
       Ext.Ajax.request({
         // GET /report/reports/:id/filters(.:format)
-        url: this.url +'/filters.json', method: 'GET', scope: panel,
+        method: 'GET', url: this.url +'/filters.json',  scope: panel,
         success: function(response){
           this.removeAll();
           var filtersObj = Ext.decode(response.responseText);
