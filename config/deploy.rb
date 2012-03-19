@@ -65,6 +65,7 @@ require 'bundler/capistrano'
 # before 'deploy', 'delayed_job:stop'
 before 'deploy', 'sphinx:start_if_not'
 after 'deploy:update_code', 'app:phin_plugins'
+before 'deploy:migrate', 'app:symlinks'
 after 'deploy:create_symlink', 'app:symlinks'
 after 'deploy:create_symlink', 'app:phin_plugins_install'
 after "deploy", "deploy:cleanup"
