@@ -225,7 +225,7 @@ class DashboardController < ApplicationController
     
     Phin::Application.eval_if_plugin_present(:han) do
        @han_menu = eval($menu_config[:han]) unless $menu_config[:han].nil?
-    end if current_user.has_app?('han')
+    end if current_user.has_app?('phin')
     
     if current_user.has_non_public_role?
       plugin_config_items = []
