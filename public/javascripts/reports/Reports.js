@@ -25,7 +25,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       listeners: {
         scope: this,
         'exception': function(){this.handleError;},
-		    'load': function(store){if(this.report_refresher == undefined)this.reportsStoreRefresher(store);}
+		    'load': function(store){}
       }
     });
 
@@ -90,8 +90,8 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       border: false,
       fill: true,
       margins: '5 5 5 5',
-	  layout: 'fit',
-	  items:[this.sidebarPanel],
+  	  layout: 'fit',
+  	  items:[this.sidebarPanel],
       buttonAlign : 'center',
       buttons: [this.generateReportButton ]
     });
@@ -108,23 +108,21 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
           { id: 'render-size', dataIndex: 'rendering_file_size', header: 'Render size' }
          ]
       }),
-		viewConfig: {
-          forceFit: true,
-          getRowClass: function(record, index) {
-            if (record.get('incomplete')) { return 'report-incomplete'; }
-          }
-        },
-	    listeners:{
-        scope: this,
-        'rowclick': function(grid, rowIndex){
-          var record = grid.getStore().getAt(rowIndex);
-          this.openViewTab(record);
-        },
-        'added': function(){
-          clearInterval(this.report_refresher);
+      viewConfig: {
+            forceFit: true,
+            getRowClass: function(record, index) {
+              if (record.get('incomplete')) { return 'report-incomplete'; }
+            }
+          },
+        listeners:{
+          scope: this,
+          'rowclick': function(grid, rowIndex){
+            var record = grid.getStore().getAt(rowIndex);
+            this.openViewTab(record);
+          },
+          'added': function(){}
         }
-	    }
-    });
+      });
 
     this.reportResultsContainer = new Ext.Panel({
       region: 'center',
@@ -157,34 +155,12 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       title: config.title,
       listeners:{
         scope: this,
-        'beforeclose': function(){
-          clearInterval(this.report_refresher);
-        }
+        'beforeclose': function(){}
       }
     });
 
     this.getPanel = function(){ return this.primary_panel; };
   },
-
-  REPORT_REFRESH_INTERVAL: 10000,
-  REPORT_REFRESH_MAXIMUM: 30,
-
-  reportsStoreRefresher: function(store){
-	if (this.report_refresher) {
-	  clearInterval(this.report_refresher);
-    } else {
-	  this.report_refresh_count = 0;
-    }
-	if (store.query('incomplete',"true") && this.report_refresh_count < this.REPORT_REFRESH_MAXIMUM ){
-      //make a copy of 'this' to pass into the interval timer
-	  var inst = this;
-	  this.report_refresher = setInterval(function(){ inst.reportsStore.load(); },this.REPORT_REFRESH_INTERVAL);
-	  this.report_refresh_count += 1;
-	} else {
-	  this.report_refresh_count = 0;
-    }
-  },
-
 
   handleError: function(proxy, type, action, options, response, arg){
     this.show_err_message(Ext.decode(response.responseText));
@@ -229,10 +205,10 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
   
   openViewTab: function(record){
     Application.fireEvent('opentab', {
-      title: 'Report: '+record.get('recipe'),
-      url: record.get('report_path'), 
-      id: 'report_view_for_' + record.get('id'),
-      report_id: record.get('id'),
+      title:       'Report: '+record.get('recipe'),
+      url:         record.get('report_path'),
+      id:          'report_view_for_' + record.get('id'),
+      report_id:   record.get('id'),
       initializer: 'Talho.ReportView'
      });
   },

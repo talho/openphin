@@ -6,7 +6,7 @@ class Report::RecipesController < ApplicationController
 	# GET /report/recipes
 	# GET /report/recipes.json
 	def index
-    recipe_names = current_user.is_admin? ? Report::Recipe.recipe_names : []
+    recipe_names = current_user.is_admin? ? Recipe.recipe_names : []
     respond_to do |format|
      format.html
      format.json do
@@ -19,7 +19,7 @@ class Report::RecipesController < ApplicationController
   def show
     begin
       json = {}
-      json["recipe"] = Report::Recipe.find(params[:id])
+      json["recipe"] = Recipe.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       json["error_msg"] = "This recipe is malformed. Please inform administrator."
     end
@@ -36,7 +36,7 @@ class Report::RecipesController < ApplicationController
 private
 
   def humanized(param)
-    Report::Recipe.humanized(param)
+    Recipe.humanized(param)
   end
 
 end

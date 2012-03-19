@@ -85,4 +85,3 @@ require 'happymapper'
 
 # suppress Sphinx indexer tool output into log files
 ThinkingSphinx.suppress_delta_output = true
-

@@ -1,4 +1,4 @@
-class Report::GroupWithRecipientsRecipeInternal < Report::Recipe
+class RecipeInternal::GroupWithRecipientsRecipe < RecipeInternal
 
   class << self
 

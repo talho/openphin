@@ -388,7 +388,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     button.setText('Scheduled').disable();
     var criteria = this.searchSidebar.getForm().getValues();
     this.applyFilters(criteria);
-    criteria['recipe_id'] = 'Report::UserAllWithinJurisdictionsRecipe';
+    criteria['recipe_id'] = 'Recipe::UserAllWithinJurisdictionsRecipe';
   	Ext.Ajax.request({
   	   url: '/report/reports.json',
   	   method: 'POST',

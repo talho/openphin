@@ -1,7 +1,7 @@
 Given 'the report derived from recipe "$recipe" by the author with email "$email"' do |recipe, email|
   author = User.find_by_email(email)
-  recipe = "Report::#{recipe}"
-  Factory(:report_report, :author => author, :recipe => recipe)
+  report_recipe = "#{recipe}"
+  Factory(:report_report, :author => author, :recipe => report_recipe)
 end
 
 Given /^reports derived from the following recipes and authored by exist:$/ do |table|

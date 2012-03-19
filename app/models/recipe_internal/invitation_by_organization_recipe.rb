@@ -1,21 +1,21 @@
-class Report::InvitationByPendingRoleRequestsRecipeInternal < Report::Recipe
+class RecipeInternal::InvitationByOrganizationRecipe < RecipeInternal
 
   class << self
 
     def description
-      "Report of all invitees of a invitation by pending role requests."
+      "Report of all invitees of a invitation by organization."
     end
 
     def helpers
-      ['RoleRequestsHelper']
+      []
     end
 
     def template_path
-      File.join('reports','admin','invitations','show_by_pending_role_requests.html.erb')
+      File.join('reports','admin','invitations','show_by_organization.html.erb')
     end
 
     def template_directives
-      [['name','Name'],['email','Email Address'],['role_requests','Pending Role Requests','to_rpt']]
+      [['name','Name'],['email','Email Address'],['is_member','Is Member?']]
     end
 
     def generate_rendering( report, view, template, filters=nil )
@@ -27,13 +27,13 @@ class Report::InvitationByPendingRoleRequestsRecipeInternal < Report::Recipe
        where = where.merge(filters_for_query(filters["elements"]))
      end
      invitation = report.dataset.find({:report=>{:$exists=>true}}).first['report']
-     entries = report.dataset.find(:i=>{:$exists=>true})
+     @entries = report.dataset.find(:i=>{:$exists=>true})
      Dir.mktmpdir do |dir|
        path = File.join dir, filename
        File.open(path, 'wb') do |f|
          rendering = view.render(
            :inline=>template,:type=>'html',
-           :locals=>{:report=>invitation,:entries=>entries,:directives=>template_directives,:filters=>filters},
+           :locals=>{:report=>invitation,:entries=>@entries,:directives=>template_directives,:filters=>filters},
            :layout=>layout_path)
          f.write(rendering)
        end
@@ -56,18 +56,17 @@ class Report::InvitationByPendingRoleRequestsRecipeInternal < Report::Recipe
           data_set.insert({:report=>result.as_report(:inject=>{:created_at=>Time.now.utc})})
           data_set.insert( {:meta=>{:template_directives=>template_directives}}.as_json )
 
-          jurisdiction_ids = report.author.role_memberships.admin_roles.map(&:jurisdiction_id).join(',')
-          select = "DISTINCT invitees.*, role_requests.id IS NULL AS role_requests_id"
+          select = "DISTINCT invitees.*, audiences.id AS audience_id"
           joins = "LEFT JOIN users ON invitees.email = users.email " +
-                  "LEFT JOIN role_requests ON users.id = role_requests.user_id " +
-                  "AND role_requests.jurisdiction_id IN (#{jurisdiction_ids})"
-          order = "role_requests_id ASC"
+                    "LEFT JOIN audiences_users ON users.id = audiences_users.user_id " +
+                    "LEFT JOIN audiences ON audiences_users.audience_id = audiences.id AND audiences.scope='Organization'"
+          order = "audience_id ASC"
 
           result.invitees.find(:all,:select=>select,:joins=>joins,:order=>order).each_with_index do |invitee,i|
             data = {:i=>(i+1),
                     :name=>invitee.name,
                     :email=>invitee.email,
-                    :role_requests=>invitee.user.role_requests.map(&:as_hash)}
+                    :is_member=>invitee.is_member?}
             data_set.insert(data)
           end
           data_set.create_index(:i)

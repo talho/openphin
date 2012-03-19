@@ -23,7 +23,7 @@ class Reporters::Reporter < Struct.new(:params)
         raise StandardError, message
       end
       begin
-        recipe = Report::Recipe.find(report.recipe)
+        recipe = Recipe.find(report.recipe)
         logger.info %Q(Report "#{report.name}", recipe is "#{recipe.name})
       rescue
         message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
