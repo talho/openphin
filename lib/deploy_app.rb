@@ -29,6 +29,7 @@ namespace :app do
 
   desc "we need a database. this helps with that."
   task :symlinks, :roles => [:app, :web, :jobs] do 
+    next if :symlinks_executed
     run "ln -fs #{shared_path}/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
@@ -61,5 +62,7 @@ namespace :app do
       run "ln -fs #{shared_path}/system.yml#{release_path}/config/system.yml"
     end
     run "mkdir #{release_path}/tmp/cache"
+    
+    set :symlinks_executed, true
   end
 end
