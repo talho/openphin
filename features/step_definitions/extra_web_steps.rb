@@ -103,9 +103,9 @@ When /^I suspend cucumber/ do
   STDIN.getc
 end
 
-When /^I wait for (\d+) seconds?$/ do |secs|
+When /^I wait for ([\.\d]+) seconds?$/ do |secs|
   print "Cucumber suspended for #{secs} seconds..."
-  sleep secs.to_i
+  sleep secs.to_f
 end
 
 When /^I maliciously post formdata .+ "([^"]*)"$/ do | url, table |

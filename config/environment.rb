@@ -70,13 +70,6 @@ ActiveRecord::Base.lock_optimistically = true
 require 'yaml' # a fix for delayed_job which is built for the semi-deprecated syck rather than the replacement psyck
 YAML::ENGINE.yamler = "syck"
 
-PHINMS_INCOMING=File.join(Rails.root,"tmp","phin_ms_queues", 'senderincoming')
-PHINMS_ARCHIVE=File.join(Rails.root,"tmp","phin_ms_queues", 'archive')
-PHINMS_ERROR=File.join(Rails.root,"tmp","phin_ms_queues", 'error')
-Dir.ensure_exists(PHINMS_INCOMING)
-Dir.ensure_exists(PHINMS_ARCHIVE)
-Dir.ensure_exists(PHINMS_ERROR)
-
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y")
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!(:standard => "%B %d, %Y %I:%M %p")
 

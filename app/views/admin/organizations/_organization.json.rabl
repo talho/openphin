@@ -9,10 +9,8 @@ child :group => :audience do
     attributes :display_name => :name
     node(:profile_path) {|u| user_profile_path(u)}
   end
-  glue :jurisdictions do
-    child :to_a do
-      attributes :id, :name
-    end
+  child :jurisdictions do
+  	attributes :id, :name
   end
   child :roles do
     attributes :id, :name
