@@ -26,7 +26,6 @@ Background:
   And delayed jobs are processed
   And reports derived from the following recipes and authored by exist:
     | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
     | Recipe::UserAllBatchRecipe               | dall.md@example.com |
 
 Scenario: Public-only user can not navigate to Reports
@@ -78,15 +77,15 @@ Scenario: Initiate the viewing of a report contents
   And I should see "Recipes"
 
   When I wait for the "Fetching Recipe List" mask to go away
-  And I click recipe-list-item "Han Alert Log Recipe"
+  And I click recipe-list-item "User All Within Jurisdictions Recipe"
   And I wait for the "recipe-list-item" element to finish
   And I press "Generate Report"
   And delayed jobs are processed
   And I click x-tbar-loading ""
-  And I should see "Han-Alert-Log-Recipe" in grid row 1 within ".report-results"
-  When I click x-grid3-cell "Han-Alert-Log-Recipe"
-  Then the "Report: Han-Alert-Log-Recipe" tab should be open
-  And I should see "Alerts as of"
+  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 1
+  When I click x-grid3-cell "User-All-Within-Jurisdictions-Recipe"
+  Then the "Report: User-All-Within-Jurisdictions-Recipe" tab should be open
+  And I should see "Users as of"
 
   Scenario: View, sort and paginate previously generated reports
   Given I am logged in as "dall.md@example.com"
@@ -94,29 +93,29 @@ Scenario: Initiate the viewing of a report contents
   And I navigate to "Reports"
   Then the "Reports" tab should be open
 
-  Then I should see "Displaying results 1 - 3 of 3"
+  Then I should see "Displaying results 1 - 2 of 2"
   And I should see "User-All-Batch-Recipe" in grid row 1 within ".report-results"
-  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 3 within ".report-results"
+  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 2 within ".report-results"
 
   When I click x-grid3-hd-inner "Report ID"
   Then the "Report ID" grid header is sorted ascending
-  And I should see "User-All-Batch-Recipe" in grid row 3 within ".report-results"
+  And I should see "User-All-Batch-Recipe" in grid row 2 within ".report-results"
   And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 1 within ".report-results"
 
   When I click x-grid3-hd-inner "Report ID"
   Then the "Report ID" grid header is sorted descending
   And I should see "User-All-Batch-Recipe" in grid row 1 within ".report-results"
-  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 3 within ".report-results"
+  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 2 within ".report-results"
 
   When I click x-grid3-hd-inner "Recipe"
   Then the "Recipe" grid header is sorted ascending
-  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 3 within ".report-results"
-  And I should see "Han-Alert-Log-Recipe" in grid row 1 within ".report-results"
+    And I should see "User-All-Batch-Recipe" in grid row 1 within ".report-results"
+  And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 2 within ".report-results"
 #
   When I click x-grid3-hd-inner "Recipe"
   Then the "Recipe" grid header is sorted descending
   And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 1 within ".report-results"
-  And I should see "Han-Alert-Log-Recipe" in grid row 3 within ".report-results"
+  And I should see "User-All-Batch-Recipe" in grid row 2 within ".report-results"
 
     When I click x-grid3-hd-inner "Rendered at"
     Then the "Rendered at" grid header is sorted ascending
@@ -136,10 +135,10 @@ Scenario: Initiate the viewing of a report contents
     | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
     | Recipe::UserAllBatchRecipe               | dall.md@example.com |
     | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
+    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
     | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::HanAlertLogRecipe                | dall.md@example.com |
+    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
   And I close the active tab
   And I navigate to "Reports"
-  Then I should see "Displaying results 1 - 10 of 11"
+  Then I should see "Displaying results 1 - 10 of 10"
 
