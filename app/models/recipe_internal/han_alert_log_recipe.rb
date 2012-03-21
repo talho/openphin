@@ -1,4 +1,4 @@
-class Recipe::HanAlertLogRecipe < Recipe
+class RecipeInternal::HanAlertLogRecipe < Recipe
 
   class << self
 
