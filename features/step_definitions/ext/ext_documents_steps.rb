@@ -33,10 +33,20 @@ def create_folder(folder, sub)
 end
 
 When /^I expand the folders "([^\"]*)"$/ do |expand|
-  When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents") && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", "My Documents") || row_button_exists?("ux-maximgb-tg-elbow-plus", "My Documents"))
-  folders = expand.split
+  begin
+    When %Q{I expand the folder "My Documents"}
+  rescue
+  end
+  #When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents") && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", "My Documents") || row_button_exists?("ux-maximgb-tg-elbow-plus", "My Documents"))
+  folders = expand.split(',')
   folders.each do |folder|
-    When %Q{I click ux-maximgb-tg-elbow-active on the "#{folder}" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", folder) && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", folder) || row_button_exists?("ux-maximgb-tg-elbow-plus", folder))
+    When %Q{I expand the folder "#{folder}"}
+  end
+end
+
+When /^I expand the folder "([^"]*)"$/ do |folder|
+  using_wait_time 0.2 do 
+    page.find(:xpath, "//div[contains(concat(' ', @class, ' '), ' x-grid3-row ') and .//text()[contains(., '#{folder}')]]//div[contains(concat(' ', @class, ' '), ' ux-maximgb-tg-elbow-active ') and (contains(concat(' ', @class, ' '), ' ux-maximgb-tg-elbow-end-plus ') or contains(concat(' ', @class, ' '), ' ux-maximgb-tg-elbow-plus '))]").click
   end
 end
 

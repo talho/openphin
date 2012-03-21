@@ -36,9 +36,9 @@ Feature: Create a folder tree in documents
     Examples:
     | outline                                             | expand          | order                           |
     | Folder1 Folder2 Folder3 Folder4                     |                 | Folder1 Folder2 Folder3 Folder4 |
-    | Folder1>Sub1 Folder2>Sub2                           | Folder1 Folder2 | Folder1 Sub1 Folder2 Sub2       |
+    | Folder1>Sub1 Folder2>Sub2                           | Folder1,Folder2 | Folder1 Sub1 Folder2 Sub2       |
     | Folder1>Sub1 Folder1>Sub2 Folder2                   | Folder1         | Folder1 Sub1 Sub2 Folder2       |
-    | Folder1>Sub1 Folder1>Sub2 Folder1>Sub3 Sub2>SubSub1 | Folder1 Sub2    | Folder1 Sub1 Sub2 SubSub1 Sub3  |
+    | Folder1>Sub1 Folder1>Sub2 Folder1>Sub3 Sub2>SubSub1 | Folder1,Sub2    | Folder1 Sub1 Sub2 SubSub1 Sub3  |
 
   Scenario: Edit a folder
     Given I create a folder outline with "Folder1"

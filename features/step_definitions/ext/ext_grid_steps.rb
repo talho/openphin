@@ -132,19 +132,16 @@ When /^the "([^"]*)" grid header is sorted (ascending|descending)$/ do |header, 
 end
 
 Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$/ do |content, within_selector, not_exists|
-  row = waiter do
-    page.find(".x-grid3-row-selected", :text => content)
-  end
   if not_exists
-    row.should be_nil
+    page.should have_no_css(".x-grid3-row-selected", :text => content)
   else
-    row.should_not be_nil
+    page.should have_css(".x-grid3-row-selected", :text => content)
   end
 end
 
 def row_button_exists?(icon_name, content)
-  waiter do
-    page.find(".x-grid3-row", :text => /#{content}/).find(".#{icon_name}").nil? == false
+  using_wait_time(0.1) do
+    page.find(".x-grid3-row", :text => content).has_css?(".#{icon_name}")
   end
 end
 

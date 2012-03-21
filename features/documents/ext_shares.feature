@@ -172,7 +172,7 @@ Feature: Document Sharing
     Examples:
       | shares                               | expand             | order                                                |
       | Share1 Share2                        |                    | Bartleby>2 Share1>3 Share2>4                         |
-      | Share1>Sub1 Sub1>SubSub1 Share2>Sub2 | Share1 Sub1 Share2 | Bartleby>2 Share1>3 Sub1>4 SubSub1>5 Share2>6 Sub2>7 |
+      | Share1>Sub1 Sub1>SubSub1 Share2>Sub2 | Share1,Sub1,Share2 | Bartleby>2 Share1>3 Sub1>4 SubSub1>5 Share2>6 Sub2>7 |
 
   Scenario: Create a shared subfolder without a shared parent
     When I create a folder outline with "Folder1>Sub1"
@@ -194,7 +194,7 @@ Feature: Document Sharing
     And I log in as "atticus@example.com"
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
-    When I expand the folders "Bartleby Folder1"
+    When I expand the folders "Bartleby,Folder1"
     Then I should see the grid items in this order "Bartleby>2 Folder1>3 Inherited>4 Shared>5 SubShared>6"
     And I should not see "NotShared"
 

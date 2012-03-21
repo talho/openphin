@@ -26,10 +26,12 @@ namespace :app do
       run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name}"
     }
   end
+  
+  set :symlinks_executed, false
 
   desc "we need a database. this helps with that."
   task :symlinks, :roles => [:app, :web, :jobs] do 
-    next if :symlinks_executed
+    next if symlinks_executed
     run "ln -fs #{shared_path}/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
