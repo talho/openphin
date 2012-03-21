@@ -26,7 +26,6 @@ Feature: Creating a forum (room)
   # I think that a forum without an audience should show to all users, no matter role
   Scenario: Create and edit a forum
     Given I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -53,14 +52,12 @@ Feature: Creating a forum (room)
 
     When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Seeking funding"
 
 
   Scenario: Restrict the particular forum audience with jurisdiction & role
     Given I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -78,20 +75,17 @@ Feature: Creating a forum (room)
 
     When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
     When I navigate to "Jane Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
 
   Scenario: Edit the jurisdiction of an existing forum audience
     Given I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -108,13 +102,11 @@ Feature: Creating a forum (room)
 
     When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
     When I navigate to "Joe Black > Sign Out"
     When I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     When I click edit_forum on the "Funding methodology" grid row
     And I select the following in the audience panel:
@@ -124,14 +116,12 @@ Feature: Creating a forum (room)
     
     When I navigate to "Joe Smith > Sign Out"
     And I am logged in as "joe.black@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
 
   Scenario: Restrict the particular forum audience with jurisdiction only
     Given I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -147,13 +137,11 @@ Feature: Creating a forum (room)
 
     When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should see "Funding methodology"
 
     When I navigate to "Jane Smith > Sign Out"
     When I am logged in as "joe.black@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then I should not see "Funding methodology"
 
@@ -161,7 +149,6 @@ Feature: Creating a forum (room)
   Scenario: Create a topic to a particular forum
     Given I am logged in as "joe.smith@example.com"
     And I have the forum named "Forum to verify sticky topics"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -199,7 +186,6 @@ Feature: Creating a forum (room)
     Given I am logged in as "joe.smith@example.com"
     And I have the forum named "Saving Money"
     And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
-    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -227,7 +213,6 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -240,7 +225,6 @@ Feature: Creating a forum (room)
 
     When I navigate to "Joe Smith > Sign Out"
     When I am logged in as "jane.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     Then I should not see "Measuring Fulfillment"
@@ -252,7 +236,6 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -272,7 +255,6 @@ Feature: Creating a forum (room)
     And the forum "Grant Capturing" has the following audience:
       | Users | jane.smith@example.com  |
 
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     Then the "Forums" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -289,7 +271,6 @@ Feature: Creating a forum (room)
   Scenario: Editing a forum concurrently to another admin editing the same forum
     # Given I am logged in as "joe.smith@example.com"
     # And I have the forum named "Forum to verify concurrency"
-    # When I navigate to the ext dashboard page
     # And I navigate to "Forums"
     # Then the "Forums" tab should be open
     # And I wait for the "Loading..." mask to go away
@@ -300,7 +281,6 @@ Feature: Creating a forum (room)
 # 
     # Given session name is "admin session"
     # And I am logged in as "joe.smith@example.com"
-    # When I navigate to the ext dashboard page
     # And I navigate to "Forums"
     # Then the "Forums" tab should be open
     # And I wait for the "Loading..." mask to go away
@@ -321,7 +301,6 @@ Feature: Creating a forum (room)
     # And I have the topic "Measuring Fulfillment" to forum "Grant Capturing"
     # And the forum "Grant Capturing" has the following audience:
       # | Users | joe.smith@example.com |
-    # When I navigate to the ext dashboard page
     # And I navigate to "Forums"
     # Then the "Forums" tab should be open
     # And I wait for the "Loading..." mask to go away
@@ -331,7 +310,6 @@ Feature: Creating a forum (room)
 # 
     # Given session name is "admin session"
     # And I am logged in as "joe.smith@example.com"
-    # When I navigate to the ext dashboard page
     # And I navigate to "Forums"
     # Then the "Forums" tab should be open
     # And I wait for the "Loading..." mask to go away

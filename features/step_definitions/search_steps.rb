@@ -1,15 +1,6 @@
-Given /^the sphinx daemon is running$/ do
-  begin
-    output = `COLUMNS=300 ps aux | grep searchd | grep cucumber`
-  end while output.blank?
-  output.should_not be_blank
-end
-
 Then /^I reindex sphinx$/ do
-  begin
-    output = `rake ts:reindex`
-  end
-  assert output =~ /SIGHUP/
+  ThinkingSphinx::Test.index
+  sleep(0.25) # Wait for Sphinx to catch up
 end
 
 Then /^I see the following users in the search results$/ do |table|

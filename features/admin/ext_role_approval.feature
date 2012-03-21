@@ -34,7 +34,6 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin approving role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |
@@ -50,7 +49,6 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin approving role requests outside their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@potter.gov"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Pending Role Requests"
     Then I should not see "john@example.com"
 
@@ -58,7 +56,6 @@ Feature: Approving users for roles
   Scenario: Jurisdiction Admin denying role requests in their jurisdiction via han dashboard
     Given "john@example.com" has requested to be a "Health Officer" for "Dallas County"
     When I log in as "admin@dallas.gov"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Pending Role Requests"
     Then I should see the following within ".pending_role_requests":
       | john@example.com | Health Officer | Dallas | Deny | Approve |

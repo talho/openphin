@@ -15,7 +15,6 @@ Feature: User documents managed through shares
     And I create shares "Folder1" shared with "atticus@example.com"
 
   Scenario: Upload a document to a shared folder that another user can see
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -27,7 +26,6 @@ Feature: User documents managed through shares
     And I sign out
 
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders "Bartleby"
     And I select the "Folder1" grid row
@@ -47,7 +45,6 @@ Feature: User documents managed through shares
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
     And I expand the folders "Bartleby"
@@ -66,7 +63,6 @@ Feature: User documents managed through shares
     Given "atticus@example.com" is an "author" for "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
     And I expand the folders "Bartleby"
@@ -79,7 +75,6 @@ Feature: User documents managed through shares
     And I sign out
 
     And I log in as "bartleby@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -91,7 +86,6 @@ Feature: User documents managed through shares
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
     And I expand the folders "Bartleby"
@@ -110,7 +104,6 @@ Feature: User documents managed through shares
 
     When I sign out
     And I log in as "bartleby@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -122,7 +115,6 @@ Feature: User documents managed through shares
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
     And I expand the folders "Bartleby"
@@ -139,7 +131,6 @@ Feature: User documents managed through shares
 
     When I sign out
     And I log in as "bartleby@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I select the "Folder1" grid row
@@ -151,7 +142,6 @@ Feature: User documents managed through shares
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
 
     And I expand the folders "Bartleby"

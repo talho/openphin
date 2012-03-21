@@ -30,7 +30,6 @@ Background:
 @people
 Scenario: Public-only user can not navigate to Find People
   Given I am logged in as "dall.pub@example.com"
-  When I navigate to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
   Then I should see the following toolbar items in "top_toolbar":
     | Dallas Public |
@@ -45,7 +44,6 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
    | title        | Supervisor      |
    | phone        | 888-123-1111    |
   And delayed jobs are processed
-  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   And I fill in "Name" with "Potter"
   And I send return to "[name='conditions[name]']"
@@ -75,7 +73,6 @@ Scenario: Initiate search by using the RETURN key and verify Form ClearAll
 @people
 Scenario: Search for a non-existent user in a jurisdiction and that roles/jurisdictions can be selected/unselected
   Given I am logged in as "pott.md@example.com"
-  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -155,7 +152,6 @@ Scenario: Search for a users from subordinate jurisdictions
   And delayed jobs are processed
   And I am logged in as "tex.admin@example.com"
 
-  When I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -351,7 +347,6 @@ Scenario: Do not display deleted users
   And delayed jobs are processed
 
   When I am logged in as "tex.admin@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -386,7 +381,6 @@ Scenario: Results pagination
   And delayed jobs are processed
 
   When I am logged in as "tex.admin@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   Then I should see "People Search"
   And the "Find People" tab should be open
@@ -405,7 +399,6 @@ Scenario: Results pagination
 @people
 Scenario: Results can be sorted by name, verify blank photo present and can follow to the display of a user's profile
   Given I am logged in as "tex.admin@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Find People"
   And I search for a user with the following:
    | Name          |               |
@@ -428,16 +421,14 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
   When I click x-grid3-cell "Dallas MD"
   Then the "Profile: Dallas MD" tab should be open
 
-@people @reindex
+@people
 Scenario: User cannot search for users in a different app
   Given the following users exist:
     | Notin Myapp | notinmyapp@example.com | Public | Dallas County | vms |
   And "notinmyapp@example.com" is not public in "Texas"
   And delayed jobs are processed
-  And I reindex sphinx
 
   When I am logged in as "tex.admin@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Find People"
 
   When I search for a user with the following:

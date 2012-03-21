@@ -11,12 +11,12 @@ Feature: Preventing malicious attempts to gain access to role applications
       | Role         | Average Guy  | phin     |
       | Jurisdiction | Texas        |          |
     And the following users exist:
-      | Sys Admin        | sysadmin@example.com        | SysAdmin     | Texas |
-      | Phin Admin       | phinadmin@example.com       | Admin        | Texas |
-      | Phin SuperAdmin  | phinsuperadmin@example.com  | SuperAdmin   | Texas |
-      | Phin User        | phinuser@example.com        | Average Guy  | Texas |
-      | Rollcall Nurse   | rollcallnurse@example.com   | School Nurse | Texas |
-      | Patrick Stewart  | numberone@example.com       | Hamlet       | Texas |
+      | Sys Admin        | sysadmin@example.com        | SysAdmin     | Texas |          |
+      | Phin Admin       | phinadmin@example.com       | Admin        | Texas |          |
+      | Phin SuperAdmin  | phinsuperadmin@example.com  | SuperAdmin   | Texas |          |
+      | Phin User        | phinuser@example.com        | Average Guy  | Texas | phin     |
+      | Rollcall Nurse   | rollcallnurse@example.com   | School Nurse | Texas | rollcall |
+      | Patrick Stewart  | numberone@example.com       | Hamlet       | Texas | stage    |
 
   Scenario: Phin User cannot maliciously request an alien application role
     Given I am logged in as "phinuser@example.com"
@@ -44,7 +44,6 @@ Feature: Preventing malicious attempts to gain access to role applications
 
   Scenario: Phin SuperAdmin cannot maliciously fetch version data for actions by a user with an alien role
     Given I am logged in as "numberone@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Patrick Stewart>Edit My Account"
     And I fill in "Display name" with "Jean Luc Picard"
     And I press "Apply Changes"

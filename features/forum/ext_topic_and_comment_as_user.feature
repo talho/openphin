@@ -97,7 +97,6 @@ I should be able to create topics to forums and place comments to these topics
     Then I should see "This is a response" in grid row 2
 
     And I am logged in as "jane.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"

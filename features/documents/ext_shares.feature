@@ -13,7 +13,6 @@ Feature: Document Sharing
     And I am logged in as "bartleby@example.com"
 
   Scenario: Create a shared folder
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Add Folder"
     And I wait for 1 seconds
@@ -28,7 +27,6 @@ Feature: Document Sharing
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
@@ -37,7 +35,6 @@ Feature: Document Sharing
   Scenario: Create a shared folder with a GROUP
     Given the following groups for "bartleby@example.com" exist:
       | Test Group ||| atticus@example.com | Global ||
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Add Folder"
     And I fill in "Folder Name" with "Shared Folder"
@@ -51,14 +48,12 @@ Feature: Document Sharing
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
     Then I should see "Shared Folder" in grid row 3
 
   Scenario: Edit a folder to be shared
-    And I navigate to the ext dashboard page
     When I create a folder outline with "Folder1"
     And I navigate to "Documents"
     And I expand the folders ""
@@ -75,7 +70,6 @@ Feature: Document Sharing
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
@@ -84,7 +78,6 @@ Feature: Document Sharing
   Scenario: Edit a folder to be shared with a group
     Given the following groups for "bartleby@example.com" exist:
       | Test Group ||| atticus@example.com | Global ||
-    When I navigate to the ext dashboard page
     And I create a folder outline with "Folder1"
     And I navigate to "Documents"
     And I expand the folders ""
@@ -101,7 +94,6 @@ Feature: Document Sharing
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
@@ -109,7 +101,6 @@ Feature: Document Sharing
 
     When I sign out
     And I log in as "bartleby@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
@@ -118,18 +109,17 @@ Feature: Document Sharing
     And I click the following in the audience panel:
       | name       | type  |
       | Test Group | Group |
+    And I wait for 0.1 seconds
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should not see "Bartleby Scrivener"
 
   Scenario: Edit a folder to be shared with an organization
     Given "atticus@example.com" is a member of the organization "TALHO"
-    When I navigate to the ext dashboard page
     And I create a folder outline with "Folder1"
     And I navigate to "Documents"
     And I expand the folders ""
@@ -145,7 +135,6 @@ Feature: Document Sharing
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 3
     When I expand the folders "Bartleby"
@@ -153,7 +142,6 @@ Feature: Document Sharing
 
     When I sign out
     And I log in as "bartleby@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
     And I click folder-context-icon on the "Folder1" grid row
@@ -162,12 +150,12 @@ Feature: Document Sharing
     And I click the following in the audience panel:
       | name  | type         |
       | TALHO | Organization |
+    And I wait for 0.1 seconds
     And I press "Save"
     And I wait for the "Saving" mask to go away
     And I sign out
 
     When I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should not see "Bartleby Scrivener"
 
@@ -175,7 +163,6 @@ Feature: Document Sharing
     When I create shares "<shares>" shared with "atticus@example.com"
     And I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
@@ -192,7 +179,6 @@ Feature: Document Sharing
     And I set "Sub1" as "shared" with "atticus@example.com"
     And I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby"
@@ -206,7 +192,6 @@ Feature: Document Sharing
     And I set "SubShared" as "shared" with "atticus@example.com"
     And I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     Then I should see "Bartleby Scrivener" in grid row 2
     When I expand the folders "Bartleby Folder1"
@@ -215,7 +200,6 @@ Feature: Document Sharing
 
   Scenario: Create shares with different permissions
     When I create shares "Reader Author Admin" shared with "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders ""
 
@@ -238,7 +222,6 @@ Feature: Document Sharing
 
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I expand the folders "Bartleby"
     Then I should see the grid items in this order "Bartleby>2 Admin>3 Author>4 Reader>5"

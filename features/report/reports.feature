@@ -31,7 +31,6 @@ Background:
 
 Scenario: Public-only user can not navigate to Reports
   Given I am logged in as "dall.pub@example.com"
-  When I navigate to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
   Then I should see the following toolbar items in "top_toolbar":
     | Dallas Public |
@@ -40,14 +39,12 @@ Scenario: Public-only user can not navigate to Reports
 
   Scenario: Users with non-public role can navigate to Reports
   Given I am logged in as "dall.md@example.com"
-  When I navigate to the ext dashboard page
   And I wait for the "Loading PHIN" mask to go away
   Then I should see the following toolbar items in "top_toolbar":
       | Reports |
 
 Scenario: View report recipes and their description
   Given I am logged in as "pott.admin@example.com"
-  When I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then I should see "Recipes"
   And the "Reports" tab should be open
@@ -65,7 +62,6 @@ Scenario: View report recipes and their description
 
 Scenario: Generate a report from a report-recipe
   Given I am logged in as "pott.admin@example.com"
-  When I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then I should see "Recipes"
   And the "Reports" tab should be open
@@ -77,7 +73,6 @@ Scenario: Generate a report from a report-recipe
 
 Scenario: Initiate the viewing of a report contents
   Given I am logged in as "pott.admin@example.com"
-  And I navigate to the ext dashboard page
   And I navigate to "Reports"
   Then the "Reports" tab should be open
   And I should see "Recipes"
@@ -87,7 +82,6 @@ Scenario: Initiate the viewing of a report contents
   And I wait for the "recipe-list-item" element to finish
   And I press "Generate Report"
   And delayed jobs are processed
-  And I wait for 8 seconds
   And I click x-tbar-loading ""
   And I should see "Han-Alert-Log-Recipe" in grid row 1 within ".report-results"
   When I click x-grid3-cell "Han-Alert-Log-Recipe"
@@ -96,7 +90,6 @@ Scenario: Initiate the viewing of a report contents
 
   Scenario: View, sort and paginate previously generated reports
   Given I am logged in as "dall.md@example.com"
-  And I navigate to the ext dashboard page
 
   And I navigate to "Reports"
   Then the "Reports" tab should be open

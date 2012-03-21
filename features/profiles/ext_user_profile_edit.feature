@@ -22,7 +22,6 @@ I should be able to edit my profile
 
   Scenario: editing user information
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Edit My Account"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |
@@ -40,7 +39,6 @@ I should be able to edit my profile
     
   Scenario: editing user account information for another user as a non-admin
     Given I am logged in as "jane.smith@example.com"
-      And I navigate to the ext dashboard page
      When I wait for the "Loading PHIN..." mask to go away
       And I view the ext profile page for "john.smith@example.com"
      Then I should not see "Edit This Account"
@@ -48,7 +46,6 @@ I should be able to edit my profile
   Scenario: editing user account information for another user as another jurisdictional admin
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Admin" in "Potter County"
     And I am logged in as "jane.smith@example.com"
-    And I navigate to the ext dashboard page
      When I wait for the "Loading PHIN..." mask to go away
     And I view the ext profile page for "john.smith@example.com"
     And I should not see "Edit This Account"
@@ -56,7 +53,6 @@ I should be able to edit my profile
   Scenario: editing user account information with an im device in a profile
     Given I am logged in as "john.smith@example.com"
     And I have an IM device
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Edit My Account"
     Then I should see "Edit My Account"
     And I should see "Last name"
@@ -64,7 +60,6 @@ I should be able to edit my profile
 
   Scenario: Editing profile concurrently to an admin editing the user's profile
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Edit My Account"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |

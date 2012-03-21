@@ -31,7 +31,6 @@ Feature: Audit Log
 
   Scenario: Pagination
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     And I should see "Displaying Events 1 - 30 of"
@@ -39,7 +38,6 @@ Feature: Audit Log
 
   Scenario: View all events for a specific record
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And "janesmith@example.com" has the title "title one"
     And "janesmith@example.com" has the title "title two"
     And "janesmith@example.com" has the title "title three"
@@ -55,7 +53,6 @@ Feature: Audit Log
 
   Scenario: Step forward and backward in record history  
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And "janesmith@example.com" has the title "title one"
     And "janesmith@example.com" has the title "title two"
     And "janesmith@example.com" has the title "title three"
@@ -80,7 +77,6 @@ Feature: Audit Log
 
   Scenario: View only creates, updates, or destroys
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -92,7 +88,6 @@ Feature: Audit Log
   Scenario: Audit log for Forums
     Given I am logged in as "billsmith@example.com"
     And I have the comment "TEST REPLY" to topic "TEST TOPIC" to forum "TEST FORUM"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     When I click model-selector-list-item "Forums"
@@ -112,8 +107,6 @@ Feature: Audit Log
       | phone | 2134567890 |
     And "TESTUSER@EXAMPLE.COM" has requested to be a "Sous Chef" for "Lubbock County"
     And I am logged in as "billsmith@example.com"
-    And I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open
     And I wait for the "Loading..." mask to go away for 1 second
@@ -136,7 +129,6 @@ Feature: Audit Log
 #  Scenario: Audit log for Documents
 #    pending #document step definitions are working
 #    Given I am logged in as "billsmith@example.com"
-#    And I navigate to the ext dashboard page
 #    And I have a folder named "TESTFOLDERONE"
 #    And I have the document "TESTFILE1.TXT" in "TESTFOLDERONE"
 #    And I have the document "TESTFILE2.JPG" in "TESTFOLDERTWO"
@@ -150,7 +142,6 @@ Feature: Audit Log
 
   Scenario: Audit log for Invitations
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And an Invitation "TEST INVITATION" exists with:
       | Subject      | YOU ARE INVITED TO TEST |
       | Organization | TALHO                   |
@@ -175,7 +166,6 @@ Feature: Audit Log
 
   Scenario: Audit log for Favorites
     Given I am logged in as "billsmith@example.com"
-    And I navigate to the ext dashboard page
     And I press "Find People"
     Then the "Find People" tab should be open
     And I drag the "Find People" tab to "#favoritestoolbar"

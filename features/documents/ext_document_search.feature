@@ -16,7 +16,6 @@ Feature: Document Search
     Given I create a folder outline with "Folder1"
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     And delayed jobs are processed
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
     Then the "Search for Files" tab should be open
@@ -32,7 +31,6 @@ Feature: Document Search
     And delayed jobs are processed
     When I sign out
     And I log in as "atticus@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
     And I fill in "Search Text" with "in"
@@ -48,8 +46,6 @@ Feature: Document Search
     When I sign out
     And I log in as "atticus@example.com"
     Given I create a folder outline with "AtticusFolder"
-    When I navigate to the ext dashboard page
-    Then I should see "Documents"
     When I navigate to "Documents"
     And I press "Search"
     And I fill in "Search Text" with "in"
@@ -71,7 +67,6 @@ Feature: Document Search
     Given I create a folder outline with "Folder1"
     And I have uploaded "spec/fixtures/invitees.csv" to "Folder1"
     And delayed jobs are processed
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
     When I fill in "Search Text" with "in"
@@ -89,7 +84,6 @@ Feature: Document Search
     When I sign out
     And I log in as "atticus@example.com"
     Given I create a folder outline with "AtticusFolder"
-    When I navigate to the ext dashboard page
     And I navigate to "Documents"
     And I press "Search"
     And I fill in "Search Text" with "in"

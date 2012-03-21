@@ -22,7 +22,6 @@ Feature: Online importing users from a uploaded CSV file
     bob@example.com,Bob,User,Bob User,Ector,5552348000,,5552348001
     """
     When I am logged in as "admin@ector.gov"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Batch Add Users"
     And a jurisdiction named "Ector"
     And I attach the tmp file at "users.csv" to "users[csvfile]"

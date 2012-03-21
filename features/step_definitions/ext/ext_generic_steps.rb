@@ -137,7 +137,7 @@ Then /^I should not see the following toolbar items in "([^\"]*)":$/ do |name, t
 end
 
 Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
-  sleep(1)
+  sleep 0.2
   with_scope(selector) do
     menus = page.all('.x-menu')
     menu_lists = []
@@ -157,7 +157,7 @@ Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |se
 end
 
 Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
-  sleep(1)
+  sleep 0.2
   with_scope(selector) do
     table.hashes.each do |hash|
       page.should_not have_xpath(".//*[contains(concat(' ', @class, ' '), ' x-menu-item ')]", :text => hash[:name])
@@ -166,15 +166,10 @@ Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do
 end
 
 Then /^I should (not )?have "([^\"]*)" within "([^\"]*)"$/ do |not_have, elem, selector|
-  with_scope(selector) do
-    element = waiter do
-      page.find(elem)
-    end
-    if not_have
-      element.should be_nil
-    else
-      element.should_not be_nil
-    end
+  if not_have
+    page.should_not have_css("#{selector} #{elem}")
+  else
+    page.should have_css("#{selector} #{elem}")
   end
 end
 
@@ -272,8 +267,12 @@ end
 
 When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do |mask_text, wait_seconds|
   begin
-    page.has_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true) # let's wait for the loading mask to appear. this is to fix a speed issue in chrome (it passes the step before the load mask shows)
-    page.has_no_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true).should be_true
+    using_wait_time(0.2) do 
+      page.has_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true) # let's wait for the loading mask to appear. this is to fix a speed issue in chrome (it passes the step before the load mask shows)
+    end
+    using_wait_time(wait_seconds || 1) do
+      page.should have_no_css('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true)
+    end
   rescue Selenium::WebDriver::Error::ObsoleteElementError
     # this is perfect, the element has gone from the dom.  Or it hasn't appeared yet.  Then this isn't perfect.
   end
@@ -301,7 +300,7 @@ When /^I click to download the file "([^\"]*)"$/ do |value|
   begin
     evaluate_script("window.open = function(url){setTimeout(function(){$.get(url,function(data){alert('Success')})},500);}")
     elem.click
-    sleep 1
+    sleep 0.5
   rescue Capybara::NotSupportedByDriverError
   end
 end
@@ -323,15 +322,15 @@ When /^(?:I )?sleep (\d+)/ do |sec|
 end
 
 Then /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be hidden$/ do |class_name, content|
-  waiter do
-    page.find(".#{class_name}", :text => content)
-  end.should be_nil
+  using_wait_time(0.1) do 
+    page.should have_no_css(".#{class_name}", :text => content, :visible => true)
+  end
 end
 
 When /^ext ([a-zA-Z0-9\-_]*) "([^\"]*)" should be visible$/ do |class_name, content|
-  waiter do
-    page.find(".#{class_name}", :text => content)
-  end.should_not be_nil
+  using_wait_time(0.1) do 
+    page.should have_css(".#{class_name}", :text => content, :visible => true)
+  end
 end
 
 Then /^I should( not)? see the image "([^\"]*)"$/ do |neg, file_name|

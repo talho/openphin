@@ -17,12 +17,11 @@ Feature: Creating groups
       | Jill Smith      | jill.smith@example.com   | Admin  | Potter County |
       | Jim Smith       | jim.smith@example.com    | Admin  | Dallas County |
       | Will Smith      | will.smith@example.com   | Admin  | Potter County |
-    Given I am logged in as "jill.smith@example.com"
     And the role "Admin" is an alerter
     When delayed jobs are processed
 
   Scenario: going to add a user group as an admin
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
     When I press "Create New Group"
@@ -32,7 +31,6 @@ Feature: Creating groups
 
   Scenario: going to add a user group as a non-admin user
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     Then I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
@@ -44,7 +42,6 @@ Feature: Creating groups
 
   Scenario: going to add a user group as a public user
     Given I am logged in as "jane.smith@example.com"
-    When I navigate to the ext dashboard page
     Then I should not see "Admin"
     When I force open the manage groups tab
     Then I should see "That resource does not exist or you do not have access to it."
@@ -55,7 +52,7 @@ Feature: Creating groups
     And the "Create New Group" tab should not be open
 
   Scenario: adding a user group with jurisdictions
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -80,7 +77,7 @@ Feature: Creating groups
       | Jim Smith       | Recipient    |
 
   Scenario: adding a user group with roles
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -106,7 +103,7 @@ Feature: Creating groups
       | Jane Smith      | Recipient |
 
   Scenario: adding a user group with jurisdictions and roles
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -136,7 +133,7 @@ Feature: Creating groups
       | Health Officer  | Role         |
 
   Scenario: adding a user group with individual users
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -161,7 +158,7 @@ Feature: Creating groups
 
   Scenario: selecting the jurisdiction when scope is jurisdiction
     Given the user "Jill Smith" with the email "jill.smith@example.com" has the role "Admin" in "Wise County"
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -191,7 +188,7 @@ Feature: Creating groups
       | Health Officer  | Role         |
 
   Scenario Outline: adding a personal scoped group should not be viewable by others
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form
@@ -222,7 +219,6 @@ Feature: Creating groups
     #get around sign-in page redirection
     Given I am on the ext dashboard page
     And I am logged in as "<other_login>"
-    When I navigate to the ext dashboard page
     When I navigate to "Admin > Manage Groups"
     Then I <should> see "Dallas County Health Officer Group"
     When I sign out
@@ -235,7 +231,7 @@ Feature: Creating groups
       | Global       | jim.smith@example.com  | should     |
 
   Scenario: adding a scoped group without all data to see error
-    When I navigate to the ext dashboard page
+    Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     And I press "Create New Group"
     Then I should see the ext add group form

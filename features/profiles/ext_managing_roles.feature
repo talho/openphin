@@ -19,7 +19,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Adding and removing public roles from user profile
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     Then the "Manage Roles" tab should be open
     And I wait for the "Loading..." mask to go away
@@ -35,7 +34,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Cannot remove all public roles from user profile
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     And I click profile-destroy "Texas"
@@ -48,7 +46,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Removing the all public roles from user profile and adding a new public role
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     And I click profile-destroy "Texas"
@@ -69,7 +66,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Adding and removing non-public roles from user profile
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -82,7 +78,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Add and remove a role then save
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -95,9 +90,7 @@ I should be able to remove all but one public role from my profile
     And I should see "Profile information saved"
 
   @role
-  Scenario: Adding a duplicate role
-    BioTerrorism Coordinator
-    When I navigate to the ext dashboard page
+  Scenario: Adding a duplicate role BioTerrorism Coordinator
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -110,7 +103,6 @@ I should be able to remove all but one public role from my profile
 
   @role
   Scenario: Add and remove a role then save
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -123,7 +115,6 @@ I should be able to remove all but one public role from my profile
 
   @role_request
   Scenario: Adding a duplicate role request
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -133,7 +124,6 @@ I should be able to remove all but one public role from my profile
 
   @role_request
   Scenario: Adding a role request duplicating an existing role membership
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "Public" for "Dallas County" in the RolesControl
@@ -143,7 +133,6 @@ I should be able to remove all but one public role from my profile
   @role_request
   Scenario: As a user the request role window should not display system-roles or foreign jurisdictions
     Given there is an system only Admin role
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     And I press "Request Role"
@@ -165,7 +154,6 @@ I should be able to remove all but one public role from my profile
     Given the following users exist:
       | Awesome Blossoms | awesome@example.com      | SuperAdmin | Texas     |
       | Fred Smith       | fred.smith@example.com   | Public     | Texas     |
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Roles"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl
@@ -177,7 +165,6 @@ I should be able to remove all but one public role from my profile
       | Potter County | BioTerrorism Coordinator | waiting for approval |
 
     When I am logged in as "awesome@example.com"
-    When I navigate to the ext dashboard page
     And I visit the Edit Profile page for "fred.smith@example.com"
     And I wait for the "Loading..." mask to go away
     When I request the role "BioTerrorism Coordinator" for "Potter County" in the RolesControl

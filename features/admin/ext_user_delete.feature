@@ -28,9 +28,8 @@ Feature: An admin deleting users
   Scenario: Delete a user
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
     And all email has been delivered
-    And I reindex sphinx
+    And delayed jobs are processed
     When I am logged in as "bob.jones@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I click x-grid3-row "Jane Smith"
     And I press "Delete User"
@@ -62,7 +61,6 @@ Feature: An admin deleting users
 
     When delayed jobs are processed
     And I am logged in as "bob.jones@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Admin > Manage Users > Edit Users"
     And I click x-grid3-row "Greg Brown"
     And I press "Delete User"
@@ -81,7 +79,6 @@ Feature: An admin deleting users
     Then I should see "Thanks for signing up"
  
   Scenario: Admin shouldn't be able to delete a user outside of his admin jurisdictions
-    When I navigate to the ext dashboard page
     And I maliciously post a destroy user "zzz.smith@example.com"
     And delayed jobs are processed
     # delayed jobs must be repeated for the delete above to be picked up

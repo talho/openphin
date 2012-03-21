@@ -1,3 +1,4 @@
+@user @as_admin
 Feature: An admin managing users
   In order to keep users happy
   As an admin
@@ -23,12 +24,10 @@ Feature: An admin managing users
     And jonas.brothers@example.com has a public profile
     And an approval role named Health Alert and Communications Coordinator
     And the role "Health Alert and Communications Coordinator" is for the "phin" application
-    And I reindex sphinx
+    And delayed jobs are processed
   
-  @user @as_admin
   Scenario: Creating a user
     Given I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     When I fill in the add user form with:
       | Email address     | john.smith@example.com |
       | First name        | John                   |
@@ -51,10 +50,8 @@ Feature: An admin managing users
     And the following users should not receive any emails
       | roles         | Dallas County / Admin |
 
-  @user @as_admin
   Scenario: Editing a user's profile
     Given I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     And I edit the user profile for "Jonas Brothers"
     And I fill in the ext form with the following info:
       | Job description                   | A developer |
@@ -70,10 +67,8 @@ Feature: An admin managing users
     Then I should not see any errors
     And I should see "Profile information saved"
     
-  @user @as_admin
   Scenario: Editing a user's profile as an administrator of an parent jurisdiction
     Given I am logged in as "joe.smith@example.com"
-    When I navigate to the ext dashboard page
     And I edit the user profile for "Jonas Brothers"
     When I fill in the ext form with the following info:
       | Job description                   | A developer |
@@ -88,12 +83,11 @@ Feature: An admin managing users
     Then I should not see any errors
     And I should see "Profile information saved"
 
-  @user @as_admin @roles @reindex
+  @roles
   Scenario: Editing a user's profile and deleting roles
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
-    And I reindex sphinx
+    And delayed jobs are processed
     And I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Smith"
     Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
     And I should see "Health Officer in Dallas County"
@@ -102,10 +96,8 @@ Feature: An admin managing users
     And I should not see "Health Officer in Dallas County" within ".role-item"
     And I should see "Profile information saved."
 
-  @user @as_admin
   Scenario: Add user as admin should not occur if no home jurisdictation is specified
     Given I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     When I fill in the add user form with:
       | Email address  | john.smith@example.com |
       | First name     | John                   |
@@ -122,12 +114,10 @@ Feature: An admin managing users
     And "john@example.com" should not exist
 	  And "bob.jones@example.com" should not receive an email
     
-  @user @as_admin @reindex
   Scenario: Editing a user's profile by adding user and organizational contact info
     Given the user "Jane Smith" with the email "jane.smith@example.com" has the role "Health Officer" in "Dallas County"
-    And I reindex sphinx
+    And delayed jobs are processed
     And I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     And I edit the user profile for "Jane Smith"
     Then "jane.smith@example.com" should have the "Health Officer" role in "Dallas County"
     When I fill in "Office phone" with "888-123-1212"
@@ -137,10 +127,8 @@ Feature: An admin managing users
     And I press "Apply Changes"
     Then I should see "Profile information saved"
 
-  @user @as_admin
   Scenario: Not permitting a second user to be created with the same case-folded e-mail
     Given I am logged in as "bob.jones@example.com"
-    When I navigate to the ext dashboard page
     When I fill in the add user form with:
       | Email address  | jane.smith@example.com |
       | First name     | Jane                   |

@@ -23,7 +23,6 @@ I should be able to edit my profile
     Given the following entities exist:
       | Organization | DSHS |
     And I am logged in as "bob.smith@example.com"
-    When I navigate to the ext dashboard page
     When I edit the user profile for "Jane Smith"
     Then I should see "Organizations"
     When I request the org "DSHS" in the OrgsControl
@@ -38,7 +37,6 @@ I should be able to edit my profile
       | Organization | DSHS |
     And "bob.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "jane.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "Jane Smith > Manage Organizations"
     And I wait for the "Loading..." mask to go away
     Then I should see "Organizations"
@@ -60,7 +58,6 @@ I should be able to edit my profile
      And I press "Approve"
 
     And I am logged in as "jane.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "Jane Smith > Manage Organizations"
     Then I should see "Organizations"
     Then I should see the following within ".org-item":
@@ -93,7 +90,6 @@ I should be able to edit my profile
       | Organization | DSHS |
     And "jane.smith@example.com" is a member of the organization "DSHS"
     And I am logged in as "bob.smith@example.com"
-    When I navigate to the ext dashboard page
     When I edit the user profile for "Jane Smith"
     Then I should see "Organizations"
     And I should see "DSHS" within ".org-item"

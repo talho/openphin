@@ -57,17 +57,20 @@ Spork.prefork do
 
   World ActionController::RecordIdentifier
 
-  ts = ThinkingSphinx::Configuration.instance
-  ThinkingSphinx.deltas_enabled = true
-  ThinkingSphinx.updates_enabled = true
-  ThinkingSphinx.suppress_delta_output = true
-  ts.build
-  FileUtils.mkdir_p ts.searchd_file_path
-  ts.controller.index
-  ts.controller.start
-  at_exit do
-    ts.controller.stop
-  end
+  # ts = ThinkingSphinx::Configuration.instance
+  # ThinkingSphinx.deltas_enabled = true
+  # ThinkingSphinx.updates_enabled = true
+  # ThinkingSphinx.suppress_delta_output = true
+  # ts.build
+  # FileUtils.mkdir_p ts.searchd_file_path
+  # ts.controller.index
+  # ts.controller.start
+  # at_exit do
+    # ts.controller.stop
+  # end
+  require 'cucumber/thinking_sphinx/external_world'
+  Cucumber::ThinkingSphinx::ExternalWorld.new
+  
   #CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 
   Capybara.default_driver = case ENV['BROWSER']
@@ -75,6 +78,14 @@ Spork.prefork do
     else ENV['HEADLESS'] == 'false' ? :selenium_with_firebug : :selenium
   end
     
+  if defined?(ActiveRecord::Base)
+    begin
+      require 'database_cleaner'
+      DatabaseCleaner.strategy = :truncation
+    rescue LoadError => ignore_if_database_cleaner_not_present
+    end
+  end
+  
   if ENV["HEADLESS"] != 'false'
     @headless = Headless.new
     @headless.start
@@ -83,8 +94,6 @@ end
 
 Spork.each_run do
   Before do
-    # Clear out PHIN_MS queue
-    FileUtils.remove_dir(Agency[:phin_ms_base_path], true)
     ActionMailer::Base.deliveries = []
   
     Service::Swn::Message.instance_eval do
@@ -95,33 +104,25 @@ Spork.each_run do
     Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
 
     # Re-generate the index before each Scenario
-    ts = ThinkingSphinx::Configuration.instance
-    ThinkingSphinx.deltas_enabled = true
-    ThinkingSphinx.updates_enabled = true
-    ThinkingSphinx.suppress_delta_output = true
-    ts.build
-    ts.controller.index
+    # ts = ThinkingSphinx::Configuration.instance
+    # ThinkingSphinx.deltas_enabled = true
+    # ThinkingSphinx.updates_enabled = true
+    # ThinkingSphinx.suppress_delta_output = true
+    # ts.build
+    # ts.controller.index
 
-    ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+    #ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
 
-    $rspec_mocks ||= RSpec::Mocks::Space.new
-  end
-
-  if defined?(ActiveRecord::Base)
-    begin
-      require 'database_cleaner'
-      DatabaseCleaner.strategy = :truncation
-    rescue LoadError => ignore_if_database_cleaner_not_present
-    end
+    #$rspec_mocks ||= RSpec::Mocks::Space.new
   end
 
   After do
     begin
       visit '/sign_out'
       unset_current_user
-      $rspec_mocks.verify_all
+      #$rspec_mocks.verify_all
     ensure
-      $rspec_mocks.reset_all
+      #$rspec_mocks.reset_all
     end
   end
 end

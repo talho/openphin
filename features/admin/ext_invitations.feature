@@ -23,12 +23,12 @@ Feature: Invitation System
     And I press "Add User"
     And I fill in "invitee_name" with "Jane Smith"
     And I fill in "invitee_email" with "jane.smith@example.com"
-    And I sleep 1
+    And I wait for 0.1 second
     And I press "Update"
-    And I sleep 1
+    And I wait for 0.1 second
     When I press "Send Invitation"
     Then I should see "Invitation was successfully sent"
-    And I sleep 1
+    And I wait for 0.2 seconds
     Then "jane.smith@example.com" is an invitee of "DSHS"
     And "joe.smith@example.com" is not an invitee of "DSHS"
     When delayed jobs are processed
@@ -67,9 +67,9 @@ Feature: Invitation System
     And I press "Add User"
     And I fill in "invitee_name" with "Joe Smith"
     And I fill in "invitee_email" with "joe.smith@example.com"
-    And I sleep 1
+    And I wait for 0.1 second
     When I press "Update"
-    And I sleep 1
+    And I wait for 0.1 second
     And I press "Send Invitation"
     Then I should see "Invitation was successfully sent"
     And "joe.smith@example.com" is an invitee of "DSHS"
@@ -373,7 +373,6 @@ Feature: Invitation System
       | John Smith | john.smith@example.com |
       | Bill Smith | bill.smith@example.com |
       | Jim Smith  | jim.smith@example.com  |
-    And I sleep 1
     And the user "Jane Smith" with the email "jane.smith@example.com" has the role "Public" in "Texas"
     And the user "John Smith" with the email "john.smith@example.com" has the role "Epidemiologist" in "Potter"
     And the user "Jim Smith" with the email "jim.smith@example.com" has the role "Health Officer" in "Andrews"

@@ -17,17 +17,20 @@ Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: ap
   end
   roles = role.split(',').map(&:strip)
   roles.each do |r|
-    role_obj = application.blank? ? Role.find_by_name(r.to_s) : Role.find_by_name_and_application(r.to_s, application)
-    role_obj = Role.create(:name => r.to_s, :application => (application.blank? ? 'phin' : application ) ) if role_obj.nil?
-    role_obj.update_attribute('approval_required', true) unless r.to_s == "Public"
+    application = application.blank? ? r.to_s == 'SysAdmin' ? 'system' : 'phin' : application
+    role_obj = Role.find_or_create_by_name_and_application(r.to_s, application) do |ro|
+      ro.approval_required = r.to_s == "Public" ? false : true
+    end
     unless r == "Public" && jur_obj.name == "Texas"
       unless RoleMembership.already_exists?(user, role_obj, jur_obj)
+        # do this manually, it's potentially faster than the factory method.
+        RoleMembership.create :role_id => role_obj.id, :jurisdiction_id => jur_obj.id, :user_id => user.id
         #force creation of the role membership.  this leaves the request dangling.
-        Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
-        if (r_request = user.role_requests.find_by_role_id_and_jurisdiction_id(role_obj.id,jur_obj.id))
-          #remove the request.
-          r_request.delete
-        end
+        # Factory(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
+        # if (r_request = user.role_requests.find_by_role_id_and_jurisdiction_id(role_obj.id,jur_obj.id))
+          # #remove the request.
+          # r_request.delete
+        # end
       end
     end
   end
@@ -96,7 +99,7 @@ end
 Then /^I am logged in$/ do
   @current_user.should_not be_nil
   begin
-    page.has_no_css?('#loading-mask', :visible => true).should be_true
+    page.should have_no_css('#loading-mask', :visible => true)
   rescue Selenium::WebDriver::Error::ObsoleteElementError
     # this is a stale element error meaning between us finding the element and us processing, it disappeared. In this case, it's good
     true

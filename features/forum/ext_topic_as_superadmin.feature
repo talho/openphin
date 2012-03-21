@@ -25,7 +25,6 @@ Feature: Managing a topic as a super admin
     And I am logged in as "jane.smith@example.com"
     And I have the comment "Walmart claims 100% fulfillment" to topic "Measuring Fulfillment" to forum "Grant Capturing"
     When I am logged in as "joe.smith@example.com"
-    And I navigate to the ext dashboard page
     And I navigate to "Forums"
     And I select the "Grant Capturing" grid row
     And I click inlineLink "Measuring Fulfillment"

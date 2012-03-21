@@ -23,7 +23,6 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding a device
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I press "Add device"
@@ -44,7 +43,6 @@ Feature: Managing devices when editing user profiles
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     And I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     When I click profile-destroy "5552345678"
@@ -57,7 +55,6 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding an invalid device
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I press "Add device"
@@ -71,7 +68,6 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Adding a phone device with an extension is invalid
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I press "Add device"
@@ -88,7 +84,6 @@ Feature: Managing devices when editing user profiles
     Given john.smith@example.com has the following devices:
       | Phone | 5552345678 |
     And I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I press "Add device"
@@ -101,7 +96,6 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Add and remove a device then save
     Given I am logged in as "john.smith@example.com"
-    When I navigate to the ext dashboard page
     And I navigate to "John Smith > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I press "Add device"
@@ -119,7 +113,6 @@ Feature: Managing devices when editing user profiles
 
   Scenario: Malicious admin cannot remove devices from users they can't administer
     Given I am logged in as "admin@potter.gov"
-    When I navigate to the ext dashboard page
     And I navigate to "Default FactoryUser > Manage Devices"
     And I wait for the "Loading..." mask to go away
     And I will confirm on next step
