@@ -137,7 +137,7 @@ Then /^I should not see the following toolbar items in "([^\"]*)":$/ do |name, t
 end
 
 Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
-  sleep 0.2
+  sleep 0.1
   with_scope(selector) do
     menus = page.all('.x-menu')
     menu_lists = []
@@ -157,17 +157,17 @@ Then /^I should see the following ext menu items(?: within "([^"]*)")?:$/ do |se
 end
 
 Then /^I should not see the following ext menu items(?: within "([^"]*)")?:$/ do |selector, table|
-  sleep 0.2
+  sleep 0.1
   with_scope(selector) do
     table.hashes.each do |hash|
-      page.should_not have_xpath(".//*[contains(concat(' ', @class, ' '), ' x-menu-item ')]", :text => hash[:name])
+      page.should have_no_xpath(".//*[contains(concat(' ', @class, ' '), ' x-menu-item ')]", :text => hash[:name])
     end
   end
 end
 
 Then /^I should (not )?have "([^\"]*)" within "([^\"]*)"$/ do |not_have, elem, selector|
   if not_have
-    page.should_not have_css("#{selector} #{elem}")
+    page.should have_no_css("#{selector} #{elem}")
   else
     page.should have_css("#{selector} #{elem}")
   end
@@ -337,7 +337,7 @@ Then /^I should( not)? see the image "([^\"]*)"$/ do |neg, file_name|
   if neg.nil?
     page.should have_xpath("//*/img[contains(@src, '#{file_name}')]")
   else
-    page.should_not have_xpath("//*/img[contains(@src, '#{file_name}')]")
+    page.should have_no_xpath("//*/img[contains(@src, '#{file_name}')]")
   end 
 end
 
