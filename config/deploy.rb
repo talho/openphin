@@ -64,11 +64,11 @@ require 'bundler/capistrano'
 before 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
+after "deploy:update_code", "deploy:cleanup"
 after 'deploy:symlink', 'app:phin_plugins_install'
 after 'deploy:restart', 'sphinx:start'
 after 'deploy:restart', 'backgroundrb:restart'
 after 'deploy:restart', 'delayed_job:restart'
-after "deploy", "deploy:cleanup"
 
 # namespace :deploy do
   # # Overriding the built-in task to add our rollback actions
@@ -89,7 +89,7 @@ after "deploy", "deploy:cleanup"
 # end
 
 after 'deploy:migrate', :seed
-after 'deploy:migrations', :seed
+after 'deploy:migrate', 'app:phin_plugins_migrate'
 desc "seed. for seed-fu"
 task :seed, :roles => :db, :only => {:primary => true} do 
   run "cd #{release_path}; RAILS_ENV=#{rails_env} #{rake} db:seed"
