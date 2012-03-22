@@ -35,7 +35,6 @@ namespace :app do
     run "ln -fs #{shared_path}/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"
     run "ln -fs #{shared_path}/smtp.rb #{release_path}/config/initializers/smtp.rb"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
-    run "ln -fs #{shared_path}/sphinx #{release_path}/db/sphinx"
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
     run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"

@@ -61,18 +61,14 @@ end
 require 'bundler/capistrano'
 
 # Setup dependencies
-# before 'deploy', 'backgroundrb:stop'
-# before 'deploy', 'delayed_job:stop'
-before 'deploy', 'sphinx:start_if_not'
+before 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:phin_plugins'
-before 'deploy:migrate', 'app:symlinks'
-after 'deploy:create_symlink', 'app:symlinks'
-after 'deploy:create_symlink', 'app:phin_plugins_install'
+after 'deploy:update_code', 'app:symlinks'
+after 'deploy:symlink', 'app:phin_plugins_install'
+after 'deploy:restart', 'sphinx:start'
+after 'deploy:restart', 'backgroundrb:restart'
+after 'deploy:restart', 'delayed_job:restart'
 after "deploy", "deploy:cleanup"
-after 'deploy', "sphinx:rebuild"
-after 'deploy:cold', "sphinx:rebuild"
-after 'sphinx:rebuild', 'backgroundrb:restart'
-after 'sphinx:rebuild', 'delayed_job:restart'
 
 # namespace :deploy do
   # # Overriding the built-in task to add our rollback actions
