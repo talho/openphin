@@ -1,6 +1,6 @@
 class UserBatch
   
-  DIRECTORY = File.join(Rails.root,'tmp','user_batch')
+  DIRECTORY = File.join(Rails.root.to_s,'tmp','user_batch')
   
   attr_accessor :email          # submitter email
   attr_accessor :jurisdiction   # affected jurisdiction
@@ -68,21 +68,21 @@ class UserBatch
       UserImporter.import_users(path, :default_jurisdiction => jurisdiction, :create => true, :update => false)
       unless $stderr.string.empty?
         # error created during import, send email to submitter
-        AppMailer.deliver_user_batch_error(@email, "during import", $stderr.string) 
+        AppMailer.user_batch_error(@email, "during import", $stderr.string).deliver 
       end
       $stderr = STDERR
     rescue ActiveRecord::RecordNotFound => e
       unless submitter
-        AppMailer.deliver_system_error(e, "Could not find submitter of #{@email}.")
+        AppMailer.system_error(e, "Could not find submitter of #{@email}.").deliver
       else
         unless jurisdiction
-          AppMailer.deliver_user_batch_error(@email, e, "Could not find the jurisdiction of #{@jurisdiction}.") 
+          AppMailer.user_batch_error(@email, e, "Could not find the jurisdiction of #{@jurisdiction}.").deliver 
         end
       end
     rescue Errno::ENOENT
-      AppMailer.deliver_system_error(e, "Could not find user batch file named #{path}.")
+      AppMailer.system_error(e, "Could not find user batch file named #{path}.").deliver
     rescue StandardError => e
-      AppMailer.deliver_system_error(e, "System Error, a batch file by #{@email} was not processed.") 
+      AppMailer.system_error(e, "System Error, a batch file by #{@email} was not processed.").deliver 
     end
     archive_file
   end
@@ -123,7 +123,7 @@ private
       arc = File.join(DIRECTORY,'archive',@filename)
       FileUtils.mv path, arc
     rescue Exception => e
-      AppMailer.deliver_system_error(e, "During archive, could not move #{path} to #{arc}.")
+      AppMailer.system_error(e, "During archive, could not move #{path} to #{arc}.").deliver
     end
   end
   

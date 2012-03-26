@@ -32,7 +32,7 @@ class Service::Swn::Base
   end
 
   def self.load_configuration_file(file)
-    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
+    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[Rails.env]
     if configuration.fake_delivery?
       def self.deliveries
         @deliveries ||= []

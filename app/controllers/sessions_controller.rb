@@ -29,7 +29,7 @@ class SessionsController < Clearance::SessionsController
                }
           }
         else
-          ::ClearanceMailer.deliver_confirmation(@user)
+          ::ClearanceMailer.confirmation(@user).deliver
           format.html {
             flash_notice_after_create
             redirect_to(new_session_url)

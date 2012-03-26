@@ -15,11 +15,12 @@ class RemoveUnusedDocumentsTables < ActiveRecord::Migration
 
     create_table :folder_permissions do |t|
       t.integer :folder_id
-      t.index :folder_id
       t.integer :user_id
-      t.index :user_id
       t.integer :permission
     end
+
+    add_index :folder_permissions, :folder_id
+    add_index :folder_permissions, :user_id
 
     add_column :documents, :delta, :boolean, :default => true
     Document.reset_column_information

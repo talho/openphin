@@ -5,8 +5,8 @@ describe ReportMailer do
     @email = 'YourAddress@Example.com'
     @report_name = 'TheForgottenRecipe-45'
     @error_message = 'The report on this recipe is missing'
-    @generated_notify = ReportMailer.deliver_report_generated(@email, @report_name)
-    @error_notify = ReportMailer.deliver_report_error(@email, @report_name, @error_message)
+    @generated_notify = ReportMailer.report_generated(@email, @report_name).deliver
+    @error_notify = ReportMailer.report_error(@email, @report_name, @error_message).deliver
   end
 
   context "creates a report generated email notification" do

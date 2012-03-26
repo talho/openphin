@@ -1,4 +1,4 @@
-file = RAILS_ROOT + "/config/paperclip.yml"
+file = Rails.root.to_s+ "/config/paperclip.yml"
 
 if File.exists?(file)
   config = YAML.load(IO.read(file))

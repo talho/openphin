@@ -130,7 +130,7 @@ class Admin::InvitationsController < ApplicationController
   def import
     invitees = []
     csvfile = params[:invitation][:csvfile]
-    newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
+    newfile = File.join(Rails.root.to_s,'tmp',csvfile.original_filename)
     File.open(newfile,'wb') do |file|
       file.puts csvfile.read
     end
@@ -204,7 +204,7 @@ class Admin::InvitationsController < ApplicationController
 
   def paramsWithCSVInvitees
     csvfile = params[:invitation][:csvfile]
-    newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
+    newfile = File.join(Rails.root.to_s,'tmp',csvfile.original_filename)
     File.open(newfile,'wb') do |file|
       file.puts csvfile.read
     end

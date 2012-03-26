@@ -49,11 +49,11 @@ class Organization < ActiveRecord::Base
 
   default_scope :order => :name
   
-  named_scope :with_user, lambda {|user|
+  scope :with_user, lambda {|user|
     { :conditions => ["organizations.group_id IN (SELECT * FROM sp_audiences_for_user(?))", user.id], :order => 'organizations.name'}
   }
-  named_scope :foreign, :conditions => ["organizations.foreign = true"]
-  named_scope :non_foreign, :conditions => ["organizations.foreign = false"]
+  scope :foreign, :conditions => ["organizations.foreign = true"]
+  scope :non_foreign, :conditions => ["organizations.foreign = false"]
 
   validates_inclusion_of :foreign, :in => [true, false]
 

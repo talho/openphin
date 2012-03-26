@@ -1,45 +1,48 @@
 class AppMailer < ActionMailer::Base
+  default :from => DO_NOT_REPLY
   
   def role_assigned(role, jurisdiction, user, admin)
-    recipients user.email
-    from DO_NOT_REPLY
-    subject "Role assigned"
-    body :role => role, :jurisdiction => jurisdiction, :user => user, :admin => admin
+    @role = role
+    @jurisdiction = jurisdiction
+    @user = user
+    @admin = admin
+    
+    mail(:to => user.email,
+         :subject => "Role assigned")
   end
 
   def system_error(exception_message, message="")
-    admins=User.with_role(Role.superadmin)
+    admins=User.with_role(Role.sysadmin)
     PHINMS_RECEIVE_LOGGER.debug "Sending system error notification to #{admins.map(&:email).join(",")}"
     unless admins.empty?
-      recipients User.with_role(Role.superadmin).map(&:email)
+      recipients = User.with_role(Role.sysadmin).map(&:email)
     else
-      recipients "root@localhost"
+      recipients = "root@localhost"
     end
-
-    from DO_NOT_REPLY
-    subject "System error: #{exception_message}"
-    body :exception_message => exception_message, :message => message
+    @exception_message = exception_message
+    @message = message
+    
+    mail(:to => recipients,
+         :subject => "System error: #{exception_message}")
   end
   
   def user_batch_error(email, exception_message, message="")
-    recipients email
-    from DO_NOT_REPLY
-    subject "TxPhin:  User batching error"
-    body :exception_message => exception_message, :message => message
+    @exception_message = exception_message
+    @message = message
+    
+    mail(:to => email,
+         :subject => "TxPhin:  User batching error")
   end
 
   def user_delete_error(requester_email, message="")
-    recipients requester_email
-    from DO_NOT_REPLY
-    subject "Deleting of user error: #{message}"
-    body :message => message
+    @message = message
+    
+    mail(:to => requester_email,
+         :subject => "Deleting of user error: #{message}")
   end
 
   def delayed_job_check(email)
-    recipients email
-    from DO_NOT_REPLY
-    subject "Delayed Job Check - #{Time.now}"
-    body
+    mail(:to => email,
+         :subject => "Delayed Job Check - #{Time.now}")
   end
-
 end

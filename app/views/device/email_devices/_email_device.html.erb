@@ -1,5 +1,5 @@
 <%- in_form ||= false -%>
-<% content_tag_for :p, email_device do %>
+<%= content_tag_for :p, email_device do %>
   <%=mail_to h(email_device.email_address) %>
   <%= link_to 'Delete Email', device_path(email_device),:method => :delete, :class => 'destroy'   if in_form %>
 <% end %>

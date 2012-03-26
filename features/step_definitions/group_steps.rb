@@ -49,11 +49,11 @@ When "I fill out the group form with:" do |table|
 end
 
 When /^I import the group file "([^\"]*)"$/ do |filename|
-  GroupImporter.import_groups(File.join(Rails.root, 'tmp', filename))
+  GroupImporter.import_groups(File.join(Rails.root.to_s, 'tmp', filename))
 end
 
 When /^I import the group file "([^\"]*)" with no update$/ do |filename|
-  GroupImporter.import_groups(File.join(Rails.root, 'tmp', filename), {:no_update => true })
+  GroupImporter.import_groups(File.join(Rails.root.to_s, 'tmp', filename), {:no_update => true })
 end
 
 When /^the group "([^\"]*)" should(?: (not))? exist$/ do |name, not_option|

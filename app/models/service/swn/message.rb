@@ -1,6 +1,6 @@
 class Service::Swn::Message < Service::Swn::Base
-  load_configuration_file RAILS_ROOT+"/config/swn.yml"
-  load_configuration_file RAILS_ROOT+"/config/email.yml"
+  load_configuration_file "#{Rails.root.to_s}/config/swn.yml"
+  load_configuration_file "#{Rails.root.to_s}/config/email.yml"
 
   property :message
 

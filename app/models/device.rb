@@ -18,12 +18,12 @@ class Device < ActiveRecord::Base
   belongs_to :user
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :email, :conditions => "type = 'Device::EmailDevice'"
-  named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
-  named_scope :sms, :conditions => "type = 'Device::SmsDevice'"
-  named_scope :fax, :conditions => "type = 'Device::FaxDevice'"
-  named_scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
-  named_scope :im, :conditions => "type = 'Device::ImDevice'"
+  scope :email, :conditions => "type = 'Device::EmailDevice'"
+  scope :phone, :conditions => "type = 'Device::PhoneDevice'"
+  scope :sms, :conditions => "type = 'Device::SmsDevice'"
+  scope :fax, :conditions => "type = 'Device::FaxDevice'"
+  scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
+  scope :im, :conditions => "type = 'Device::ImDevice'"
 
   serialize :options, Hash
 

@@ -55,7 +55,7 @@ describe Service::Tfcc::Phone::Alert do
     context "when the alert has a voice recording" do
       before(:each) do
         subject.alert.stub(
-          :message_recording =>  stub("Paperclip::Attachment", :path => "#{RAILS_ROOT}/spec/fixtures/sample.wav"),
+          :message_recording =>  stub("Paperclip::Attachment", :path => "#{Rails.root.to_s}/spec/fixtures/sample.wav"),
           :message_recording_file_name => "sample.wav"
         )
       end

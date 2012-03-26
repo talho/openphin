@@ -1,6 +1,6 @@
 Given /^no documents exist$/ do
   Folder.destroy_all
-  path = File.join(RAILS_ROOT,'attachments','files')
+  path = File.join(Rails.root.to_s,'attachments','files')
   Dir.foreach(path) {|filename| 
     next if filename == "." || filename == ".."
     if File.directory?(File.join(path,filename))
@@ -15,12 +15,12 @@ Given /^no documents exist$/ do
 end
 
 Given 'I have the document "$filename" in my inbox' do |filename|
-  @current_user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
+  @current_user.documents.create! :file => File.open(File.expand_path(Rails.root.to_s+'/spec/fixtures/'+filename))
 end
 
 Given /^I have the document "([^\"]*)" in "([^\"]*)"$/ do |filename, foldername|
   @current_user.folders.find_or_create_by_name(
-    foldername).documents.create! :user_id => @current_user.id, :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
+    foldername).documents.create! :user_id => @current_user.id, :file => File.open(File.expand_path(Rails.root.to_s+'/spec/fixtures/'+filename))
 end
 
 Given /^I have a folder named "([^\"]*)"$/ do |name|
@@ -43,7 +43,7 @@ Given 'I have "$count" folders named "$name" with the following documents:' do |
 end
 
 When /^I attach the fixture file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
-  full_path = File.join(Rails.root,'features',path)
+  full_path = File.join(Rails.root.to_s,'features',path)
   attach_file(field, full_path)
 end
 
@@ -70,18 +70,18 @@ end
 
 Then /^the file "([^\"]*)" in the inbox does not exist$/ do |filename|
   Document.find_by_file_file_name(filename).should be_nil
-  Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
+  Dir[File.join(Rails.root.to_s,'attachments','files',"**",filename)].should be_empty
 end
 
 Then /^the file "([^\"]*)" in folder "([^\"]*)" does not exist$/ do |filename, foldername|
   Document.find_by_file_file_name(filename).should be_nil
-  Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
+  Dir[File.join(Rails.root.to_s,'attachments','files',"**",filename)].should be_empty
   Folder.find_by_name(foldername).should_not be_nil
 end
 
 Then /^the file "([^\"]*)" and folder "([^\"]*)" do not exist$/ do |filename, foldername|
   Document.find_by_file_file_name(filename).should be_nil
-  Dir[File.join(RAILS_ROOT,'attachments','files',"**",filename)].should be_empty
+  Dir[File.join(Rails.root.to_s,'attachments','files',"**",filename)].should be_empty
   Folder.find_by_name(foldername).should be_nil
 end
 

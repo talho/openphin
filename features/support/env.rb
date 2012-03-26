@@ -19,21 +19,21 @@ require 'capybara/cucumber'
 require 'capybara/session'
 #require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 
-require "#{Rails.root}/spec/factories"
+require "#{Rails.root.to_s}/spec/factories"
 require 'rspec/mocks'
 require File.join(File.dirname(__FILE__),'patches','send_key')
 
 #require 'db/migrate/20110314145442_create_my_sql_compatible_functions_for_postgres'
 
 Capybara.register_driver :selenium_with_firebug do |app|
-  if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+  if File.exists?("#{Rails.root.to_s}/features/support/firebug.xpi")
     profile = Selenium::WebDriver::Firefox::Profile.new
     profile['extensions.firebug.currentVersion'] = '100.100.100'
     profile['extensions.firebug.console.enableSites'] = 'true'
     profile['extensions.firebug.script.enableSites'] = 'true'
     profile['extensions.firebug.net.enableSites'] = 'true'
     profile['extensions.firebug.allPagesActivation'] = 'on'
-    profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
+    profile.add_extension("#{Rails.root.to_s}/features/support/firebug.xpi")
 
     Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile, :resynchronize => true })
   else
@@ -71,7 +71,7 @@ Spork.prefork do
   require 'cucumber/thinking_sphinx/external_world'
   Cucumber::ThinkingSphinx::ExternalWorld.new
   
-  #CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+  #CreateMySqlCompatibleFunctionsForPostgres.up if ActiveRecord::Base.configurations[Rails.env]["adapter"] == "postgresql"
 
   Capybara.default_driver = case ENV['BROWSER']
     when 'chrome' then :selenium_with_chrome
@@ -101,7 +101,7 @@ Spork.each_run do
     end
 
     # load application-wide fixtures
-    Dir[File.join(RAILS_ROOT, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
+    Dir[File.join(Rails.root.to_s, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
 
     # Re-generate the index before each Scenario
     # ts = ThinkingSphinx::Configuration.instance
@@ -111,7 +111,7 @@ Spork.each_run do
     # ts.build
     # ts.controller.index
 
-    #ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+    #ActiveRecord::Base.connection.execute("SELECT rebuilt_sequences();") if ActiveRecord::Base.configurations[Rails.env]["adapter"] == "postgresql"
 
     #$rspec_mocks ||= RSpec::Mocks::Space.new
   end

@@ -18,31 +18,31 @@ class Dashboard < ActiveRecord::Base
 
   has_many :portlets, :through => :dashboard_portlets, :dependent => :destroy, :order => 'dashboards_portlets.sequence' do
     def with_column(column)
-      scoped :conditions => ["dashboards_portlets.column = ?", column]
+      where "dashboards_portlets.column" => column
     end
 
     def draft
-      scoped :conditions => ["dashboards_portlets.draft = ?", true]
+      where "dashboards_portlets.draft" => true
     end
 
     def published
-      scoped :conditions => ["dashboards_portlets.draft = ?", false]
+      where "dashboards_portlets.draft" => false
     end
   end
 
   has_many :dashboard_audiences, :dependent => :destroy do
     def with_role(role)
-      scoped :conditions => ["audiences_dashboards.role = ?", Dashboard::DashboardAudience::ROLES[role.to_sym]]
+      where "audiences_dashboards.role" => Dashboard::DashboardAudience::ROLES[role.to_sym]
     end
   end
 
   has_many :audiences, :through => :dashboard_audiences, :dependent => :destroy do
     def with_role(role)
-      scoped :conditions => ["audiences_dashboards.role = ?", Dashboard::DashboardAudience::ROLES[role.to_sym]]
+      where "audiences_dashboards.role" => Dashboard::DashboardAudience::ROLES[role.to_sym]
     end
   end
   
-  named_scope :with_user, lambda { |user|
+  scope :with_user, lambda { |user|
     user_id = user.class == User ? user.id : user
     { :joins => send(:sanitize_sql_array,
       ["JOIN audiences_dashboards ON (dashboards.id = audiences_dashboards.dashboard_id) JOIN sp_audiences_for_user(?) au ON (au.id = audiences_dashboards.audience_id)", 
@@ -53,11 +53,11 @@ class Dashboard < ActiveRecord::Base
       end
   end
 
-  named_scope :draft, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
+  scope :draft, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", true]
 
-  named_scope :published, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
+  scope :published, :include => :dashboard_portlets, :conditions => ["dashboards_portlets.draft = ?", false]
 
-  named_scope :application_default, :conditions => {:application_default => true}
+  scope :application_default, :conditions => {:application_default => true}
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 

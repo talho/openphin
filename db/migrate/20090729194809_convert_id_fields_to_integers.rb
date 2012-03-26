@@ -1,6 +1,6 @@
 class ConvertIdFieldsToIntegers < ActiveRecord::Migration
   def self.up
-    if ActiveRecord::Base.configurations[RAILS_ENV]["adapter"] == "postgresql"
+    if ActiveRecord::Base.configurations[Rails.env]["adapter"] == "postgresql"
       execute("CREATE OR REPLACE FUNCTION pc_chartoint(chartoconvert character varying) \
       RETURNS integer AS \
       $BODY$ \

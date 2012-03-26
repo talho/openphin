@@ -1,5 +1,5 @@
 <%- in_form ||= false -%>
-<% content_tag_for :p, fax_device do %>
+<%= content_tag_for :p, fax_device do %>
   <%= fax_device.class.display_name %>: <%=h fax_device.fax %>
   <%= link_to 'Delete Fax', device_path(fax_device), :class => 'destroy' if in_form %>
 <% end %>

@@ -53,7 +53,7 @@ class Doc::FoldersController < ApplicationController
     end
 
     if(folder.notify_of_audience_addition)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients } ) unless folder.audience.nil? || folder.audience.recipients.empty?
+      DocumentMailer.share_invitation(folder, {:creator => current_user, :users => folder.audience.recipients } ).deliver unless folder.audience.nil? || folder.audience.recipients.empty?
     end
 
     respond_to do |format|
@@ -102,7 +102,7 @@ class Doc::FoldersController < ApplicationController
     
     if folder.notify_of_audience_addition
       aud = folder.audience.nil? ? [] : (folder.audience.recipients(true) - original_recipients)
-      DocumentMailer.deliver_share_invitation(folder, {:creator => current_user, :users => aud } ) unless aud.empty?
+      DocumentMailer.share_invitation(folder, {:creator => current_user, :users => aud } ).deliver unless aud.empty?
     end
 
     respond_to do |format|

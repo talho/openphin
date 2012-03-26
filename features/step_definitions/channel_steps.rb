@@ -44,7 +44,7 @@ end
 
 Given 'a document "$document" is in the share "$share"' do |filename, share|
   user = Given('a user in a non-public role')
-  document = user.documents.create! :file => File.open(File.expand_path(RAILS_ROOT+'/spec/fixtures/'+filename))
+  document = user.documents.create! :file => File.open(File.expand_path(Rails.root.to_s,'/spec/fixtures/'+filename))
   document.shares << Given(%Q|a share named "#{share}"|)
 end
 

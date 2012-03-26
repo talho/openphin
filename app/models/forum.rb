@@ -14,7 +14,7 @@ class Forum < ActiveRecord::Base
                                    FROM users u 
                                    JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id'
   
-  named_scope :for_user, lambda { |user|
+  scope :for_user, lambda { |user|
     user_id = user.class == User ? user.id : user
     user = user.class == User ? user : User.find(user)
     if user.is_super_admin?
@@ -40,7 +40,7 @@ class Forum < ActiveRecord::Base
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
   #alias :_destroy :_delete unless respond_to? '_destroy'
   
-  named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
 
 
   # would like to DRY this up
@@ -50,7 +50,7 @@ class Forum < ActiveRecord::Base
       obj.present? ? {:conditions => {:hidden_at => nil}} : {}
     end
   end
-  named_scope :unhidden, unhidden_lamb
+  scope :unhidden, unhidden_lamb
 
   validates_presence_of  :name
 

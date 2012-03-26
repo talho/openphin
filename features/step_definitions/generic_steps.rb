@@ -4,7 +4,7 @@ end
 
 
 Given /^the following file "([^\"]*)":$/ do |filename, text|
-  file=File.open(File.join(Rails.root, "tmp",filename), "w+")
+  file=File.open(File.join(Rails.root.to_s, "tmp",filename), "w+")
   file.write(text)
   file.close
 end

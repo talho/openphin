@@ -9,14 +9,14 @@ texas = Jurisdiction.find_or_create_by_name(:name => "Texas") { |j|
 }
 texas.move_to_child_of(federal) unless federal.children.include?(texas)
 
-CSV.open(File.join(RAILS_ROOT, "db/fixtures/jurisdiction_regions.csv"), :headers => true) do |roles|
+CSV.open(File.join(Rails.root.to_s, "db/fixtures/jurisdiction_regions.csv"), :headers => true) do |roles|
   roles.each do |row|
     j = Jurisdiction.find_or_create_by_name(:name => row['name'].strip)
     j.move_to_child_of(texas) unless texas.children.include?(j)
   end
 end
 
-CSV.open(File.join(RAILS_ROOT, "db/fixtures/jurisdictions.csv"), :headers => true) do |roles|
+CSV.open(File.join(Rails.root.to_s, "db/fixtures/jurisdictions.csv"), :headers => true) do |roles|
   roles.each do |row|
     m = Jurisdiction.find_or_create_by_name_and_fips_code(:name => row['name'].strip, :fips_code => row['fips_code'])
     region = Jurisdiction.find_by_name!(row['region_name'])

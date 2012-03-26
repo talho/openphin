@@ -4,8 +4,8 @@ class Dashboard::DashboardPortlet < ActiveRecord::Base
   belongs_to :portlet, :dependent => :destroy
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :draft, :conditions => {:draft => true}
-  named_scope :published, :conditions => {:draft => false}
+  scope :draft, :conditions => {:draft => true}
+  scope :published, :conditions => {:draft => false}
   
   accepts_nested_attributes_for :portlet
 end

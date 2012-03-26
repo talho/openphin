@@ -22,9 +22,9 @@ class Delivery < ActiveRecord::Base
 
 #  default_scope :order => "delivered_at DESC"
 
-  named_scope :sys_acknowledged?, :conditions => "sys_acknowledged_at IS NOT NULL"
-  named_scope :delivered, :conditions => "delivered_at IS NOT NULL"
-  named_scope :with_device, lambda {|device_type|
+  scope :sys_acknowledged?, :conditions => "sys_acknowledged_at IS NOT NULL"
+  scope :delivered, :conditions => "delivered_at IS NOT NULL"
+  scope :with_device, lambda {|device_type|
     if device_type.is_a?(Class)
       d=device_type.name
     elsif device_type.is_a?(Device)

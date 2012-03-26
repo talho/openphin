@@ -10,16 +10,16 @@ class Report::Report < ActiveRecord::Base
   has_many   :filters
   has_one    :dataset
 
-  named_scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
-  named_scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
-  named_scope :complete, :conditions => ['incomplete = ?', false]
+  scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
+  scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
+  scope :complete, :conditions => ['incomplete = ?', false]
 
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
   validates_presence_of     :author
   validates_inclusion_of    :incomplete, :in => [false,true]
 
-  def validate_on_create
+  validate :on => :create do
     begin
       recipe.constantize
     rescue StandardError

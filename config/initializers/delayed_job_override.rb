@@ -1,4 +1,4 @@
-require 'dispatcher'
+require 'action_controller/deprecated/dispatcher'
 
 module DelayedJobOverride
   module Object
@@ -7,7 +7,7 @@ module DelayedJobOverride
     end
   end
 
-  Dispatcher.to_prepare do
+  ActionController::Dispatcher.to_prepare do
     if Rails.env == "development" && ENV["DELAYED_JOB_OVERRIDE"]
       ::Object.send(:include, DelayedJobOverride::Object)
     end

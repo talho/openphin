@@ -1,15 +1,14 @@
 class ApprovalMailer < ActionMailer::Base
-
+  default :from => DO_NOT_REPLY
+  
   def approval(request)
     recipients request.user.email
-    from DO_NOT_REPLY
     subject "Request approved"
     body :request => request
   end
 
   def denial(request, admin)
     recipients request.user.email
-    from DO_NOT_REPLY
     subject "Request denied"
     body :request => request, :admin => admin
   end
@@ -20,7 +19,6 @@ class ApprovalMailer < ActionMailer::Base
     else
       recipients organization.contact.email
     end
-    from DO_NOT_REPLY
     subject "Confirmation of #{organization.name} organization registration"
     body :organization => organization
   end
@@ -31,7 +29,6 @@ class ApprovalMailer < ActionMailer::Base
     else
       recipients organization.contact.email
     end
-    from DO_NOT_REPLY
     subject "Organization registration request denied"
     body :organization => organization
   end

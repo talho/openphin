@@ -61,8 +61,8 @@ module RecipeModules
     def recipe_names
       if Rails.env == 'development'
         pathname = File.join('app','models',name.underscore)
-        glob_script = File.join(Rails.root,pathname,'**','*_recipe.rb')
-        recipe_names = Dir.glob(glob_script).collect{|f| File.join(Rails.root,pathname,File.basename(f))}
+        glob_script = File.join(Rails.root.to_s,pathname,'**','*_recipe.rb')
+        recipe_names = Dir.glob(glob_script).collect{|f| File.join(Rails.root.to_s,pathname,File.basename(f))}
         begin
           recipe_names.each{|n| require n}
           puts recipe_names

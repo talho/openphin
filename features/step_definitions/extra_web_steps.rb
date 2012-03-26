@@ -47,7 +47,7 @@ When /^(?:|I )attach the file "([^"]*)" with button "([^"]*)"(?: within "([^"]*)
       page.find("button", :text => field)['for']
     end
     page.execute_script("$('##{id}').css('opacity', '100')")
-    attach_file(id, File.join(RAILS_ROOT, path))
+    attach_file(id, File.join(Rails.root.to_s, path))
     sleep 1
   end
 end

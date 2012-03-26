@@ -35,10 +35,10 @@ class Audience < ActiveRecord::Base
 
   has_one :forum
 
-  named_scope :with_forum, :conditions => "forum_id is not NULL"
-  named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
+  scope :with_forum, :conditions => "forum_id is not NULL"
+  scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 
-  named_scope :with_user, lambda {|user|
+  scope :with_user, lambda {|user|
     { :conditions => [ "users.id = ?", user.id ], :joins => :users}
   }
 

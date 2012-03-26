@@ -20,17 +20,19 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.boolean :draft, :default => true, :null => true 
       t.integer :column
       t.timestamps
-      t.index [:dashboard_id, :portlet_id, :draft]
     end
+
+    add_index :dashboards_portlets, [:dashboard_id, :portlet_id, :draft] 
 
     create_table :audiences_dashboards do |t|
       t.integer :audience_id
       t.integer :dashboard_id
       t.integer :role
       t.timestamps
-      t.index [:audience_id, :dashboard_id]
-      t.index :role
     end
+
+    add_index :audiences_dashboards, [:audience_id, :dashboard_id]
+    add_index :audiences_dashboards, :role
 
     add_column :users, :dashboard_id, :integer
   end

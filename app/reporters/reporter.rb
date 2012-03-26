@@ -61,7 +61,7 @@ class Reporters::Reporter < Struct.new(:params)
         end
         recipe.generate_rendering report, view, File.read(template_path), params[:filters]
         logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
-        ReportMailer.deliver_report_generated(report.author.email,report.name)
+        ReportMailer.report_generated(report.author.email,report.name).deliver
       rescue StandardError => e
         message = %Q(Report "#{report.name}" erred in rendering html: (#{e}))
         full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
@@ -97,9 +97,9 @@ protected
   def fatal_logging(logger,report,message)
     logger.fatal message
     if report.nil? || report.author.nil?
-      AppMailer.deliver_system_error(message)
+      AppMailer.system_error(message).deliver
     else
-      ReportMailer.deliver_report_error(report.author.email, report.name || "", message)
+      ReportMailer.report_error(report.author.email, report.name || "", message).deliver
     end
   end
 

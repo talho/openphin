@@ -129,28 +129,28 @@ class User < ActiveRecord::Base
   before_create :create_default_email_device
   before_create :set_display_name
 
-  named_scope :live, :conditions => UNDELETED
+  scope :live, :conditions => UNDELETED
   
-  named_scope :with_jurisdiction, lambda {|jurisdiction|
+  scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
   }
 
-  named_scope :with_user?, lambda {|user|
+  scope :with_user?, lambda {|user|
     { :conditions => ["users.id = ?", user.id]}
   }
-  named_scope :with_apps, lambda{|apps|  #apps is an array of string app names
+  scope :with_apps, lambda{|apps|  #apps is an array of string app names
     { :conditions => ["id in (select user_id from role_memberships where role_id in (select id from roles where application IN (?)))", apps ] }
   }
-  named_scope :without_apps, lambda{|apps|  #apps is an array of string app names
+  scope :without_apps, lambda{|apps|  #apps is an array of string app names
     { :conditions => ["id NOT IN (select user_id from role_memberships where role_id IN (select id from roles where application IN (?)))", apps ] }
   }
 
-#  named_scope :acknowledged_alert, lamda {|alert|
+#  scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
 #  }
 
-  named_scope :alphabetical, :order => 'last_name, first_name, display_name'
+  scope :alphabetical, :order => 'last_name, first_name, display_name'
 
   # thinking sphinx stuff
   # Should be able to search by first name, last name, display name, email address, phone device, jurisdiction, role, and job title.
@@ -218,7 +218,7 @@ class User < ActiveRecord::Base
   end
   
   def has_uploaded?
-    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{confirmation_token}.wav"
+    filename = "#{Rails.root.to_s}/message_recordings/tmp/#{confirmation_token}.wav"
     return File.exists?(filename)
   end
 
@@ -273,7 +273,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_upload_token
-#    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"
+#    filename = "#{Rails.root.to_s}/message_recordings/tmp/#{self.token}.wav"
 #    if File.exists?(filename)
 #      File.delete(filename)
 #    end
@@ -308,7 +308,7 @@ class User < ActiveRecord::Base
     begin
       self.send_later(:delete_by,requester_email,requester_ip)
       unless errors.empty?
-        AppMailer.deliver_user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.")
+        AppMailer.user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.").deliver
       end 
     end
   end

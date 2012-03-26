@@ -1,5 +1,3 @@
-require 'dispatcher'
-
 # General
 
 Then /^I should see error messages$/ do
@@ -149,12 +147,12 @@ Capybara.class_eval do
         Capybara.register_driver "selenium_with_firebug_#{name}".to_sym do |app|
           Capybara::Selenium::Driver
           profile = Selenium::WebDriver::Firefox::Profile.new
-          if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+          if File.exists?("#{Rails.root.to_s}/features/support/firebug.xpi")
             profile['extensions.firebug.currentVersion'] = '100.100.100'
             profile['extensions.firebug.console.enableSites'] = 'true'
             profile['extensions.firebug.script.enableSites'] = 'true'
             profile['extensions.firebug.net.enableSites'] = 'true'
-            profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
+            profile.add_extension("#{Rails.root.to_s}/features/support/firebug.xpi")
 
             Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile })
           else

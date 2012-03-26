@@ -25,7 +25,7 @@ class Admin::RoleAssignmentsController < ApplicationController
         else
           User.assign_role(role, jurisdiction, users)
           users.each do |user|
-            AppMailer.deliver_role_assigned(role, jurisdiction, user, current_user)
+            AppMailer.role_assigned(role, jurisdiction, user, current_user).deliver
           end
           connector = users.size == 1 ? "has" : "have"
           flash[:notice] = "#{users.map(&:email).to_sentence} #{connector} been approved for the role #{role.name} in #{jurisdiction.name}"

@@ -3,7 +3,7 @@
 <div class="aside">
   <h2>Sign In to Your Account</h2>
   <div class="t_boot">
-    <% form_for :session, :url => session_index_path, :html => {:id => 'sign_in_form', :class => "form-stacked"} do |form| %>
+    <%= form_for :session, :url => session_index_path, :html => {:id => 'sign_in_form', :class => "form-stacked"} do |form| %>
       <div class="well">
         <div>
           <%= form.label :email %>

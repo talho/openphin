@@ -54,13 +54,13 @@ class Service::Talho::Email::Message < Service::Talho::Email::Base
       message_hash[msg.name] = {:ref => msg.ref, :value => msg.Value}
     end
     txt = build_ivr(message_hash)
-    GenericMailer.deliver_mail({:recipients => device.URN, :from => @sender, :subject => @title, :body => txt})
+    GenericMailer.mail({:recipients => device.URN, :from => @sender, :subject => @title, :body => txt}).deliver
   end
   
   def do_mass_delivery(recipients, message_hash)
     txt = build_ivr(message_hash)
     recip_emails = recipients.map { |r| r.Devices.select{|d| d.device_type == 'E-mail'}.first.URN }
-    GenericMailer.deliver_mail({:recipients => recip_emails, :from => @sender, :subject => @title, :body => txt})
+    GenericMailer.mail({:recipients => recip_emails, :from => @sender, :subject => @title, :body => txt}).deliver
   end
   
   def build_ivr(message_hash)

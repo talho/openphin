@@ -75,13 +75,13 @@ class Alert < ActiveRecord::Base
   after_create :create_console_alert_device_type
   after_create :batch_deliver
 
-  named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
-  named_scope :devices, {
+  scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
+  scope :devices, {
       :select => "DISTINCT devices.type",
       :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
       :conditions => "alerts.id=#{object_id}"
   }
-  named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
+  scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
   before_create :set_alert_type
 
   def self.default_alert

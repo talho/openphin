@@ -23,17 +23,17 @@ class RoleMembership < ActiveRecord::Base
   validates_presence_of :jurisdiction_id
   validates_presence_of :user
   validates_uniqueness_of :role_id, :scope => [ :jurisdiction_id, :user_id ]
-  named_scope :user_roles, :include => [:role, :jurisdiction, :user], :conditions => {:roles => {:user_role => true}}
-  named_scope :admin_roles, lambda{{ :include => :role, :conditions => {:role_id => Role.admin.id} }}
-  named_scope :public_roles, lambda{{ :include => :role, :conditions => {:role_id => (defined?($public_roles) ? $public_roles | [Role.public.id] : Role.public.id)} }}
-  named_scope :not_public_roles, lambda{{ :include => :role, :conditions => ["role_id != ?", Role.public.id] }}
+  scope :user_roles, :include => [:role, :jurisdiction, :user], :conditions => {:roles => {:user_role => true}}
+  scope :admin_roles, lambda{{ :include => :role, :conditions => {:role_id => Role.admin.id} }}
+  scope :public_roles, lambda{{ :include => :role, :conditions => {:role_id => (defined?($public_roles) ? $public_roles | [Role.public.id] : Role.public.id)} }}
+  scope :not_public_roles, lambda{{ :include => :role, :conditions => ["role_id != ?", Role.public.id] }}
 
-  named_scope :all_roles, :include => [:role, :jurisdiction]
+  scope :all_roles, :include => [:role, :jurisdiction]
 
-  named_scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}, :include => :jurisdiction
-  named_scope :recent, lambda{{ :conditions => ["role_memberships.created_at > ?",1.days.ago] }}
+  scope :alerter, :joins => :role, :conditions => {:roles => {:alerter => true}}, :include => :jurisdiction
+  scope :recent, lambda{{ :conditions => ["role_memberships.created_at > ?",1.days.ago] }}
 
-  named_scope :role_jurisdiction, :select => 'role_id, jurisdiction_id'
+  scope :role_jurisdiction, :select => 'role_id, jurisdiction_id'
   def as_hash
     Hash["role",role.name,"jurisdiction",jurisdiction.name]
   end 

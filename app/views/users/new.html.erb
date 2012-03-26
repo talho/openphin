@@ -1,6 +1,6 @@
 <div class="t_boot">
   <h2>New User</h2>
-  <% form_for @user, :html => {:class => "form-stacked"}  do |f| %>
+  <%= form_for @user, :html => {:class => "form-stacked"}  do |f| %>
     <%= render 'new_user_form', :f => f, :user => @user %>
     <div>
       <%= f.submit 'Sign Up', :disable_with => "Please wait...", :class => "btn large primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn large" %>

@@ -47,21 +47,20 @@ class MigrateAudiences < ActiveRecord::Migration
   
   def self.up
     create_table :targets_users, :id => false, :force => true do |t|
-      t.references :user, :target
+      t.integer :user_id, :target_id
     end
-    
-    Alert.all.each do |alert|
-      unless alert.jurisdictions.empty? && alert.roles.empty? && alert.users.empty?
-        alert.audiences.create!(
-          :jurisdictions => alert.jurisdictions,
-          :roles         => alert.roles,
-          :users         => alert.users
-        )
-      end
-      alert.group_snapshots.each do |group_snapshot|
-        alert.targets.create! :audience_id => group_snapshot.group, :users => group_snapshot.users
-      end
-    end
+    # Alert.all.each do |alert|
+      # unless alert.jurisdictions.empty? && alert.roles.empty? && alert.users.empty?
+        # alert.audiences.create!(
+          # :jurisdictions => alert.jurisdictions,
+          # :roles         => alert.roles,
+          # :users         => alert.users
+        # )
+      # end
+      # alert.group_snapshots.each do |group_snapshot|
+        # alert.targets.create! :audience_id => group_snapshot.group, :users => group_snapshot.users
+      # end
+    # end
     drop_table :alerts_jurisdictions
     drop_table :alerts_organizations
     drop_table :alerts_roles
@@ -101,17 +100,17 @@ class MigrateAudiences < ActiveRecord::Migration
       t.integer "jurisdiction_id"
     end
     
-    Alert.all.each do |alert|
-      alert.targets.each do |target|
-        if target.audience.is_a?(Group)
-          alert.group_snapshots.create! :group => target.audience, :users => target.users
-        else
-          alert.jurisdictions += target.audience.jurisdictions
-          alert.roles         += target.audience.roles
-          alert.users         += target.audience.users
-        end
-      end
-    end
+    # Alert.all.each do |alert|
+      # alert.targets.each do |target|
+        # if target.audience.is_a?(Group)
+          # alert.group_snapshots.create! :group => target.audience, :users => target.users
+        # else
+          # alert.jurisdictions += target.audience.jurisdictions
+          # alert.roles         += target.audience.roles
+          # alert.users         += target.audience.users
+        # end
+      # end
+    # end
 
     drop_table :targets_users
   end

@@ -227,7 +227,7 @@ When /^I import the user file "([^\"]*)" with options "([^\"]*)"$/ do |filename,
   create = (options=~/create/i).nil? ? false : true
   update = (options=~/update/i).nil? ? false : true
   $stderr = StringIO.new
-  UserImporter.import_users(File.join(Rails.root, 'tmp', filename),
+  UserImporter.import_users(File.join(Rails.root.to_s, 'tmp', filename),
                             :default_jurisdiction => Jurisdiction.find_by_name("Texas"),
                             :create => create,
                             :update => update
@@ -276,7 +276,7 @@ Then "standard error stream should not be empty" do
 end
 
 When /^I attach the tmp file at "([^\"]*)" to "([^\"]*)"$/ do |path, field|
-  full_path = "#{File.join(Rails.root,'tmp',path)}"
+  full_path = "#{File.join(Rails.root.to_s,'tmp',path)}"
   page.execute_script("$(\"input[name='#{field}']\").css('opacity', '100')")
   attach_file(field, full_path)
 end

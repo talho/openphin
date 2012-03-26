@@ -22,7 +22,7 @@ class DocumentDailyCleanupWorker < BackgrounDRb::MetaWorker
     
     #notify users that these documents are going to expire soon
     users.flatten.each do |user|
-      DocumentMailer.deliver_documents_soon_to_expire_warning(user)
+      DocumentMailer.documents_soon_to_expire_warning(user).deliver
     end
   end
 end

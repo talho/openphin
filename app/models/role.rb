@@ -19,10 +19,10 @@ class Role < ActiveRecord::Base
   has_many :users, :through => :role_memberships
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :alerters, :conditions => {:alerter => true}
-  named_scope :alphabetical, :order => 'name'
-  named_scope :public, :conditions => {:approval_required => false}
-  named_scope :non_public, :conditions => {:approval_required => true}
+  scope :alerters, :conditions => {:alerter => true}
+  scope :alphabetical, :order => 'name'
+  scope :public, :conditions => {:approval_required => false}
+  scope :non_public, :conditions => {:approval_required => true}
   default_scope :order => "user_role, name ASC"
 
   Defaults = {
@@ -33,15 +33,15 @@ class Role < ActiveRecord::Base
     :public => 'Public'
   }
   
-  named_scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
+  scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
 
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
-  named_scope :for_app, lambda { |app| { :conditions => { :application => app } } }
+  scope :for_app, lambda { |app| { :conditions => { :application => app } } }
   
-  named_scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
+  scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
                                        conditions[:application] = app.to_s unless app.blank?
                                        {:conditions => conditions} }
-  named_scope :superadmins, ->(app = nil) { conditions = {:name => Defaults[:superadmin]}
+  scope :superadmins, ->(app = nil) { conditions = {:name => Defaults[:superadmin]}
                                             conditions[:application] = app.to_s unless app.blank?
                                             {:conditions => conditions} }
   
@@ -81,8 +81,8 @@ class Role < ActiveRecord::Base
     find_or_create_by_name_and_application(Defaults[:public],app) {|r| r.user_role = true }
   end
 
-  named_scope :user_roles, :conditions => { :user_role => true }
-  named_scope :approval_roles, :conditions => { :approval_required => true }
+  scope :user_roles, :conditions => { :user_role => true }
+  scope :approval_roles, :conditions => { :approval_required => true }
 
   validates_uniqueness_of :name, :scope => :application
 
