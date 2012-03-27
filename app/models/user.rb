@@ -491,7 +491,7 @@ class User < ActiveRecord::Base
         end
       end
     end
-    super
+    #super
   end
 
 private

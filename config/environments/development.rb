@@ -14,6 +14,8 @@ Openphin::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
   
+  config.active_support.deprecation = :log
+  
   # Show full error reports and disable caching
   config.action_controller.consider_all_requests_local = true
   config.action_view.debug_rjs                         = true
@@ -24,7 +26,7 @@ Openphin::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { :host => HOST }
   
-  config.reload_plugins = true
+  #config.reload_plugins = true
   
   PHIN_PARTNER_OID="2.16.840.1.114222.4.3.2.2.3.770"
   PHIN_APP_OID="1"

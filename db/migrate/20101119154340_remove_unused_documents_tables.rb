@@ -11,7 +11,7 @@ class RemoveUnusedDocumentsTables < ActiveRecord::Migration
       t.boolean :notify_before_document_expiry, :default => true
     end
 
-    Folder.reset_column_information
+ #   Folder.reset_column_information
 
     create_table :folder_permissions do |t|
       t.integer :folder_id
@@ -23,7 +23,7 @@ class RemoveUnusedDocumentsTables < ActiveRecord::Migration
     add_index :folder_permissions, :user_id
 
     add_column :documents, :delta, :boolean, :default => true
-    Document.reset_column_information
+ #   Document.reset_column_information
 
     #find the shares that need to be converted
 #    shares = execute('Select id, name from channels').all_hashes.map {|x| {:id => x['id'], :name => x['name']} }

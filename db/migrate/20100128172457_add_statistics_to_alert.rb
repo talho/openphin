@@ -1,7 +1,7 @@
 class AddStatisticsToAlert < ActiveRecord::Migration
   def self.up
     add_column :alerts, :options, :text
-    require 'app/models/alert'
+    #require 'app/models/alert'
     #add basic stats to all alerts
     # Alert.find_each(:batch_size=>100,:include=>[{:alert_attempts => {:user => :jurisdictions}}], :conditions => ["acknowledge = ?", true]) do |alert|
     #   aa_size = alert.alert_attempts.size.to_f

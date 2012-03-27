@@ -22,7 +22,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :dashboards_portlets, [:dashboard_id, :portlet_id, :draft] 
+    add_index :dashboards_portlets, [:dashboard_id, :portlet_id, :draft], :name => 'dashboard_portlet_draft_index'
 
     create_table :audiences_dashboards do |t|
       t.integer :audience_id
@@ -31,7 +31,7 @@ class AddDashboardAndPortletTables < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :audiences_dashboards, [:audience_id, :dashboard_id]
+    add_index :audiences_dashboards, [:audience_id, :dashboard_id], :name => 'dashboard_audience_dashboard_index'
     add_index :audiences_dashboards, :role
 
     add_column :users, :dashboard_id, :integer

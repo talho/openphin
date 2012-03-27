@@ -5,7 +5,7 @@ class CreateAudiencesSubAudiences < ActiveRecord::Migration
       t.integer :sub_audience_id
     end
     
-    add_index :audiences_sub_audiences, [:audience_id, :sub_audience_id], :uniq => true
+    add_index :audiences_sub_audiences, [:audience_id, :sub_audience_id], :uniq => true, :name => "audience_sub_audience_uniq_index"
   end
 
   def self.down
