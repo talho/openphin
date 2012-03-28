@@ -1,6 +1,6 @@
 Given /^"([^\"]*)" is a member of the organization "([^\"]*)"$/ do |email, org_name|
-	user = User.find_by_email(email) || Factory(:user, :email => email)
-	org = Organization.find_by_name(org_name) || Factory(:organization, :name => org_name)
+	user = User.find_by_email(email) || FactoryGirl.create(:user, :email => email)
+	org = Organization.find_by_name(org_name) || FactoryGirl.create(:organization, :name => org_name)
   org << user
   org.save!
 end
@@ -17,7 +17,7 @@ end
 
 Given /^a few organizations$/ do
   3.times do |i|
-    Factory.create(:organization)
+    FactoryGirl.create(:organization)
   end
 end
 

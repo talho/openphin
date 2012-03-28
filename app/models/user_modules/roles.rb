@@ -41,14 +41,8 @@ module UserModules
     
     def is_super_admin?(app = "")
       return true if is_sysadmin?
-      begin
-        jid = Jurisdiction.state.nonforeign.blank? ? 0 : Jurisdiction.state.nonforeign.first.id # Should be Texas
-        rescue
-          return false
-        end
-        return false if jid.nil?
-        conditions = app.blank? ? {} : {:application => app}
-        return role_memberships.count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
+      conditions = app.blank? ? {} : {:application => app}
+      return role_memberships.where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
       end
      
     def is_admin?(app = "")

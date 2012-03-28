@@ -13,7 +13,7 @@ When /^I edit (?:a|the "([^"]*)") dashboard (?:on|as) "([^\"]*)"$/ do |dash_name
 end
 
 Given /^the following dashboard exists:$/ do |table|
-  Factory.create(:dashboard, table.rows_hash)
+  FactoryGirl.create(:dashboard, table.rows_hash)
 end
 
 Given /^the "([^\"]*)" dashboard has the following portlet:$/ do |dash_name, table|

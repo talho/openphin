@@ -7,7 +7,7 @@ Given /^the following groups for "([^\"]*)" exist:$/ do |email, table|
     options[:owner_jurisdiction] = Jurisdiction.find_by_name(owner_jurisdiction) unless owner_jurisdiction.blank?
     options[:roles] = Role.find_all_by_name(roles.split(',').map(&:strip)) unless roles.blank?
     options[:users] = User.find_all_by_email(users.split(',').map(&:strip)) unless users.blank?
-    group = Factory(:group, options)
+    group = FactoryGirl.create(:group, options)
    end
 end
 

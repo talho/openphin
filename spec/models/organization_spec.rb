@@ -34,8 +34,8 @@ describe Organization do
   describe "validations" do
 
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
       @organization = Factory.build(:organization)
     end
 
@@ -78,8 +78,8 @@ describe Organization do
 
   describe "default scope" do
     before do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
       Organization.delete_all
       Organization.create! :name => 'Banana', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization"
       Organization.create! :name => 'Apple', :distribution_email => "abc@email.com", :postal_code => "22212", :phone => "555-555-5555", :street => "123 Willow Ave. Suite 34", :locality => "Dallas", :state => "TX", :description => "National Organization"
@@ -93,10 +93,10 @@ describe Organization do
   
   describe "parent/child relationships" do
     it "should return an array of people from .users" do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      o=Factory(:organization, :name => "APHC")
-      p=Factory(:user)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      o=FactoryGirl.create(:organization, :name => "APHC")
+      p=FactoryGirl.create(:user)
       o.group.users << p
       o.group.users.length.should == 1
     end  
@@ -105,9 +105,9 @@ describe Organization do
   describe "finders" do
     describe ".approved" do
       it "should return only approved organizations " do
-        unapproved_org = Factory(:organization, :approved => false)
-        organization1 = Factory(:organization)
-        organization2 = Factory(:organization)
+        unapproved_org = FactoryGirl.create(:organization, :approved => false)
+        organization1 = FactoryGirl.create(:organization)
+        organization2 = FactoryGirl.create(:organization)
         approved_orgs = [organization1, organization2]
         Organization.approved.should include(*approved_orgs)
         Organization.approved.should_not include(unapproved_org)

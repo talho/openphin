@@ -41,14 +41,14 @@ describe "Released" do
   Recipe::Recipe.selectable.map(&:name).grep(/Recipe$/).each do |id|
 #    puts "Testing #{id} for data capturing operations"
     it "#{id} captures data to a file" do
-      report = Factory(:report_report,:recipe=>id)
+      report = FactoryGirl.create(:report_report,:recipe=>id)
       report.dataset.should_receive(:insert).at_least(:once).with(any_args())
       recipe = id.constantize
       recipe.capture_to_db report
     end
     it "#{id} captures data to the report as a resultset and generates the html to the report as a rendering" do
-#      report = Factory(:report_report)
-      current_user = Factory(:user)
+#      report = FactoryGirl.create(:report_report)
+      current_user = FactoryGirl.create(:user)
       report = current_user.reports.create!(:recipe=>id,:incomplete=>true)
 #      Reporters::Reporter.new(:report_id=>report[:id]).perform
       recipe = id.constantize

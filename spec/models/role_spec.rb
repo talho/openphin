@@ -20,8 +20,8 @@ describe Role do
     describe "#user_roles" do
       it "should return user roles, not including system roles" do
         Role.delete_all
-        user_role = Factory(:role, :user_role => true, :name => "user role")
-        system_role = Factory(:role, :user_role => false, :name => "system role")
+        user_role = FactoryGirl.create(:role, :user_role => true, :name => "user role")
+        system_role = FactoryGirl.create(:role, :user_role => false, :name => "system role")
         Role.user_roles.should == [user_role]
       end
     end

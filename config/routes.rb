@@ -146,12 +146,12 @@ Openphin::Application.routes.draw do
       get :faqs
     end
   end
-  match '/' => 'dashboard#index', :format => 'ext'
+  root :to => 'dashboard#index', :format => 'ext'
   match '/about' => 'dashboard#about', :as => :about_dashboard
   match '/about_talhophin' => 'dashboard#about_talhophin', :as => :about_talhophin
   match '/han.:format' => 'dashboard#hud', :as => :hud
   match '/ext' => 'dashboard#index', :as => :ext, :format => 'ext'
-  resources :session, :only => [:new, :create, :destroy]
+  resources :sessions, :only => [:new, :create, :destroy]
   match '/sign_out' => 'sessions#destroy', :as => :sign_out, :method => :delete
   match '/sign_in' => 'sessions#new', :as => :sign_in
 end

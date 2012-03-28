@@ -1,5 +1,5 @@
 Given 'a share named "$name"' do |name|
-  Share.find_by_name(name) || Factory(:share, :name => name, :owner => current_user)
+  Share.find_by_name(name) || FactoryGirl.create(:share, :name => name, :owner => current_user)
 end
 
 Given 'I created the share "$name"' do |name|

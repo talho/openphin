@@ -1,8 +1,8 @@
 Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_email, role_name, jurisdiction_name|
-  user=User.find_by_email(user_email) || Factory(:user, :email => user_email)
-  role=Role.find_by_name(role_name) || Factory(:role, :name => role_name)
-  jurisdiction = Jurisdiction.find_by_name(jurisdiction_name) ||  Factory(:jurisdiction, :name => jurisdiction_name)
-  req = Factory(:role_request,
+  user=User.find_by_email(user_email) || FactoryGirl.create(:user, :email => user_email)
+  role=Role.find_by_name(role_name) || FactoryGirl.create(:role, :name => role_name)
+  jurisdiction = Jurisdiction.find_by_name(jurisdiction_name) ||  FactoryGirl.create(:jurisdiction, :name => jurisdiction_name)
+  req = FactoryGirl.create(:role_request,
                     :jurisdiction => jurisdiction,
                     :role => role,
                     :user => user,
@@ -17,7 +17,7 @@ Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)"
   role = Role.find_by_name!(role_name)
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   user = User.find_by_email(email_address)
-  r = user.role_memberships << Factory(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :created_at => numdays.to_i.days.ago)
+  r = user.role_memberships << FactoryGirl.create(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :created_at => numdays.to_i.days.ago)
 end
 
 When /^I fill out the role request form with:$/ do |table|

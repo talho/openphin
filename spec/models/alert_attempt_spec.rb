@@ -23,24 +23,24 @@ describe "AlertAttempt" do
 
 	describe "named scope for_jurisdiction" do
 		before(:each) do
-			@j1=Factory(:jurisdiction)
-			@j2=Factory(:jurisdiction)
-			@j3=Factory(:jurisdiction)
-			role=Factory(:role)
-			u1=Factory(:user)
-			u2=Factory(:user)
-			u3=Factory(:user)
-			u4=Factory(:user)
+			@j1=FactoryGirl.create(:jurisdiction)
+			@j2=FactoryGirl.create(:jurisdiction)
+			@j3=FactoryGirl.create(:jurisdiction)
+			role=FactoryGirl.create(:role)
+			u1=FactoryGirl.create(:user)
+			u2=FactoryGirl.create(:user)
+			u3=FactoryGirl.create(:user)
+			u4=FactoryGirl.create(:user)
 			u1.role_memberships.create!(:role => role, :jurisdiction => @j1)
 			u2.role_memberships.create!(:role => role, :jurisdiction => @j1)
 			u2.role_memberships.create!(:role => role, :jurisdiction => @j2)
 			u3.role_memberships.create!(:role => role, :jurisdiction => @j3)
-			u4.role_memberships.create!(:role => Factory(:role), :jurisdiction => @j2)
+			u4.role_memberships.create!(:role => FactoryGirl.create(:role), :jurisdiction => @j2)
 			audience = Audience.create
 			audience.jurisdictions << @j1
 			audience.jurisdictions << @j2
 			audience.roles << role
-            @alert=Factory(:han_alert, :audiences => [audience])
+            @alert=FactoryGirl.create(:han_alert, :audiences => [audience])
 			@alert.alert_attempts.create!(:user => u1)
 			aa = @alert.alert_attempts.create!(:user => u2)
             @alert.initialize_statistics

@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe DevicesController do
   before(:each) do
-    @jurisdiction =Factory(:jurisdiction)
-    Factory(:jurisdiction).move_to_child_of(@jurisdiction)
+    @jurisdiction =FactoryGirl.create(:jurisdiction)
+    FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
   end
 
   #Delete these examples and add some real ones
@@ -12,8 +12,8 @@ describe DevicesController do
   end
 
   it "should destroy when owner is logged in" do
-    user = Factory(:user)
-    device = Factory(:email_device, :user => user)
+    user = FactoryGirl.create(:user)
+    device = FactoryGirl.create(:email_device, :user => user)
     login_as(user)
     lambda {
       delete(:destroy, {:user_id => user.id, :id => device.id}).session["flash"].should be_blank
@@ -21,9 +21,9 @@ describe DevicesController do
   end
 
   it "should not destroy when another user is logged in" do
-    user = Factory(:user)
-    user2 = Factory(:user)
-    device = Factory(:email_device, :user => user2)
+    user = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
+    device = FactoryGirl.create(:email_device, :user => user2)
     login_as(user)
     lambda {
       delete(:destroy, {:user_id => user2.id, :id => device.id}).session["flash"][:error].should_not be_blank
@@ -31,12 +31,12 @@ describe DevicesController do
   end
 
   it "should destroy when admin is logged in" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     RoleMembership.create(:role => Role.admin, :jurisdiction => @jurisdiction, :user => user)
     user.reload
     device_ct=Device.all.size
-    user2 = Factory(:user)
-    RoleMembership.create(:role => Factory(:role), :jurisdiction => @jurisdiction, :user => user2)
+    user2 = FactoryGirl.create(:user)
+    RoleMembership.create(:role => FactoryGirl.create(:role), :jurisdiction => @jurisdiction, :user => user2)
     user.reload
     device = user2.devices.first
     login_as(user)

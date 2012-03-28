@@ -74,7 +74,7 @@ module SpecHelpers
       it "should have a contact for each user" do
         users = []
         5.times do |i|
-          users << Factory(:user, :email => "joe#{i}@example.com", :devices => [])
+          users << FactoryGirl.create(:user, :email => "joe#{i}@example.com", :devices => [])
           users.last.devices << Factory.build(:phone_device, :phone => "616555#{i.to_s.rjust(4,'0')}", :user => users.last)
         end
 

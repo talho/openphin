@@ -1,5 +1,5 @@
 Given /^I have an? (.*) device$/ do |device_type|
-  current_user.devices << Factory("#{device_type.downcase}_device")
+  current_user.devices << FactoryGirl.create("#{device_type.downcase}_device")
 
 end
 
@@ -298,15 +298,15 @@ Given /^(.*) has the following devices:$/ do |useremail, table|
   table.rows_hash.each do |type, value|
     case type
       when /email/i
-        Factory(:email_device, :email_address => value, :user => user)
+        FactoryGirl.create(:email_device, :email_address => value, :user => user)
       when /fax/i
-        Factory(:fax_device, :fax => value, :user => user)
+        FactoryGirl.create(:fax_device, :fax => value, :user => user)
       when /phone/i
-        Factory(:phone_device, :phone => value, :user => user)
+        FactoryGirl.create(:phone_device, :phone => value, :user => user)
       when /sms/i
-        Factory(:sms_device, :sms => value, :user => user)
+        FactoryGirl.create(:sms_device, :sms => value, :user => user)
       when /blackberry/i
-        Factory(:blackberry_device, :blackberry => value, :user => user)
+        FactoryGirl.create(:blackberry_device, :blackberry => value, :user => user)
     end
   end
 

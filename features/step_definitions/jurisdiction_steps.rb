@@ -31,7 +31,7 @@ end
 Given /^(\d*) jurisdictions that are children of (.*)$/ do |count, parent|
   pj = Jurisdiction.find_by_name(parent)
   count.to_i.times do
-    j=Factory(:jurisdiction)
+    j=FactoryGirl.create(:jurisdiction)
     j.move_to_child_of(pj)
   end
 end

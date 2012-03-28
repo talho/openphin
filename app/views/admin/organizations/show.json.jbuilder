@@ -1,2 +1,2 @@
 
-json.partial! 'admin/organizations/_organization', org: @organization
+json.partial! 'organization', org: @organization

@@ -4,9 +4,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe Device::EmailDevice do
   describe 'validations' do
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      @email = Factory(:email_device)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      @email = FactoryGirl.create(:email_device)
     end
     
     it "should be valid" do

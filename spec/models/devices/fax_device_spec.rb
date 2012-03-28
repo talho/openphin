@@ -6,9 +6,9 @@ describe Device::FaxDevice do
 
   describe 'validations' do
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      @fax = Factory(:fax_device)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      @fax = FactoryGirl.create(:fax_device)
     end
     it "should be valid" do
       @fax.should be_valid

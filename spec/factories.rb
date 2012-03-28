@@ -77,17 +77,17 @@ FactoryGirl.define do
     status 'Test'
     severity 'Moderate'
     delivery_time 60
-    from_jurisdiction { Factory(:jurisdiction) }
+    from_jurisdiction { FactoryGirl.create(:jurisdiction) }
     audiences {|a| [a.association(:audience)] }
   end
 
-  factory(:audience) do
+  factory :audience do
     users {|u| [u.association(:user)] }
   end
 
   factory :alert_attempt do
     alert {|t| t.association :alert}
-    user {|t| Factory(:user)}
+    user {|t| FactoryGirl.create(:user)}
     requested_at Time.zone.now
   end
 

@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe Reporters::Reporter do
   before(:each) do
     User.all.map(&:destroy)
-    @current_user = Factory(:user)
+    @current_user = FactoryGirl.create(:user)
     @recipe = Recipe.find("Recipe::UserAllWithinJurisdictionsRecipe")
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true

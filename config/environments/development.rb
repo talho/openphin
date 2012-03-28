@@ -17,7 +17,7 @@ Openphin::Application.configure do
   config.active_support.deprecation = :log
   
   # Show full error reports and disable caching
-  config.action_controller.consider_all_requests_local = true
+  config.consider_all_requests_local = true
   config.action_view.debug_rjs                         = true
   config.action_controller.perform_caching             = false
   config.reload_plugins                                = true

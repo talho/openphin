@@ -14,8 +14,8 @@ describe Service::Tfcc::Phone::Alert do
   end
 
   before(:each) do
-    @alert = Factory(:han_alert, :acknowledge => false)
-    @user = Factory(:user, :devices => [Factory(:phone_device)])
+    @alert = FactoryGirl.create(:han_alert, :acknowledge => false)
+    @user = FactoryGirl.create(:user, :devices => [FactoryGirl.create(:phone_device)])
     @client_id = "AAA1"
     @user_id = "BBB2"
     @retry_duration = "6 hours"

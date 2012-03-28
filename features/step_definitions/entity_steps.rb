@@ -19,9 +19,9 @@ Given /^a[n]? organization named (.*)$/ do |name|
 end
 
 Given /^a new organization named (.*)$/ do |name|
-  org = Factory(:organization, :name => name)
-  user = Factory(:user)
-  RoleMembership.create(:user => user, :role => Role.admin, :jurisdiction => Jurisdiction.root || Factory(:jurisdiction))
+  org = FactoryGirl.create(:organization, :name => name)
+  user = FactoryGirl.create(:user)
+  RoleMembership.create(:user => user, :role => Role.admin, :jurisdiction => Jurisdiction.root || FactoryGirl.create(:jurisdiction))
   org
 end
 
@@ -29,7 +29,7 @@ Given 'a jurisdiction named $name' do |name|
   if jurisdiction=Jurisdiction.find_by_name(name)
     jurisdiction
   else
-    jurisdiction = Factory(:jurisdiction, :name => name)
+    jurisdiction = FactoryGirl.create(:jurisdiction, :name => name)
     jurisdiction.move_to_child_of(Jurisdiction.root) if Jurisdiction.root
     jurisdiction
   end
@@ -39,18 +39,18 @@ Given 'a child jurisdiction named $name' do |name|
   if jurisdiction=Jurisdiction.find_by_name(name)
     jurisdiction
   else
-    jurisdiction = Factory(:jurisdiction, :name => name)
+    jurisdiction = FactoryGirl.create(:jurisdiction, :name => name)
     if Jurisdiction.root
       if Jurisdiction.state.nonforeign.blank?
-        state = Factory(:jurisdiction)
+        state = FactoryGirl.create(:jurisdiction)
         state.move_to_child_of(Jurisdiction.root)
         jurisdiction.move_to_child_of(state)
       else
         jurisdiction.move_to_child_of(Jurisdiction.state.nonforeign.first)
       end
     else
-      federal = Factory(:jurisdiction)
-      state = Factory(:jurisdiction)
+      federal = FactoryGirl.create(:jurisdiction)
+      state = FactoryGirl.create(:jurisdiction)
       state.move_to_child_of(Jurisdiction.root)
       jurisdiction.move_to_child_of(state)
     end
@@ -59,29 +59,29 @@ Given 'a child jurisdiction named $name' do |name|
 end
 
 Given /^a[n]? role named (.*)$/ do |name|
-  Role.find_by_name_and_application(name,"phin") || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => "phin")
+  Role.find_by_name_and_application(name,"phin") || FactoryGirl.create(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => "phin")
 end
 
 Given /^a[n]? application role named (.*) for (.*)$/ do |name, app|
-  Role.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => app)
+  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => app)
 end
 
 Given /^a[n]? organization type named (.*)$/ do |name|
-  OrganizationType.find_by_name(name) || Factory(:organization_type, :name => name)
+  OrganizationType.find_by_name(name) || FactoryGirl.create(:organization_type, :name => name)
 end
 
 Given /^a[n]? approval role named (.*)$/ do |name|
-  Role.approval_roles.find_by_name(name) || Factory(:role, :name => name, :approval_required => true)
+  Role.approval_roles.find_by_name(name) || FactoryGirl.create(:role, :name => name, :approval_required => true)
 end
 Given /^a[n]? application approval role named (.*) for (.*)$/ do |name, app|
-  Role.approval_roles.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => true, :application => app)
+  Role.approval_roles.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => true, :application => app)
 end
 
 Given /^a[n]? system role named (.*)$/ do |name|
-  r = Role.approval_roles.find_by_name_and_application(name, "phin") || Factory(:role, :name => name, :approval_required => true, :user_role => false, :application => "phin")
+  r = Role.approval_roles.find_by_name_and_application(name, "phin") || FactoryGirl.create(:role, :name => name, :approval_required => true, :user_role => false, :application => "phin")
 end
 Given /^a[n]? application system role named (.*) for (.*)$/ do |name, app|
-  Role.find_by_name_and_application(name,app) || Factory(:role, :name => name, :approval_required => true, :user_role => false, :application => app)
+  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => true, :user_role => false, :application => app)
 end
 
 Given /^the role "([^\"]*)" is for the "([^\"]*)" application$/ do |role, app|
@@ -125,5 +125,5 @@ Given '"$name" has the FIPS code "$code"' do |name, code|
 end
 
 When /^an article exists$/ do
-	Factory(:article)
+	FactoryGirl.create(:article)
 end

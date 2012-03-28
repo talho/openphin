@@ -6,9 +6,9 @@ describe Device::BlackberryDevice do
 
   describe 'validations' do
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      @blackberry = Factory(:blackberry_device)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      @blackberry = FactoryGirl.create(:blackberry_device)
     end
     it "should be valid" do
       @blackberry.should be_valid

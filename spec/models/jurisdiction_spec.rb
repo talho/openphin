@@ -51,31 +51,31 @@ describe Jurisdiction do
   
   describe "associations" do
     it "should have many users through its role memberships" do
-      jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(jurisdiction)
-      other_jurisdiction = Factory(:jurisdiction)
-      user1 = Factory(:user)
-      user2 = Factory(:user)
-      unexpected_user = Factory(:user)
+      jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(jurisdiction)
+      other_jurisdiction = FactoryGirl.create(:jurisdiction)
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+      unexpected_user = FactoryGirl.create(:user)
       
-      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
-      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
-      Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
+      FactoryGirl.create(:role_membership, :jurisdiction => jurisdiction, :user => user1)
+      FactoryGirl.create(:role_membership, :jurisdiction => jurisdiction, :user => user2)
+      FactoryGirl.create(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
       
       jurisdiction.users.should == [user1, user2]
     end
     
     it "should not include users in child jurisdictions" do
-      jurisdiction = Factory(:jurisdiction)
-      other_jurisdiction = Factory(:jurisdiction)
+      jurisdiction = FactoryGirl.create(:jurisdiction)
+      other_jurisdiction = FactoryGirl.create(:jurisdiction)
       other_jurisdiction.move_to_child_of(jurisdiction)
-      user1 = Factory(:user)
-      user2 = Factory(:user)
-      unexpected_user = Factory(:user)
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+      unexpected_user = FactoryGirl.create(:user)
       
-      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user1)
-      Factory(:role_membership, :jurisdiction => jurisdiction, :user => user2)
-      Factory(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
+      FactoryGirl.create(:role_membership, :jurisdiction => jurisdiction, :user => user1)
+      FactoryGirl.create(:role_membership, :jurisdiction => jurisdiction, :user => user2)
+      FactoryGirl.create(:role_membership, :jurisdiction => other_jurisdiction, :user => unexpected_user)
       
       jurisdiction.users.should == [user1, user2]
        
@@ -84,13 +84,13 @@ describe Jurisdiction do
   
   describe "name_scope: admin relationships" do
     before :each do
-      @dallas = Factory(:jurisdiction, :name => "dallas")
-      @houston = Factory(:jurisdiction, :name => "houston")
-      @austin = Factory(:jurisdiction, :name => "austin")
-      @user = Factory(:user)
-      @user.role_memberships << Factory(:role_membership, :jurisdiction => @dallas, :role => Role.admin, :user => @user)
-      @user.role_memberships << Factory(:role_membership, :jurisdiction => @houston, :role => Role.admin, :user => @user)
-      @user.role_memberships << Factory(:role_membership, :jurisdiction => @austin, :role => Factory(:role), :user => @user)
+      @dallas = FactoryGirl.create(:jurisdiction, :name => "dallas")
+      @houston = FactoryGirl.create(:jurisdiction, :name => "houston")
+      @austin = FactoryGirl.create(:jurisdiction, :name => "austin")
+      @user = FactoryGirl.create(:user)
+      @user.role_memberships << FactoryGirl.create(:role_membership, :jurisdiction => @dallas, :role => Role.admin, :user => @user)
+      @user.role_memberships << FactoryGirl.create(:role_membership, :jurisdiction => @houston, :role => Role.admin, :user => @user)
+      @user.role_memberships << FactoryGirl.create(:role_membership, :jurisdiction => @austin, :role => FactoryGirl.create(:role), :user => @user)
     end
 
     it "should return jurisdictions the user is an admin of" do

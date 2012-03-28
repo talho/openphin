@@ -11,27 +11,22 @@ Openphin::Application.configure do
   config.whiny_nils = true
   
   # Show full error reports and disable caching
-  config.action_controller.consider_all_requests_local = true
-  config.action_controller.perform_caching             = false
+  config.consider_all_requests_local = true
+  config.perform_caching             = false
   
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection    = false
-  
-  # Tell Action Mailer not to deliver emails to the real world.
-  # The :test delivery method accumulates sent emails in the
-  # ActionMailer::Base.deliveries array.
-  config.action_mailer.delivery_method = :test
-  config.action_mailer.default_url_options = { :host => HOST }
-  
-  config.plugins = config.plugin_locators.map do |locator|
-    locator.new(self).plugins
-  end.flatten.map{|p| p.name.to_sym}
-  config.plugins -= [:backgroundrb]
-  
+      
   PHIN_PARTNER_OID="1.3.6.1.4.1.1"
   PHIN_APP_OID="1"
   PHIN_ENV_OID="3"
   PHIN_OID_ROOT="#{PHIN_PARTNER_OID}.#{PHIN_ENV_OID}.#{PHIN_APP_OID}"
   UPLOAD_BASE_URI = "http://localhost:3000"
   HOST = 'localhost:3000'
+  
+  # Tell Action Mailer not to deliver emails to the real world.
+  # The :test delivery method accumulates sent emails in the
+  # ActionMailer::Base.deliveries array.
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.default_url_options = { :host => HOST }
 end
