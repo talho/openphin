@@ -270,7 +270,7 @@ When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do 
     using_wait_time(0.2) do 
       page.has_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true) # let's wait for the loading mask to appear. this is to fix a speed issue in chrome (it passes the step before the load mask shows)
     end
-    using_wait_time(wait_seconds.to_f || 1) do
+    using_wait_time((wait_seconds|| 1).to_f) do
       page.should have_no_css('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true)
     end
   rescue Selenium::WebDriver::Error::ObsoleteElementError

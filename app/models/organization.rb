@@ -46,8 +46,6 @@ class Organization < ActiveRecord::Base
   before_create :set_token, :create_group
   before_save :set_before_save_var
   after_save :ensure_folder
-
-  default_scope :order => :name
   
   scope :with_user, lambda {|user|
     { :conditions => ["organizations.group_id IN (SELECT * FROM sp_audiences_for_user(?))", user.id], :order => 'organizations.name'}
