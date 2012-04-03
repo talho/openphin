@@ -1,4 +1,4 @@
-class Recipe::UserAllBatchRecipe < Recipe
+class RecipeExternal::UserAllBatchRecipe < RecipeExternal
   
   class << self
 

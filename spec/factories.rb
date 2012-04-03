@@ -190,12 +190,12 @@ FactoryGirl.define do
     association :user
   end
 
-  factory :report_recipe, :class => Recipe do
+  factory :report_recipe, :class => RecipeExternal do
   end
 
   factory :report_report, :class => Report::Report do
     association :author, :factory => :user
-    recipe "Report::Recipe"
+    recipe "Report::RecipeExternal"
     incomplete :true
   end
 

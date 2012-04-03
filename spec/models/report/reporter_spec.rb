@@ -4,7 +4,7 @@ describe Reporters::Reporter do
   before(:each) do
     User.all.map(&:destroy)
     @current_user = FactoryGirl.create(:user)
-    @recipe = Recipe.find("Recipe::UserAllWithinJurisdictionsRecipe")
+    @recipe = RecipeExternal.find("RecipeExternal::UserAllWithinJurisdictionsRecipe")
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
@@ -35,7 +35,7 @@ describe Reporters::Reporter do
       Reporters::Reporter.new(:report_id=>report[:id]).perform
     end
     it "on a non-existent recipe" do
-      report = @current_user.reports.create(:recipe=>"Recipe::CocktailRecipe",:incomplete=>true)
+      report = @current_user.reports.create(:recipe=>"RecipeExternal::CocktailRecipe",:incomplete=>true)
       report.should_not be_valid
     end
   end

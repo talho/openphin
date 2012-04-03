@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Report::Report do
 
-  id = Recipe::Recipe.selectable.map(&:name).grep(/Recipe$/).first
+  id = RecipeExternal::RecipeExternal.selectable.map(&:name).grep(/Recipe$/).first
 
   context "can" do
     it "associate with author and recipe" do
@@ -23,7 +23,7 @@ describe Report::Report do
     it "create a report with using a non-existent recipe" do
 #      report = FactoryGirl.create(:report_report,:recipe=>"Report::MartiniRecipe")
       @current_user = FactoryGirl.create(:user)
-      report = @current_user.reports.create(:recipe=>"Recipe::MartiniRecipe",:incomplete=>true)
+      report = @current_user.reports.create(:recipe=>"RecipeExternal::MartiniRecipe",:incomplete=>true)
       report[:id].should be_nil
     end
   end

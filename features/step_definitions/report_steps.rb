@@ -6,7 +6,7 @@ end
 
 Given /^reports derived from the following recipes and authored by exist:$/ do |table|
   table.raw.each do |row|
-    Given %Q(the report derived from recipe "#{row[0]}" by the author with email "#{row[1]}")
+    step %Q(the report derived from recipe "#{row[0]}" by the author with email "#{row[1]}")
   end
 end
 

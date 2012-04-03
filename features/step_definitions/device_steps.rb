@@ -104,7 +104,7 @@ Then /^"([^\"]*)" should receive the email with an alert attachment:$/ do |email
 end
 
 Then /^the following users should receive the email:$/ do |table|
-  When "delayed jobs are processed"
+  step "delayed jobs are processed"
 
   headers = table.headers
   recipients = if headers.first == "roles"
@@ -116,7 +116,7 @@ Then /^the following users should receive the email:$/ do |table|
   recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
 
   recipients.each do |user|
-    Then %Q{"#{user.email}" should receive the email:}, table
+    step %Q{"#{user.email}" should receive the email:}, table
   end
 end
 
@@ -134,7 +134,7 @@ Then '"$email" should not receive an email with the subject "$subject"' do |emai
 end
 
 Then "the following users should not receive any emails" do |table|
-  When "delayed jobs are processed"
+  step "delayed jobs are processed"
 
   headers = table.headers
   recipients = if headers.first == "roles"
@@ -146,7 +146,7 @@ Then "the following users should not receive any emails" do |table|
   end
 
   recipients.each do |user|
-    Then %Q{"#{user.email}" should not receive an email}
+    step %Q{"#{user.email}" should not receive an email}
   end
 end
 

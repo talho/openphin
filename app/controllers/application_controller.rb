@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
   helper_method :toolbar
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  #protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-  before_filter :authenticate, :set_locale, :except => :options
+  before_filter :authorize, :set_locale, :except => :options
   before_filter :add_cors_header, :only => :options
 
   layout :choose_layout
@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
   # end
 
   def admin_required
-    unless current_user.role_memberships.count(:conditions => {:role_id => (Role.admins | Role.superadmins).map(&:id) }) > 0
+    unless current_user.role_memberships.where(:role_id => (Role.admins | Role.superadmins).map(&:id)).count > 0
       message = "That resource does not exist or you do not have access to it."
       if request.xhr?
         respond_to do |format|
@@ -283,7 +283,7 @@ private
     # end
   # end
 
-  def force_json_as_html
-    self.class.rescue_from Exception, :with => :render_json_error_as_html
-  end
+  # def force_json_as_html
+    # self.class.rescue_from Exception, :with => :render_json_error_as_html
+  # end
 end

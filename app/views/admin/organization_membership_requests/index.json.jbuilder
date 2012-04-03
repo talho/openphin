@@ -1,7 +1,7 @@
 
 json.array! @requests do |json, req|
   json.(req, :id)
-  json.name r.user.display_name
-  json.organization r.organization.name
-  json.email r.user.email
+  json.name req.user.display_name
+  json.organization req.organization.name
+  json.email req.user.email
 end

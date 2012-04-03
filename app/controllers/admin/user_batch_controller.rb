@@ -17,7 +17,7 @@ class Admin::UserBatchController < ApplicationController
     success = true
     error_messages = []
 
-    user_list = ActiveSupport::JSON.decode(params[:user_batch][:users])
+    user_list = JSON.parse(params[:user_batch][:users])
     user_list.each { |u|
       if User.find_by_email(u["email"]).nil?
         j = Jurisdiction.find_by_name(u["jurisdiction"])
@@ -50,7 +50,7 @@ class Admin::UserBatchController < ApplicationController
   def create
     if request.post?
       if request.xhr?
-        user_list = ActiveSupport::JSON.decode(params[:user_batch][:users])
+        user_list = JSON.parse(params[:user_batch][:users])
         params[:user_batch].delete(:users)
         if !user_list.empty?
           csv_str = StringIO.new
@@ -101,7 +101,7 @@ class Admin::UserBatchController < ApplicationController
     users = []
     error = nil
     begin
-      CSV.new(csvfile, :col_sep => ",", :headers => true).each { |record|
+      CSV.new(csvfile.tempfile, :col_sep => ",", :headers => true).each { |record|
         new_user = Hash.new
         fields.each_with_index { |field,i| new_user[field] = record[field.to_s] }
         users.push(new_user)

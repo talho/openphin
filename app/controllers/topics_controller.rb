@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  #before_filter :authenticate
+  #before_filter :authorize
   app_toolbar "forums"
 
   before_filter :find_forum, :except => [:active_topics, :recent_posts]

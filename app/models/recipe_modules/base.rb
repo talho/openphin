@@ -70,7 +70,7 @@ module RecipeModules
           puts e
         end
       end
-      subclasses.map(&:name).select{|n| /^#{name}::/.match(n)}
+      descendants.map(&:name).select{|n| /^#{name}::/.match(n)}
     end
 
   end

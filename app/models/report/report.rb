@@ -19,6 +19,9 @@ class Report::Report < ActiveRecord::Base
   validates_presence_of     :author
   validates_inclusion_of    :incomplete, :in => [false,true]
 
+  after_create :do_after_create
+  before_destroy :do_before_destroy
+  
   validate :on => :create do
     begin
       recipe.constantize
@@ -42,7 +45,7 @@ class Report::Report < ActiveRecord::Base
     self[:rendering_updated_at] ? time_ago_in_words(self[:rendering_updated_at]) : "Generating...Click Refresh"
   end
 
-  def after_create
+  def do_after_create
     update_attribute(:name,"#{recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-')}#{id}")
   end
 
@@ -83,7 +86,7 @@ class Report::Report < ActiveRecord::Base
 
   JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
-  def before_destroy
+  def do_before_destroy
     dataset.drop
   end
 

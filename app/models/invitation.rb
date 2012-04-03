@@ -15,12 +15,14 @@
 class Invitation < ActiveRecord::Base
   
   has_many :invitees
-  has_many :registered_users, :class_name => "User", :finder_sql =>
-      'SELECT DISTINCT users.* FROM users, invitees WHERE users.email = invitees.email' +
-      ' AND invitees.invitation_id = #{id} AND users.email_confirmed = true'
-  has_many :registered_invitees, :class_name => "Invitee", :finder_sql =>
-      'SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email' +
-      ' AND invitees.invitation_id = #{id}'  
+  has_many :registered_users, :class_name => "User", :finder_sql => proc {
+      "SELECT DISTINCT users.* FROM users, invitees WHERE users.email = invitees.email" +
+      " AND invitees.invitation_id = #{id} AND users.email_confirmed = true"
+    }
+  has_many :registered_invitees, :class_name => "Invitee", :finder_sql => proc {
+      "SELECT DISTINCT invitees.* FROM users, invitees WHERE users.email = invitees.email" +
+      " AND invitees.invitation_id = #{id}"
+    } 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   belongs_to :default_organization, :class_name => "Organization", :foreign_key => "organization_id"

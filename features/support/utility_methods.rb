@@ -6,7 +6,7 @@ module FeatureHelpers
     end
     
     def find_email(email_address, table=nil)
-      When "delayed jobs are processed"
+      step "delayed jobs are processed"
       ActionMailer::Base.deliveries.detect do |email|
         status = false
         if(!email.bcc.blank?)
@@ -40,7 +40,7 @@ module FeatureHelpers
     end
 
     def find_email_via_SWN(email_address, table=nil)
-      When "delayed jobs are processed"
+      step "delayed jobs are processed"
       Service::Email.deliveries.detect do |email|
         xml = Nokogiri::XML(email.body)
         status = false

@@ -40,7 +40,7 @@ class Admin::GroupsController < ApplicationController
         format.html
         format.any(:csv,:pdf) do
           criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
-          report = create_data_set("Recipe::GroupWithRecipientsRecipe",criteria)
+          report = create_data_set("RecipeInternal::GroupWithRecipientsRecipe",criteria)
           render :json => {:success => true, :report_name=> report.name}
         end
         format.json do

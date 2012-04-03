@@ -6,5 +6,6 @@
 
 ENV["RAILS_ENV"] ||= "cucumber"
 require 'cucumber/rails'
-
+require 'ruby-debug' 
+ 
 require "#{Rails.root.to_s}/spec/factories"

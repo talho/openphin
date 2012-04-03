@@ -34,13 +34,13 @@ end
 
 When /^I expand the folders "([^\"]*)"$/ do |expand|
   begin
-    When %Q{I expand the folder "My Documents"}
+    step %Q{I expand the folder "My Documents"}
   rescue
   end
   #When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents") && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", "My Documents") || row_button_exists?("ux-maximgb-tg-elbow-plus", "My Documents"))
   folders = expand.split(',')
   folders.each do |folder|
-    When %Q{I expand the folder "#{folder}"}
+    step %Q{I expand the folder "#{folder}"}
   end
 end
 
@@ -54,7 +54,7 @@ Then /^I should see folders in the order "([^\"]*)"$/ do |order|
   index = 2
   folders = order.split
   folders.each do |folder|
-    Then %Q{I should see "#{folder}" in grid row #{index} within ".document-folder-tree-grid"}
+    step %Q{I should see "#{folder}" in grid row #{index} within ".document-folder-tree-grid"}
     index += 1
   end
 end
@@ -148,9 +148,9 @@ When /^I upload the file "([^"]*)"$/ do |file|
       ]});
       win.doLayout();
     ");
-    And %Q{I attach the file "#{file}" to "File"}
+    step %Q{I attach the file "#{file}" to "File"}
     page.execute_script("Ext.getCmp('chrome_upload_hack').getForm().submit()");
   else
-    And %Q{I attach the file "#{file}" to "file"}
+    step %Q{I attach the file "#{file}" to "file"}
   end
 end

@@ -37,7 +37,7 @@ Given 'I have "$count" folders named "$name" with the following documents:' do |
   (1..count.to_i).each do |num|
     current_user.folders.find_or_create_by_name("#{name}#{num.to_s}")
     table.raw.each do |row|
-      Given(%Q|I have the document "#{row[0]}" in "#{name}#{num.to_s}"|)
+      step(%Q|I have the document "#{row[0]}" in "#{name}#{num.to_s}"|)
     end
   end
 end
@@ -91,7 +91,7 @@ end
 
 Then 'I should see "$count" folders named "$folder"' do |count, name|
   (1..count.to_i).each do |num|
-    Then(%Q|I should see "#{name}#{num.to_s}"|)
+    step(%Q|I should see "#{name}#{num.to_s}"|)
   end
 end
 

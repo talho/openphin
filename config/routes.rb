@@ -10,6 +10,7 @@ Openphin::Application.routes.draw do
     collection do
       get :jurisdictions
       get :jurisdictions_flat
+      post :jurisdictions_flat
       get :roles
       get :groups
       get :determine_recipients
@@ -71,7 +72,7 @@ Openphin::Application.routes.draw do
       end
       resources :delayed_job_checks
   end
-  resources :role_assignments, :controller => 'admin/role_assginments'
+  resources :role_assignments, :controller => 'admin/role_assignments'
   
   resources :alerts, :only => [:show, :update] do
     get :recent_alerts, :on => :collection

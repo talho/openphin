@@ -3,16 +3,16 @@ Given 'a share named "$name"' do |name|
 end
 
 Given 'I created the share "$name"' do |name|
-  When 'I follow "Documents"'
-  And 'I wait for the "#new_share_folder" element to load'
-  And 'I select "#new_share_folder" from the documents toolbar'
-  And %Q|I fill in "Share Name" with "#{name}"|
-  And 'I press "Create Share"'
+  step 'I follow "Documents"'
+  step 'I wait for the "#new_share_folder" element to load'
+  step 'I select "#new_share_folder" from the documents toolbar'
+  step %Q|I fill in "Share Name" with "#{name}"|
+  step 'I press "Create Share"'
   sleep 0.5
 end
 
 Given 'I have been added to the share "$name"' do |name|
-  share = Given(%Q|a share named "#{name}"|) 
+  share = step(%Q|a share named "#{name}"|) 
   share.audience.users << current_user
   share.audience.recipients.with_refresh(:force => true)
 
@@ -20,8 +20,8 @@ Given 'I have been added to the share "$name"' do |name|
 end
 
 Given '"$email" has been added as owner to the share "$share_name"' do |email,share_name|
-  user = Given(%Q|a user with the email "#{email}"|)
-  share = Given(%Q|a share named "#{share_name}"|)
+  user = step(%Q|a user with the email "#{email}"|)
+  share = step(%Q|a share named "#{share_name}"|)
   share.audience.users << user
   share.save!
   share.audience.recipients.with_refresh(:force => true)
@@ -34,8 +34,8 @@ Given '"$email" has been added as owner to the share "$share_name"' do |email,sh
 end
 
 Given '"$email" has been added to the share "$share_name"' do |email, share_name|
-  user = Given(%Q|a user with the email "#{email}"|)
-  share = Given(%Q|a share named "#{share_name}"|)
+  user = step(%Q|a user with the email "#{email}"|)
+  share = step(%Q|a share named "#{share_name}"|)
   share.audience.users << user
   share.audience.recipients.with_refresh(:force => true)
 
@@ -43,9 +43,9 @@ Given '"$email" has been added to the share "$share_name"' do |email, share_name
 end
 
 Given 'a document "$document" is in the share "$share"' do |filename, share|
-  user = Given('a user in a non-public role')
+  user = step('a user in a non-public role')
   document = user.documents.create! :file => File.open(File.expand_path(Rails.root.to_s,'/spec/fixtures/'+filename))
-  document.shares << Given(%Q|a share named "#{share}"|)
+  document.shares << step(%Q|a share named "#{share}"|)
 end
 
 

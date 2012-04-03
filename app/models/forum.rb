@@ -10,9 +10,9 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   belongs_to :audience, :autosave => true
-  has_many :users, :finder_sql => 'SELECT u.* 
+  has_many :users, :finder_sql => proc {"SELECT u.* 
                                    FROM users u 
-                                   JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id'
+                                   JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id"}
   
   scope :for_user, lambda { |user|
     user_id = user.class == User ? user.id : user

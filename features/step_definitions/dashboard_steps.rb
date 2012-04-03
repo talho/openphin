@@ -1,15 +1,15 @@
 
 When /^I edit (?:a|the "([^"]*)") dashboard (?:on|as) "([^\"]*)"$/ do |dash_name, user_email|
-  Then %{I am logged in as "#{user_email}"}
-   And %{I wait for the "Loading..." mask to go away}
-   And %{I press "Edit Dashboards"}
+  step %{I am logged in as "#{user_email}"}
+  step %{I wait for the "Loading..." mask to go away}
+  step %{I press "Edit Dashboards"}
   if dash_name
-     And %{I wait for the "Loading..." mask to go away}
-    Then %{I press "Open"}
-     And %{I select the "#{dash_name}" grid row}
-     And %{I press "Open" within ".cms-open-dash-window"}
+    step %{I wait for the "Loading..." mask to go away}
+    step %{I press "Open"}
+     step %{I select the "#{dash_name}" grid row}
+     step %{I press "Open" within ".cms-open-dash-window"}
   end
-  And %{I wait for the "Loading..." mask to go away}
+  step %{I wait for the "Loading..." mask to go away}
 end
 
 Given /^the following dashboard exists:$/ do |table|
@@ -194,14 +194,14 @@ When /^I load ExtJs$/ do
 end
 
 Then /^I should not see the application default option in the permissions window$/ do
-    When %{I press "Permissions"}
-    Then %{I should not see "Make this the application default"}
+    step %{I press "Permissions"}
+    step %{I should not see "Make this the application default"}
 end
 
 When /^I check application default in the dashboard permission window$/ do
-  Then %{I press "Permissions"}
-   And %{I check "Make this the application default"}
-   And %{I press "OK"}
+  step %{I press "Permissions"}
+   step %{I check "Make this the application default"}
+   step %{I press "OK"}
 end
 
 Then /^"([^\"]*)" should be the default dashboard$/ do |dash_name|

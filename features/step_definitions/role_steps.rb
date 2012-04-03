@@ -45,6 +45,7 @@ Then '"$email" should not have the "$role" role' do |email, role|
   user = User.find_by_email!(email)
   user.has_public_role?.should be_false
 end
+
 Then /^I should see "(.*)" in the role select$/ do |role|
   page.should have_css("select.role_select option", :content => role)
 end

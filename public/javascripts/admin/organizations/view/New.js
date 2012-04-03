@@ -56,8 +56,8 @@ Talho.Admin.Organizations.view.New = Ext.extend(Ext.form.FormPanel, {
           if(action.response && action.response.responseText){
             var errors = {},
                 res = Ext.decode(action.response.responseText);
-            for(var i = 0; i < res.errors.length; i++){
-              errors['organization['+ res.errors[i][0] + ']'] = res.errors[i][1];
+            for(var k in res.errors){
+              errors['organization['+ k + ']'] = res.errors[k];
             }
             form.markInvalid(errors);
           }

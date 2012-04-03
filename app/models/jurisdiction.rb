@@ -52,7 +52,7 @@ class Jurisdiction < ActiveRecord::Base
   end
 
   def admins(app = '')
-    users.with_roles(Role.admins(app) )
+    users.where("role_memberships.role_id" => Role.admins(app).map(&:id) ).includes(:role_memberships)
   end
 
   def super_admins(app = '')

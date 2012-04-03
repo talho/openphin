@@ -6,7 +6,7 @@ source "http://rubygems.org"
 group :default do
   gem "rails", "~> 3.0.0"
     gem 'rdoc'
-  gem "clearance", "0.10.5"
+  gem "clearance", "~> 0.16.0"
   gem "prawn", "0.8.4"
   gem "paperclip", "2.7.0"
   gem "rack-raw-upload"
@@ -35,6 +35,7 @@ group :default do
   gem 'thinking-sphinx', '~> 2.0.11', :require => 'thinking_sphinx/deltas/delayed_delta'
     gem 'ts-delayed-delta'
   gem "delayed_job", "~> 3.0.1"
+    gem 'delayed_job_active_record', "~> 0.3"
   gem 'option_attrs', :git => 'git://github.com/talho/option_attrs.git'
   gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
   gem 'smurf', :git => 'git://github.com/Dishwasha/smurf.git'
@@ -47,6 +48,7 @@ group :default do
   gem 'jbuilder', :git => 'git://github.com/rails/jbuilder.git'
   gem 'awesome_nested_set'
   gem 'sinatra'
+  gem "dynamic_form"
 end
 
 group :development do
@@ -87,7 +89,8 @@ group :tools do
   gem "hoe"
   gem "git"
   gem "git_remote_branch"
-  gem "ruby-debug19"
-  gem "linecache19", '0.5.12'
+  gem 'linecache19', :git => 'git://github.com/mark-moseley/linecache'
+  gem 'ruby-debug-base19x', '~> 0.11.30.pre4'
+  gem 'ruby-debug19'
   gem "simplecov"
 end

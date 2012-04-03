@@ -37,12 +37,12 @@ Given /^(\d*) jurisdictions that are children of (.*)$/ do |count, parent|
 end
 
 Given /^a few jurisdictions$/ do
-  Given "the following entities exist:", table(%{
+  step "the following entities exist:", table(%{
     | Jurisdiction | Texas      |
     | Jurisdiction | Travis     |
     | Jurisdiction | Williamson |
   });
-  Given %Q{Texas is the parent jurisdiction of:}, table([
+  step %Q{Texas is the parent jurisdiction of:}, table([
     %w{Travis},
     %w{Williamson}
   ]);

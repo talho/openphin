@@ -1,4 +1,4 @@
-class Recipe::UserAllWithinJurisdictionsRecipe < Recipe
+class RecipeExternal::UserAllWithinJurisdictionsRecipe < RecipeExternal
 
   # create_table :report, :force => true do |t|
   #   t.string    :type

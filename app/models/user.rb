@@ -38,14 +38,8 @@
 #
 
 class User < ActiveRecord::Base
-  extend Clearance::User::ClassMethods
-  include Clearance::User::InstanceMethods
-  include Clearance::User::AttrAccessor
-  include Clearance::User::Callbacks
+  include Clearance::User
   
-  UNDELETED = {:deleted_at => nil}
-  default_scope :conditions => UNDELETED
-
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
@@ -67,7 +61,7 @@ class User < ActiveRecord::Base
   
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
-      scoped :conditions => 'documents.folder_id IS NULL'
+      scoped :conditions => proc{'documents.folder_id IS NULL'}
     end      
     def expiring_soon(options = {})
       options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
@@ -76,7 +70,7 @@ class User < ActiveRecord::Base
   end
   has_many :folders  do
     def rootsm
-      scoped :conditions => 'folders.parent_id IS NULL'
+      scoped :conditions => proc{'folders.parent_id IS NULL'}
     end
   end
 
@@ -85,7 +79,7 @@ class User < ActiveRecord::Base
   has_many :folder_permissions
   has_many :authoring_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 1']
   has_many :admin_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 2']
-  has_and_belongs_to_many :audiences, :finder_sql => 'SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id'
+  has_and_belongs_to_many :audiences, :finder_sql => proc { "SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id"}
 
   def shares
     Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder_permissions]
@@ -107,7 +101,7 @@ class User < ActiveRecord::Base
   validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
   validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
   validates_format_of       :email, :with => %r{[^\.]$}
-  validates_uniqueness_of   :email, :case_sensitive => false, :scope => [:deleted_at],
+  validates_uniqueness_of   :email, :case_sensitive => false,
     :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
   validates_presence_of     :password, :if => :password_required?
   validates_confirmation_of :password, :if => :password_required?
@@ -129,8 +123,6 @@ class User < ActiveRecord::Base
   before_create :create_default_email_device
   before_create :set_display_name
 
-  scope :live, :conditions => UNDELETED
-  
   scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
@@ -168,8 +160,7 @@ class User < ActiveRecord::Base
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
-  end  
-  sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
+  end
     
   def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
@@ -287,31 +278,31 @@ class User < ActiveRecord::Base
     groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
   end
 
-  def delete_by(requester_email,requester_ip)
-    # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
-    begin
-      User.transaction do
-        self.deleted_by = requester_email   # email addr of the deleter - redundant with paper_trail
-        self.deleted_from = requester_ip    # ip addr of the deleter
-        self.deleted_at = Time.now.utc      # redundant with paper_trail
-        self.save!
-      end
-    rescue
-      errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
-    end
-    if User.find_by_id(self.id)
-      errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
-    end
-  end
-
-  def delayed_delete_by(requester_email,requester_ip)
-    begin
-      self.send_later(:delete_by,requester_email,requester_ip)
-      unless errors.empty?
-        AppMailer.user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.").deliver
-      end 
-    end
-  end
+  # def delete_by(requester_email,requester_ip)
+    # # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
+    # begin
+      # User.transaction do
+        # self.deleted_by = requester_email   # email addr of the deleter - redundant with paper_trail
+        # self.deleted_from = requester_ip    # ip addr of the deleter
+        # self.deleted_at = Time.now.utc      # redundant with paper_trail
+        # self.save!
+      # end
+    # rescue
+      # errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
+    # end
+    # if User.find_by_id(self.id)
+      # errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
+    # end
+  # end
+# 
+  # def delayed_delete_by(requester_email,requester_ip)
+    # begin
+      # self.send_later(:delete_by,requester_email,requester_ip)
+      # unless errors.empty?
+        # AppMailer.user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.").deliver
+      # end 
+    # end
+  # end
 
   def self.find_deleted(user_id)
     deleted_user = Version.find_by_item_id_and_item_type_and_event(user_id, 'User', 'destroy') # look for a deleted version of User in paper_trail

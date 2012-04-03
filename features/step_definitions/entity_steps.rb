@@ -2,9 +2,9 @@ Given /^the following entities exist[s]?:$/ do |table|
   table.raw.each do |row|
     key, value, app = row
     if app.blank?
-      Given "a #{key.downcase} named #{value}"
+      step "a #{key.downcase} named #{value}"
     else
-      Given "an application #{key.downcase} named #{value} for #{app}"
+      step "an application #{key.downcase} named #{value} for #{app}"
     end
   end
 end
@@ -14,7 +14,7 @@ Given /^a[n]? organization named (.*)$/ do |name|
   if organization
     organization
   else
-    Given "a new organization named #{name}"
+    step "a new organization named #{name}"
   end  
 end
 
@@ -94,18 +94,18 @@ Given /^(.*) is the parent jurisdiction of:$/ do |parent_name, table|
   unless (jurisdictions.size != 1) || (!jurisdictions.first.kind_of? String)
     jurisdictions = jurisdictions.first.split(",").map(&:strip)
   end
-  parent = Given "a jurisdiction named #{parent_name}"
+  parent = step "a jurisdiction named #{parent_name}"
   jurisdictions.each do |name|
-    jurisdiction = Given "a jurisdiction named #{name}"
+    jurisdiction = step "a jurisdiction named #{name}"
     jurisdiction.move_to_child_of parent
   end
 end
 
 Given /^the following users belong to the (.*):$/ do |organization_name, table|
-  organization = Given "an organization named #{organization_name}"
+  organization = step "an organization named #{organization_name}"
   users = table.raw.first
   users.each do |user_name|
-    user = Given "a user named #{user_name}"
+    user = step "a user named #{user_name}"
     organization.users << user
   end
 end
@@ -115,12 +115,12 @@ Given '$name is a foreign Organization' do |name|
 end
 
 Given '"$name" has the OID "$oid"' do |name, oid|
-  organization = Given "an organization named #{name}"
+  organization = step "an organization named #{name}"
   organization.update_attributes :phin_oid => oid
 end
 
 Given '"$name" has the FIPS code "$code"' do |name, code|
-  jurisdiction = Given "a jurisdiction named #{name}"
+  jurisdiction = step "a jurisdiction named #{name}"
   jurisdiction.update_attributes :fips_code => code
 end
 

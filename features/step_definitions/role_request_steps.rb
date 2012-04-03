@@ -10,7 +10,7 @@ Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_em
 end
 
 Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)"$/ do |admin_email_address, role_name, jurisdiction_name, email_address|
- Given "\"#{admin_email_address}\" has approved the \"#{role_name}\" role in \"#{jurisdiction_name}\" for \"#{email_address}\" 0 days ago"
+ step "\"#{admin_email_address}\" has approved the \"#{role_name}\" role in \"#{jurisdiction_name}\" for \"#{email_address}\" 0 days ago"
 end
 
 Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)" (\d) days ago$/ do |admin_email_address, role_name, jurisdiction_name, email_address, numdays|
@@ -128,7 +128,7 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
 
-  When %Q{I navigate to "Admin > Pending Role Requests"}
+  step %Q{I navigate to "Admin > Pending Role Requests"}
   page.should have_css(".pending_role_requests .requester_email", :content => user_email)
   page.should have_css(".pending_role_requests .role", :content => role_name)
   page.should have_css(".pending_role_requests .jurisdiction", :content => current_user.jurisdictions.first.name )

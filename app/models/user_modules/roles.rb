@@ -30,7 +30,7 @@ module UserModules
       end
     end
     
-    def with_roles(roles)
+    def self.with_roles(roles)
       roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
       where(["role_memberships.role_id in (?)", roles.map(&:id)]).includes(:role_memberships)
     end

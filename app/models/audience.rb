@@ -29,9 +29,11 @@ class Audience < ActiveRecord::Base
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
-  has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => 'select distinct u.*
+  has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => proc {
+    "select distinct u.*
     from users u
-    join sp_recipients(#{self.id}) r on u.id = r.id'
+    join sp_recipients(#{self.id}) r on u.id = r.id"
+  }
 
   has_one :forum
 

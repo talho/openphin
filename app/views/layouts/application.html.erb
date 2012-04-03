@@ -7,12 +7,12 @@
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
-  <% css_list.concat [ 'jquery.crossSelect','jquery.ui.autocomplete', 'master', '/javascripts/jquery-tooltip/jquery.tooltip.css' ] %>
+  <% css_list.concat [ 'master' ] %>
   <% css_list.push({:cache => 'all'}) %>
   <%= stylesheet_link_tag(*css_list) %>
 
   <% js_list = [] %>
-  <% js_list.concat [ 'jquery', 'application', 'alerts', 'jquery-tooltip/lib/jquery.bgiframe', 'jquery-tooltip/jquery.tooltip', 'forum' ] %>
+  <% js_list.concat [ 'jquery', 'application', 'alerts'] %>
   <% js_list.push({:cache => 'all'}) %>
   <%= javascript_include_tag(*js_list) %>
   <!--[if IE 6]>
@@ -32,25 +32,10 @@
 
       <%= link_to '<img src="' + domain_config['logo_image'] + '">', root_path %>
       <ul class="apps">
-        <li<%= ' class="current"' if toolbar == 'han' %>><%= link_to s("HAN"), hud_path %></li>
-        <% Phin::Application.eval_if_plugin_present(:rollcall) do %>
-          <% unless current_user.role_memberships.with_rollcall.empty? %>
-            <li<%= ' class="current"' if toolbar == 'rollcall' %>><%= link_to s("Rollcall"), rollcall_path %></li>
-          <% end %>
-        <% end %>
-  	<li<%= ' class="current"' if toolbar == 'faqs' %>><%= link_to s("FAQs"), faqs_dashboard_path %></li>
-  	<% if current_user.has_non_public_role? %>
-          <li<%= ' class="current"' if toolbar == 'forums' %>><%= link_to s("Forums"), forums_path %></li>
-        <% end -%>
-        <li<%= ' class="current"' if toolbar == 'tutorials' %>><%= link_to s("Tutorials"), tutorials_path %></li>
+        
       </ul>
       <ul class="actions">
       <%- if signed_in? -%>
-          <li<%= tab_me root_path %>><%= link_to s('My Dashboard'), root_path %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= tab_me({:controller => "searches"}) %>><%= link_to(s('Find People'), show_advanced_search_path, :class => 'search') if signed_in? && current_user.has_non_public_role? %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= ' class="current"' if toolbar == 'accounts' %>><%= link_to s('My Account'), edit_user_profile_path(current_user), :class => '.edit_profile' %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= ' class="current"' if toolbar == 'admin' %>><%= link_to s('Admin'), admin_role_requests_path if current_user.is_admin? %></li><li>&nbsp;|&nbsp;</li>
-          <li<%= tab_me about_dashboard_path %>><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'], :class => '.about' %></li><li>&nbsp;|&nbsp;</li>
           <li><%= link_to 'Sign Out', sign_out_path, :class => '.signout' %></li>
       <%- else -%>
           <li><%= link_to 'Sign In', sign_in_path %></li>
@@ -60,7 +45,7 @@
     <div id='app_toolbar'>
 
   		<%- if signed_in? -%>
-  			<%= render :partial => "toolbars/#{toolbar}" %>
+  			
   		<%- else -%>
   			<ul>
   			  <li><%= link_to s('Sign Up'), new_user_path %></li>
@@ -71,8 +56,8 @@
   </div>
   <div id='app_alert'>
 		<div id='comingsoon'>
-					<h1>This content is coming soon!</h1>
-					OpenPHIN has reached 1.0, but we're not resting!  We're working hard to bring new functionality and applications to users of this groundbreaking software.  Check back often for new developments!
+					<h1>OpenPHIN 1.0 is retired</h1>
+					Go to OpenPHIN 2.0 here: <%= link_to 'OpenPHIN 2.0', root_path %>
 		  <a class='close'>Close</a>
 		</div>
   </div>
@@ -91,52 +76,14 @@
     </div>
   </div> 
 </div>
-<div id='calendar_panel'>
-   <img src='/images/calendar.png'/>
-</div>
 
-<div id='documents_panel'>
-  <a href="/ext">The documents panel is no longer available.<br /><br />To use the brand new documents application, please click here or click the NEW: Try TXPHIN 2.0! button</a>
-</div>
-
-<div style="display: none;" id="documentsFlash">
-   <div>
-      <span style="font-size: 110%; font-weight: bold; padding: 10px;">Error: </span>
-      <div>
-        <p id="documentsFlashMessage"></p>
-      </div>
-      <br />
-      <CENTER><a style=" padding-top: 30px; font-size: 115%; font-weight: bold; color: black; " href="#" onClick=" javascript: closeDocumentsFlash(); ">OK</a></CENTER>
-  </div>  
-</div>
-<div id='documents_progress_panel'><div>Loading please wait...</div></div>
-<div id='chat_panel'>
-   <img src='/images/chat.png'/>
-</div>
-<div id='links_panel'>
-  <ul>
-		<li><%= link_to "EMResource", "http://www1.emsystem.com", :target => "_blank" %></li>
-    <li><%= link_to "Texas Disaster Volunteer Registry", "http://texasdisastervolunteerregistry.org", :target => "_blank" %></li>
-    <li><%= link_to "TIMS", "https://txphin.dshs.state.tx.us/tims/user/login.cfm", :target => "_blank" %></li>
-    <li><%= link_to "The New England Journal of Medicine", "http://www.nejm.org/stoken/default+domain/000101132721/full?redirectUri=/", :target => "_blank" %></li>
-    <li><%= link_to "Traction", "https://trac.dshs.state.tx.us/", :target => "_blank" %></li>
-    <li><%= link_to "TRAIN Texas", "https://tx.train.org/DesktopShell.aspx", :target => "_blank" %></li>
-    <li><%= link_to "WebEOC", "https://txphin.dshs.state.tx.us/eoc7/", :target => "_blank" %></li>
-	</ul>
-</div>
 <div id="footer">
   <div>
     <ul id='comm_toolbar'>
-      <%- if current_user.has_non_public_role? -%>
-      <li class="calendar"><%=  link_to s("<b>Calendar</b>"),  root_path %></li>
-      <li class="documents"><%= link_to s("<b>Documents</b>"), root_path %></li>
-      <li class="chat"><%=      link_to s("<b>Chat</b>"),      root_path %></li>
-      <li class='links'><%=     link_to s("<b>Links</b>"),     root_path %></li>
-      <%- end -%>
     </ul>
   </div>
   <div id="newphin" style="padding-top: 2px; margin-left: 42%;">
-    <a href="/ext"><img style="border: none;" src="/images/newphin.gif"></a>
+    <%= link_to raw('<img style="border: none;" src="/images/newphin.gif">'), root_path %>
   </div>
   <div class='help'>Need help?  Email <%= link_to domain_config['help_email'], "mailto:" + domain_config['help_email'] %></div>
   

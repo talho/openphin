@@ -50,7 +50,7 @@ class Alert < ActiveRecord::Base
 
   belongs_to :author, :class_name => 'User'
 
-  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => 'targets.item_type = \'#{self.class.to_s}\'', :include => :users
+  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => proc{"targets.item_type = \'#{self.class.to_s}\'"}, :include => :users
   has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
 
   has_many :alert_device_types, :foreign_key => :alert_id, :dependent => :delete_all
@@ -69,7 +69,7 @@ class Alert < ActiveRecord::Base
            :conditions => ["alert_attempts.acknowledged_at IS NULL"]
 
   has_many :ack_logs, :class_name => 'AlertAckLog'
-  has_many :recipients, :class_name => "User", :finder_sql => 'SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id'
+  has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type

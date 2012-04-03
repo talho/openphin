@@ -37,8 +37,8 @@ class Folder < ActiveRecord::Base
   belongs_to :owner, :class_name => 'User', :foreign_key => 'user_id'
   belongs_to :audience, :class_name => 'Audience'
   has_many :folder_permissions
-  has_many :authors, :through => :folder_permissions, :source => 'user', :conditions => "permission = 1"
-  has_many :admins, :through => :folder_permissions, :source => 'user', :conditions => 'permission = 2'
+  has_many :authors, :through => :folder_permissions, :source => 'user', :conditions => proc{"permission = 1"}
+  has_many :admins, :through => :folder_permissions, :source => 'user', :conditions => proc{'permission = 2'}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def users

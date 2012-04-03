@@ -82,20 +82,20 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
 
   tb_button = menu_array.delete_at(0)
   waiter do
-    Then %Q{I should see "#{tb_button.strip}"}
+    step %Q{I should see "#{tb_button.strip}"}
   end
   waiter do
-    When %Q{I press "#{tb_button}"}
+    step %Q{I press "#{tb_button}"}
   end
 
   menu_array.each do |menu|
     waiter do
-      When %Q{I click x-menu-item "#{menu}"}
+      step %Q{I click x-menu-item "#{menu}"}
     end
   end
 end
 
-When /^(?:|I )navigate to ([^\"]*)$/ do |path|
+When /^(?:|I )navigate to ([^\"].*)$/ do |path|
   path_lookup = {
     "the ext dashboard page".to_sym => "",
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
@@ -107,10 +107,10 @@ When /^(?:|I )navigate to ([^\"]*)$/ do |path|
   }
 
   if path_lookup[path.to_sym].blank?
-    When %Q{I go to the ext dashboard page}
-    Then %Q{I am logged in}
+    step %Q{I go to the ext dashboard page}
+    step %Q{I am logged in}
   else
-    When %Q{I navigate to "#{path_lookup[path.to_sym]}"}
+    step %Q{I navigate to "#{path_lookup[path.to_sym]}"}
   end
 end
 
@@ -227,8 +227,8 @@ end
 
 # Must have editable: false property set to work properly if not typing in value to combobox
 When /^I select "([^\"]*)" from ext combo "([^\"]*)"$/ do |value, select_box|
-  When %Q{I open ext combo "#{select_box}"}
-  When %Q{I click x-combo-list-item "#{value}"}
+  step %Q{I open ext combo "#{select_box}"}
+  step %Q{I click x-combo-list-item "#{value}"}
 end
 
 Then /^the "([^\"]*)" field should be invalid$/ do |field_name|
@@ -243,7 +243,7 @@ end
 
 Then /^the following fields should be invalid:$/ do |table|
   table.rows.each do |row|
-    Then %Q{the "#{row[0]}" field should be invalid}
+    step %Q{the "#{row[0]}" field should be invalid}
   end
 end
 
@@ -254,7 +254,7 @@ end
 When /^I should see a display form with:$/ do |table|
   # table is a | Message  | For more details, keep on reading...         |
   table.rows_hash.each do |name, value|
-    Then %{I should see "#{value}" within display field "#{name}"}
+    step %{I should see "#{value}" within display field "#{name}"}
     #page.should have_xpath("//div[@id=//label[contains(text(), '#{name}')]/@for]", :text => value)
   end
 end
@@ -270,7 +270,7 @@ When /^I wait for the "([^\"]*)" mask to go away(?: for (\d+) second[s]*)?$/ do 
     using_wait_time(0.2) do 
       page.has_css?('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true) # let's wait for the loading mask to appear. this is to fix a speed issue in chrome (it passes the step before the load mask shows)
     end
-    using_wait_time(wait_seconds || 1) do
+    using_wait_time(wait_seconds.to_f || 1) do
       page.should have_no_css('.loading-indicator, .x-mask-loading', :text => mask_text, :visible => true)
     end
   rescue Selenium::WebDriver::Error::ObsoleteElementError
@@ -283,9 +283,9 @@ Then /^I should not be able to navigate to "([^\"]*)"$/ do |menu_navigation_list
   tb_button = menu_array.delete_at(0)
 
   begin
-    When %Q{I press "#{tb_button}"}
+    step %Q{I press "#{tb_button}"}
     menu_array.each do |menu|
-      When %Q{I click x-menu-item "#{menu}"}
+      step %Q{I click x-menu-item "#{menu}"}
     end
     menu_item_found = true
   rescue Capybara::TimeoutError, Capybara::ElementNotFound
