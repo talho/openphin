@@ -1,6 +1,6 @@
 class ClearanceUpdateUsersTo088 < ActiveRecord::Migration
-  class User < ActiveRecord::Base    
-    include Clearance::User::InstanceMethods
+  class User < ActiveRecord::Base   
+    include Clearance::User
   end
   
   def self.up

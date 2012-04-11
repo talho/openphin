@@ -36,7 +36,7 @@ group :default do
   gem "delayed_job", "~> 3.0.1"
     gem 'delayed_job_active_record', "~> 0.3"
   gem 'option_attrs', :git => 'git://github.com/talho/option_attrs.git'
-  gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
+  gem 'pin_cushion', :path => '/home/cdubose/projects/pin_cushion'# :git => 'git://github.com/talho/pin_cushion.git'
   gem 'smurf', :git => 'git://github.com/Dishwasha/smurf.git'
   gem 'backgroundrb', :git => 'git://github.com/talho/backgroundrb.git'
     gem "packet", "0.1.15"

@@ -45,7 +45,7 @@
 
 class Alert < ActiveRecord::Base
   acts_as_MTI
-=begin
+
   serialize :call_down_messages, Hash
 
   belongs_to :author, :class_name => 'User'
@@ -70,10 +70,10 @@ class Alert < ActiveRecord::Base
 
   has_many :ack_logs, :class_name => 'AlertAckLog'
   has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
-  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
+#  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type
-  after_create :batch_deliver
+ # after_create :batch_deliver
 
   scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   scope :devices, {
@@ -327,5 +327,4 @@ class Alert < ActiveRecord::Base
   def set_alert_type
     self[:alert_type] = "Alert"
   end
-=end
 end
