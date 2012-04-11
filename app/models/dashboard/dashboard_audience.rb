@@ -9,7 +9,7 @@ class Dashboard::DashboardAudience < ActiveRecord::Base
   accepts_nested_attributes_for :audience #, :reject_if => Proc.new{|attributes| attributes["id"] != self.audience_id}
 
   def role
-    ROLES.index(read_attribute(:role)).to_s
+    ROLES.key(read_attribute(:role)).to_s
   end
 
   def role=(r)

@@ -14,18 +14,15 @@ class Forum < ActiveRecord::Base
                                    FROM users u 
                                    JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id"}
   
-  scope :for_user, lambda { |user|
+  def self.for_user(user)
     user_id = user.class == User ? user.id : user
     user = user.class == User ? user : User.find(user)
     if user.is_super_admin?
-      {}
+      self.scoped
     else
-      { :joins => send(:sanitize_sql_array,
-        ["JOIN sp_audiences_for_user(?) au ON (au.id = audience_id)", 
-         user_id]), :conditions => "hidden_at IS NULL"
-       }
+      joins(send(:sanitize_sql_array, ["JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("hidden_at IS NULL")
     end
-  }
+  end
   
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   

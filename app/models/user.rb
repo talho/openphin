@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   def alerting_jurisdictions
-    Jurisdiction.scoped(:joins => [:role_memberships => [:role, :user]], :conditions => {:role_memberships => {:roles => {:alerter => true}}, :users => {:id => self.id}})
+    Jurisdiction.joins(:role_memberships => [:role, :user]).where(:role_memberships => {:roles => {:alerter => true}}, :users => {:id => self.id})
   end
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices]
@@ -61,16 +61,15 @@ class User < ActiveRecord::Base
   
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
-      scoped :conditions => proc{'documents.folder_id IS NULL'}
+      where('documents.folder_id IS NULL')
     end      
-    def expiring_soon(options = {})
-      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
-      scoped(options)
+    def expiring_soon
+      where("created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago)
     end
   end
   has_many :folders  do
     def rootsm
-      scoped :conditions => proc{'folders.parent_id IS NULL'}
+      where('folders.parent_id IS NULL')
     end
   end
 
@@ -82,11 +81,11 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :audiences, :finder_sql => proc { "SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id"}
 
   def shares
-    Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder_permissions]
+    Folder.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder_permissions)
   end
 
   def shared_documents
-    Document.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder]
+    Document.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder)
   end
 
   has_many :favorites
@@ -122,6 +121,7 @@ class User < ActiveRecord::Base
   before_create :generate_oid
   before_create :create_default_email_device
   before_create :set_display_name
+  after_create :notify_role_requests
 
   scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
@@ -173,7 +173,7 @@ class User < ActiveRecord::Base
   def is_org_member_of?(other)
     if other.class == Organization
       return true if other.members.include?(self)
-    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+    elsif other.class == Array || other.class == ActiveRecord::Relation
       other.each do |org|
         return true if org.members.include?(self)
       end
@@ -275,7 +275,7 @@ class User < ActiveRecord::Base
   end
 
   def viewable_groups
-    groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
+    Group.joins("JOIN users owner on owner.id = owner_id").where("owner.id = ? OR (scope = 'Jurisdiction' AND owner_jurisdiction_id in (?)) OR scope = 'Global'", id, jurisdictions.map(&:id))
   end
 
   # def delete_by(requester_email,requester_ip)
@@ -486,6 +486,10 @@ class User < ActiveRecord::Base
   end
 
 private
+
+  def notify_role_requests
+    role_requests.unapproved.each(&:notify_admin_of_request)
+  end
 
   def generate_oid
     self[:phin_oid] = email.to_phin_oid

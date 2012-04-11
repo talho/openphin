@@ -109,7 +109,7 @@ end
 When /^backgroundrb has processed the nightly documents$/ do
   require 'bdrb_server_helper'
   require 'meta_worker'
-  require 'lib/workers/document_daily_cleanup_worker.rb'
+  require 'workers/document_daily_cleanup_worker'
   DocumentDailyCleanupWorker.new.clean
 end
 

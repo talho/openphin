@@ -85,7 +85,7 @@ Openphin::Application.routes.draw do
   resources :devices, :only => [:create, :destroy]
   resources :favorites, :only => [:create, :index, :destroy]
   
-  resources :documents, :except => [:index] do
+  resources :documents, :controller => 'doc/documents', :except => [:index] do
     collection do
       get :search
       get :recent_documents
@@ -97,7 +97,7 @@ Openphin::Application.routes.draw do
       put :copy
     end
   end
-  resources :folders do
+  resources :folders, :controller => 'doc/folders' do
     get :target_folders, :on => :collection
     member do
       post :move

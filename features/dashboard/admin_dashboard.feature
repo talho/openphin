@@ -342,7 +342,7 @@ Feature: Dashboard Administration
     # And I try to post the server while not logged in
     When I go to the dashboard page
     And I load ExtJs
-    And I wait for 2 seconds
+    And I wait for 4 seconds
     And I maliciously try to create a dashboard
     Then The maliciousness response should contain "TXPhin: sessions/new"
     And I maliciously try to edit a dashboard

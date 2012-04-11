@@ -25,8 +25,8 @@ Background:
     | Potter Public   | pott.pub@example.com     | Public           | Potter         |
   And delayed jobs are processed
   And reports derived from the following recipes and authored by exist:
-    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+    | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
 
 Scenario: Public-only user can not navigate to Reports
   Given I am logged in as "dall.pub@example.com"
@@ -130,14 +130,14 @@ Scenario: Initiate the viewing of a report contents
     Then the "Render size" grid header is sorted descending
 
   When reports derived from the following recipes and authored by exist:
-    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-    | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-    | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+    | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+    | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+    | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+    | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+    | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
   And I close the active tab
   And I navigate to "Reports"
   Then I should see "Displaying results 1 - 10 of 10"

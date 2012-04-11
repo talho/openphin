@@ -32,10 +32,10 @@ module Reporters
         end
   
         begin
-          view_path = Rails::Configuration.new.view_path
+          view_path = Rails.configuration.view_path
           view = view_for_at_using author, view_path, recipe
         rescue StandardError => e
-          message = %Q(Report "#{report.name}" erred in building supporting view: (#{e}))
+          message = %Q{report "#{report.name}" erred in building supporting view: (#{e})}
           full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
           fatal_logging(logger,report,full_message)
         end
@@ -45,9 +45,9 @@ module Reporters
           begin
             start_time = Time.now
               recipe.capture_to_db report
-            logger.info %Q(Report "#{report.name}", Data Capture #{Time.now-start_time} seconds)
+            logger.info %Q{Report "#{report.name}", Data Capture #{Time.now-start_time} seconds}
           rescue StandardError => e
-            message = %Q(Report "#{report_id}" erred in capturing data: (#{e}))
+            message = %Q{Report "#{report_id}" erred in capturing data: (#{e})}
             full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
             fatal_logging(logger,report,full_message)
           end
@@ -61,7 +61,7 @@ module Reporters
             template_path = File.join(view_path,recipe.template_path)
           end
           recipe.generate_rendering report, view, File.read(template_path), params[:filters]
-          logger.info %Q(Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds)
+          logger.info %Q{Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds}
           ReportMailer.report_generated(report.author.email,report.name).deliver
         rescue StandardError => e
           message = %Q(Report "#{report.name}" erred in rendering html: (#{e}))

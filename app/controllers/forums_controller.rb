@@ -88,6 +88,7 @@ class ForumsController < ApplicationController
     # The nested attribute audience has habtm associations that don't play nicely with optimistic locking
     if(params[:forum][:audience_attributes])
       non_ids = params[:forum][:audience_attributes].reject{|key,value| key =~ /_ids$/}
+      audience_id = non_ids[:id]
       ids = params[:forum][:audience_attributes].reject{|key,value| !(key =~ /_ids$/)}
       params[:forum][:audience_attributes] = non_ids
     end
@@ -96,7 +97,7 @@ class ForumsController < ApplicationController
       if @forum.update_attributes(params[:forum])
         if params[:forum][:audience_attributes]
           # Once we're sure that forums and the audience itself isn't stale, we update the audience
-          @audience = Audience.find_by_id(non_ids[:id])
+          @audience = Audience.find(audience_id)
           @audience.update_attributes(ids)
           
           # Force a lock_version increment for stale object detection on the audience itself

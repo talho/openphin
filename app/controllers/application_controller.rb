@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
   # end
 
   def admin_required
-    unless current_user.role_memberships.where(:role_id => (Role.admins | Role.superadmins).map(&:id)).count > 0
+    unless current_user.role_memberships.where(:role_id => (Role.admins | Role.superadmins | [Role.sysadmin]).map(&:id)).count > 0
       message = "That resource does not exist or you do not have access to it."
       if request.xhr?
         respond_to do |format|
@@ -206,7 +206,7 @@ private
   # This makes #present always pass set the current_user on the presenter
   # if the presenter accepts :current_user.
   def present_with_current_user(*args)
-    returning present_without_current_user(*args) do |presenter|
+    present_without_current_user(*args).tap do |presenter|
       if presenter.accepts?(:current_user)
         presenter.instance_variable_set :@current_user, current_user
       end

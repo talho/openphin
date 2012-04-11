@@ -5,7 +5,6 @@ source "http://rubygems.org"
 
 group :default do
   gem "rails", "~> 3.0.0"
-    gem 'rdoc'
   gem "clearance", "~> 0.16.0"
   gem "prawn", "0.8.4"
   gem "paperclip", "2.7.0"
@@ -49,10 +48,11 @@ group :default do
   gem 'awesome_nested_set'
   gem 'sinatra'
   gem "dynamic_form"
+  gem "rails_sql_views", :path => '/home/cdubose/projects/rails_sql_views'#:git => 'git://github.com/talho/rails_sql_views.git'
 end
 
 group :development do
-  gem "jslint_on_rails"
+  # gem "jslint_on_rails"
   gem "capistrano-unicorn"
 end
 
@@ -60,28 +60,28 @@ group :test do
   gem "rspec", "2.1.0"
   gem "rspec-rails"#, "1.3.4"
 end
-
+ 
 group :cucumber do
   gem "factory_girl"#, "1.3.3", :require => "factory_girl"
-  
+   
   gem "cucumber", "1.1.9"
   gem "capybara" #, "0.4.1.2"
   gem "gherkin", "2.9.3"
-  gem "cucumber-rails", "1.3.0"
+  gem "cucumber-rails"#, "1.3.0"
   gem "database_cleaner"#, "0.5.0"
   gem "spork"#, "0.8.4"
-
+ 
   gem "childprocess"
   gem "selenium-webdriver"#, '2.8.0'
   gem "chromedriver-helper"
   gem "headless"
 end
-
+ 
 group :production do
   gem "unicorn"
   gem "clamav", "0.4.1"
 end
-
+ 
 group :tools do
   gem "launchy"
   gem "capistrano"

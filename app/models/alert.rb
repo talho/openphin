@@ -45,7 +45,7 @@
 
 class Alert < ActiveRecord::Base
   acts_as_MTI
-
+=begin
   serialize :call_down_messages, Hash
 
   belongs_to :author, :class_name => 'User'
@@ -327,5 +327,5 @@ class Alert < ActiveRecord::Base
   def set_alert_type
     self[:alert_type] = "Alert"
   end
-
+=end
 end

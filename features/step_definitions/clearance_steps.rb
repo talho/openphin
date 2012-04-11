@@ -16,18 +16,21 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
-  user = Factory :user,
+  user = FactoryGirl.create(:user,
     :email                 => email.downcase,
     :password              => password,
-    :password_confirmation => password,
-    :email_confirmed       => false
+    :password_confirmation => password)
+  user.send(:generate_confirmation_token)
+  user.save
 end
 
 Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
-  user = Factory :user,
+  user = FactoryGirl.create(:user,
     :email                 => email.downcase,
     :password              => password,
-    :password_confirmation => password
+    :password_confirmation => password)
+  user.send(:generate_confirmation_token)
+  user.save
 end
 
 # Session
@@ -79,7 +82,7 @@ end
 
 When /^I follow the password reset link with a damaged token sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user, :token => user.confirmation_token<<"*")
+  visit edit_user_password_path(:user_id => user, :token => "#{user.confirmation_token}*")
 end
 
 

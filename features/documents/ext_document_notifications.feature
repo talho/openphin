@@ -92,6 +92,8 @@ Feature: Receiving notifications to different events
     And I click inlineLink "Replace File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I wait for the "Loading" mask to go away
     Then "atticus@example.com" should receive the email:
       | subject       | The document "invitees.csv" has been updated. |
       | body contains | A document "invitees.csv" in the shared folder "Folder1" has been updated by Bartleby Scrivener. |
@@ -111,6 +113,8 @@ Feature: Receiving notifications to different events
     And I click inlineLink "Replace File"
     And I attach the file "spec/fixtures/invitees.csv" to "File"
     And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I wait for the "Loading" mask to go away
     Then "bartleby@example.com" should receive the email:
       | subject       | The document "invitees.csv" has been updated. |
       | body contains | A document "invitees.csv" in the shared folder "Folder1" has been updated by Atticus Finch. |
@@ -146,6 +150,8 @@ Feature: Receiving notifications to different events
       | name            | type |
       | Sybil Carpenter | User |
     And I press "Save"
+    And I wait for the "Saving" mask to go away
+    And I wait for the "Loading" mask to go away
     Then "sybil@example.com" should receive the email:
       | subject       | Bartleby Scrivener has added you to the shared folder "Folder1" |
       | body contains | Bartleby Scrivener has given you access to the shared folder "Folder1" |     

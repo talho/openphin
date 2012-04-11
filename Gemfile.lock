@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/jbuilder.git
-  revision: d8398f2b046eb1903587741c0ee211107194b9ed
+  revision: e2a66168bfa38d6536944680815d417538ef7000
   specs:
     jbuilder (0.4.1)
       activesupport (>= 3.0.0)
@@ -55,6 +55,12 @@ GIT
   revision: 55a4aacc905ad021dd31792d394ca9d0699f30a2
   specs:
     pin_cushion (0.1)
+
+PATH
+  remote: /home/cdubose/projects/rails_sql_views
+  specs:
+    rails_sql_views (0.8.2)
+      activerecord
 
 GEM
   remote: http://rubygems.org/
@@ -100,7 +106,7 @@ GEM
     bson (1.3.1)
     bson_ext (1.3.1)
     builder (2.1.2)
-    bullet (2.3.0)
+    bullet (2.3.1)
       uniform_notifier (~> 1.0.0)
     capistrano (2.11.2)
       highline
@@ -124,7 +130,7 @@ GEM
     chronic (0.2.3)
       hoe (>= 1.2.1)
     clamav (0.4.1)
-    clearance (0.16.0)
+    clearance (0.16.1)
       diesel (~> 0.1.5)
       rails (>= 3.0)
     cocaine (0.2.1)
@@ -142,7 +148,7 @@ GEM
       nokogiri (>= 1.5.0)
     curb (0.7.15)
     database_cleaner (0.7.2)
-    delayed_job (3.0.1)
+    delayed_job (3.0.2)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.2)
       activerecord (> 2.1.0)
@@ -153,7 +159,7 @@ GEM
     dynamic_form (1.1.4)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    factory_girl (3.0.0)
+    factory_girl (3.1.0)
       activesupport (>= 3.0.0)
     feedzirra (0.0.23)
       activesupport (>= 2.0.0)
@@ -172,9 +178,9 @@ GEM
       builder (>= 2.1.2)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
-    headless (0.2.2)
+    headless (0.3.1)
     highline (1.6.11)
-    hoe (3.0.1)
+    hoe (3.0.3)
       rake (~> 0.8)
     hoptoad_notifier (2.4.11)
       activesupport
@@ -183,7 +189,6 @@ GEM
       multi_json
       multi_xml
     i18n (0.5.0)
-    jslint_on_rails (1.0.7)
     json (1.6.6)
     json_pure (1.6.6)
     kgio (2.7.4)
@@ -285,7 +290,7 @@ GEM
       archive-tar-minitar (>= 0.5.2)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
-    rubyzip (0.9.6.1)
+    rubyzip (0.9.7)
     savon (0.9.7)
       akami (~> 1.0)
       builder (>= 2.1.2)
@@ -322,7 +327,7 @@ GEM
     ts-delayed-delta (1.1.3)
       delayed_job (>= 2.0.4)
       thinking-sphinx (>= 1.3.6)
-    tzinfo (0.3.32)
+    tzinfo (0.3.33)
     unicorn (4.2.1)
       kgio (~> 2.6)
       rack
@@ -360,7 +365,7 @@ DEPENDENCIES
   clearance (~> 0.16.0)
   crack (= 0.1.8)
   cucumber (= 1.1.9)
-  cucumber-rails (= 1.3.0)
+  cucumber-rails
   curb (= 0.7.15)
   database_cleaner
   delayed_job (~> 3.0.1)
@@ -379,7 +384,6 @@ DEPENDENCIES
   httpclient!
   httpi!
   jbuilder!
-  jslint_on_rails
   launchy
   libxml-ruby (~> 2.3)
   linecache19!
@@ -394,7 +398,7 @@ DEPENDENCIES
   prawn (= 0.8.4)
   rack-raw-upload
   rails (~> 3.0.0)
-  rdoc
+  rails_sql_views!
   rspec (= 2.1.0)
   rspec-rails
   ruby-debug-base19x (~> 0.11.30.pre4)

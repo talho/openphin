@@ -22,13 +22,11 @@
 
 class Folder < ActiveRecord::Base
   has_many :documents, :dependent => :destroy do
-    def expired(options = {})
-      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ?", 30.days.ago])
-      scoped(options)
+    def expired
+      where("created_at <= ?", 30.days.ago)
     end
-    def expiring_soon(options = {})
-      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
-      scoped(options)
+    def expiring_soon
+      where("created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago)
     end
   end
 
@@ -216,6 +214,7 @@ class Folder < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options = {} if options.nil?
     options[:methods] = [] if options[:methods].nil?
     options[:methods] |= [:share_status]
     super(options)

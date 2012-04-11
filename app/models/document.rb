@@ -151,6 +151,7 @@ class Document < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options = {} if options.nil?
     options[:methods] = [] if options[:methods].nil?
     options[:methods] |= [:ftype, :name]
     super( options )
