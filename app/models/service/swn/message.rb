@@ -47,7 +47,6 @@ class Service::Swn::Message < Service::Swn::Base
         :password => config['password'],
         :retry_duration => config['retry_duration']
       ).build!
-
       response = perform_delivery body
       NotificationResponse.build(response, message)
     end

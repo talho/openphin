@@ -22,12 +22,6 @@ class Target < ActiveRecord::Base
   after_create :save_snapshot_of_users
 
   def save_snapshot_of_users &block
-#    ActiveRecord::Base.connection.execute(
-#        "insert into targets_users (target_id, user_id)
-#          select #{self.id}, users.id from users
-#            inner join role_memberships on users.id=role_memberships.user_id
-#          where #{conditions_for(audience)}"
-#    )
     user_ids = if block_given?
       yield
     end

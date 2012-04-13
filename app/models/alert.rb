@@ -70,10 +70,10 @@ class Alert < ActiveRecord::Base
 
   has_many :ack_logs, :class_name => 'AlertAckLog'
   has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
-#  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
+  has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type
- # after_create :batch_deliver
+  after_create :batch_deliver
 
   scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
   scope :devices, {
@@ -159,9 +159,6 @@ class Alert < ActiveRecord::Base
     end
     yield if block_given?
     ::MessageApi.deliver(self)
-#    alert_device_types(true).each do |device_type|
-#      device_type.device_type.batch_deliver(self)
-#    end
     self.initialize_statistics
   end
 

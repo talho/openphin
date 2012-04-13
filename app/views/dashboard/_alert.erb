@@ -39,7 +39,7 @@
       </div>
 
       <p>
-        <% if alert.acknowledge? && !alert.acknowledged_by_user? %>
+        <% if alert.acknowledge? && !alert.acknowledged_by_user?(@user) %>
           <% if alert.expired? %>
             Acknowledgement is no longer allowed for this Alert.
           <% elsif alert.call_down_messages["1"] == "Please press one to acknowledge this alert." %>

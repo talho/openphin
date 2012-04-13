@@ -96,6 +96,11 @@ class ApplicationController < ActionController::Base
     # end
   # end
 
+  def authorize
+    flash.keep unless signed_in?
+    super
+  end
+
   def admin_required
     unless current_user.role_memberships.where(:role_id => (Role.admins | Role.superadmins | [Role.sysadmin]).map(&:id)).count > 0
       message = "That resource does not exist or you do not have access to it."

@@ -46,7 +46,8 @@ Ext.AjaxPanel = Ext.extend(Ext.Panel,
                 url: this.url,
                 method: 'GET',
                 callback: this.handleAJAXLoad,
-                scope: this
+                scope: this,
+                nocache: true
             });
         }
     },

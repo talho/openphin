@@ -32,6 +32,13 @@ GIT
     caching_presenter (0.8.0)
 
 GIT
+  remote: git://github.com/talho/happymapper.git
+  revision: 0453583977a70170fbe94039f5d03d78cfb63ca4
+  specs:
+    happymapper (0.4.0)
+      libxml-ruby (~> 2.0)
+
+GIT
   remote: git://github.com/talho/httpclient.git
   revision: 557ef82946919232ea99822489f67d3634ab74c6
   specs:
@@ -107,7 +114,7 @@ GEM
     builder (2.1.2)
     bullet (2.3.1)
       uniform_notifier (~> 1.0.0)
-    capistrano (2.11.2)
+    capistrano (2.12.0)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -175,8 +182,6 @@ GEM
       rainbow
     gyoku (0.4.4)
       builder (>= 2.1.2)
-    happymapper (0.4.0)
-      libxml-ruby (~> 2.0)
     headless (0.3.1)
     highline (1.6.11)
     hoe (3.0.3)
@@ -378,7 +383,7 @@ DEPENDENCIES
   gherkin (= 2.9.3)
   git
   git_remote_branch
-  happymapper
+  happymapper!
   headless
   hoe
   hoptoad_notifier (= 2.4.11)
