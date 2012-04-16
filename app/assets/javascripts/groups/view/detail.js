@@ -42,21 +42,6 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
     Talho.Groups.View.Detail.superclass.initComponent.apply(this, arguments);
   },
 
-  create_report_old:function(button){
-    button.disable();
-    Ext.Ajax.request({
-      url: '/admin/groups/' + this.group_id + '.pdf',
-      params: {no_page: true},
-      method: 'GET',
-      success: function(response, options){
-        var report = Ext.decode(response.responseText);
-        this.report_msg(report.report_name);
-        button.enable();
-      },
-      scope: this
-    });
-  },
-
 //  criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
 //  report = create_data_set("Report::GroupWithRecipientsRecipeInternal",criteria)
 

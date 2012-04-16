@@ -16,8 +16,9 @@ class Report::Report < ActiveRecord::Base
 
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
-  validates_presence_of     :author
-  validates_inclusion_of    :incomplete, :in => [false,true]
+  validates_presence_of  :author
+  validates_associated   :author
+  validates_inclusion_of :incomplete, :in => [false,true]
 
   after_create :do_after_create
   before_destroy :do_before_destroy
@@ -25,13 +26,13 @@ class Report::Report < ActiveRecord::Base
   validate :on => :create do
     begin
       recipe.constantize
-    rescue StandardError
-      errors.add :base, "#{recipe} is not found on the system"
+    rescue NameError
+      errors.add_to_base "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
     end
   end
 
   def dataset
-    @collection ||= REPORT_DB.collection(name)
+    @collection ||= REPORT_DB.collection(name.to_s)
   end
 
   def as_json(options={})
