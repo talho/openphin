@@ -59,18 +59,21 @@ module RecipeModules
     end
 
     def recipe_names
+      puts "\n========subclasses are #{subclasses}\n=======constants are #{constants}"
       if Rails.env == 'development'
         pathname = File.join('app','models',name.underscore)
         glob_script = File.join(Rails.root,pathname,'**','*_recipe.rb')
-        recipe_names = Dir.glob(glob_script).collect{|f| File.join(Rails.root,pathname,File.basename(f))}
+        recipe_names = Dir.glob(glob_script).collect{|f| File.join(Rails.root,pathname,File.basename(f,'.rb'))}
         begin
           recipe_names.each{|n| require n}
-          puts recipe_names
+#          puts "recipe_names requires\n #{recipe_names}"
         rescue StandardError => e
           puts e
         end
       end
-      subclasses.map(&:name).select{|n| /^#{name}::/.match(n)}
+      subs = subclasses.map(&:name).select{|n| /^#{name}::/.match(n)}
+#      puts "recipe_names selects\n #{subs}"
+      subs
     end
 
   end

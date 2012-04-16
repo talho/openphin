@@ -78,6 +78,8 @@ protected
 
   def view_for_at_using(owner,path,recipe)
     view = ActionView::Base.new path
+    template_path = File.dirname(recipe.template_path)
+    view.view_paths.push(template_path) unless template_path.blank?
     view.class_eval do
     # current_user support for any subsequent capture query logic
       define_method :current_user do
