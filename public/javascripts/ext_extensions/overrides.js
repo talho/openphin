@@ -80,7 +80,14 @@
   });
   
   if(Application.rails_environment === 'cucumber'){
-    var show_at = function(){
+    var show_at = function(xy){
+      Ext.Tip.superclass.show.call(this);
+        // if(this.measureWidth !== false && (!this.initialConfig || typeof this.initialConfig.width != 'number')){
+            // this.doAutoWidth();
+        // }
+        // if(this.constrainPosition){
+            // xy = this.el.adjustForConstraints(xy);
+        // }
       this.setPagePosition(0,0);
     } 
     Ext.override(Ext.Tip, {
