@@ -188,7 +188,7 @@ class User < ActiveRecord::Base
     other.each do |user|
       return true if !(organizations & user.organizations).empty? && is_admin_for?(user.jurisdictions)
       user.organization_membership_requests.each { |org_mem_request|
-        return true if org_mem_request.organization.members.include?(self) && is_admin_for?(user.jurisdictions)
+        return true if org_mem_request.organization.users.include?(self) && is_admin_for?(user.jurisdictions)
       }
     end
     false

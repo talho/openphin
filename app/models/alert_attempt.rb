@@ -122,6 +122,7 @@ class AlertAttempt < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options = {} if options.blank?
     options[:include] = {} if options[:include].nil?
     include = {:user => {:only => [:display_name, :email]}}
     include[:acknowledged_alert_device_type] = {} unless acknowledged_alert_device_type_id.nil?

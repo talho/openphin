@@ -1,7 +1,7 @@
 <html>
   <head>
-    <%= javascript_include_tag 'ext/adapter/ext/ext-base', 'ext/ext-all', 'alert/acknowledgement_controller', :cache => :alert_acknowledgement  %>
-    <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-Ocean', 'alert_acknowledgement', :cache => :alert_acknowledgement %>
+    <%= javascript_include_tag 'ext/adapter/ext/ext-base', 'ext/ext-all', 'alert/acknowledgement_controller', :cache => "alert_acknowledgement"  %>
+    <%= stylesheet_link_tag 'resources/css/ext-all', 'resources/css/xtheme-Ocean', 'alert_acknowledgement', :cache => "alert_acknowledgement" %>
     <script>
       window.callback_url = '<%= alert_url :id => params[:id], :format => 'json' %>'
     </script>

@@ -5,7 +5,7 @@ std_opts = "-r features --format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict 
 han = "-r vendor/plugins/han/features"
 talho = "-r vendor/plugins/talho/features"
 rollcall = "-r vendor/plugins/rollcall/features"
-vms = "-r vendor/plugins/vms/features"
+vms = "-r vendor/plugins/vms/spec/factories.rb -r vendor/plugins/vms/features"
 %>
 default: <%= std_opts %> features
 wip: --tags @wip:3 --wip features
