@@ -4,7 +4,7 @@ source "http://rubygems.org"
 #source "http://gems.github.com" 
 
 group :default do
-  gem "rails", "~> 3.0.0"
+  gem "rails", "~> 3.1.0"
   gem "clearance", "~> 0.16.0"
   gem "prawn", "0.8.4"
   gem "paperclip", "2.7.0"
@@ -14,14 +14,12 @@ group :default do
   gem "validatable", "1.6.7"
   gem "will_paginate", "~> 3"
   gem "RedCloth"
-  gem "hoptoad_notifier", "2.4.11"
   gem "feedzirra", "0.0.23"
-  gem "builder", "2.1.2"
   gem "curb", "0.7.15"
   gem "happymapper", :git => 'git://github.com/talho/happymapper.git' #"0.3.2"
   gem "libxml-ruby", "~> 2.3"
-  gem "pg", "0.10.1"
-  gem "acts-as-taggable-on", "2.0.6"
+  gem "pg", ">= 0.11"
+  gem "acts-as-taggable-on", "~> 2.2.0"
   gem "paper_trail", ">= 2"
   gem "wicked_pdf", "0.7.0"
   gem "mongo", "1.3.1"
@@ -36,9 +34,8 @@ group :default do
   gem "delayed_job", "~> 3.0.1"
     gem 'delayed_job_active_record', "~> 0.3"
   gem 'option_attrs', :git => 'git://github.com/talho/option_attrs.git'
-  gem 'pin_cushion', :path => '/home/cdubose/projects/pin_cushion'# :git => 'git://github.com/talho/pin_cushion.git'
-  gem 'smurf', :git => 'git://github.com/Dishwasha/smurf.git'
-  gem 'backgroundrb', :git => 'git://github.com/talho/backgroundrb.git'
+  gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
+  gem 'backgroundrb-rails3', :require => 'backgroundrb'
     gem "packet", "0.1.15"
     gem "chronic", "0.2.3"
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3
@@ -56,8 +53,14 @@ group :development do
   gem "capistrano-unicorn"
 end
 
+group :assets do
+#  gem 'sass-rails', "  ~> 3.1.0"
+#  gem 'coffee-rails', "~> 3.1.0"
+  gem 'uglifier'
+end
+
 group :test do
-  gem "rspec", "2.1.0"
+  gem "rspec"#, "2.1.0"
   gem "rspec-rails"#, "1.3.4"
 end
  

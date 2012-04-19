@@ -20,6 +20,7 @@ module Openphin
       #{Rails.root.to_s}/app/xml
     ) 
   
+    
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named
     config.reload_plugins = true if Rails.env == 'development'
@@ -34,5 +35,8 @@ module Openphin
     config.time_zone = 'Central Time (US & Canada)'
       
     config.middleware.use 'Rack::RawUpload', :paths => ["/documents.*"]
+    
+    config.assets.enabled = true
+    config.assets.version = '1.0'
   end
 end

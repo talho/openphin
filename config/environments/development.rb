@@ -18,7 +18,6 @@ Openphin::Application.configure do
   
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
-  config.action_view.debug_rjs                         = true
   config.action_controller.perform_caching             = false
   config.reload_plugins                                = true
   
@@ -27,6 +26,10 @@ Openphin::Application.configure do
   config.action_mailer.default_url_options = { :host => HOST }
   
   #config.reload_plugins = true
+  config.action_dispatch.best_standards_support = :builtin
+
+  config.assets.compress = false
+  config.assets.debug = true
   
   PHIN_PARTNER_OID="2.16.840.1.114222.4.3.2.2.3.770"
   PHIN_APP_OID="1"

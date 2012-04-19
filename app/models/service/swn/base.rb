@@ -6,8 +6,11 @@ class Service::Swn::Base
     FAKE_DELIVERY_METHOD = :test
     DEFAULT_DELIVERY_METHOD = :deliver
 
-    attr_accessor_with_default(:options){ Hash.new }
-
+    attr_accessor :options
+    
+    def initialize
+      @options = Hash.new
+    end
 
     def fake_delivery?
       options["delivery_method"] == "test"

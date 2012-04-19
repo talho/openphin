@@ -250,45 +250,6 @@ private
     super user
   end
 
-  # def render_password_error(exception)
-    # if exception.message == "missing token"
-      # flash[:error] = "The token from your link is missing"
-      # redirect_to '/'
-    # elsif exception.message == "non-existent user"
-      # flash[:error] = "The token from your link is incorrect"
-      # redirect_to '/'
-    # else
-      # render_error(exception)
-    # end
-  # end
-# 
-  # def render_error(exception)
-    # #log_error(exception)
-    # notify_hoptoad(exception) if request.path.match(/rrd\//).blank?
-    # if request.format.to_sym == :json
-      # if Rails.env.downcase == "production"
-        # json = {:success => false, :error => "There was an error processing your request.  Please contact technical support."}
-      # else
-        # json = {:success => false, :error => "There was an error processing your request.  Please contact technical support.",
-                # :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}
-      # end
-      # (request.xhr?) ? render(:json => json, :status => 400) : render(:json => json, :content_type => 'text/html')
-    # else
-      # request.local? ? rescue_action_locally(exception) : rescue_action_in_public(exception)
-    # end
-  # end
-# 
-  # def render_json_error_as_html(exception)
-    # #log_error(exception)
-    # notify_hoptoad(exception)
-    # if Rails.env.downcase == "production"
-      # render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support."}.as_json, :content_type => 'text/html'
-    # else
-      # render :json => {:success => false, :error => "There was an error processing your request.  Please contact technical support.", :exception => h(exception.to_s), :backtrace => exception.backtrace.collect{|b| h(b)}}.as_json, :content_type => 'text/html'
-    # end
-  # end
+#TODO: Re-enable airbrake notifier
 
-  # def force_json_as_html
-    # self.class.rescue_from Exception, :with => :render_json_error_as_html
-  # end
 end

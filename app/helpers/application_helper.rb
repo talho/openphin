@@ -87,6 +87,7 @@ module ApplicationHelper
   end
 
   def javascript_include_domino(sources)
+    debugger
     expand_javascript_sources(sources).map{|e| javascript_path(e) }.join(' ')
   end
 end

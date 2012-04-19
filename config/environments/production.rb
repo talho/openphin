@@ -34,6 +34,9 @@ Openphin::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { :host => HOST }
   
+  config.i18n.fallbacks = true
+  config.active_support.deprecation = :notify
+
   # Enable threaded mode
   # config.threadsafe!
   PHIN_PARTNER_OID="2.16.840.1.114222.4.3.2.2.3.770"
