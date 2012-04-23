@@ -43,8 +43,8 @@ class ForumsController < ApplicationController
     end
   end
 
-  # POST /forums/new
-  # POST /forums/new.json
+  # POST /forums
+  # POST /forums.json
   def create
     merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
     @forum = Forum.new(params[:forum]) if current_user.is_super_admin?

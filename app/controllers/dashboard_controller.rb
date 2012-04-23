@@ -235,7 +235,7 @@ class DashboardController < ApplicationController
         Phin::Application.eval_if_plugin_present(app.to_s) do
           plugin_config_items << eval(val) 
         end if app != :han && current_user.has_app?(app.to_s) && !val.nil?
-      end
+      end unless $menu_config.nil?
       @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
     end
     
