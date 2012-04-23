@@ -40,7 +40,6 @@ group :default do
     gem "chronic", "0.2.3"
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'
-  gem 'bullet'
   gem 'jbuilder', :git => 'git://github.com/rails/jbuilder.git'
   gem 'awesome_nested_set'
   gem 'sinatra'
