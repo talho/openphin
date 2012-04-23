@@ -18,7 +18,11 @@ module Phin
     end
 
     module ClassMethods
-      attr_accessor_with_default(:access_roles){ Array.new }
+      attr_accessor(:access_roles)
+      
+      def after_initialize
+        self.access_roles = self.access_roles || Array.new
+      end
 
       def self.extended(controller)
         controller.before_filter :verify_roles

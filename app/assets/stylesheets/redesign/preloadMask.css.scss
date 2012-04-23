@@ -17,7 +17,7 @@ HTML, BODY { height: 100%; }
      padding: 2px;
 }
 #loading SPAN {
-     background: url('/images/Ajax-loader.gif') no-repeat 5px center;
+     background: image_url('Ajax-loader.gif') no-repeat 5px center;
      padding: 10px 10px 10px 40px;
      border: 1px solid black;
      display: block;

@@ -9,7 +9,7 @@ Openphin::Application.configure do
   # In the development environment your application's code is reloaded on
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the webserver when you make code changes.
-  config.cache_classes = true# false
+  config.cache_classes = false
   
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
@@ -37,4 +37,15 @@ Openphin::Application.configure do
   PHIN_OID_ROOT="#{PHIN_PARTNER_OID}.#{PHIN_ENV_OID}.#{PHIN_APP_OID}"
   
   ENV["DELAYED_JOB_OVERRIDE"] = "1"
+  
+  config.middleware.use ::Rack::PerftoolsProfiler, :default_printer => 'gif', :bundler => true, :mode => :walltime
+  
+  config.dev_tweaks.autoload_rules do
+    keep :all
+  
+    skip '/favicon.ico'
+    skip :assets
+    keep :xhr
+    keep :forced
+  end
 end

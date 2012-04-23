@@ -29,7 +29,7 @@ Feature: Dashboard
     And the "Application Default" dashboard has the following portlet:
       | column | 1                                      |
       | xtype  | dashboardhtmlportlet                   |
-      | config | {html: "<h1>Welcome to openPHIN</h1>"} |
+      | config | {"html": "<h1>Welcome to openPHIN</h1>"} |
 
   Scenario: Public-only user sees default dashboard
     Given I am logged in as "pott.pub@example.com"
@@ -43,7 +43,7 @@ Feature: Dashboard
     And the "Jurisdictional" dashboard has the following portlet:
       | column | 1                                                     |
       | xtype  | dashboardhtmlportlet                                  |
-      | config | {html: "<h1>This is a jurisdictional dashboard</h1>"} |
+      | config | {"html": "<h1>This is a jurisdictional dashboard</h1>"} |
     And the "Jurisdictional" dashboard has the following audience:
       | Dashboard Role | viewer        |
       | Jurisdictions  | Potter County |
@@ -57,7 +57,7 @@ Feature: Dashboard
     And the "Jurisdictional" dashboard has the following portlet:
       | column | 1                                                     |
       | xtype  | dashboardhtmlportlet                                  |
-      | config | {html: "<h1>This is a jurisdictional dashboard</h1>"} |
+      | config | {"html": "<h1>This is a jurisdictional dashboard</h1>"} |
     And the "Jurisdictional" dashboard has the following audience:
       | Dashboard Role | viewer        |
       | Jurisdictions  | Potter County |
@@ -78,7 +78,7 @@ Feature: Dashboard
     And the "No Audience" dashboard has the following portlet:
       | column | 1                                                 |
       | xtype  | dashboardhtmlportlet                              |
-      | config | {html: "<h1>This dashboard has no audience</h1>"} |
+      | config | {"html": "<h1>This dashboard has no audience</h1>"} |
     And I am logged in as "pott.pub@example.com"
     Then I should see "Welcome to openPHIN"
     When I force open the "No Audience" dashboard tab

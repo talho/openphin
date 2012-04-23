@@ -2,10 +2,10 @@ Ext.ns("Talho");
 
 // We're going to create a singleton manager here that is an observable
 (function(){
-    dominoes.property('ext_extensions', '/javascripts/ext_extensions');
-    dominoes.property('js', '/javascripts');
-    dominoes.property('css', '/stylesheets');
-    dominoes.property('cms', '/javascripts/dashboard/cms');
+    dominoes.property('ext_extensions', '/assets/ext_extensions');
+    dominoes.property('js', '/assets');
+    dominoes.property('css', '/assets');
+    dominoes.property('cms', '/assets/dashboard/cms');
     dominoes.property('admin', '$(js)/admin');
     
     dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');

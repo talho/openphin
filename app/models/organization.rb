@@ -128,7 +128,7 @@ class Organization < ActiveRecord::Base
   private
 
   def set_token
-    self.token = ActiveSupport::SecureRandom.hex
+    self.token = SecureRandom.hex
   end
   
   def create_group

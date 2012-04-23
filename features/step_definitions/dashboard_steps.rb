@@ -148,7 +148,7 @@ When /^I maliciously try to edit (?:a|the "([^"]*)") dashboard$/ do |dash_name|
       url: '/dashboard/#{dash.id}.json',
       method: 'PUT',
       params: {
-        'dashboards': '{name: \"TEST\"}'
+        'dashboards': '{\"name\": \"TEST\"}'
       },
       callback: function(o, s, r){
         window.responseText = r.responseText;
@@ -184,11 +184,11 @@ When /^I load ExtJs$/ do
   page.execute_script("
     var s = document.createElement('SCRIPT');
     s.charset = 'UTF-8';
-    s.src ='/javascripts/ext/adapter/ext/ext-base.js';
+    s.src ='/assets/ext/adapter/ext/ext-base.js';
     document.getElementsByTagName('HEAD')[0].appendChild(s);
     var s2 = document.createElement('SCRIPT');
     s2.charset = 'UTF-8';
-    s2.src ='/javascripts/ext/ext-all.js';
+    s2.src ='/assets/ext/ext-all.js';
     document.getElementsByTagName('HEAD')[0].appendChild(s2);
   ")
 end

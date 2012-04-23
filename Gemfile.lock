@@ -51,8 +51,9 @@ GIT
   specs:
     pin_cushion (0.1)
 
-PATH
-  remote: /home/cdubose/projects/rails_sql_views
+GIT
+  remote: git://github.com/talho/rails_sql_views.git
+  revision: 27a643be6ca5963298896c26ebb5accfd1c086b2
   specs:
     rails_sql_views (0.8.2)
       activerecord
@@ -124,7 +125,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    childprocess (0.3.1)
+    childprocess (0.3.2)
       ffi (~> 1.0.6)
     chromedriver-helper (0.0.3)
       nokogiri
@@ -159,6 +160,8 @@ GEM
     diff-lcs (1.1.3)
     dynamic_form (1.1.4)
     erubis (2.7.0)
+    execjs (1.3.0)
+      multi_json (~> 1.0)
     factory_girl (3.1.1)
       activesupport (>= 3.0.0)
     feedzirra (0.0.23)
@@ -215,6 +218,7 @@ GEM
       activerecord (>= 1.1)
     nokogiri (1.5.2)
     nori (1.1.0)
+    open4 (1.3.0)
     packet (0.1.15)
     paper_trail (2.6.3)
       activerecord (~> 3.0)
@@ -224,6 +228,7 @@ GEM
       activesupport (>= 2.3.2)
       cocaine (>= 0.0.2)
       mime-types
+    perftools.rb (2.0.0)
     pg (0.13.2)
     polyglot (0.3.3)
     prawn (0.8.4)
@@ -238,6 +243,10 @@ GEM
       rack (>= 0.4)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
+    rack-perftools_profiler (0.6.0)
+      open4 (~> 1.0)
+      perftools.rb (~> 2.0.0)
+      rack (~> 1.0)
     rack-protection (1.2.0)
       rack
     rack-raw-upload (1.0.11)
@@ -254,6 +263,9 @@ GEM
       activesupport (= 3.1.4)
       bundler (~> 1.0)
       railties (= 3.1.4)
+    rails-dev-tweaks (0.6.1)
+      actionpack (~> 3.1)
+      railties (~> 3.1)
     railties (3.1.4)
       actionpack (= 3.1.4)
       activesupport (= 3.1.4)
@@ -298,6 +310,12 @@ GEM
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
     rubyzip (0.9.7)
+    sass (3.1.15)
+    sass-rails (3.1.6)
+      actionpack (~> 3.1.0)
+      railties (~> 3.1.0)
+      sass (>= 3.1.10)
+      tilt (~> 1.3.2)
     savon (0.9.7)
       akami (~> 1.0)
       builder (>= 2.1.2)
@@ -314,8 +332,8 @@ GEM
       libwebsocket (~> 0.1.3)
       multi_json (~> 1.0)
       rubyzip
-    simplecov (0.6.1)
-      multi_json (~> 1.0)
+    simplecov (0.6.2)
+      multi_json (~> 1.3)
       simplecov-html (~> 0.5.3)
     simplecov-html (0.5.3)
     sinatra (1.3.2)
@@ -341,6 +359,9 @@ GEM
       delayed_job (>= 2.0.4)
       thinking-sphinx (>= 1.3.6)
     tzinfo (0.3.33)
+    uglifier (1.2.4)
+      execjs (>= 0.3.0)
+      multi_json (>= 1.0.2)
     unicorn (4.3.0)
       kgio (~> 2.6)
       rack
@@ -353,6 +374,7 @@ GEM
     will_paginate (3.0.3)
     xpath (0.1.4)
       nokogiri (~> 1.3)
+    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -407,14 +429,17 @@ DEPENDENCIES
   pg (>= 0.11)
   pin_cushion!
   prawn (= 0.8.4)
+  rack-perftools_profiler
   rack-raw-upload
   rails (~> 3.1.0)
+  rails-dev-tweaks (~> 0.6.1)
   rails_sql_views!
   rspec
   rspec-rails
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
   rubyforge
+  sass-rails (~> 3.1.0)
   savon (= 0.9.7)
   selenium-webdriver
   simplecov
@@ -422,7 +447,9 @@ DEPENDENCIES
   spork
   thinking-sphinx (~> 2.0.11)
   ts-delayed-delta
+  uglifier
   unicorn
   validatable (= 1.6.7)
   wicked_pdf (= 0.7.0)
   will_paginate (~> 3)
+  yajl-ruby

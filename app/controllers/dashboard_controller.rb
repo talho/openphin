@@ -125,10 +125,10 @@ class DashboardController < ApplicationController
         portlets["items"].each_with_index do |portlet, index|
           p = if portlet["itemId"] && dp = dashboard.dashboard_portlets.find_by_portlet_id(portlet["itemId"])
             dp.attributes = { :draft => false, :column => portlet["column"], :sequence => index } 
-            dp.portlet["config"] = portlet
+            dp.portlet["config"] = portlet.to_json
             dp.portlet.save && dp.save ? dp.portlet : nil
           else
-            p = Portlet.create(:xtype => portlet["xtype"], :config => portlet)
+            p = Portlet.create(:xtype => portlet["xtype"], :config => portlet.to_json)
             dashboard.dashboard_portlets.create(:portlet_id => p.id, :column => portlet["column"], :draft => false, :sequence => index)
             p
           end

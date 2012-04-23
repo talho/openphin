@@ -45,16 +45,20 @@ group :default do
   gem 'awesome_nested_set'
   gem 'sinatra'
   gem "dynamic_form"
-  gem "rails_sql_views", :path => '/home/cdubose/projects/rails_sql_views'#:git => 'git://github.com/talho/rails_sql_views.git'
+  gem "rails_sql_views", :git => 'git://github.com/talho/rails_sql_views.git'
+  
+  gem "yajl-ruby", :require => ['yajl', 'yajl/json_gem']
 end
 
 group :development do
   # gem "jslint_on_rails"
+  gem 'rack-perftools_profiler', :require => 'rack/perftools_profiler'
+  gem 'rails-dev-tweaks', '~> 0.6.1'
   gem "capistrano-unicorn"
 end
 
 group :assets do
-#  gem 'sass-rails', "  ~> 3.1.0"
+  gem 'sass-rails', "  ~> 3.1.0"
 #  gem 'coffee-rails', "~> 3.1.0"
   gem 'uglifier'
 end
