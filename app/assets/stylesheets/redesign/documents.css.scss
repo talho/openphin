@@ -28,35 +28,35 @@
 }
 
 .documents-folder-item-icon.documents-folder-item-folder-icon{
-    background: no-repeat center url(/images/documents/folder.png);
+    background: no-repeat center asset-url("documents/folder.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-file-icon{
-    background: no-repeat center url(/images/documents/text-x-generic.png);
+    background: no-repeat center asset-url("documents/text-x-generic.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-audio-icon{
-    background: no-repeat center url(/images/documents/audio-x-generic.png);
+    background: no-repeat center asset-url("documents/audio-x-generic.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-image-icon{
-    background: no-repeat center url(/images/documents/image-x-generic.png);
+    background: no-repeat center asset-url("documents/image-x-generic.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-video-icon{
-    background: no-repeat center url(/images/documents/video-x-generic.png);
+    background: no-repeat center asset-url("documents/video-x-generic.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-doc-icon{
-    background: no-repeat center url(/images/documents/x-office-document.png);
+    background: no-repeat center asset-url("documents/x-office-document.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-presentation-icon{
-    background: no-repeat center url(/images/documents/x-office-presentation.png);
+    background: no-repeat center asset-url("documents/x-office-presentation.png", image);
 }
 
 .documents-folder-item-icon.documents-folder-item-spreadsheet-icon{
-    background: no-repeat center url(/images/documents/x-office-spreadsheet.png);
+    background: no-repeat center asset-url("documents/x-office-spreadsheet.png", image);
 }
 
 .documents-file-action-button{
@@ -72,49 +72,49 @@
 .documents-add-folder-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/folder-add.png);
+    background: no-repeat asset-url("documents/folder-add.png", image);
 }
 
 .documents-delete-folder-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/folder-delete.png);
+    background: no-repeat asset-url("documents/folder-delete.png", image);
 }
 
 .documents-edit-folder-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/folder-edit.png);
+    background: no-repeat asset-url("documents/folder-edit.png", image);
 }
 
 .documents-add-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/document-new-6.png);
+    background: no-repeat asset-url("documents/document-new-6.png", image);
 }
 
 .documents-download-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/document-save-4.png);
+    background: no-repeat asset-url("documents/document-save-4.png", image);
 }
 
 .documents-replace-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/edit-copy-3.png);
+    background: no-repeat asset-url("documents/edit-copy-3.png", image);
 }
 
 .documents-move-icon{
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/document-export-4.png);
+    background: no-repeat asset-url("documents/document-export-4.png", image);
 }
 
 .documents-delete-file-icon{                             
     width: 16px;
     height: 16px;
-    background: no-repeat url(/images/documents/document-close-4.png);
+    background: no-repeat asset-url("documents/document-close-4.png", image);
 }
 
 .icon-16{
@@ -137,11 +137,11 @@
 }
 
 .x-tool-icon-view{
-    background-image: url(/images/documents/view-list-icons.png)
+    background-image: asset-url("documents/view-list-icons.png", image)
 }
 
 .x-tool-detail-view{
-    background-image: url(/images/documents/view-list-details-4.png)
+    background-image: asset-url("documents/view-list-details-4.png", image)
 }
 
 .documents-detail-row .x-grid3-row-body-tr{
@@ -174,35 +174,35 @@
 }
 
 .ux-image-display-field.documents-folder-item-folder-icon{
-    background: no-repeat center url(/images/documents/folder-small.png);
+    background: no-repeat center asset-url("documents/folder-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-file-icon{
-    background: no-repeat center url(/images/documents/text-x-generic-small.png);
+    background: no-repeat center asset-url("documents/text-x-generic-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-audio-icon{
-    background: no-repeat center url(/images/documents/audio-x-generic-small.png);
+    background: no-repeat center asset-url("documents/audio-x-generic-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-image-icon{
-    background: no-repeat center url(/images/documents/image-x-generic-small.png);
+    background: no-repeat center asset-url("documents/image-x-generic-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-video-icon{
-    background: no-repeat center url(/images/documents/video-x-generic-small.png);
+    background: no-repeat center asset-url("documents/video-x-generic-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-doc-icon{
-    background: no-repeat center url(/images/documents/x-office-document-small.png);
+    background: no-repeat center asset-url("documents/x-office-document-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-presentation-icon{
-    background: no-repeat center url(/images/documents/x-office-presentation-small.png);
+    background: no-repeat center asset-url("documents/x-office-presentation-small.png", image);
 }
 
 .ux-image-display-field.documents-folder-item-spreadsheet-icon{
-    background: no-repeat center url(/images/documents/x-office-spreadsheet-small.png);
+    background: no-repeat center asset-url("documents/x-office-spreadsheet-small.png", image);
 }
 
 .document-detail-name-field{

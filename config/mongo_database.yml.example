@@ -3,8 +3,6 @@
 development:
   database:  openphin_development
   pool_size: 5
-  username:  talho_apps
-  password:  leelane
   host:      127.0.0.1
   port:      27017
   timeout:   5
@@ -12,8 +10,6 @@ development:
 test: &TEST
   database: openphin_test
   pool_size: 5
-  username:  talho_apps
-  password:  leelane
   host:      127.0.0.1
   port:      27017
   timeout:   5
@@ -21,8 +17,6 @@ test: &TEST
 production:
   database: openphin_production
   pool_size: 5
-  username:  talho_apps
-  password:  leelane
   host:      127.0.0.1
   port:      27017
   timeout:   5

@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
     :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id, :email, :password, :password_confirmation
     
-  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
+  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/assets/missing_:style.jpg'
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 

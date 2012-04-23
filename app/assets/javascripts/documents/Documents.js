@@ -79,9 +79,9 @@ Talho.Documents = Ext.extend(function(){}, {
             }),
             master_column_id: 'name_column',
             columns: [
-                {xtype: 'xactioncolumn', icon: '/images/shared.png', iconCls: 'folder-shared-icon', showField: 'shared', tooltip: 'Folder is shared with other users'},
+                {xtype: 'xactioncolumn', icon: '/assets/shared.png', iconCls: 'folder-shared-icon', showField: 'shared', tooltip: 'Folder is shared with other users'},
                 {id: 'name_column', header: '', dataIndex: 'name'},
-                {xtype: 'xactioncolumn', icon: '/images/arrow_down2.png', iconCls: 'folder-context-icon', showField: 'is_owner', tooltip: 'Show the folder context menu', handler: this.showFolderContextMenu, scope: this}
+                {xtype: 'xactioncolumn', icon: '/assets/arrow_down2.png', iconCls: 'folder-context-icon', showField: 'is_owner', tooltip: 'Show the folder context menu', handler: this.showFolderContextMenu, scope: this}
             ],
             sm: new Ext.grid.RowSelectionModel({
                 single:true,

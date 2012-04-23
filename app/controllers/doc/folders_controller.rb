@@ -26,7 +26,7 @@ class Doc::FoldersController < ApplicationController
   end
 
   def create
-    params[:folder][:parent_id] = nil if params[:folder][:parent_id].blank? || params[:folder][:parent_id] == '0'
+    params[:folder][:parent_id] = nil if params[:folder][:parent_id].blank? || params[:folder][:parent_id] == '0' || params[:folder][:parent_id] == 'null'
 
     if params[:folder][:parent_id].nil?
       owner = current_user

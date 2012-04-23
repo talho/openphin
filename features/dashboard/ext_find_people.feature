@@ -407,7 +407,7 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
    | Title         |               |
    | Roles         |               |
    | Jurisdictions | Dallas County |
-  And I should see the image "/images/missing_tiny.jpg"
+  And I should see the image "/assets/missing_tiny.jpg"
   Then I should see "Dallas Admin" in grid row 1
   And I should see "Dallas MD" in grid row 2
   And I should see "Dallas Public" in grid row 3

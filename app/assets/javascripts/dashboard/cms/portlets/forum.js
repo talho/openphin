@@ -138,7 +138,7 @@ Talho.Dashboard.Portlet.Forum = Ext.extend(Talho.Dashboard.Portlet, {
                    }, scope: this} , editor: {
                      xtype: 'combo', editable: false, triggerAction: 'all', mode: 'local', store: this.forum_store, displayField: 'name', valueField: 'id'
                    }}, 
-                   {xtype: 'xactioncolumn', icon: '/images/cross-circle.png', handler: function(grid, row){
+                   {xtype: 'xactioncolumn', icon: '/assets/cross-circle.png', handler: function(grid, row){
                      grid.getStore().removeAt(row);
                    }, scope: this}],
          autoExpandColumn: 'id',

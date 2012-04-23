@@ -23,7 +23,7 @@ Talho.Admin.OrganizationMembershipRequests.view.Index = Ext.extend(Ext.Panel, {
       xtype: 'box', cls: 'container', style: 'margin: 20px auto 0 auto;', html: [
         '<h2>Organization Membership Requests</h2>',
         '<div class="row">',
-          '<img class="span1" src="/images/info_icon.png">',
+          '<img class="span1" src="/assets/info_icon.png">',
           '<p class="span14">These are pending organization membership requests for organizations that ',
           'you have administrative rights for. You are considered to have administrative rights for an',
           'organization if you are an admin and are a member of that organization. Confirm that the ',

@@ -83,7 +83,7 @@ Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {
             master_column_id : 'name',
             columns: [ this.sm,
                 {id:'name', header: "Jurisdiction", sortable: true, dataIndex: 'name', menuDisabled: true},
-                {xtype:'xactioncolumn', icon: '/images/arrow_down2.png', iconCls:'contextArrow', hideField: 'leaf', scope: this, handler: function(grid, index){ this.showJurisdictionTreeContextMenu(grid, index);}}
+                {xtype:'xactioncolumn', icon: '/assets/arrow_down2.png', iconCls:'contextArrow', hideField: 'leaf', scope: this, handler: function(grid, index){ this.showJurisdictionTreeContextMenu(grid, index);}}
             ],
             autoExpandColumn: 'name',
             sm: this.sm,

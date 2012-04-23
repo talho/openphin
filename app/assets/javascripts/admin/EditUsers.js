@@ -104,9 +104,9 @@ Talho.EditUsers = Ext.extend(Talho.ProfileBase, {
         {header: 'Email', dataIndex: 'email', sortable: true, editor: {xtype:'textfield',id:'n_email',allowBlank:false,vtype:'email'}, width: 150},
         {xtype: 'templatecolumn', header: 'Roles', dataIndex: 'roles', sortable: false, tpl: roles_tpl, width: 250,
           editor: new Talho.EditRolesButton({}, this)},
-        {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
+        {xtype: 'xactioncolumn', icon: '/assets/images/cross-circle.png', sortable: false, scope: this,
           handler: function(grid, row){ this.editor.stopEditing(); this.manage_user_roles(grid.getStore().getAt(row)); }},
-        {xtype: 'xactioncolumn', header: 'X', icon: '/stylesheets/images/cross-circle.png', sortable: false, scope: this,
+        {xtype: 'xactioncolumn', header: 'X', icon: '/assets/images/cross-circle.png', sortable: false, scope: this,
           handler: function(grid, row){
             var record = grid.getStore().getAt(row);
             record.set("state", "deleted");

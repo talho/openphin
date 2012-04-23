@@ -93,7 +93,7 @@ Talho.Dashboard.Portlet.RSS = Ext.extend(Talho.Dashboard.Portlet, {
          }),
          hideHeaders: true,
          columns: [{dataIndex: 'url', name: 'URL', id: 'url', editor: Ext.form.TextField}, 
-                   {xtype: 'xactioncolumn', icon: '/images/cross-circle.png', handler: function(grid, row){
+                   {xtype: 'xactioncolumn', icon: '/assets/cross-circle.png', handler: function(grid, row){
                      grid.getStore().removeAt(row);
                    }, scope: this}],
          autoExpandColumn: 'url',

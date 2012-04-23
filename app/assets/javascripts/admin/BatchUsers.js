@@ -128,7 +128,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
       width: 900,
       cls: 'infobox',
       items: [
-        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/assets/info_icon.png">'},
         {xtype: 'container', cls:'infobox-inner', items:[
           {xtype: 'box', html: 'Load new user data into the form via CSV Import, or one at a time with the "Add User" button. '},
           {xtype: 'box', html: 'Users without a specified Jurisdiction will appear in the selected Default Jurisdiction.'},

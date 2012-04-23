@@ -24,9 +24,9 @@ Talho.Admin.Organizations.view.Index = Ext.extend(Ext.Panel, {
         {header: 'Locality', dataIndex: 'locality', width: 150},
         {header: 'State', dataIndex: 'state'},
         {xtype: 'xactioncolumn', items: [
-            {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: function(grid, row){ this.fireEvent('editorg', grid.getStore().getAt(row).get('id'));}, scope: this},
+            {icon: '/assets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: function(grid, row){ this.fireEvent('editorg', grid.getStore().getAt(row).get('id'));}, scope: this},
             {xtype: 'spacer', width: 10},
-            {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row){ this._del = true; this.fireEvent('delorg', grid.getStore().getAt(row).get('id'));}, scope: this}
+            {icon: '/assets/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: function(grid, row){ this._del = true; this.fireEvent('delorg', grid.getStore().getAt(row).get('id'));}, scope: this}
           ]
         }
       ],

@@ -67,7 +67,7 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
             bbar: [{ iconCls:'add_forum', text:'Add Forum', handler: this.create_or_edit_forum,  scope: this, hidden: true, itemId: 'add_forum_button'}]
         };
 
-        var rowActionConfig = {xtype: 'xactioncolumn', iconCls: 'edit_forum', icon: '/stylesheets/images/pencil.png', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_forum(grid.getStore().getAt(row).id);}, scope:this, tooltip: 'Edit'};
+        var rowActionConfig = {xtype: 'xactioncolumn', iconCls: 'edit_forum', icon: '/assets/images/pencil.png', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_forum(grid.getStore().getAt(row).id);}, scope:this, tooltip: 'Edit'};
 
         var grid_config = {
             loadMask: true,
@@ -110,9 +110,9 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
 
     _create_topic_list_grid: function(store){
         var iconConfig = [
-            {icon: '/stylesheets/images/pencil.png', iconCls: 'edit_topic', tooltip: 'Edit Topic', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_topic(grid.getStore().getAt(row).id);}, scope: this },
-            {icon: '/stylesheets/resources/images/default/layout/collapse.gif', iconCls: 'move_topic', tooltip: 'Move Topic', showField: 'is_super_admin', handler: function(grid, row){this.move_topic(grid.getStore().getAt(row).id);}, scope: this},
-            {icon: '/stylesheets/images/cross-circle.png', tooltip: 'Delete Topic', iconCls: 'delete_topic', showField: 'is_super_admin', scope: this, handler: function(grid, row){
+            {icon: '/assets/images/pencil.png', iconCls: 'edit_topic', tooltip: 'Edit Topic', showField: 'is_moderator', handler: function(grid, row){this.create_or_edit_topic(grid.getStore().getAt(row).id);}, scope: this },
+            {icon: '/assets/resources/images/default/layout/collapse.gif', iconCls: 'move_topic', tooltip: 'Move Topic', showField: 'is_super_admin', handler: function(grid, row){this.move_topic(grid.getStore().getAt(row).id);}, scope: this},
+            {icon: '/assets/images/cross-circle.png', tooltip: 'Delete Topic', iconCls: 'delete_topic', showField: 'is_super_admin', scope: this, handler: function(grid, row){
                 var store = grid.getStore();
                 Ext.Msg.confirm("Delete Record", 'Are you sure you wish to delete the topic "' + store.getAt(row).get("name") + '"', function(btn){
                     if(btn === 'yes'){
@@ -123,8 +123,8 @@ Talho.Forums = Ext.extend(function(config){Ext.apply(this, config);}, {
         ];
 
         var leadIconConfig = [
-            {icon: '/images/yellow_thumbtack.png', iconCls: 'topic_pinned', tooltip: 'Pinned', showField: 'sticky'},
-            {icon: '/stylesheets/resources/images/default/grid/hmenu-lock.png', iconCls: 'topic_closed', tooltip: 'Closed', showField: 'locked'}
+            {icon: '/assets/yellow_thumbtack.png', iconCls: 'topic_pinned', tooltip: 'Pinned', showField: 'sticky'},
+            {icon: '/assets/resources/images/default/grid/hmenu-lock.png', iconCls: 'topic_closed', tooltip: 'Closed', showField: 'locked'}
         ];
 
         var ptoolbar = new Ext.PagingToolbar({

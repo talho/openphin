@@ -9,7 +9,7 @@ Talho.EditDevices = Ext.extend(Talho.ProfileBase, {
       width: 600,
       cls: 'infobox',
       items: [
-        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/assets/info_icon.png">'},
         {xtype: 'container', cls:'infobox-inner', items:[
           {xtype: 'box', html: 'Devices in this list will receive TxPhin Alerts.'},
           {xtype: 'box', html: 'When you are satisfied with the list, click "Apply Changes"'}

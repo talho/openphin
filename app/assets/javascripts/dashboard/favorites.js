@@ -52,7 +52,7 @@ Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {
         this.contextMenu = new Ext.menu.Menu({
             defaultAlign: 'tl-b?',
             defaultOffsets: [0, 2],
-            items:[{id:'removeFavoriteItem', text:'Remove', icon: '/images/x.png'}]
+            items:[{id:'removeFavoriteItem', text:'Remove', icon: '/assets/x.png'}]
         });
 
         this.getStore();

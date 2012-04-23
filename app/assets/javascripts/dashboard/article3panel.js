@@ -41,7 +41,7 @@ Talho.Article3Panel = Ext.extend(Ext.util.Observable, {
 <br/>\
 <div>\
   <p>\
-    <img src=\"/images/CDC-HHST.png\" align=\"left\"/><b>Tip of the Week:</b> Be informed about how to protect your health and safety after a hurricane strikes.<br/><br/>For additional tips, fact sheets, and podcasts, see <a href=\"http://emergency.cdc.gov/disasters/hurricanes/recovery.asp?source=govdelivery\">CDC's Hurricanes website</a>.\
+    <img src=\"/assets/CDC-HHST.png\" align=\"left\"/><b>Tip of the Week:</b> Be informed about how to protect your health and safety after a hurricane strikes.<br/><br/>For additional tips, fact sheets, and podcasts, see <a href=\"http://emergency.cdc.gov/disasters/hurricanes/recovery.asp?source=govdelivery\">CDC's Hurricanes website</a>.\
   </p>\
 </div>\
 <br/>\

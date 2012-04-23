@@ -310,7 +310,7 @@ GEM
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
     rubyzip (0.9.7)
-    sass (3.1.15)
+    sass (3.1.16)
     sass-rails (3.1.6)
       actionpack (~> 3.1.0)
       railties (~> 3.1.0)
@@ -439,12 +439,13 @@ DEPENDENCIES
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
   rubyforge
-  sass-rails (~> 3.1.0)
+  sass-rails
   savon (= 0.9.7)
   selenium-webdriver
   simplecov
   sinatra
   spork
+  sprockets
   thinking-sphinx (~> 2.0.11)
   ts-delayed-delta
   uglifier

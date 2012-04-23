@@ -8,11 +8,11 @@
 	    $('a.new_topic').toggle ( 
 	      function() {
 	        $(this.parentNode.nextSibling).slideDown('slow');
-			$("#new_topic_image").attr('src','images/arrow_down.png');
+			$("#new_topic_image").attr('src','assets/arrow_down.png');
 	      },
 	      function() {
 	        $(this.parentNode.nextSibling).slideUp('slow');
-			$("#new_topic_image").attr('src','images/arrow_right.png');
+			$("#new_topic_image").attr('src','assets/arrow_right.png');
 	      }
 	    )
 	  }
@@ -21,7 +21,7 @@
 	// build the edit comment div
 	$( document ) . ready ( 
 	  function() {
-	    $( 'div.edit_comment' ).before( '<p><a class="edit_comment" href="#"><img src="/images/pencil.png" />Edit Comment</a></p>' );
+	    $( 'div.edit_comment' ).before( '<p><a class="edit_comment" href="#"><img src="/assets/pencil.png" />Edit Comment</a></p>' );
 	    $( 'div.edit_comment' ).hide();
 	    $('a.edit_comment').toggle ( 
 	      function() {

@@ -94,7 +94,7 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
             columns:[
                 { id: 'name_column', header: 'Name', dataIndex: 'name', sortable: true, menuDisabled: true },
                 { header: 'Email', dataIndex: 'email', sortable: true, width: 125, menuDisabled: true },
-                { xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', iconCls: 'remove_btn', scope: this, handler: function(grid, row){ grid.getStore().removeAt(row);}}
+                { xtype: 'xactioncolumn', icon: '/assets/images/cross-circle.png', iconCls: 'remove_btn', scope: this, handler: function(grid, row){ grid.getStore().removeAt(row);}}
             ],
             autoExpandColumn: 'name_column',
             plugins: [new Ext.ux.DataTip({tpl:'<tpl for="."><div>{tip}</div></tpl>'})],

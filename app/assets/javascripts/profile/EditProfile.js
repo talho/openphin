@@ -48,7 +48,7 @@ Talho.EditProfile = Ext.extend(Talho.ProfileBase, {
       ]},
       {xtype: 'container', layout: 'form', layoutConfig: {cls:'overflow-visible'}, labelAlign: 'top', width: 400, defaults:{width:400},
         margins: '0 0 0 40', items:[
-        {xtype: 'container', name: 'user[current_photo]', html: '<ul class="media-grid" style="margin:0px;"><li><a style="margin:0px;"><img id=current_photo' + user_id + ' src="images/missing.jpg"></a></li></ul>'},
+        {xtype: 'container', name: 'user[current_photo]', html: '<ul class="media-grid" style="margin:0px;"><li><a style="margin:0px;"><img id=current_photo' + user_id + ' src="assets/missing.jpg"></a></li></ul>'},
         {xtype: 'spacer', height: '10'},
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'Picture to upload', name: 'user[photo]', maxLength: '1024', width: 'auto'},
         {xtype: 'container', layout: 'hbox', labelAlign: 'top', items:[

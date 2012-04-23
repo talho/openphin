@@ -58,7 +58,8 @@ group :development do
 end
 
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0"
+  gem 'sprockets'
+  gem 'sass-rails' 
 #  gem 'coffee-rails', "~> 3.1.0"
   gem 'uglifier'
 end

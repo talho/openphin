@@ -100,14 +100,14 @@ $(document).ready(function() {
   }
   set800 = false;
   if((screen.width < 1024) && (screen.height < 768)) {
-    $('head').append("<link href='/stylesheets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
+    $('head').append("<link href='/assets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
     if(document.getElementById('sign_in_form'))
       $('#wrapper').prepend("<div class='flash'><p class='notice'>For optimal experience, please set your resolution to 1024x768 or higher.</p></div>");
     set800 = true;
   }
   $(window).resize(function() {
     if((screen.width < 1024) && (screen.height < 768) && !set800) {
-      $('head').append("<link href='/stylesheets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
+      $('head').append("<link href='/assets/detect800.css' media='screen' rel='stylesheet' type='text/css' />");
       if(document.getElementById('sign_in_form'))
         $('#wrapper').prepend("<div class='flash'><p class='notice'>For optimal experience, please set your resolution to 1024x768 or higher.</p></div>");
       set800 = true;

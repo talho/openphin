@@ -280,7 +280,7 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
                         return value;
                     }.createDelegate(this)},
                     {header: "Type", dataIndex: 'type', renderer: Ext.util.Format.capitalize, groupable: true, hidden: true},
-                    {xtype: 'xactioncolumn', icon: '/stylesheets/images/cross-circle.png', iconCls: 'removeBtn', scope: this, handler: function(grid, row){
+                    {xtype: 'xactioncolumn', icon: '/assets/images/cross-circle.png', iconCls: 'removeBtn', scope: this, handler: function(grid, row){
                         var record = grid.getStore().getAt(row);
                         var type = record.get('type'),
                             id = record.get('id');

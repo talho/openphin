@@ -28,9 +28,9 @@ Talho.Groups.View.List = Ext.extend(Ext.Container, {
     
     var rowActions = new Ext.ux.grid.xActionColumn({
      items: [
-       {icon: '/stylesheets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: this.editBtn_click, scope: this},
+       {icon: '/assets/images/page_edit.png', tooltip: 'Edit Group', iconCls: 'editBtn', handler: this.editBtn_click, scope: this},
        {xtype: 'spacer', width: 10},
-       {icon: '/images/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: this.removeBtn_click, scope: this}
+       {icon: '/assets/cross-circle.png', tooltip: 'Delete Group', iconCls: 'removeBtn', handler: this.removeBtn_click, scope: this}
      ]
     });
     
@@ -52,7 +52,7 @@ Talho.Groups.View.List = Ext.extend(Ext.Container, {
     });
 
     this.infobox = new Ext.Container({ layout: 'column', width: 600, cls: 'infobox',
-      items: [ {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+      items: [ {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/assets/info_icon.png">'},
         {xtype: 'container', cls:'infobox-inner', items:[
           {xtype: 'box', html: 'Click on a group to view details.'},
           {xtype: 'box', html: 'To Edit or Delete a group, use the icons on the right.'}

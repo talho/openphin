@@ -9,7 +9,7 @@ Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {
       width: 600,
       cls: 'infobox',
       items: [
-        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/images/info_icon.png">'},
+        {xtype: 'box', cls:'infobox-inner', width: 50, html:'<img src="/assets/info_icon.png">'},
         {xtype: 'container', cls:'infobox-inner', items:[
           {xtype: 'box', html: 'Roles determine your permissions and which alerts you receive.'},
           {xtype: 'box', html: "Most roles will require an administrator's approval. "},
