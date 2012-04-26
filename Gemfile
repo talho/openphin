@@ -24,7 +24,7 @@ group :default do
   gem "nokogiri", "1.4.4"
   gem "curb", "0.7.15"
   gem "happymapper", :git => 'git://github.com/talho/happymapper.git' #"0.3.2"
-  gem "libxml-ruby", "1.1.3"
+  gem "libxml-ruby", "2.3.2"
   gem "pg", "0.10.1"
   gem "acts-as-taggable-on", "2.0.6"
   gem "paper_trail", "1.6.5"  # 2.x versions require rails3

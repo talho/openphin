@@ -63,7 +63,7 @@ Then /^folder "([^\"]*)" should not exist$/ do |name|
   Folder.find_by_name(name).should be_nil
 end
 
-When /^I double\-click the "([^\"]*)" folder$/ do |button|
+When /^I double\-click the "([^\"]*)" (?:folder|file)$/ do |button|
   id = page.find('.document-file-icon-view')['id']
   page.execute_script "
     var cmp = Ext.getCmp('#{id}');

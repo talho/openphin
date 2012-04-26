@@ -41,7 +41,7 @@ module UserModules
     def is_super_admin?(app = "")
       return true if is_sysadmin?
       conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
+      return role_memberships.count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id) } ) > 0
     end
      
     def is_admin?(app = "")

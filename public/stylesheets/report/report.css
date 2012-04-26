@@ -1,0 +1,59 @@
+@media all {
+  body { font-family: Verdana,Arial,sans-serif; }
+  body,p,blockquote,li,th,td { font-size: 10pt; }
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.1em; margin-top: 2em; margin-bottom: 0.5em; }
+  h3 { font-size: 1.0em; font-style: italic; font-weight: normal; margin-top: 2em; margin-bottom: 0.5em; }
+  code { font-size: 1.1em; }
+  table.BreadnButter {
+      border-spacing: 0px;
+  /*    border-collapse: collapse; */
+/*      background: #E9E9F3; */
+/*      border: 0.5em solid #E9E9F3; */
+  }
+  table.BreadnButter th {
+      text-align: left;
+      font-weight: normal;
+      padding: 0.1em 0.5em;
+      border: 0px;
+      border-bottom: 1px solid #9999AA;
+  }
+  table.BreadnButter td {
+      text-align: left;
+      border: 0px;
+      border-bottom: 1px solid #9999AA;
+      border-left: 1px solid #9999AA;
+      padding: 0.1em 0.5em;
+  }
+  table.BreadnButter th.RowWrap {
+    text-align: center;
+    font-weight: bold;
+    color: #6C6C9A;
+    border-left: 1px solid #9999AA;
+  }
+  table.BreadnButter thead th {
+      text-align: center;
+      font-weight: bold;
+      color: #6C6C9A;
+      border-left: 1px solid #9999AA;
+  }
+  table.BreadnButter caption {
+      line-height:240%;
+      text-align: center;
+      font-weight: bold;
+/*      background: #E9E9F3; */
+      list-style-type: none;
+  }
+  table.BreadnButter th.Corner {
+      text-align: left;
+      border-left: 0px;
+  }
+  table.BreadnButter tr.Odd {
+      background: #F6F4E4;
+  }
+}
+@media print {
+  body,p,blockquote,li,th,td { font-size: 8pt; }
+  table {page-break-after: always; }
+  .nobreak { page-break-inside: avoid; }
+}
