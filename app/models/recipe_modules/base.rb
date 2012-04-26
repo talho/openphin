@@ -55,6 +55,7 @@ module RecipeModules
     end
 
     def humanized(name)
+      name ||= ''
       name.demodulize.split(/(?=[A-Z])/).join(" ")
     end
 

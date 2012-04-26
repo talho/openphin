@@ -8,7 +8,7 @@ protected
 
   def self.generate_rendering( report, view, template, filters=nil )
    filtered_at = nil
-   pre_where = {"i"=>{'$exists'=>true}}
+   pre_where = {"i"=>{'$exists'=>true},:report_id=>report.id}
    if filters.present?
      filtered_at = filters["filtered_at"]
      fa = filtered_at.nil? ? "" : "-#{filtered_at}"
@@ -19,7 +19,7 @@ protected
      filename = "#{report.name}.html"
      where = pre_where
    end
-   subject = report.dataset.find({:report=>{:$exists=>true}}).first['report']
+   subject = report.dataset.find({:report=>{:$exists=>true},:report_id=>report.id}).first['report']
    results = []
    report.dataset.find(where).each{|e| results << e}
    Dir.mktmpdir do |dir|
