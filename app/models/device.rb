@@ -78,11 +78,11 @@ class Device < ActiveRecord::Base
 
   def check_uniq_device
     if options.blank?
-      errors.add_to_base("Device is blank")
+      errors.add(:base, "Device is blank")
     else
       devices = Device.find_all_by_user_id_and_type(user_id, type)
       devices = Device.find(:all, :conditions => ['id != ? AND user_id = ? AND type = ?', id, user_id, type]) if(!id.nil? && devices.map(&:id).include?(id))
-      errors.add_to_base("Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
+      errors.add(:base, "Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
     end
   end
 end

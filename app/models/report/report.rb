@@ -26,7 +26,7 @@ class Report::Report < ActiveRecord::Base
     begin
       recipe.constantize
     rescue StandardError
-      errors.add_to_base "#{recipe} is not found on the system"
+      errors.add :base, "#{recipe} is not found on the system"
     end
   end
 

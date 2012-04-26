@@ -288,10 +288,10 @@ class User < ActiveRecord::Base
         # self.save!
       # end
     # rescue
-      # errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
+      # errors.add(:base, "Failure during deleting the user with the email of #{self.email}.")
     # end
     # if User.find_by_id(self.id)
-      # errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
+      # errors.add(:base, "Unexpectectly the user with the email of #{self.email} has not been deleted.")
     # end
   # end
 # 

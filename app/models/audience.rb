@@ -80,7 +80,7 @@ class Audience < ActiveRecord::Base
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
-      errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
+      errors.add(:base, "You must select at least one role, one jurisdiction, or one user.")
     end
   end
 
@@ -89,7 +89,7 @@ class Audience < ActiveRecord::Base
   def doesnt_contain_self_as_group
     def check_recursion(group)
       if group.id == self.id
-        errors.add_to_base("Group cannot be a member of itself or subgroups")
+        errors.add(:base, "Group cannot be a member of itself or subgroups")
       else
         group.groups.each { |g| check_recursion(g) }
       end

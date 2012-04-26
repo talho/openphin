@@ -17,7 +17,7 @@ db/schema.rb
 public/system/photos
 config/*.sphinx.conf
 db/sphinx
-log/searchd.*.pid
+log/*
 coverage/
 .autotest
 message_recordings/*.wav
@@ -50,11 +50,7 @@ public/*/talho
 lib/workers/han
 lib/workers/vms
 lib/workers/rollcall
-vendor/plugins/han
-vendor/plugins/rollcall
-vendor/plugins/vms
-vendor/plugins/talho
-vendor/plugins/facho
+vendor/plugins/*
 spec/rollcall
 config/*.yml
 reports/*
@@ -64,3 +60,6 @@ app/models/report/attendance_all_recipe_internal.rb
 app/models/report/ili_all_recipe_internal.rb
 app/models/report/nurse_assistance_recipe.rb
 *~
+*.rails2
+*.rails3
+.sass-cache

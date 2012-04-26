@@ -64,7 +64,7 @@ module Reporters
           logger.info %Q{Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds}
           ReportMailer.report_generated(report.author.email,report.name).deliver
         rescue StandardError => e
-          message = %Q(Report "#{report.name}" erred in rendering html: (#{e}))
+          message = %Q{Report "#{report.name}" erred in rendering html: (#{e})}
           full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
           fatal_logging(logger,report,full_message)
         end

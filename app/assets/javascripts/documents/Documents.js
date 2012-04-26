@@ -267,7 +267,7 @@ Talho.Documents = Ext.extend(function(){}, {
                             });
                             this._folderTreeGrid.getSelectionModel().selectRecords([folder]);
                         } else {
-                          var file = gv.getSelectedRecords()[0].data.doc_url
+                          var file = gv.getSelectedRecords()[0].data.doc_path
                           // create a hidden iframe, open the file
                           if(Application.rails_environment === 'cucumber')
                           {

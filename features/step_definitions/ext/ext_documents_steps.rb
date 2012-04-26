@@ -22,11 +22,7 @@ When /^I create shares "([^\"]*)" shared with "([^\"]*)"$/ do |outline, user|
 end
 
 def create_folder(folder, sub)
-  f = Folder.find_by_name(folder)
-  if(f.nil?)
-    f = Folder.new :name => folder, :user_id => current_user.id
-    f.save
-  end
+  f = Folder.find_or_create_by_name_and_user_id(folder, current_user.id)
   unless sub.nil?
     Folder.create :name => sub, :user_id => current_user.id, :parent_id => f.id 
   end
@@ -86,12 +82,12 @@ When /^I set "([^\"]*)" as "([^\"]*)"(?: with "([^"]*)")?$/ do |folder, sharing,
   folder = Folder.find_by_name(folder)
 
   if sharing == "shared"
-    folder.update_attributes :shared => 'shared', :audience => { :user_ids => [User.find_by_email(user).id] }
+    folder.update_attributes :audience_attributes => { :user_ids => [User.find_by_email(user).id] }
     folder.audience.recipients.length if folder.audience
   elsif sharing == "inherited"
-    folder.update_attributes :shared => 'inherited'
+    folder.update_attributes :audience_id => folder.parent.audience_id
   else
-    folder.update_attributes :shared => 'not_shared'
+    folder.update_attributes :audience_id => nil
   end
 end
 
@@ -107,8 +103,6 @@ When /^"([^\"]*)" performs all notifications$/ do |fname|
 end
 
 When /^backgroundrb has processed the nightly documents$/ do
-  require 'bdrb_server_helper'
-  require 'meta_worker'
   require 'workers/document_daily_cleanup_worker'
   DocumentDailyCleanupWorker.new.clean
 end

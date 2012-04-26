@@ -140,7 +140,7 @@ class Report::ReportsController < ApplicationController
      if Rails.env == 'development'
        reporter.perform  # for debugging
      else
-       Delayed::Job.enqueue( reporter )
+       reporter.delay.perform
      end
    end
 

@@ -90,7 +90,7 @@ Ext.ns('Talho.ux.Documents');
             root: 'files',
             idProperty: 'id_property_that_will_never_be_used_damn_you_store',
             fields: [{name: 'name', sortType: Ext.data.SortTypes.asUCString}, {name:'type', mapping:'ftype'}, {name:'size', mapping: 'file_file_size'},
-                'id', {name: 'created_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name: 'updated_at', mapping: 'file_updated_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, 'doc_url',
+                'id', {name: 'created_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name: 'updated_at', mapping: 'file_updated_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, 'doc_path',
                 {name:'is_owner', type: 'boolean'}, {name:'is_author', type: 'boolean'}]
         })
     });
@@ -235,7 +235,7 @@ Ext.ns('Talho.ux.Documents');
             if(Application.rails_environment === 'cucumber')
             {
                 Ext.Ajax.request({
-                    url: this.current_selections[0].get('doc_url'),
+                    url: this.current_selections[0].get('doc_path'),
                     method: 'GET',
                     success: function(){
                         alert("Success");
@@ -257,7 +257,7 @@ Ext.ns('Talho.ux.Documents');
                 }
 
                 if(this.current_selections.length > 0){
-                    this._downloadFrame.src = window.location.protocol + "//" + window.location.host + this.current_selections[0].get('doc_url');
+                    this._downloadFrame.src = window.location.protocol + "//" + window.location.host + this.current_selections[0].get('doc_path');
                 }
             }
         },

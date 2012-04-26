@@ -1,0 +1,129 @@
+.dd-tabpanel-proxy .x-dd-drop-icon {
+	/* Adjust based on the height of tabs in your theme */
+	top: 8px;
+}
+
+.dd-tabpanel-proxy li {
+	display: inline;
+}
+
+.dd-tabpanel-proxy span.x-tab-strip-text {
+	padding: 4px 0;
+}
+.dd-tabpanel-proxy a, .dd-tabpanel-proxy span, .dd-tabpanel-proxy em {
+	display: block;
+}
+
+
+
+
+/* --------- Wizard Header control -------------- */
+
+ol.breadCrumbList{
+    list-style: none inside none;
+}
+
+ol.breadCrumbList li{
+    float: right;
+    cursor: pointer;
+    color: bisque;
+    text-decoration: underline;
+    -moz-background-clip: border;
+    -moz-background-origin: padding;
+    -moz-background-size: auto auto;
+    background-color: transparent;
+    background-image: image-url("/redesign/breadcrumb-bg2.png");
+    background-position: right center;
+    background-repeat: no-repeat;
+    font-size: 130%;
+    font-weight: bold;
+    margin: 0 0 0 -15px;
+    height: 30px;
+    padding: 10px 30px 0 50px;
+    text-decoration: underline;
+}
+
+ol.breadCrumbList li.selected{
+    cursor:default;
+    color: white;
+    text-decoration: none;
+}
+
+/* --------- End Wizard Header ---------------- */
+
+/* --------- ux.center -------------------------*/
+
+.ux-layout-center-item {
+    margin:0 auto;
+    text-align:left;
+}
+/*.ux-layout-center .x-panel-body {
+    text-align:center;
+} */
+
+/* -------- End ux.center ----------------------*/
+
+/* -------- Ext.ux.NavigableTabPanel -----------*/
+
+.ux-navigable-tab-panel-header .x-tab-scroller-left {
+    left: 80px;
+}
+
+.ux-strip-wrap-for-navigation{
+    float: left;
+}
+
+.ux-strip-wrap-for-navigation ul.x-tab-strip{
+    padding-left: 8px;
+}
+
+ul.ux-navigation-wrap{
+    background: #E9E9E9;
+    display: block;
+    float: left;
+    list-style: none outside none;
+    padding: 2px 10px 1px;
+}
+
+ul.ux-navigation-wrap li{
+    float: left;
+}
+
+li.ux-navigation-button span{
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    display: block;
+    background: no-repeat center center;
+    margin: 2px;
+}
+
+li.ux-navigation-disabled span{
+    cursor: default;
+}
+
+li.ux-navigation-button span.ux-back-button{
+    background-image:image-url("redesign/ux-back-button.png");
+}
+
+li.ux-navigation-disabled span.ux-back-button{
+    background-image:image-url("redesign/ux-back-button-disabled.png");
+}
+
+li.ux-navigation-button span.ux-forward-button{
+    background-image:image-url("redesign/ux-forward-button.png");
+}
+
+li.ux-navigation-disabled span.ux-forward-button{
+    background-image:image-url("redesign/ux-forward-button-disabled.png");
+}
+
+li.ux-navigation-button span.ux-refresh-button{
+    background-image:image-url("redesign/ux-refresh-button.png");
+}
+
+li.ux-navigation-disabled span.ux-refresh-button{
+    background-image:image-url("redesign/ux-refresh-button-disabled.png");
+}
+
+/* -------- End ux.NavigableTabPanel -----------*/

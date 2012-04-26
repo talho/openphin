@@ -39,12 +39,16 @@ class Folder < ActiveRecord::Base
   has_many :admins, :through => :folder_permissions, :source => 'user', :conditions => proc{'permission = 2'}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
+  attr_accessor :level, :ftype, :is_owner, :is_author, :leaf
+
   def users
     self.audience.recipients
     #User.scoped :joins => ', folders', :conditions => ['folders.audience_id IN (select * from sp_audiences_for_user(users.id)) and folders.id = ?', self.id]
   end
 
   acts_as_nested_set :scope => :user_id
+  
+  accepts_nested_attributes_for :audience
 
   def to_s
     name
@@ -76,7 +80,7 @@ class Folder < ActiveRecord::Base
     end
   end
 
-  def self.new( attributes = {} )
+  def self.new( attributes = {}, options = {} )
     shared_attr = attributes[:shared]
     attributes.delete(:shared)
     audience_attr = attributes[:audience]
@@ -84,7 +88,7 @@ class Folder < ActiveRecord::Base
     permissions = attributes[:permissions]
     attributes.delete(:permissions)
 
-    folder = super( attributes )
+    folder = super( attributes, options )
 
     parent = attributes[:parent_id].blank? ? nil : Folder.find(attributes[:parent_id])
     if(shared_attr == 'not_shared')
@@ -135,46 +139,31 @@ class Folder < ActiveRecord::Base
 
   def self.get_formatted_folders(current_user)
     folders = []
-    Folder.each_with_level(current_user.folders) { |folder, level| folder[:level] = level + 1; folders << folder }
-    folders = folders.sort_by {|f| f.name.downcase}
-
-    folders.each do |folder|
-      folder[:safe_parent_id] = (folder[:parent_id].nil? ? 0 : 'folder' + folder[:parent_id].to_s )
-      folder[:safe_id] = 'folder' + folder[:id].to_s
-      folder[:leaf] = folder.leaf?
-      folder[:ftype] = 'folder'
-      folder[:is_owner] = true
+    Folder.each_with_level(current_user.folders) do |folder, level| 
+      folder.level = level + 1
+      folder.ftype = 'folder'
+      folder.is_owner = true
+      folders << folder
     end
-
-    folders << {:name => "My Documents", :id => nil, :safe_id => 0, :safe_parent_id => nil, :parent_id => nil, :leaf => folders.empty?, :ftype => 'folder', :is_owner => true, :level => 0 }
-    
-    folders
+    folders << Folder.new({name: "My Documents", id: nil, parent_id: nil, level: 0, ftype: 'folder', is_owner: true, leaf: folders.empty? })
+    folders.sort{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
   end
 
   def self.get_formatted_shares(current_user)
-    shares = current_user.shares
-    shares = shares.sort_by {|s| s.name.downcase}
-
-    shares |= shares.map do |share|
-      leaf = share.leaf?
-      leaf = shares.select { |s| s.parent_id == share.id}.empty? unless leaf
-      share[:leaf] = leaf
-      share[:ftype] = 'share'
-      share[:safe_id] = 'share' + share[:id].to_s
-      share[:safe_parent_id] = share.parent_id.nil? || shares.select { |s| s.id == share.parent_id}.empty? ? nil : 'share' + share.parent_id.to_s
-      share[:is_owner] = share.owner?(current_user)
-      share[:is_author] = share.author?(current_user)
+    shares = []
+    Folder.each_with_level(current_user.shares) do |share, level|
+      share.is_owner = share.owner?(current_user)
+      share.is_author = share.author?(current_user)
+      share.ftype = share.owner.nil? ? 'organization' : 'share'
+      share.level = level + (share.ftype == 'share' ? 1 : 0)
       
-      unless share.owner.nil?
-        user = {:name => share.owner.display_name, :id => nil, :safe_id => share.owner.id.to_s + share.owner.display_name.gsub(/ /, ''), :safe_parent_id => nil, :parent_id => nil, :leaf => false, :ftype => 'share', :level => 0}
-        share[:safe_parent_id] = user[:safe_id] if share[:safe_parent_id].nil?
-        user
-      else
-        nil
+      shares << share
+      
+      unless share.owner.nil? || !shares.index{|s| s.id == nil && s.parent_id == nil && s.owner == share.owner && s.level == 0}.nil?
+        shares << Folder.new({:name => share.owner.display_name, :owner => share.owner, :id => nil, :parent_id => nil, :ftype => 'share', :level => 0})
       end
-    end.compact
-
-    shares
+    end
+    shares.sort{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
   end
 
   def permissions= (permission_attributes)

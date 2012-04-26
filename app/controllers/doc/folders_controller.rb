@@ -2,27 +2,24 @@ class Doc::FoldersController < ApplicationController
   before_filter :non_public_role_required
   before_filter :can_edit_folder, :only => [:edit, :update, :move, :destroy]
 
+  respond_to :json, :only => [:index, :show]
+
   def index
-    folders = Folder.get_formatted_folders(current_user)
-
-    shares = Folder.get_formatted_shares(current_user)
-
-    render :json => {:folders => ( folders + shares ).as_json }
+    @folders = Folder.get_formatted_folders(current_user) + Folder.get_formatted_shares(current_user)
+    respond_with(@folders)
   end
 
   def show
     folder = params[:id].nil? || params[:id] == 'null' ? nil : Folder.find(params[:id])
-    if !folder.nil? && !(folder.owner == current_user || folder.users.include?(current_user))
+    unless folder.nil? || folder.owner == current_user || folder.users.include?(current_user)
       render :json => { :files => [] }
       return
     end
 
-    docs = folder.nil? ? current_user.documents.inbox : folder.documents
-    folders = folder.nil? ? current_user.folders.rootsm : folder.children
-    docs.each {|doc| doc[:doc_url] = document_path(doc) }
-    folders.reject! { |f| !(f.owner == current_user || f.users.include?(current_user)) }
-    folders.each { |f| f[:ftype] = f.owner == current_user ? 'folder' : 'share'; f[:is_owner] = f.owner?(current_user); f[:is_author] = f.author?(current_user) }
-    render :json => { :files => folders.sort_by{|f| f.name.downcase}.as_json + docs.sort_by{|d| d.name.downcase}.as_json }
+    @documents = (folder.nil? ? current_user.documents.inbox : folder.documents).order('file_file_name')
+    @folders = (folder.nil? ? current_user.folders.rootsm : folder.children).order('name')
+    @folders.select! { |f| f.owner == current_user || f.users.include?(current_user) }
+    respond_with(@documents, @folders)
   end
 
   def create
