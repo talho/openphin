@@ -16,21 +16,21 @@ class Report::Report < ActiveRecord::Base
 
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
-  validates_presence_of     :author
-  validates_inclusion_of    :incomplete, :in => [false,true]
+  validates_presence_of  :author
+  validates_associated   :author
+  validates_inclusion_of :incomplete, :in => [false,true]
 
   def validate_on_create
     begin
       self[:recipe] = criteria["recipe"] unless recipe
       recipe.constantize
-      self[:name] = recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-').sub(/-$/,'')
-    rescue StandardError
-      errors.add_to_base "#{recipe} is not found on the system"
+    rescue NameError
+      errors.add_to_base "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
     end
   end
 
   def dataset
-    @collection ||= REPORT_DB.collection(name)
+    @collection ||= REPORT_DB.collection(name.to_s)
   end
 
   def full_name

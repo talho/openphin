@@ -78,7 +78,7 @@ describe "Released" do
 
   after(:all) do
     # this assures the deletion of the paperclip files
-    Recipe::Report.all.map(&:destroy)
+    Report::Report.all.map(&:destroy)
   end
 
 end

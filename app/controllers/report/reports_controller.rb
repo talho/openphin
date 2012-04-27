@@ -60,8 +60,9 @@ class Report::ReportsController < ApplicationController
   def create
     begin
       unless params[:report_url]
+        recipe = params[:criteria] ? params[:criteria][:recipe] : params[:recipe_id]
         # capture the resultset and generate the html rendering in delayed-job
-        report = current_user.reports.create!(:recipe=>params[:recipe_id],:criteria=>params[:criteria],:incomplete=>true)
+        report = current_user.reports.create!(:recipe=>recipe,:criteria=>params[:criteria],:incomplete=>true)
         run_reporter(:report_id=>report[:id])
         respond_to do |format|
           format.html {}
@@ -183,20 +184,5 @@ class Report::ReportsController < ApplicationController
     data.collect{|ele|ele.sub(/, $/,"")}.join("\n")
   end
 
-
-  # DEPRECATE
-  def mimic_file
-    file = StringIO.new(part.body) #mimic a real upload file
-    file.class.class_eval { attr_accessor :original_filename, :content_type } #add attr's that paperclip needs
-    file.original_filename = part.filename #assign filename in way that paperclip likes
-    file.content_type = part.mime_type # you could set this manually as well if needed e.g 'application/pdf'
-
-    # now just use the file object to save to the Paperclip association.
-
-    a = Asset.new
-    a.asset = file
-    a.save!
-
-  end
 
 end
