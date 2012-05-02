@@ -53,7 +53,7 @@ namespace :app do
     }
     # For the PHIN plugins
     if_plugin_present(:rollcall) {
-      run "ln -fs #{shared_path}/phin_plugins/interface_fields.yml #{release_path}/vendor/plugins/rollcall/config/interface_fields.yml"
+      run "ln -fs #{shared_path}/phin_plugins/interface_fields.yml #{release_path}/vendor/extensions/rollcall/config/interface_fields.yml"
     }
 
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"

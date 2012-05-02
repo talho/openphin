@@ -1,0 +1,38 @@
+
+h1{
+  font-size: 2em;
+  font-family: Helvetica;
+  margin: 8px
+}
+
+p{
+  margin: 15px 8px;
+}
+
+ul.acknowledgement_list{
+  margin: 7px;
+  list-style: none;
+  padding: 0px;
+}
+
+ul.acknowledgement_list li{
+  cursor: pointer;
+  border: 1px solid;
+  border-color: #33A;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  padding: 2px 5px;
+  margin: 4px 2px;
+}
+
+ul.acknowledgement_list li.selected{
+  background-color: #AAC;
+}
+
+ul.acknowledgement_list li:hover{
+  background-color: #DDE;
+}
+
+ul.acknowledgement_list li.selected:hover{
+  background-color: #BBC;
+}
