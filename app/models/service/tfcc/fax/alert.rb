@@ -23,7 +23,7 @@ class Service::Tfcc::Fax::Alert < Service::Tfcc::Fax::Base
     caller_id = alert.caller_id.nil? || alert.caller_id.blank? ? "" : alert.caller_id
 
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do
       xml.request :method => "create" do

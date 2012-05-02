@@ -50,7 +50,7 @@ public/*/talho
 lib/workers/han
 lib/workers/vms
 lib/workers/rollcall
-vendor/plugins/*
+vendor/extensions/*
 spec/rollcall
 config/*.yml
 reports/*

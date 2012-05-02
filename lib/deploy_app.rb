@@ -10,19 +10,11 @@ namespace :app do
       cmds = [ "cd #{release_path}" ]
       name = File.basename(pp["url"]).sub(/\.git$/, "")
       branch = pp["branch"] || "master"
-      cmds << "git clone #{pp["url"]} --branch #{branch} vendor/plugins/#{name}"
-      cmds << "cd vendor/plugins/#{name}"
+      cmds << "git clone #{pp["url"]} --branch #{branch} vendor/extensions/#{name}"
+      cmds << "cd vendor/extensions/#{name}"
       cmds << "git checkout #{pp["commit"]}" if pp.has_key?("commit")
       cmds << "git submodule update -i"
       run cmds.join(" && ")
-    }
-  end
-
-  desc "install the PHIN plugins: han, etc."
-  task :phin_plugins_install, :roles => [:app, :web, :jobs] do
-    YAML.load_file("config/phin_plugins.yml").each { |pp|
-      name = File.basename(pp["url"]).sub(/\.git$/, "")
-      run "cd #{release_path} && RAILS_ENV=production ./script/runner vendor/plugins/#{name}/install.rb"
     }
   end
   

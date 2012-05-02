@@ -16,7 +16,7 @@ class Service::Swn::Fax::Message < Service::Swn::Fax::Base
     raise "Invalid #{self}, Errors: #{self.errors.full_messages.inspect}" unless valid?
 
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
 #    xml.instruct!
     xsi = "xmlns:xsi".to_sym
     xsd = "xmlns:xsd".to_sym

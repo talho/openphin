@@ -77,7 +77,7 @@ class Organization < ActiveRecord::Base
 
 
   def to_dsml(builder=nil)
-    builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
+    builder=::Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|
         ocv="oc-value".to_sym

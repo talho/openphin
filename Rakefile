@@ -22,26 +22,6 @@ Openphin::Application.load_tasks
 # 
 # task :build => %w(db:migrate spec cucumber)
 # task :db => %w(db:migrate db:test:prepare)
-# task :phin_plugins do
-  # phin_plugins = YAML.load_file("config/phin_plugins.yml")
-  # phin_plugins.each do |pp|
-    # cmds = Array.new
-    # name = File.basename(pp["url"]).sub(/\.git$/, "")
-    # branch = pp["branch"] || "master"
-#     
-    # unless File.exists?("vendor/plugins/#{name}")
-      # cmds << "git clone #{pp["url"]} --branch #{branch} vendor/plugins/#{name}"
-    # end
-    # cmds << "cd vendor/plugins/#{name}"
-    # if pp.has_key?("commit")
-      # cmds << "git checkout #{pp["commit"]}"
-    # elsif File.exists?("vendor/plugins/#{name}")
-      # cmds << "git checkout #{branch}"
-      # cmds << "git pull"
-    # end
-    # sh cmds.join(" && ")
-  # end
-# end
 # 
 # begin
   # require 'thinking_sphinx/tasks'

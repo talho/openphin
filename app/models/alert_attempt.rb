@@ -138,7 +138,7 @@ class AlertAttempt < ActiveRecord::Base
 
   protected
   def generate_acknowledgment_token
-    self.token = ActiveSupport::SecureRandom.hex
+    self.token = SecureRandom.hex
   end
 
   private

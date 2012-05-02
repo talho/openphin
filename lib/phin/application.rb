@@ -7,8 +7,7 @@ module Phin
     end
 
     def self.eval_if_plugin_present(plugin_name, &block)
-      loc = File.join(Rails.root.to_s, "vendor", "plugins", plugin_name.to_s)
-      if File.exists?(loc) && (!File.directory?(loc) || Dir.entries(loc).count > 2)
+      if $extensions.include?(plugin_name)
         begin
           yield block
         rescue => e

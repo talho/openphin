@@ -86,7 +86,7 @@ class Service::Swn::Base
       @url, @username, @password  = options['url'], options['username'], options['password']
 
       body = ""
-      xml = Builder::XmlMarkup.new :target => body, :indent => 2
+      xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
       xsi = "xmlns:xsi".to_sym
       xsd = "xmlns:xsd".to_sym
       swn = "xmlns:swn".to_sym

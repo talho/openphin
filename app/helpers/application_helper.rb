@@ -86,7 +86,15 @@ module ApplicationHelper
     result
   end
 
-  def javascript_include_domino(sources)
-    expand_javascript_sources(sources).map{|e| javascript_path(e) }.join(' ')
+  def plugin_assets
+    res = ""
+    $extensions_css.each do |k, v|
+      res += v.map{|css| "$css(#{stylesheet_path(css)})"}.join(" ") + " "
+    end
+    res += " "
+    $extensions_js.each do |k, v|
+      res += v.map{|js| javascript_path(js)}.join(" ") + " "
+    end
+    res
   end
 end

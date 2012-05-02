@@ -2,7 +2,7 @@ class DSMLBuilder
 
   def self.to_dsml(entries=[])
     begin
-      d=Builder::XmlMarkup.new(:target => $stdout, :indent =>2)
+      d=::Builder::XmlMarkup.new(:target => $stdout, :indent =>2)
       d.instruct!
       ns="xmlns:dsml".to_sym
       d.dsml(:dsml, ns => "http://www.dsml.org/DSML") do |root|

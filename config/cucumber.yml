@@ -2,15 +2,15 @@
 rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
 rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
 std_opts = "-r features --format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict --tags ~@wip"
-han = "-r vendor/plugins/han/features"
-talho = "-r vendor/plugins/talho/features"
-rollcall = "-r vendor/plugins/rollcall/features"
-vms = "-r vendor/plugins/vms/spec/factories.rb -r vendor/plugins/vms/features"
+han = "-r vendor/extensions/han/features"
+talho = "-r vendor/extensions/talho/features"
+rollcall = "-r vendor/extensions/rollcall/features"
+vms = "-r vendor/extensions/vms/spec/factories.rb -r vendor/extensions/vms/features"
 %>
 default: <%= std_opts %> features
 wip: --tags @wip:3 --wip features
 rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip
-han: <%= std_opts %> <%= han %> vendor/plugins/han/features
-talho: <%= std_opts %> <%= talho %> vendor/plugins/talho/features
-rollcall: <%= std_opts %> <%= rollcall %> vendor/plugins/rollcall/features
-vms: <%= std_opts %> <%= vms %> vendor/plugins/vms/features
+han: <%= std_opts %> <%= han %> vendor/extensions/han/features
+talho: <%= std_opts %> <%= talho %> vendor/extensions/talho/features
+rollcall: <%= std_opts %> <%= rollcall %> vendor/extensions/rollcall/features
+vms: <%= std_opts %> <%= vms %> vendor/extensions/vms/features

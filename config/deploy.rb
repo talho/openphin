@@ -63,7 +63,6 @@ before 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
-after 'deploy:symlink', 'app:phin_plugins_install'
 after 'deploy:restart', 'sphinx:start'
 after 'deploy:restart', 'backgroundrb:restart'
 after 'deploy:restart', 'delayed_job:restart'

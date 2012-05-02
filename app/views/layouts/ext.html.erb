@@ -31,7 +31,7 @@
 
     dominoes.rule('phinCSS', '$css(/assets/redesign/ext_extensions.css) $css(/assets/redesign/master.css) $css(/assets/redesign/bootstrap.css) $css(/assets/redesign/dashboard.css) $css(/assets/redesign/admin.css) $css(/assets/redesign/forum.css) $css(/assets/redesign/documents.css)');
     dominoes.rule('phinInitialLoad', '(( phinCSS )) /assets/dashboard/application.js /assets/dashboard/script_manager.js /assets/dashboard/index.js ( /dashboard/menu.js > /assets/ext_extensions/overrides.js ) /assets/ext_extensions/validations.js');
-    dominoes.rule('phinPlugins', '');
+    dominoes.rule('phinPlugins', '<%= plugin_assets %>');
     dominoes({
         chain: 'jquery >| preExtMessage > ext > prePhinMessage > phinInitialLoad > phinPlugins >| initView',
         preExtMessage: function(){

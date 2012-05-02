@@ -138,7 +138,7 @@ class Alert < ActiveRecord::Base
 
   def to_xml(options={})
     options={} if options.blank?
-    builder=Builder::XmlMarkup.new( :indent => 2)
+    builder=::Builder::XmlMarkup.new( :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
     builder.TMAPI(:messageId => options[:messageId].blank? ? "#{self.class}-#{self.id}" : options[:messageId]) do |tmapi|
       xml_build_author tmapi, options[:Author]
