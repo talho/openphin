@@ -27,6 +27,7 @@ class Report::Report < ActiveRecord::Base
     begin
       self[:recipe] = criteria["recipe"] unless recipe
       recipe.constantize
+      self[:name] = recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-').sub(/-$/,'')
     rescue NameError
       errors.add_to_base "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
     end
@@ -67,8 +68,8 @@ class Report::Report < ActiveRecord::Base
       helper_expected = directives.detect{|e| e.size > 2}
       if helper_expected
         view = ActionView::Base.new
-        recipe = report.recipe.constantize
-        helpers = recipe.respond_to?(:helpers) ? (recipe.helpers || []) : []
+        recipe_obj = recipe.constantize
+        helpers = recipe_obj.respond_to?(:helpers) ? (recipe_obj.helpers || []) : []
         helpers.each {|h| view.extend(h.constantize)}
       end
       # generate csv
