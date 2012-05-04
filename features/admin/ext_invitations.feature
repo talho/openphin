@@ -125,6 +125,7 @@ Feature: Invitation System
       | name | email                  |
       | Jane | jane.smith@example.com |
       | Bob  | bob.smith@example.com  |
+
   Scenario: Viewing invitation completion status by email
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |
@@ -148,6 +149,7 @@ Feature: Invitation System
     And I should see "Please Join DSHS"
     When I select the "Email" grid header
     And the "Email" grid header is sorted ascending
+    And I suspend cucumber
 
     Then I should see "Registrations complete: 60% (3)" with html stripped
     And I should see "Registrations incomplete: 40% (2)" with html stripped

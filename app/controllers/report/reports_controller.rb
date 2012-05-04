@@ -76,7 +76,7 @@ class Report::ReportsController < ApplicationController
         case params[:document_format]
           when 'HTML' then copy_to_documents File.read(filepath), basename
           when 'PDF' then  copy_to_documents WickedPdf.new.pdf_from_string(File.read(filepath)), basename.sub!(/html$/,'pdf')
-          when 'CSV' then  copy_to_documents report.data2csv, basename.sub(/html$/,'csv')
+          when 'CSV' then  copy_to_documents report.to_csv, basename.sub(/html$/,'csv')
           else raise "Unsupported format (#{params[:document_format]}) for file #{filepath}"
         end
         respond_to do |format|
@@ -138,7 +138,7 @@ class Report::ReportsController < ApplicationController
 
    def run_reporter(options)
      reporter = Reporters::Reporter.new(options)
-     if Rails.env == 'development'
+     if Rails.env == 'cucumber'
        reporter.perform  # for debugging
      else
        Delayed::Job.enqueue( reporter )
@@ -154,34 +154,6 @@ class Report::ReportsController < ApplicationController
       document.owner_id = current_user[:id]
       document.save!
     end
-  end
-
-  # DEPRECATE
-  def html2csv(table_string)
-    doc = Nokogiri::HTML(table_string)
-    data = []
-    header = doc.xpath('//table/thead/tr/th').inject(""){|s,ele| s << %Q(\"#{ele.text}\", )}
-    embedded = []
-    idx = 0
-    doc.xpath('//table/tr').each do |tr|
-      idx += 1 if tr.xpath('./@class[contains(., "report-data-first")]').present?
-      break if idx > 1
-      tr.xpath('th').each { |embedded_th| embedded.push(embedded_th.text) }
-    end
-    header += embedded.uniq.inject(""){|s,ele| s << %Q(\"#{ele}\", )}
-    idx = 0
-    data[idx] = header.sub(/, $/,"")
-    idx += 1 unless doc.xpath('//table/tr[contains(@class,"report-data-first")]').present?
-    doc.xpath('//table/tr').each do |row|
-      if row.xpath('./@class[contains(., "report-data-first")]').present?
-        idx += 1
-        data[idx] = ""
-      end
-      row.xpath('td').each do |data_obj|
-        data[idx] << '"' + data_obj.text.gsub("\n"," ").gsub('"','\"').gsub(/(\s){2,}/m, '\1') + "\", "
-      end
-    end
-    data.collect{|ele|ele.sub(/, $/,"")}.join("\n")
   end
 
 

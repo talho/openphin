@@ -19,16 +19,17 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
     end
 
     def generate_rendering( report, view, template, filters=nil )
-     where = {}
+      id = {:report_id => report.id}
+      where = id.clone
      filename = "#{report.name}.html"
      if filters.present?
        filtered_at = filters["filtered_at"]
        filename = "#{report.name}#{filtered_at.nil? ? "" : "-#{filtered_at}"}.html"
        where = where.merge(filters_for_query(filters["elements"]))
      end
-     invitation = report.dataset.find({:report=>{:$exists=>true}}).first['report']
-     entries = report.dataset.find(:i=>{:$exists=>true})
-     meta = report.dataset.find({:meta=>{:$exists=>true}}).first["meta"]
+     invitation = report.dataset.find( id.merge( {:report=>{:$exists=>true}} )).first['report']
+     entries = report.dataset.find( id.merge( :i=>{:$exists=>true} ))
+     meta = report.dataset.find( id.merge( {:meta=>{:$exists=>true}} )).first["meta"]
      Dir.mktmpdir do |dir|
        path = File.join dir, filename
        File.open(path, 'wb') do |f|
@@ -52,6 +53,7 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
     end
 
     def capture_to_db(report)
+      id = {:report_id => report.id}
       @current_user = report.author
       data_set = report.dataset
       if report.criteria.present?
@@ -59,15 +61,24 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
         begin
           # Invitation.find(params)
           result = criteria[:model].constantize.send(criteria[:method],criteria[:params])
-          data_set.insert({:report=>result.as_report(:inject=>{:created_at=>Time.now.utc})})
+          data_set.insert( id.merge( {:report=>result.as_report(:inject=>{:created_at=>Time.now.utc})}))
           stats = {
             :registrations=>{
               :complete=>{:percentage=>result.registrations_complete_percentage,:total=>result.registrations_complete_total},
               :incomplete=>{:percentage=>result.registrations_incomplete_percentage,:total=>result.registrations_incomplete_total}}}
-          data_set.insert( {:meta=>{:stats=>stats,:template_directives=>template_directives}}.as_json )
-          result.invitees.each_with_index do |r,i|
-            doc = {:i=>(i+1),:name=>r.name,:email=>r.email,:completion_status=>r.completion_status}
-            data_set.insert(doc)
+          data_set.insert( id.merge( {:meta=>{:stats=>stats,:template_directives=>template_directives}}.as_json ))
+          index = 0
+          result.invitees.sort{|x,y| x.name <=> y.name}.each do |u|
+            begin
+              doc = id.clone
+              doc[:name] = u.name
+              doc[:email] = u.email
+              doc[:completion_status] = u.completion_status
+              doc[:i] = index += 1
+              data_set.insert(doc)
+            rescue NoMethodError
+              #skip illegitimate entry
+            end
           end
           data_set.create_index(:i)
         rescue StandardError => error

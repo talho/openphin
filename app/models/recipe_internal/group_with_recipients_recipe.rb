@@ -25,15 +25,25 @@ class RecipeInternal::GroupWithRecipientsRecipe < RecipeInternal
     def capture_to_db(report)
       @current_user = report.author
       data_set = report.dataset
+      id = {:report_id => report.id}
       if report.criteria.present?
         criteria = report.criteria
         begin
           result = criteria[:model].constantize.send(criteria[:method],criteria[:params])
-          data_set.insert( {:report=>result.as_report(:inject=>{:created_at=>Time.now.utc})} )
-          data_set.insert( {:meta=>{:template_directives=>template_directives}}.as_json )
-          result.recipients.each_with_index do |r,i|
-            doc = {:i=>(i+1),:display_name=>r.display_name,:email=>r.email,:role_memberships=>r.role_memberships.map(&:as_hash)}
-            data_set.insert(doc)
+          data_set.insert( id.merge( {:report=>result.as_report(:inject=>{:created_at=>Time.now.utc})} ))
+          data_set.insert( id.merge( {:meta=>{:template_directives=>template_directives}}.as_json ))
+          index = 0
+          result.recipients.sort{|x,y| x.name <=> y.name}.each do |u|
+            begin
+              doc = id.clone
+              doc[:display_name] = u.display_name
+              doc[:email] = u.email
+              doc[:role_memberships] = u.role_memberships.map(&:as_hash)
+              doc[:i] = index += 1
+              data_set.insert(doc)
+            rescue NoMethodError
+              #skip illegitimate entry
+            end
           end
           data_set.create_index(:i)
         rescue StandardError => error
@@ -43,16 +53,17 @@ class RecipeInternal::GroupWithRecipientsRecipe < RecipeInternal
     end
 
     def generate_rendering( report, view, template, filters=nil )
-     where = {}
+     id = {:report_id => report.id}
+     where = id.clone
      filename = "#{report.name}.html"
      if filters.present?
        filtered_at = filters["filtered_at"]
        filename = "#{report.name}#{filtered_at.nil? ? "" : "-#{filtered_at}"}.html"
        where = where.merge(filters_for_query(filters["elements"]))
      end
-     subject = report.dataset.find({:report=>{:$exists=>true}}).first['report']
-     meta = report.dataset.find({:meta=>{:$exists=>true}}).first["meta"]
-     result = report.dataset.find(:i=>{:$exists=>true})
+     subject = report.dataset.find( id.merge( {:report=>{:$exists=>true}} )).first['report']
+     meta = report.dataset.find( id.merge( {:meta=>{:$exists=>true}} )).first["meta"]
+     result = report.dataset.find(id.merge( :i=>{:$exists=>true} ))
      Dir.mktmpdir do |dir|
        path = File.join dir, filename
        File.open(path, 'wb') do |f|

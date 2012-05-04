@@ -22,12 +22,24 @@ Given 'the system builds all the user jurisdictions' do
   require File.expand_path(File.join(File.dirname(__FILE__),"..","..","db","fixtures","jurisdictions"))
 end
 
-When /^I generate "([^"]*)" report on "([^"]*)" titled "([^"]*)"$/ do |recipe, model, title|
-  id = model.constantize.find_by_title(title).id
+When /^I generate "([^"]*)" report on "([^"]*)" (titled|named) "([^"]*)"$/ do |recipe, model, where, parameter|
+  if where == 'titled'
+    id = model.constantize.find_by_title(parameter).id
+  else
+    id = model.constantize.find_by_name(parameter).id
+  end
   criteria = {:recipe=>recipe,:model=>model,:method=>:find_by_id,:params=>id}
   report = current_user.reports.create!(:recipe=>recipe,:criteria=>criteria,:incomplete=>true)
   Reporters::Reporter.new(:report_id=>report[:id]).perform
   @report = current_user.reports.find_by_id(id)
+  raise unless @report && @report.rendering.path
+end
+
+When /^I generate "([^"]*)" report$/ do |recipe|
+  report = current_user.reports.create!(:recipe=>recipe,:incomplete=>true)
+  Reporters::Reporter.new(:report_id=>report.id).perform
+  @report = current_user.reports.find_by_id(report.id)
+  raise unless @report && @report.rendering.path
 end
 
 When /^I inspect the generated rendering$/ do
@@ -64,7 +76,7 @@ Then /^I should (not )?see "([^\"]*)" in the pdf$/ do |inversion, text|
 end
 
 When /^I inspect the generated csv$/ do
-  @csv = @report.data2csv
+  @csv = @report.to_csv
 end
 
 Then /^I should (not )?see "([^\"]*)" in the csv$/ do |inversion, text|
