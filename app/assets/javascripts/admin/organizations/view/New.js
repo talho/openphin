@@ -31,8 +31,8 @@ Talho.Admin.Organizations.view.New = Ext.extend(Ext.form.FormPanel, {
         {xtype: 'combo', fieldLabel: 'Contact', hiddenName: 'organization[user_id]', itemId: 'contact', 
           displayField: 'name', valueField: 'id', queryParam: 'tag', store: new Ext.data.JsonStore({
             proxy: new Ext.data.HttpProxy({
-                url: '/search/show_clean',
-                api: {read: {url: '/search/show_clean', method:'POST'}}
+                url: '/search/show_clean.json',
+                api: {read: {url: '/search/show_clean.json', method:'POST'}}
             }),
             idProperty: 'id',
             bodyCssClass: 'users',

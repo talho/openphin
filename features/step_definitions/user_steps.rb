@@ -329,7 +329,7 @@ end
 Given /^a few users with various roles$/ do
   3.times do |i|
     u = FactoryGirl.create(:user)
-    u.role_memberships << RoleMembership.new(:role => Role.all[i], :jurisdiction => Jurisdiction.all[i]) 
+    u.role_memberships << RoleMembership.new(:role => Role.for_app('phin').all[i], :jurisdiction => Jurisdiction.all[i]) 
     u.save
   end
   step "delayed jobs are processed"

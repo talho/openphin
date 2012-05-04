@@ -64,10 +64,10 @@ end
 When /^I give the organization an audience$/ do
   #Select the first jurisdiction, first role, last user
   step %Q{I select the following in the audience panel:}, table(%{
-      | name                      | type         |
-      | #{Jurisdiction.first}     | Jurisdiction |
-      | #{Role.first}             | Role         |
-      | #{User.last.display_name} | User         |
+      | name                          | type         |
+      | #{Jurisdiction.first}         | Jurisdiction |
+      | #{Role.for_app('phin').first} | Role         |
+      | #{User.last.display_name}     | User         |
   })
 end
 
@@ -88,7 +88,7 @@ end
 
 Then /^my organization should have some recipients$/ do
   Organization.order('updated_at').last.group.recipients.include?(User.last).should be_true
-  Organization.order('updated_at').last.group.recipients.include?(RoleMembership.find_by_jurisdiction_id_and_role_id(Jurisdiction.first.id, Role.first.id).user).should be_true
+  Organization.order('updated_at').last.group.recipients.include?(RoleMembership.find_by_jurisdiction_id_and_role_id(Jurisdiction.first.id, Role.for_app('phin').first.id).user).should be_true
 end
 
 Then /^my organization should have a folder$/ do

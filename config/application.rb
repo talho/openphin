@@ -27,11 +27,6 @@ module Openphin
       #{Rails.root.to_s}/app/xml
     ) 
   
-    
-    # Only load the plugins named here, in the order given (default is alphabetical).
-    # :all can be used as a placeholder for all plugins not explicitly named
-    config.reload_plugins = true if Rails.env == 'development'
-  
     config.filter_parameters += [:password, :confirm_password]
     
     # Activate observers that should always be running

@@ -53,8 +53,8 @@ Talho.ux.UserSelectionGrid = Ext.extend(Ext.Panel, {
     _createUserSearchStore: function(){
         this.user_search_store = new Ext.data.JsonStore({
             proxy: new Ext.data.HttpProxy({
-                url: '/search/show_clean',
-                api: {read: {url: '/search/show_clean', method:'POST'}}
+                url: '/search/show_clean.json',
+                api: {read: {url: '/search/show_clean.json', method:'POST'}}
             }),
             idProperty: 'id',
             bodyCssClass: 'users',

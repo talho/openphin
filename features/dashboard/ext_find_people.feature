@@ -238,7 +238,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions |                        |
   Then I should see "Texas Admin"
   And I should see "Potter Admin"
@@ -272,7 +272,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions | Dallas County          |
   Then I should see "Dallas Admin"
 
@@ -282,7 +282,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
@@ -302,7 +302,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        | Super                  |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
   And I should see "Admin in Potter County"
@@ -335,7 +335,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                             |
    | Phone        |                             |
    | Title        |                             |
-   | Roles        | Admin                       |
+   | Roles        | Phin: Admin                 |
    |Jurisdictions | Potter County,Dallas County |
   Then I should see "Potter Admin"
   Then I should see "Dallas Admin"

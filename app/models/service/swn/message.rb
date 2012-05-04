@@ -53,7 +53,7 @@ class Service::Swn::Message < Service::Swn::Base
   end
 
   class NotificationResponse < ActiveRecord::Base
-    set_table_name "message_notification_response"
+    self.table_name = "message_notification_response"
     serialize :response
 
     def self.build(response, message)

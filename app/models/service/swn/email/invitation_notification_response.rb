@@ -1,5 +1,5 @@
 class Service::Swn::Email::InvitationNotificationResponse < ActiveRecord::Base
-  set_table_name "swn_notification_response"
+  self.table_name = "swn_notification_response"
   belongs_to :alert, :polymorphic => true
 
   scope :acknowledge, :joins => :alert, :conditions => ['alerts.acknowledge = ?', true]

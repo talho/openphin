@@ -1,6 +1,6 @@
 class Report::Report < ActiveRecord::Base
 
-  set_table_name :report_reports
+  self.table_name = "report_reports"
 
   include ActionView::Helpers::DateHelper
 

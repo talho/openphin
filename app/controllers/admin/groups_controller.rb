@@ -107,7 +107,7 @@ class Admin::GroupsController < ApplicationController
           ids = params[:group].reject{|key,value| !(key =~ /_ids$/)}
 
           if params[:group][:lock_version].to_i < @group.lock_version
-            raise ActiveRecord::StaleObjectError
+            raise ActiveRecord::StaleObjectError.new(self, 'update')
           end
           
           # If any associations have changed, manually update the locking on groups to prevent overlapping changes

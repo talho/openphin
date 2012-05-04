@@ -1,5 +1,5 @@
 class Dashboard::DashboardAudience < ActiveRecord::Base
-  set_table_name "audiences_dashboards"
+  self.table_name = "audiences_dashboards"
   ROLES={:viewer => 1, :reviewer => 2, :approver => 3, :assigner => 4, :publisher => 5, :editor => 6}
   
   belongs_to :dashboard

@@ -3,7 +3,7 @@ class Admin::InvitationsController < ApplicationController
   #before_filter :admin_required
   # before_filter :force_json_as_html, :only => :import
   include Report::CreateDataSet
-  extend ActiveSupport::Memoizable
+  #extend ActiveSupport::Memoizable
 
   def index
     @invitations = Invitation.all
@@ -88,7 +88,7 @@ class Admin::InvitationsController < ApplicationController
   rescue StandardError => error
     render :json => {:success => false, :error => error}
   end
-  memoize :recipe_types
+  #memoize :recipe_types
 
   def new
     @invitation = Invitation.new
