@@ -16,7 +16,7 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :role
   validates_presence_of :jurisdiction
   validates_presence_of :user, :if => lambda { |rr| !rr.new_record? }
-  validate_on_create do |req|
+  validate :on => :create do |req|
     unless req.user.blank?
       req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
       req.errors.add("You do not have permission to request that role") unless req.role.approval_required == false || Role.for_app("phin").include?(req.role) || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
@@ -35,12 +35,12 @@ class RoleRequest < ActiveRecord::Base
   has_one :role_membership, :dependent => :delete
   has_paper_trail  :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :unapproved, :conditions => ["approver_id is null"]
-  named_scope :in_jurisdictions, lambda { |jurisdictions|
+  scope :unapproved, :conditions => ["approver_id is null"]
+  scope :in_jurisdictions, lambda { |jurisdictions|
     {:conditions => ["jurisdiction_id in (?)", jurisdictions],
      :include => [:user, :role, :jurisdiction]}
   }
-  named_scope :for_apps, lambda { |applications|
+  scope :for_apps, lambda { |applications|
     {:include => [:user, :role], :conditions => ["roles.application in (?)", applications]}
   }
   before_create :set_requester_if_nil
@@ -57,7 +57,7 @@ class RoleRequest < ActiveRecord::Base
       self.approver=approving_user
       create_role_membership(:user => user, :role => role, :jurisdiction => jurisdiction)
       if self.save
-        AppMailer.deliver_role_assigned(role, jurisdiction, user, approver) unless user == approver
+        AppMailer.role_assigned(role, jurisdiction, user, approver).deliver unless user == approver
       end
     end 
   end
@@ -88,7 +88,7 @@ class RoleRequest < ActiveRecord::Base
     end while admins.blank? && !current_jurisdiction.nil?
     
     admins.each do |admin|
-      SignupMailer.deliver_admin_notification_of_role_request(self, admin)
+      SignupMailer.admin_notification_of_role_request(self, admin).deliver
     end
   end
   

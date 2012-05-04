@@ -31,7 +31,7 @@ class Tfcc
   
   def list_programs
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "query" do |request|
@@ -57,7 +57,7 @@ class Tfcc
   
   def create_program
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "create" do |request|
@@ -81,7 +81,7 @@ class Tfcc
 
   def play_music
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "create" do |request|
@@ -117,7 +117,7 @@ class Tfcc
 
   def create_program_and_activation
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "create" do |request|
@@ -157,7 +157,7 @@ class Tfcc
   
   def register_music
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "create" do |request|
@@ -186,7 +186,7 @@ class Tfcc
   # 'id' that returns a number. This is the program id.
   def activate_music
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do |ucsxml|
       ucsxml.request :method => "create" do |request|

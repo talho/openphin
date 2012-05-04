@@ -1,4 +1,4 @@
-rails_env = ENV['RAILS_ENV'] || 'production'
+rails_env = Rails.env || 'production'
 working_directory '/var/www/openphin/current'
 
 # 16 workers and 1 master
@@ -37,7 +37,7 @@ before_fork do |server, worker|
   #
   # Using this method we get 0 downtime deploys.
 
-  old_pid = RAILS_ROOT + '/tmp/pids/unicorn.pid.oldbin'
+  old_pid = Rails.root.to_s + '/tmp/pids/unicorn.pid.oldbin'
   if File.exists?(old_pid) && server.pid != old_pid
     begin
       Process.kill("QUIT", File.read(old_pid).to_i)
@@ -75,7 +75,7 @@ after_fork do |server, worker|
   #    Process::UID.change_privilege(target_uid)
   #  end
   #rescue => e
-  #  if RAILS_ENV == 'development'
+  #  if Rails.env == 'development'
   #    STDERR.puts "couldn't change user, oh well"
   #  else
   #    raise e

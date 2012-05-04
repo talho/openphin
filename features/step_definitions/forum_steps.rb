@@ -1,16 +1,16 @@
 Given 'I have the forum named "$name"' do |name|
-  Forum.find_by_name(name) || Factory(:forum, :name => name)
+  Forum.find_by_name(name) || FactoryGirl.create(:forum, :name => name)
 end
 
 Given 'I have the topic "$topic_name" to forum "$forum_name"' do |topic_name,forum_name|
-  forum = Forum.find_by_name(forum_name) || Factory(:forum, :name => forum_name)
-  topic = Topic.find_by_name(topic_name) || Factory(:topic, :name => topic_name, :forum => forum, :poster => current_user)
+  forum = Forum.find_by_name(forum_name) || FactoryGirl.create(:forum, :name => forum_name)
+  topic = Topic.find_by_name(topic_name) || FactoryGirl.create(:topic, :name => topic_name, :forum => forum, :poster => current_user)
 end
 
 Given 'I have the comment "$comment_content" to topic "$topic_name" to forum "$forum_name"' do |comment_content,topic_name,forum_name|
-  forum = Forum.find_by_name(forum_name) || Factory(:forum, :name => forum_name)
-  topic = Topic.find_by_name(topic_name) || Factory(:topic, :name => topic_name, :forum => forum, :poster => current_user)
-  comment = Topic.find_by_content(comment_content) || Factory(:comment, :name => "not blank", :content => comment_content, :poster => @current_user, :forum => forum, :poster => current_user)
+  forum = Forum.find_by_name(forum_name) || FactoryGirl.create(:forum, :name => forum_name)
+  topic = Topic.find_by_name(topic_name) || FactoryGirl.create(:topic, :name => topic_name, :forum => forum, :poster => current_user)
+  comment = Topic.find_by_content(comment_content) || FactoryGirl.create(:comment, :name => "not blank", :content => comment_content, :poster => @current_user, :forum => forum, :poster => current_user)
   topic.comments << comment
 end
 

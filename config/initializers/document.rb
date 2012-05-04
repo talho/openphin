@@ -1,4 +1,4 @@
-if File.exist?(doc_yml = RAILS_ROOT+"/config/document.yml")
+if File.exist?(doc_yml = Rails.root.to_s+"/config/document.yml")
 # MIME Type loading for Document Upload
   CONTENT_TYPES = YAML.load(IO.read(doc_yml))["permitted_mimes"]
 # Load disallowed file extensions

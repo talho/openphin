@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  skip_before_filter :authenticate, :only => [:about]
+  skip_before_filter :authorize, :only => [:about]
   before_filter :non_public_role_required, :only => [:new, :create, :edit, :update, :delete]
   require 'feedzirra'
 
@@ -125,10 +125,10 @@ class DashboardController < ApplicationController
         portlets["items"].each_with_index do |portlet, index|
           p = if portlet["itemId"] && dp = dashboard.dashboard_portlets.find_by_portlet_id(portlet["itemId"])
             dp.attributes = { :draft => false, :column => portlet["column"], :sequence => index } 
-            dp.portlet["config"] = portlet
+            dp.portlet["config"] = portlet.to_json
             dp.portlet.save && dp.save ? dp.portlet : nil
           else
-            p = Portlet.create(:xtype => portlet["xtype"], :config => portlet)
+            p = Portlet.create(:xtype => portlet["xtype"], :config => portlet.to_json)
             dashboard.dashboard_portlets.create(:portlet_id => p.id, :column => portlet["column"], :draft => false, :sequence => index)
             p
           end
@@ -196,16 +196,17 @@ class DashboardController < ApplicationController
   def hud
     DashboardController.app_toolbar "han"
     @user = current_user
+    require 'will_paginate/array'
     per_page = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 10 )
-    @alerts = present_collection((defined?(current_user.recent_han_alerts) && current_user.recent_han_alerts.size > 0) ? 
+    @alerts = (defined?(current_user.recent_han_alerts) && current_user.recent_han_alerts.size > 0) ? 
                 current_user.recent_han_alerts.paginate(:page => params[:page], :per_page => per_page) : 
-                (defined?(HanAlert) ? [HanAlert.default_alert] : []).paginate(:page => 1))
+                (defined?(HanAlert) ? [HanAlert.default_alert] : []).paginate(:page => 1)
     respond_to do |format|
       format.html
       format.ext
       format.json do
         unless @alerts.nil? || @alerts.empty? || ( @alerts.map(&:id) == [nil] ) # for dummy default alert
-          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_han_alert_path(alert.id),alert.acknowledged_by_user?) }
+          jsonObject = @alerts.collect{ |alert| alert.iphone_format(acknowledge_han_alert_path(alert.id),alert.acknowledged_by_user?(current_user)) }
           headers["Access-Control-Allow-Origin"] = "*"
           render :json => jsonObject
         else
@@ -231,10 +232,9 @@ class DashboardController < ApplicationController
       plugin_config_items = []
     
       $menu_config.each do |app, val|
-        Phin::Application.eval_if_plugin_present(app.to_s) do
-          plugin_config_items << eval(val) 
-        end if app != :han && current_user.has_app?(app.to_s) && !val.nil?
-      end
+          plugin_config_items << eval(val) if app != :han && current_user.has_app?(app.to_s) && !val.nil?
+      end unless $menu_config.nil?
+      
       @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
     end
     

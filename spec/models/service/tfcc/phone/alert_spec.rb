@@ -14,8 +14,8 @@ describe Service::Tfcc::Phone::Alert do
   end
 
   before(:each) do
-    @alert = Factory(:han_alert, :acknowledge => false)
-    @user = Factory(:user, :devices => [Factory(:phone_device)])
+    @alert = FactoryGirl.create(:han_alert, :acknowledge => false)
+    @user = FactoryGirl.create(:user, :devices => [FactoryGirl.create(:phone_device)])
     @client_id = "AAA1"
     @user_id = "BBB2"
     @retry_duration = "6 hours"
@@ -55,7 +55,7 @@ describe Service::Tfcc::Phone::Alert do
     context "when the alert has a voice recording" do
       before(:each) do
         subject.alert.stub(
-          :message_recording =>  stub("Paperclip::Attachment", :path => "#{RAILS_ROOT}/spec/fixtures/sample.wav"),
+          :message_recording =>  stub("Paperclip::Attachment", :path => "#{Rails.root.to_s}/spec/fixtures/sample.wav"),
           :message_recording_file_name => "sample.wav"
         )
       end

@@ -1,5 +1,5 @@
 Given /^there is an system only (.*) role$/ do |role_name|
-  role = Role.find_by_name(role_name) || Factory(:role, :name => role_name)
+  role = Role.find_by_name(role_name) || FactoryGirl.create(:role, :name => role_name)
   role.update_attributes!(:user_role => false)
 end
 
@@ -45,6 +45,7 @@ Then '"$email" should not have the "$role" role' do |email, role|
   user = User.find_by_email!(email)
   user.has_public_role?.should be_false
 end
+
 Then /^I should see "(.*)" in the role select$/ do |role|
   page.should have_css("select.role_select option", :content => role)
 end
@@ -69,7 +70,7 @@ end
 
 Given /^a few roles$/ do
   3.times do |i|
-    Factory.create(:role)
+    FactoryGirl.create(:role)
   end
 end
 

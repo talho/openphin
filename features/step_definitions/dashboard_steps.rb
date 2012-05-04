@@ -1,19 +1,19 @@
 
 When /^I edit (?:a|the "([^"]*)") dashboard (?:on|as) "([^\"]*)"$/ do |dash_name, user_email|
-  Then %{I am logged in as "#{user_email}"}
-   And %{I wait for the "Loading..." mask to go away}
-   And %{I press "Edit Dashboards"}
+  step %{I am logged in as "#{user_email}"}
+  step %{I wait for the "Loading..." mask to go away}
+  step %{I press "Edit Dashboards"}
   if dash_name
-     And %{I wait for the "Loading..." mask to go away}
-    Then %{I press "Open"}
-     And %{I select the "#{dash_name}" grid row}
-     And %{I press "Open" within ".cms-open-dash-window"}
+    step %{I wait for the "Loading..." mask to go away}
+    step %{I press "Open"}
+     step %{I select the "#{dash_name}" grid row}
+     step %{I press "Open" within ".cms-open-dash-window"}
   end
-  And %{I wait for the "Loading..." mask to go away}
+  step %{I wait for the "Loading..." mask to go away}
 end
 
 Given /^the following dashboard exists:$/ do |table|
-  Factory.create(:dashboard, table.rows_hash)
+  FactoryGirl.create(:dashboard, table.rows_hash)
 end
 
 Given /^the "([^\"]*)" dashboard has the following portlet:$/ do |dash_name, table|
@@ -148,7 +148,7 @@ When /^I maliciously try to edit (?:a|the "([^"]*)") dashboard$/ do |dash_name|
       url: '/dashboard/#{dash.id}.json',
       method: 'PUT',
       params: {
-        'dashboards': '{name: \"TEST\"}'
+        'dashboards': '{\"name\": \"TEST\"}'
       },
       callback: function(o, s, r){
         window.responseText = r.responseText;
@@ -184,24 +184,24 @@ When /^I load ExtJs$/ do
   page.execute_script("
     var s = document.createElement('SCRIPT');
     s.charset = 'UTF-8';
-    s.src ='/javascripts/ext/adapter/ext/ext-base.js';
+    s.src ='/assets/ext/adapter/ext/ext-base.js';
     document.getElementsByTagName('HEAD')[0].appendChild(s);
     var s2 = document.createElement('SCRIPT');
     s2.charset = 'UTF-8';
-    s2.src ='/javascripts/ext/ext-all.js';
+    s2.src ='/assets/ext/ext-all.js';
     document.getElementsByTagName('HEAD')[0].appendChild(s2);
   ")
 end
 
 Then /^I should not see the application default option in the permissions window$/ do
-    When %{I press "Permissions"}
-    Then %{I should not see "Make this the application default"}
+    step %{I press "Permissions"}
+    step %{I should not see "Make this the application default"}
 end
 
 When /^I check application default in the dashboard permission window$/ do
-  Then %{I press "Permissions"}
-   And %{I check "Make this the application default"}
-   And %{I press "OK"}
+  step %{I press "Permissions"}
+   step %{I check "Make this the application default"}
+   step %{I press "OK"}
 end
 
 Then /^"([^\"]*)" should be the default dashboard$/ do |dash_name|

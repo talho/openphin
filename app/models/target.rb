@@ -22,12 +22,6 @@ class Target < ActiveRecord::Base
   after_create :save_snapshot_of_users
 
   def save_snapshot_of_users &block
-#    ActiveRecord::Base.connection.execute(
-#        "insert into targets_users (target_id, user_id)
-#          select #{self.id}, users.id from users
-#            inner join role_memberships on users.id=role_memberships.user_id
-#          where #{conditions_for(audience)}"
-#    )
     user_ids = if block_given?
       yield
     end
@@ -47,26 +41,5 @@ class Target < ActiveRecord::Base
   # polymorphic class does not set item_type correctly when inheritance is involved
   def update_item_type
     update_attribute('item_type', item.class.to_s)
-  end
-
-  def conditions_for(audience)
-    jurs = audience.jurisdictions.map(&:id).join(",")
-    if audience.roles.empty?
-      if item.include_public_users?
-        roles = Role.user_roles.map(&:id).join(",")
-      else
-        roles = Role.user_roles.approval_roles.map(&:id).join(",")
-      end
-    else
-      roles = audience.roles.map(&:id).join(',')
-    end
-
-    users = audience.users.map(&:id).join(",")
-    conditions = []
-    conditions.push "role_memberships.jurisdiction_id in (#{jurs})" unless jurs.blank?
-    conditions.push "role_memberships.role_id in (#{roles})" unless roles.blank?
-    conditions = [conditions.join(" AND ")]
-    conditions.push "users.id in (#{users})" unless users.blank?
-    conditions.join(" OR ")
   end
 end

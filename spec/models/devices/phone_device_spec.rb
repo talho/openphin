@@ -4,9 +4,9 @@ describe Device::PhoneDevice do
 
   describe 'validations' do
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      @phone_device = Factory(:phone_device)
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      @phone_device = FactoryGirl.create(:phone_device)
     end
     it "should be valid" do
       @phone_device.should be_valid

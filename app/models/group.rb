@@ -25,9 +25,9 @@ class Group < Audience
   validates_uniqueness_of :name, :scope => [:scope, :owner_jurisdiction_id], :if => Proc.new {|group| group.scope == "Jurisdiction"}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :personal, lambda{{:conditions => ["scope = ?", "Personal"]}}
-  named_scope :jurisdictional, lambda{{:conditions => ["scope = ?", "Jurisdiction"]}}
-  named_scope :global, lambda{{:conditions => ["scope = ?", "Global"]}}
+  scope :personal, lambda{{:conditions => ["scope = ?", "Personal"]}}
+  scope :jurisdictional, lambda{{:conditions => ["scope = ?", "Jurisdiction"]}}
+  scope :global, lambda{{:conditions => ["scope = ?", "Global"]}}
 
   def to_s
    scope + ': ' + name

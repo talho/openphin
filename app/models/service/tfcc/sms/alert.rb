@@ -1,4 +1,3 @@
-include ActionView::Helpers::TextHelper
 
 class Service::Tfcc::Sms::Alert < Service::Tfcc::Sms::Base
   property :alert
@@ -7,6 +6,8 @@ class Service::Tfcc::Sms::Alert < Service::Tfcc::Sms::Base
   property :user_id
   property :retry_duration
   
+  include ActionView::Helpers::TextHelper
+
   validates_presence_of :alert, :client_id, :user_id, :retry_duration, :users
   
   def self.format_activation_time(time)
@@ -25,7 +26,7 @@ class Service::Tfcc::Sms::Alert < Service::Tfcc::Sms::Base
     caller_id = alert.caller_id.nil? || alert.caller_id.blank? ? "" : alert.caller_id
 
     body = ""
-    xml = Builder::XmlMarkup.new :target => body, :indent => 2
+    xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
     xml.instruct!
     xml.ucsxml :version=>"1.1", :xmlns=>"http://ucs.tfcci.com" do
       xml.request :method => "create" do

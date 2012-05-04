@@ -1,5 +1,5 @@
 class AlertsController < ApplicationController
-  skip_before_filter :authenticate, :only => [:show_with_token, :update_with_token]
+  skip_before_filter :authorize, :only => [:show_with_token, :update_with_token]
   before_filter :find_alert, :except => [:recent_alerts]
   before_filter :can_view_alert, :only => [:show, :update]
   

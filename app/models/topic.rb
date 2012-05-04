@@ -15,9 +15,9 @@ class Topic < ActiveRecord::Base
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
   
-  named_scope :recent_topics, lambda{|limit| {
+  scope :recent_topics, lambda{|limit| {
     :select => "topics.id, topics.forum_id, topics.comment_id, topics.sticky, topics.locked_at, topics.name, topics.content, 
                 topics.poster_id, topics.created_at, topics.updated_at, topics.hidden_at, topics.lock_version, 
                 COALESCE(MAX(c.created_at), topics.created_at) as sortable_created_at",  
@@ -28,7 +28,7 @@ class Topic < ActiveRecord::Base
     :order => "sortable_created_at DESC",
     :limit => limit}}
   
-  named_scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
+  scope :unhidden, lambda {|obj| obj.present? ? {:conditions => {:hidden_at => nil}} : {}}
 
   validates_presence_of :poster_id, :forum_id, :name
   #before_save :sanitize_content # removing this because redcloth escapes outgoing html. If we switch to bbcode, we need this even less

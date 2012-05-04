@@ -5,4 +5,13 @@ module DocumentsHelper
     output += "Owner: #{document.owner.display_name}" unless document.owner.nil?
     h output
   end
+  
+  def rewrite_level(folder)
+    @folders.each do |f|
+      if f.parent_id == folder.id
+        f.level = folder.level + 1
+        rewrite_level(f) unless f.leaf?
+      end
+    end
+  end
 end

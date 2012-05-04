@@ -46,14 +46,12 @@ class Organization < ActiveRecord::Base
   before_create :set_token, :create_group
   before_save :set_before_save_var
   after_save :ensure_folder
-
-  default_scope :order => :name
   
-  named_scope :with_user, lambda {|user|
+  scope :with_user, lambda {|user|
     { :conditions => ["organizations.group_id IN (SELECT * FROM sp_audiences_for_user(?))", user.id], :order => 'organizations.name'}
   }
-  named_scope :foreign, :conditions => ["organizations.foreign = true"]
-  named_scope :non_foreign, :conditions => ["organizations.foreign = false"]
+  scope :foreign, :conditions => ["organizations.foreign = true"]
+  scope :non_foreign, :conditions => ["organizations.foreign = false"]
 
   validates_inclusion_of :foreign, :in => [true, false]
 
@@ -79,7 +77,7 @@ class Organization < ActiveRecord::Base
 
 
   def to_dsml(builder=nil)
-    builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
+    builder=::Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|
         ocv="oc-value".to_sym
@@ -130,7 +128,7 @@ class Organization < ActiveRecord::Base
   private
 
   def set_token
-    self.token = ActiveSupport::SecureRandom.hex
+    self.token = SecureRandom.hex
   end
   
   def create_group

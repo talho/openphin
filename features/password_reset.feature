@@ -14,13 +14,6 @@ Feature: Password reset
     Then I should see "instructions for changing your password"
     And a password reset message should be sent to "email@person.com"
 
-  Scenario: User is signed up updated his password and types wrong confirmation
-    Given I signed up with "email@person.com/Password1"
-    When I follow the password reset link sent to "email@person.com"
-    And I update my password with "Newpassword1/Wrongconfirmation1"
-    Then I should see error messages
-    And I should be signed out
-
   Scenario: User is signed up and updates his password
     Given I signed up with "email@person.com/Password1"
     When I follow the password reset link sent to "email@person.com"
@@ -55,14 +48,14 @@ Feature: Password reset
   Scenario: User responses to reset password email
     Given I signed up with "email@person.com/Password1"
     Given I try to change the password of "email@person.com" without token
-    Then I should see "missing token"
+    Then I should see "Please double check the URL"
 
   Scenario: User responses to password reset by linking to edit action without a token
     Given I signed up with "email@person.com/Password1"
     And I try to change the password of "email@person.com" without token
-    Then I should see "missing token"
+    Then I should see "Please double check the URL"
 
   Scenario: User responses to password reset by linking to edit action with a incorrect token
     Given I signed up with "email@person.com/Password1"
     And I follow the password reset link with a damaged token sent to "email@person.com"
-    Then I should see "non-existent user"
+    Then I should see "Please double check the URL"

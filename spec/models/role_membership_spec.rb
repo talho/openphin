@@ -29,10 +29,10 @@ describe RoleMembership do
   end
   
   it "should be unique for role, jurisdiction, and user" do
-    jurisdiction = Factory(:jurisdiction)
-    Factory(:jurisdiction).move_to_child_of(jurisdiction)
-    user = Factory(:user)
-    membership = Factory(:role_membership, :user => user, :jurisdiction => jurisdiction)
+    jurisdiction = FactoryGirl.create(:jurisdiction)
+    FactoryGirl.create(:jurisdiction).move_to_child_of(jurisdiction)
+    user = FactoryGirl.create(:user)
+    membership = FactoryGirl.create(:role_membership, :user => user, :jurisdiction => jurisdiction)
     bad_membership = Factory.build(:role_membership, 
       :user => membership.user, 
       :jurisdiction => membership.jurisdiction, 

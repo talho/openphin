@@ -5,7 +5,7 @@ class DelayedJobCheck < ActiveRecord::Base
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   def deliver
-    deliver_status = AppMailer.deliver_delayed_job_check(email)
+    deliver_status = AppMailer.delayed_job_check(email).deliver
     deliver_status == "200 OK"
   end
 

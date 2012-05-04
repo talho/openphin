@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  #before_filter :authenticate
+  #before_filter :authorize
   app_toolbar "forums"
 
   before_filter :find_forum, :except => [:active_topics, :recent_posts]
@@ -12,7 +12,7 @@ class TopicsController < ApplicationController
     options = {:page => params[:page] || 1, :per_page => 8}
     options[:order] = "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc"
     options[:conditions] = {:hidden_at => nil} unless current_user.is_super_admin?
-    @topics = Topic.paginate_all_by_forum_id_and_comment_id(@forum.id,nil,options)
+    @topics = Topic.where(:forum_id => @forum.id, :comment_id => nil).paginate(options)
     for topic in @topics
       if current_user.moderator_of?(topic)
         topic[:is_moderator] = true
@@ -21,7 +21,7 @@ class TopicsController < ApplicationController
         topic[:is_super_admin] = true
       end
       topic[:posts] = topic.comments.length
-      topic[:user_avatar] = User.find_by_id(topic.poster_id).photo.url(:tiny)
+      topic[:user_avatar] = User.find(topic.poster_id).photo.url(:tiny)
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -40,17 +40,12 @@ class TopicsController < ApplicationController
   # GET /topics/1.json
   def show
     options = {:page => params[:page] || 1, :per_page => params[:per_page] || 20}
-    @comments = @topic.comments
+    @comments = Topic.where('comment_id = ? OR (comment_id is NULL and id = ?)', @topic.id, @topic.id).order('created_at ASC').paginate(options)
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @topic }
       format.json do
-        comments = []
-        comments.push(@topic)
-        comments.concat(@comments)
-        @comments = comments.paginate(options)
-
         render :json => {:comments => @comments.map do |x|
                             x[:user_avatar] = x.poster.photo.url(:thumb)
                             x[:is_moderator] = current_user.moderator_of?(x)

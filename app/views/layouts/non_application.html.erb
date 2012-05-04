@@ -6,8 +6,8 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', 'master', 'redesign/bootstrap.css', :cache => true %>
-  <%= javascript_include_tag 'jquery', 'application', :cache => 'none' %>
+  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', 'master', 'redesign/bootstrap.css' %>
+  <%= javascript_include_tag 'jquery', 'application' %>
 
 </head>
 <body>
@@ -19,7 +19,7 @@
       <div class="topbar" data-dropdown="dropdown">
         <div class="topbar-inner">
           <div class="container">
-            <%= link_to '<img src="' + domain_config['logo_image'] + '">', root_path %>
+            <%= link_to raw(%{<img src="#{asset_path(domain_config['logo_image'])}">}), root_path %>
             <ul class="nav secondary-nav">
               <li><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'] %></li><li>&nbsp;|&nbsp;</li>
               <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
@@ -44,11 +44,9 @@
   <div id="wrapper">
     <div id="content">
       <div class="flash">
-        <%- [:notice, :instructions, :completed, :error, :failure].each do |type| -%>
-          <%- if flash[type] -%>
-            <div class="alert-message block-message <%= type %>"><%= flash[type] %></div>
-          <%- end -%>
-        <%- end -%>
+        <% flash.each do |key, value| -%>
+          <div class="alert-message block-message <%= key %>"><%= value %></div>
+        <% end -%>
       </div>
       <%= yield %>
     </div>

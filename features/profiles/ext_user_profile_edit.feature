@@ -73,19 +73,16 @@ I should be able to edit my profile
 
     Given session name is "admin session"
     And I am logged in as "bob.smith@example.com"
-    When I view the profile page for "john.smith@example.com"
-    And I follow "Edit"
-    Then I should see the profile edit form
+
+    And I view the ext profile page for "john.smith@example.com"
+    And I press "Edit This Account"
 
     When I fill in the form with the following info:
-      | Preferred name to be displayed    | John Smith |
-    And I press "Save"
-    Then I should see the profile page
-    Then I should not see any errors
+      | Display name    | John Smith |
+    And I press "Apply Changes"
     And I should see "Profile information saved."
 
-    Given I am logged in as "john.smith@example.com"
-    And session name is "default"
+    Given session name is "default"
     And I press "Apply Changes"
     #Then I should see the profile edit form
     And I should see "Another user has recently updated this profile, please try again."

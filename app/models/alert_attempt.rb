@@ -26,9 +26,9 @@ class AlertAttempt < ActiveRecord::Base
   has_many :devices, :through => :deliveries, :uniq => true
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
-  named_scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"
-  named_scope :with_device, lambda {|device_type|
+  scope :acknowledged, :conditions => "acknowledged_at IS NOT NULL"
+  scope :not_acknowledged, :conditions => "acknowledged_at IS NULL"
+  scope :with_device, lambda {|device_type|
     if device_type.is_a?(AlertDeviceType)
       d=device_type.device
     elsif device_type.is_a?(Device)
@@ -39,7 +39,7 @@ class AlertAttempt < ActiveRecord::Base
 
     {:include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices],
      :conditions => ["devices.type = ?", d]}}
-  named_scope :acknowledged_by_device, lambda {|device_type|
+  scope :acknowledged_by_device, lambda {|device_type|
     if device_type.is_a?(AlertDeviceType)
         d=device_type.device
       elsif device_type.is_a?(Device)
@@ -122,6 +122,7 @@ class AlertAttempt < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options = {} if options.blank?
     options[:include] = {} if options[:include].nil?
     include = {:user => {:only => [:display_name, :email]}}
     include[:acknowledged_alert_device_type] = {} unless acknowledged_alert_device_type_id.nil?
@@ -137,7 +138,7 @@ class AlertAttempt < ActiveRecord::Base
 
   protected
   def generate_acknowledgment_token
-    self.token = ActiveSupport::SecureRandom.hex
+    self.token = SecureRandom.hex
   end
 
   private

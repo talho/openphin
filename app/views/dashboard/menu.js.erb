@@ -4,7 +4,7 @@ Application.rails_environment = '<%= Rails.env %>';
 Application.current_user = <%= current_user.id %>;
 Application.default_dashboard = <%= current_user.default_dashboard.blank? ? 'undefined' : current_user.default_dashboard.id %>;
 
-Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions'][0] %>" height="<%= domain_config['logo_image_dimensions'][1] %>" src="<%= domain_config['logo_image'] %>">', 
+Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions'][0] %>" height="<%= domain_config['logo_image_dimensions'][1] %>" src="<%= asset_path(domain_config['logo_image']) %>">', 
   <%= @han_menu + ',' if defined? @han_menu %>
   <%= @app_menu + ',' if defined? @app_menu %>
   <%= @report_menu + ',' if defined? @report_menu %>
@@ -46,7 +46,7 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
       {name:'Manage Devices', tab:{id: 'edit_devices', title:'Manage Devices', url:'<%= user_profile_path(current_user) %>', initializer: 'Talho.EditDevices'}},
       {name: 'Manage Roles', tab:{id: 'manage_roles', title:'Manage Roles', url:'<%= user_profile_path(current_user) %>', admin_mode: <%= current_user.is_admin? %>, initializer: 'Talho.ManageRoles'}},
       {name: 'Manage Organizations', tab:{id: 'manage_orgs', title:'Manage Organizations', url:'<%= user_profile_path(current_user) %>', initializer: 'Talho.ManageOrganizations'}},
-      {name: 'Sign Out', icon: '/images/logoff.png', redirect: '<%= sign_out_path %>'}
+      {name: 'Sign Out', icon: '/assets/logoff.png', redirect: '<%= sign_out_path %>'}
     ]}
 
   <% else %>

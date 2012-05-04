@@ -4,6 +4,8 @@ class SearchesController < ApplicationController
   #app_toolbar "han"
   include SearchModules::Search
 
+  respond_to :json, :only => [:show_clean]
+
   def show
     if !params[:tag].blank?
       search_size = 20
@@ -23,19 +25,18 @@ class SearchesController < ApplicationController
   end
 
   def show_clean
+    @total = 0
     unless params[:tag].blank?
       without = params[:without_ids].nil? || params[:without_ids].empty? || params[:without_ids][0].blank? ? {} : {:user_id => params[:without_ids]}
       search_size = (params[:limit]||20).to_i
       page = (params[:start]||0).to_i/search_size + 1
       @results = User.search(params[:tag], :star => true, :match_mode => :all, :without => without, :with => {:applications => current_user_applications}, :per_page => search_size, :page => page, :retry_stale => true, :sort_mode => :expr, :order => "@weight")
-      total = @results.total_entries
+      @total = @results.total_entries
       @results = sort_by_tag(@results, params[:tag])
     end
 
     @results = [] if @results.blank?
-    render :json => { :total => total,
-                      :users => @results.map{|u| {:caption => "#{u.name} #{u.email}", :name => u.name, :email => u.email, :id => u.id, :title => u.title,
-                                      :extra => render_to_string(:partial => 'extra.json', :locals => {:user => u})}}}
+    respond_with(@total, @results)
   end
 
   def show_advanced

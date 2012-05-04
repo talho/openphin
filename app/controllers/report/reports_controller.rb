@@ -86,7 +86,7 @@ class Report::ReportsController < ApplicationController
     rescue StandardError => error
       respond_to do |format|
         format.html {}
-        format.json {render :json => {:success => false, :msg => error.as_json}, :content_type => 'text/html', :status => 406}
+        format.json {render :json => {:success => false, :msg => error.message, :backtrace => error.backtrace}, :content_type => 'text/html', :status => 406}
       end
     end
   end
@@ -136,11 +136,11 @@ class Report::ReportsController < ApplicationController
   protected
 
    def run_reporter(options)
-     reporter = Reporters::Reporter.new(options)
+     reporter = ::Reporters::Reporter.new(options)
      if Rails.env == 'development'
        reporter.perform  # for debugging
      else
-       Delayed::Job.enqueue( reporter )
+       reporter.delay.perform
      end
    end
 

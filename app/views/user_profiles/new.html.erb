@@ -1,6 +1,6 @@
 <h1>Profile for <%= @user.display_name %></h1>
 
-<% tagged_form_for(@user) do |f| %>
+<%= tagged_form_for(@user) do |f| %>
   <%= f.error_messages %>
   <%= f.hidden_field :user_id %>
   <%= f.text_field :photo %>

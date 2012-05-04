@@ -14,24 +14,25 @@ module UserModules
         
       base.after_create :assign_public_role
       
-      base.named_scope :with_role, lambda {|role|
+      base.scope :with_role, lambda {|role|
         role = role.is_a?(Role) ? role : Role.find_by_name(role)
         { :conditions => [ "role_memberships.role_id = ?", role.id ], :include => :role_memberships}
       }
-      base.named_scope :without_role, lambda {|role|
+      base.scope :without_role, lambda {|role|
         role = role.is_a?(Role) ? role : Role.find_by_name(role)
         { :conditions => [ "users.id not in (select user_id from role_memberships where role_id = ?)", role.id ], :include => :role_memberships}
       }
-      base.named_scope :with_roles, lambda {|roles|
-        roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
-        { :conditions => [ "role_memberships.role_id in (?)", roles.map(&:id) ], :include => :role_memberships}
-      }
     end
-          
+
     def self.assign_role(role, jurisdiction, users)
       users.each do |u|
         u.role_memberships.create(:role => role, :jurisdiction => jurisdiction) unless u.role_memberships.map(&:role_id).include?(role.id) && u.role_memberships.map(&:jurisdiction_id).include?(jurisdiction.id)
       end
+    end
+    
+    def self.with_roles(roles)
+      roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
+      where(["role_memberships.role_id in (?)", roles.map(&:id)]).includes(:role_memberships)
     end
     
     def is_sysadmin?
@@ -41,7 +42,7 @@ module UserModules
     def is_super_admin?(app = "")
       return true if is_sysadmin?
       conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.count(:conditions => { :role_id => Role.superadmins.find(:all, :conditions => conditions).map(&:id), :jurisdiction_id => jid } ) > 0
+      return role_memberships.where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
     end
      
     def is_admin?(app = "")
@@ -140,7 +141,7 @@ module UserModules
             role_request.requester = current_user
             role_request.user = self
             if role_request.valid? && role_request.save
-              RoleRequestMailer.deliver_user_notification_of_role_request(role_request) if !role_request.approved?
+              RoleRequestMailer.user_notification_of_role_request(role_request).deliver if !role_request.approved?
             else
               result = "failure"
               rq_errors.concat(role_request.errors.full_messages)

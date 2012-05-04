@@ -37,7 +37,7 @@ class UserImporter
         end
         if options[:update] && options[:create]
           user=User.find_or_create_by_email(email)
-          user.update_password(options[:default_password],options[:default_password]) if user.new_record?          
+          user.update_password(options[:default_password]) if user.new_record?          
         elsif options[:update]
           user=User.find_by_email(email)
           next if user.nil?
@@ -45,7 +45,7 @@ class UserImporter
           user=User.find_by_email(email)
           next unless user.nil?
           user=User.create(:email => email)
-          user.update_password(options[:default_password],options[:default_password])
+          user.update_password(options[:default_password])
         else
           raise "At least one of :update or :create must be true"
         end
@@ -80,8 +80,9 @@ class UserImporter
         j=options[:default_jurisdiction] if j.nil? && options[:default_jurisdiction]
         user.role_memberships.create(:jurisdiction => j, :role => Role.public) unless j.nil? || user.jurisdictions.include?(j)
         user.email_confirmed = true  # instead of user.confirm_email!() so the token is not cleared
+        user.send(:generate_confirmation_token)
         user.save
-        SignupMailer.deliver_signup_notification(user)
+        SignupMailer.signup_notification(user).deliver
       end
     end
   end

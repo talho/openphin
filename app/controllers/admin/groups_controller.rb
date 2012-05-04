@@ -5,29 +5,26 @@ class Admin::GroupsController < ApplicationController
 
   def index
     page = params[:page].blank? ? "1" : params[:page]
-    @reverse = params[:reverse] == "1" ? nil : "&reverse=1"
+    @reverse = params[:reverse] == "1" ? "DESC" : 'ASC'
     @sort = params[:sort]
+    @groups = current_user.viewable_groups
     case @sort
       when "owner"
-        groups = current_user.viewable_groups.sort_by{|group| group.owner.display_name}
+        @groups = @groups.order("owner.display_name #{@reverse}")
       when "scope"
-        groups = current_user.viewable_groups.sort_by{|group| group.scope}
+        @groups = @groups.order("scope #{@reverse}")
       else
-        groups = current_user.viewable_groups.sort_by{|group| group.name}
+        @groups = @groups.order("name #{@reverse}")
     end
-    groups.reverse! if params[:reverse] == "1"
-    @groups = groups.paginate(:page => page, :per_page => 10)
+    @groups = @groups.paginate(:page => page, :per_page => 10)
     @page = (page == "1" ? "?" : "?page=#{params[:page]}")
 
-    if request.xhr?
-      respond_to do |format|
-        format.html
-        format.json {
-          @groups = @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT
-                                                                     :owner => x.owner.nil? ? {} : {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)}} unless @groups.empty?
-          render :json => { :groups =>  @groups, :count => groups.length, :page => page.to_i, :per_page => 10, :start => params[:start].to_i }
-        }
-      end
+    respond_to do |format|
+      format.json {
+        groups = @groups.map { |x| {:id => x.id, :name => x.name, :scope => x.scope, :lock_version => x.lock_version, # remapping these to get a group json that plays nice with EXT
+                                                                   :owner => x.owner.nil? ? {} : {:id => x.owner.id, :display_name => x.owner.display_name, :profile_path => user_profile_path(x.owner) }, :group_path => admin_group_path(x)}} unless @groups.empty?
+        render :json => { :groups =>  groups, :count => @groups.total_entries, :page => page.to_i, :per_page => 10, :start => params[:start].to_i }
+      }
     end
   end
 
@@ -40,7 +37,7 @@ class Admin::GroupsController < ApplicationController
         format.html
         format.any(:csv,:pdf) do
           criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
-          report = create_data_set("Recipe::GroupWithRecipientsRecipe",criteria)
+          report = create_data_set("RecipeInternal::GroupWithRecipientsRecipe",criteria)
           render :json => {:success => true, :report_name=> report.name}
         end
         format.json do
@@ -64,7 +61,7 @@ class Admin::GroupsController < ApplicationController
     @group = Group.new
     @group.owner = current_user
     scopes = ['Personal']
-    scopes = scopes | ['Jurisdiction', 'Global', 'Organization'] if current_user.is_admin?('phin')
+    scopes = scopes | ['Jurisdiction', 'Global', 'Organization'] if current_user.is_admin?
     respond_to do |format|
       format.html
       format.json {render :json => {:scopes => scopes}}
@@ -110,7 +107,7 @@ class Admin::GroupsController < ApplicationController
           ids = params[:group].reject{|key,value| !(key =~ /_ids$/)}
 
           if params[:group][:lock_version].to_i < @group.lock_version
-            raise ActiveRecord::StaleObjectError
+            raise ActiveRecord::StaleObjectError.new(self, 'update')
           end
           
           # If any associations have changed, manually update the locking on groups to prevent overlapping changes

@@ -1,5 +1,3 @@
-require 'dispatcher'
-
 # General
 
 Then /^I should see error messages$/ do
@@ -18,35 +16,38 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
-  user = Factory :user,
+  user = FactoryGirl.create(:user,
     :email                 => email.downcase,
     :password              => password,
-    :password_confirmation => password,
-    :email_confirmed       => false
+    :password_confirmation => password)
+  user.send(:generate_confirmation_token)
+  user.save
 end
 
 Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
-  user = Factory :user,
+  user = FactoryGirl.create(:user,
     :email                 => email.downcase,
     :password              => password,
-    :password_confirmation => password
+    :password_confirmation => password)
+  user.send(:generate_confirmation_token)
+  user.save
 end
 
 # Session
 
 Then /^I should be signed in$/ do
-  Given %{I am on the homepage}
-  Then %{I should see "Need Help?"}
+  step %{I am on the homepage}
+  step %{I should see "Need Help?"}
 end
 
 Then /^I should be signed out$/ do
-  Given %{I am on the homepage}
-  Then %{I should see "Sign In to Your Account"}
+  step %{I am on the homepage}
+  step %{I should see "Sign In to Your Account"}
 end
 
 When /^session is cleared$/ do
-  Given %{I am on the homepage}
-  Then %{I should see "Sign In to Your Account"}
+  step %{I am on the homepage}
+  step %{I should see "Sign In to Your Account"}
 end
 
 # Emails
@@ -62,7 +63,7 @@ end
 
 When /^I follow the confirmation link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit new_user_confirmation_path(:user_id => user, :token => user.confirmation_token)
+  visit edit_user_password_path(user, :token => user.confirmation_token.html_safe)
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
@@ -81,7 +82,7 @@ end
 
 When /^I follow the password reset link with a damaged token sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user, :token => user.confirmation_token<<"*")
+  visit edit_user_password_path(:user_id => user, :token => "#{user.confirmation_token}*")
 end
 
 
@@ -97,11 +98,11 @@ end
 # Actions
 
 When /^I sign in( with "remember me")? as "(.*)\/(.*)"$/ do |remember, email, password|
-  When %{I go to the sign in page}
-  And %{I fill in "Email" with "#{email}"}
-  And %{I fill in "Password" with "#{password}"}
-  And %{I check "Remember me"} if remember
-  And %{I press "Sign in"}
+  step %{I go to the sign in page}
+  step %{I fill in "Email" with "#{email}"}
+  step %{I fill in "Password" with "#{password}"}
+  step %{I check "Remember me"} if remember
+  step %{I press "Sign in"}
 end
 
 When /^I sign out$/ do
@@ -110,19 +111,19 @@ When /^I sign out$/ do
 end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
-  When %{I go to the password reset request page}
-  And %{I fill in "Email address" with "#{email}"}
-  And %{I press "Reset password"}
+  step %{I go to the password reset request page}
+  step %{I fill in "Email address" with "#{email}"}
+  step %{I press "Reset password"}
 end
 
 When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
-  And %{I fill in "Choose password" with "#{password}"}
-  And %{I fill in "Confirm password" with "#{confirmation}"}
-  And %{I press "Save this password"}
+  step %{I fill in "Choose password" with "#{password}"}
+  #step %{I fill in "Confirm password" with "#{confirmation}"}
+  step %{I press "Save this password"}
 end
 
 When /^I return next time$/ do
-  When %{I go to the homepage}
+  step %{I go to the homepage}
 end
 
 Then /^my session should stay active$/ do
@@ -149,12 +150,12 @@ Capybara.class_eval do
         Capybara.register_driver "selenium_with_firebug_#{name}".to_sym do |app|
           Capybara::Selenium::Driver
           profile = Selenium::WebDriver::Firefox::Profile.new
-          if File.exists?("#{Rails.root}/features/support/firebug.xpi")
+          if File.exists?("#{Rails.root.to_s}/features/support/firebug.xpi")
             profile['extensions.firebug.currentVersion'] = '100.100.100'
             profile['extensions.firebug.console.enableSites'] = 'true'
             profile['extensions.firebug.script.enableSites'] = 'true'
             profile['extensions.firebug.net.enableSites'] = 'true'
-            profile.add_extension("#{Rails.root}/features/support/firebug.xpi")
+            profile.add_extension("#{Rails.root.to_s}/features/support/firebug.xpi")
 
             Capybara::Selenium::Driver.new(app, { :browser => :firefox, :profile => profile })
           else

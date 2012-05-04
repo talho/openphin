@@ -1,4 +1,8 @@
 class ClearanceUpdateUsersTo088 < ActiveRecord::Migration
+  class User < ActiveRecord::Base   
+    include Clearance::User
+  end
+  
   def self.up
     change_table(:users) do |t|
       t.string :confirmation_token, :limit => 128
@@ -9,7 +13,7 @@ class ClearanceUpdateUsersTo088 < ActiveRecord::Migration
     add_index :users, :email
     add_index :users, :remember_token
     
-    User.all.each do |u| 
+    ClearanceUpdateUsersTo088::User.find_each do |u| 
       u.send(:generate_remember_token)
       u.save
     end

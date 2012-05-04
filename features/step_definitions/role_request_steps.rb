@@ -1,8 +1,8 @@
 Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_email, role_name, jurisdiction_name|
-  user=User.find_by_email(user_email) || Factory(:user, :email => user_email)
-  role=Role.find_by_name(role_name) || Factory(:role, :name => role_name)
-  jurisdiction = Jurisdiction.find_by_name(jurisdiction_name) ||  Factory(:jurisdiction, :name => jurisdiction_name)
-  req = Factory(:role_request,
+  user=User.find_by_email(user_email) || FactoryGirl.create(:user, :email => user_email)
+  role=Role.find_by_name(role_name) || FactoryGirl.create(:role, :name => role_name)
+  jurisdiction = Jurisdiction.find_by_name(jurisdiction_name) ||  FactoryGirl.create(:jurisdiction, :name => jurisdiction_name)
+  req = FactoryGirl.create(:role_request,
                     :jurisdiction => jurisdiction,
                     :role => role,
                     :user => user,
@@ -10,14 +10,14 @@ Given /^"([^\"]*)" has requested to be a "([^\"]*)" for "([^\"]*)"$/ do |user_em
 end
 
 Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)"$/ do |admin_email_address, role_name, jurisdiction_name, email_address|
- Given "\"#{admin_email_address}\" has approved the \"#{role_name}\" role in \"#{jurisdiction_name}\" for \"#{email_address}\" 0 days ago"
+ step "\"#{admin_email_address}\" has approved the \"#{role_name}\" role in \"#{jurisdiction_name}\" for \"#{email_address}\" 0 days ago"
 end
 
 Given /^"([^\"]*)" has approved the "([^\"]*)" role in "([^\"]*)" for "([^\"]*)" (\d) days ago$/ do |admin_email_address, role_name, jurisdiction_name, email_address, numdays|
   role = Role.find_by_name!(role_name)
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   user = User.find_by_email(email_address)
-  r = user.role_memberships << Factory(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :created_at => numdays.to_i.days.ago)
+  r = user.role_memberships << FactoryGirl.create(:role_membership, :user_id => user.id, :jurisdiction_id => jurisdiction.id, :role_id => role.id, :created_at => numdays.to_i.days.ago)
 end
 
 When /^I fill out the role request form with:$/ do |table|
@@ -128,7 +128,7 @@ Then /^I should see "([^\"]*)" is awaiting approval for "([^\"]*)"$/ do |user_em
           Role.find_by_name!(role_name).id,
           current_user.jurisdictions.first.id)
 
-  When %Q{I navigate to "Admin > Pending Role Requests"}
+  step %Q{I navigate to "Admin > Pending Role Requests"}
   page.should have_css(".pending_role_requests .requester_email", :content => user_email)
   page.should have_css(".pending_role_requests .role", :content => role_name)
   page.should have_css(".pending_role_requests .jurisdiction", :content => current_user.jurisdictions.first.name )

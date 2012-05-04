@@ -101,11 +101,11 @@ Feature: Audit Log
     Then I should see "anonymous" in column "Descriptor" within "grid-version-results"
 
   Scenario: Audit log for Editing Profile and Devices
-    Given the user "TEST USER" with the email "TESTUSER@EXAMPLE.COM" has the role "Lackey" in "Dallas County"
-    And "TESTUSER@EXAMPLE.COM" has the title "TEST TITLE"
-    And TESTUSER@EXAMPLE.COM has the following devices:
+    Given the user "TEST USER" with the email "testuser@example.com" has the role "Lackey" in "Dallas County"
+    And "testuser@example.com" has the title "TEST TITLE"
+    And testuser@example.com has the following devices:
       | phone | 2134567890 |
-    And "TESTUSER@EXAMPLE.COM" has requested to be a "Sous Chef" for "Lubbock County"
+    And "testuser@example.com" has requested to be a "Sous Chef" for "Lubbock County"
     And I am logged in as "billsmith@example.com"
     And I navigate to "Admin > Audit Log"
     Then the "Audit Log" tab should be open

@@ -31,7 +31,7 @@
   <%= f.text_field(:mobile_phone, :class => "mobile_phone") %>
 
   <% user.role_requests.build if user.role_requests.empty? %>
-  <% f.fields_for :role_requests do |r| %>
+  <%= f.fields_for :role_requests do |r| %>
     <%= r.label :jurisdiction_id,  "Choose your home jurisdiction from the dropdown or choose 'Texas' from the dropdown to indicate that your operating jurisdiction is statewide.  Choose a county or one of the DSHS Health Service Regions listed under 'R' for 'Region'." %>
     <%= r.collection_select( :jurisdiction_id,  Jurisdiction.non_foreign_state_before_descendants, :id, :name, {:include_blank => true}, {:class => "home_jurisdiction"}) %> <span class="label important">Required</span>
     <label for="health_professional">

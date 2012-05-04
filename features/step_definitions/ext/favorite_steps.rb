@@ -1,5 +1,5 @@
 When /^I have a favorite named "([^\"]*)"$/ do |favorite_name|
-  Factory(:favorite, :tab_config => {:id => favorite_name.downcase.gsub(" ", "_"), :title => favorite_name}, :user => current_user)
+  FactoryGirl.create(:favorite, :tab_config => {:id => favorite_name.downcase.gsub(" ", "_"), :title => favorite_name}, :user => current_user)
 end
 
 When /^I drag the "([^\"]*)" tab to "([^\"]*)"$/ do |tabname, target|

@@ -50,7 +50,7 @@ class Alert < ActiveRecord::Base
 
   belongs_to :author, :class_name => 'User'
 
-  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => 'targets.item_type = \'#{self.class.to_s}\'', :include => :users
+  has_many :targets, :as => :item, :foreign_key => :item_id, :conditions => proc{"targets.item_type = \'#{self.class.to_s}\'"}, :include => :users
   has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
 
   has_many :alert_device_types, :foreign_key => :alert_id, :dependent => :delete_all
@@ -69,19 +69,19 @@ class Alert < ActiveRecord::Base
            :conditions => ["alert_attempts.acknowledged_at IS NULL"]
 
   has_many :ack_logs, :class_name => 'AlertAckLog'
-  has_many :recipients, :class_name => "User", :finder_sql => 'SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id'
+  has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type
   after_create :batch_deliver
 
-  named_scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
-  named_scope :devices, {
+  scope :acknowledged, :join => :alert_attempts, :conditions => "alert_attempts.acknowledged IS NOT NULL"
+  scope :devices, {
       :select => "DISTINCT devices.type",
       :joins => "INNER JOIN alert_attempts ON alerts.id=alert_attempts.alert_id INNER JOIN deliveries ON deliveries.alert_attempt_id=alert_attempts.id INNER JOIN devices ON deliveries.device_id=devices.id",
       :conditions => "alerts.id=#{object_id}"
   }
-  named_scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
+  scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
   before_create :set_alert_type
 
   def self.default_alert
@@ -138,7 +138,7 @@ class Alert < ActiveRecord::Base
 
   def to_xml(options={})
     options={} if options.blank?
-    builder=Builder::XmlMarkup.new( :indent => 2)
+    builder=::Builder::XmlMarkup.new( :indent => 2)
     builder.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
     builder.TMAPI(:messageId => options[:messageId].blank? ? "#{self.class}-#{self.id}" : options[:messageId]) do |tmapi|
       xml_build_author tmapi, options[:Author]
@@ -159,9 +159,6 @@ class Alert < ActiveRecord::Base
     end
     yield if block_given?
     ::MessageApi.deliver(self)
-#    alert_device_types(true).each do |device_type|
-#      device_type.device_type.batch_deliver(self)
-#    end
     self.initialize_statistics
   end
 
@@ -327,5 +324,4 @@ class Alert < ActiveRecord::Base
   def set_alert_type
     self[:alert_type] = "Alert"
   end
-
 end

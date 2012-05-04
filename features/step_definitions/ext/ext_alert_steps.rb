@@ -1,26 +1,26 @@
 
 When /^I select the following alert audience:$/ do |table|
-  When %{delayed jobs are processed}
-  When %{I click breadCrumbItem "Recipients"}
-  Then %{I should see "Recipient Preview"}
-  When %{I select the following in the audience panel:}, table
+  step %{delayed jobs are processed}
+  step %{I click breadCrumbItem "Recipients"}
+  step %{I should see "Recipient Preview"}
+  step %{I select the following in the audience panel:}, table
 end
 
 When /^I fill in the ext alert defaults$/ do
-  When %{I fill in the following:}, table(%{
+  step %{I fill in the following:}, table(%{
     | Title   | H1N1 SNS push packs to be delivered tomorrow |
     | Message | There is a Chicken pox outbreak in the area  |})
-  And %{I select "" from ext combo "Jurisdiction"}
-  And %{I check "E-mail"}
+  step %{I select "" from ext combo "Jurisdiction"}
+  step %{I check "E-mail"}
 end
 
 When /^I send the alert$/ do
-  And %{I click breadCrumbItem "Preview"}
-  Then %{I should have the "Preview" breadcrumb selected}
+  step %{I click breadCrumbItem "Preview"}
+  step %{I should have the "Preview" breadcrumb selected}
 
-  When %{I press "Send Alert"}
-  Then %{the "Alert Log and Reporting" tab should be open}
-  And %{the "Send Alert" tab should not be open}
+  step %{I press "Send Alert"}
+  step %{the "Alert Log and Reporting" tab should be open}
+  step %{the "Send Alert" tab should not be open}
 end
 
 When /^I click "([^"]*)" within alert "([^"]*)"$/ do |link, title|

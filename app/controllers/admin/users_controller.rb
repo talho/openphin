@@ -97,7 +97,7 @@ class Admin::UsersController < ApplicationController
     @users.each do |user|
       # Make sure current_user has admin privileges over the user to be deleted
       if user.editable_by?(current_user)
-        user.delete_by(current_user.email,request.remote_ip)
+        user.destroy
       else
         flash[:error] ||= ""
         flash[:error] += "User #{current_user.email} does not have permission to delete #{user.email}.<br>"

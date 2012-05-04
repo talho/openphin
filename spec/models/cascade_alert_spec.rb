@@ -2,9 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe CascadeHanAlert do
   before do
-    @jurisdiction = Factory(:jurisdiction)
-    Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-    @cascade_alert = CascadeHanAlert.new(Factory(:han_alert, :author => Factory(:user)))
+    @jurisdiction = FactoryGirl.create(:jurisdiction)
+    FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+    @cascade_alert = CascadeHanAlert.new(FactoryGirl.create(:han_alert, :author => FactoryGirl.create(:user)))
   end
   
   describe 'to_edxl' do

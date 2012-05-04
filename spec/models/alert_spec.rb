@@ -57,14 +57,14 @@ describe Alert do
       end
       
       it "should build a new alert given an existing alert" do
-        alert = Factory(:han_alert)
+        alert = FactoryGirl.create(:han_alert)
         new_alert = alert.build_cancellation
         new_alert.should_not == alert
         new_alert.new_record?.should be_true
       end
       
       it "should assign the original alert to the existing alert" do
-        alert = Factory(:han_alert)
+        alert = FactoryGirl.create(:han_alert)
         new_alert = alert.build_cancellation
         new_alert.original_alert.should == alert
         new_alert.save!
@@ -72,43 +72,43 @@ describe Alert do
       end
       
       it "should set the message_type to 'Cancel'" do
-        alert = Factory(:han_alert)
+        alert = FactoryGirl.create(:han_alert)
         new_alert = alert.build_cancellation
         new_alert.save!
         new_alert.reload.message_type.should == "Cancel"
       end
       
       it "should clone values from the existing alert" do
-        alert = Factory(:han_alert)
+        alert = FactoryGirl.create(:han_alert)
         new_alert = alert.build_cancellation
         new_alert.attributes.except(*fields_not_cloned).should == alert.attributes.except(*fields_not_cloned)
       end
       
       it "should prefix the title with '[Cancel] -'" do
-        alert = Factory(:han_alert, :title => "Hey there!")
+        alert = FactoryGirl.create(:han_alert, :title => "Hey there!")
         alert.build_cancellation.title.should == "[Cancel] - Hey there!"
       end
       
       it "should allow message to be changed" do
-        alert = Factory(:han_alert, :message => "test")
+        alert = FactoryGirl.create(:han_alert, :message => "test")
         new_alert = alert.build_cancellation(:message => "Mic check")
         new_alert.message.should == "Mic check"
       end
       
       it "should allow severity to be changed" do
-        alert = Factory(:han_alert, :severity => Alert::Severities.first)
+        alert = FactoryGirl.create(:han_alert, :severity => Alert::Severities.first)
         new_alert = alert.build_cancellation(:severity => Alert::Severities.last)
         new_alert.severity.should == Alert::Severities.last
       end
 
       it "should allow sensitive to be changed" do
-        alert = Factory(:han_alert, :sensitive => true)
+        alert = FactoryGirl.create(:han_alert, :sensitive => true)
         new_alert = alert.build_cancellation(:sensitive => false)
         new_alert.sensitive.should be_false
       end
       
       it "should ignore changes to status" do
-        alert = Factory(:han_alert, :status => Alert::Statuses.first)
+        alert = FactoryGirl.create(:han_alert, :status => Alert::Statuses.first)
         new_alert = alert.build_cancellation(:status => Alert::Statuses.last)
         new_alert.status.should == Alert::Statuses.first
       end
@@ -131,7 +131,7 @@ describe Alert do
             else
               raise "unknown field #{field} or maybe its misspelled?"
           end
-          alert = Factory(:han_alert, field => old_value)
+          alert = FactoryGirl.create(:han_alert, field => old_value)
           new_alert = alert.build_cancellation(field => old_value)
           new_alert.send(field).should == old_value
         end        
@@ -228,7 +228,7 @@ describe Alert do
   
   describe "device_types=" do
     before do
-      @alert = Factory(:han_alert)
+      @alert = FactoryGirl.create(:han_alert)
     end
 
     it "should create an association for the given device types" do
@@ -245,7 +245,7 @@ describe Alert do
   
   describe "device_types" do
     before do
-      @alert = Factory(:han_alert)
+      @alert = FactoryGirl.create(:han_alert)
     end
 
     it "should return the names of the device types" do
@@ -257,7 +257,7 @@ describe Alert do
   
   describe "message_type" do
     before do
-      @alert = Factory(:han_alert)
+      @alert = FactoryGirl.create(:han_alert)
     end
     
     it "should have a default of 'Alert'" do
@@ -273,26 +273,26 @@ describe Alert do
 
   describe "jurisdiction level" do
     before(:each) do
-      @federal=Factory(:jurisdiction,  :foreign => true)
-      @state = Factory(:jurisdiction, :foreign => true)
-      @local = Factory(:jurisdiction, :foreign => true)
+      @federal=FactoryGirl.create(:jurisdiction,  :foreign => true)
+      @state = FactoryGirl.create(:jurisdiction, :foreign => true)
+      @local = FactoryGirl.create(:jurisdiction, :foreign => true)
       @state.move_to_child_of(@federal)
       @local.move_to_child_of(@state) 
     end
     it "should have 'Federal' with a foreign root" do
-      alert=Factory(:han_alert, :audiences => [Factory(:audience, :jurisdictions => [@federal])])
+      alert=FactoryGirl.create(:han_alert, :audiences => [FactoryGirl.create(:audience, :jurisdictions => [@federal])])
       alert.jurisdiction_level.should == "Federal"
     end
     it "should have 'State' with a foreign intermediate node" do
-      alert=Factory(:han_alert, :audiences => [Factory(:audience, :jurisdictions => [@state])])
+      alert=FactoryGirl.create(:han_alert, :audiences => [FactoryGirl.create(:audience, :jurisdictions => [@state])])
       alert.jurisdiction_level.should == "State"
     end
     it "should have 'Local' with a foreign terminal leaf node" do
-      alert=Factory(:han_alert, :audiences => [Factory(:audience, :jurisdictions => [@local])])
+      alert=FactoryGirl.create(:han_alert, :audiences => [FactoryGirl.create(:audience, :jurisdictions => [@local])])
       alert.jurisdiction_level.should == "Local"
     end
     it "should have comma-separated list with multiple levels" do
-      alert=Factory(:han_alert, :audiences => [Factory(:audience, :jurisdictions => [@federal, @state, @local])])
+      alert=FactoryGirl.create(:han_alert, :audiences => [FactoryGirl.create(:audience, :jurisdictions => [@federal, @state, @local])])
       alert.jurisdiction_level.should == "Federal,State,Local"
     end
   end

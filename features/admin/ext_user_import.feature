@@ -27,6 +27,7 @@ Feature: Online importing users from a uploaded CSV file
     And I attach the tmp file at "users.csv" to "users[csvfile]"
     Then I should see "Ector"
     When I press "Apply Changes"
+    And I wait for 3 seconds
     Then I should not see any errors
     And I should see "The user batch has been successfully submitted"
 

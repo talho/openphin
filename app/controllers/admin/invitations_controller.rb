@@ -1,11 +1,9 @@
 class Admin::InvitationsController < ApplicationController
-  
   require 'csv'
-  before_filter :admin_required
-  before_filter :force_json_as_html, :only => :import
-  app_toolbar "admin"
+  #before_filter :admin_required
+  # before_filter :force_json_as_html, :only => :import
   include Report::CreateDataSet
-  extend ActiveSupport::Memoizable
+  #extend ActiveSupport::Memoizable
 
   def index
     @invitations = Invitation.all
@@ -23,38 +21,7 @@ class Admin::InvitationsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        options = {}
-        params[:reverse] = (params[:dir] && params[:dir] == 'DESC') ? "1" : nil
-        if params[:sort]
-          case params[:sort]
-            when 'email'
-              options[:order] = 'invitees.email'
-            when 'name'
-              options[:order] = 'invitees.name'
-            else
-              options[:order] = 'invitees.name'
-          end
-          if params[:dir] && params[:dir] == 'ASC'
-            options[:order] += ' ASC'
-          else
-            options[:order] += ' DESC'
-          end
-        end
-        
-        options[:per_page] = params[:per_page] = (params[:limit] || 20).to_i
-        options[:page] = params[:page] = (params[:start].to_i / params[:limit].to_i) + 1
-        invitees = case params[:sort]
-          when 'completionStatus'
-            inviteeStatus
-          when 'pendingRequests'
-            inviteeStatusByPendingRequests
-          when 'organizationMembership'
-            @invitation.default_organization ? inviteeStatusByOrganization : @invitation.invitees.paginate(options)
-          when 'profileUpdated'
-            inviteeStatusByProfileUpdate
-          else
-            @invitation.invitees.paginate(options)
-        end.map{|i| {
+        invitees = find_invitees.map{|i| {
           :name => i.name,
           :email => i.email,
           :completionStatus => i.completion_status,
@@ -89,7 +56,7 @@ class Admin::InvitationsController < ApplicationController
           },                                                                               
           :total => @invitation.invitees.size,
           :invitees => invitees
-        }.as_json
+        }
       end
     end
   end
@@ -111,8 +78,8 @@ class Admin::InvitationsController < ApplicationController
   end
 
   def recipe_types
-    recipe_names = RecipeInternal::Recipe.recipe_names.grep(/^Report::Invitation/)
-    selection = recipe_names.collect{|r| { :id => r, :name_humanized => Recipe.humanized(r) } }
+    recipe_names = RecipeInternal.recipe_names.grep(/^RecipeInternal::Invitation/)
+    selection = recipe_names.collect{|r| { :id => r, :name_humanized => RecipeInternal.humanized(r) } }
     respond_to do |format|
       format.json do
         render :json => {:success=>true, :recipes=>selection  }
@@ -121,7 +88,7 @@ class Admin::InvitationsController < ApplicationController
   rescue StandardError => error
     render :json => {:success => false, :error => error}
   end
-  memoize :recipe_types
+  #memoize :recipe_types
 
   def new
     @invitation = Invitation.new
@@ -130,7 +97,7 @@ class Admin::InvitationsController < ApplicationController
   def import
     invitees = []
     csvfile = params[:invitation][:csvfile]
-    newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
+    newfile = File.join(Rails.root.to_s,'tmp',csvfile.original_filename)
     File.open(newfile,'wb') do |file|
       file.puts csvfile.read
     end
@@ -188,9 +155,9 @@ class Admin::InvitationsController < ApplicationController
 
         format.json do
           if @invitation.deliver
-            render :json => {:success => true, :flash => 'Invitation was successfully sent'}.as_json
+            render :json => {:success => true, :flash => 'Invitation was successfully sent'}
           else
-            render :json => {:success => false, :error => 'Invitation was created but did not send'}.as_json
+            render :json => {:success => false, :error => 'Invitation was created but did not send'}
           end
         end
       end
@@ -204,7 +171,7 @@ class Admin::InvitationsController < ApplicationController
 
   def paramsWithCSVInvitees
     csvfile = params[:invitation][:csvfile]
-    newfile = File.join(Rails.root,'tmp',csvfile.original_filename)
+    newfile = File.join(Rails.root.to_s,'tmp',csvfile.original_filename)
     File.open(newfile,'wb') do |file|
       file.puts csvfile.read
     end
@@ -240,37 +207,29 @@ class Admin::InvitationsController < ApplicationController
     end
   end
 
-  def inviteeStatus
-    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil && params[:sort] != 'completionStatus' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, users.email_confirmed",
-                                          :joins => "LEFT JOIN users ON invitees.email = users.email",
-                                          :order => "users.email_confirmed #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
-  end
-
-  def inviteeStatusByOrganization
-    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil && params[:sort] != 'organizationMembership' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, audiences.id AS audience_id",
-                                          :joins => "LEFT JOIN users ON invitees.email = users.email LEFT JOIN audiences_users ON users.id = audiences_users.user_id LEFT JOIN audiences ON audiences_users.audience_id = audiences.id AND audiences.scope='Organization'",
-                                          :order => "audience_id #{order_in}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
-  end
-
-  def inviteeStatusByPendingRequests
-    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil && params[:sort] != 'pendingRequests' ? params[:sort] : 'email'
-    Invitee.paginate_all_by_invitation_id params[:id], :select => "DISTINCT invitees.*, role_requests.id IS#{order_in == 'DESC' ? ' NOT ' : ' '}NULL AS role_requests_id",
-                                         :joins => "LEFT JOIN users ON invitees.email = users.email LEFT JOIN role_requests ON users.id = role_requests.user_id AND role_requests.jurisdiction_id IN (#{current_user.role_memberships.admin_roles.map(&:jurisdiction_id).join(',')})",
-                                         :order => "role_requests_id, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
-  end
-
-  def inviteeStatusByProfileUpdate
-    order_in = params[:reverse] == '1' ? 'DESC' : 'ASC'
-    order_by = params[:sort] != nil && params[:sort] != 'profileUpdated' ? params[:sort] : 'email'
-    order_by = "display_name" if order_by == "name"
-    invitation_time = Invitation.find(params[:id]).updated_at
-    Invitee.paginate_by_invitation_id params[:id], :select => "DISTINCT invitees.*, users.updated_at > '#{invitation_time}' AS users_updated_at", :joins => "LEFT JOIN users ON invitees.email = users.email",
-                                      :order => "users_updated_at #{order_in == 'ASC' ? 'DESC' : 'ASC'}, invitees.#{order_by} #{order_in}", :page => params[:page], :per_page => params[:per_page]
+  def find_invitees
+    params[:dir] ||= 'DESC'
+    params[:sort] = params[:sort] ? params[:sort].underscore : 'name'
+    
+    params[:per_page] = params[:limit].to_i || 20
+    params[:page] = (params[:start].to_i / params[:limit].to_i) + 1
+    
+    invitees = case params[:sort]
+      when 'completion_status'
+        @invitation.invitees.joins("LEFT JOIN users ON invitees.email = users.email").order("users.id #{params[:dir]}")
+      when 'pending_requests'
+        @invitation.invitees.joins("LEFT JOIN users ON invitees.email = users.email LEFT JOIN role_requests ON users.id = role_requests.user_id").order("role_requests.role_id #{params[:dir]}")
+      when 'organization_membership'
+        @invitation.default_organization ? 
+        @invitation.invitees.joins("LEFT JOIN users ON invitees.email = users.email LEFT JOIN sp_recipients(#{@invitation.default_organization.group.id}) r on users.id = r.id").order("r.id #{params[:dir]}") :
+        @invitation.invitees
+      when 'profile_updated'
+        @invitation.invitees.joins("LEFT JOIN users ON invitees.email = users.email").order("users.updated_at #{params[:dir]}")
+      else
+        @invitation.invitees.order("#{params[:sort]} #{params[:dir]}")
+    end 
+    
+    invitees.order("invitees.name ASC").paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
   def csv_download

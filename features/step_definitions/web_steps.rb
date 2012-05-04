@@ -82,7 +82,7 @@ end
 When /^(?:|I )fill in the following(?: within "([^"]*)")?:$/ do |selector, fields|
   with_scope(selector) do
     fields.rows_hash.each do |name, value|
-      When %{I fill in "#{name}" with "#{value}"}
+      step %{I fill in "#{name}" with "#{value}"}
     end
   end
 end
@@ -142,7 +142,7 @@ end
 # error message
 When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
   with_scope(selector) do
-    attach_file(field, File.join(RAILS_ROOT, path))
+    attach_file(field, File.join(Rails.root.to_s, path))
   end
 end
 

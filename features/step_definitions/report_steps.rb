@@ -1,12 +1,12 @@
 Given 'the report derived from recipe "$recipe" by the author with email "$email"' do |recipe, email|
   author = User.find_by_email(email)
   report_recipe = "#{recipe}"
-  Factory(:report_report, :author => author, :recipe => report_recipe)
+  FactoryGirl.create(:report_report, :author => author, :recipe => report_recipe)
 end
 
 Given /^reports derived from the following recipes and authored by exist:$/ do |table|
   table.raw.each do |row|
-    Given %Q(the report derived from recipe "#{row[0]}" by the author with email "#{row[1]}")
+    step %Q(the report derived from recipe "#{row[0]}" by the author with email "#{row[1]}")
   end
 end
 

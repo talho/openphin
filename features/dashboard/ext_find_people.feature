@@ -238,7 +238,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions |                        |
   Then I should see "Texas Admin"
   And I should see "Potter Admin"
@@ -272,7 +272,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions | Dallas County          |
   Then I should see "Dallas Admin"
 
@@ -282,7 +282,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        |                        |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions |                        |
   Then I should see "Potter Admin"
 
@@ -302,7 +302,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                        |
    | Phone        |                        |
    | Title        | Super                  |
-   | Roles        | Admin                  |
+   | Roles        | Phin: Admin            |
    |Jurisdictions | Potter County          |
   Then I should see "Potter Admin"
   And I should see "Admin in Potter County"
@@ -335,7 +335,7 @@ Scenario: Search for a users from subordinate jurisdictions
    | Email        |                             |
    | Phone        |                             |
    | Title        |                             |
-   | Roles        | Admin                       |
+   | Roles        | Phin: Admin                 |
    |Jurisdictions | Potter County,Dallas County |
   Then I should see "Potter Admin"
   Then I should see "Dallas Admin"
@@ -407,7 +407,7 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
    | Title         |               |
    | Roles         |               |
    | Jurisdictions | Dallas County |
-  And I should see the image "/images/missing_tiny.jpg"
+  And I should see the image "/assets/missing_tiny.jpg"
   Then I should see "Dallas Admin" in grid row 1
   And I should see "Dallas MD" in grid row 2
   And I should see "Dallas Public" in grid row 3

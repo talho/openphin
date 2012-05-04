@@ -18,12 +18,12 @@ class Device < ActiveRecord::Base
   belongs_to :user
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
-  named_scope :email, :conditions => "type = 'Device::EmailDevice'"
-  named_scope :phone, :conditions => "type = 'Device::PhoneDevice'"
-  named_scope :sms, :conditions => "type = 'Device::SmsDevice'"
-  named_scope :fax, :conditions => "type = 'Device::FaxDevice'"
-  named_scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
-  named_scope :im, :conditions => "type = 'Device::ImDevice'"
+  scope :email, :conditions => "type = 'Device::EmailDevice'"
+  scope :phone, :conditions => "type = 'Device::PhoneDevice'"
+  scope :sms, :conditions => "type = 'Device::SmsDevice'"
+  scope :fax, :conditions => "type = 'Device::FaxDevice'"
+  scope :blackberry, :conditions => "type = 'Device::BlackberryDevice'"
+  scope :im, :conditions => "type = 'Device::ImDevice'"
 
   serialize :options, Hash
 
@@ -40,7 +40,7 @@ class Device < ActiveRecord::Base
   end
 
   def to_dsml(builder=nil)
-    builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
+    builder=::Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml(:objectclass) do |oc|
         ocv="oc-value".to_sym
@@ -78,11 +78,11 @@ class Device < ActiveRecord::Base
 
   def check_uniq_device
     if options.blank?
-      errors.add_to_base("Device is blank")
+      errors.add(:base, "Device is blank")
     else
       devices = Device.find_all_by_user_id_and_type(user_id, type)
       devices = Device.find(:all, :conditions => ['id != ? AND user_id = ? AND type = ?', id, user_id, type]) if(!id.nil? && devices.map(&:id).include?(id))
-      errors.add_to_base("Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
+      errors.add(:base, "Device already exists") if(devices.map(&:options).map{|item| item.values}.flatten.include?(options.values.first))
     end
   end
 end

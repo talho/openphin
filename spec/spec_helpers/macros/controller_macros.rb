@@ -47,7 +47,7 @@ module SpecHelpers
         describe "when the user has the admin role" do
           it "calls the ##{action} action" do
             user = instance_variable_get(user_str)
-            Factory(:role_membership, :role => @role, :user => user)
+            FactoryGirl.create(:role_membership, :role => @role, :user => user)
             controller.should_receive(action)
             send http_method, action, params
           end

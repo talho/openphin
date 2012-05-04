@@ -38,14 +38,8 @@
 #
 
 class User < ActiveRecord::Base
-  extend Clearance::User::ClassMethods
-  include Clearance::User::InstanceMethods
-  include Clearance::User::AttrAccessor
-  include Clearance::User::Callbacks
+  include Clearance::User
   
-  UNDELETED = {:deleted_at => nil}
-  default_scope :conditions => UNDELETED
-
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
   
@@ -55,7 +49,7 @@ class User < ActiveRecord::Base
   
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   def alerting_jurisdictions
-    Jurisdiction.scoped(:joins => [:role_memberships => [:role, :user]], :conditions => {:role_memberships => {:roles => {:alerter => true}}, :users => {:id => self.id}})
+    Jurisdiction.joins(:role_memberships => [:role, :user]).where(:role_memberships => {:roles => {:alerter => true}}, :users => {:id => self.id})
   end
   has_many :alerts, :foreign_key => 'author_id'
   has_many :alert_attempts, :include => [:jurisdiction, :organization, :user, :acknowledged_alert_device_type, :devices]
@@ -67,16 +61,15 @@ class User < ActiveRecord::Base
   
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
-      scoped :conditions => 'documents.folder_id IS NULL'
+      where('documents.folder_id IS NULL')
     end      
-    def expiring_soon(options = {})
-      options[:conditions] = Document.merge_conditions(options[:conditions], ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago])
-      scoped(options)
+    def expiring_soon
+      where("created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago)
     end
   end
   has_many :folders  do
     def rootsm
-      scoped :conditions => 'folders.parent_id IS NULL'
+      where('folders.parent_id IS NULL')
     end
   end
 
@@ -85,14 +78,14 @@ class User < ActiveRecord::Base
   has_many :folder_permissions
   has_many :authoring_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 1']
   has_many :admin_folders, :through => :folder_permissions, :source => :folder, :conditions => ['folder_permissions.permission = 2']
-  has_and_belongs_to_many :audiences, :finder_sql => 'SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id'
+  has_and_belongs_to_many :audiences, :finder_sql => proc { "SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id"}
 
   def shares
-    Folder.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder_permissions]
+    Folder.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder_permissions)
   end
 
   def shared_documents
-    Document.scoped :conditions => ['folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id], :include => [:owner, :folder]
+    Document.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder)
   end
 
   has_many :favorites
@@ -107,7 +100,7 @@ class User < ActiveRecord::Base
   validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
   validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
   validates_format_of       :email, :with => %r{[^\.]$}
-  validates_uniqueness_of   :email, :case_sensitive => false, :scope => [:deleted_at],
+  validates_uniqueness_of   :email, :case_sensitive => false,
     :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
   validates_presence_of     :password, :if => :password_required?
   validates_confirmation_of :password, :if => :password_required?
@@ -117,7 +110,7 @@ class User < ActiveRecord::Base
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
     :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id, :email, :password, :password_confirmation
     
-  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/images/missing_:style.jpg'
+  has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/assets/missing_:style.jpg'
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
@@ -128,29 +121,28 @@ class User < ActiveRecord::Base
   before_create :generate_oid
   before_create :create_default_email_device
   before_create :set_display_name
+  after_create :notify_role_requests
 
-  named_scope :live, :conditions => UNDELETED
-  
-  named_scope :with_jurisdiction, lambda {|jurisdiction|
+  scope :with_jurisdiction, lambda {|jurisdiction|
     jurisdiction = jurisdiction.is_a?(Jurisdiction) ? jurisdiction : Jurisdiction.find_by_name(jurisdiction)
     { :conditions => [ "role_memberships.jurisdiction_id = ?", jurisdiction.id ], :include => :role_memberships}
   }
 
-  named_scope :with_user?, lambda {|user|
+  scope :with_user?, lambda {|user|
     { :conditions => ["users.id = ?", user.id]}
   }
-  named_scope :with_apps, lambda{|apps|  #apps is an array of string app names
+  scope :with_apps, lambda{|apps|  #apps is an array of string app names
     { :conditions => ["id in (select user_id from role_memberships where role_id in (select id from roles where application IN (?)))", apps ] }
   }
-  named_scope :without_apps, lambda{|apps|  #apps is an array of string app names
+  scope :without_apps, lambda{|apps|  #apps is an array of string app names
     { :conditions => ["id NOT IN (select user_id from role_memberships where role_id IN (select id from roles where application IN (?)))", apps ] }
   }
 
-#  named_scope :acknowledged_alert, lamda {|alert|
+#  scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
 #  }
 
-  named_scope :alphabetical, :order => 'last_name, first_name, display_name'
+  scope :alphabetical, :order => 'last_name, first_name, display_name'
 
   # thinking sphinx stuff
   # Should be able to search by first name, last name, display name, email address, phone device, jurisdiction, role, and job title.
@@ -168,8 +160,7 @@ class User < ActiveRecord::Base
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
-  end  
-  sphinx_scope(:ts_live) {{ :conditions => UNDELETED }}
+  end
     
   def visible_groups
 		@_visible_groups ||= (groups | Group.find_all_by_owner_jurisdiction_id_and_scope(jurisdictions.map(&:id), "Jurisdiction") | Group.find_all_by_scope("Global")).sort{|a,b| a.name <=> b.name}
@@ -182,7 +173,7 @@ class User < ActiveRecord::Base
   def is_org_member_of?(other)
     if other.class == Organization
       return true if other.members.include?(self)
-    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+    elsif other.class == Array || other.class == ActiveRecord::Relation
       other.each do |org|
         return true if org.members.include?(self)
       end
@@ -197,7 +188,7 @@ class User < ActiveRecord::Base
     other.each do |user|
       return true if !(organizations & user.organizations).empty? && is_admin_for?(user.jurisdictions)
       user.organization_membership_requests.each { |org_mem_request|
-        return true if org_mem_request.organization.members.include?(self) && is_admin_for?(user.jurisdictions)
+        return true if org_mem_request.organization.users.include?(self) && is_admin_for?(user.jurisdictions)
       }
     end
     false
@@ -218,12 +209,12 @@ class User < ActiveRecord::Base
   end
   
   def has_uploaded?
-    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{confirmation_token}.wav"
+    filename = "#{Rails.root.to_s}/message_recordings/tmp/#{confirmation_token}.wav"
     return File.exists?(filename)
   end
 
   def to_dsml(builder=nil)
-    builder=Builder::XmlMarkup.new( :indent => 2) if builder.nil?
+    builder=::Builder::XmlMarkup.new( :indent => 2) if builder.nil?
     builder.dsml(:entry, :dn => dn) do |entry|
       entry.dsml:objectclass do |oc|
         ocv="oc-value".to_sym
@@ -273,7 +264,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_upload_token
-#    filename = "#{RAILS_ROOT}/message_recordings/tmp/#{self.token}.wav"
+#    filename = "#{Rails.root.to_s}/message_recordings/tmp/#{self.token}.wav"
 #    if File.exists?(filename)
 #      File.delete(filename)
 #    end
@@ -284,34 +275,34 @@ class User < ActiveRecord::Base
   end
 
   def viewable_groups
-    groups | Group.jurisdictional.by_jurisdictions(jurisdictions) | Group.global
+    Group.joins("JOIN users owner on owner.id = owner_id").where("owner.id = ? OR (scope = 'Jurisdiction' AND owner_jurisdiction_id in (?)) OR scope = 'Global'", id, jurisdictions.map(&:id))
   end
 
-  def delete_by(requester_email,requester_ip)
-    # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
-    begin
-      User.transaction do
-        self.deleted_by = requester_email   # email addr of the deleter - redundant with paper_trail
-        self.deleted_from = requester_ip    # ip addr of the deleter
-        self.deleted_at = Time.now.utc      # redundant with paper_trail
-        self.save!
-      end
-    rescue
-      errors.add_to_base("Failure during deleting the user with the email of #{self.email}.")
-    end
-    if User.find_by_id(self.id)
-      errors.add_to_base("Unexpectectly the user with the email of #{self.email} has not been deleted.")
-    end
-  end
-
-  def delayed_delete_by(requester_email,requester_ip)
-    begin
-      self.send_later(:delete_by,requester_email,requester_ip)
-      unless errors.empty?
-        AppMailer.deliver_user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.")
-      end 
-    end
-  end
+  # def delete_by(requester_email,requester_ip)
+    # # This logical deleting works jointly with the default_scope :conditions => {:deleted_at => nil}
+    # begin
+      # User.transaction do
+        # self.deleted_by = requester_email   # email addr of the deleter - redundant with paper_trail
+        # self.deleted_from = requester_ip    # ip addr of the deleter
+        # self.deleted_at = Time.now.utc      # redundant with paper_trail
+        # self.save!
+      # end
+    # rescue
+      # errors.add(:base, "Failure during deleting the user with the email of #{self.email}.")
+    # end
+    # if User.find_by_id(self.id)
+      # errors.add(:base, "Unexpectectly the user with the email of #{self.email} has not been deleted.")
+    # end
+  # end
+# 
+  # def delayed_delete_by(requester_email,requester_ip)
+    # begin
+      # self.send_later(:delete_by,requester_email,requester_ip)
+      # unless errors.empty?
+        # AppMailer.user_delete_error(requester_email, "Could not delete the user with the email of #{self.email}.").deliver
+      # end 
+    # end
+  # end
 
   def self.find_deleted(user_id)
     deleted_user = Version.find_by_item_id_and_item_type_and_event(user_id, 'User', 'destroy') # look for a deleted version of User in paper_trail
@@ -491,10 +482,14 @@ class User < ActiveRecord::Base
         end
       end
     end
-    super
+    #super
   end
 
 private
+
+  def notify_role_requests
+    role_requests.unapproved.each(&:notify_admin_of_request)
+  end
 
   def generate_oid
     self[:phin_oid] = email.to_phin_oid

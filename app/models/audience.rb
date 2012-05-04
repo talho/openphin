@@ -29,16 +29,18 @@ class Audience < ActiveRecord::Base
 
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
-  has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => 'select distinct u.*
+  has_and_belongs_to_many :recipients, :class_name => "User", :finder_sql => proc {
+    "select distinct u.*
     from users u
-    join sp_recipients(#{self.id}) r on u.id = r.id'
+    join sp_recipients(#{self.id}) r on u.id = r.id"
+  }
 
   has_one :forum
 
-  named_scope :with_forum, :conditions => "forum_id is not NULL"
-  named_scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
+  scope :with_forum, :conditions => "forum_id is not NULL"
+  scope :with_visible_forum, :include => :forum, :conditions => "forum_id  is not NULL and forums.hidden_at is NULL"
 
-  named_scope :with_user, lambda {|user|
+  scope :with_user, lambda {|user|
     { :conditions => [ "users.id = ?", user.id ], :joins => :users}
   }
 
@@ -78,7 +80,7 @@ class Audience < ActiveRecord::Base
   protected
   def at_least_one_recipient?
     if roles.empty? & jurisdictions.empty? & users.empty?
-      errors.add_to_base("You must select at least one role, one jurisdiction, or one user.")
+      errors.add(:base, "You must select at least one role, one jurisdiction, or one user.")
     end
   end
 
@@ -87,7 +89,7 @@ class Audience < ActiveRecord::Base
   def doesnt_contain_self_as_group
     def check_recursion(group)
       if group.id == self.id
-        errors.add_to_base("Group cannot be a member of itself or subgroups")
+        errors.add(:base, "Group cannot be a member of itself or subgroups")
       else
         group.groups.each { |g| check_recursion(g) }
       end

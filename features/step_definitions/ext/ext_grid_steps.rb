@@ -122,13 +122,13 @@ When /^the "([^\"]*)" grid row should (not )?have the ([a-zA-Z0-9\-_]*) icon$/ d
   begin
     row_button_exists?(icon_name, content).should not_exists.nil? ? be_true : be_false
   rescue Selenium::WebDriver::Error::ObsoleteElementError
-    When %Q{the "#{content}" grid row should have the #{icon_name} icon}
+    step %Q{the "#{content}" grid row should have the #{icon_name} icon}
   end
 end
 
 When /^the "([^"]*)" grid header is sorted (ascending|descending)$/ do |header, sort|
   sortcss = sort == "ascending" ? ".sort-asc" : ".sort-desc"
-  Then %Q{I should see "#{header}" within "#{sortcss}"}
+  step %Q{I should see "#{header}" within "#{sortcss}"}
 end
 
 Then /^the "([^\"]*)" grid row(?: within "([^\"]*)")? should (not )?be selected$/ do |content, within_selector, not_exists|
@@ -149,6 +149,6 @@ Then /^I should see the grid items in this order "([^\"]*)"$/ do |orders|
   orders = orders.split
   orders.each do |order|
     cmp = order.split(">")
-    Then %Q{I should see "#{cmp[0]}" in grid row #{cmp[1]}}
+    step %Q{I should see "#{cmp[0]}" in grid row #{cmp[1]}}
   end
 end

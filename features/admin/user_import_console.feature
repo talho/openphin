@@ -115,6 +115,6 @@ Feature: Importing users from a CSV
     And I go to the sign in page
     And I sign in with "andy@example.com" and "Password123"
     Then I should be signed in
-    When I load the user profile page for "andy@example.com"
+    When I view the ext profile page for "andy@example.com"
     Then I should see "Andy User"
     And I should not see "Andy Contact"

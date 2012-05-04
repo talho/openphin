@@ -1,6 +1,6 @@
 Given /^"([^\"]*)" is a member of the organization "([^\"]*)"$/ do |email, org_name|
-	user = User.find_by_email(email) || Factory(:user, :email => email)
-	org = Organization.find_by_name(org_name) || Factory(:organization, :name => org_name)
+	user = User.find_by_email(email) || FactoryGirl.create(:user, :email => email)
+	org = Organization.find_by_name(org_name) || FactoryGirl.create(:organization, :name => org_name)
   org << user
   org.save!
 end
@@ -17,19 +17,19 @@ end
 
 Given /^a few organizations$/ do
   3.times do |i|
-    Factory.create(:organization)
+    FactoryGirl.create(:organization)
   end
 end
 
 # Checks to see if organizations created via 'a few organizations' are in the grid
 Then /^I should see organizations in the grid$/ do
   arr = [%w{name}] | Organization.all.map{|o| [o.name] }
-  Then %Q{the grid ".org-list-grid" should contain:}, table(arr)
+  step %Q{the grid ".org-list-grid" should contain:}, table(arr)
 end
 
 When /^I click on an organization$/ do
-  When %Q{I wait for the "Loading..." mask to go away}
-  When %Q{I click x-grid3-cell "#{Organization.order('updated_at').last.name}"}
+  step %Q{I wait for the "Loading..." mask to go away}
+  step %Q{I click x-grid3-cell "#{Organization.order('updated_at').last.name}"}
 end
 
 Then /^I should see the organization details$/ do
@@ -63,16 +63,16 @@ end
 
 When /^I give the organization an audience$/ do
   #Select the first jurisdiction, first role, last user
-  When %Q{I select the following in the audience panel:}, table(%{
-      | name                      | type         |
-      | #{Jurisdiction.first}     | Jurisdiction |
-      | #{Role.first}             | Role         |
-      | #{User.last.display_name} | User         |
+  step %Q{I select the following in the audience panel:}, table(%{
+      | name                          | type         |
+      | #{Jurisdiction.first}         | Jurisdiction |
+      | #{Role.for_app('phin').first} | Role         |
+      | #{User.last.display_name}     | User         |
   })
 end
 
 Then /^I should have a new organization$/ do
-  When %Q{I wait for the "Saving..." mask to go away}
+  step %Q{I wait for the "Saving..." mask to go away}
   org = Organization.order('updated_at').last
   org.should_not be_nil
   org.name.should == "My Organization"
@@ -88,7 +88,7 @@ end
 
 Then /^my organization should have some recipients$/ do
   Organization.order('updated_at').last.group.recipients.include?(User.last).should be_true
-  Organization.order('updated_at').last.group.recipients.include?(RoleMembership.find_by_jurisdiction_id_and_role_id(Jurisdiction.first.id, Role.first.id).user).should be_true
+  Organization.order('updated_at').last.group.recipients.include?(RoleMembership.find_by_jurisdiction_id_and_role_id(Jurisdiction.first.id, Role.for_app('phin').first.id).user).should be_true
 end
 
 Then /^my organization should have a folder$/ do
@@ -98,27 +98,27 @@ Then /^my organization should have a folder$/ do
 end
 
 Then /^the required organization fields should be invalid$/ do
-  Then %Q{the "Name" field should be invalid}
-  Then %Q{the "Description" field should be invalid}
-  Then %Q{the "Locality" field should be invalid}
+  step %Q{the "Name" field should be invalid}
+  step %Q{the "Description" field should be invalid}
+  step %Q{the "Locality" field should be invalid}
 end
 
 When /^I edit an organization$/ do
-  When %Q{I click editBtn on the "#{Organization.order('updated_at').last.name}" grid row}
-  And %Q{I wait for the "Loading..." mask to go away}
+  step %Q{I click editBtn on the "#{Organization.order('updated_at').last.name}" grid row}
+  step %Q{I wait for the "Loading..." mask to go away}
 end
 
 Then /^my organization should be updated$/ do
   # This fills in the same values as the new organization, so we need to make sure it matches up
-  Then "I should have a new organization"
+  step "I should have a new organization"
 end
 
 When /^I delete an organization$/ do
   @del_org_name = Organization.order('updated_at').first.name
   @org_count = Organization.count
-  When "I will confirm on next step"
-  When %Q{I click removeBtn on the "#{Organization.order('updated_at').first.name}" grid row}
-  And %Q{I wait for the "Loading..." mask to go away}
+  step "I will confirm on next step"
+  step %Q{I click removeBtn on the "#{Organization.order('updated_at').first.name}" grid row}
+  step %Q{I wait for the "Loading..." mask to go away}
 end
 
 Then /^my organization shouldn't exist$/ do
@@ -127,12 +127,12 @@ Then /^my organization shouldn't exist$/ do
 end
 
 Given /^I am a member of an organization$/ do
-  Given %Q{"#{current_user.email}" is a member of the organization "#{Organization.order('updated_at').first.name}"}
+  step %Q{"#{current_user.email}" is a member of the organization "#{Organization.order('updated_at').first.name}"}
 end
 
 Given /^a few organization membership requests( for a different organization)?$/ do |diff|
   org = diff.nil? ? Organization.order('updated_at').first : Organization.order('updated_at').last
-  Given %Q{"#{User.last.email}" has requested membership in organization "#{org.name}"}
+  step %Q{"#{User.last.email}" has requested membership in organization "#{org.name}"}
   
   # save off the org request state
   @org_reqs ||= []
@@ -141,15 +141,15 @@ end
 
 Then /^I should( not)? see organization membership requests$/ do |neg|
   if neg
-    Then %Q{I should see "There are no unapproved requests at this time."}
+    step %Q{I should see "There are no unapproved requests at this time."}
   else
-    Then %Q{I should see "Default FactoryUser"}
-    Then %Q{I should see "ApproveDeny"}
+    step %Q{I should see "Default FactoryUser"}
+    step %Q{I should see "ApproveDeny"}
   end
 end
 
 Then /^my organization should( not)? have a new member$/ do |neg|
-  When %Q{I wait for the "Loading..." mask to go away}
+  step %Q{I wait for the "Loading..." mask to go away}
   
   org = current_user.organizations.first
 

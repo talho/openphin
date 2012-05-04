@@ -7,8 +7,7 @@ module Phin
     end
 
     def self.eval_if_plugin_present(plugin_name, &block)
-      loc = File.join(Rails.root, "vendor", "plugins", plugin_name.to_s)
-      if File.exists?(loc) && (!File.directory?(loc) || Dir.entries(loc).count > 2)
+      if $extensions.include?(plugin_name)
         begin
           yield block
         rescue => e
@@ -18,7 +17,11 @@ module Phin
     end
 
     module ClassMethods
-      attr_accessor_with_default(:access_roles){ Array.new }
+      attr_accessor(:access_roles)
+      
+      def after_initialize
+        self.access_roles = self.access_roles || Array.new
+      end
 
       def self.extended(controller)
         controller.before_filter :verify_roles

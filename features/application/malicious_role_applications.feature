@@ -51,6 +51,7 @@ Feature: Preventing malicious attempts to gain access to role applications
     And I fill in "Display name" with "John Luke Pickerd"
     And I press "Apply Changes"
     And I wait for the "Saving..." mask to go away
+    And I wait for the "Loading..." mask to go away
     And I sign out
     And I should see "Sign In to Your Account"
 

@@ -14,9 +14,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe OrganizationMembershipRequest do
   before(:each) do
-    @organization = Factory(:organization)
-    @user = Factory(:user)
-    @texas = Factory(:jurisdiction, :name => "Texas")
+    @organization = FactoryGirl.create(:organization)
+    @user = FactoryGirl.create(:user)
+    @texas = FactoryGirl.create(:jurisdiction, :name => "Texas")
     @valid_attributes = {
       :organization => @organization,
       :user => @user
@@ -29,23 +29,23 @@ describe OrganizationMembershipRequest do
 
   it "should be approved when approver_id is set and approver superadmin" do
     orm = OrganizationMembershipRequest.create!(@valid_attributes)
-    approver = Factory(:user)
-    role_membership = Factory(:role_membership, :role => Role.superadmin, :jurisdiction => @texas, :user => approver)
+    approver = FactoryGirl.create(:user)
+    role_membership = FactoryGirl.create(:role_membership, :role => Role.superadmin, :jurisdiction => @texas, :user => approver)
     orm.approve!(approver).should be_true
   end
 
   it "should not be approved when approver_id is set and approver is not superadmin or admin" do
     orm = OrganizationMembershipRequest.create!(@valid_attributes)
-    approver = Factory(:user)
-    role = Factory(:role)
-    role_membership = Factory(:role_membership, :role => role, :jurisdiction => @texas, :user => approver)
+    approver = FactoryGirl.create(:user)
+    role = FactoryGirl.create(:role)
+    role_membership = FactoryGirl.create(:role_membership, :role => role, :jurisdiction => @texas, :user => approver)
     orm.approve!(approver).should be_nil
   end
 
   it "should not approve when approver_id is already set" do
     orm = OrganizationMembershipRequest.create!(@valid_attributes)
-    approver = Factory(:user)
-    role_membership = Factory(:role_membership, :role => Role.superadmin, :jurisdiction => @texas, :user => approver)
+    approver = FactoryGirl.create(:user)
+    role_membership = FactoryGirl.create(:role_membership, :role => Role.superadmin, :jurisdiction => @texas, :user => approver)
     orm.approve!(approver).should be_true
     orm.approve!(approver).should be_nil
   end

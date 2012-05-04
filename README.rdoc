@@ -26,3 +26,7 @@ OpenPHIN is a portal for public health related projects.
    for example:
   - rake cucumber:rollcall
   - rake spec:rollcall
+
+  
+==Rails 3 Upgrade
+  - Fix dashboards before deploying. run in console: Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }

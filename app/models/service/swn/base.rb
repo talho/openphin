@@ -6,8 +6,11 @@ class Service::Swn::Base
     FAKE_DELIVERY_METHOD = :test
     DEFAULT_DELIVERY_METHOD = :deliver
 
-    attr_accessor_with_default(:options){ Hash.new }
-
+    attr_accessor :options
+    
+    def initialize
+      @options = Hash.new
+    end
 
     def fake_delivery?
       options["delivery_method"] == "test"
@@ -32,7 +35,7 @@ class Service::Swn::Base
   end
 
   def self.load_configuration_file(file)
-    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[RAILS_ENV]
+    configuration.options = configuration.options.merge! YAML.load(IO.read(file))[Rails.env]
     if configuration.fake_delivery?
       def self.deliveries
         @deliveries ||= []
@@ -83,7 +86,7 @@ class Service::Swn::Base
       @url, @username, @password  = options['url'], options['username'], options['password']
 
       body = ""
-      xml = Builder::XmlMarkup.new :target => body, :indent => 2
+      xml = ::Builder::XmlMarkup.new :target => body, :indent => 2
       xsi = "xmlns:xsi".to_sym
       xsd = "xmlns:xsd".to_sym
       swn = "xmlns:swn".to_sym

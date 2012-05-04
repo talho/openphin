@@ -1,6 +1,6 @@
 class Service::Swn::Message < Service::Swn::Base
-  load_configuration_file RAILS_ROOT+"/config/swn.yml"
-  load_configuration_file RAILS_ROOT+"/config/email.yml"
+  load_configuration_file "#{Rails.root.to_s}/config/swn.yml"
+  load_configuration_file "#{Rails.root.to_s}/config/email.yml"
 
   property :message
 
@@ -47,14 +47,13 @@ class Service::Swn::Message < Service::Swn::Base
         :password => config['password'],
         :retry_duration => config['retry_duration']
       ).build!
-
       response = perform_delivery body
       NotificationResponse.build(response, message)
     end
   end
 
   class NotificationResponse < ActiveRecord::Base
-    set_table_name "message_notification_response"
+    self.table_name = "message_notification_response"
     serialize :response
 
     def self.build(response, message)

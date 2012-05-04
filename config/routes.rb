@@ -1,113 +1,159 @@
-ActionController::Routing::Routes.draw do |map|
-
-  map.resources :roles
-  map.resources :jurisdictions, :collection => [:user_alerting, :user_alerter]
-  map.resources :audiences, :only => [:index], :collection => [:jurisdictions, :jurisdictions_flat, :roles, :groups, :determine_recipients, :recipients]
-
-  map.resources :users do |user|
-    user.resource :profile, :as => "profile", :controller => "user_profiles", :except => [:destroy]
-    user.resources :devices, :only => [:create,:destroy]
-    user.is_admin "/is_admin.:format", :controller => "users", :action => "is_admin", :conditions => {:method => [:get]}
-  end
-  map.resource :search, :member => {:show_advanced => [:post, :get], :show_clean => [:get, :post]}
-
-  map.namespace(:admin) do |admin|
-    admin.resources :organizations, :collection => {:confirmation => [:post], :requests => :get}
-    admin.resources :organization_membership_requests, :only => [:index, :update, :destroy]
-    admin.resources :groups do |groups|
-      groups.dismember "/dismember/:member_id(.:format)", :action => "dismember", :conditions => {:method => :post}
+Openphin::Application.routes.draw do
+  resources :roles
+  resources :jurisdictions do
+    collection do
+      get :user_alerting
+      get :user_alerter
     end
-    admin.resources :role_requests, :except => [:edit,:update], :member => {:approve => :get, :deny => :get}
-    admin.resources :invitations, :only => [:index,:show,:create], :member => {:download => :get}, :collection => {:import => :post, :recipe_types => :get }
-    admin.resources :users, :only => [:new,:create], :collection => {:deactivate => :post}
-    admin.resources :edit_users, :only => [:update], :collection => {:admin_users => [:get]}
-    admin.resources :user_batch, :only => [:new,:create], :member => [:download], :collection => {:import => [:post], :admin_jurisdictions => [:get], :create_from_json => [:put]}
-    admin.resources :delayed_job_checks
   end
-  map.resources :role_assignments, :controller => "admin/role_assignments"  # malicious testing prevents being in admin namespace for now
-
-  map.resources :alerts, :only => [:show, :update], :collection => [:recent_alerts]
-  map.alert_with_token '/alerts/:id/show_with_token/:token.:format', :controller => 'alerts', :action => 'show_with_token', :method => :get
-  map.update_alert_with_token '/alerts/:id/update_with_token/:token.:format', :controller => 'alerts', :action => 'update_with_token', :method => :put
-
-  map.resources :organizations, :only => [:index]
-  map.resources :role_requests, :only => [:new,:create]
-  map.resources :devices, :only => [:create,:destroy]
-  map.resources :favorites, :only => [:create, :index, :destroy]
-
-  map.resources :documents, :controller => 'doc/documents', :except => [:index], :collection => [:search, :recent_documents], :member => {:move => [:post, :put], :copy => [:post, :put]}
-  map.resources :folders, :controller => 'doc/folders', :collection => [:target_folders], :member => {:move => [:post, :put] }
-  map.resources :shares, :member => {:unsubscribe => :delete, :edit_audience => :get, :update_audience => :put}
-
-  map.resources :forums do |forum|
-    forum.resources :topics, :collection => {:active_topics => :get, :recent_posts => :get}, :member => { :update_comments => :put }
-  end
-  map.namespace :report do |report|
-    report.resources :reports, :member => { :filters => :get, :reduce => :post }
-    report.resources :recipes, :only => [:index,:show] #, :requirements => {:id =>  /::([A-Z][a-z]+)+Recipe/}
+  resources :audiences, :only => [:index] do
+    collection do
+      get :jurisdictions
+      get :jurisdictions_flat
+      post :jurisdictions_flat
+      get :roles
+      get :groups
+      get :determine_recipients
+      post :determine_recipients
+      get :recipients
+    end
   end
 
-  map.resources :audits, :collection => [:models]
-  map.rss_feed '/rss_feed.:format', :controller => 'rss_feed', :action => 'index', :conditions => {:method => [:get, :post]}
-  map.resources :tutorials
+  resources :users do
+    resource :profile, :controller => "user_profiles", :except => [:destroy]
+    resources :devices, :only => [:create, :destroy]
+    match '/is_admin.:format' => 'users#is_admin', :as => :is_admin, :via => [:get]
+  end
+  resource :search do
+    member do
+      post :show_advanced
+      get :show_advanced
+      post :show_clean
+      get :show_clean
+    end
+  end
 
-  map.connect '/*path(.:format)', :controller => 'application', :action => 'options', :conditions => {:method => :options}
+  namespace :admin do
+      resources :organizations do
+        collection do
+          post :confirmation
+          get :requests
+        end
+      end
+      resources :organization_membership_requests, :only => [:index, :update, :destroy]
+      resources :groups do
+          match '/dismember/:member_id(.:format)' => '#dismember', :as => :dismember, :via => :post
+      end
+      resources :role_requests, :except => [:edit, :update] do
+        member do
+          get :approve
+          get :deny
+        end
+      end
+      resources :invitations, :only => [:index, :show, :create] do
+        collection do
+          post :import
+          get :recipe_types
+        end
+        get :download, :on => :member
+      end
+      resources :users, :only => [:new, :create] do
+         post :deactivate, :on => :collection
+      end
+      resources :edit_users, :only => [:update] do
+        get :admin_users, :on => :collection
+      end
+      resources :user_batch, :only => [:new, :create] do
+        collection do
+          post :import
+          get :admin_jurisdictions
+          put :create_from_json
+        end
+        get :user_batch, :on => :member
+      end
+      resources :delayed_job_checks
+  end
+  resources :role_assignments, :controller => 'admin/role_assignments'
+  
+  resources :alerts, :only => [:show, :update] do
+    get :recent_alerts, :on => :collection
+  end
+  match '/alerts/:id/show_with_token/:token(.:format)' => 'alerts#show_with_token', :as => :alert_with_token, :method => :get
+  match '/alerts/:id/update_with_token/:token(.:format)' => 'alerts#update_with_token', :as => :update_alert_with_token, :method => :put
+  
+  resources :organizations, :only => [:index]
+  resources :role_requests, :only => [:new, :create]
+  resources :devices, :only => [:create, :destroy]
+  resources :favorites, :only => [:create, :index, :destroy]
+  
+  resources :documents, :controller => 'doc/documents', :except => [:index] do
+    collection do
+      get :search
+      get :recent_documents
+    end
+    member do
+      post :move
+      put :move
+      post :copy
+      put :copy
+    end
+  end
+  resources :folders, :controller => 'doc/folders' do
+    get :target_folders, :on => :collection
+    member do
+      post :move
+      put :move
+    end
+  end
+  resources :shares do
+    member do
+      delete :unsubscribe
+      get :edit_audience
+      put :update_audience
+    end
+  end
 
-  map.resources :dashboard, :collection => {:all => :get, :menu => :get, :faqs => :get}
-  map.root :controller => "dashboard", :action => "index", :format => "ext"
-  map.about_dashboard "/about", :controller => "dashboard", :action => "about"
-  map.about_talhophin "/about_talhophin", :controller=> "dashboard", :action=> "about_talhophin"
-  map.hud "/han.:format", :controller => "dashboard", :action => "hud"
-  map.ext "/ext", :controller => "dashboard", :action => "index", :format => "ext"
-  map.resources :session, :controller => 'sessions', :only => [:new, :create, :destroy]
-  map.sign_out '/sign_out', :controller => 'sessions', :action => 'destroy', :method => :delete
-  map.sign_in '/sign_in', :controller => 'sessions', :action => 'new' 
-  Clearance::Routes.draw(map)
+  resources :forums do
+    resources :topics do
+      collection do
+        get :active_topics
+        get :recent_posts
+      end
+      put :update_comments, :on => :member
+    end
+  end
 
-  # The priority is based upon order of creation: first created -> highest priority.
+  namespace :report do
+    resources :reports do
+      member do
+        get :filters
+        post :reduce
+      end
+    end
+    resources :recipes, :only => [:index, :show]
+  end
 
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
+  resources :audits do
+    get :models, :on => :collection
+  end
 
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
+  match '/rss_feed.:format' => 'rss_feed#index', :as => :rss_feed, :via => [:get, :post]
+  resources :tutorials
+  match '/*path(.:format)' => 'application#options', :via => :options
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :controller => "welcome"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  #map.connect ':controller/auto_complete_for_phin_person_display_name', :action => "auto_complete_for_phin_person_display_name", :format => "json"
-  #map.connect ':controller/auto_complete_for_phin_person_first_name', :action => 'auto_complete_for_phin_person_first_name', :format => 'json'
-  #map.connect ':controller/auto_complete_for_phin_person_last_name', :action => "auto_complete_for_phin_person_last_name", :format => "json"
-  # map.auto_complete ':controller/:action', :requirements => { :action => /auto_complete_for_\S+/ }, :conditions => { :method => :get }
-
-  # map.connect ':controller/:action/:id'
-  # map.connect ':controller/:action/:id.:format'
+  resources :dashboard do
+    collection do
+      get :all
+      get :menu
+      get :faqs
+    end
+  end
+  root :to => 'dashboard#index', :format => 'ext'
+  match '/about' => 'dashboard#about', :as => :about_dashboard
+  match '/about_talhophin' => 'dashboard#about_talhophin', :as => :about_talhophin
+  match '/han(.:format)' => 'dashboard#hud', :as => :hud
+  match '/ext' => 'dashboard#index', :as => :ext, :format => 'ext'
+  resources :sessions, :only => [:new, :create, :destroy]
+  match '/sign_out' => 'sessions#destroy', :as => :sign_out, :method => :delete
+  match '/sign_in' => 'sessions#new', :as => :sign_in
 end

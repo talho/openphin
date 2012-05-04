@@ -19,9 +19,9 @@ class Document < ActiveRecord::Base
   has_attached_file :file, :path => ":rails_root/attachments/:attachment/:id/:filename"
 
   validates_attachment_presence :file
-  validate_on_create :validate_mime
-  validate_on_create :validate_extension
-  validate_on_create :validate_virus
+  validate :validate_mime, :on => :create
+  validate :validate_extension, :on => :create
+  validate :validate_virus, :on => :create
 
   has_one :audience, :through => :folder
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
@@ -30,7 +30,7 @@ class Document < ActiveRecord::Base
   belongs_to :folder
   belongs_to :owner, :class_name => 'User'
 
-  named_scope :shared_with_user, lambda{|user|
+  scope :shared_with_user, lambda{|user|
     {:joins => ', folders',
      :conditions => ['folders.audience_id IN (select * from sp_audiences_for_user(?)) and folders.user_id != ? and documents.folder_id = folders.id', user.id, user.id],
      :include => [:owner]
@@ -121,18 +121,18 @@ class Document < ActiveRecord::Base
     target.users.each do |user|
       self.copy(user)
     end
-    DocumentMailer.deliver_document(self, target)
+    DocumentMailer.document(self, target).deliver
   end
   
   def share_with_share(share)
-    DocumentMailer.deliver_document_addition(share, self) unless share.users.empty?
+    DocumentMailer.document_addition(share, self).deliver unless share.users.empty?
   end
   
   def notify_shares_of_update
     shares.each do |share|
       recipients = share.users
       unless recipients.empty?
-        DocumentMailer.deliver_document_update(self, recipients, share)
+        DocumentMailer.document_update(self, recipients, share).deliver
       end
     end
   end
@@ -151,6 +151,7 @@ class Document < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options = {} if options.nil?
     options[:methods] = [] if options[:methods].nil?
     options[:methods] |= [:ftype, :name]
     super( options )

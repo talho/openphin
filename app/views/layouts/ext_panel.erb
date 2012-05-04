@@ -1,9 +1,7 @@
 <div id="wrapper">
-  <%- [:notice, :instructions, :completed, :error].each do |type| -%>
-    <%- if flash[type] -%>
-      <p class="<%=type%> flash"><%= flash[type] %></p>
-    <%- end -%>
-  <%- end -%>
+  <% flash.each do |key, value| -%>
+    <div class="alert-message block-message flash <%= key %>"><%= raw(value) %></div>
+  <% end -%>
   <div id="content">
     <%= yield %>
   </div>

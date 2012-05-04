@@ -81,7 +81,7 @@ class Admin::RoleRequestsController < ApplicationController
             flash[:notice]="#{link} has been approved for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
 
             # Set referer for redirect when testing
-            request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
+            request.env["HTTP_REFERER"] = "/" if Rails.env == "cucumber"
             if request.xhr?
               redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"
             else
@@ -121,14 +121,14 @@ class Admin::RoleRequestsController < ApplicationController
     if role_req
       if current_user.is_admin_for?(role_req.jurisdiction)
         role_req.deny!
-        ApprovalMailer.deliver_denial(role_req, current_user)
+        ApprovalMailer.denial(role_req, current_user).deliver
         respond_to do |format|
           format.html do
             link = "<a href=\"#{user_profile_path(role_req.user)}\">#{role_req.user.display_name}</a>"
             flash[:notice]="#{link} has been denied for the role #{role_req.role.name} in #{role_req.jurisdiction.name}"
 
             # Set referer for redirect when testing
-            request.env["HTTP_REFERER"] = "/" if ENV["RAILS_ENV"] == "cucumber"
+            request.env["HTTP_REFERER"] = "/" if Rails.env == "cucumber"
 
             if request.xhr?
               redirect_to :action => "index", :controller => "admin/role_requests", :format => "ext"

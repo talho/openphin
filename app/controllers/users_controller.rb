@@ -153,7 +153,7 @@ class UsersController < Clearance::UsersController
             # admins = current_jurisdiction.super_admins(application)
           # end
           # admins.each do |admin|
-            # SignupMailer.deliver_admin_notification_of_role_request(role_request, admin)
+            # SignupMailer.admin_notification_of_role_request(role_request, admin).deliver
           # end
         # end
 # 

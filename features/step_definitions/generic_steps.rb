@@ -4,7 +4,7 @@ end
 
 
 Given /^the following file "([^\"]*)":$/ do |filename, text|
-  file=File.open(File.join(Rails.root, "tmp",filename), "w+")
+  file=File.open(File.join(Rails.root.to_s, "tmp",filename), "w+")
   file.write(text)
   file.close
 end
@@ -38,9 +38,9 @@ When /^I fill in the form with the following info:$/ do |table|
 		if ["Preferred language"
 # Add in more select form elements here
 		].include?(row[0])
-			When "I select \"#{row[1]}\" from \"#{row[0]}\""
+			step "I select \"#{row[1]}\" from \"#{row[0]}\""
     else
-      When "I fill in \"#{row[0]}\" with \"#{row[1]}\""
+      step "I fill in \"#{row[0]}\" with \"#{row[1]}\""
 		end
 	end
 end
@@ -50,9 +50,9 @@ When /^I fill in the ext form with the following info:$/ do |table|
 		if ["Language"
 # Add in more select form elements here
 		].include?(row[0])
-			When "I select \"#{row[1]}\" from ext combo \"#{row[0]}\""
+			step "I select \"#{row[1]}\" from ext combo \"#{row[0]}\""
     else
-      When "I fill in \"#{row[0]}\" with \"#{row[1]}\""
+      step "I fill in \"#{row[0]}\" with \"#{row[1]}\""
 		end
 	end
 end

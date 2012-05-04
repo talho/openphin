@@ -1,5 +1,5 @@
 Given /^I have an? (.*) device$/ do |device_type|
-  current_user.devices << Factory("#{device_type.downcase}_device")
+  current_user.devices << FactoryGirl.create("#{device_type.downcase}_device")
 
 end
 
@@ -104,7 +104,7 @@ Then /^"([^\"]*)" should receive the email with an alert attachment:$/ do |email
 end
 
 Then /^the following users should receive the email:$/ do |table|
-  When "delayed jobs are processed"
+  step "delayed jobs are processed"
 
   headers = table.headers
   recipients = if headers.first == "roles"
@@ -116,7 +116,7 @@ Then /^the following users should receive the email:$/ do |table|
   recipients = headers.last.split(',').map{|u| User.find_by_email!(u.strip)} if headers.first == "People"
 
   recipients.each do |user|
-    Then %Q{"#{user.email}" should receive the email:}, table
+    step %Q{"#{user.email}" should receive the email:}, table
   end
 end
 
@@ -134,7 +134,7 @@ Then '"$email" should not receive an email with the subject "$subject"' do |emai
 end
 
 Then "the following users should not receive any emails" do |table|
-  When "delayed jobs are processed"
+  step "delayed jobs are processed"
 
   headers = table.headers
   recipients = if headers.first == "roles"
@@ -146,7 +146,7 @@ Then "the following users should not receive any emails" do |table|
   end
 
   recipients.each do |user|
-    Then %Q{"#{user.email}" should not receive an email}
+    step %Q{"#{user.email}" should not receive an email}
   end
 end
 
@@ -298,15 +298,15 @@ Given /^(.*) has the following devices:$/ do |useremail, table|
   table.rows_hash.each do |type, value|
     case type
       when /email/i
-        Factory(:email_device, :email_address => value, :user => user)
+        FactoryGirl.create(:email_device, :email_address => value, :user => user)
       when /fax/i
-        Factory(:fax_device, :fax => value, :user => user)
+        FactoryGirl.create(:fax_device, :fax => value, :user => user)
       when /phone/i
-        Factory(:phone_device, :phone => value, :user => user)
+        FactoryGirl.create(:phone_device, :phone => value, :user => user)
       when /sms/i
-        Factory(:sms_device, :sms => value, :user => user)
+        FactoryGirl.create(:sms_device, :sms => value, :user => user)
       when /blackberry/i
-        Factory(:blackberry_device, :blackberry => value, :user => user)
+        FactoryGirl.create(:blackberry_device, :blackberry => value, :user => user)
     end
   end
 

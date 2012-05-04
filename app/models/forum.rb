@@ -10,22 +10,19 @@ class Forum < ActiveRecord::Base
             :allow_destroy => true   
 
   belongs_to :audience, :autosave => true
-  has_many :users, :finder_sql => 'SELECT u.* 
+  has_many :users, :finder_sql => proc {"SELECT u.* 
                                    FROM users u 
-                                   JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id'
+                                   JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id"}
   
-  named_scope :for_user, lambda { |user|
+  def self.for_user(user)
     user_id = user.class == User ? user.id : user
     user = user.class == User ? user : User.find(user)
     if user.is_super_admin?
-      {}
+      self.scoped
     else
-      { :joins => send(:sanitize_sql_array,
-        ["JOIN sp_audiences_for_user(?) au ON (au.id = audience_id)", 
-         user_id]), :conditions => "hidden_at IS NULL"
-       }
+      joins(send(:sanitize_sql_array, ["JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("hidden_at IS NULL")
     end
-  }
+  end
   
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
   
@@ -40,7 +37,7 @@ class Forum < ActiveRecord::Base
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
   #alias :_destroy :_delete unless respond_to? '_destroy'
   
-  named_scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
+  scope :recent, lambda{|limit| {:limit => limit, :order => "created_at DESC"}}
 
 
   # would like to DRY this up
@@ -50,7 +47,7 @@ class Forum < ActiveRecord::Base
       obj.present? ? {:conditions => {:hidden_at => nil}} : {}
     end
   end
-  named_scope :unhidden, unhidden_lamb
+  scope :unhidden, unhidden_lamb
 
   validates_presence_of  :name
 

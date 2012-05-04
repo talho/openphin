@@ -2,18 +2,18 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SearchesController do
   before(:each) do
-    @jurisdiction1 =Factory(:jurisdiction)
-    @jurisdiction2 = Factory(:jurisdiction)
+    @jurisdiction1 =FactoryGirl.create(:jurisdiction)
+    @jurisdiction2 = FactoryGirl.create(:jurisdiction)
     @jurisdiction2.move_to_child_of(@jurisdiction1)
-    user = Factory(:user)
-    Factory(:role_membership, :user => user, :role => Factory(:role, :approval_required => true), :jurisdiction => @jurisdiction2)
+    user = FactoryGirl.create(:user)
+    FactoryGirl.create(:role_membership, :user => user, :role => FactoryGirl.create(:role, :approval_required => true), :jurisdiction => @jurisdiction2)
     login_as(user)
   end
   
   describe 'show' do
     before do
-      @user1 = Factory(:user, :last_name => 'Smith')
-      @user2 = Factory(:user, :last_name => 'Smithers')
+      @user1 = FactoryGirl.create(:user, :last_name => 'Smith')
+      @user2 = FactoryGirl.create(:user, :last_name => 'Smithers')
     end
     
     def do_action

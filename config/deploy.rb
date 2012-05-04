@@ -25,7 +25,6 @@ set :deploy_to, "#{root_path}/#{application}"
 
 
 task :production do
-  require 'hoptoad_notifier/capistrano'
   role :app, "txphin.texashan.org"
   role :web, "txphin.texashan.org"
   role :jobs, "jobs.texashan.org"
@@ -49,7 +48,6 @@ task :talhostaging do
 end 
 
 task :talhoapps_production do
-#  require 'hoptoad_notifier/capistrano'
   set :branch, 'messaging'
   set :unicorn_binary, "~apache/.rvm/gems/ree-1.8.7-2011.03/bin/unicorn_rails"
   role :app, "talhoapps.talho.org"
@@ -65,7 +63,6 @@ before 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
-after 'deploy:symlink', 'app:phin_plugins_install'
 after 'deploy:restart', 'sphinx:start'
 after 'deploy:restart', 'backgroundrb:restart'
 after 'deploy:restart', 'delayed_job:restart'
@@ -108,6 +105,3 @@ end
 set :pivotal_tracker_project_id, 19881
 set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
-Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
-  $: << File.join(vendored_notifier, 'lib')
-end

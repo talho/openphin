@@ -1,38 +1,32 @@
 class ApprovalMailer < ActionMailer::Base
-
+  default :from => DO_NOT_REPLY
+  
   def approval(request)
-    recipients request.user.email
-    from DO_NOT_REPLY
-    subject "Request approved"
-    body :request => request
+    @request = request
+    
+    mail(to: request.user.email,
+         subject: "Request approved")
   end
 
   def denial(request, admin)
-    recipients request.user.email
-    from DO_NOT_REPLY
-    subject "Request denied"
-    body :request => request, :admin => admin
+    @request = request
+    @admin = admin
+    
+    mail(to: request.user.email,
+         subject: "Request denied")
   end
 
   def organization_approval(organization)
-    if organization.contact.blank?
-      recipients organization.contact_email
-    else
-      recipients organization.contact.email
-    end
-    from DO_NOT_REPLY
-    subject "Confirmation of #{organization.name} organization registration"
-    body :organization => organization
+    @organization = organization
+    
+    mail(to: organization.contact.blank? ? organization.contact_email : organization.contact.email,
+         subject: "Confirmation of #{organization.name} organization registration")    
   end
 
   def organization_denial(organization)
-    if organization.contact.blank?
-      recipients organization.contact_email
-    else
-      recipients organization.contact.email
-    end
-    from DO_NOT_REPLY
-    subject "Organization registration request denied"
-    body :organization => organization
+    @organization = organization
+    
+    mail(to: organization.contact.blank? ? organization.contact_email : organization.contact.email,
+         subject: "Organization registration request denied")
   end
 end

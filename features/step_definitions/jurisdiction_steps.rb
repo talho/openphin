@@ -31,18 +31,18 @@ end
 Given /^(\d*) jurisdictions that are children of (.*)$/ do |count, parent|
   pj = Jurisdiction.find_by_name(parent)
   count.to_i.times do
-    j=Factory(:jurisdiction)
+    j=FactoryGirl.create(:jurisdiction)
     j.move_to_child_of(pj)
   end
 end
 
 Given /^a few jurisdictions$/ do
-  Given "the following entities exist:", table(%{
+  step "the following entities exist:", table(%{
     | Jurisdiction | Texas      |
     | Jurisdiction | Travis     |
     | Jurisdiction | Williamson |
   });
-  Given %Q{Texas is the parent jurisdiction of:}, table([
+  step %Q{Texas is the parent jurisdiction of:}, table([
     %w{Travis},
     %w{Williamson}
   ]);

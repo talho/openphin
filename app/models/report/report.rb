@@ -1,6 +1,6 @@
 class Report::Report < ActiveRecord::Base
 
-  set_table_name :report_reports
+  self.table_name = "report_reports"
 
   include ActionView::Helpers::DateHelper
 
@@ -10,20 +10,23 @@ class Report::Report < ActiveRecord::Base
   has_many   :filters
   has_one    :dataset
 
-  named_scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
-  named_scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
-  named_scope :complete, :conditions => ['incomplete = ?', false]
+  scope :expired, :conditions => ["created_at <= ?", 30.days.ago]
+  scope :expiring_soon, :conditions => ["created_at <= ? and created_at > ?", 25.days.ago, 26.days.ago]
+  scope :complete, :conditions => ['incomplete = ?', false]
 
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
   validates_presence_of     :author
   validates_inclusion_of    :incomplete, :in => [false,true]
 
-  def validate_on_create
+  after_create :do_after_create
+  before_destroy :do_before_destroy
+  
+  validate :on => :create do
     begin
       recipe.constantize
     rescue StandardError
-      errors.add_to_base "#{recipe} is not found on the system"
+      errors.add :base, "#{recipe} is not found on the system"
     end
   end
 
@@ -42,7 +45,7 @@ class Report::Report < ActiveRecord::Base
     self[:rendering_updated_at] ? time_ago_in_words(self[:rendering_updated_at]) : "Generating...Click Refresh"
   end
 
-  def after_create
+  def do_after_create
     update_attribute(:name,"#{recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-')}#{id}")
   end
 
@@ -83,7 +86,7 @@ class Report::Report < ActiveRecord::Base
 
   JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
-  def before_destroy
+  def do_before_destroy
     dataset.drop
   end
 

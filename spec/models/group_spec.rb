@@ -18,9 +18,9 @@ describe Group do
 
   describe "validations" do
     before(:each) do
-      @jurisdiction = Factory(:jurisdiction)
-      Factory(:jurisdiction).move_to_child_of(@jurisdiction)
-      @group=Factory(:group, :users => [Factory(:user)])
+      @jurisdiction = FactoryGirl.create(:jurisdiction)
+      FactoryGirl.create(:jurisdiction).move_to_child_of(@jurisdiction)
+      @group=FactoryGirl.create(:group, :users => [FactoryGirl.create(:user)])
     end
 
     it "be valid" do

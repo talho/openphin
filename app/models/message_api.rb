@@ -7,7 +7,7 @@ module ObjectValidation
   end
 
   def initialize(*args)
-    @errors = ActiveRecord::Errors.new(self)
+    @errors = ActiveModel::Errors.new(self)
   end
 
   def save

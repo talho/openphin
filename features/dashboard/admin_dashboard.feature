@@ -27,7 +27,7 @@ Feature: Dashboard Administration
      And the "Application Default" dashboard has the following portlet:
       | column | 1                                      |
       | xtype  | dashboardhtmlportlet                   |
-      | config | {html: "<h1>Welcome to openPHIN</h1>"} |
+      | config | {"html": "<h1>Welcome to openPHIN</h1>"} |
      And delayed jobs are processed
 
   Scenario: Superadmin editing default dashboard
@@ -81,7 +81,7 @@ Feature: Dashboard Administration
      And the "My Dashboard" dashboard has the following portlet:
       | column | 1                                      |
       | xtype  | dashboardhtmlportlet                   |
-      | config | {html: "<h1>This is a custom dashboard</h1>"} |
+      | config | {"html": "<h1>This is a custom dashboard</h1>"} |
      And the "My Dashboard" dashboard has the following audience:
       | Dashboard Role | editor        |
       | Users          | Atticus Finch |
@@ -127,7 +127,7 @@ Feature: Dashboard Administration
     Given the "Application Default" dashboard has the following portlet:
       | column | 1                                         |
       | xtype  | dashboardhtmlportlet                      |
-      | config | {html: "<h1>second welcome portlet</h1>"} |
+      | config | {"html": "<h1>second welcome portlet</h1>"} |
     When I edit a dashboard as "atticus@example.com"
      And I click x-tool-close "" within ".portlet"
      And I press "Save"
@@ -142,7 +142,7 @@ Feature: Dashboard Administration
     Given the "Application Default" dashboard has the following portlet:
       | column | 1                                         |
       | xtype  | dashboardhtmlportlet                      |
-      | config | {html: "<h1>second welcome portlet</h1>"} |
+      | config | {"html": "<h1>second welcome portlet</h1>"} |
     When I edit a dashboard as "atticus@example.com"
      And I move the "second welcome portlet" portlet to position 0 in column 1
      And I press "Save"
@@ -153,7 +153,7 @@ Feature: Dashboard Administration
     Given the "Application Default" dashboard has the following portlet:
       | column | 1                                         |
       | xtype  | dashboardhtmlportlet                      |
-      | config | {html: "<h1>second welcome portlet</h1>"} |
+      | config | {"html": "<h1>second welcome portlet</h1>"} |
     When I edit a dashboard as "atticus@example.com"
      And I press "Columns"
      And I set cms-column-slider to 3
@@ -208,7 +208,7 @@ Feature: Dashboard Administration
     Given the "Application Default" dashboard has the following portlet:
       | column | 1                                         |
       | xtype  | dashboardhtmlportlet                      |
-      | config | {html: "<h1>second welcome portlet</h1>"} |
+      | config | {"html": "<h1>second welcome portlet</h1>"} |
     When I edit a dashboard as "atticus@example.com"
      And I click x-tool-gear number 2
      And I fill in the htmleditor "htmlportlet" with "editing dashboard element"
@@ -235,7 +235,7 @@ Feature: Dashboard Administration
      And the "My Dashboard" dashboard has the following portlet:
       | column | 1                                         |
       | xtype  | dashboardhtmlportlet                      |
-      | config | {html: "<h1>other dashboard this is</h1>"} |
+      | config | {"html": "<h1>other dashboard this is</h1>"} |
     When I edit the "My Dashboard" dashboard as "atticus@example.com"
      And I press "Permissions"
     Then the "Permissions" window should be open
@@ -270,7 +270,7 @@ Feature: Dashboard Administration
      And the "My Dashboard" dashboard has the following portlet:
       | column | 1                                          |
       | xtype  | dashboardhtmlportlet                       |
-      | config | {html: "<h1>other dashboard this is</h1>"} |
+      | config | {"html": "<h1>other dashboard this is</h1>"} |
     When I edit the "My Dashboard" dashboard as "atticus@example.com"
      And I press "Permissions"
     Then the "Permissions" window should be open
@@ -342,7 +342,7 @@ Feature: Dashboard Administration
     # And I try to post the server while not logged in
     When I go to the dashboard page
     And I load ExtJs
-    And I wait for 2 seconds
+    And I wait for 4 seconds
     And I maliciously try to create a dashboard
     Then The maliciousness response should contain "TXPhin: sessions/new"
     And I maliciously try to edit a dashboard

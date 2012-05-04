@@ -22,11 +22,7 @@ When /^I create shares "([^\"]*)" shared with "([^\"]*)"$/ do |outline, user|
 end
 
 def create_folder(folder, sub)
-  f = Folder.find_by_name(folder)
-  if(f.nil?)
-    f = Folder.new :name => folder, :user_id => current_user.id
-    f.save
-  end
+  f = Folder.find_or_create_by_name_and_user_id(folder, current_user.id)
   unless sub.nil?
     Folder.create :name => sub, :user_id => current_user.id, :parent_id => f.id 
   end
@@ -34,13 +30,13 @@ end
 
 When /^I expand the folders "([^\"]*)"$/ do |expand|
   begin
-    When %Q{I expand the folder "My Documents"}
+    step %Q{I expand the folder "My Documents"}
   rescue
   end
   #When %Q{I click ux-maximgb-tg-elbow-active on the "My Documents" grid row} if row_button_exists?("ux-maximgb-tg-elbow-active", "My Documents") && (row_button_exists?("ux-maximgb-tg-elbow-end-plus", "My Documents") || row_button_exists?("ux-maximgb-tg-elbow-plus", "My Documents"))
   folders = expand.split(',')
   folders.each do |folder|
-    When %Q{I expand the folder "#{folder}"}
+    step %Q{I expand the folder "#{folder}"}
   end
 end
 
@@ -54,7 +50,7 @@ Then /^I should see folders in the order "([^\"]*)"$/ do |order|
   index = 2
   folders = order.split
   folders.each do |folder|
-    Then %Q{I should see "#{folder}" in grid row #{index} within ".document-folder-tree-grid"}
+    step %Q{I should see "#{folder}" in grid row #{index} within ".document-folder-tree-grid"}
     index += 1
   end
 end
@@ -86,12 +82,12 @@ When /^I set "([^\"]*)" as "([^\"]*)"(?: with "([^"]*)")?$/ do |folder, sharing,
   folder = Folder.find_by_name(folder)
 
   if sharing == "shared"
-    folder.update_attributes :shared => 'shared', :audience => { :user_ids => [User.find_by_email(user).id] }
+    folder.update_attributes :audience_attributes => { :user_ids => [User.find_by_email(user).id] }
     folder.audience.recipients.length if folder.audience
   elsif sharing == "inherited"
-    folder.update_attributes :shared => 'inherited'
+    folder.update_attributes :audience_id => folder.parent.audience_id
   else
-    folder.update_attributes :shared => 'not_shared'
+    folder.update_attributes :audience_id => nil
   end
 end
 
@@ -107,9 +103,7 @@ When /^"([^\"]*)" performs all notifications$/ do |fname|
 end
 
 When /^backgroundrb has processed the nightly documents$/ do
-  require 'bdrb_server_helper'
-  require 'meta_worker'
-  require 'lib/workers/document_daily_cleanup_worker.rb'
+  require 'workers/document_daily_cleanup_worker'
   DocumentDailyCleanupWorker.new.clean
 end
 
@@ -126,7 +120,7 @@ end
 
 Given /^I create ([0-9]*) folders$/ do |num|
   num.to_i.times do
-    Factory.create(:folder)
+    FactoryGirl.create(:folder)
   end
 end
 
@@ -134,7 +128,7 @@ Given /^I uploaded ([0-9]*) files into each folder ([0-9]*) days ago$/ do |num, 
   num = num.to_i
   Folder.all.each do |folder|
     num.times do
-      Factory.create(:document, {:folder => folder, :owner => folder.owner, :created_at => days.to_i.days.ago, :file => File.open("spec/fixtures/sample.wav") })
+      FactoryGirl.create(:document, {:folder => folder, :owner => folder.owner, :created_at => days.to_i.days.ago, :file => File.open("spec/fixtures/sample.wav") })
     end
   end
 end
@@ -148,9 +142,9 @@ When /^I upload the file "([^"]*)"$/ do |file|
       ]});
       win.doLayout();
     ");
-    And %Q{I attach the file "#{file}" to "File"}
+    step %Q{I attach the file "#{file}" to "File"}
     page.execute_script("Ext.getCmp('chrome_upload_hack').getForm().submit()");
   else
-    And %Q{I attach the file "#{file}" to "file"}
+    step %Q{I attach the file "#{file}" to "file"}
   end
 end
