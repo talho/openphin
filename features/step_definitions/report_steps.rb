@@ -22,12 +22,9 @@ Given 'the system builds all the user jurisdictions' do
   require File.expand_path(File.join(File.dirname(__FILE__),"..","..","db","fixtures","jurisdictions"))
 end
 
-When /^I generate "([^"]*)" report on "([^"]*)" (titled|named) "([^"]*)"$/ do |recipe, model, where, parameter|
-  if where == 'titled'
-    id = model.constantize.find_by_title(parameter).id
-  else
-    id = model.constantize.find_by_name(parameter).id
-  end
+When /^I generate "([^"]*)" report on "([^"]*)" (titled|named) "([^"]*)"$/ do |recipe, model, where_gherkin, parameter|
+  where = where_gherkin.sub(/d$/,'')
+  id = model.constantize.where(where=>parameter).select(:id).map(&:id).first
   criteria = {:recipe=>recipe,:model=>model,:method=>:find_by_id,:params=>id}
   report = current_user.reports.create!(:recipe=>recipe,:criteria=>criteria,:incomplete=>true)
   Reporters::Reporter.new(:report_id=>report[:id]).perform
