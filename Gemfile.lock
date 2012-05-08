@@ -64,11 +64,6 @@ PATH
     facho (0.0.1)
 
 PATH
-  remote: vendor/extensions/han
-  specs:
-    han (0.0.1)
-
-PATH
   remote: vendor/extensions/rollcall
   specs:
     rollcall (0.0.1)
@@ -412,7 +407,6 @@ DEPENDENCIES
   facho!
   factory_girl
   feedzirra (= 0.0.23)
-  han!
   happymapper!
   headless
   httparty (= 0.8.1)

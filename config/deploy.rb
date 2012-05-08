@@ -16,6 +16,7 @@ set :default_run_options, {:shell => "sh -l"}
 set :rake, "bundle exec rake"
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
+set :normalize_asset_timestamps, false
 
 
 # If you aren't deploying to /u/apps/#{application} on the target
@@ -60,7 +61,7 @@ require 'bundler/capistrano'
 
 # Setup dependencies
 before 'deploy:update_code', 'sphinx:stop'
-after 'deploy:update_code', 'app:phin_plugins'
+before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
 after 'deploy:restart', 'sphinx:start'

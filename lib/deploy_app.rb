@@ -13,7 +13,6 @@ namespace :app do
       cmds << "git clone #{pp["url"]} --branch #{branch} vendor/extensions/#{name}"
       cmds << "cd vendor/extensions/#{name}"
       cmds << "git checkout #{pp["commit"]}" if pp.has_key?("commit")
-      cmds << "git submodule update -i"
       run cmds.join(" && ")
     }
   end
