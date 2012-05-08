@@ -90,11 +90,11 @@ module ApplicationHelper
     res = ""
     $extensions_css.each do |k, v|
       res += v.map{|css| "$css(#{stylesheet_path(css)})"}.join(" ") + " "
-    end
+    end if $extensions_css
     res += " "
     $extensions_js.each do |k, v|
       res += v.map{|js| javascript_path(js)}.join(" ") + " "
-    end
+    end if $extensions_js
     res
   end
 end

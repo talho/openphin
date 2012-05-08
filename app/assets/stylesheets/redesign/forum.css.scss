@@ -9,6 +9,10 @@
   background: image-url("images/cross-circle.png") no-repeat;
 }
 
+.quote_cell{
+  background: image-url("images/truck.png") no-repeat;
+}
+
 .topic_container{
   background: #fff;
 }
@@ -59,6 +63,14 @@
 }
 
 /* ----- End Buttons, images, and such --- */
+
+/* ----- Forum Index --- */
+.forum-name
+{
+  background-color: blue;
+}
+
+/* ----- End Forum Index --- */
 
 /* ----- Topic view layout ------ */
 

@@ -2,45 +2,22 @@ class ForumsController < ApplicationController
   # GET /forums
   # GET /forums.xml
   # GET /forums.json
+  respond_to :json
+  
   def index
-    page = params[:page] || (params[:start].nil? ? nil : (params[:start].to_i/(params[:per_page]||10).to_i) + 1) || 1
-    
-    @forums = Forum.for_user(current_user)
-    @forums = @forums.paginate(:page => page, :per_page => params[:per_page]||10) unless params[:per_page].to_i == 0
-    
-    respond_to do |format|
-      format.html
-      format.json  {render :json => {
-        :forums => @forums.each do |f|
-          f[:is_moderator] = true unless !current_user.moderator_of?(f)
-          f[:threads]      = f.topics.length
-        end,
-        :current_page        => @forums.respond_to?(:current_page) ? @forums.current_page : 0,
-        :per_page            => @forums.respond_to?(:per_page) ? @forums.per_page : 0,
-        :total_entries       => @forums.respond_to?(:total_entries) ? @forums.total_entries : 0,
-        :is_super_admin      => current_user.is_super_admin?
-      }}
-    end
+      respond_with(@forums = Forum.for_user(current_user))      
   end
 
   # GET /forums/1
   # GET /forums/1.json
   def show
     @forum = Forum.for_user(current_user).find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json {render :json => @forum}
-    end
   end
 
   # GET /forums/new
   # GET /forums/new.json
   def new
     @forum = Forum.new
-    respond_to do |format|
-      format.html
-      format.json {render :json => @forum}
-    end
   end
 
   # POST /forums
@@ -67,16 +44,7 @@ class ForumsController < ApplicationController
   # GET /forums/1/edit
   # GET /forums/1/edit.json
   def edit
-    @forum = Forum.find(params[:id]) if current_user.is_super_admin?
-    respond_to do |format|
-      format.html
-      format.json {render :json => @forum.as_json(:include => {:audience => {:include => {:users => {:only => [:id, :display_name, :email, :title ]},
-                                                                                          :roles => {:only => [:id, :name]},
-                                                                                          :jurisdictions => {:only => [:id, :name]} },
-                                                                             :only => [:id] }
-                                                              }
-                                                  ) }
-    end
+    @forum = Forum.find(params[:id]) if current_user.is_super_admin?        
   end
 
   # PUT /forums/1
@@ -142,9 +110,7 @@ class ForumsController < ApplicationController
   # DELETE /forums/1.json
   def destroy
     @forum = Forum.for_user(current_user).find(params[:id])
-    @forum.destroy
-    flash[:notice] = "Forum was successfully removed."
-    redirect_to forums_url
+    @forum.destroy    
   end
   
 protected

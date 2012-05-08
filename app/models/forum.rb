@@ -1,10 +1,13 @@
 class Forum < ActiveRecord::Base
   after_save :update_lock_version
 
+  has_many :comments, class_name: "Topic"
+  
   has_many  :topics, 
             :conditions => {:comment_id => nil}, 
             :order => "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc", 
             :dependent => :destroy
+            
   accepts_nested_attributes_for :topics, 
             :reject_if => lambda { |a| a[:content].blank? }, 
             :allow_destroy => true   
@@ -13,6 +16,14 @@ class Forum < ActiveRecord::Base
   has_many :users, :finder_sql => proc {"SELECT u.* 
                                    FROM users u 
                                    JOIN sp_recipients(#{self.audience_id}) r ON u.id = r.id"}
+                                   
+  has_many :subforums,  :class_name => 'Forum', :foreign_key => :parent_id,
+                        :order => "created_at ASC",
+                        :dependent => :destroy
+                      
+  belongs_to :owner,  :class_name => 'User', :foreign_key => :owner_id
+  
+  belongs_to :moderator_audience, :class_name => 'Audience', :foreign_key => :moderator_audience_id
   
   def self.for_user(user)
     user_id = user.class == User ? user.id : user

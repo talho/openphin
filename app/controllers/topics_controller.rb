@@ -1,7 +1,8 @@
 class TopicsController < ApplicationController
+  respond_to :json
   #before_filter :authorize
   app_toolbar "forums"
-
+  
   before_filter :find_forum, :except => [:active_topics, :recent_posts]
   before_filter :find_topic, :only => [:show, :edit, :update, :destroy]
   
@@ -9,57 +10,16 @@ class TopicsController < ApplicationController
   # GET /topics.xml
   # GET /topics.json
   def index
-    options = {:page => params[:page] || 1, :per_page => 8}
-    options[:order] = "#{Topic.table_name}.sticky desc, #{Topic.table_name}.created_at desc"
-    options[:conditions] = {:hidden_at => nil} unless current_user.is_super_admin?
-    @topics = Topic.where(:forum_id => @forum.id, :comment_id => nil).paginate(options)
-    for topic in @topics
-      if current_user.moderator_of?(topic)
-        topic[:is_moderator] = true
-      end
-      if current_user.is_super_admin?
-        topic[:is_super_admin] = true
-      end
-      topic[:posts] = topic.comments.length
-      topic[:user_avatar] = User.find(topic.poster_id).photo.url(:tiny)
-    end
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @topics }
-      format.json  {render :json => {
-        :topics              => @topics.map {|x| x.as_json(:include => {:poster => {:only => [:display_name, :id]}})},
-        :current_page        => @topics.current_page,
-        :per_page            => @topics.per_page,
-        :total_entries       => @topics.total_entries
-      }}
-    end
+    @topics = Topic.where(:forum_id => @forum.id, :comment_id => nil).order('sticky DESC, created_at ASC')
+    respond_with(@topics)
   end
-
+  
   # GET /topics/1
   # GET /topics/1.xml
   # GET /topics/1.json
   def show
-    options = {:page => params[:page] || 1, :per_page => params[:per_page] || 20}
-    @comments = Topic.where('comment_id = ? OR (comment_id is NULL and id = ?)', @topic.id, @topic.id).order('created_at ASC').paginate(options)
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @topic }
-      format.json do
-        render :json => {:comments => @comments.map do |x|
-                            x[:user_avatar] = x.poster.photo.url(:thumb)
-                            x[:is_moderator] = current_user.moderator_of?(x)
-                            x[:formatted_content] = RedCloth.new(h(x.content)).to_html
-                            x.as_json(:include => {:poster => {:only => [:display_name, :id, :photo] }})
-                         end,
-                         :is_super_admin => current_user.is_super_admin?,
-                         :page => @comments.current_page,
-                         :per_page => @comments.per_page,
-                         :total_entries => @comments.total_entries,
-                         :locked => !@topic.locked_at.nil?
-        }
-      end
-    end
+    @topics = Topic.where('comment_id = ? OR (comment_id is NULL and id = ?)', @topic.id, @topic.id).order('created_at ASC')
+    respond_with(@topics)
   end
 
   # GET /topics/new
@@ -67,23 +27,13 @@ class TopicsController < ApplicationController
   # GET /topics/new.json
   def new
     @topic = Topic.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @topic }
-      format.json { render :json => @topic }
-    end
+    respond_with(@topic)
   end
 
   # GET /topics/1/edit
   def edit
-    respond_to do |format|
-      format.html
-      format.json {render :json => {:data => { 'topic[name]' => @topic.name, 'topic[content]' => @topic.content, 'topic[sticky]' => @topic.sticky,
-                                               'topic[hide]' => @topic.hidden_at ? 1 : 0, 'topic[locked]' => @topic.locked_at ? 1: 0,
-                                               'topic[lock_version]' => @topic.lock_version},
-                                    :success => true }}
-    end
+    #Check if moderator, creator, or admin
+    respond_with(@topic)
   end
 
   # POST /topics
@@ -171,12 +121,6 @@ class TopicsController < ApplicationController
   # DELETE /topics/1.json
   def destroy
     @topic.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(forum_topics_url) }
-      format.xml  { head :ok }
-      format.json { render :json => {:success => true}, :status => :ok }
-    end
   end
   
   def update_comments
@@ -254,7 +198,7 @@ protected
   end
 
   def find_topic
-    @topic = @forum.topics.find(params[:id])
+    @topic = @forum.comments.find(params[:id])    
   end
 
   def merge_if(ahash,options={})

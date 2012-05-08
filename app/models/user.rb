@@ -38,7 +38,7 @@
 #
 
 class User < ActiveRecord::Base
-  include Clearance::User
+  include Clearance::User  
   
   has_many :devices, :dependent => :delete_all
   accepts_nested_attributes_for :devices
@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
   include UserModules::Dashboard
+  include UserModules::Forum
   
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
@@ -311,12 +312,6 @@ class User < ActiveRecord::Base
     else
       return deleted_user.reify
     end
-  end
-
-  def moderator_of?(object)
-    return is_super_admin? if object == Forum
-    return false unless [Forum,Topic].include? object.class
-    is_super_admin? || ( object.respond_to?('poster_id') && (self.id == object.poster_id) )
   end
 
   def to_iphone_results

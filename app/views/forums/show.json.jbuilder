@@ -1,0 +1,1 @@
+json.partial! 'forum', forum: @forum
