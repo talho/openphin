@@ -65,7 +65,9 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
           this.getForm().setValues(data);
           if (data.audience)
           {
-            this.getComponent('audience_panel').load(data.audience.jurisdictions || [], data.audience.roles || [], data.audience.users || []);
+            var audiencePanel = this.getComponent('audience_panel');
+            audiencePanel.load(data.audience.jurisdictions || [], data.audience.roles || [], data.audience.users || []);
+            audiencePanel.audienceId = data.audience.id;
           }
         },
         scope: this
@@ -74,12 +76,14 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
   },
   beforeSubmit: function(form, action){
     if(action.type == 'submit'){
-      var audienceIds = this.getComponent('audience_panel').getSelectedIds();
+      var audiencePanel = this.getComponent('audience_panel'); 
+      var audienceIds = audiencePanel.getSelectedIds();
   
       action.options.params = {
-        'forum[group_attributes][jurisdiction_ids][]': audienceIds.jurisdiction_ids,
-        'forum[group_attributes][role_ids][]': audienceIds.role_ids,
-        'forum[group_attributes][user_ids][]': audienceIds.user_ids
+        'forum[audience_attributes][jurisdiction_ids][]': audienceIds.jurisdiction_ids,
+        'forum[audience_attributes][role_ids][]': audienceIds.role_ids,
+        'forum[audience_attributes][user_ids][]': audienceIds.user_ids,
+        'forum[audience_attributes][id]': audiencePanel.audienceId
       }
     }
   },

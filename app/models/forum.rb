@@ -79,6 +79,15 @@ class Forum < ActiveRecord::Base
       audience.update_attributes(attributes)
     end
   end
+  
+  def moderator_audience_attributes=(attributes)
+    unless moderator_audience
+      moderator_audience = Audience.new      
+    else
+      attributes.delete(:id)
+    end
+    moderator_audience.update_attributes(attributes)
+  end
       
   def self.find_for(id,user)
     options = hide_conditions !user.is_super_admin?

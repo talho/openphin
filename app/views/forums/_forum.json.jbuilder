@@ -7,3 +7,6 @@ json.is_owner current_user.forum_owner_of?(forum)
 if forum.audience
   json.partial! 'audiences/audience', audience: forum.audience
 end
+if forum.moderator_audience
+  json.partial! 'audiences/audience', audience: forum.moderator_audience
+end

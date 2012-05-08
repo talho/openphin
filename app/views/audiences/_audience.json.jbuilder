@@ -1,4 +1,5 @@
 json.audience do |json|
+  json.id audience.id
   json.users audience.users do |json, u|
     json.(u, :id, :email)
     json.name u.display_name
