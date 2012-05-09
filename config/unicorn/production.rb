@@ -1,5 +1,5 @@
 
-env = Environment["RACK_ENV"]
+env = ENV["RACK_ENV"]
 working_directory '/var/www/openphin/current'
 
 # 16 workers and 1 master
