@@ -18,6 +18,8 @@ Openphin::Application.configure do
   
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection    = false
+  
+  config.logger = Logger.new(Rails.root.join("log",Rails.env + ".log"), 3, 10 * 1024**2)
       
   PHIN_PARTNER_OID="1.3.6.1.4.1.1"
   PHIN_APP_OID="1"

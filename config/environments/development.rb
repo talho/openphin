@@ -28,6 +28,8 @@ Openphin::Application.configure do
   #config.reload_plugins = true
   config.action_dispatch.best_standards_support = :builtin
 
+  config.logger = Logger.new(Rails.root.join("log",Rails.env + ".log"), 3, 10 * 1024**2)
+  
   config.assets.compress = false
   config.assets.debug = true
   
