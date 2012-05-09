@@ -17,6 +17,7 @@ group :default do
   # These are required to boot into cucumber
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'
   gem "delayed_job", "~> 3.0.1"
+    gem "daemons"
   gem "paperclip", "2.7.0"
   gem 'thinking-sphinx', '~> 2.0.11'
     gem 'ts-delayed-delta', :require => 'thinking_sphinx/deltas/delayed_delta'
