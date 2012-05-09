@@ -92,7 +92,7 @@ task :seed, :roles => :db, :only => {:primary => true} do
 end
 
 # Unicorn configuration
-set :unicorn_bin, "unicorn_rails"
+set :unicorn_bin, "unicorn"
 set :unicorn_env, rails_env
 require 'capistrano-unicorn'
 
