@@ -42,11 +42,44 @@ When /^I prepare for admin forum tests$/ do
     step %Q{I am logged in as "admin@dallas.gov"}
 end
 
+When /^I prepare for user forum tests$/ do
+  step %Q{the following entities exists:}, table(%{
+      | Jurisdiction  | Texas                   |
+      | Jurisdiction  | Dallas County           |
+      | Role          | Animal Control Director |
+      | Role          | Chief Epidemiologist    |
+    })
+    step %Q{Federal is the parent jurisdiction of:}, table(%{
+      | Texas |
+    })
+    step %Q{Texas is the parent jurisdiction of:}, table(%{
+      | Dallas County |
+    })
+    step %Q{the following administrators exist:}, table(%{
+      | admin@dallas.gov | Dallas County |
+    })
+    step %Q{the following users exist:}, table(%{
+      | Hank Hill | hhill@example.com | User | Dallas County |
+    })
+    step %Q{I am logged in as "admin@dallas.gov"}
+    step %Q{I open a new forum} 
+    step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
+      | name          | type         |
+      | Dallas County | Jurisdiction |
+    })
+    step %Q{I open a new forum}
+    step %Q{I create forum with name "Resource Discovery" and with audience:}, table(%{
+      | name          | type         |
+    })
+    step %Q{I am logged in as "hhill@example.com"}
+    step %Q{I navigate to "Forums"}
+end
+
 When /^I enter the new forum data and save$/ do
   step %Q{I create forum with name "Dallas Region Discussion" and with audience:}, table(%{
       | name  | type         |
       | Texas | Jurisdiction |
-  })  
+  })
 end
 
 When /^I enter the edit forum data and save$/ do
@@ -88,6 +121,8 @@ Then /^the hidden forum is verified$/ do
   step %Q{I edit forum "Hidden Discussion"}
   page.should have_css('input[checked]')
   #TODO: verify that a regular user can't see the hidden forum
+  #TODO: verify that a administrator and not owner can see it
+  #TODO: verify that it has a hidden forum icon
 end
 
 When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:$/ do |hidden, forum_name, table|  
@@ -95,6 +130,11 @@ When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:
   step %Q{I fill in "Forum Name" with "#{forum_name}"}
   step %Q{I check "Hidden"} if hidden
   step %Q{I press "Save"}
+end
+
+When /^"([^\"]*)" has( no)? visible ([^\"]*) icon$/ do |forum_name, visible, icon_name|
+  forum_row = page.find(".x-grid3-row", :text => forum_name)
+  forum_row.should have_css('img.edit_forum.' + (visible ? 'x-hide-display' : ''))
 end
 
 Then /^the forum "([^\"]*)" exists and is visible$/ do |forum_name|
@@ -111,46 +151,3 @@ Given /^I have the forum "([^\"]*)"$/ do |forum_name|
     forum
   end
 end
-# Given 'I have the forum named "$name"' do |name|
-  # Forum.find_by_name(name) || FactoryGirl.create(:forum, :name => name)
-# end
-# 
-# Given 'I have the topic "$topic_name" to forum "$forum_name"' do |topic_name,forum_name|
-  # forum = Forum.find_by_name(forum_name) || FactoryGirl.create(:forum, :name => forum_name)
-  # topic = Topic.find_by_name(topic_name) || FactoryGirl.create(:topic, :name => topic_name, :forum => forum, :poster => current_user)
-# end
-# 
-# Given 'I have the comment "$comment_content" to topic "$topic_name" to forum "$forum_name"' do |comment_content,topic_name,forum_name|
-  # forum = Forum.find_by_name(forum_name) || FactoryGirl.create(:forum, :name => forum_name)
-  # topic = Topic.find_by_name(topic_name) || FactoryGirl.create(:topic, :name => topic_name, :forum => forum, :poster => current_user)
-  # comment = Topic.find_by_content(comment_content) || FactoryGirl.create(:comment, :name => "not blank", :content => comment_content, :poster => @current_user, :forum => forum, :poster => current_user)
-  # topic.comments << comment
-# end
-# 
-# Given 'the forum "$forum_name" has the following audience:' do |forum_name, table|
-  # forum = Forum.find_by_name!(forum_name)
-  # table.raw.each do |row|
-    # case row[0]
-    # when "Jurisdictions"
-      # row[1].split(",").each do |name|
-        # jurisdiction = Jurisdiction.find_by_name!(name.strip)
-        # forum.jurisdictions << jurisdiction
-      # end
-    # when "Roles"
-      # row[1].split(",").each do |name|
-        # role = Role.find_by_name!(name.strip)
-        # forum.audience.roles << role
-      # end
-    # when "Users"
-      # row[1].split(",").each do |email|
-        # user = User.find_by_email!(email.strip)
-        # forum.audience.users << user
-      # end
-    # end
-  # end
-# end
-# 
-# When 'I fill out the audience form with:' do |table|
-  # fill_in_audience_form table
-# end
-
