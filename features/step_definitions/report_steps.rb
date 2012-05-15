@@ -1,3 +1,8 @@
+Then /^the report database system is ready$/ do
+  REPORT_DB.should be_an_instance_of Mongo::DB
+  REPORT_DB.collection("test").should be_an_instance_of Mongo::Collection
+end
+
 Given 'the report derived from recipe "$recipe" by the author with email "$email"' do |recipe, email|
   author = User.find_by_email(email)
   report_recipe = "#{recipe}"
@@ -24,7 +29,7 @@ end
 
 When /^I generate "([^"]*)" report on "([^"]*)" (titled|named) "([^"]*)"$/ do |recipe, model, where_gherkin, parameter|
   where = where_gherkin.sub(/d$/,'')
-  id = model.constantize.where(where=>parameter).select(:id).map(&:id).first
+  id = model.constantize.where(where=>parameter).pluck(:id).first
   criteria = {:recipe=>recipe,:model=>model,:method=>:find_by_id,:params=>id}
   report = current_user.reports.create!(:recipe=>recipe,:criteria=>criteria,:incomplete=>true)
   Reporters::Reporter.new(:report_id=>report[:id]).perform
@@ -52,16 +57,17 @@ Then /^I should (not )?see "([^\"]*)" in the rendering$/ do |inversion, text|
 end
 
 When /^I inspect the generated pdf$/ do
-  @pdf = WickedPdf.new.pdf_from_string(File.read(@report.rendering.path))
+  @pdf = WickedPdf.new.pdf_from_string(File.read(@report.rendering.path,:encoding=>'ascii-8bit'))
 end
 
 Then /^I should (not )?see "([^\"]*)" in the pdf$/ do |inversion, text|
   unless @pdf_text
-    Tempfile.open('pdf') do |temp_pdf|
+    Tempfile.open('pdf',:encoding => 'ascii-8bit') do |temp_pdf|
       temp_pdf << @pdf
-      Tempfile.open(['txt','.html']) do |temp_txt|
-        `pdftohtml -c -i -noframes #{temp_pdf.path} #{temp_txt.path}`
-        @pdf_text = File.read(temp_txt.path)
+      Tempfile.open(['txt','.html'],:encoding => 'ascii-8bit') do |temp_txt|
+        `pdftohtml -i -c -noframes #{temp_pdf.path} #{temp_txt.path}`
+        # remove html tags and replace one or more newlines with a single space
+        @pdf_text = File.read(temp_txt.path,:encoding => 'ascii-8bit').gsub(%r{</?[^>]+?>}, '').gsub(/[\n]+/,' ')
       end
     end
   end
