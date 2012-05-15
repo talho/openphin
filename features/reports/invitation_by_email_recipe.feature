@@ -25,10 +25,15 @@ Feature:
   @clear_report_db
   Scenario: Viewing invitation completion status by email
     Given I generate "RecipeInternal::InvitationByEmailRecipe" report on "Invitation" named "DSHS"
-    When I inspect the generated pdf
 
-    Then I should see "Registrations complete: 60%" in the pdf
-    And I should see "Registrations incomplete: 40%" in the pdf
+    When I inspect the generated rendering
+    Then I should see "Registrations complete" in the rendering
+    And I should see "Completion Status" in the rendering
+    And I should see "bill.smith@example.com" in the rendering
+
+    When I inspect the generated pdf
+    Then I should see "Registrations complete" in the pdf
+    And I should see "Registrations incomplete" in the pdf
 
     And I should see "Name" in the pdf
     And I should see "Email Address" in the pdf
@@ -44,7 +49,7 @@ Feature:
     When I inspect the generated csv
     Then I should see "name" in the csv
     And I should see "email" in the csv
-    And I should see "completion_status" in the csv
+    And I should see "completionStatus" in the csv
 
     And I should see "Bill Smith" in the csv
     And I should see "Bob Smith" in the csv

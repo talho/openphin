@@ -6,7 +6,8 @@ Feature: Generate a Report
   Background:
   #  Given the system builds all the user roles
   #  And the system builds all the user jurisdictions
-    Given the following entities exist:
+    Given the report database system is ready
+    And the following entities exist:
       | role         | Admin            |
       | role         | Medical Director |
       | role         | Public           |
@@ -25,8 +26,8 @@ Feature: Generate a Report
       | Potter Public   | pott.pub@example.com     | Public           | Potter         |
     And delayed jobs are processed
     And reports derived from the following recipes and authored by exist:
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
 
   Scenario: Public-only user can not navigate to Reports
     Given I am logged in as "dall.pub@example.com"
@@ -97,7 +98,7 @@ Feature: Generate a Report
     And I should see "Reports" in grid row 2 within ".document-folder-tree-grid"
 
     When I select the "Reports" grid row
-    Then I should see "User-All-Within-Jurisdictions-Recipe.csv" within ".document-file-icon-view"
+    Then I should see "User-All-Within-Jurisdictions-Recipe-3.csv" within ".document-file-icon-view"
 
     When I navigate to "Reports"
     And I click x-grid3-cell "User-All-Within-Jurisdictions-Recipe"
@@ -111,9 +112,9 @@ Feature: Generate a Report
     And I should see "Reports" in grid row 2 within ".document-folder-tree-grid"
 
     When I select the "Reports" grid row
-    Then I should see "User-All-Within-Jurisdictions-Recipe.pdf" within ".document-file-icon-view"
+    Then I should see "User-All-Within-Jurisdictions-Recipe-3.pdf" within ".document-file-icon-view"
 
-    When I generate "Recipe::UserAllWithinJurisdictionsRecipe" report
+    When I generate "RecipeExternal::UserAllWithinJurisdictionsRecipe" report
     And I inspect the generated pdf
     Then I should see "pott.md@example.com" in the pdf
 
@@ -144,9 +145,9 @@ Feature: Generate a Report
 
     When I click x-grid3-hd-inner "Recipe"
     Then the "Recipe" grid header is sorted ascending
-      And I should see "User-All-Batch-Recipe" in grid row 1 within ".report-results"
+    And I should see "User-All-Batch-Recipe" in grid row 1 within ".report-results"
     And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 2 within ".report-results"
-  #
+
     When I click x-grid3-hd-inner "Recipe"
     Then the "Recipe" grid header is sorted descending
     And I should see "User-All-Within-Jurisdictions-Recipe" in grid row 1 within ".report-results"
@@ -165,14 +166,14 @@ Feature: Generate a Report
     Then the "Render size" grid header is sorted descending
 
     When reports derived from the following recipes and authored by exist:
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
     And I close the active tab
     And I navigate to "Reports"
     Then I should see "Displaying results 1 - 10 of 10"

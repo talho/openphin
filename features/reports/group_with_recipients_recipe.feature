@@ -4,7 +4,8 @@ Feature: Create a groups report
   I can quickly generate reports from existing report recipe
 
   Background:
-    Given the following entities exists:
+    Given the report database system is ready
+    And the following entities exists:
       | Jurisdiction | Texas          |
       | Jurisdiction | Dallas County  |
       | Jurisdiction | Potter County  |
@@ -30,6 +31,11 @@ Feature: Create a groups report
   Scenario:
     Given I am logged in as "jill.smith@example.com"
     And I generate "RecipeInternal::GroupWithRecipientsRecipe" report on "Group" named "Dallas County Health Officer Group"
+
+    When I inspect the generated rendering
+    And I should see "Health Officer in Dallas County" in the rendering
+    And I should see "ho1@example.com" in the rendering
+
 
     When I inspect the generated pdf
     Then I should see "Dallas County Health Officer Group" in the pdf

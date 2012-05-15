@@ -26,21 +26,41 @@ Feature:
   Scenario: Viewing invitation completion status by email
     Given I generate "RecipeInternal::InvitationByPendingRoleRequestsRecipe" report on "Invitation" named "DSHS"
 
+    When I inspect the generated rendering
+    Then I should see "Profile Updated" in the rendering
+    And I should see "Completion Status" in the rendering
+    And I should see "Organization Membership" in the rendering
+    And I should see "Pending Role Requests" in the rendering
+
     When I inspect the generated pdf
-    Then I should see "3 Invitees Found" in the pdf
+    Then I should see "5 Invitees Found" in the pdf
 
     And I should see "Name" in the pdf
     And I should see "Email Address" in the pdf
-    And I should see "Pending Role Requests" in the pdf
+    And I should see "Profile Updated" in the pdf
 
+    And I should see "Bill Smith" in the pdf
+    And I should see "bill.smith@example.com" in the pdf
+    And I should see "Not Registered" in the pdf
+    And I should see "Bob Smith" in the pdf
     And I should see "Jane Smith" in the pdf
-    And I should see "jane.smith@example.com" in the pdf
+    And I should see "Jim Smith" in the pdf
+    And I should see "John Smith" in the pdf
 
     When I inspect the generated csv
     Then I should see "name" in the csv
     And I should see "email" in the csv
-    And I should see "role_requests" in the csv
+    And I should see "completionStatus" in the csv
+    And I should see "organizationMembership" in the csv
+    And I should see "profileUpdated" in the csv
+    And I should see "pendingRequests" in the csv
 
+    And I should see "Bill Smith" in the csv
+    And I should see "Bob Smith" in the csv
     And I should see "Jane Smith" in the csv
     And I should see "Jim Smith" in the csv
+
     And I should see "John Smith" in the csv
+    And I should see "john.smith@example.com" in the csv
+    And I should see "No" in the csv
+    And I should see "Yes" in the csv

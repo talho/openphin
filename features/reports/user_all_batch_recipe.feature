@@ -6,7 +6,8 @@ Feature: Generate a Report from the User-All-Batch-Recipe
   Background:
   #  Given the system builds all the user roles
   #  And the system builds all the user jurisdictions
-    Given the following entities exist:
+    Given the report database system is ready
+    And the following entities exist:
       | role         | Admin            |
       | role         | Medical Director |
       | role         | Public           |
@@ -25,8 +26,8 @@ Feature: Generate a Report from the User-All-Batch-Recipe
       | Potter Public   | pott.pub@example.com     | Public           | Potter         |
     And delayed jobs are processed
     And reports derived from the following recipes and authored by exist:
-      | Recipe::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
-      | Recipe::UserAllBatchRecipe               | dall.md@example.com |
+      | RecipeExternal::UserAllWithinJurisdictionsRecipe | dall.md@example.com |
+      | RecipeExternal::UserAllBatchRecipe               | dall.md@example.com |
 
   @clear_report_db
   Scenario: Initiate the viewing of a report contents

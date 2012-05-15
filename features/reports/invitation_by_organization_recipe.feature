@@ -26,12 +26,24 @@ Feature:
   Scenario: Viewing invitation completion status by email
     Given I generate "RecipeInternal::InvitationByOrganizationRecipe" report on "Invitation" named "DSHS"
 
+    When I inspect the generated rendering
+#    Then I should see "3 Invitees Found" in the rendering
+    And I should see "jane.smith@example.com" in the rendering
+    And I should see "jim.smith@example.com" in the rendering
+    And I should see "bob.smith@example.com" in the rendering
+    And I should see "Name" in the rendering
+    And I should see "Email" in the rendering
+    And I should see "Completion Status" in the rendering
+    And I should see "Organization Membership" in the rendering
+    And I should see "Profile Updated" in the rendering
+    And I should see "Pending Role Requests" in the rendering
+
     When I inspect the generated pdf
-    Then I should see "5 Invitees Found" in the pdf
+#    Then I should see "3 Invitees Found" in the pdf
 
     And I should see "Name" in the pdf
     And I should see "Email Address" in the pdf
-    And I should see "Is Member?" in the pdf
+    And I should see "Organization Membership" in the pdf
 
     And I should see "Bill Smith" in the pdf
     And I should see "Bob Smith" in the pdf
@@ -43,7 +55,7 @@ Feature:
     When I inspect the generated csv
     Then I should see "name" in the csv
     And I should see "email" in the csv
-    And I should see "is_member" in the csv
+    And I should see "organizationMembership" in the csv
 
     And I should see "Bill Smith" in the csv
     And I should see "Bob Smith" in the csv

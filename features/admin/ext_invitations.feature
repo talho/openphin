@@ -115,7 +115,7 @@ Feature: Invitation System
     When I navigate to the invitations page
     Then I should see "DSHS" in grid row 1  
     And I should see "TORCH" in grid row 2
-    
+
     When I select the "DSHS" grid cell
     Then I should see "DSHS"
     And I should see "Please Join DSHS"
@@ -149,7 +149,6 @@ Feature: Invitation System
     And I should see "Please Join DSHS"
     When I select the "Email" grid header
     And the "Email" grid header is sorted ascending
-    And I suspend cucumber
 
     Then I should see "Registrations complete: 60% (3)" with html stripped
     And I should see "Registrations incomplete: 40% (2)" with html stripped
