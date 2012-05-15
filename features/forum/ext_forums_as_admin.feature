@@ -26,11 +26,7 @@ Feature: Forum checking as a admin
     Then the management of the forum is verified
   
   Scenario: Create a Hidden Forum
-    When I navigate to "Forums"
-    And I click button "New Forum"
-    Then I see the new forum page
-    And I create new hidden forum "Hidden Discussion" with the audience
-      | name | type |
-      | Federal | Jurisdiction |
-    #check the hiddeness by logging in as a user in the jurisdiction with no admin
+    When I open a new forum
+    And I enter the new hidden forum data and save
+    Then the hidden forum is verified
     

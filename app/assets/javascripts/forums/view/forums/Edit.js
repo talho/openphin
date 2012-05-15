@@ -13,7 +13,7 @@ Talho.Forums.view.Forums.Edit = Ext.extend(Ext.FormPanel, {
     Talho.Forums.view.Forums.Edit.superclass.constructor.apply(this, arguments);
   },
   initComponent : function() {
-    this.setTitle(String.format('Manage Moderators: {1}', this.forumName));
+    this.setTitle(String.format('Manage Moderators'));
     
     this.items = [];
     

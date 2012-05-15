@@ -64,6 +64,13 @@ When /^I manage the forum and save$/ do
   step %Q{I press "Save"}
 end
 
+When /^I enter the new hidden forum data and save$/ do
+  step %Q{I create hidden forum with name "Hidden Discussion" and with audience:}, table(%{
+    | name          | type          |
+    | Dallas County | Jurisdiction  |
+  })
+end
+
 Then /^I should see the "([^\"]*)" panel$/ do |name|
   step %Q{I the "#{name}" breadcrumb should be selected}
 end
@@ -73,9 +80,15 @@ Then /^the management of the forum is verified$/ do
   #TODO: verify the moderatorness
 end
 
-When /^I (create|edit) forum with name "([^\"]*)" and with audience:$/ do |mode, forum_name, table|  
+Then /^the hidden forum is verified$/ do
+  step %Q{the forum "Hidden Discussion" exists and is visible}
+  #TODO: verify that a regular user can't see the hidden forum
+end
+
+When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:$/ do |hidden, forum_name, table|  
   step %Q{I select the following in the audience panel:}, table
   step %Q{I fill in "Forum Name" with "#{forum_name}"}
+  step %Q{I check "Hidden"} if hidden
   step %Q{I press "Save"}
 end
 
