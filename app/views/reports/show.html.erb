@@ -1,21 +1,38 @@
-<%- filtered = filters.present? ? "(FILTERED)" : "" -%>
-<%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
-  <%= content_tag(:caption, "Users #{filtered} as of #{report['created_at']}", :style=>"text-align:center")%>
-  <%- content_tag(:thead) do -%>
-    <%- content_tag(:tr) do -%>
-      <%=content_tag(:th,"Name")%>
-      <%=content_tag(:th,"Email")%>
-      <%=content_tag(:th,"Roles")%>
-    <%- end -%>
-  <%- end -%>
-  <%- content_tag(:div, :class=>"nobreak") do -%>
-	  <%- entries.each_with_index do |user,i| -%>
-	    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
-	      <%= content_tag(:td, user["display_name"]) %>
-	      <%= content_tag(:td, user["email"]) %>
-	      <%= content_tag(:td, to_rpt(user["role_memberships"])) %>
-	    <%- end -%>
-	  <%- end -%>
-  <%- end  -%>
-<%- end -%>
-<%= content_tag(:p,"Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}") %>
+<% filtered = filters.present? ? "(FILTERED)" : "" %>
+
+  <table cellspacing="0" class="BreadnButter">
+    <caption style="text-align:center">
+      <%= "Users #{filtered} as of #{report['created_at']}" %>
+    </caption>
+    <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Email
+      </th>
+      <th>
+        Roles
+      </th>
+    </tr>
+    </thead>
+    <div class="nobreak">
+      <% entries.each_with_index do |user,i| %>
+        <tr class="<%= (i%2 > 0) ? 'Odd' : 'Even' %>">
+          <td>
+            <%=  user["display_name"] %>
+          </td>
+          <td>
+            <%=  user["email"] %>
+          </td>
+          <td>
+            <%=  to_rpt(user["role_memberships"]) %>
+          </td>
+        </tr>
+      <% end %>
+    </div>
+  </table>
+<p>
+  <%= "Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}" %>
+</p>

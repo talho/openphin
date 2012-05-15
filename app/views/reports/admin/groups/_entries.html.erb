@@ -1,19 +1,21 @@
-<%- content_tag(:thead) do -%>
-  <%- content_tag(:tr) do -%>
+<thead>
+  <tr>
     <%- directives.each do |entry| -%>
       <%= content_tag(:td, entry[1] ) %>
     <%- end -%>
-  <%- end -%>
-<%- end -%>
-<%- content_tag(:div, :class=>"nobreak") do -%>
-  <%- entries.each_with_index do |entry,i| -%>
-    <%- content_tag(:tr,:class=>"#{(i%2 > 0) ? "Odd" : "Even"}") do -%>
-      <%- directives.each do |meta| -%>
-        <%= content_tag(:td, meta.size>2 ? send(meta[2],entry[meta[0]]) : entry[meta[0]] ) %>
-      <%- end -%>
+  </tr>
+</thead>
+<thead>
+  <div class="nobreak">
+    <%- entries.each_with_index do |entry,i| -%>
+      <tr class="<%= "#{(i%2 > 0) ? 'Odd' : 'Even'}" %>">
+        <%- directives.each do |meta| -%>
+          <%= content_tag(:td, meta.size>2 ? send(meta[2],entry[meta[0]]) : entry[meta[0]] ) %>
+        <%- end -%>
+      </tr>
     <%- end -%>
-  <%- end -%>
-<%- end  -%>
+  </div>
+</thead>
 
 
 
