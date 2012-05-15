@@ -42,7 +42,7 @@ When /^I prepare for admin forum tests$/ do
     step %Q{I am logged in as "admin@dallas.gov"}
 end
 
-When /^I prepare for user forum tests$/ do
+When /^I prepare for (user|moderator)? forum tests$/ do |mode|
   step %Q{the following entities exists:}, table(%{
       | Jurisdiction  | Texas                   |
       | Jurisdiction  | Dallas County           |
@@ -58,9 +58,15 @@ When /^I prepare for user forum tests$/ do
     step %Q{the following administrators exist:}, table(%{
       | admin@dallas.gov | Dallas County |
     })
-    step %Q{the following users exist:}, table(%{
-      | Hank Hill | hhill@example.com | User | Dallas County |
-    })
+    if (mode == "user")    
+      step %Q{the following users exist:}, table(%{
+        | Hank Hill | hhill@example.com | User | Dallas County |
+      })
+    else
+      step %Q{the following users exist:}, table(%{
+        | Hank Hill | hhill@example.com | Moderator | Dallas County |
+      })
+    end
     step %Q{I am logged in as "admin@dallas.gov"}
     step %Q{I open a new forum} 
     step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
