@@ -69,7 +69,7 @@ class ForumsController < ApplicationController
   # PUT /forums/1.json
   def update   
     if (current_user.is_admin? || current_user.moderator_of?(@forum) || current_user.forum_owner_of?(@forum))
-      @forum = Forum.for_user(current_user).find(params[:id])
+      @forum = Forum.for_user(current_user).find(params[:id], :readonly => false)
       merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})      
   
       # The nested attribute audience has habtm associations that don't play nicely with optimistic locking

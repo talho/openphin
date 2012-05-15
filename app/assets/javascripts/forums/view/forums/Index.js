@@ -44,7 +44,8 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
            this.fireEvent('editforum', grid.getStore().getAt(i).get('id')) }, 
            scope: this, tooltip: 'Edit'},
        {xtype: 'actioncolumn', align: 'center',
-         icon: '/assets/images/pencil.png', 
+         icon: '/assets/images/pencil.png',
+         iconCls: 'manage_forum',
          getClass: function (v,meta,record) { 
            if (record.get('is_super_admin') || record.get('is_forum_admin')) { 
             return 'x-action-col-cell'} else { 
