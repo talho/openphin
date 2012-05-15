@@ -7,7 +7,7 @@ module Phin
     end
 
     def self.eval_if_plugin_present(plugin_name, &block)
-      if $extensions.include?(plugin_name)
+      if $extensions && $extensions.include?(plugin_name)
         begin
           yield block
         rescue => e
