@@ -20,12 +20,11 @@ protected
      where = pre_where
    end
    subject = report.dataset.find({:report=>{:$exists=>true},:report_id=>report.id}).first['report']
-   results = []
-   report.dataset.find(where).each{|e| results << e}
+   results = report.dataset.find(where).to_a
    Dir.mktmpdir do |dir|
      path = File.join dir, filename
      File.open(path, 'wb') do |f|
-       rendering = view.render(:inline=>template,:type=>'html',
+       rendering = view.render(:file=>template,
                                :locals=>{:entries=>results,
                                          :report=>subject,
                                          :filters=>filters},

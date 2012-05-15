@@ -1,4 +1,5 @@
 class Report::Report < ActiveRecord::Base
+  require 'csv'
 
   self.table_name = "report_reports"
 
@@ -29,7 +30,7 @@ class Report::Report < ActiveRecord::Base
       recipe.constantize
       self[:name] = recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-').sub(/-$/,'')
     rescue NameError
-      errors.add_to_base "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
+      errors[:base] << "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
     end
   end
 

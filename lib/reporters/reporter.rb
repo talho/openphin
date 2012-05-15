@@ -32,7 +32,7 @@ module Reporters
         end
   
         begin
-          view_path = Rails.configuration.view_path
+          view_path = Rails.configuration.paths["app/views"].first
           view = view_for_at_using author, view_path, recipe
         rescue StandardError => e
           message = %Q{report "#{report.name}" erred in building supporting view: (#{e})}
@@ -60,7 +60,7 @@ module Reporters
           unless Pathname(template_path).absolute?
             template_path = File.join(view_path,recipe.template_path)
           end
-          recipe.generate_rendering report, view, File.read(template_path), params[:filters]
+          recipe.generate_rendering report, view, template_path, params[:filters]
           logger.info %Q{Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds}
           ReportMailer.report_generated(report.author.email,report.name).deliver
         rescue StandardError => e

@@ -15,7 +15,8 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
     end
 
     def template_directives
-      [['name','Name'],['email','Email Address'],['completion_status','Completion Status']]
+      [['name','Name'],['email','Email Address'],['completionStatus','Completion Status'],['organizationMembership','Organization Membership'],
+       ['profileUpdated','Profile Updated'],['pendingRequests','Pending Role Requests']]
     end
 
     def generate_rendering( report, view, template, filters=nil )
@@ -28,19 +29,20 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
        where = where.merge(filters_for_query(filters["elements"]))
      end
      invitation = report.dataset.find( id.merge( {:report=>{:$exists=>true}} )).first['report']
-     entries = report.dataset.find( id.merge( :i=>{:$exists=>true} ))
+     entries = report.dataset.find( id.merge( :i=>{:$exists=>true} )).to_a
      meta = report.dataset.find( id.merge( {:meta=>{:$exists=>true}} )).first["meta"]
      Dir.mktmpdir do |dir|
        path = File.join dir, filename
        File.open(path, 'wb') do |f|
          rendering = view.render(
-           :inline=>template,:type=>'html',
+           :file=>template,
            :locals=>{
               :report=>invitation,
               :entries=>entries,
               :directives=>meta["template_directives"],
               :stats=>meta["stats"],
-              :filters=>filters},
+              :filters=>filters
+              },
            :layout=>layout_path)
          f.write(rendering)
        end
@@ -68,12 +70,15 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
               :incomplete=>{:percentage=>result.registrations_incomplete_percentage,:total=>result.registrations_incomplete_total}}}
           data_set.insert( id.merge( {:meta=>{:stats=>stats,:template_directives=>template_directives}}.as_json ))
           index = 0
-          result.invitees.sort{|x,y| x.name <=> y.name}.each do |u|
+          result.invitees.sort{|x,y| x.name <=> y.name}.each do |invitee|
             begin
               doc = id.clone
-              doc[:name] = u.name
-              doc[:email] = u.email
-              doc[:completion_status] = u.completion_status
+              doc[:name] = invitee.name
+              doc[:email] = invitee.email
+              doc[:completionStatus] = invitee.completion_status
+              doc[:organizationMembership] = result.default_organization ? invitee.is_member? : 'N/A'
+              doc[:profileUpdated] = invitee.user && invitee.user.updated_at > result.created_at ? "Yes" : "No"
+              doc[:pendingRequests] = pending_requests(invitee)
               doc[:i] = index += 1
               data_set.insert(doc)
             rescue NoMethodError
@@ -85,6 +90,24 @@ class RecipeInternal::InvitationByEmailRecipe < RecipeInternal
           raise error
         end
       end
+    end
+
+    def pending_requests(invitee)
+      requests = []
+      if invitee.user
+        requests = invitee.user.role_requests.unapproved.map do |rr|
+          if current_user.is_admin_for?(rr.jurisdiction)
+            {
+                :role => rr.role.name,
+                :jurisdiction => rr.jurisdiction.name
+            }
+          else
+            nil
+          end
+        end
+      end
+      requests = requests.compact
+      requests.blank? ? "" : requests
     end
 
   end

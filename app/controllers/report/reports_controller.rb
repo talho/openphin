@@ -138,7 +138,7 @@ class Report::ReportsController < ApplicationController
 
    def run_reporter(options)
      reporter = ::Reporters::Reporter.new(options)
-     if Rails.env == 'development'
+     if %W(development).include? Rails.env
        reporter.perform  # for debugging
      else
        reporter.delay.perform

@@ -53,30 +53,33 @@ class RecipeInternal::GroupWithRecipientsRecipe < RecipeInternal
     end
 
     def generate_rendering( report, view, template, filters=nil )
-     id = {:report_id => report.id}
-     where = id.clone
-     filename = "#{report.name}.html"
-     if filters.present?
-       filtered_at = filters["filtered_at"]
-       filename = "#{report.name}#{filtered_at.nil? ? "" : "-#{filtered_at}"}.html"
-       where = where.merge(filters_for_query(filters["elements"]))
-     end
-     subject = report.dataset.find( id.merge( {:report=>{:$exists=>true}} )).first['report']
-     meta = report.dataset.find( id.merge( {:meta=>{:$exists=>true}} )).first["meta"]
-     result = report.dataset.find(id.merge( :i=>{:$exists=>true} ))
-     Dir.mktmpdir do |dir|
-       path = File.join dir, filename
-       File.open(path, 'wb') do |f|
-         rendering = view.render(:inline=>template,:type=>'html',
-                                 :locals=>{:report=>subject,
-                                           :entries=>result,
-                                           :directives=>meta["template_directives"],
-                                           :filters=>filters},
-                                 :layout=>layout_path)
-         f.write(rendering)
-       end
-       report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )
-     end
+      id = {:report_id => report.id}
+      where = id.clone
+      filename = "#{report.name}.html"
+      if filters.present?
+        filtered_at = filters["filtered_at"]
+        filename = "#{report.name}#{filtered_at.nil? ? "" : "-#{filtered_at}"}.html"
+        where = where.merge(filters_for_query(filters["elements"]))
+      end
+      subject = report.dataset.find( id.merge( {:report=>{:$exists=>true}} )).first['report']
+      meta = report.dataset.find( id.merge( {:meta=>{:$exists=>true}} )).first["meta"]
+      result = report.dataset.find(id.merge( :i=>{:$exists=>true} )).to_a
+      Dir.mktmpdir do |dir|
+        path = File.join dir, filename
+        File.open(path, 'wb') do |f|
+          rendering = view.render(
+            :file=>template,
+            :locals=>{
+                :report=>subject,
+                :entries=>result,
+                :directives=>meta["template_directives"],
+                :filters=>filters
+            },
+            :layout=>layout_path)
+            f.write(rendering)
+        end
+        report.update_attributes( :rendering=>File.new(path, "rb"), :incomplete=>false )
+      end
     end
 
   end
