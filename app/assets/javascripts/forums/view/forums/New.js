@@ -20,7 +20,7 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
     this.items = [
       {xtype: 'container', itemId: 'container', width: 350, layout: 'form', defaults: {anchor: '100%'}, items: [
         {xtype: 'textfield', fieldLabel: 'Forum Name', name:'forum[name]', allowBlank: false},
-        {xtype: 'checkbox', boxLabel: 'Hidden'}
+        {xtype: 'checkbox', itemId: 'hidden_checkbox', boxLabel: 'Hidden'}
       ]},
       {xtype: 'audiencepanel', itemId: 'audience_panel', flex: 1, height: 400, margins: '0 0 0 10px'}
     ];
@@ -63,6 +63,10 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
             data['forum[' + k + ']'] = data[k];          
           }
           this.getForm().setValues(data);
+          if (data.hide)
+          {
+            this.getComponent('container').getComponent('hidden_checkbox').setValue(true);            
+          }
           if (data.audience)
           {
             var audiencePanel = this.getComponent('audience_panel');
@@ -79,9 +83,11 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
       var audiencePanel = this.getComponent('audience_panel'); 
       var audienceIds = audiencePanel.getSelectedIds();
       var parentId = this.parentId;
+      var hidden = (this.getComponent('container').getComponent('hidden_checkbox').getValue() ? "1" : "0");
   
       action.options.params = {
-        'forum[parent_id]': parentId,        
+        'forum[parent_id]': parentId,
+        'forum[hide]': hidden,       
         'forum[audience_attributes][jurisdiction_ids][]': audienceIds.jurisdiction_ids,
         'forum[audience_attributes][role_ids][]': audienceIds.role_ids,
         'forum[audience_attributes][user_ids][]': audienceIds.user_ids,

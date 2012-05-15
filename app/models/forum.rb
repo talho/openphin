@@ -35,7 +35,7 @@ class Forum < ActiveRecord::Base
     if user.is_super_admin?
       self.scoped
     else
-      joins(send(:sanitize_sql_array, ["LEFT JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("hidden_at IS NULL and (au.id is not null or (au.id is null and owner_id = (?)) )",user_id)
+      joins(send(:sanitize_sql_array, ["LEFT JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("(owner_id = (?) or (au.id is not null and hidden_at is null))",user_id)
     end
   end
   

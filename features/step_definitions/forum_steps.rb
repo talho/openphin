@@ -6,7 +6,7 @@ end
 
 When /^I edit forum "([^\"]*)"$/ do |forum_name|
   step %Q{I navigate to "Forums"}
-  step %Q{the forum "Dallas Region Discussion" exists and is visible}
+  step %Q{the forum "#{forum_name}" exists and is visible}
   step %Q{the "#{forum_name}" grid row should have the edit_forum icon}
   step %Q{I click edit_forum on the "#{forum_name}" grid row}
   step %Q{I should see the "Edit Forum" panel}
@@ -69,6 +69,7 @@ When /^I enter the new hidden forum data and save$/ do
     | name          | type          |
     | Dallas County | Jurisdiction  |
   })
+  step %Q{I wait for the "Saving..." mask to go away}
 end
 
 Then /^I should see the "([^\"]*)" panel$/ do |name|
@@ -82,6 +83,10 @@ end
 
 Then /^the hidden forum is verified$/ do
   step %Q{the forum "Hidden Discussion" exists and is visible}
+  forum = Forum.find_by_name("Hidden Discussion")
+  assert_not_nil forum.hidden_at
+  step %Q{I edit forum "Hidden Discussion"}
+  page.should have_css('input[checked]')
   #TODO: verify that a regular user can't see the hidden forum
 end
 
