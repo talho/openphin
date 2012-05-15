@@ -32,17 +32,7 @@ Talho.Forums.view.Forums.Edit = Ext.extend(Ext.FormPanel, {
         waitMsg: 'Saving...',
         scope: this,
         success: function(){this.fireEvent('savecomplete');},
-        failure: function(form, action) {
-          if (action.response && action.response.responseText) {
-            var errors = {},
-              res = Ext.decode(action.response.responseText);
-            for (var k in res.errors){
-              errors['forums[' + k + ']'] = res.erorrs[k];
-            }
-            form.markInvalid(errors);
-          }
-        }
-      });}},
+      })}},
       {text: 'Cancel', scope: this, handler: function(){ this.fireEvent('cancel');}}
     ]
     
@@ -55,7 +45,7 @@ Talho.Forums.view.Forums.Edit = Ext.extend(Ext.FormPanel, {
         method: 'GET',
         success: function(form, action) {          
           var data = action.result.data;
-          if (data.audience)
+          if (data.moderator_audience)
           {
             var audiencePanel = this.getComponent('audience_panel');
             audiencePanel.load(data.moderator_audience.jurisdictions || [], data.moderator_audience.roles || [], data.moderator_audience.users || []);

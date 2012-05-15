@@ -19,11 +19,15 @@ class Forum < ActiveRecord::Base
                                    
   has_many :subforums,  :class_name => 'Forum', :foreign_key => :parent_id,
                         :order => "created_at ASC",
-                        :dependent => :destroy
+                        :dependent => :destroy, :uniq => true
+                        
                       
   belongs_to :owner,  :class_name => 'User', :foreign_key => :owner_id
   
   belongs_to :moderator_audience, :class_name => 'Audience', :foreign_key => :moderator_audience_id
+  
+  validate :validate_subforum, :on => :create
+  validate :validate_subforum, :on => :update
   
   def self.for_user(user)
     user_id = user.class == User ? user.id : user
@@ -31,7 +35,7 @@ class Forum < ActiveRecord::Base
     if user.is_super_admin?
       self.scoped
     else
-      joins(send(:sanitize_sql_array, ["JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("hidden_at IS NULL")
+      joins(send(:sanitize_sql_array, ["LEFT JOIN sp_audiences_for_user(?) au ON au.id = audience_id", user_id])).where("hidden_at IS NULL and (au.id is not null or (au.id is null and owner_id = (?)) )",user_id)
     end
   end
   
@@ -44,6 +48,9 @@ class Forum < ActiveRecord::Base
   
   accepts_nested_attributes_for :audience, 
             :allow_destroy => true   #destroy not necessary since forum deletion is not an option
+            
+  accepts_nested_attributes_for :moderator_audience,
+            :allow_destroy => true              
   
    # required in helper, with Rails 2.3.5 :_destroy is preferred  
   #alias :_destroy :_delete unless respond_to? '_destroy'
@@ -62,7 +69,6 @@ class Forum < ActiveRecord::Base
 
   validates_presence_of  :name
 
-
   def hide=(hide_string)
     self.hidden_at = hide_string == "1" ? Time.now : nil 
   end
@@ -79,16 +85,7 @@ class Forum < ActiveRecord::Base
       audience.update_attributes(attributes)
     end
   end
-  
-  def moderator_audience_attributes=(attributes)
-    unless moderator_audience
-      moderator_audience = Audience.new      
-    else
-      attributes.delete(:id)
-    end
-    moderator_audience.update_attributes(attributes)
-  end
-      
+
   def self.find_for(id,user)
     options = hide_conditions !user.is_super_admin?
     result = self.find(id,options)
@@ -142,6 +139,33 @@ class Forum < ActiveRecord::Base
 
   def to_s
     name
+  end
+  
+  protected
+    
+  def validate_subforum
+    if self.failed_child_forum_insertion?
+      self.errors.add("parent_id", "If you are inserting or moving a subforum you can't insert a subforum to itself or it's children")
+    elsif self.failed_subforum_depth_check?
+      self.errors.add("parent_id", "If you are inserting or moving a subforum it must be less than 5 deep")    
+    end
+  end
+  
+  def failed_subforum_depth_check?
+    if self.parent_id      
+      child = ActiveRecord::Base.connection.select_all("select sp_forum_get_count_to_deepest_leaf(#{self.id}) as depth")
+      parent = ActiveRecord::Base.connection.select_all("select sp_forum_get_count_to_root(#{self.parent_id}) as depth")
+      return parent[0]['depth'].to_i + child[0]['depth'].to_i > 5
+    end
+    return false
+  end
+  
+  def failed_child_forum_insertion?
+    if self.parent_id
+      result = ActiveRecord::Base.connection.select_all("select * from forums where id = #{self.parent_id} and #{self.parent_id} not in (select sp_get_children_forums_with_root(#{self.id}))")
+      return result.count == 0
+    end
+    return false
   end
 
   private

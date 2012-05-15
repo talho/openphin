@@ -94,7 +94,9 @@ Talho.Forums.view.Topics.Index = Ext.extend(Ext.Panel, {
     });
 
     this.buttons = this.buttons || ['->'];    
-    this.buttons.push({xtype : 'button', text: 'New Topic', handler: function() {this.fireEvent('newtopic', this.forumId)}, scope: this},{
+    this.buttons.push(
+      {xtype: 'button', text: 'New Subforum', handler: function() {this.fireEvent('newsubforum', null, this.forumId)}, scope: this},
+      {xtype : 'button', text: 'New Topic', handler: function() {this.fireEvent('newtopic', this.forumId)}, scope: this},{
       xtype : 'button',
       text : 'Refresh',
       handler : function() {

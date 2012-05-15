@@ -27,14 +27,14 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
 		}		
 	},
 	
-	newForum: function(id){	  
+	newForum: function(forumId,parentId){	  
     var ic = this.getPanel().innerContainer;
-    var nf = ic.add(new Talho.Forums.view.Forums.New({forumId: id}));      
+    var nf = ic.add(new Talho.Forums.view.Forums.New({forumId: forumId, parentId: parentId}));      
     ic.layout.setActiveItem(ic.items.getCount() - 1);
     
     nf.on({
       'cancel': function(){this._removePanel(nf); this.index.fireEvent('reload');},
-      'savecomplete': function(){this._removePanel(nf);},
+      'savecomplete': function(){this._removePanel(nf); this.index.fireEvent('reload');},
       'deactivate': function(){this._removePanel(nf);},
       scope: this
     });
@@ -65,6 +65,7 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'newtopic': this.newTopic,
       'edittopic': this.editTopic,
       'deletetopic': this.deleteTopic,
+      'newsubforum': this.newForum,
       scope: this
     });    
   },

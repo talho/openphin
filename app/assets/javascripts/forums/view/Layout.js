@@ -17,7 +17,7 @@ Talho.Forums.view.Layout = Ext.extend(Ext.Panel, {
    
    this.innerContainer = this.getComponent('centering').getComponent('container');
    this.add = function(){
-     this.innerContainer.add.apply(this.innerContainer, arguements);
+     this.innerContainer.add.apply(this.innerContainer, arguments);
    }
   },
   

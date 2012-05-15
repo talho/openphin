@@ -103,7 +103,7 @@ When /^(?:|I )navigate to ([^\"].*)$/ do |path|
     "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
     "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations",
     "the manage organizations tab".to_sym => "Admin > Manage Organizations",
-    "the organization membership request tab".to_sym => "Admin > Organization Membership Requests"
+    "the organization membership request tab".to_sym => "Admin > Organization Membership Requests"    
   }
 
   if path_lookup[path.to_sym].blank?

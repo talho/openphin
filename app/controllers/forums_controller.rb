@@ -33,8 +33,9 @@ class ForumsController < ApplicationController
   # POST /forums.json
   def create
     if (current_user.is_admin?)
-      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
+      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})      
       @forum = Forum.new(params[:forum])
+      @forum.owner_id = current_user.id
       if @forum.save
         respond_to do |format|
           format.json {render :json => {:success => true}}
@@ -55,7 +56,7 @@ class ForumsController < ApplicationController
   # GET /forums/1/edit.json
   def edit
     @forum = Forum.find(params[:id])
-    if (current_user.is_admin? || current_user.moderator_of?(@forum) || current_user.forum_owner_of?(@forum))
+    if (current_user.is_admin? || current_user.moderator_of?(@forum) || current_user.forum_owner_of?(@forum))      
       respond_with(@forum)
     else
       respond_to do |format|
@@ -69,7 +70,7 @@ class ForumsController < ApplicationController
   def update   
     if (current_user.is_admin? || current_user.moderator_of?(@forum) || current_user.forum_owner_of?(@forum))
       @forum = Forum.for_user(current_user).find(params[:id])
-      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})
+      merge_if(params[:forum][:audience_attributes],{:owner_id=>current_user.id})      
   
       # The nested attribute audience has habtm associations that don't play nicely with optimistic locking
       if params[:forum][:audience_attributes]
@@ -78,16 +79,12 @@ class ForumsController < ApplicationController
         ids = params[:forum][:audience_attributes].reject{|key,value| !(key =~ /_ids$/)}
         params[:forum][:audience_attributes] = non_ids
       end
-      
-      if params[:forum][:moderator_audience_attributes]
-        moderator_non_ids = params[:forum][:moderator_audience_attributes].reject{|key,value| key =~ /_ids$/}
-        moderator_audience_id = moderator_non_ids[:id]
-        moderator_ids = params[:forum][:moderator_audience_attributes].reject{|key,value| !(key =~ /_ids$/)}
-        params[:forum][:moderator_audience_attributes] = non_ids
-      end
   
       begin
-        if @forum.update_attributes(params[:forum])
+        if @forum.update_attributes(params[:forum])  
+          if params[:forum][:moderator_audience_attributes]
+            save_moderator_audience(merge_if(params[:forum][:moderator_audience_attributes],{:owner_id=>current_user.id}))
+          end        
           if params[:forum][:audience_attributes]
             # Once we're sure that forums and the audience itself isn't stale, we update the audience
             if audience_id
@@ -100,18 +97,6 @@ class ForumsController < ApplicationController
               @forum.audience = Audience.new
               @forum.audience.update_attributes(ids)
             end            
-          end
-          
-          if params[:forum][:moderator_audience_attributes]
-            if moderator_audience_id
-              @moderator_audience = Audience.find(moderator_audience_id)
-              @moderator_audience.update_attributes(moderator_ids)
-              
-              Audience.update_counters params[:forum][:moderator_audience_attributes][:id], {}
-            else
-              @forum.audience = Audience.new
-              @forum.audience.update_attributes(moderator_ids)
-            end
           end
   
           if params[:forum][:topic_attributes]
@@ -162,5 +147,13 @@ protected
       ahash.merge!(options)
     end
   end
-
+  
+  def save_moderator_audience(attributes)
+    attributes = attributes.reject{|key,value| !(key =~ /_ids$/)}
+    if !@forum.moderator_audience
+      @forum.moderator_audience = Audience.new      
+    end
+    @forum.moderator_audience.update_attributes(attributes)
+    @forum.save
+  end
 end

@@ -13,7 +13,8 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
     }
     
     this.buttons = this.buttons || ['->'];
-    this.buttons.push({xtype: 'button', id: 'newForumButton', text: 'New Forum', handler: function(){ this.fireEvent('newforum');}, scope: this},
+    this.buttons.push(      
+      {xtype: 'button', id: 'newForumButton', text: 'New Forum', handler: function(){ this.fireEvent('newforum');}, scope: this},
       {xtype: 'button', text: 'Refresh', handler: function(){ this.fireEvent('reload');}, scope: this });
         
     
@@ -25,7 +26,7 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
         fields: ['name', {name:'hidden_at', type: 'date'}, {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
                 'lock_version', 'id', {name: 'is_moderator', type: 'boolean'}, {name: 'is_super_admin', type: 'boolean'}, {name: 'is_forum_admin', type: 'boolean'}, 'threads'],
         baseParams: {per_page: 20},
-        autoLoad: {params: {start: 0}}               
+        autoLoad: {params: {start: 0}}
     });
     
     this.items.push({xtype: 'grid', itemId: 'grid', header: false, border: true, 

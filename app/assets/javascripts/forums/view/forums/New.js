@@ -41,7 +41,7 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
             var errors = {},
               res = Ext.decode(action.response.responseText);
             for (var k in res.errors){
-              errors['forums[' + k + ']'] = res.erorrs[k];
+              errors['forum[' + k + ']'] = res.erorrs[k];
             }
             form.markInvalid(errors);
           }
@@ -78,8 +78,10 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
     if(action.type == 'submit'){
       var audiencePanel = this.getComponent('audience_panel'); 
       var audienceIds = audiencePanel.getSelectedIds();
+      var parentId = this.parentId;
   
       action.options.params = {
+        'forum[parent_id]': parentId,        
         'forum[audience_attributes][jurisdiction_ids][]': audienceIds.jurisdiction_ids,
         'forum[audience_attributes][role_ids][]': audienceIds.role_ids,
         'forum[audience_attributes][user_ids][]': audienceIds.user_ids,
