@@ -14,6 +14,5 @@ Feature: Forum checking as a user
     And I should not see "New Forum" within "x-btn-text"    
     
   Scenario: Ensure people outside of the Audience Can't view the Forum
-    And I go to "Forums"
-    And the forum "ILI Tracking" is visible
-    And the forum "Resource Discovery" is not visible
+    Then the forum "ILI Tracking" exists and is visible
+    Then the forum "Resource Discovery" exists and is not visible

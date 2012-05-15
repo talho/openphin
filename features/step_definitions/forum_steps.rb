@@ -137,10 +137,14 @@ When /^"([^\"]*)" has( no)? visible ([^\"]*) icon$/ do |forum_name, visible, ico
   forum_row.should have_css('img.edit_forum.' + (visible ? 'x-hide-display' : ''))
 end
 
-Then /^the forum "([^\"]*)" exists and is visible$/ do |forum_name|
+Then /^the forum "([^\"]*)" exists and is( not)? visible$/ do |forum_name, exist|
   forum = Forum.find_by_name(forum_name)
   #TODO: nav to forums index
-  step %Q{I should see "#{forum_name}"}
+  if (exist)
+    step %Q{I should not see "#{forum_name}"}
+  else
+    step %Q{I should see "#{forum_name}"}
+  end
 end
 
 Given /^I have the forum "([^\"]*)"$/ do |forum_name|
