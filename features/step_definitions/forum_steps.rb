@@ -14,7 +14,7 @@ end
 
 When /^I manage forum "([^\"]*)"$/ do |forum_name|
   step %Q{I navigate to "Forums"}
-  step %Q{the forum "Dallas Discussion" exists and is visible}
+  step %Q{the forum "#{forum_name}" exists and is visible}
   step %Q{the "#{forum_name}" grid row should have the manage_forum icon}
   step %Q{I click manage_forum on the "#{forum_name}" grid row}
   step %Q{I should see the "Manage Moderators" panel}
@@ -25,60 +25,62 @@ end
 
 When /^I prepare for admin forum tests$/ do
   step %Q{the following entities exists:}, table(%{
-      | Jurisdiction  | Texas                   |
-      | Jurisdiction  | Dallas County           |
-      | Role          | Animal Control Director |
-      | Role          | Chief Epidemiologist    |
-    })
-    step %Q{Federal is the parent jurisdiction of:}, table(%{
-      | Texas |
-    })
-    step %Q{Texas is the parent jurisdiction of:}, table(%{
-      | Dallas County |
-    })
-    step %Q{the following administrators exist:}, table(%{
-      | admin@dallas.gov | Dallas County |
-    })
-    step %Q{I am logged in as "admin@dallas.gov"}
+    | Jurisdiction  | Texas                   |
+    | Jurisdiction  | Dallas County           |
+    | Role          | Animal Control Director |
+    | Role          | Chief Epidemiologist    |
+  })
+  step %Q{Federal is the parent jurisdiction of:}, table(%{
+    | Texas |
+  })
+  step %Q{Texas is the parent jurisdiction of:}, table(%{
+    | Dallas County |
+  })
+  step %Q{the following administrators exist:}, table(%{
+    | admin@dallas.gov | Dallas County |
+  })
+  step %Q{I am logged in as "admin@dallas.gov"}
 end
 
 When /^I prepare for (user|moderator)? forum tests$/ do |mode|
   step %Q{the following entities exists:}, table(%{
-      | Jurisdiction  | Texas                   |
-      | Jurisdiction  | Dallas County           |
-      | Role          | Animal Control Director |
-      | Role          | Chief Epidemiologist    |
-    })
-    step %Q{Federal is the parent jurisdiction of:}, table(%{
-      | Texas |
-    })
-    step %Q{Texas is the parent jurisdiction of:}, table(%{
-      | Dallas County |
-    })
-    step %Q{the following administrators exist:}, table(%{
-      | admin@dallas.gov | Dallas County |
-    })
-    if (mode == "user")    
-      step %Q{the following users exist:}, table(%{
-        | Hank Hill | hhill@example.com | User | Dallas County |
-      })
-    else
-      step %Q{the following users exist:}, table(%{
-        | Hank Hill | hhill@example.com | Moderator | Dallas County |
-      })
-    end
-    step %Q{I am logged in as "admin@dallas.gov"}
-    step %Q{I open a new forum} 
-    step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
-      | name          | type         |
-      | Dallas County | Jurisdiction |
-    })
-    step %Q{I open a new forum}
-    step %Q{I create forum with name "Resource Discovery" and with audience:}, table(%{
-      | name          | type         |
-    })
-    step %Q{I am logged in as "hhill@example.com"}
-    step %Q{I navigate to "Forums"}
+    | Jurisdiction  | Texas                   |
+    | Jurisdiction  | Dallas County           |
+    | Role          | Animal Control Director |
+    | Role          | Chief Epidemiologist    |
+  })
+  step %Q{Federal is the parent jurisdiction of:}, table(%{
+    | Texas |
+  })
+  step %Q{Texas is the parent jurisdiction of:}, table(%{
+    | Dallas County |
+  })
+  step %Q{the following administrators exist:}, table(%{
+    | admin@dallas.gov | Dallas County |
+  })  
+  step %Q{the following users exist:}, table(%{
+    | Hank Hill | hhill@example.com | User | Dallas County |
+  })
+  step %Q{I am logged in as "admin@dallas.gov"}
+  step %Q{I open a new forum} 
+  step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
+    | name          | type         |
+    | Dallas County | Jurisdiction |
+  })
+  if (mode == "moderator")
+    step %Q{I click manage_forum on the "ILI Tracking" grid row}
+    step %Q{I select the following in the audience panel:}, table(%Q{
+      | name                 | type         |
+      | Dallas County        | Jurisdiction |
+    })    
+    step %Q{I press "Save"}
+  end
+  step %Q{I open a new forum}
+  step %Q{I create forum with name "Resource Discovery" and with audience:}, table(%{
+    | name          | type         |
+  })
+  step %Q{I am logged in as "hhill@example.com"}
+  step %Q{I navigate to "Forums"}
 end
 
 When /^I enter the new forum data and save$/ do
@@ -138,9 +140,9 @@ When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:
   step %Q{I press "Save"}
 end
 
-When /^"([^\"]*)" has( no)? visible ([^\"]*) icon$/ do |forum_name, visible, icon_name|
-  forum_row = page.find(".x-grid3-row", :text => forum_name)
-  forum_row.should have_css('img.edit_forum.' + (visible ? 'x-hide-display' : ''))
+When /^"([^\"]*)" has( no)? visible ([^\"]*) icon$/ do |name, visible, icon_name|  
+  row = page.find(".x-grid3-row", :text => name)
+  row.should have_css("img.#{icon_name}" + (visible ? ".x-hide-display" : ""))
 end
 
 Then /^the forum "([^\"]*)" exists and is( not)? visible$/ do |forum_name, exist|

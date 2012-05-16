@@ -13,6 +13,6 @@ Feature: Forum checking as a moderator
     And "ILI Tracking" has no visible edit_forum icon
     And I should not see "New Forum" within "x-btn-text"    
     
-  Scenario: Ensure people outside of the Audience Can't view the Forum
+  Scenario: Ensure moderator outside of the Audience Can't view the Forum
     Then the forum "ILI Tracking" exists and is visible
     Then the forum "Resource Discovery" exists and is not visible

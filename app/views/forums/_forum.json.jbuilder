@@ -6,7 +6,6 @@ json.is_moderator current_user.moderator_of?(forum)
 json.is_owner current_user.forum_owner_of?(forum)
 if forum.audience
   json.audience do |json|
-    p forum.audience.id
     json.id forum.audience.id
     json.users forum.audience.users do |json, u|
       json.(u, :id, :email)
@@ -19,7 +18,6 @@ if forum.audience
 end
 if forum.moderator_audience
   json.moderator_audience do |json|
-    p forum.moderator_audience.id
     json.id forum.moderator_audience.id
     json.users forum.moderator_audience.users do |json, u|
       json.(u, :id, :email)
