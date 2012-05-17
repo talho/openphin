@@ -83,6 +83,8 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'deletetopic': this.deleteTopic,
       scope: this
     });
+    
+    topic.on('activate', topic.reload, topic);
   },
   
   newTopic: function(forumId) {
@@ -124,10 +126,8 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       method: 'DELETE',
       scope: this,
       callback: function(options, success){          
-        if(success){
-            alert('Successfully deleted');
-        }
-        else{
+        if(!success)
+        {
           alert("We were unable to delete the thread. An administrator has been notified.");
         }
       }

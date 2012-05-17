@@ -3,7 +3,7 @@ Ext.ns("Talho.Forums.view.Topics");
 Talho.Forums.view.Topics.Show = Ext.extend(Ext.Panel, {
   layout : 'fit',
   height : 400,
-  constructor : function() {    
+  constructor : function() {      
     Talho.Forums.view.Topics.Show.superclass.constructor.apply(this, arguments);
   },
   initComponent : function() {
@@ -34,11 +34,11 @@ Talho.Forums.view.Topics.Show = Ext.extend(Ext.Panel, {
       '<tr><td>Created at {created_at:date("Y-m-d g:i a")}</td><td>Updated at {updated_at:date("Y-m-d g:i a")}</td></tr></table></div>';
     var iconConfig = [
       {icon: '/assets/images/pencil.png', iconCls: 'edit_topic', tooltip: 'Edit Topic', handler: function(grid, i){var row = grid.getStore().getAt(i); this.fireEvent('editcomment',row.get('forum_id') ,row.get('id'));}, scope: this },      
-      {icon: '/assets/images/cross-circle.png', tooltip: 'Delete Topic', scope: this, 
+      {icon: '/assets/images/cross-circle.png', iconCls: 'delete_topic', tooltip: 'Delete Topic', scope: this, 
       handler: function(grid, row){
           var store = grid.getStore();
           var row = store.getAt(row);
-          Ext.Msg.confirm("Delete Record", 'Are you sure you wish to delete the topic "' + row.get("name") + '"', function(btn){
+          Ext.Msg.confirm("Delete Record", 'Are you sure you wish to delete the comment?', function(btn){
               if(btn === 'yes'){
                   store.removeAt(row)
                   this.fireEvent('deletetopic', row.get('forum_id'), row.get('id') )
@@ -75,7 +75,7 @@ Talho.Forums.view.Topics.Show = Ext.extend(Ext.Panel, {
     {xtype : 'button', text: 'Reply', handler: function() {this.fireEvent('newcomment', this.forumId, this.topicId)}, scope: this},
     {xtype : 'button', text : 'Refresh', handler : function() { this.fireEvent('reload'); }, scope : this }
     );
-    
+
     Talho.Forums.view.Topics.Show.superclass.initComponent.apply(this, arguments);
   },
   reload : function() {

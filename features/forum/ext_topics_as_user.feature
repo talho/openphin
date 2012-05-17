@@ -33,3 +33,38 @@ Feature: Topic checking as an user
   Scenario: A topic owner can edit the topic
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I check and edit topic "Outbreak Tracking" to "Outbreaks" with "Rashes recently"
+    Then the topic "Outbreaks" with content "Rashes recently" exists and is visible
+    
+  Scenario: A comment owner can edit the comment
+    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
+    And I reply to "Outbreak Tracking" with "oh!"
+    And the reply "oh!" to "Outbreak Tracking" exists and is visible
+    And I edit comment "oh!" to "oooooohhhhhhhh" in topic "Outbreak Tracking"
+    Then the reply "oooooohhhhhhhh" to "Outbreak Tracking" exists and is visible
+    
+  Scenario: Create a new comment by quoting the original post
+    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I quote "Rash Recently" adding "I concur" in topic "Outbreak Tracking"    
+    Then the quote "I concur" from "Rash Recently" to "Outbreak Tracking" exists and is visible
+    
+  Scenario: Create a new comment by quoting a reply
+    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
+    And I reply to "Outbreak Tracking" with "O really?"
+    And I quote "O really?" adding "I concur" in topic "Outbreak Tracking"    
+    Then the quote "I concur" from "O really?" to "Outbreak Tracking" exists and is visible
+    
+  Scenario: A comment owner can delete their comment
+    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
+    And I reply to "Outbreak Tracking" with "O really?"
+    And I delete "O really?" from topic "Outbreak Tracking"
+    Then the reply "O really?" to "Outbreak Tracking" doesn't exist and is not visible
+    
+  Scenario: A comment owner can cancel deleting their comment
+    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
+    And I reply to "Outbreak Tracking" with "O really?"
+    And I don't delete "O really?" from topic "Outbreak Tracking"
+    Then the reply "O really?" to "Outbreak Tracking" exists and is visible

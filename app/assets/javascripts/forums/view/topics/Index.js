@@ -35,7 +35,8 @@ Talho.Forums.view.Topics.Index = Ext.extend(Ext.Panel, {
         idProperty: 'comment_id',
         fields:  ['forum_id', 'comment_id', 'id', {name: 'sticky', type:'boolean'}, 'locked_at', 'locked',
                 'name', 'content', 'poster_id', 'hidden_at', 'poster_name', 'created_at', 'updated_at',
-                'lock_version', {name:'is_moderator', type:'boolean'}, {name:'is_super_admin', type:'boolean'}, 'id', 'posts', 'user_avatar'],
+                'lock_version', {name:'is_moderator', type:'boolean'}, {name:'is_forum_admin', type:'boolean'}, {name:'is_super_admin', type:'boolean'},
+                {name:'is_user_owned', type:'boolean'},'id', 'posts', 'user_avatar'],
         autoLoad: true
       }),
       columns: [

@@ -18,7 +18,7 @@ Talho.Forums.view.Forums.Edit = Ext.extend(Ext.FormPanel, {
     this.items = [];
     
     this.items.push(      
-      {xtype: 'audiencepanel', title: 'Moderators', itemId: 'audience_panel', flex: 1, height: 400, margins: '0 0 0 10px'}
+      {xtype: 'audiencepanel', title: 'Moderators', itemId: 'audience_panel', flex: 1, height: 400, margins: '0 0 0 10px', showGroups: true}
     );
     
     this.listeners = {

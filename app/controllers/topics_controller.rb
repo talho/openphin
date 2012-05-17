@@ -32,7 +32,7 @@ class TopicsController < ApplicationController
 
   # GET /topics/1/edit
   def edit
-    #Check if moderator, creator, or admin
+    #TODO: Check if moderator, creator, or admin
     respond_with(@topic)
   end
 
@@ -44,26 +44,27 @@ class TopicsController < ApplicationController
     @topic = Topic.new(params[:topic])
     respond_to do |format|
       if @forum.topics << @topic
-        format.html do
-          flash[:notice] = 'Topic was successfully created.'
-          redirect_to forum_topics_url
-        end
-        format.xml  { render :xml => @topic, :status => :created, :location => forum_topics_url }
         format.json do
           render :json => {:topic => @topic, :success => true}, :status => :created, :location => forum_topics_url
         end
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
         format.json { render :json => @topic.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   # PUT /topics/1
-  # PUT /topics/1.xml
   # PUT /topics/1.json
   def update
+    if (params[:topic] && params[:topic][:comment_attributes] && params[:topic][:comment_attributes][:comment_id])    
+      parent_topic = Topic.find(params[:topic][:comment_attributes][:comment_id])
+      while not parent_topic.comment_id.nil?
+        parent_topic = Topic.find(parent_topic.comment_id)
+      end
+      
+      @topic = @forum.comments.find(parent_topic.id)
+    end
+        
     # no forum selected for the move, so lets set it to the original
     params[:topic][:forum_id] = params[:topic][:dest_forum_id] unless params[:topic][:dest_forum_id].blank?
     params[:topic].delete("dest_forum_id")
@@ -73,10 +74,6 @@ class TopicsController < ApplicationController
       unless @topic.locked_at.nil?
         error = "This forum topic was closed and you will be unable to add or edit comments herein."
         respond_to do |format|
-          format.html do
-            flash[:error] = error
-            redirect_to forum_topic_path(@topic)
-          end
           format.json {render :json => {:success => false, :msg => error}, :status => 406}
         end
         return
@@ -87,30 +84,15 @@ class TopicsController < ApplicationController
     respond_to do |format|
       begin
         if @topic.update_attributes(params[:topic])
-          format.html do
-            flash[:notice] = 'Topic was successfully updated.'
-            redirect_to( params[:commit] == "Add Comment" ? :back : forum_topics_url )
-          end
-          format.xml  { render :json => {:success => true} }
           format.json { render :json => {:success => true} }
         else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @topic.errors, :status => :unprocessable_entity }
           format.json  { render :json => @topic.errors, :status => :unprocessable_entity }
         end
       rescue ActiveRecord::StaleObjectError
         error = "Another user recently updated the same topic.  Please try again."
-        format.html do
-          flash[:error] = error
-          redirect_to edit_forum_topic_path(@topic)
-        end
         format.json {render :json => {:success => false, :msg => error, :retry => true}}
       rescue StandardError => e
         error = "There was an unexpected error while saving this topic."
-        format.html do
-          flash[:error] = error
-          redirect_to forum_topic_path(@topic)
-        end
         format.json {render :json => {:success => false, :msg => error, :extra => e.message}}
       end
     end

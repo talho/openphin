@@ -130,8 +130,12 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
       };
       if (this.edit)
       {
-        action.options.params ['topic[comment_attributes][id]'] = this.editCommentId;
-      }      
+        action.options.params ['topic[comment_attributes][id]'] = this.topicId;
+      }
+      else
+      {
+        action.options.params ['topic[comment_attributes][comment_id]'] = this.topicId;
+      }
     }
   },
   border: false,  

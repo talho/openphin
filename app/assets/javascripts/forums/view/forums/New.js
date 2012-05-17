@@ -22,7 +22,7 @@ Talho.Forums.view.Forums.New = Ext.extend(Ext.form.FormPanel, {
         {xtype: 'textfield', fieldLabel: 'Forum Name', name:'forum[name]', allowBlank: false},
         {xtype: 'checkbox', itemId: 'hidden_checkbox', boxLabel: 'Hidden'}
       ]},
-      {xtype: 'audiencepanel', itemId: 'audience_panel', flex: 1, height: 400, margins: '0 0 0 10px'}
+      {xtype: 'audiencepanel', itemId: 'audience_panel', flex: 1, height: 400, margins: '0 0 0 10px', showGroups: true}
     ];
     
     this.listeners = {

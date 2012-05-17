@@ -68,12 +68,49 @@ When /^I reply to "([^\"]*)" with "([^\"]*)"$/ do |topic, reply|
   step %Q{I wait for the "Saving..." mask to go away}
 end
 
-When /^the reply "([^\"]*)" to "([^\"]*)" exists and is visible$/ do |reply, topic_name|
+When /^I edit comment "([^\"]*)" to "([^\"]*)" in topic "([^\"]*)"$/ do |old_comment, new_comment, topic|
+  step %Q{I select the "#{topic}" grid row}
+  step %Q{I click edit_topic on the "#{old_comment}" grid row}
+  step %Q{I fill in "topic[comment_attributes][content]" with "#{new_comment}"}
+  step %Q{I press "Save"}
+  step %Q{I wait for the "Saving..." mask to go away}
+end
+
+When /^I quote "([^\"]*)" adding "([^\"]*)" in topic "([^\"]*)"$/ do |quote, comment, topic|
+  step %Q{I select the "#{topic}" grid row}
+  step %Q{I click quote_topic on the "#{quote}" grid row}
+  comment = field = find_field("topic[comment_attributes][content]").value + comment
+  step %Q{I fill in "topic[comment_attributes][content]" with "#{comment}"}
+  step %{I press "Save"}
+  step %Q{I wait for the "Saving..." mask to go away}
+end
+
+Then /^the reply "([^\"]*)" to "([^\"]*)" exists and is visible$/ do |reply, topic_name|
+  step %Q{I wait for the "Loading..." mask to go away}
   topic = Topic.find_by_name(topic_name)
   assert_not_nil topic
   comment = topic.comments.find_by_content(reply)
   assert_not_nil comment
   #TODO: Check visible
+end
+
+When /^the quote "([^\"]*)" from "([^\"]*)" to "([^\"]*)" exists and is visible$/ do |quote, comment, topic_name|
+  topic = Topic.find_by_name(topic_name)
+  assert_not_nil topic
+  lookup = "select * from topics where content like '%" + comment + "%" + quote + "%'"
+  comment = Topic.find_by_sql(lookup)
+  assert_not_nil comment
+  #TODO: Check visible
+end
+
+When /^I( don't)? delete "([^\"]*)" from topic "([^\"]*)"$/ do |cancel,comment, topic|
+  step %Q{I select the "#{topic}" grid row}  
+  step %Q{I click delete_topic on the "#{comment}" grid row}
+  if cancel
+    step %Q{I press "No"}
+  else
+    step %Q{I press "Yes"}
+  end
 end
 
 When /^I check and edit topic "([^\"]*)" to "([^\"]*)" with "([^\"]*)"$/ do |old_topic_name, new_topic_name, new_content|
@@ -104,3 +141,10 @@ Then /^the topic "([^\"]*)" with content "([^\"]*)" exists and( not)? is visible
   #TODO: Check content visible
   topic.content.should  == content
 end
+
+Then /^the reply "([^\"]*)" to "([^\"]*)" doesn't exist and is not visible$/ do |reply, topic_name|
+  topic = Topic.find_by_name(topic_name)
+  assert_not_nil topic
+  comment = topic.comments.find_by_content(reply)
+  assert_nil comment
+end 
