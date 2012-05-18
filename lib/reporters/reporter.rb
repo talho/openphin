@@ -32,7 +32,7 @@ module Reporters
         end
   
         begin
-          view_path = Rails.configuration.paths["app/views"].first
+          view_path = File.dirname(recipe.template_path)
           view = view_for_at_using author, view_path, recipe
         rescue StandardError => e
           message = %Q{report "#{report.name}" erred in building supporting view: (#{e})}
