@@ -24,7 +24,6 @@ set :normalize_asset_timestamps, false
 # via the :deploy_to variable:
 set :deploy_to, "#{root_path}/#{application}"
 
-
 task :production do
   role :app, "txphin.texashan.org"
   role :web, "txphin.texashan.org"
@@ -57,7 +56,7 @@ end
 require 'bundler/capistrano'
 
 # Setup dependencies
-#before 'deploy:update_code', 'sphinx:stop'
+before 'deploy:update_code', 'sphinx:stop'
 before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"

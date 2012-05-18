@@ -39,7 +39,7 @@ namespace :sphinx do
   end
   
   task :symlink_sphinx_indexes, :roles => [:app] do
-    run "ln -nfs #{shared_path}/sphinx #{release_path}/db/sphinx"
+    run "ln -nfs #{shared_path}/sphinx #{current_path}/db/sphinx"
   end
   
   task :start, :roles => [:app] do
