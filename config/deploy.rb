@@ -57,7 +57,7 @@ end
 require 'bundler/capistrano'
 
 # Setup dependencies
-before 'deploy:update_code', 'sphinx:stop'
+#before 'deploy:update_code', 'sphinx:stop'
 before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
