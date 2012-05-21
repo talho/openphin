@@ -24,10 +24,10 @@ module Reporters
           raise StandardError, message
         end
         begin
-          recipe = RecipeExternal.find(report.recipe)
+          recipe = report.recipe.constantize
           logger.info %Q(Report "#{report.name}", recipe is "#{recipe.name})
         rescue
-          message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
+          message = %Q(Report "#{report.name}" could not find #{report.recipe})
           raise StandardError, message
         end
   
