@@ -64,14 +64,14 @@ class TopicsController < ApplicationController
       
       @topic = @forum.comments.find(parent_topic.id)
     end
-        
+            
     # no forum selected for the move, so lets set it to the original
     params[:topic][:forum_id] = params[:topic][:dest_forum_id] unless params[:topic][:dest_forum_id].blank?
     params[:topic].delete("dest_forum_id")
 
     unless params[:topic][:comment_attributes].nil?
       #we're going to check and make sure that the topic that we're updating isn't closed. if it's closed and there are comments, well, we need to return an error
-      unless @topic.locked_at.nil?
+      if !@topic.locked_at.nil? && !current_user.is_admin?("phin") && !current_user.is_super_admin? && !current_user.moderator_of?(Forum.find(@topic.forum_id))
         error = "This forum topic was closed and you will be unable to add or edit comments herein."
         respond_to do |format|
           format.json {render :json => {:success => false, :msg => error}, :status => 406}
@@ -102,6 +102,7 @@ class TopicsController < ApplicationController
   # DELETE /topics/1.xml
   # DELETE /topics/1.json
   def destroy
+    #TODO: Check permissions
     @topic.destroy
   end
   

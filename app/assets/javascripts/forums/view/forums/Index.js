@@ -32,9 +32,9 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
     this.items.push({xtype: 'grid', itemId: 'grid', header: false, border: true, 
       store: store,
       columns: [
-        {header: 'Name', cls: 'forum-name', dataIndex: 'name', id: 'name'},
-        {header: 'Topics', cls: 'forum-topic-count', dataIndex: 'threads', align: 'center'},
-        {xtype: 'actioncolumn', align: 'center', width: 30, iconCls: 'edit_forum',
+        {header: 'Name', cls: 'forum-name', dataIndex: 'name', id: 'name', sortable: false},
+        {header: 'Topics', cls: 'forum-topic-count', dataIndex: 'threads', align: 'center', sortable: false},
+        {xtype: 'actioncolumn', align: 'center', width: 30, iconCls: 'edit_forum', sortable: false,
          icon: '/assets/images/pencil.png', 
          getClass: function (v,meta,record) { 
            if (record.get('is_super_admin') || record.get('is_forum_admin')) { 
@@ -43,9 +43,10 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
          handler: function (grid,i) { 
            this.fireEvent('editforum', grid.getStore().getAt(i).get('id')) }, 
            scope: this, tooltip: 'Edit'},
-       {xtype: 'actioncolumn', align: 'center',
+       {xtype: 'actioncolumn', align: 'center', sortable: false,
          icon: '/assets/images/pencil.png',
          iconCls: 'manage_forum',
+         width: 30,
          getClass: function (v,meta,record) { 
            if (record.get('is_super_admin') || record.get('is_forum_admin')) { 
             return 'x-action-col-cell'} else { 

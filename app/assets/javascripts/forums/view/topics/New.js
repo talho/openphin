@@ -51,6 +51,8 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
       this.items = [
         {xtype: 'container', itemId: 'container', width: 350, layout: 'form', defaults: {anchor: '100%'}, items: [
           {xtype: 'textfield', fieldLabel: 'Topic Name', name:'topic[name]', allowBlank: false},
+          {xtype: 'checkbox', itemId: 'sticky_checkbox', boxLabel: 'Sticky'},
+          {xtype: 'checkbox', itemId: 'locked_checkbox', boxLabel: 'Locked'},
           [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -30', hideLabel: true, name: 'topic[content]'},
             {xtype:'box', anchor: '100% b', autoEl:{tag: 'a', href: 'http://redcloth.org/hobix.com/textile/quick.html', target: '_blank'}, html: 'Textile Quick Reference'}],
           ]}
@@ -101,11 +103,20 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
           method: 'GET',
           waitMsg: 'Loading...',          
           success: function(form,action){
-            var data = action.result.data;
+            var data = action.result.data;            
             if (this.isTopic)
             {
               data['topic[name]'] = data.name;
               data['topic[content]'] = data.content;
+              
+              if (data.sticky)
+              {
+                this.getComponent('container').getComponent('sticky_checkbox').setValue(true);
+              }
+              if (data.locked)
+              {
+                this.getComponent('container').getComponent('locked_checkbox').setValue(true);
+              }              
             }
             else {
               if (this.mode == 'quoteComment')
@@ -123,7 +134,7 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
   },
   beforeSubmit: function(form, action){
     if(action.type == 'submit' && !this.isTopic){
-  
+
       action.options.params = {        
         'topic[comment_attributes][forum_id]': this.forumId,
         'topic[comment_attributes][name]': (new Date()).format('D M j G:i:s O Y')
@@ -135,6 +146,15 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
       else
       {
         action.options.params ['topic[comment_attributes][comment_id]'] = this.topicId;
+      }
+    }
+    if (action.type == 'submit' && this.isTopic)
+    {
+      var sticky = (this.getComponent('container').getComponent('sticky_checkbox').getValue() ? "1" : "0");
+      var locked = (this.getComponent('container').getComponent('locked_checkbox').getValue() ? "1" : "0");
+      action.options.params = {
+        'topic[sticky]': sticky,
+        'topic[locked]': locked
       }
     }
   },

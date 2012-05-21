@@ -32,7 +32,7 @@ Talho.Forums.view.Topics.Index = Ext.extend(Ext.Panel, {
         url: '/forums/' + this.forumId + '/topics.json',
         root: 'topics',
         restful: true,
-        idProperty: 'comment_id',
+        idProperty: 'comment_id',        
         fields:  ['forum_id', 'comment_id', 'id', {name: 'sticky', type:'boolean'}, 'locked_at', 'locked',
                 'name', 'content', 'poster_id', 'hidden_at', 'poster_name', 'created_at', 'updated_at',
                 'lock_version', {name:'is_moderator', type:'boolean'}, {name:'is_forum_admin', type:'boolean'}, {name:'is_super_admin', type:'boolean'},
@@ -40,13 +40,13 @@ Talho.Forums.view.Topics.Index = Ext.extend(Ext.Panel, {
         autoLoad: true
       }),
       columns: [
-        {xtype: 'xactioncolumn', items: leadIconConfig, vertical: true},                      
-        {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name'},
-        {header: 'Replies', sortable: true, dataIndex: 'posts', width: 55},
-        {xtype: 'templatecolumn', header: 'Poster', sortable: true, dataIndex: 'poster_name', id: 'poster', width: 100, tpl: '<span class="inlineLink">{poster_name}</span>'},
-        {header: 'Created At', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
-        {header: 'Last Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135},
-        {xtype: 'actioncolumn', align: 'center', width: 30,
+        {xtype: 'xactioncolumn', items: leadIconConfig, vertical: true, sortable: false},                      
+        {id: 'name_column', header: 'Name', sortable: true, dataIndex: 'name', sortable: false},
+        {header: 'Replies', sortable: true, dataIndex: 'posts', width: 55, sortable: false},
+        {xtype: 'templatecolumn', header: 'Poster', sortable: true, dataIndex: 'poster_name', id: 'poster', width: 100, tpl: '<span class="inlineLink">{poster_name}</span>', sortable: false},
+        {header: 'Created At', sortable: true, dataIndex: 'created_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135, sortable: false},
+        {header: 'Last Updated', sortable: true, dataIndex: 'updated_at', renderer: Ext.util.Format.dateRenderer('n/j/Y h:i:s A'), width: 135, sortable: false},
+        {xtype: 'actioncolumn', align: 'center', width: 30, sortable: false,
          icon: '/assets/images/pencil.png',
          iconCls: 'edit_topic',
          getClass: function (v,meta,record) { 
@@ -56,17 +56,20 @@ Talho.Forums.view.Topics.Index = Ext.extend(Ext.Panel, {
          handler: function (grid,i) { 
            this.fireEvent('edittopic', this.forumId ,grid.getStore().getAt(i).get('id')) }, 
            scope: this, tooltip: 'Edit Topic'},
-         {xtype: 'actioncolumn', align: 'center', width: 30,
+         {xtype: 'actioncolumn', align: 'center', width: 30, sortable: false,
            icon: '/assets/resources/images/default/layout/collapse.gif',
            iconCls: 'move_topic',
            getClass: function (v,meta,record) { 
              if (record.get('is_super_admin') || record.get('is_forum_admin') || record.get('is_moderator')) { 
               return 'x-action-col-cell'} else { 
                 return 'x-hide-display';} }, 
-           handler: function (grid,i) { 
-             this.fireEvent('movetopic', grid.getStore().getAt(i).get('id')) }, 
+           handler: function (grid,i) {
+              var store = grid.getStore();
+              var record = store.getAt(i);
+              this.fireEvent('movetopic',record.get('forum_id'),record.get('id'),this.forumName,record.get('name'));
+             }, 
              scope: this, tooltip: 'Move Topic'},
-         {xtype: 'actioncolumn', align: 'center', width: 30,
+         {xtype: 'actioncolumn', align: 'center', width: 30, sortable: false,
            icon: '/assets/images/cross-circle.png',
            iconCls: 'delete_topic',
            getClass: function (v,meta,record) { 

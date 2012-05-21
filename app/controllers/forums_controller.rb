@@ -5,7 +5,7 @@ class ForumsController < ApplicationController
   # GET /forums.xml
   # GET /forums.json
   def index
-    @forums = Forum.for_user(current_user)
+    @forums = Forum.for_user(current_user).where('parent_id is null')
     respond_with(@forums)      
   end
 

@@ -62,9 +62,9 @@ Feature: Topic checking as an user
     And I delete "O really?" from topic "Outbreak Tracking"
     Then the reply "O really?" to "Outbreak Tracking" doesn't exist and is not visible
     
-  Scenario: A comment owner can cancel deleting their comment
+  Scenario: I click a posters name on the topics index
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
-    And I reply to "Outbreak Tracking" with "O really?"
-    And I don't delete "O really?" from topic "Outbreak Tracking"
-    Then the reply "O really?" to "Outbreak Tracking" exists and is visible
+    And I click inlineLink on the "Hank Hill" grid row
+    Then the "Profile: Hank Hill" tab should be open and active
+    

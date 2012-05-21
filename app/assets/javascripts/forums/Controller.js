@@ -66,6 +66,7 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'edittopic': this.editTopic,
       'deletetopic': this.deleteTopic,
       'newsubforum': this.newForum,
+      'movetopic': this.moveTopic,
       scope: this
     });    
   },
@@ -116,6 +117,24 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'cancel': function(){this._removePanel(new_topic);},
       'savecomplete': function(){this._removePanel(new_topic);},
       'deactivate': function(){this._removePanel(new_topic);},
+      scope: this
+    });
+  },
+  
+  moveTopic: function(forumId, topicId, forumName, topicName) {
+    var ic = this.getPanel().innerContainer;
+    var move_topic = ic.add(new Talho.Forums.view.Topics.Edit({
+      forumId: forumId,
+      topicId: topicId,
+      forumName: forumName,
+      topicName: topicName
+    }));
+    ic.layout.setActiveItem(ic.items.getCount() - 1);
+    
+    move_topic.on({
+      'cancel': function(){this._removePanel(move_topic);},
+      'savecomplete': function(){this._removePanel(move_topic);},
+      'deactivate': function(){this._removePanel(move_topic);},
       scope: this
     });
   },

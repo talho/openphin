@@ -1,4 +1,4 @@
-When /^I prepare for user topic tests$/ do
+When /^I prepare for topic tests$/ do
   step %Q{the following entities exists:}, table(%{
     | Jurisdiction  | Texas                   |
     | Jurisdiction  | Dallas County           |
@@ -17,6 +17,7 @@ When /^I prepare for user topic tests$/ do
   step %Q{the following users exist:}, table(%{
     | Hank Hill       | hhill@example.com     | User | Dallas County  |
     | Steve McAwesome | sawesome@example.com  | User | Dallas County  |
+    | Mr Moderator    | moderator@example.com | User | Dallas County  |
   })
   step %Q{I am logged in as "admin@dallas.gov"}
   step %Q{I open a new forum}
@@ -29,7 +30,22 @@ When /^I prepare for user topic tests$/ do
     | name  | type         |
     | Texas | Jurisdiction |
   })
+  step %Q{I click manage_forum on the "ILI Tracking" grid row}
+  step %Q{I select the following in the audience panel:}, table(%Q{
+    | name         | type |
+    | Mr Moderator | User |
+  })
+  step %Q{I press "Save"}
+end
+
+When /^I prepare for user topic tests$/ do
+  step %Q{I prepare for topic tests}
   step %Q{I am logged in as "hhill@example.com"}
+  step %Q{I navigate to "Forums"}
+end
+
+When /^I prepare for admin topic tests$/ do 
+  step %Q{I prepare for topic tests}  
   step %Q{I navigate to "Forums"}
 end
 
@@ -86,10 +102,9 @@ When /^I quote "([^\"]*)" adding "([^\"]*)" in topic "([^\"]*)"$/ do |quote, com
 end
 
 Then /^the reply "([^\"]*)" to "([^\"]*)" exists and is visible$/ do |reply, topic_name|
-  step %Q{I wait for the "Loading..." mask to go away}
-  topic = Topic.find_by_name(topic_name)
-  assert_not_nil topic
-  comment = topic.comments.find_by_content(reply)
+  topic = Topic.where("comment_id is null and name = '#{topic_name}'").first
+  assert_not_nil topic  
+  comment = Topic.where("comment_id = #{topic.id} and content = '#{reply}'")
   assert_not_nil comment
   #TODO: Check visible
 end
@@ -103,15 +118,35 @@ When /^the quote "([^\"]*)" from "([^\"]*)" to "([^\"]*)" exists and is visible$
   #TODO: Check visible
 end
 
-When /^I( don't)? delete "([^\"]*)" from topic "([^\"]*)"$/ do |cancel,comment, topic|
+When /^I move "([^\"]*)" to "([^\"]*)"$/ do |topic, newForum|
+    step %Q{I click move_topic on the "#{topic}" grid row}
+    step %Q{I select "#{newForum}" from ext combo "forumMover"}
+    step %Q{I press "Save"}
+end
+
+When /^I delete "([^\"]*)" from topic "([^\"]*)"$/ do |comment, topic|
   step %Q{I select the "#{topic}" grid row}  
-  step %Q{I click delete_topic on the "#{comment}" grid row}
+  step %Q{I click delete_topic on the "#{comment}" grid row}  
+  step %Q{I press "Yes"}
+end
+
+When /^I( don't)? delete topic "([^\"]*)"$/ do |cancel, topic|
+  step %Q{I click delete_topic on the "#{topic}" grid row}
   if cancel
     step %Q{I press "No"}
   else
     step %Q{I press "Yes"}
   end
 end
+
+When /^I (Sticky|Locked)? "([^\"]*)"$/ do |action, topic|
+  step %Q{I click edit_topic on the "#{topic}" grid row}
+  step %Q{I check "#{action}"}
+  step %Q{I press "Save"}
+  step %Q{I wait for the "Saving..." mask to go away}
+  step %Q{I wait for the "Loading..." mask to go away}
+end
+
 
 When /^I check and edit topic "([^\"]*)" to "([^\"]*)" with "([^\"]*)"$/ do |old_topic_name, new_topic_name, new_content|
   step %Q{"#{old_topic_name}" has visible edit_topic icon}
@@ -131,15 +166,20 @@ Then /^the correct actions are visible( for owner)? on row "([^\"]*)"$/ do |owne
 end
 
 Then /^the topic "([^\"]*)" with content "([^\"]*)" exists and( not)? is visible$/ do |topic_name, content, exist|
-  topic = Topic.find_by_name(topic_name)  
+  topic = Topic.where("comment_id is null and name = '#{topic_name}' and content = '#{content}'")
   assert_not_nil topic
   if (exist)
     step %Q{I should not see "#{topic_name}"}
   else
     step %Q{I should see "#{topic_name}"}
   end
-  #TODO: Check content visible
-  topic.content.should  == content
+  #TODO: Check content visible 
+end
+
+Then /^the topic "([^\"]*)" doesn't exist and is not visible$/ do |topic_name|
+  topic = Topic.find_by_name(topic_name)
+  assert_nil topic
+  step %Q{I should not see "#{topic_name}"}
 end
 
 Then /^the reply "([^\"]*)" to "([^\"]*)" doesn't exist and is not visible$/ do |reply, topic_name|

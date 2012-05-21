@@ -30,7 +30,7 @@ Ext.ns("Talho");
       'Talho.FindPeople': {js:'$(js)/search/FindPeople.js'},
       'Talho.ManageGroups': {js:'AudienceDisplayPanel $(ext_extensions)/xActionColumn.js AudiencePanel > $(js)/groups/view/list.js $(js)/groups/view/create_edit.js $(js)/groups/view/detail.js $(js)/groups/ManageGroups.js'},
       'Talho.Tutorials': {js: 'AjaxPanel > $(js)/dashboard/tutorials.js'},
-      'Talho.Forums': {js: '$(ext_extensions)/xActionColumn.js AudiencePanel $(ext_extensions)/BootstrapBreadcrumbContainer.js $(forums)/Controller.js $(forums)/view/Layout.js $(forums_view)/Index.js $(forums_view)/New.js $(forums_view)/Edit.js $(topics_view)/Index.js $(topics_view)/Show.js $(topics_view)/New.js'},      
+      'Talho.Forums': {js: '$(ext_extensions)/xActionColumn.js AudiencePanel $(ext_extensions)/BootstrapBreadcrumbContainer.js $(forums)/Controller.js $(forums)/view/Layout.js $(forums_view)/Index.js $(forums_view)/New.js $(forums_view)/Edit.js $(topics_view)/Index.js $(topics_view)/Show.js $(topics_view)/New.js $(topics_view)/Edit.js'},      
       'Talho.EditProfile': {js:'ProfileBase $(js)/profile/DevicesControl.js $(js)/profile/RolesControl.js $(js)/profile/OrganizationsControl.js > $(js)/profile/EditProfile.js'},
       'Talho.ShowProfile': {js:'$(js)/profile/ShowProfile.js'},
       'Talho.EditPassword': {js:'ProfileBase > $(js)/profile/EditPassword.js'},
