@@ -49,3 +49,4 @@ else
   require "backgroundrb_server"
   BackgrounDRb::MasterProxy.new()
 end
+
