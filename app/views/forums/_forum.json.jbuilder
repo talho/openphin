@@ -28,3 +28,8 @@ if forum.moderator_audience
     json.roles forum.moderator_audience.roles, :id, :name
   end
 end
+json.subforums forum.subforums do |json, subforum|
+  if subforum
+    json.partial! 'forum', forum: subforum
+  end 
+end

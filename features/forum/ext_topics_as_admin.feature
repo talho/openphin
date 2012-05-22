@@ -30,7 +30,7 @@ Feature: Topic checking as an administrator
   Scenario: I move a topic
     When I prepare a topic "Resource Discovery" with "Let's find something"
     And I move "Resource Discovery" to "Resource Tracking"    
-    When I view the topics in forum "Resource Tracking" as "sawesome@example.com"
+    When I view the topics in forum "Resource Tracking" as "sawesome@example.com"   
     Then the topic "Resource Discovery" with content "Let's find something" exists and is visible
   
   Scenario: I delete someone else's comment
@@ -61,15 +61,7 @@ Feature: Topic checking as an administrator
   Scenario: I lock a topic
     When I prepare a topic "Resource Discovery" with "Let's find something"
     And I Locked "Resource Discovery"    
-    And "Resource Discovery" has visible topic_closed icon
-    And I reply to "Resource Discovery" with "Woo"
-    And the reply "Woo" to "Resource Discovery" exists and is visible
-    When I view the topics in forum "ILI Tracking" as "moderator@example.com"
-    And I reply to "Resource Discovery" with "Moderator Woo"    
-    And the reply "Moderator Woo" to "Resource Discovery" exists and is visible    
-    When I view the topics in forum "ILI Tracking" as "hhill@example.com"
-    And I select the "Resource Discovery" grid row        
-    Then I should not see "Reply" within ".x-btn-text"    
+    Then moderators and admins can post users can not
     
   Scenario: New Subforum
     I create a sub form and it shows up

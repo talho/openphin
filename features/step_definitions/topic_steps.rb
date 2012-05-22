@@ -29,13 +29,7 @@ When /^I prepare for topic tests$/ do
   step %Q{I create forum with name "Resource Tracking" and with audience:}, table(%{
     | name  | type         |
     | Texas | Jurisdiction |
-  })
-  step %Q{I click manage_forum on the "ILI Tracking" grid row}
-  step %Q{I select the following in the audience panel:}, table(%Q{
-    | name         | type |
-    | Mr Moderator | User |
-  })
-  step %Q{I press "Save"}
+  })  
 end
 
 When /^I prepare for user topic tests$/ do
@@ -45,7 +39,25 @@ When /^I prepare for user topic tests$/ do
 end
 
 When /^I prepare for admin topic tests$/ do 
-  step %Q{I prepare for topic tests}  
+  step %Q{I prepare for topic tests}
+  step %Q{I click manage_forum on the "ILI Tracking" grid row}
+  step %Q{I select the following in the audience panel:}, table(%Q{
+    | name         | type |
+    | Mr Moderator | User |
+  })
+  step %Q{I press "Save"}
+  step %Q{I navigate to "Forums"}
+end
+
+When /^I prepare for moderator topic tests$/ do
+  step %Q{I prepare for topic tests}
+  step %Q{I click manage_forum on the "ILI Tracking" grid row}
+  step %Q{I select the following in the audience panel:}, table(%Q{
+    | name         | type |
+    | Mr Moderator | User |
+  })
+  step %Q{I press "Save"}
+  step %Q{I am logged in as "moderator@example.com"}
   step %Q{I navigate to "Forums"}
 end
 
@@ -122,6 +134,7 @@ When /^I move "([^\"]*)" to "([^\"]*)"$/ do |topic, newForum|
     step %Q{I click move_topic on the "#{topic}" grid row}
     step %Q{I select "#{newForum}" from ext combo "forumMover"}
     step %Q{I press "Save"}
+    step %Q{I wait for the "Saving..." mask to go away}
 end
 
 When /^I delete "([^\"]*)" from topic "([^\"]*)"$/ do |comment, topic|
@@ -152,6 +165,19 @@ When /^I check and edit topic "([^\"]*)" to "([^\"]*)" with "([^\"]*)"$/ do |old
   step %Q{"#{old_topic_name}" has visible edit_topic icon}
   step %Q{I click edit_topic on the "#{old_topic_name}" grid row}
   step %Q{I edit topic "#{new_topic_name}" with content "#{new_content}"}
+end
+
+Then /^moderators and admins can post users can not$/ do
+  step %Q{"Resource Discovery" has visible topic_closed icon}
+  step %Q{I view the topics in forum "ILI Tracking" as "admin@dallas.gov"}
+  step %Q{I reply to "Resource Discovery" with "Woo"}
+  step %Q{the reply "Woo" to "Resource Discovery" exists and is visible}
+  step %Q{I view the topics in forum "ILI Tracking" as "moderator@example.com"}
+  step %Q{I reply to "Resource Discovery" with "Moderator Woo"} 
+  step %Q{the reply "Moderator Woo" to "Resource Discovery" exists and is visible}
+  step %Q{I view the topics in forum "ILI Tracking" as "hhill@example.com"}
+  step %Q{I select the "Resource Discovery" grid row}
+  step %Q{I should not see "Reply" within ".x-btn-text"}
 end
 
 Then /^the correct actions are visible( for owner)? on row "([^\"]*)"$/ do |owner, name|

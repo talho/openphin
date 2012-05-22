@@ -10,8 +10,8 @@ Feature: Forum checking as a user
     
   Scenario: Ensure New Forum, Edit Forum, Manage Moderators do not appear
     When "ILI Tracking" has no visible manage_forum icon
-    And "ILI Tracking" has no visible edit_forum icon
-    And I should not see "New Forum" within "x-btn-text"    
+    And "ILI Tracking" has no visible edit_forum icon    
+    And I should not see "New Forum" within ".x-btn-text"    
     
   Scenario: Ensure people in the audience can view the forum
     Then the forum "ILI Tracking" exists and is visible
