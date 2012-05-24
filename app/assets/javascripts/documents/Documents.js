@@ -413,10 +413,10 @@ Talho.Documents = Ext.extend(function(){}, {
                         'updated_at': Ext.util.Format.date(sel.get('updated_at'), 'n/j/y h:i A')
                     });
                 }
-                else if(type.match(/share/)){ // we want to figure out what sharing permissions we have, eventually, but for now, roll with it
+                else if(type.match(/share|organization/)){ // we want to figure out what sharing permissions we have, eventually, but for now, roll with it
                     show.push('folder_detail_container');
                     if(sel.get('is_owner')){
-                        show.push('folder_action_container');
+                        show.push('folder_action_container', 'move_action_container');
                         this._add_folder_button.show();
                     }
                     this._fileControls.applySectionDetails('folder_detail_container', {
@@ -427,8 +427,11 @@ Talho.Documents = Ext.extend(function(){}, {
                     });
                 }
                 else{
-                    if(folderSelections[0] && folderSelections[0].get('type') == 'share'){  // we want to figure out what sharing permissions we have, eventually, but for now, roll with it
+                    if(folderSelections[0] && folderSelections[0].get('type').match(/share|organization/)){  // we want to figure out what sharing permissions we have, eventually, but for now, roll with it
                         show.push('copy_action_container', 'file_detail_container');
+                        if(folderSelections[0].get('is_owner')){
+                            show.push('move_action_container');
+                        }
                         if(folderSelections[0].get('is_author')){
                             show.push('file_action_container');
                         }
