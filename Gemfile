@@ -12,8 +12,7 @@ group :default do
   gem "paper_trail", ">= 2"
   gem "wicked_pdf", "0.7.0"
   gem "mongo", "1.6.2"
-    gem "bson", "1.6.2"
-    gem "bson_ext", "1.6.2"
+    gem 'bson_ext', '1.6.2'
     
   # These are required to boot into cucumber
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'

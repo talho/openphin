@@ -68,9 +68,9 @@ GIT
       activerecord
 
 PATH
-  remote: vendor/extensions/han
+  remote: vendor/extensions/facho
   specs:
-    han (0.0.1)
+    facho (0.0.1)
 
 PATH
   remote: vendor/extensions/rollcall
@@ -394,7 +394,6 @@ DEPENDENCIES
   awesome_nested_set
   backgroundrb-rails3!
   base32-crockford (= 0.1.0)
-  bson (= 1.6.2)
   bson_ext (= 1.6.2)
   caching_presenter!
   capistrano
@@ -412,9 +411,9 @@ DEPENDENCIES
   delayed_job (~> 3.0.1)
   delayed_job_active_record (~> 0.3)
   dynamic_form
+  facho!
   factory_girl
   feedzirra (= 0.0.23)
-  han!
   happymapper!
   headless
   httparty (= 0.8.1)
