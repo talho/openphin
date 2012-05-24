@@ -6,7 +6,7 @@
 -
     domain: txphin.org
     sign_in_partial: txphin    
-    logo_image: images/txphin_header_logo.png
+    logo_image: /stylesheets/images/txphin_header_logo.png
     help_email: phinadmin@dshs.state.tx.us
     about_button_label: About TXPhin
     about_button_url: /about
@@ -14,14 +14,14 @@
     domain: vms.talho.org
     sign_in_partial: talho
     new_user_path: new_vms_user
-    logo_image: images/talho_header_logo.png
+    logo_image: /stylesheets/images/talho_header_logo.png
     help_email: admins@talho.org
     about_button_label: About TALHO Phin
     about_button_url: /about_talhophin
 -
     domain: default
     sign_in_partial: txphin
-    logo_image: images/txphin_header_logo.png
+    logo_image: /stylesheets/images/txphin_header_logo.png
     help_email: phinadmin@dshs.state.tx.us
     about_button_label: About TXPhin
     about_button_url: /about

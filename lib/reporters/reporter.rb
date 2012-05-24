@@ -24,16 +24,15 @@ module Reporters
           raise StandardError, message
         end
         begin
-          recipe = RecipeExternal.find(report.recipe)
+          recipe = report.recipe.constantize
           logger.info %Q(Report "#{report.name}", recipe is "#{recipe.name})
         rescue
-          message = %Q(Report "#{report.name}" could not find #{report.recipe.demodulize})
+          message = %Q(Report "#{report.name}" could not find #{report.recipe})
           raise StandardError, message
         end
   
         begin
-          view_path = Rails.configuration.view_path
-          view = view_for_at_using author, view_path, recipe
+          view = view_for_at_using author, recipe
         rescue StandardError => e
           message = %Q{report "#{report.name}" erred in building supporting view: (#{e})}
           full_message = "#{message}\n#{e.backtrace.collect{|b| "#{b}\n"}}"
@@ -53,14 +52,14 @@ module Reporters
           end
   
         end
-  
+
         begin
           start_time = Time.now
           template_path = recipe.template_path
           unless Pathname(template_path).absolute?
-            template_path = File.join(view_path,recipe.template_path)
+            template_path = File.join(view.view_paths.first,recipe.template_path)
           end
-          recipe.generate_rendering report, view, File.read(template_path), params[:filters]
+          recipe.generate_rendering report, view, template_path, params[:filters]
           logger.info %Q{Report "#{report.name}", Rendering HTML #{Time.now-start_time} seconds}
           ReportMailer.report_generated(report.author.email,report.name).deliver
         rescue StandardError => e
@@ -77,8 +76,10 @@ module Reporters
   
   protected
   
-    def view_for_at_using(owner,path,recipe)
+    def view_for_at_using(owner,recipe)
+      path = Rails.configuration.paths["app/views"].first     # default path
       view = ActionView::Base.new path
+      view.view_paths << File.dirname(recipe.template_path)   # path for partial resolver
       view.class_eval do
       # current_user support for any subsequent capture query logic
         define_method :current_user do

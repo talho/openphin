@@ -59,9 +59,9 @@ GIT
       activerecord
 
 PATH
-  remote: vendor/extensions/facho
+  remote: vendor/extensions/han
   specs:
-    facho (0.0.1)
+    han (0.0.1)
 
 PATH
   remote: vendor/extensions/rollcall
@@ -124,8 +124,9 @@ GEM
       rails (>= 3.0.0)
     base32-crockford (0.1.0)
     blankslate (2.1.2.4)
-    bson (1.3.1)
-    bson_ext (1.3.1)
+    bson (1.6.2)
+    bson_ext (1.6.2)
+      bson (~> 1.6.2)
     builder (3.0.0)
     capistrano (2.12.0)
       highline
@@ -217,8 +218,8 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.18)
-    mongo (1.3.1)
-      bson (>= 1.3.1)
+    mongo (1.6.2)
+      bson (~> 1.6.2)
     multi_json (1.3.4)
     multi_xml (0.4.4)
     net-scp (1.0.4)
@@ -388,8 +389,8 @@ DEPENDENCIES
   awesome_nested_set
   backgroundrb-rails3
   base32-crockford (= 0.1.0)
-  bson (= 1.3.1)
-  bson_ext (= 1.3.1)
+  bson (= 1.6.2)
+  bson_ext (= 1.6.2)
   caching_presenter!
   capistrano
   capistrano-unicorn
@@ -406,9 +407,9 @@ DEPENDENCIES
   delayed_job (~> 3.0.1)
   delayed_job_active_record (~> 0.3)
   dynamic_form
-  facho!
   factory_girl
   feedzirra (= 0.0.23)
+  han!
   happymapper!
   headless
   httparty (= 0.8.1)
@@ -418,7 +419,7 @@ DEPENDENCIES
   jslint_on_rails
   libxml-ruby (~> 2.3)
   linecache19!
-  mongo (= 1.3.1)
+  mongo (= 1.6.2)
   no_peeping_toms (~> 1.1.0)
   option_attrs!
   packet (= 0.1.15)

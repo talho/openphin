@@ -25,15 +25,23 @@ class RecipeExternal::UserAllBatchRecipe < RecipeExternal
     def capture_to_db(report)
       @current_user = report.author
       data_set = report.dataset
-      data_set.insert({:report=>{:created_at=>Time.now.utc}})
-      data_set.insert( {:meta=>{:template_directives=>template_directives}}.as_json )
-      i = 1
+      id = {:report_id => report.id}
+      data_set.insert( id.merge( {:report=>{:created_at=>Time.now.utc}} ))
+      data_set.insert( id.merge( {:meta=>{:template_directives=>template_directives}} ))
+      index = 0
       User.find_each(:batch_size=>10000) do |u|
-        doc = {"i"=>i,"display_name"=>u.display_name,"email"=>u.email,"role_memberships"=>u.role_memberships.map(&:as_hash)}
-        data_set.insert(doc)
-        i = i + 1
+        begin
+          doc = id.clone
+          doc[:display_name] = u.display_name
+          doc[:email] = u.email
+          doc[:role_memberships] = u.role_memberships.map(&:as_hash)
+          doc[:i] = index += 1
+          data_set.insert(doc)
+        rescue NoMethodError
+          #skip illegitimate entry
+        end
+        data_set.create_index("i")
       end
-      data_set.create_index("i")
     end
 
   end

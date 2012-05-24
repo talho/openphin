@@ -11,8 +11,9 @@ group :default do
   gem "pg", ">= 0.11"
   gem "paper_trail", ">= 2"
   gem "wicked_pdf", "0.7.0"
-  gem "mongo", "1.3.1"
-    gem "bson_ext", "1.3.1"
+  gem "mongo", "1.6.2"
+    gem "bson", "1.6.2"
+    gem "bson_ext", "1.6.2"
     
   # These are required to boot into cucumber
   gem "caching_presenter", :git => 'git://github.com/talho/caching_presenter.git'
@@ -40,7 +41,6 @@ group :default do
   gem "RedCloth"
   gem "libxml-ruby", "~> 2.3"
   gem "acts-as-taggable-on", "~> 2.2.0"
-    gem "bson", "1.3.1"
   gem 'savon', '0.9.7'
   gem 'httpi', :git => 'git://github.com/talho/httpi.git'
   gem "httpclient", :git => 'git://github.com/talho/httpclient.git'

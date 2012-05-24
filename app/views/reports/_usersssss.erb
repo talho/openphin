@@ -1,0 +1,13 @@
+<% users.tap do |user| %>
+  <tr>
+    <td>
+      <%= user["display_name"] %>
+    </td>
+    <td>
+      <%= user["email"] %>
+    </td>
+    <td>
+      <%= to_rpt(user["role_memberships"]) %>
+    </td>
+  </tr>
+<% end %>
