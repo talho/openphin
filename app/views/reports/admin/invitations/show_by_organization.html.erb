@@ -1,21 +1,27 @@
-<%- unless (invitation = report) -%>
+<% unless (invitation = report) %>
   This Invitation does not exist or you do not have authorization to view it.
-<%- else -%>
-
-  <%- filtered = filters.present? ? "(FILTERED)" : "" -%>
-
-  <%- content_tag(:table,:cellspacing=>"0", :class=>"BreadnButter") do -%>
-
-    <%- content_tag(:caption, :style=>"text-align:center") do -%>
-      <%= content_tag(:h2, "#{invitation['name']}<br>Invitation Report by Organization<br>as of #{report['created_at']}") %>
-      <%= content_tag(:h3, "#{entries.count} Invitees Found" ) %>
-    <%- end -%>
-
-    <%- if entries.present? -%>
+<% else %>
+  <% filtered = filters.present? ? "(FILTERED)" : "" %>
+  <table cellspacing="0" class="BreadnButter" >
+    <caption style="text-align:center" class="">
+      <% if invitation.present? %>
+        <h2>
+          <%= h invitation['name'] %><br>
+          <%= "Invitation Report by Organization" %><br>
+          <%= h "as of #{invitation['created_at']}" %>
+        </h2>
+      <% end %>
+      <% if entries.present? %>
+        <h3>
+          <%= "#{entries.count} Invitees Found" %>
+        </h3>
+    <% end %>
+    </caption>
+    <% if entries.present? %>
       <%= render :partial => "reports/admin/invitations/entries", :locals => {:entries => entries, :directives => directives} %>
-    <%- end -%>
-
-  <%- end -%>
-
-<%- end -%>
-<%= content_tag(:p,"Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}") %>
+    <% end %>
+  </table>
+<% end %>
+<p>
+  <%= "Report Generated #{filtered} on: #{Time.now.utc} for #{current_user.display_name}" %>
+</p>

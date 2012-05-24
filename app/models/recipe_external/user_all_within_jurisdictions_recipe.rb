@@ -33,8 +33,9 @@ class RecipeExternal::UserAllWithinJurisdictionsRecipe < RecipeExternal
     def capture_to_db(report)
       @current_user = report.author
       data_set = report.dataset
-      data_set.insert({:report=>{:created_at=>Time.now.utc}})
-      data_set.insert( {:meta=>{:template_directives=>template_directives}}.as_json )
+      id = {:report_id => report.id}
+      data_set.insert( id.merge( {:report=>{:created_at=>Time.now.utc}} ))
+      data_set.insert( id.merge( {:meta=>{:template_directives=>template_directives}} ))
       if report.criteria.present?
         normalize_search_params(report.criteria)
         report.criteria['per_page'] = 1000   # max return set in config
@@ -42,9 +43,18 @@ class RecipeExternal::UserAllWithinJurisdictionsRecipe < RecipeExternal
       else
         users = User.where(report.author.within_jurisdictions).includes([:jurisdictions]).limit(1000).all
       end
-      users.each_with_index do |u,i|
-        doc = {"i"=>i+1,"display_name"=>u.display_name,"email"=>u.email,"role_memberships"=>u.role_memberships.map(&:as_hash)}
-        data_set.insert(doc)
+      index = 0
+      users.each do |u|
+        begin
+          doc = id.clone
+          doc[:display_name] = u.display_name
+          doc[:email] = u.email
+          doc[:role_memberships] = u.role_memberships.map(&:as_hash)
+          doc[:i] = index += 1
+          data_set.insert(doc)
+        rescue NoMethodError
+          #skip illegitimate entry
+        end
       end
       
       data_set.create_index("i")

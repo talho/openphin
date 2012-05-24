@@ -115,7 +115,7 @@ Feature: Invitation System
     When I navigate to the invitations page
     Then I should see "DSHS" in grid row 1  
     And I should see "TORCH" in grid row 2
-    
+
     When I select the "DSHS" grid cell
     Then I should see "DSHS"
     And I should see "Please Join DSHS"
@@ -125,6 +125,7 @@ Feature: Invitation System
       | name | email                  |
       | Jane | jane.smith@example.com |
       | Bob  | bob.smith@example.com  |
+
   Scenario: Viewing invitation completion status by email
     Given an Invitation "DSHS" exists with:
       | Subject      | Please Join DSHS                         |

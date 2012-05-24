@@ -1,4 +1,5 @@
 class Report::Report < ActiveRecord::Base
+  require 'csv'
 
   self.table_name = "report_reports"
 
@@ -16,22 +17,29 @@ class Report::Report < ActiveRecord::Base
 
   has_attached_file :rendering, :path => ":rails_root/reports/:rails_env/:id/:filename"
   
-  validates_presence_of     :author
-  validates_inclusion_of    :incomplete, :in => [false,true]
+  validates_presence_of  :author
+  validates_associated   :author
+  validates_inclusion_of :incomplete, :in => [false,true]
 
   after_create :do_after_create
   before_destroy :do_before_destroy
   
   validate :on => :create do
     begin
+      self[:recipe] = criteria["recipe"] unless recipe
       recipe.constantize
-    rescue StandardError
-      errors.add :base, "#{recipe} is not found on the system"
+      self[:name] = recipe.demodulize.gsub(/([A-Z][a-z]+)/,'\1-').sub(/-$/,'')
+    rescue NameError
+      errors[:base] << "a recipe class of #{recipe.nil? ? 'nil' : recipe.to_s} is not found on the system"
     end
   end
 
   def dataset
-    @collection ||= REPORT_DB.collection(name)
+    @collection ||= REPORT_DB.collection(name.to_s)
+  end
+
+  def full_name
+    "#{name}-#{id}"
   end
 
   def as_json(options={})
@@ -52,24 +60,24 @@ class Report::Report < ActiveRecord::Base
   def to_csv
     # uses the view helpers just as the html templates would
     begin
-      meta = dataset.find({:meta=>{:$exists=>true}}).first["meta"]
+      meta = dataset.find({:meta=>{:$exists=>true},:report_id=>id}).first["meta"]
       raise "Report #{name} is missing meta component" unless meta
-#     ex: [['name','Name'],['email','Email Address'],['role_requests','Pending Role Requests','to_rpt']]
+      #     ex: [['name','Name'],['email','Email Address'],['role_requests','Pending Role Requests','to_rpt']]
       directives = meta["template_directives"]
       raise "Report #{name} is missing column directives" unless directives
-    # setup supporting view
+      # setup supporting view
       helper_expected = directives.detect{|e| e.size > 2}
       if helper_expected
         view = ActionView::Base.new
-        recipe_instance = recipe.constantize
-        helpers = recipe_instance.respond_to?(:helpers) ? (recipe_instance.helpers || []) : []
+        recipe_obj = recipe.constantize
+        helpers = recipe_obj.respond_to?(:helpers) ? (recipe_obj.helpers || []) : []
         helpers.each {|h| view.extend(h.constantize)}
       end
-    # generate csv
+      # generate csv
       headers = directives.collect{|col| col.first}
       raise "Report #{name} has malformed the csv header" unless headers.kind_of? Array
-      entries = dataset.find(:i=>{:$exists=>true})
-      FasterCSV.generate(:force_quotes=>true,:headers=>headers,:write_headers=>true) do |row|
+      entries = dataset.find({:i=>{:$exists=>true},:report_id=>id}).to_a
+      csv = CSV.generate(:force_quotes=>true,:headers=>headers,:write_headers=>true) do |row|
         entries.each do |entry|
           rr = directives.inject([]) do |memo,column|
             memo << ( (column.size > 2) ? view.send(column[2],entry[column[0]]) : entry[column[0]] )
@@ -77,6 +85,7 @@ class Report::Report < ActiveRecord::Base
           row << rr
         end
       end
+      csv.empty? ? "\n" : csv
     rescue StandardError => error
       raise error
     end
@@ -86,8 +95,8 @@ class Report::Report < ActiveRecord::Base
 
   JSON_COLUMNS =  %w(id author_id rendering_file_name rendering_file_size rendering_updated_at dataset_size dataset_updated_at incomplete)
 
-  def do_before_destroy
-    dataset.drop
+  def before_destroy
+    dataset.remove("report_id"=>self[:id])
   end
 
 end

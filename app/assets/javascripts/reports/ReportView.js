@@ -31,7 +31,8 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
     });
 
 	this.reportViewContainer = new Ext.Panel({
-	  region: 'center',
+      id: 'report-rendering',
+      region: 'center',
       frame: false,
       layout: 'fit',
       border: true,
@@ -122,6 +123,7 @@ Talho.ReportView = Ext.extend(Ext.util.Observable, {
                 footer.getComponent('cancel').setText('OK');
                 var response = Ext.decode(responseObj.response.responseText);
                 win.getComponent('document-display').setValue(this.report_msg(response.report.file['name']));
+                win.close();
               },
               failure: function(form,responseObj){}
             });

@@ -10,7 +10,7 @@ begin
       unless File.exists?("vendor/extensions/#{name}")
         cmds << "git clone #{pp["url"]} --branch #{branch} vendor/extensions/#{name}"
       end
-      cmds << "cd vendor/plugins/#{name}"
+      cmds << "cd vendor/extensions/#{name}"
       if pp.has_key?("commit")
         cmds << "git checkout #{pp["commit"]}"
       elsif File.exists?("vendor/extensions/#{name}")
