@@ -1,4 +1,4 @@
-
+ENV["RAILS_ENV"] = "production"
 env = ENV["RACK_ENV"]
 working_directory '/var/www/openphin/current'
 

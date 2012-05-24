@@ -45,7 +45,7 @@ group :default do
   gem 'httpi', :git => 'git://github.com/talho/httpi.git'
   gem "httpclient", :git => 'git://github.com/talho/httpclient.git'
     gem 'delayed_job_active_record', "~> 0.3"
-  gem 'backgroundrb-rails3', :require => 'backgroundrb'
+  gem 'backgroundrb-rails3', :require => 'backgroundrb', :git => 'git://github.com/talho/backgroundrb-rails3.git'
     gem "packet", "0.1.15"
     gem "chronic", "0.2.3"
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3

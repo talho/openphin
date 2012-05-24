@@ -1,5 +1,7 @@
 class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
   set_worker_name :query_swn_for_acknowledgments_worker
+  set_no_auto_load(true)
+    
   def create(args = nil)
     # this method is called, when worker is loaded for the first time
   end
