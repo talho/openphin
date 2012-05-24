@@ -32,7 +32,6 @@ task :production do
 end
 
 task :staging do
-  set :branch, 'messaging'
   role :app, '192.168.30.97' #"staging.txphin.org"
   role :web, '192.168.30.97' #"staging.txphin.org"
   role :jobs, '192.168.30.97' #"staging.txphin.org"

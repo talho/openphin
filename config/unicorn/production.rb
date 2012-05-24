@@ -17,6 +17,8 @@ listen '0.0.0.0:8080', :backlog => 2048
 
 stderr_path "/var/www/openphin/current/log/unicorn.stderr.log"
 
+pid "/var/www/openphin/current/tmp/pids/unicorn.pid"
+
 ##
 # REE
 
