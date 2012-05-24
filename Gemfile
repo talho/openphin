@@ -4,6 +4,9 @@ source "http://rubygems.org"
 #source "http://gems.github.com" 
 
 group :default do
+  #temp fix because the net-ssh guys introduced an issue
+  gem "net-ssh", '~> 2.4.0'
+  
   # These are the gems required for phin to boot
   gem "rails", "~> 3.2.0"
   gem "clearance", "~> 0.16.0"
