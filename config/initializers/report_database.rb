@@ -4,7 +4,7 @@ config_path = File.join(Rails.root,'config','mongo_database.yml')
 begin
   configs = YAML::load(File.read(config_path)).with_indifferent_access
   if (config = configs[Rails.env])
-    conn = Mongo::Connection.new(config[:host],config[:port],config[:options])
+    conn = Mongo::Connection.new(config[:host],config[:port],config[:options].symbolize_keys)
     REPORT_DB = conn.db(config[:database])
     REPORT_DB.authenticate(config[:database],config[:password]) if config[:password]
   else
