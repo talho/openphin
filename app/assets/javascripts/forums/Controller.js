@@ -4,27 +4,37 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
 	constructor: function(config){
 		Ext.apply(this, config);
 		
-		this.index = new Talho.Forums.view.Forums.Index({itemId: 'index'});
+		this.index = new Talho.Forums.view.Forums.Index();
 		var layout = new Talho.Forums.view.Layout({
-			title: this.title || "Forums",
-			itemId: this.itemId,
+			title: this.title || "Forums",			
 			items: [
 				this.index
 			]
 		});
 		
-		this.index.on('reload', this.index.reload, this.index);
-		this.index.on({
-		   'editforum': this.newForum,
-		   'newforum': this.newForum,
-		   'showtopics': this.displayTopics,
-		   'manageforum': this.manageForum,
-		   scope: this
-		});
-
 		this.getPanel = function(){
-			return layout;
-		}		
+      return layout;
+    }
+        
+  	this.index.on('reload', this.index.reload, this.index);
+  	this.index.on({
+  	   'editforum': this.newForum,
+  	   'newforum': this.newForum,
+  	   'showtopics': this.displayTopics,
+  	   'manageforum': this.manageForum,
+  	   'newtab': this.newTab,
+  	   scope: this
+  	});
+  	
+  	// New Tab stuff
+		// if (config.panels)
+    // {
+       // var ic = this.getPanel().innerContainer;
+       // for(var i = 0; i < config.panels.length; i++)
+       // {
+        // ic.add(config.panels.items[i]); 
+       // }       
+    // }
 	},
 	
 	newForum: function(forumId,parentId){	  
@@ -67,6 +77,8 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'deletetopic': this.deleteTopic,
       'newsubforum': this.newForum,
       'movetopic': this.moveTopic,
+      'showtopics': this.displayTopics,
+      'newtab': this.newTab,
       scope: this
     });    
   },
@@ -82,6 +94,7 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
       'editcomment': this.editComment,
       'quotecomment': this.quoteComment,
       'deletetopic': this.deleteTopic,
+      'newtab': this.newTab,
       scope: this
     });
     
@@ -151,6 +164,11 @@ Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {
         }
       }
     });
+  },
+  
+  newTab: function () {
+    var panels = this.getPanel().innerContainer.items;
+    Application.fireEvent('opentab', {title: 'Forums Tab', panels: panels, initializer: 'Talho.Forums'});
   },
     
   _removePanel: function(panel){

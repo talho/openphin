@@ -9,8 +9,8 @@ Feature: Forum checking as a user
     When I prepare for user forum tests
     
   Scenario: Ensure New Forum, Edit Forum, Manage Moderators do not appear
-    When "ILI Tracking" has no visible manage_forum icon
-    And "ILI Tracking" has no visible edit_forum icon    
+    When I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"
+    And I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"    
     And I should not see "New Forum" within ".x-btn-text"    
     
   Scenario: Ensure people in the audience can view the forum

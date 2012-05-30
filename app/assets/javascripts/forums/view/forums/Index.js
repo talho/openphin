@@ -1,13 +1,14 @@
 Ext.ns("Talho.Forums.view.Forums");
 
 Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
-  layout: 'fit',
-  height: 400,
+  autoHeight: true,  
   constructor: function(){
     this.addEvents('showtopic', 'editforum');
+    this.on('activate', this.reload, this);
+    this.on('reload', this.reload, this);
     Talho.Forums.view.Forums.Index.superclass.constructor.apply(this, arguments);
   },
-  initComponent: function(){
+  initComponent: function(){    
     if (!this.items){
       this.items = [];
     }
@@ -24,58 +25,107 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
         restful: true,
         idProperty: 'id',
         fields: ['name', {name:'hidden_at', type: 'date'}, {name:'created_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name:'updated_at', type:'date', dateFormat: 'Y-m-d\\Th:i:sP'},
-                'lock_version', 'id', {name: 'is_moderator', type: 'boolean'}, {name: 'is_super_admin', type: 'boolean'}, {name: 'is_forum_admin', type: 'boolean'}, 'threads'],
-        baseParams: {per_page: 20},
-        autoLoad: {params: {start: 0}}
+                'lock_version', 'id', {name: 'is_moderator', type: 'boolean'}, {name: 'is_super_admin', type: 'boolean'}, {name: 'is_forum_admin', type: 'boolean'}, 'threads', 'subforums'],        
+        autoLoad: true
     });
     
-    this.items.push({xtype: 'grid', itemId: 'grid', header: false, border: true, 
-      store: store,
-      columns: [
-        {header: 'Name', cls: 'forum-name', dataIndex: 'name', id: 'name', sortable: false},
-        {header: 'Topics', cls: 'forum-topic-count', dataIndex: 'threads', align: 'center', sortable: false},
-        {xtype: 'actioncolumn', align: 'center', width: 30, iconCls: 'edit_forum', sortable: false,
-         icon: '/assets/images/pencil.png', 
-         getClass: function (v,meta,record) { 
-           if (record.get('is_super_admin') || record.get('is_forum_admin')) { 
-            return 'x-action-col-cell'} else { 
-            Ext.ComponentMgr.get('newForumButton').addClass('x-hide-display'); return 'x-hide-display';} }, 
-         handler: function (grid,i) { 
-           this.fireEvent('editforum', grid.getStore().getAt(i).get('id')) }, 
-           scope: this, tooltip: 'Edit'},
-       {xtype: 'actioncolumn', align: 'center', sortable: false,
-         icon: '/assets/images/pencil.png',
-         iconCls: 'manage_forum',
-         width: 30,
-         getClass: function (v,meta,record) { 
-           if (record.get('is_super_admin') || record.get('is_forum_admin')) { 
-            return 'x-action-col-cell'} else { 
-            Ext.ComponentMgr.get('newForumButton').addClass('x-hide-display'); return 'x-hide-display';} }, 
-         handler: function (grid,i) { 
-           this.fireEvent('manageforum', grid.getStore().getAt(i).get('id')) }, 
-           scope: this, tooltip: 'Manage Forum'}             
-      ],
-      loadMask: true,      
-      autoExpandColumn: 'name',
-      listeners: {
-        scope: this,
-        'rowclick': function(grid,i,e) { 
-          var target = e.getTarget(null, null, true);
-                
-          if (target.hasClass('x-action-col-icon')) {
-              return;
+    var forumTpl = new Ext.XTemplate(      
+      '<div class="forum-wrap" forumid="{id}">',
+        '<div class="forum-left" forumid="{id}"><table>',
+          '<tr>',
+            '<td><span class="forum-title" forum_name="{name}" forumid="{id}">{name}</span></td>',
+          '</tr>',
+          '<tr>',
+            '<td>',
+              '<tpl if="this.canEdit(values)">',
+                '<span class="forum-edit forum-actions" forum_name="{name}" forumid="{id}">&laquo;Edit</span>',
+              '</tpl>',
+              '<tpl if="this.canManage(values)">',
+                '<span class="forum-manage forum-actions" forum_name="{name}" forumid="{id}" alt="Manage Forum">&laquo;Manage</span>',
+              '</tpl>',
+            '<td>',
+          '</tr>',
+        '</table></div>',        
+        '<div class="forum-reply-count">{threads}</div>',
+        '<div class="forum-clear"></div>' ,       
+      '</div>',
+      {
+        canEdit: function(values){
+          return (this.isAdmin(values) || values.is_owner);
+        },
+        canManage: function(values){
+          return this.isAdmin(values);
+        },
+        isAdmin: function (values){
+          if (values.is_super_admin || values.is_forum_admin)
+          {
+            return true;
           }
-          var store = grid.getStore();
-          this.fireEvent('showtopics',store.getAt(i).get('id'), store.getAt(i).get('name'));
+          Ext.ComponentMgr.get('newForumButton').addClass('x-hide-display');
+          return false;
         }
       }
+    );
+    
+    var forumIndexTpl = new Ext.XTemplate(
+      '<div class="forum-header">',
+        '<span class="forum-header-title">My Forums</span>',
+        '<span class="forum-header-threads">Threads</span>',
+      '</div>',
+      '<div class="forum-divider">&nbsp;</div>',
+      '<ul class="forum-list">',
+        '<tpl for=".">',
+          '<li class="forum-index-selector" forumid="{id}">',      
+            '{[ this.renderForum(values) ]}',                
+          '</li>',          
+        '</tpl>',
+      '</ul>',
+      {
+        renderForum: function(values){
+          return forumTpl.apply(values); 
+        }
+      }
+    );
+    
+    var indexView = new Ext.DataView({
+      id: 'forumsIndex',
+      store: store,
+      tpl: forumIndexTpl,
+      emptyText: "No forums created",
+      listeners: {
+        'click': { 
+          fn:  function(div, index, node, e) {
+            if (node.classList.contains('forum-edit')) {            
+              this.fireEvent('editforum', parseInt(node.attributes['forumid'].value), null);        
+            }
+            else if (node.classList.contains('forum-manage')) {
+              this.fireEvent('manageforum', parseInt(node.attributes['forumid'].value));
+            }
+            else if (node.attributes['forumid']) {
+              var forumId = node.attributes['forumid'].value;
+              var forumName = Ext.DomQuery.selectValue(".forum-title[forumId=" + forumId + "]");
+              this.fireEvent('showtopics', parseInt(forumId), forumName);
+            }
+        },
+        scope: this }
+      }
     });
+    
+    this.items.push(indexView);
     
     Talho.Forums.view.Forums.Index.superclass.initComponent.apply(this, arguments);
   },
   reload: function () {    
-    this.getComponent('grid').getStore().load();
-  },
+    if (this.activated)
+    {         
+      for (i=0; i < this.items.getCount(); i++)
+      {
+        this.items.get(i).getStore().load();
+        this.items.get(i).refresh();
+      }
+    }
+    this.activated = true;
+  },  
   border: false,
   title: 'Forums',
   header: false

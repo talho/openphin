@@ -9,9 +9,10 @@ Feature: Forum checking as a moderator
     When I prepare for moderator forum tests
     
   Scenario: Ensure New Forum, Edit Forum, Manage Moderators do not appear
-    When "ILI Tracking" has no visible manage_forum icon
-    And "ILI Tracking" has no visible edit_forum icon
-    And I should not see "New Forum" within "x-btn-text"    
+    Then the forum "ILI Tracking" exists and is visible
+    When I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"
+    And I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"  
+    And I should not see "New Forum" within ".x-btn-text"    
     
   Scenario: Ensure moderator outside of the Audience Can't view the Forum
     Then the forum "ILI Tracking" exists and is visible

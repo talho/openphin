@@ -5,7 +5,7 @@ Talho.Forums.view.Topics.Edit = Ext.extend(Ext.form.FormPanel, {
   height : 400,
   constructor : function(config) {
     this.addEvents('cancel, savecomplete');
-    config.url = String.format('forums/{0}/topics/{1}.json', config.forumId, config.topicId);
+    config.url = String.format('/forums/{0}/topics/{1}.json', config.forumId, config.topicId);
     config.method = 'PUT'
     config.waitMsgTarget = true;
     

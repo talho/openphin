@@ -1,7 +1,6 @@
 Ext.ns("Talho.Forums.view");
 
 Talho.Forums.view.Layout = Ext.extend(Ext.Panel, {
-  layout: 'border',
   closable: true,
   id: 'ForumPanel',
   initComponent: function(){
@@ -10,7 +9,7 @@ Talho.Forums.view.Layout = Ext.extend(Ext.Panel, {
       {itemId: 'container', width: 940, layout: 'card', style: 'margin: auto;', activeItem: 0, items: items}
     );
     this.items = [{xtype: 'bootstrapbreadcrumb', region: 'north', panel: card_panel},  
-      {xtype: 'panel', border: false, autoScroll: true, itemId: 'centering', region: 'center', items: [card_panel]}
+      {xtype: 'panel', border: false, itemId: 'centering', region: 'center', items: [card_panel]}
      ];
      
    Talho.Forums.view.Layout.superclass.initComponent.apply(this, arguments);

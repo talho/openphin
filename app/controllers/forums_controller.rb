@@ -5,7 +5,7 @@ class ForumsController < ApplicationController
   # GET /forums.xml
   # GET /forums.json
   def index
-    @forums = Forum.for_user(current_user).where('parent_id is null')
+    @forums = Forum.for_user(current_user).where('parent_id is null').order('created_at')
     respond_with(@forums)      
   end
 
@@ -13,7 +13,7 @@ class ForumsController < ApplicationController
   # GET /forums/1.json
   def show
     @forum = Forum.for_user(current_user).find(params[:id])
-    respond_with(@forums)
+    respond_with(@forum)
   end
 
   # GET /forums/new

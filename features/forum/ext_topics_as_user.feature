@@ -14,28 +14,33 @@ Feature: Topic checking as an user
     Then the topic "Recent Outbreaks" with content "Rash recently" exists and is visible
     
   Scenario: Ensure Delete Topic, Edit Topic, Move Topic, and New Subforum don't appear for a user
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     Then the correct actions are visible for owner on row "Outbreak Tracking"
     When I view the topics in forum "ILI Tracking" as "sawesome@example.com"
     Then the correct actions are visible on row "Outbreak Tracking"
     
   Scenario: Ensure that the user can reply to an owned topic
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I reply to "Outbreak Tracking" with "O really?"
     And the reply "O really?" to "Outbreak Tracking" exists and is visible
   
   Scenario: Ensure that the user can reply to someone else's topic
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     When I view the topics in forum "ILI Tracking" as "sawesome@example.com"
     And I reply to "Outbreak Tracking" with "O really?"
     And the reply "O really?" to "Outbreak Tracking" exists and is visible
     
   Scenario: A topic owner can edit the topic
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I check and edit topic "Outbreak Tracking" to "Outbreaks" with "Rashes recently"
     Then the topic "Outbreaks" with content "Rashes recently" exists and is visible
     
   Scenario: A comment owner can edit the comment
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
     And I reply to "Outbreak Tracking" with "oh!"
@@ -44,11 +49,14 @@ Feature: Topic checking as an user
     Then the reply "oooooohhhhhhhh" to "Outbreak Tracking" exists and is visible
     
   Scenario: Create a new comment by quoting the original post
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
+    And I click ".forum-topic-title[topic_name='Outbreak Tracking']"
     And I quote "Rash Recently" adding "I concur" in topic "Outbreak Tracking"    
     Then the quote "I concur" from "Rash Recently" to "Outbreak Tracking" exists and is visible
     
   Scenario: Create a new comment by quoting a reply
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
     And I reply to "Outbreak Tracking" with "O really?"
@@ -56,15 +64,9 @@ Feature: Topic checking as an user
     Then the quote "I concur" from "O really?" to "Outbreak Tracking" exists and is visible
     
   Scenario: A comment owner can delete their comment
+    When I open forum "ILI Tracking"
     When I prepare a topic "Outbreak Tracking" with "Rash Recently"
     And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
-    And I reply to "Outbreak Tracking" with "O really?"
-    And I delete "O really?" from topic "Outbreak Tracking"
-    Then the reply "O really?" to "Outbreak Tracking" doesn't exist and is not visible
-    
-  Scenario: I click a posters name on the topics index
-    When I prepare a topic "Outbreak Tracking" with "Rash Recently"
-    And I view the topics in forum "ILI Tracking" as "sawesome@example.com"
-    And I click inlineLink on the "Hank Hill" grid row
-    Then the "Profile: Hank Hill" tab should be open and active
-    
+    And I reply to "Outbreak Tracking" with "O really?"    
+    And I delete comment "O really?"
+    Then the reply "O really?" to "Outbreak Tracking" doesn't exist and is not visible    

@@ -6,21 +6,28 @@ end
 
 When /^I edit forum "([^\"]*)"$/ do |forum_name|
   step %Q{I navigate to "Forums"}
-  step %Q{the forum "#{forum_name}" exists and is visible}
-  step %Q{the "#{forum_name}" grid row should have the edit_forum icon}
-  step %Q{I click edit_forum on the "#{forum_name}" grid row}
+  step %Q{the forum "#{forum_name}" exists and is visible}  
+  step %Q{I should have ".forum-edit[forum_name='#{forum_name}']" within "td"}
+  step %Q{I click ".forum-edit[forum_name='#{forum_name}']"}
   step %Q{I should see the "Edit Forum" panel}
 end
 
 When /^I manage forum "([^\"]*)"$/ do |forum_name|
   step %Q{I navigate to "Forums"}
   step %Q{the forum "#{forum_name}" exists and is visible}
-  step %Q{the "#{forum_name}" grid row should have the manage_forum icon}
-  step %Q{I click manage_forum on the "#{forum_name}" grid row}
+  step %Q{I should have ".forum-manage[forum_name='#{forum_name}']" within "td"}
+  step %Q{I click ".forum-manage[forum_name='#{forum_name}']"}
   step %Q{I should see the "Manage Moderators" panel}
   step %Q{I should see the following audience breakdown:}, table(%{
     | name | type |
   })
+end
+
+When /^I prepare for new tab tests$/ do
+   step %Q{I prepare for admin topic tests}
+   step %Q{I open forum "ILI Tracking"}
+   step %Q{I prepare a topic "Tracking" with "Let's find something"}
+   step %{I click ".forum-topic-title[topic_name='Tracking']"}
 end
 
 When /^I prepare for admin forum tests$/ do
@@ -56,7 +63,7 @@ When /^I prepare for (user|moderator)? forum tests$/ do |mode|
     | Dallas County |
   })
   step %Q{the following administrators exist:}, table(%{
-    | admin@dallas.gov | Dallas County |
+    | admin@dallas.gov | Dallas County |   
   })  
   step %Q{the following users exist:}, table(%{
     | Hank Hill | hhill@example.com | User | Dallas County |
@@ -68,7 +75,7 @@ When /^I prepare for (user|moderator)? forum tests$/ do |mode|
     | Dallas County | Jurisdiction |
   })
   if (mode == "moderator")
-    step %Q{I click manage_forum on the "ILI Tracking" grid row}
+    step %Q{I click ".forum-manage[forum_name='ILI Tracking']"}
     step %Q{I select the following in the audience panel:}, table(%Q{
       | name                 | type         |
       | Dallas County        | Jurisdiction |
@@ -88,6 +95,7 @@ When /^I enter the new forum data and save$/ do
       | name  | type         |
       | Texas | Jurisdiction |
   })
+  
 end
 
 When /^I enter the edit forum data and save$/ do
@@ -118,8 +126,7 @@ Then /^I should see the "([^\"]*)" panel$/ do |name|
 end
 
 Then /^the management of the forum is verified$/ do
-  step %Q{the forum "Dallas Discussion" exists and is visible}
-  #TODO: verify the moderatorness
+  step %Q{the forum "Dallas Discussion" exists and is visible}  
 end
 
 Then /^the hidden forum is verified$/ do
@@ -128,9 +135,6 @@ Then /^the hidden forum is verified$/ do
   assert_not_nil forum.hidden_at
   step %Q{I edit forum "Hidden Discussion"}
   page.should have_css('input[checked]')
-  #TODO: verify that a regular user can't see the hidden forum
-  #TODO: verify that a administrator and not owner can see it
-  #TODO: verify that it has a hidden forum icon
 end
 
 When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:$/ do |hidden, forum_name, table|  
@@ -140,14 +144,17 @@ When /^I (?:create|edit)( hidden)? forum with name "([^\"]*)" and with audience:
   step %Q{I press "Save"}
 end
 
-When /^"([^\"]*)" has( no)? visible ([^\"]*) icon$/ do |name, visible, icon_name|  
-  row = page.find(".x-grid3-row", :text => name)
-  row.should have_css("img.#{icon_name}" + (visible ? ".x-hide-display" : ""))
+When /^I create a new tab$/ do
+  step %Q{I press "New Tab"}
+end
+
+Then /^I see two forums tabs$/ do
+  step %Q{the "Forums" tab should be open inactive}
+  step %Q{the "Forums Tab" tab should be open active}
 end
 
 Then /^the forum "([^\"]*)" exists and is( not)? visible$/ do |forum_name, exist|
   forum = Forum.find_by_name(forum_name)
-  #TODO: nav to forums index
   if (exist)
     step %Q{I should not see "#{forum_name}"}
   else
