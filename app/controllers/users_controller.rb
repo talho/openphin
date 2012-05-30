@@ -74,9 +74,8 @@ class UsersController < Clearance::UsersController
     @user.email = @user.email.downcase
     respond_to do |format|
       if @user.save
-        format.html
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-        flash[:notice] = "Thanks for signing up! An email will be sent to #{@user.email} shortly to confirm your account. Once you've confirmed you'll be able to login to TXPhin.\n\nIf you have any questions please email support@#{DOMAIN}."
+        sign_in(@user)
+        redirect_back_or(url_after_create)
       else
         @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i if defined? params[:user][:role_requests_attributes]['0']['role_id']
         format.html { render :action => "new" }
