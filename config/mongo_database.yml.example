@@ -1,28 +1,28 @@
 # REPORT_DB = Mongo::Connection.new("localhost",27017,:pool_size=>5,:pool_timeout=>5).db("openphin_#{Rails.env}")
 
-:development:
-  :host:         127.0.0.1
-  :port:         27017
-  :database:     openphin_development
-  :options:
-    :pool_size:    5
-    :pool_timeout: 5
+development:
+  host:         127.0.0.1
+  port:         27017
+  database:     openphin_development
+  options:
+    pool_size:    5
+    pool_timeout: 5
 
-:test: &TEST
-  :host:         127.0.0.1
-  :port:         27017
-  :database:     openphin_test
-  :options:
-    :pool_size:    5
-    :pool_timeout: 5
+test: &TEST
+  host:         127.0.0.1
+  port:         27017
+  database:     openphin_test
+  options:
+    pool_size:    5
+    pool_timeout: 5
 
-:production:
-  :host:         127.0.0.1
-  :port:         27017
-  :database:     openphin_production
-  :options:
-    :pool_size:    5
-    :pool_timeout: 5
+production:
+  host:         127.0.0.1
+  port:         27017
+  database:     openphin_production
+  options:
+    pool_size:    5
+    pool_timeout: 5
 
 cucumber:
   <<: *TEST
