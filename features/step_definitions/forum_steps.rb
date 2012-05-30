@@ -125,6 +125,22 @@ Then /^I should see the "([^\"]*)" panel$/ do |name|
   step %Q{I the "#{name}" breadcrumb should be selected}
 end
 
+Given /^I have the forum named "([^\"]*)"$/ do |name|
+  Forum.find_by_name(name) || FactoryGirl.create(:forum, :name => name)
+end
+
+Given /^I have the topic "([^\"]*)" to forum "([^\"]*)"$/ do |topic_name,forum_name|
+  forum = Forum.find_by_name(forum_name) || FactoryGirl.create(:forum, :name => forum_name)
+  topic = Topic.find_by_name(topic_name) || FactoryGirl.create(:topic, :name => topic_name, :forum => forum, :poster => current_user)
+end
+
+When /^I have the comment "([^\"]*)" to topic "([^\"]*)" to forum "([^\"]*)"$/ do |comment_content, topic_name, forum_name|
+  forum = FactoryGirl.create(:forum, :name => forum_name)
+  topic = FactoryGirl.create(:topic, :name => topic_name, :poster => current_user, :forum => forum)
+  comment = FactoryGirl.create(:comment, :name => "not blank", :content => comment_content, :forum => forum, :poster => current_user)
+  topic.comments << comment
+end
+
 Then /^the management of the forum is verified$/ do
   step %Q{the forum "Dallas Discussion" exists and is visible}  
 end

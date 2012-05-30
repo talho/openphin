@@ -67,26 +67,6 @@ GIT
     rails_sql_views (0.8.2)
       activerecord
 
-PATH
-  remote: vendor/extensions/facho
-  specs:
-    facho (0.0.1)
-
-PATH
-  remote: vendor/extensions/rollcall
-  specs:
-    rollcall (0.0.1)
-
-PATH
-  remote: vendor/extensions/talho
-  specs:
-    talho (0.0.1)
-
-PATH
-  remote: vendor/extensions/vms
-  specs:
-    vms (0.0.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
