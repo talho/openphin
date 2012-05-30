@@ -67,7 +67,7 @@ Then /^I should (not )?see "([^\"]*)" in the pdf$/ do |inversion, text|
       Tempfile.open(['txt','.html'],:encoding => 'ascii-8bit') do |temp_txt|
         `pdftohtml -i -c -noframes #{temp_pdf.path} #{temp_txt.path}`
         # remove html tags and replace one or more newlines with a single space
-        @pdf_text = File.read(temp_txt.path,:encoding => 'ascii-8bit').gsub(%r{</?[^>]+?>}, '').gsub(/[\n]+/,' ')
+        @pdf_text = File.read(temp_txt.path,:encoding => 'ascii-8bit').gsub(%r{</?[^>]+?>}, '').gsub(/[\n]+|&#160;/,' ')
       end
     end
   end
