@@ -17,6 +17,7 @@ Talho.Topic = Ext.extend(Ext.util.Observable, {
             autoLoad: false,
             root: 'comments',
             idProperty: 'id',
+            totalProperty: 'total_entries',
             fields: ['id', 'content', 'formatted_content', {name: 'user_name', mapping: 'poster.display_name'}, {name: 'user_id', mapping: 'poster.id'}, 'user_avatar', {name: 'created_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'},
                 {name: 'updated_at', type: 'date', dateFormat: 'Y-m-d\\Th:i:sP'}, {name: 'is_moderator', type: 'boolean'}, 'comment_id'
             ],

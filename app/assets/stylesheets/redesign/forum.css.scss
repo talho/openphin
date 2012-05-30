@@ -1,139 +1,137 @@
-/* ----- Buttons, images, and such ------ */
+$title-color: #548AD4;
+$hover-color: #ECECEC;
+$header-color: #5E7088;
+$odd-color: #F0F8FF;
+$divider-color: lightgray;
 
-.edit_cell{
-    cursor:pointer;
-    background: image-url("images/pencil.png") no-repeat;
+.forum-title {
+  font-size: x-large;
+  color: $title-color;
+  font-variant: small-caps;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  display: inline-block;
 }
 
-.delete_cell{
-  background: image-url("images/cross-circle.png") no-repeat;
+.forum-title:hover {
+  color: $header-color;
 }
 
-.topic_container{
-  background: #fff;
+.forum-reply-count {
+  font-size: larger;
+  float: left;
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  display: inline-block;
+  padding-top: 10px;
 }
 
-.add_forum{
-  background: image-url("/add.png") no-repeat !important;
-  padding-left: 20px !important;
+.forum-divider {
+  display: block;
+  width: 100%;
+  height: 5px;
+  background-color: $divider-color;
+  margin-top: 5px;
 }
 
-.edit_header{
-  color: #fff !important;
+.forum-index-selector {
+  margin-top: 8px;
+  padding: 5px;
 }
 
-.move_topic{
-    background: image-url("resources/images/default/layout/collapse.gif") no-repeat;
+.forum-index-selector:hover {
+  background-color: $hover-color;
 }
 
-.topic-control-buttons span{
-    border: 1px transparent solid;
-    cursor: pointer;
-    height: 20px;
-    padding: 4px 4px 4px 24px;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    margin: 3px;
-    background-repeat: no-repeat;
-    background-position: left -2px;
+.forum-index-selector:nth-child(even) {
+  background-color: $odd-color;
 }
 
-.topic-control-buttons span:hover{
-    border: 1px black solid;
+.forum-index-selector:nth-child(even):hover {
+  background-color: $hover-color;
 }
 
-.topic-add-comment-button{
-    background-image: image-url("comment-add.png") !important;
+.forum-left {
+  width: 745px;
+  float: left;
+  display: inline-block;
 }
 
-.topic-edit-comment-button{
-    background-image: image-url("comment-edit.png") !important;
+.forum-clear {
+  clear: both;
+  line-height: 0;
 }
 
-.topic-quote-comment-button{
-    background-image: image-url("comment.png") !important;
+.forum-actions {
+  font-size: x-small;
+  color: $header-color;
+  padding-left: 5px;
+  cursor: pointer;
 }
 
-.topic-delete-comment-button{
-    background-image: image-url("comment-delete.png") !important;
+.forum-actions:hover {
+  font-weight: bolder;
 }
 
-/* ----- End Buttons, images, and such --- */
-
-/* ----- Topic view layout ------ */
-
-.topic-result-grid{
-    border: 0;
+.forum-header-title {
+  display: inline-block;
+  width: 750px;
+  color: $header-color;
+  font-size: x-large;
+  font-weight: bold;
 }
 
-.topic-result-grid .x-grid3-cell-inner, .topic-result-grid td{
-    padding: 0;
+.forum-header-threads {
+  color: $header-color;
+  width: 50px;
+  display: inline-block;
+  text-align: center;
 }
 
-.topic-content{
-    margin: 5px;
-    cursor: text;
+.forum-topic-comment-left {
+  float: left;  
+  width: 15%;
 }
 
-.topic-result-grid .x-grid3-td-post_content_column{
-    border: #666 solid;
-    border-width: 1px 0 0 0;
-    -moz-user-select: text;
-    -webkit-user-select: text;
-    user-select: text;
+.forum-topic-comment-right {
+  float: left;
+  width: 85%;
 }
 
-.topic-result-grid .x-grid3-td-post_content_column > div{
-    border: #DDD solid;
-    margin: 0 0 0 -1px;
-    border-width: 0 0 0 1px;
+.forum-topic-comment-lower {
+  background-color: $divider-color;
+  padding-left: 15%
 }
 
-.topic-user-info-column{
-    text-align: center;
-    border: solid;
-    border-color: #666 #DDD;
-    padding: 3px;
-    border-width: 1px 1px 0 0;
+.topic-comment-time {
+  font-size: x-small;
+  font-style: italic;
+  color: gray;
+  padding-bottom: 5px;
 }
 
-.topic-user-info-column div{
-    margin: 2px;
+.forum-topic-comment-poster-picture {
+  display: block;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 25px;
+  cursor: pointer;
 }
 
-.topic-user-name{
-    font-size:14px;
-    font-weight: bold;
+.forum-topic-comment-poster-name {
+  font-weight: bold;
+  font-style: italic;
+  padding-left: 5px;
+  display: block;
+  cursor: pointer;
 }
 
-.topic-additional-row{
-    position: relative;
-    height: 29px;
-    border: solid;
-    border-color: #CCC;
-    border-width: 1px 0;
-    padding: 0;
+#forumsIndex {
+  padding-bottom: 39px;
 }
 
-.topic-control-buttons{
-    position: absolute;
-    right: 0;
-    top: 8px;
+#topicsIndex {
+  padding-bottom: 39px;
 }
-
-/* ----- End Topic view layout ---- */
-
-/* ----- Comment styling -------- */
-
-.x-grid3-td-post_content_column p{
-    margin: 4px 0;
-}
-
-.x-grid3-td-post_content_column blockquote{
-    margin: 10px;
-    border: solid #999;
-    border-width: 1px 0;
-    padding: 0 5px;
-}
-
-/* ----- End Comment styling ---- */
