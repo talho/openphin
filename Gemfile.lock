@@ -67,6 +67,26 @@ GIT
     rails_sql_views (0.8.2)
       activerecord
 
+PATH
+  remote: vendor/extensions/facho
+  specs:
+    facho (0.0.1)
+
+PATH
+  remote: vendor/extensions/rollcall
+  specs:
+    rollcall (0.0.1)
+
+PATH
+  remote: vendor/extensions/talho
+  specs:
+    talho (0.0.1)
+
+PATH
+  remote: vendor/extensions/vms
+  specs:
+    vms (0.0.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -391,6 +411,7 @@ DEPENDENCIES
   delayed_job (~> 3.0.1)
   delayed_job_active_record (~> 0.3)
   dynamic_form
+  facho!
   factory_girl
   feedzirra (= 0.0.23)
   happymapper!
@@ -417,6 +438,7 @@ DEPENDENCIES
   rails (~> 3.2.0)
   rails-dev-tweaks (~> 0.6.1)
   rails_sql_views!
+  rollcall!
   rspec
   rspec-rails
   ruby-debug-base19x (~> 0.11.30.pre4)
@@ -427,11 +449,13 @@ DEPENDENCIES
   sinatra
   spork
   sprockets
+  talho!
   thinking-sphinx (~> 2.0.11)
   ts-delayed-delta
   uglifier
   unicorn
   validatable (= 1.6.7)
+  vms!
   wicked_pdf (= 0.7.0)
   will_paginate (~> 3)
   yajl-ruby
