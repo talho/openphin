@@ -91,8 +91,8 @@ Given /^"([^\"]*)" has the home phone "([^\"]*)"$/ do |email, value|
 end
 
 Given /^I am logged in as "([^\"]*)"$/ do |email|
-  user = User.find_by_email!(email)
-  login_as user
+  user = User.find_by_email!(email)  
+  login_as user  
   step %Q{I am logged in}
 end
 

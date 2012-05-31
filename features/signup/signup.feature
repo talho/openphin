@@ -27,8 +27,7 @@ Feature: Signing up for an account
       | Last Name             | Smith            |
       | Preferred name        | Jonathan Smith   |
       | Home Jurisdiction     | Dallas County    |
-      | Preferred language    | English          |
-    Then I should see "Thanks for signing up"
+      | Preferred language    | English          |    
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the communication device
       | Email | john@example.com |
@@ -42,8 +41,7 @@ Feature: Signing up for an account
       | Last Name      | Smith            |
       | Preferred name | Jonathan Smith   |
       | Home Jurisdiction | Texas        |
-      | Preferred language | English      |
-    Then I should see "Thanks for signing up"
+      | Preferred language | English      |    
     And "john@example.com" should not have the "Public" role in "Dallas County"
     And "john@example.com" should have the "Public" role in "Texas"
     And "john@example.com" should have the communication device
@@ -60,8 +58,7 @@ Feature: Signing up for an account
       | Home Jurisdiction  | Dallas County    |
       | Preferred language | English      |
       | What is your primary role | Health Alert and Communications Coordinator |
-      | Are you a public health professional? | <unchecked> |
-    Then I should see "Thanks for signing up!"
+      | Are you a public health professional? | <unchecked> |    
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should not have the "Health Alert and Communications Coordinator" role request for "Dallas County"
     
@@ -94,8 +91,7 @@ Feature: Signing up for an account
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
       | Are you a public health professional? | <checked> |
-      | Are you with any of these organizations | Red Cross        |
-    Then I should see "Thanks for signing up"
+      | Are you with any of these organizations | Red Cross        |    
     And "john@example.com" should have the "Public" role for "Dallas County"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Dallas County"
 
@@ -127,8 +123,7 @@ Feature: Signing up for an account
       | Home Jurisdiction | Texas    |
       | What is your primary role | Health Alert and Communications Coordinator |
       | Preferred language | English      |
-      | Are you a public health professional? | <checked> |
-    Then I should see "Thanks for signing up"
+      | Are you a public health professional? | <checked> |    
     And "john@example.com" should have the "Public" role for "Texas"
     And "john@example.com" should have the "Health Alert and Communications Coordinator" role request for "Texas"
 
@@ -139,7 +134,7 @@ Feature: Signing up for an account
       | body contains | Jonathan Smith (john@example.com) |
       | body contains | Health Alert and Communications Coordinator |
       | body contains | Texas |
-
+    When I sign out
     When I log in as "john@example.com"
     And I navigate to "Jonathan Smith > Manage Roles"
     #And I follow "My Account"
@@ -147,6 +142,7 @@ Feature: Signing up for an account
     Then I should see "waiting for approval"
 
     Given "john@example.com" has been approved for the role "Health Alert and Communications Coordinator"
+    When I sign out
     When I log in as "john@example.com"
     And I navigate to "Jonathan Smith > Manage Roles"
     Then I should not see "waiting for approval"

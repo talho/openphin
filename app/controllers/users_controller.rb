@@ -75,7 +75,7 @@ class UsersController < Clearance::UsersController
     respond_to do |format|
       if @user.save
         sign_in(@user)
-        redirect_back_or(url_after_create)
+        format.html { redirect_to :root }
       else
         @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i if defined? params[:user][:role_requests_attributes]['0']['role_id']
         format.html { render :action => "new" }

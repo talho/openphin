@@ -6,15 +6,9 @@
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
   <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <% css_list = (defined?($expansion_list)) ? $expansion_list.dup : [] %>
-  <% css_list.concat [ 'master' ] %>
-  <% css_list.push({:cache => 'all'}) %>
-  <%= stylesheet_link_tag(*css_list) %>
-
-  <% js_list = [] %>
-  <% js_list.concat [ 'jquery', 'application', 'alerts'] %>
-  <% js_list.push({:cache => 'all'}) %>
-  <%= javascript_include_tag(*js_list) %>
+  <%= stylesheet_link_tag 'master'%>
+ 
+  <%= javascript_include_tag 'jquery', 'application', 'alerts' %>
   <!--[if IE 6]>
 <script type="text/javascript">
 	var IE6UPDATE_OPTIONS = {
@@ -30,7 +24,7 @@
   <div id="header">
     <div id="portal_toolbar">
 
-      <%= link_to '<img src="' + domain_config['logo_image'] + '">', root_path %>
+      <%= link_to raw('<img src="' + domain_config['logo_image'] + '">'), root_path %>
       <ul class="apps">
         
       </ul>
@@ -82,8 +76,6 @@
     <ul id='comm_toolbar'>
     </ul>
   </div>
-  <div id="newphin" style="padding-top: 2px; margin-left: 42%;">
-    <%= link_to raw('<img style="border: none;" src="/assets/newphin.gif">'), root_path %>
   </div>
   <div class='help'>Need help?  Email <%= link_to domain_config['help_email'], "mailto:" + domain_config['help_email'] %></div>
   

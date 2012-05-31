@@ -46,7 +46,6 @@ Feature: An admin deleting users
       | First Name            | Greg                   |
       | Last Name             | Brown                  |
       | Home Jurisdiction     | Dallas County          |
-    Then I should see "Thanks for signing up"
 
     And "greg.brown@example.com" should have the "Public" role for "Dallas County"
 
@@ -76,7 +75,6 @@ Feature: An admin deleting users
       | First Name            | Greg                   |
       | Last Name             | Brown                  |
       | Home Jurisdiction     | Dallas County          |
-    Then I should see "Thanks for signing up"
  
   Scenario: Admin shouldn't be able to delete a user outside of his admin jurisdictions
     And I maliciously post a destroy user "zzz.smith@example.com"

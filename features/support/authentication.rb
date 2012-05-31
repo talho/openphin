@@ -2,7 +2,7 @@ module FeatureHelpers
   module AuthenticationMethods
     attr_reader :current_user
     
-    def login_as(user)
+    def login_as(user)        
         step %Q{I sign out} if current_user
         visit sign_in_path
         fill_in "Email", :with => user.email
