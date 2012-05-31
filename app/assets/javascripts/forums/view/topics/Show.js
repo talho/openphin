@@ -27,8 +27,7 @@ Talho.Forums.view.Topics.Show = Ext.extend(Ext.Panel, {
         restful: true,
         idProperty: 'id',
         fields: ['id', 'content', 'formatted_content', 'poster_name', 'poster_id', 'user_avatar', 
-                {name:'created_at', type:'date', dateFormat: 'n/d/Y H:i:s A'}, {name:'updated_at', type:'date', dateFormat: 'n/d/Y H:i:s A'},
-                'forum_id', 'locked_at',
+                'created_at', 'updated_at', 'forum_id', 'locked_at',
                 {name: 'is_moderator', type: 'boolean'}, {name: 'is_super_admin', type: 'boolean'}, 
                 {name: 'is_forum_admin', type: 'boolean'}, {name: 'is_user_owned', type: 'boolean'}, 'comment_id'] 
     });
@@ -74,13 +73,13 @@ Talho.Forums.view.Topics.Show = Ext.extend(Ext.Panel, {
         canDelete: function (values) {
           return ((values.is_moderator || values.is_forum_admin || values.is_super_admin || values.is_user_owned) && values.comment_id) 
         },
-        displayTime: function(values) {
+        displayTime: function(values) {          
           if (values.created_at == values.updated_at)
           {
-            return String.format("Created at {0}",values.created_at);
+            return String.format("Created at {0}",Ext.util.Format.date(values.created_at,'n/d/Y h:i:s A'));
           }
           else{
-            return String.format("Updated at {0}",values.updated_at);
+            return String.format("Updated at {0}",Ext.util.Format.date(values.updated_at,'n/d/Y h:i:s A'));
           }
         }
       }

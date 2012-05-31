@@ -18,18 +18,23 @@ When /^I prepare for topic tests$/ do
     | Hank Hill       | hhill@example.com     | User | Dallas County  |
     | Steve McAwesome | sawesome@example.com  | User | Dallas County  |
     | Mr Moderator    | moderator@example.com | User | Dallas County  |
-  })
-  step %Q{I am logged in as "admin@dallas.gov"}
-  step %Q{I open a new forum}
-  step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
-    | name          | type         |
-    | Dallas County | Jurisdiction |
-  })
-  step %Q{I open a new forum}
-  step %Q{I create forum with name "Resource Tracking" and with audience:}, table(%{
-    | name  | type         |
-    | Texas | Jurisdiction |
   })  
+  admin = User.find_by_email("admin@dallas.gov")
+  FactoryGirl.create(:forum, :name => 'ILI Tracking', :owner_id => admin.id, 
+    :audience_attributes => { :jurisdiction_ids => [Jurisdiction.find_by_name('Dallas County').id]}, 
+    :moderator_audience_attributes => { :user_ids => [User.find_by_email('moderator@example.com').id]})
+  forum = FactoryGirl.create(:forum, :name => 'Resource Tracking', :owner_id => admin.id, :audience_attributes => { :jurisdiction_ids => [Jurisdiction.find_by_name('Texas').id]} )
+  # step %Q{I am logged in as "admin@dallas.gov"}
+  # step %Q{I open a new forum}
+  # step %Q{I create forum with name "ILI Tracking" and with audience:}, table(%{
+    # | name          | type         |
+    # | Dallas County | Jurisdiction |
+  # })
+  # step %Q{I open a new forum}
+  # step %Q{I create forum with name "Resource Tracking" and with audience:}, table(%{
+    # | name  | type         |
+    # | Texas | Jurisdiction |
+  # })  
 end
 
 When /^I prepare for user topic tests$/ do
@@ -40,26 +45,31 @@ end
 
 When /^I prepare for admin topic tests$/ do 
   step %Q{I prepare for topic tests}
-  sleep 0.2
-  step %Q{I click ".forum-manage[forum_name='ILI Tracking']"}
-  step %Q{I select the following in the audience panel:}, table(%Q{
-    | name         | type |
-    | Mr Moderator | User |
-  })
-  step %Q{I press "Save"}
+  # sleep 0.2
+  # step %Q{I am logged in as "admin@dallas.gov"}
+  # step %Q{I navigate to "Forums"}
+  # step %Q{I click ".forum-manage[forum_name='ILI Tracking']"}
+  # step %Q{I select the following in the audience panel:}, table(%Q{
+    # | name         | type |
+    # | Mr Moderator | User |
+  # })
+  # step %Q{I press "Save"}
+  step %Q{I am logged in as "admin@dallas.gov"}
   step %Q{I navigate to "Forums"}
 end
 
 When /^I prepare for moderator topic tests$/ do
   step %Q{I prepare for topic tests}  
-  sleep 0.2
-  step %Q{I click ".forum-manage[forum_name='ILI Tracking']"} 
-  step %Q{I select the following in the audience panel:}, table(%Q{
-    | name         | type |
-    | Mr Moderator | User |
-  })
-  step %Q{I press "Save"}
-  sleep 0.2
+  # sleep 0.2
+  # step %Q{I am logged in as "admin@dallas.gov"}
+  # step %Q{I navigate to "Forums"}
+  # step %Q{I click ".forum-manage[forum_name='ILI Tracking']"} 
+  # step %Q{I select the following in the audience panel:}, table(%Q{
+    # | name         | type |
+    # | Mr Moderator | User |
+  # })
+  # step %Q{I press "Save"}
+  # sleep 0.2 
   step %Q{I am logged in as "moderator@example.com"}
   step %Q{I navigate to "Forums"}
 end

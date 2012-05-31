@@ -1,8 +1,8 @@
 Ext.ns("Talho.Forums.view.Topics");
 
 Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
-  layout: 'fit',
-  height: 400,
+  width: 940,
+  autoHeight: true,
   constructor : function(config) {
     this.addEvents('cancel','savecomplete');
 
@@ -49,19 +49,19 @@ Talho.Forums.view.Topics.New = Ext.extend(Ext.form.FormPanel, {
     
     if (this.isTopic) {
       this.items = [
-        {xtype: 'container', itemId: 'container', width: 350, layout: 'form', defaults: {anchor: '100%'}, items: [
+        {xtype: 'container', itemId: 'container', width: 940, layout: 'form', defaults: {anchor: '100%'}, items: [
           {xtype: 'textfield', fieldLabel: 'Topic Name', name:'topic[name]', allowBlank: false},
           {xtype: 'checkbox', itemId: 'sticky_checkbox', boxLabel: 'Sticky'},
           {xtype: 'checkbox', itemId: 'locked_checkbox', boxLabel: 'Locked'},
-          [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -30', hideLabel: true, name: 'topic[content]'},
+          [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -30', hideLabel: true, name: 'topic[content]', allowBlank: false, height: 200},
             {xtype:'box', anchor: '100% b', autoEl:{tag: 'a', href: 'http://redcloth.org/hobix.com/textile/quick.html', target: '_blank'}, html: 'Textile Quick Reference'}],
           ]}
       ];    
     }
     else {
       this.items = [
-        {xtype: 'container', itemId: 'container', width: 350, layout: 'form', defaults: {anchor: '100%'}, items: [          
-          [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -30', hideLabel: true, name: 'topic[comment_attributes][content]'},
+        {xtype: 'container', itemId: 'container', width: 940, layout: 'form', defaults: {anchor: '100%'}, items: [          
+          [{xtype: 'textarea', itemId: 'comment_contents', anchor: '100% -30', hideLabel: true, name: 'topic[comment_attributes][content]', allowBlank: false, height: 200},
             {xtype:'box', anchor: '100% b', autoEl:{tag: 'a', href: 'http://redcloth.org/hobix.com/textile/quick.html', target: '_blank'}, html: 'Textile Quick Reference'}],
         ]}
       ];      

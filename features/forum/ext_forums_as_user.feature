@@ -11,7 +11,12 @@ Feature: Forum checking as a user
   Scenario: Ensure New Forum, Edit Forum, Manage Moderators do not appear
     When I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"
     And I should not have ".forum-manage[forum_name='ILI Tracking']" within "td"    
-    And I should not see "New Forum" within ".x-btn-text"    
+    And I should not see "New Forum" within ".x-btn-text"
+    
+  Scenario: When there are no forums I should not see a New Forum button
+    When I am logged in as "chez@example.com"
+    And I navigate to "Forums"    
+    And I should not see "New Forum" within ".x-btn-text"
     
   Scenario: Ensure people in the audience can view the forum
     Then the forum "ILI Tracking" exists and is visible

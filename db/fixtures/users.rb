@@ -49,6 +49,24 @@ if u.new_record? && u.save
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
 end
 
+u = User.find_by_email("channa@texashan.org") || User.new(
+  :first_name => 'Colin',
+  :last_name => 'Hanna',
+  :display_name => 'Colin Hanna',
+  :email => 'channa@texashan.org',
+  :password => 'Password1',
+  :password_confirmation => 'Password1',
+  :role_requests_attributes => [{:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.public.id}]
+)
+
+if u.new_record? && u.save
+  u.confirm_email!
+  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
+  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
+  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
+end
+
+
 unless Rails.env.strip.downcase == "production"
   u = User.find_by_email("awesome@example.com") || User.new(
     :first_name => 'Awesome',

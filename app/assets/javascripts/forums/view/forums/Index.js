@@ -60,8 +60,7 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
           if (values.is_super_admin || values.is_forum_admin)
           {
             return true;
-          }
-          Ext.ComponentMgr.get('newForumButton').addClass('x-hide-display');
+          }          
           return false;
         }
       }
@@ -112,6 +111,18 @@ Talho.Forums.view.Forums.Index = Ext.extend(Ext.Panel, {
     });
     
     this.items.push(indexView);
+    
+    Ext.Ajax.request({
+      url: '/users/' + Application.current_user + '/is_admin.json',
+      method: 'GET',
+      scope: this,
+      success: function (resp) {
+        var data = Ext.decode(resp.responseText);
+        if (data.admin == false && data.superadmin == false) {
+          Ext.ComponentMgr.get('newForumButton').addClass('x-hide-display');
+        }
+      }
+    });
     
     Talho.Forums.view.Forums.Index.superclass.initComponent.apply(this, arguments);
   },

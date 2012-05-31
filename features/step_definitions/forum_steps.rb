@@ -66,7 +66,8 @@ When /^I prepare for (user|moderator)? forum tests$/ do |mode|
     | admin@dallas.gov | Dallas County |   
   })  
   step %Q{the following users exist:}, table(%{
-    | Hank Hill | hhill@example.com | User | Dallas County |
+    | Hank Hill | hhill@example.com | User | Dallas County        |
+    | Chez Chez | chez@example.com  | User | Chief Epidemiologist |
   })
   step %Q{I am logged in as "admin@dallas.gov"}
   step %Q{I open a new forum} 
