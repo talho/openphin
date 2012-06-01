@@ -68,9 +68,9 @@ GIT
       activerecord
 
 PATH
-  remote: vendor/extensions/han
+  remote: vendor/extensions/facho
   specs:
-    han (0.0.1)
+    facho (0.0.1)
 
 PATH
   remote: vendor/extensions/rollcall
@@ -411,9 +411,9 @@ DEPENDENCIES
   delayed_job (~> 3.0.1)
   delayed_job_active_record (~> 0.3)
   dynamic_form
+  facho!
   factory_girl
   feedzirra (= 0.0.23)
-  han!
   happymapper!
   headless
   httparty (= 0.8.1)
@@ -459,5 +459,3 @@ DEPENDENCIES
   wicked_pdf (= 0.7.0)
   will_paginate (~> 3)
   yajl-ruby
-
-  
