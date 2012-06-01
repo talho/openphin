@@ -459,3 +459,5 @@ DEPENDENCIES
   wicked_pdf (= 0.7.0)
   will_paginate (~> 3)
   yajl-ruby
+
+  
