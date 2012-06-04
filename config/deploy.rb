@@ -18,6 +18,8 @@ set :deploy_via, :remote_cache
 set :root_path, "/var/www"
 set :normalize_asset_timestamps, false
 
+set :rvm_ruby_string, '1.9.3-p194'                     # Or:
+require "rvm/capistrano"                               # Load RVM's capistrano plugin.
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -25,6 +27,7 @@ set :normalize_asset_timestamps, false
 set :deploy_to, "#{root_path}/#{application}"
 
 task :production do
+  set :rvm_ruby_string, 'ree-1.8.7'
   role :app, "txphin.texashan.org"
   role :web, "txphin.texashan.org"
   role :jobs, "jobs.texashan.org"
@@ -50,6 +53,14 @@ task :talhoapps_production do
   role :web, "talhoapps.talho.org"
   role :jobs, "talhoapps.talho.org"
   role :db,  "talhoapps.talho.org", :primary => true  
+end
+
+task :cloudtest do
+  set :user, 'ubuntu'
+  role :app, '192.168.1.99'
+  role :web, '192.168.1.99'
+  role :jobs, '192.168.1.99'
+  role :db, '192.168.1.99', :primary => true
 end
 
 require 'bundler/capistrano'

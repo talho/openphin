@@ -3,11 +3,13 @@
 #- url: "ssh://git@git.talho.org/home/git/repositories/han.git"
 #  branch: master
 #  commit: "75c7f36bf41fb788b550fe0a2579e99feed160be"
-- url: "ssh://git@git.talho.org/home/git/repositories/han.git"
-  branch: messaging
+#- url: "ssh://git@git.talho.org/home/git/repositories/han.git"
+#  branch: master
 - url: "ssh://git@git.talho.org/home/git/repositories/rollcall"
-  branch: ext_adst
+  branch: master
 - url: "ssh://git@git.talho.org/home/git/repositories/vms"
   branch: master
 - url: ssh://git@git.talho.org/home/git/repositories/talho
+  branch: master
+- url: ssh://git@git.talho.org/home/git/repositories/facho
   branch: master

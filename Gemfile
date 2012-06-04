@@ -101,6 +101,7 @@ end
 group :tools do
   # gem "launchy"
   gem "capistrano"
+  gem "rvm-capistrano"
   # gem "rubyforge"
   # gem "hoe"
   # #gem "git"
