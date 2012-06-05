@@ -10,15 +10,13 @@ set :scm, :git  # override default of subversion
 set :branch, 'master'
 set :use_sudo, false
 set :user, 'apache'
-set :git_enable_submodules, true
 set :ssh_options, {:forward_agent => true}
-set :default_run_options, {:shell => "sh -l"}
 set :rake, "bundle exec rake"
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
 set :normalize_asset_timestamps, false
 
-set :rvm_ruby_string, '1.9.3-p194'                     # Or:
+set :rvm_ruby_string, 'ruby-1.9.3-p194'                     # Or:
 require "rvm/capistrano"                               # Load RVM's capistrano plugin.
 
 # If you aren't deploying to /u/apps/#{application} on the target
@@ -66,6 +64,10 @@ end
 require 'bundler/capistrano'
 
 # Setup dependencies
+before 'deploy:setup', 'rvm:install_rvm'
+before 'deploy:setup', 'app:install_requirements'
+before 'deploy:setup', 'rvm:install_ruby'
+after 'deploy:setup', 'app:install_yml'
 before 'deploy:update_code', 'sphinx:stop'
 before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
