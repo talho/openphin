@@ -1,0 +1,7 @@
+
+self.instance_eval(Bundler.read_file("Gemfile"))
+
+gem 'rollcall', git: "ssh://git@git.talho.org/home/git/repositories/rollcall", branch: 'master'
+gem 'vms', git: "ssh://git@git.talho.org/home/git/repositories/vms", branch: 'master'
+gem 'talho', git: "ssh://git@git.talho.org/home/git/repositories/talho", branch: 'master'
+gem 'facho', git: "ssh://git@git.talho.org/home/git/repositories/facho", branch: 'master'

@@ -2,17 +2,14 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-Bundler.require(:default, Rails.env) if defined?(Bundler)
-
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  #Bundler.require *Rails.groups(:assets => %w(development test))
-  # If you want your assets lazily compiled in production, use this line
-  Bundler.require(:default, :assets, Rails.env)
-end
+ENV["BUNDLE_GEMFILE"] = "Gemfile.local" if ENV["BUNDLE_GEMFILE"].blank? && File.exists?(File.expand_path('../Gemfile.local', __FILE__))
+p ENV["BUNDLE_GEMFILE"]
+Bundler.require(:default, :assets, Rails.env) if defined?(Bundler)
 
 module Openphin
   class Application < Rails::Application
+
+
     config.autoload_paths += [config.root.join('lib')]
     config.encoding = 'utf-8'
     # Settings in config/environments/* take precedence over those specified here.

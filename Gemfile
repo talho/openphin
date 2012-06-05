@@ -111,10 +111,3 @@ group :tools do
   gem 'ruby-debug19'
   # gem "simplecov"
 end
-
-begin
-  Pathname.new(File.join(File.dirname(__FILE__), 'vendor', 'extensions')).each_child do |child|
-    gem child.basename.to_s, :path => child if child.directory?
-  end
-rescue
-end

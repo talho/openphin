@@ -63,3 +63,6 @@ app/models/report/nurse_assistance_recipe.rb
 *.rails2
 *.rails3
 .sass-cache
+Gemfile.lock
+Gemfile.local
+Gemfile.local.lock

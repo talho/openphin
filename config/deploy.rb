@@ -40,6 +40,7 @@ task :staging do
 end
  
 task :talhostaging do
+  set :bundle_gemfile, "Gemfile.talho"
   role :app, "talhostaging.talho.org"
   role :web, "talhostaging.talho.org"
   role :jobs, "talhostaging.talho.org"
@@ -47,6 +48,7 @@ task :talhostaging do
 end 
 
 task :talhoapps_production do
+  set :bundle_gemfile, "Gemfile.talho"
   role :app, "talhoapps.talho.org"
   role :web, "talhoapps.talho.org"
   role :jobs, "talhoapps.talho.org"
@@ -54,6 +56,7 @@ task :talhoapps_production do
 end
 
 task :cloudtest do
+  set :bundle_gemfile, "Gemfile.talho"
   set :user, 'ubuntu'
   role :app, '192.168.1.99'
   role :web, '192.168.1.99'
