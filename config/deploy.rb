@@ -11,9 +11,7 @@ set :branch, 'master'
 set :use_sudo, false
 set :user, 'apache'
 set :ssh_options, {:forward_agent => true}
-set :rake, "bundle exec rake"
 set :deploy_via, :remote_cache
-set :root_path, "/var/www"
 set :normalize_asset_timestamps, false
 
 set :rvm_ruby_string, 'ruby-1.9.3-p194'                     # Or:
@@ -22,7 +20,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "#{root_path}/#{application}"
+set :deploy_to, "#{application}"
 
 task :production do
   set :rvm_ruby_string, 'ree-1.8.7'
@@ -41,6 +39,7 @@ end
  
 task :talhostaging do
   set :bundle_gemfile, "Gemfile.talho"
+  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "talhostaging.talho.org"
   role :web, "talhostaging.talho.org"
   role :jobs, "talhostaging.talho.org"
@@ -49,6 +48,7 @@ end
 
 task :talhoapps_production do
   set :bundle_gemfile, "Gemfile.talho"
+  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "talhoapps.talho.org"
   role :web, "talhoapps.talho.org"
   role :jobs, "talhoapps.talho.org"
@@ -57,6 +57,7 @@ end
 
 task :cloudtest do
   set :bundle_gemfile, "Gemfile.talho"
+  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   set :user, 'ubuntu'
   role :app, '192.168.1.99'
   role :web, '192.168.1.99'
@@ -70,9 +71,10 @@ require 'bundler/capistrano'
 before 'deploy:setup', 'rvm:install_rvm'
 before 'deploy:setup', 'app:install_requirements'
 before 'deploy:setup', 'rvm:install_ruby'
+after 'deploy:setup', 'app:link_www'
 after 'deploy:setup', 'app:install_yml'
 before 'deploy:update_code', 'sphinx:stop'
-before 'bundle:install', 'app:phin_plugins'
+#before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
 after 'deploy:restart', 'sphinx:start'

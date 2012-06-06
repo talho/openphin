@@ -35,7 +35,7 @@ end
 require 'thinking_sphinx/deploy/capistrano'
 namespace :sphinx do
   task :stop, :roles => [:app] do
-    thinking_sphinx.stop
+     "rake thinking_sphinx:stop"
   end
   
   task :symlink_sphinx_indexes, :roles => [:app] do

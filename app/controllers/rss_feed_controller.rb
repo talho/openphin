@@ -9,6 +9,8 @@ class RssFeedController < ApplicationController
     # Need to split out the strange way it returns all of the different feeds
     feeds = feed.nil? ? [] : feed.values
     
+    require 'will_paginate/array'
+    
     feeds.each{|f| f.sanitize_entries!}
     entries = feeds.map{|f| f.entries.map{|e| {:title => e.title, :date => e.published, :url => e.url, :content => e.content, :summary => e.summary, :feed_title => f.title } } }.flatten
     respond_to do |format|
