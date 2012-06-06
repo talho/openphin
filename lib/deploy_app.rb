@@ -1,6 +1,6 @@
 def if_plugin_present(plugin_name)
-  plugins = YAML.load_file("config/phin_plugins.yml")
-  yield if plugins.find {|e| e["url"] =~ /\b#{plugin_name}\b/}
+  gemfile = File.read(fetch(:bundle_gemfile, 'Gemfile'))
+  yield if gemfile.match(plugin_name.to_s)
 end
 
 def file_exists?(file_name)
@@ -82,7 +82,7 @@ namespace :app do
       upload "config/initializers/cascade.yml.example", "#{shared_path}/cascade.yml" unless file_exists?("#{shared_path}/cascade.yml")
     }
     if_plugin_present(:rollcall) {
-      upload "vendor/extensions/rollcall/config/interface_fields.yml.example", "#{shared_path}/phin_plugins/interface_fields.yml" unless file_exists?("#{shared_path}/phin_plugins/interface_fields.yml")
+      put "", "#{shared_path}/interface_fields.yml" unless file_exists?("#{shared_path}/interface_fields.yml")
     }
         
     run "mkdir -p #{shared_path}/vendor/cache" unless dir_exists?("#{shared_path}/vendor/cache")
@@ -114,9 +114,10 @@ namespace :app do
       run "ln -fs #{shared_path}/certificates/cdc.pem #{release_path}/config/cdc.pem"
     }
     if_plugin_present(:rollcall) {
-      run "ln -fs #{shared_path}/phin_plugins/interface_fields.yml #{release_path}/vendor/extensions/rollcall/config/interface_fields.yml"
+      run "ln -fs #{shared_path}/interface_fields.yml #{release_path}/config/interface_fields.yml"
     }
 
+    run "mkdir -p #{release_path}/vendor/cache"
     run "ln -fs #{shared_path}/vendor/cache #{release_path}/vendor/cache"
     run "mkdir #{release_path}/tmp/cache"
     

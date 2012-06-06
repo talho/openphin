@@ -2,8 +2,6 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-ENV["BUNDLE_GEMFILE"] = "Gemfile.local" if ENV["BUNDLE_GEMFILE"].blank? && File.exists?(File.expand_path('../Gemfile.local', __FILE__))
-p ENV["BUNDLE_GEMFILE"]
 Bundler.require(:default, :assets, Rails.env) if defined?(Bundler)
 
 module Openphin

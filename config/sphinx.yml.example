@@ -13,7 +13,8 @@ test: &TEST
 production:
   enable_star: true
   min_infix_len: 2
-  bin_path: '/usr/local/bin'
+  max_matches: 30000
+
 
 cucumber:
   <<: *TEST
