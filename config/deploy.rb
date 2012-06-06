@@ -12,6 +12,7 @@ set :use_sudo, false
 set :user, 'apache'
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
+set :root_path, "/var/www"
 set :normalize_asset_timestamps, false
 
 set :rvm_ruby_string, 'ruby-1.9.3-p194'                     # Or:
@@ -20,7 +21,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "#{application}"
+set :deploy_to, "#{root_path}/#{application}"
 
 task :production do
   set :rvm_ruby_string, 'ree-1.8.7'
@@ -58,6 +59,7 @@ end
 task :cloudtest do
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  set :root_path, "/home/ubuntu"
   set :user, 'ubuntu'
   role :app, '192.168.1.99'
   role :web, '192.168.1.99'
