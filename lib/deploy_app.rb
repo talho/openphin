@@ -1,6 +1,5 @@
 def if_plugin_present(plugin_name)
-  gemfile = File.read(fetch(:bundle_gemfile, 'Gemfile'))
-  yield if gemfile.match(plugin_name.to_s)
+  yield if fetch(:phin_plugins, []).include?(plugin_name.to_sym)
 end
 
 def file_exists?(file_name)
@@ -32,23 +31,10 @@ def with_config_variable(var_name, var_value)
 end
 
 namespace :app do
-  desc "deploy the PHIN plugins: han, etc."
-  task :phin_plugins, :roles => [:app, :web, :jobs] do
-    YAML.load_file("config/phin_plugins.yml").each { |pp|
-      cmds = [ "cd #{release_path}" ]
-      name = File.basename(pp["url"]).sub(/\.git$/, "")
-      branch = pp["branch"] || "master"
-      cmds << "git clone #{pp["url"]} --branch #{branch} vendor/extensions/#{name}"
-      cmds << "cd vendor/extensions/#{name}"
-      cmds << "git checkout #{pp["commit"]}" if pp.has_key?("commit")
-      run cmds.join(" && ")
-    }
-  end
-  
   desc "migrate the PHIN plugins"
   task :phin_plugins_migrate, :roles => [:app, :web, :jobs] do
-    YAML.load_file("config/phin_plugins.yml").each { |pp|
-      name = File.basename(pp["url"]).sub(/\.git$/, "")
+    fetch(:phin_plugins, []).each { |pp|
+      name = pp.to_s
       run "cd #{release_path} && RAILS_ENV=production #{rake} db:migrate:#{name} db:seed:#{name}"
     }
   end

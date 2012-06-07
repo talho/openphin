@@ -24,7 +24,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 set :deploy_to, "#{root_path}/#{application}"
 
 task :production do
-  set :rvm_ruby_string, 'ree-1.8.7'
+  set :phin_plugins, [:han]
   role :app, "txphin.texashan.org"
   role :web, "txphin.texashan.org"
   role :jobs, "jobs.texashan.org"
@@ -32,6 +32,7 @@ task :production do
 end
 
 task :staging do
+  set :phin_plugins, [:han]
   role :app, '192.168.30.97' #"staging.txphin.org"
   role :web, '192.168.30.97' #"staging.txphin.org"
   role :jobs, '192.168.30.97' #"staging.txphin.org"
@@ -39,6 +40,7 @@ task :staging do
 end
  
 task :talhostaging do
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "talhostaging.talho.org"
@@ -48,6 +50,7 @@ task :talhostaging do
 end 
 
 task :talhoapps_production do
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "talhoapps.talho.org"
@@ -57,6 +60,7 @@ task :talhoapps_production do
 end
 
 task :cloudtest do
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   set :root_path, "/home/ubuntu"
@@ -76,7 +80,6 @@ before 'deploy:setup', 'rvm:install_ruby'
 after 'deploy:setup', 'app:link_www'
 after 'deploy:setup', 'app:install_yml'
 before 'deploy:update_code', 'sphinx:stop'
-#before 'bundle:install', 'app:phin_plugins'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
 after 'deploy:restart', 'sphinx:start'
