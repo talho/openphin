@@ -45,7 +45,7 @@ Some things that might help during install/upgrade:
 Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }
 ```
 
-#### PHIN Extensions/Plugins
+## PHIN Extensions/Plugins
 
 Additional functionality can be added via extension gems. These can now be run entirely as gems without. There is a generator in place, but
 as of this writing it is outdated.
