@@ -26,10 +26,12 @@ Testing takes advantage of Xvfb to run headlessly on your server. This is a good
 and takes some significant time to complete. You may need to install xvfb.
 
 #### Preparing the test environment
+
   sudo apt-get install xvfb
   RAILS_ENV=cucumber rake db:create && rake db:migrate
   
 #### Running tests
+
 ```cucumber```
 
 Notes
