@@ -223,16 +223,12 @@ class DashboardController < ApplicationController
 
   def menu
     @report_menu = "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}" if defined? REPORT_DB && current_user.has_non_public_role?
-    
-    Phin::Application.eval_if_plugin_present(:han) do
-       @han_menu = eval($menu_config[:han]) unless $menu_config[:han].nil?
-    end if current_user.has_app?('phin')
-    
+ debugger
     if current_user.has_non_public_role?
       plugin_config_items = []
-    
       $menu_config.each do |app, val|
-          plugin_config_items << eval(val) if app != :han && current_user.has_app?(app.to_s) && !val.nil?
+        debugger
+          plugin_config_items << eval(val) if current_user.has_app?(app.to_s) && !val.nil?
       end unless $menu_config.nil?
       
       @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
