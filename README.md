@@ -10,7 +10,7 @@ Install ruby 1.9.3, bundler, Postgresql, and if you want reporting, MongoDB. Wor
 For development, you need the curl development libraries, the postgres dev libraries, some JS engine (node is easy), and sphinx. For
 production, you'll also need clamav. This should be sufficient to run the application (for Ubuntu):
 
-```sudo apt-get install -qy clamav libclamav6 libclamav-dev libcurl3 libcurl3-gnutls libcurl4-openssl-dev libpq-dev nodejs sphinxsearch```
+    sudo apt-get install -qy clamav libclamav6 libclamav-dev libcurl3 libcurl3-gnutls libcurl4-openssl-dev libpq-dev nodejs sphinxsearch
 
 ## Installation
 
@@ -41,4 +41,7 @@ Some things that might help during install/upgrade:
 
 #### Rails 3 Upgrade
   - You should be able to upgrade directly from the old version of OpenPHIN to the new. The most recent OpenPHIN master uses Ruby 1.9.3
-  - Fix dashboards before deploying. run in console: Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }
+  - Fix dashboards before deploying. run in console: 
+``` ruby
+Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }
+```
