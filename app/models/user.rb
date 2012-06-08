@@ -315,7 +315,7 @@ class User < ActiveRecord::Base
   end
 
   def to_iphone_results
-    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort[0..1]
+    rm = role_memberships.map{|rm| "#{rm.role.to_s} in #{rm.jurisdiction.name}"}.sort[0..1]
     {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
       'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}]
@@ -323,7 +323,7 @@ class User < ActiveRecord::Base
   end
 
   def to_json_results(for_admin=false)
-    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
+    rm = role_memberships.map{|rm| "#{rm.role.to_s} in #{rm.jurisdiction.name}"}
     rq = (for_admin) ? role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} : []
     {
       'user_id' => id, 'display_name' => display_name, 'first_name'=>first_name, 'last_name'=>last_name,
@@ -332,7 +332,7 @@ class User < ActiveRecord::Base
   end
 
   def to_json_profile
-    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.to_s, "jurisdiction" => rm.jurisdiction.name} }
     orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
     device_defuddler = {"Device::EmailDevice" => "email", "Device::BlackberryDevice" => "blackberry", "Device::PhoneDevice" => "phone", "Device::SmsDevice" => "sms"}
   # devs = devices.collect{ |d| {"type" => device_defuddler[d].type], "address" => d.options.values.first} }
@@ -352,7 +352,7 @@ class User < ActiveRecord::Base
   end
 
   def to_json_private_profile
-    roles = role_memberships.collect{ |rm| {"role" => rm.role.name, "jurisdiction" => rm.jurisdiction.name} }
+    roles = role_memberships.collect{ |rm| {"role" => rm.role.to_s, "jurisdiction" => rm.jurisdiction.name} }
     orgs = organizations.collect{ |o| {"name" => o.name, "id" => o.id} }
     { 'user_id' => id, 'display_name' => display_name, 'first_name' => first_name, 'last_name' => last_name,
       'contacts' => [{"type" => "email", 'address' => email}],
@@ -362,12 +362,12 @@ class User < ActiveRecord::Base
 
   def to_json_edit_profile
     role_desc = role_memberships.collect { |rm|
-      {:id => rm.id, :role_id => rm.role_id, :rname => Role.find(rm.role_id).to_s, :type => "role", :state => "unchanged",
-      :jurisdiction_id => rm.jurisdiction_id, :jname => Jurisdiction.find(rm.jurisdiction_id).to_s }
+      {:id => rm.id, :role_id => rm.role_id, :rname => rm.role.to_s, :type => "role", :state => "unchanged",
+      :jurisdiction_id => rm.jurisdiction_id, :jname => rm.jurisdiction.to_s }
     }
     role_requests.unapproved.each { |rq|
-      rq = {:id => rq.id, :role_id => rq.role_id, :rname => Role.find(rq.role_id).to_s, :type => "req", :state => "pending",
-            :jurisdiction_id => rq.jurisdiction_id, :jname => Jurisdiction.find(rq.jurisdiction_id).to_s }
+      rq = {:id => rq.id, :role_id => rq.role_id, :rname => rq.role.to_s, :type => "req", :state => "pending",
+            :jurisdiction_id => rq.jurisdiction_id, :jname => rq.jurisdiction.to_s }
       role_desc.push(rq)
     }
     device_desc = devices.collect { |d|
