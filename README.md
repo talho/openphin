@@ -41,7 +41,8 @@ Some things that might help during install/upgrade:
 
 #### Rails 3 Upgrade
   - You should be able to upgrade directly from the old version of OpenPHIN to the new. The most recent OpenPHIN master uses Ruby 1.9.3
-  - Fix dashboards before deploying. run in console: 
+  - Fix dashboards before deploying. run in console:
+
 ``` ruby
 Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }
 ```
