@@ -27,17 +27,17 @@ and takes some significant time to complete. You may need to install xvfb.
 
 #### Preparing the test environment
 
-  sudo apt-get install xvfb
-  RAILS_ENV=cucumber rake db:create && rake db:migrate
+    sudo apt-get install xvfb
+    RAILS_ENV=cucumber rake db:create && rake db:migrate
   
 #### Running tests
 
-```cucumber```
+    cucumber
 
 Notes
 -----
 
-Some things that might help during install/upgrade
+Some things that might help during install/upgrade:
 
 #### Rails 3 Upgrade
   - You should be able to upgrade directly from the old version of OpenPHIN to the new. The most recent OpenPHIN master uses Ruby 1.9.3
