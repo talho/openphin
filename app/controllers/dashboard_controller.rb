@@ -223,11 +223,9 @@ class DashboardController < ApplicationController
 
   def menu
     @report_menu = "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}" if defined? REPORT_DB && current_user.has_non_public_role?
- debugger
     if current_user.has_non_public_role?
       plugin_config_items = []
       $menu_config.each do |app, val|
-        debugger
           plugin_config_items << eval(val) if current_user.has_app?(app.to_s) && !val.nil?
       end unless $menu_config.nil?
       
