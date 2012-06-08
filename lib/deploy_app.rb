@@ -51,14 +51,12 @@ namespace :app do
     
     upload "config/backgroundrb.yml.example", "#{shared_path}/backgroundrb.yml" unless file_exists?("#{shared_path}/backgroundrb.yml")
     upload "config/database.yml.example", "#{shared_path}/database.yml" unless file_exists?("#{shared_path}/database.yml")
-    upload "config/document.yml.example", "#{shared_path}/document.yml" unless file_exists?("#{shared_path}/document.yml")
     upload "config/domain.yml", "#{shared_path}/domain.yml" unless file_exists?("#{shared_path}/domain.yml")
     upload "config/email.yml.example", "#{shared_path}/email.yml" unless file_exists?("#{shared_path}/email.yml")
     upload "config/mongo_database.yml.example", "#{shared_path}/mongo_database.yml" unless file_exists?("#{shared_path}/mongo_database.yml")
     upload "config/phone.yml.example", "#{shared_path}/phone.yml" unless file_exists?("#{shared_path}/phone.yml")
     upload "config/sphinx.yml.example", "#{shared_path}/sphinx.yml" unless file_exists?("#{shared_path}/sphinx.yml")
     upload "config/swn.yml.example", "#{shared_path}/swn.yml" unless file_exists?("#{shared_path}/swn.yml")
-    upload "config/system.yml.example", "#{shared_path}/system.yml" unless file_exists?("#{shared_path}/system.yml")
     
     run "mkdir #{shared_path}/tutorials" unless dir_exists?("#{shared_path}/tutorials")
     run "mkdir #{shared_path}/attachments" unless dir_exists?("#{shared_path}/attachments")
@@ -68,7 +66,7 @@ namespace :app do
       upload "config/initializers/cascade.yml.example", "#{shared_path}/cascade.yml" unless file_exists?("#{shared_path}/cascade.yml")
     }
     if_plugin_present(:rollcall) {
-      put "", "#{shared_path}/interface_fields.yml" unless file_exists?("#{shared_path}/interface_fields.yml")
+      uplode "config/interface_fields.yml", "#{shared_path}/interface_fields.yml" unless file_exists?("#{shared_path}/interface_fields.yml")
     }
         
     run "mkdir -p #{shared_path}/vendor/cache" unless dir_exists?("#{shared_path}/vendor/cache")
@@ -83,14 +81,12 @@ namespace :app do
     
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
-    run "ln -fs #{shared_path}/document.yml #{release_path}/config/document.yml"
     run "ln -fs #{shared_path}/domain.yml #{release_path}/config/domain.yml"
     run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"
     run "ln -fs #{shared_path}/mongo_database.yml #{release_path}/config/mongo_database.yml"
     run "ln -fs #{shared_path}/phone.yml #{release_path}/config/phone.yml"
     run "ln -fs #{shared_path}/sphinx.yml #{release_path}/config/sphinx.yml"
     run "ln -fs #{shared_path}/swn.yml #{release_path}/config/swn.yml"
-    run "ln -fs #{shared_path}/system.yml #{release_path}/config/system.yml"
     
     run "ln -fs #{shared_path}/tutorials #{release_path}/public/tutorials"
     run "ln -fs #{shared_path}/attachments #{release_path}/attachments"

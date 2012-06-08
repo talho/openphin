@@ -3,7 +3,7 @@
   <%= form_for @user, :html => {:class => "form-stacked"}  do |f| %>
     <%= render 'new_user_form', :f => f, :user => @user %>
     <div>
-      <%= f.submit 'Sign Up', :disable_with => "Please wait...", :class => "btn large primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn large" %>
+      <%= f.submit 'Sign Up', 'data-disable-with' => "Please wait...", :class => "btn large primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn large" %>
     </div>
   <% end %>
 </div>

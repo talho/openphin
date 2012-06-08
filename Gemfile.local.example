@@ -5,3 +5,6 @@ gem 'rollcall', git: "ssh://git@git.talho.org/home/git/repositories/rollcall", b
 gem 'vms', git: "ssh://git@git.talho.org/home/git/repositories/vms", branch: 'master'
 gem 'talho', git: "ssh://git@git.talho.org/home/git/repositories/talho", branch: 'master'
 gem 'facho', git: "ssh://git@git.talho.org/home/git/repositories/facho", branch: 'master'
+
+# To work on a plugin, check that pluging out in your projects directory (or under the ignored path vendor/extensions
+# specify gem '', path: '' to point to that directory. Run bundle install. 

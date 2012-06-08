@@ -52,7 +52,6 @@ lib/workers/vms
 lib/workers/rollcall
 vendor/extensions/*
 spec/rollcall
-config/*.yml
 reports/*
 lib/workers/plugin_workers
 app/models/report/rollcall
@@ -66,3 +65,13 @@ app/models/report/nurse_assistance_recipe.rb
 Gemfile.lock
 Gemfile.local
 Gemfile.local.lock
+config/backgroundrb.yml
+config/cascade.yml
+config/database.yml
+config/email.yml
+config/interface_fields.yml
+config/mongo_database.yml
+config/phone.yml
+config/sphinx.yml
+config/swn.yml
+

@@ -1,9 +1,8 @@
 development:
+  port: 3312
   enable_star: true
   min_infix_len: 2
-  indexed_models:
-    - User
-    - Document
+  max_matches: 30000
 
 test: &TEST
   port: 3313
@@ -14,7 +13,6 @@ production:
   enable_star: true
   min_infix_len: 2
   max_matches: 30000
-
 
 cucumber:
   <<: *TEST

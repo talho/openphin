@@ -1,8 +1,0 @@
-master: testmaster.texashan.org
-slaves: testslave1.texashan.org,testslave2.texashan.org,testslave3.texashan.org,testslave4.texashan.org,testslave5.texashan.org,testslave6.texashan.org,testslave7.texashan.org
-repository: "ssh://root@testmaster.texashan.org/root/openphin.git"
-master_user: root
-root_path: /root
-dbusername: root
-dbpassword: password
-exclude: *.msi,docs,*.swf,externals,manual_features

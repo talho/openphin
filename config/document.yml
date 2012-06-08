@@ -1,4 +1,3 @@
-clam_av_enable: false
 permitted_mimes:
     - image/jpeg
     - image/pjpeg
@@ -14,6 +13,7 @@ permitted_mimes:
     - text/plain 
     - text/richtext 
     - text/csv
+    - text/html
     - application/x-compressed 
     - application/x-gzip 
     - application/x-stuffit 
@@ -35,12 +35,12 @@ permitted_mimes:
     - application/msword 
     - application/vnd.ms-excel 
     - application/vnd.ms-outlook 
-    - application/vnd.ms-powerpoint 
-    - application/vnd.ms-works
-    - application/vnd.oasis.opendocument.text
+    - application/vnd.ms-office
+    - application/vnd.ms-powerpoint
+    - application/vnd.ms-works 
     - application/x-mswrite
     - application/vnd.openxmlformats-officedocument.presentationml.presentation
-    - application/vnd.openxmlformats-officedocument.wordprocessingml.template   
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.template
 rejected_extensions:
     - .applescript
     - .as
@@ -51,8 +51,6 @@ rejected_extensions:
     - .com
     - .csh
     - .exe
-    - .htm
-    - .html
     - .json
     - .js
     - .msi
