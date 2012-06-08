@@ -86,8 +86,8 @@ Talho.Dashboard.Portlet.Documents = Ext.extend(Talho.Dashboard.Portlet, {
   },
 
   editWindow_save: function(win){
-    this.numDocuments = win.getComponent('north').getComponent('num_docs').getValue();
-    this.title = win.getComponent('north').getComponent('titleField').getValue();
+    this.numDocuments = win.getComponent('num_docs').getValue();
+    this.title = win.getComponent('titleField').getValue();
   },
   
   isModified: function() {
