@@ -16,7 +16,7 @@ production, you'll also need clamav. This should be sufficient to run the applic
 
 1. ```git clone git://github.com/talho/openphin.git```
 1. ```bundle install```
-1. Copy all the config/*.yml.example files as config/*.yml files. Modify your database .yml file appropriately
+1. Copy all the config/\*.yml.example files as config/\*.yml files. Modify your database .yml file appropriately
 1. ```rake db:create && rake db:migrate```
 1. ```rails s```
 
