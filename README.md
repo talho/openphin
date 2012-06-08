@@ -1,5 +1,4 @@
-OpenPHIN
-========
+# OpenPHIN
 
 OpenPHIN is a portal and framework for public health related projects.
 
@@ -34,8 +33,7 @@ and takes some significant time to complete. You may need to install xvfb.
 
     cucumber
 
-Notes
------
+## Notes
 
 Some things that might help during install/upgrade:
 
@@ -46,3 +44,15 @@ Some things that might help during install/upgrade:
 ``` ruby
 Portlet.all.each {|p| p.update_attributes config: ActiveSupport::JSON.decode(p.config).to_json }
 ```
+
+#### PHIN Extensions/Plugins
+
+Additional functionality can be added via extension gems. These can now be run entirely as gems without. There is a generator in place, but
+as of this writing it is outdated.
+
+These extensions are currently available:
+  - HAN: Health Alert Network for alerting. Written to support Health and Communication Coordinators. CDC Cascade alerting certified.
+  - Rollcall: Attendance and ILI surveillance and analysis.
+  - VMS: Volunteer managment system. Capabilities include scenario execution and templating, volunteer check-in/check-out, and volunteer alerting
+
+Please contact TALHO (or one of the contributors) for more information.
