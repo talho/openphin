@@ -41,6 +41,7 @@ permitted_mimes:
     - application/x-mswrite
     - application/vnd.openxmlformats-officedocument.presentationml.presentation
     - application/vnd.openxmlformats-officedocument.wordprocessingml.template
+    - message/rfc822
 rejected_extensions:
     - .applescript
     - .as
