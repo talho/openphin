@@ -151,7 +151,7 @@ Feature: Viewing groups
       | Group Name         | Health Officer and Epidemiologist Group |
     And I select the following in the audience panel:
       | name           | type |
-      | Epidemiologist | Role |
+      | Phin: Epidemiologist | Role |
     And I press "Save"
     Then I should see the following group summary:
       | group_name               | Health Officer and Epidemiologist Group |
@@ -160,7 +160,7 @@ Feature: Viewing groups
     And I should see the following audience breakdown
       | name            | type |
       | Health Officer  | Role |
-      | Epidemiologist  | Role |
+      | Phin: Epidemiologist  | Role |
     
   Scenario: updating a user group with individual users
     Given I am logged in as "jill.smith@example.com"
@@ -298,18 +298,18 @@ Feature: Viewing groups
 
   Scenario: Page through groups
     Given the following groups for "jill.smith@example.com" exist:
-      | Group A | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group B | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group C | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group F | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group G | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group H | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group I | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group J | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group K | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group L | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group M | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
-      | Group N | Dallas County | Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group A | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group B | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group C | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group F | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group G | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group H | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group I | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group J | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group K | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group L | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group M | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
+      | Group N | Dallas County | Phin: Health Officer | john.smith@example.com | Personal     | Potter County |
     Given I am logged in as "jill.smith@example.com"
     And I navigate to "Admin > Manage Groups"
     Then the "Manage Groups" tab should be open
