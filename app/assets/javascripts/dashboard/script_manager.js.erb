@@ -1,0 +1,133 @@
+Ext.ns("Talho");
+
+// We're going to create a singleton manager here that is an observable
+(function(){
+    dominoes.property('ext_extensions', '/assets/ext_extensions');
+    dominoes.property('js', '/assets');
+    dominoes.property('css', '/assets');
+    dominoes.property('cms', '/assets/dashboard/cms');
+    dominoes.property('admin', '$(js)/admin');
+    dominoes.property('forums', '$(js)/forums');
+    dominoes.property('forums_view', '$(forums)/view/forums');
+    dominoes.property('topics_view', '$(forums)/view/topics');
+        
+    dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
+    dominoes.rule('TreeGrid', '(( $css($(css)/TreeGrid/css/TreeGrid.css) $css($(css)/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
+    dominoes.rule('AudiencePanel', 'TreeGrid <%= javascript_dominoes_paths("audience/AudiencePanel") %>');
+    dominoes.rule('AudienceDisplayPanel', '<%= javascript_dominoes_paths("audience/AudienceDisplayPanel") %>');
+    dominoes.rule('NewInvitation', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/invitations/NewInvitationBase.js');
+    dominoes.rule('ProfileBase', '(( $css($(css)/redesign/profile.css) )) $(js)/profile/ProfileBase.js');
+    dominoes.rule('BatchUsers', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
+    dominoes.rule('EditUsers', '(( $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/xActionColumn.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
+    dominoes.rule('GMap', '<%= javascript_dominoes_paths("ext_extensions/GMapPanel") %>');
+    dominoes.rule('Portlets', '<%= javascript_dominoes_paths("dashboard/cms/portlet") %>');
+
+    var regList = {
+      'Talho.FindPeople': {js:'<%= javascript_dominoes_paths("search/FindPeople") %>'},
+      'Talho.ManageGroups': {js:'AudiencePanel > <%= javascript_dominoes_paths("groups/ManageGroups") %>'},
+      'Talho.Tutorials': {js: '<%= javascript_dominoes_paths("dashboard/tutorials") %>'},
+      'Talho.Forums': {js: 'AudiencePanel <%= javascript_dominoes_paths("forums/Controller") %>'},      
+      'Talho.EditProfile': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/EditProfile") %>'},
+      'Talho.ShowProfile': {js:'<%= javascript_dominoes_paths("profile/ShowProfile") %>'},
+      'Talho.EditPassword': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/EditPassword") %>'},
+      'Talho.EditDevices': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/EditDevices") %>'},
+      'Talho.ManageRoles': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/ManageRoles") %>'},
+      'Talho.ManageOrganizations': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/ManageOrganizations") %>'},
+      'Talho.Documents': {js: '$(js)/lib/fileuploader.js $css($(css)/fileuploader.css) TreeGrid AudiencePanel <%= javascript_dominoes_paths("documents/Documents.js") %>'},
+      'Talho.DocumentSearch': {js: '<%= javascript_dominoes_paths("documents/DocumentSearch") %>'},
+      'Talho.NewInvitation': {js:'NewInvitation > <%= javascript_dominoes_paths("invitations/NewInvitation") %>'},
+      'Talho.Invitations': {js:'<%= javascript_dominoes_paths("invitations/Invitations") %>'},
+      'Talho.AddUser': {js:'ProfileBase <%= javascript_dominoes_paths("admin/AddUser") %>'},
+      'Talho.BatchUsers': {js:'BatchUsers ProfileBase > <%= javascript_dominoes_paths("admin/BatchUsers") %>'},
+      'Talho.EditUsers': {js:'EditUsers ProfileBase > <%= javascript_dominoes_paths("admin/EditUsers") %>'},
+      'Talho.PendingRoleRequests': {js: '<%= javascript_dominoes_paths("admin/PendingRoleRequests") %>'},
+      'Talho.AuditLog': {js: '<%= javascript_dominoes_paths("admin/AuditLog") %>'},
+      'Talho.ReportView': {js:'<%= javascript_dominoes_paths("reports/ReportView") %>'},
+      'Talho.Reports': {js:'<%= javascript_dominoes_paths("reports/Reports") %>'},
+      'Talho.HelpWindow': {js:'<%= javascript_dominoes_paths("dashboard/help_window") %>'},
+      'Talho.Dashboard.CMS.Admin': {js: 'AudiencePanel <%= javascript_dominoes_paths("dashboard/cms/admin_controller") %>'},
+      'Talho.Admin.Organizations': {js: 'AudiencePanel <%= javascript_dominoes_paths("admin/organizations/Controller") %>'},
+      'Talho.Admin.OrganizationMembershipRequests': {js: '<%= javascript_dominoes_paths("admin/organization_membership_requests/Controller") %>'},
+      'Talho.Admin.Apps': {js: '<%= javascript_dominoes_paths("admin/apps/Controller") %>' }
+    };
+
+    // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
+    dominoes.rule('AjaxPanel', '<%= javascript_dominoes_paths("ext_extensions/AjaxPanel") %>');
+    dominoes.rule('Favorites', '<%= javascript_dominoes_paths("dashboard/favorites.js") %>');
+    dominoes.rule('PhinLayout', '<%= javascript_dominoes_paths("dashboard/menu_builder") %> /dashboard/menu.js');
+    dominoes.rule('Dashboard', '<%= javascript_dominoes_paths("dashboard/cms/view_controller") %>');
+    dominoes.rule('ManageFavorites', 'RowActions <%= javascript_dominoes_paths("dashboard/manage_favorites_window") %>');
+
+    var mgr = function(config){};
+    Ext.extend(mgr, Ext.util.Observable, {
+        /**
+         * Registers an initializer with the registration list. Allows us to determine if a script has been loaded or not
+         * @param {String}      name            The string representation of the class. Should be preregistered
+         * @param {Object}      classVariable   The class variable, in case we want to remove it later
+         * @param {Function}    initializer     The initializer function. Singleton function that should return a panel.
+         */
+        reg: function(name, classVariable, initializer){
+            if(!regList[name]){// Here we want to register allow people to register a constructor if there is one or isn't
+                regList[name] = {};
+            }
+            Ext.apply(regList[name], {
+                initializer: initializer,
+                classVariable: classVariable
+            });
+        },
+
+        addInitializer:function(name, config){
+            if(regList[name]){
+                throw("Initializer " + name +" has already been configured. Please use a unique name");
+            }
+            regList[name] = config;
+        },
+
+        exists: function(name){
+            return !Ext.isEmpty(regList[name]);
+        },
+
+        isLoaded: function(name){
+            return !Ext.isEmpty(regList[name]) && Ext.isFunction(regList[name].initializer);
+        },
+
+        getInitializer: function(name, callback){
+            if(!this.isLoaded(name)){
+                this.load(name, callback);
+            }
+            else{
+                callback(regList[name].initializer);
+            }
+        },
+
+        load: function(name, callback){
+            if(!Ext.isEmpty(regList[name])){
+              dominoes([regList[name].js], function(name, callback){
+                  callback(regList[name].initializer);
+              }.createDelegate(this, [name, callback]));
+            }
+        },
+
+        loadOtherLibrary: function(name, callback){
+            try
+            {
+                dominoes(name, function(name, callback){callback(name);}.createDelegate(this, [name, callback]));
+            }
+            catch(e){
+                callback(name); // maybe send an error message here at some point
+            }
+        }
+
+        /*,
+
+        unload: function(name){
+            var cls = regList[name].classVariable;
+
+            delete regList[name].classVariable;
+            delete regList[name].initializer;
+            delete cls;
+        }  */
+    });
+
+    Talho.ScriptManager = new mgr({});
+})();

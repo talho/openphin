@@ -1,3 +1,6 @@
+//= require ./RolesControl
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.ManageRoles = Ext.extend(Talho.ProfileBase, {

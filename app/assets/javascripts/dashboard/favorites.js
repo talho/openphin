@@ -1,3 +1,7 @@
+//= require ext_extensions/DragDropTabs
+//= require ext_extensions/RailsJsonReader
+//= require_self
+
 Ext.ns('Talho.ux');
 
 Talho.ux.FavoritesPanel = Ext.extend(Ext.Panel, {

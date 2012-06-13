@@ -1,3 +1,7 @@
+//= require ./GMapInfoWindow
+//= require ./GMapStyledMarker
+//= require_self
+
 /*!
  * Ext JS Library 3.3.1
  * Copyright(c) 2006-2010 Sencha Inc.

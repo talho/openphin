@@ -1,3 +1,10 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/SubmitFalse
+//= require ext_extensions/ImageDisplayField
+//= require ./AddEditFolderWindow
+//= require ./DocumentViews
+//= require_self
+
 Ext.ns('Talho');
 
 Talho.Documents = Ext.extend(function(){}, {

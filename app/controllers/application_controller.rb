@@ -150,6 +150,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sys_admin_required
+    unless current_user.role_memberships.where(:role_id => Role.sysadmin).count > 0
+      message = "That resource does not exist or you do not have access to it."
+      if request.xhr?
+        respond_to do |format|
+          format.html {render :text => message, :status => 404}
+          format.json {render :json => {:message => message}, :status => 404}
+        end
+      else
+        flash[:error] = message
+        redirect_to root_path
+      end
+      false
+    end
+  end
+
   def non_public_role_required
     unless current_user.has_non_public_role?
       if request.xhr?

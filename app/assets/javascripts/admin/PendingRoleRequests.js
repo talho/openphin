@@ -1,3 +1,6 @@
+//= require ext_extensions/AjaxPanel
+//= require_self
+
 Ext.namespace('Talho');
 
 Talho.PendingRoleRequests = Ext.extend(Ext.util.Observable, {

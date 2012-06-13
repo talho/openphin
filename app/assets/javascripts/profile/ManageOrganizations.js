@@ -1,3 +1,6 @@
+//= require ./OrganizationsControl
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.ManageOrganizations = Ext.extend(Talho.ProfileBase, {

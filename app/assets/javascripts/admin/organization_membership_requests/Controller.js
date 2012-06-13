@@ -1,3 +1,5 @@
+//= require_tree ./view
+//= require_self
 
 Ext.ns('Talho.Admin.OrganizationMembershipRequests');
 

@@ -1,3 +1,9 @@
+//= require ./DevicesControl
+//= require ./RolesControl 
+//= require ./OrganizationsControl
+//= require_self
+
+
 Ext.ns("Talho");
 
 Talho.EditProfile = Ext.extend(Talho.ProfileBase, {

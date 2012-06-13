@@ -35,6 +35,9 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
           , {name: 'Manage Organizations', tab: {id: 'manage_org', title: 'Manage Organizations', initializer: 'Talho.Admin.Organizations'}}
           , {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}
       <% end %>
+      <% if current_user.is_sysadmin? %>
+          , {name: 'Manage Apps', tab: {id: 'manage_apps', title: 'Manage Apps', initializer: 'Talho.Admin.Apps'}}
+      <% end %>
       ]},
     <% end %>
 

@@ -1,3 +1,8 @@
+//= require ext_extensions/Portal
+//= require_self
+//= require ext_extensions/jsonp
+//= require_tree ./portlets
+
 Ext.namespace('Talho.Dashboard.Portlet');
 
 Talho.Dashboard.Portlet = Ext.extend(Ext.ux.Portlet, {

@@ -1,3 +1,6 @@
+//= require ./DevicesControl
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.EditDevices = Ext.extend(Talho.ProfileBase, {

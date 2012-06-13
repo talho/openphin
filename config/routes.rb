@@ -34,44 +34,46 @@ Openphin::Application.routes.draw do
   end
 
   namespace :admin do
-      resources :organizations do
-        collection do
-          post :confirmation
-          get :requests
-        end
+    resources :organizations do
+      collection do
+        post :confirmation
+        get :requests
       end
-      resources :organization_membership_requests, :only => [:index, :update, :destroy]
-      resources :groups do
-          match '/dismember/:member_id(.:format)' => '#dismember', :as => :dismember, :via => :post
+    end
+    resources :organization_membership_requests, :only => [:index, :update, :destroy]
+    resources :groups do
+        match '/dismember/:member_id(.:format)' => '#dismember', :as => :dismember, :via => :post
+    end
+    resources :role_requests, :except => [:edit, :update] do
+      member do
+        get :approve
+        get :deny
       end
-      resources :role_requests, :except => [:edit, :update] do
-        member do
-          get :approve
-          get :deny
-        end
+    end
+    resources :invitations, :only => [:index, :show, :create] do
+      collection do
+        post :import
+        get :recipe_types
       end
-      resources :invitations, :only => [:index, :show, :create] do
-        collection do
-          post :import
-          get :recipe_types
-        end
-        get :download, :on => :member
+      get :download, :on => :member
+    end
+    resources :users, :only => [:new, :create] do
+       post :deactivate, :on => :collection
+    end
+    resources :edit_users, :only => [:update] do
+      get :admin_users, :on => :collection
+    end
+    resources :user_batch, :only => [:new, :create] do
+      collection do
+        post :import
+        get :admin_jurisdictions
+        put :create_from_json
       end
-      resources :users, :only => [:new, :create] do
-         post :deactivate, :on => :collection
-      end
-      resources :edit_users, :only => [:update] do
-        get :admin_users, :on => :collection
-      end
-      resources :user_batch, :only => [:new, :create] do
-        collection do
-          post :import
-          get :admin_jurisdictions
-          put :create_from_json
-        end
-        get :user_batch, :on => :member
-      end
-      resources :delayed_job_checks
+      get :user_batch, :on => :member
+    end
+    resources :delayed_job_checks
+    resources :apps
+    resources :roles, only: [:index, :create, :edit, :update, :destroy]
   end
   resources :role_assignments, :controller => 'admin/role_assignments'
   

@@ -1,3 +1,8 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/FilterableCheckboxSelectionModel
+//= require ./BaseSelectionGrid
+//= require_self
+
 Ext.ns('Talho.ux');
 
 Talho.ux.JurisdictionsTree = Ext.extend(Talho.ux.BaseSelectionGrid, {

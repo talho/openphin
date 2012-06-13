@@ -1,3 +1,6 @@
+//= require ext_extensions/AjaxPanel
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.AuditLog = Ext.extend(Ext.util.Observable, {

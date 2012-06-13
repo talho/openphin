@@ -1,3 +1,9 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/PhinHtmlEditor
+//= require ./portlet
+//= require_tree ./views
+//= require_self
+
 Ext.ns('Talho.Dashboard.CMS');
 
 Talho.Dashboard.CMS.AdminController = Ext.extend(Ext.util.Observable, {

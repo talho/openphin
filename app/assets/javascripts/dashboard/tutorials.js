@@ -1,3 +1,6 @@
+//= require ext_extensions/AjaxPanel
+//= require_self
+
 Ext.ns('TALHO');
 
 Talho.Tutorials = Ext.extend(Ext.util.Observable, {

@@ -1,3 +1,6 @@
+//= require profile/RolesControl
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.EditRolesButton = Ext.extend(Ext.Button, {

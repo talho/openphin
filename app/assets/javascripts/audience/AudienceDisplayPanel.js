@@ -1,3 +1,5 @@
+//= require ext_extensions/PagingStore
+//= require_self
 
 Ext.ns('Ext.ux');
 

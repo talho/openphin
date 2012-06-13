@@ -1,3 +1,8 @@
+//= require profile/DevicesControl
+//= require profile/RolesControl
+//= require profile/OrganizationsControl
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.AddUser = Ext.extend(Talho.ProfileBase, {

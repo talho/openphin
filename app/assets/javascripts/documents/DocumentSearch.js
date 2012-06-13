@@ -1,3 +1,7 @@
+//= require ext_extensions/ImageDisplayField
+//= require ./DocumentViews
+//= require_self
+
 Ext.ns('Talho');
 
 Talho.DocumentSearch = Ext.extend(Ext.Panel, {

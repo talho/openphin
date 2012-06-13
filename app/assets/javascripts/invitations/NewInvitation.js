@@ -1,3 +1,5 @@
+//= require_self
+
 Ext.ns("Talho");
 
 Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {

@@ -1,3 +1,11 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/DoNotCollapseActive
+//= require ./GroupSelectionGrid
+//= require ./JurisdictionsTree
+//= require ./RoleSelectionGrid
+//= require ./UserSelectionGrid
+//= require_self
+
 Ext.ns("Ext.ux");
 
 /**
