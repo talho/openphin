@@ -1,1 +1,1 @@
-json.success @success
+json.success success

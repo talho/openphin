@@ -56,7 +56,7 @@ Feature: Topic checking as an administrator
     When I view the topics in forum "Resource Tracking" as "admin@dallas.gov"
     And I prepare a topic "Tracking" with "Let's find something"
     And I prepare a topic "Resources" with "Let's find something"
-    And I Sticky "Resources"    
+    And I Sticky "Resources"
     And I should see the topics in this order "Resources>1 Tracking>2"    
     And I should see "Sticky: Resources" within ".forum-topic-title[topic_name='Resources']"
   
