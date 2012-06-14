@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   include UserModules::Roles
   
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
-  def alerting_jurisdictions
+  def alerting_jurisdictions    
     Jurisdiction.joins(:role_memberships => [:role, :user]).where(:roles => {:alerter => true}, :users => {:id => self.id})
   end
   has_many :alerts, :foreign_key => 'author_id'
