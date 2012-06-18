@@ -24,6 +24,7 @@ Feature: Forum checking as a admin
     When I manage forum "Dallas Discussion"
     And I manage the forum and save
     Then the management of the forum is verified
+    And I wait for the "Saving..." mask to go away
   
   Scenario: Create a Hidden Forum
     When I open a new forum
