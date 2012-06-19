@@ -35,7 +35,7 @@ end
 require 'thinking_sphinx/deploy/capistrano'
 namespace :sphinx do
   task :stop, :roles => [:app] do
-     run "cd #{current_path}; RAILS_ENV=#{rails_env} bundle exec rake thinking_sphinx:stop"
+     run "cd #{current_path}; RAILS_ENV=#{rails_env} bundle exec rake thinking_sphinx:stop", :env => {"BUNDLE_GEMFILE" => "Gemfile"}
   end
   
   task :symlink_sphinx_indexes, :roles => [:app] do
