@@ -1,2 +1,2 @@
-json.success true
+json.partial! 'application/success', success: true
 json.status 'ok'
