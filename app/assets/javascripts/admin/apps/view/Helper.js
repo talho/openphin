@@ -6,6 +6,7 @@ Ext.ns("Talho.Admin.Apps.view");
  * Add handlers to automate throwing these events 
  */
 Talho.Admin.Apps.view.Helper = Ext.extend(Ext.Panel, {
+  autoScroll: true,
   constructor: function(){
     Talho.Admin.Apps.view.Helper.superclass.constructor.apply(this, arguments);
     

@@ -11,6 +11,7 @@ class CreateApps < ActiveRecord::Migration
       t.text    :about_text
       t.string  :help_email
       t.string  :new_user_path
+      t.string  :login_text
       t.timestamps
     end
   end

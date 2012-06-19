@@ -8,12 +8,17 @@ Talho.Admin.Apps.Controller = Ext.extend(Ext.util.Observable, {
   constructor: function(config){
     Ext.apply(this, config);
     
-    var index = new Talho.Admin.Apps.view.Index({});
+    var index = new Talho.Admin.Apps.view.Index({
+      listeners: {
+        scope: this,
+        'appselect': this.show_app
+      }
+    });
     var new_app = new Talho.Admin.Apps.view.New({
       listeners: {
         scope: this,
         'cancel': this._new_app_cancel,
-        'save': this._new_app_save
+        'save': this.show_app
       }
     });
     var layout = new Ext.create({
@@ -37,13 +42,13 @@ Talho.Admin.Apps.Controller = Ext.extend(Ext.util.Observable, {
     this.getPanel().setActiveTab(0);
   },
   
-  _new_app_save: function(name, id){
+  show_app: function(name, id){
     var layout = this.getPanel();
     // Open a show app tab with the newly created app.
     layout.add(new Talho.Admin.Apps.view.Show({id: 'app-' + id, appId: id, title: 'App Details: ' + name}));
     layout.setActiveTab(layout.items.length - 1);
   },
-  
+    
   _detail_change: function(id, name, val){
     // make an update call to the server
   }
