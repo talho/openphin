@@ -29,17 +29,24 @@ class AuditsController < ApplicationController
     end
   end
 
+  Models = %W( AlertAttempt AlertDeviceType AlertAckLog Article Audience DelayedJobCheck Delivery Device Document Favorite
+               Folder FolderPermission Forum Group Invitation Invitee Jurisdiction Organization
+               OrganizationMembershipRequest Role RoleMembership RoleRequest Target Topic User )
+
   def models
-    model_list = ['AlertAttempt', 'AlertDeviceType', 'AlertAckLog', 'Article', 'Audience', 'DelayedJobCheck', 'Delivery', 'Device',
-                  'Document', 'Favorite', 'Folder', 'FolderPermission', 'Forum', 'Group', 'HanAlert', 'Invitation','Invitee', 'Jurisdiction',
-                  'Organization', 'OrganizationMembershipRequest', 'Role', 'RoleMembership', 'RoleRequest', 'Target', 'Topic', 'User']
     models = []
-    model_list.each do |m|
+    Models.each do |m|
       models.push({'model_name' => m, 'human_name' => m.titleize.pluralize})
     end
     respond_to do |format|
       format.json{ render :json => { :models => models } }
     end
+  end
+
+  def self.add_model(model_class_name)
+    name = model_class_name.to_s
+    Models << name unless Models.include? name
+    name
   end
 
   private
