@@ -1,0 +1,1 @@
+json.(role, :name, :id, :description, :approval_required, :alerter, :user_role, :public)

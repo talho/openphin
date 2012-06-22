@@ -24,7 +24,7 @@ Talho.Admin.Apps.view.Show = Ext.extend(Ext.ux.PillPanel, {
     
     // Load the app
     Ext.Ajax.request({
-      url: 'admin/app/' + this.appId,
+      url: '/admin/app/' + this.appId,
       method: 'GET',
       success: this._load_success,
       scope: this

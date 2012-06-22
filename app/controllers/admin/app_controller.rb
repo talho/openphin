@@ -18,20 +18,18 @@ class Admin::AppController < ApplicationController
   end
 
   def create
-    @app = App.build params[:app]
+    @app = App.new params[:app]
     if @app.save
-      respond_with(@app) do |format|
-        format.any { redirect_to :show }
-      end
+      respond_with(@app)
     else
-      render 'application/failure', errors: @app.errors
+      respond_with @errors = @app.errors, status: 400 do |format|
+        format.any { render 'application/failure'}
+      end
     end
   end
 
   def edit
-    respond_with(@app = App.find(params[:id])) do |format|
-      format.any { redirect_to :show }
-    end
+    redirect_to :admin_app
   end
 
   def update
@@ -39,7 +37,9 @@ class Admin::AppController < ApplicationController
     if @app.update_attributes params[:app]
       render 'application/success' # We're doing ajax, on-the-fly updates here, no need to return the full item
     else
-      render 'application/failure', errors: @app.errors
+      respond_with @errors = @app.errors, @app, status: 400 do |format|
+        format.any { render 'application/failure'}
+      end
     end
   end
 
@@ -48,7 +48,21 @@ class Admin::AppController < ApplicationController
     if @app.destroy
       render 'application/success'
     else
-      render 'application/failure'
+      respond_with @errors = @app.errors, status: 400 do |format|
+        format.any { render 'application/failure'}
+      end
+    end
+  end
+  
+  ## Special handler for uploads so as to be able to respond with a different sort of response
+  def upload
+    @app = App.find(params[:id])    
+    if @app.update_attributes params[:app]
+      render :json => {success: true, logo_url: @app.logo.url(:thumb), tiny_logo_url: @app.tiny_logo.url(:thumb)}
+    else
+      respond_with @errors = @app.errors, @app, status: 400 do |format|
+        format.any { render 'application/failure'}
+      end
     end
   end
 end

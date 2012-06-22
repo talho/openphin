@@ -11,12 +11,14 @@
 #  approval_required :boolean(1)
 #  alerter           :boolean(1)
 #  user_role         :boolean(1)      default(TRUE)
-#  application       :string(255)     
+#  app_id            :string(255)
+#  public            :boolean(1)      default(FALSE)     
 
 class Role < ActiveRecord::Base
   has_many :role_requests, :dependent => :delete_all
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
+  belongs_to :app
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   scope :alerters, :conditions => {:alerter => true}
@@ -35,14 +37,28 @@ class Role < ActiveRecord::Base
   scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
 
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
-  scope :for_app, lambda { |app| { :conditions => { :application => app } } }
+  scope :for_app, lambda { |app| { :conditions => { "apps.name" => app }, :joins => :app } }
   
   scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
-                                       conditions[:application] = app.to_s unless app.blank?
-                                       {:conditions => conditions} }
+                                       conditions["apps.name"] = app.to_s unless app.blank?
+                                       {:conditions => conditions, :joins => :app} }
   scope :superadmins, ->(app = nil) { conditions = {:name => Defaults[:superadmin]}
-                                            conditions[:application] = app.to_s unless app.blank?
-                                            {:conditions => conditions} }
+                                            conditions["apps.name"] = app.to_s unless app.blank?
+                                            {:conditions => conditions, :joins => :app} }
+  
+  def self.find_or_create_by_name_and_application(name, app, &block)
+    r = Role.joins(:app).where("apps.name" => app, "roles.name" => name).first
+    unless r
+      r = Role.create_by_name(name) &block
+      r.app = App.where(name: name)
+      r.save!
+    end
+    r
+  end
+  
+  def self.find_by_name_and_application(name, app, &block)
+    r = Role.joins(:app).where("apps.name" => app, "roles.name" => name).first
+  end
   
   def self.latest_in_secs
     recent(1).first.updated_at.utc.to_i
@@ -80,10 +96,14 @@ class Role < ActiveRecord::Base
     find_or_create_by_name_and_application(Defaults[:public],app) {|r| r.user_role = true }
   end
 
+  def application
+    app.name
+  end
+
   scope :user_roles, :conditions => { :user_role => true }
   scope :approval_roles, :conditions => { :approval_required => true }
 
-  validates_uniqueness_of :name, :scope => :application
+  validates_uniqueness_of :name, :scope => :app_id
 
   def is_public?
     if name == Defaults[:public]

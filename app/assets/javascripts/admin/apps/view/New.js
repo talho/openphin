@@ -12,12 +12,13 @@ Talho.Admin.Apps.view.New = Ext.extend(Ext.Panel, {
   
   initComponent: function(){
     // Add form with required information for the app
-    this.items = {xtype: 'form', bodyCssClass: 't_boot', itemId: 'form', border: false, labelWidth: 200, items: [
-      {xtype: 'box', html: '<fieldset><legend>New App</legend></fieldset>'},
-      {xtype: 'textfield', fieldLabel: 'App Name'},
-      {xtype: 'textfield', fieldLabel: 'Domains (Comma Separated)'},
-      {xtype: 'textfield', fieldLabel: 'Help Email'},
-      {xtype: 'combo', fieldLabel: 'Root Jurisdiction'}
+    this.items = {xtype: 'form', bodyCssClass: 't_boot', itemId: 'form', border: false, labelWidth: 200, 
+      url: '/admin/app',
+      method: 'POST',
+      items: [
+        {xtype: 'box', html: '<fieldset><legend>New App</legend></fieldset>'},
+        {xtype: 'textfield', itemId: 'name', name: 'app[name]', fieldLabel: 'App Name'},
+        {xtype: 'textfield', itemId: 'domains', name: 'app[domains]', fieldLabel: 'Domains (Comma Separated)'}
     ], buttons: [
       {text: 'Save', handler: this._save_clicked, scope: this},
       {text: 'Cancel', handler: function(){this.getComponent('form').getForm().reset(); this.fireEvent('cancel');}, scope: this}
@@ -27,14 +28,16 @@ Talho.Admin.Apps.view.New = Ext.extend(Ext.Panel, {
   },
   
   _save_clicked: function(){
-    // submit the form
-    this._save_success(1);
+    this.getComponent('form').getForm().submit({
+      success: this._save_success,
+      scope: this
+    });
   },
   
-  _save_success: function(result){
+  _save_success: function(form, a){
     // get the id
-    var name = 'asdf';
-    var id = result;
+    var name = a.result.name,
+        id = a.result.id;
     
     this.getComponent('form').getForm().reset()
     this.fireEvent('save', name, id);

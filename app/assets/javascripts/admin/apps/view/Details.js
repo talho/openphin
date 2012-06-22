@@ -11,19 +11,31 @@ Talho.Admin.Apps.view.Details = Ext.extend(Talho.Admin.Apps.view.Helper, {
   initComponent: function(){
     this.items = {xtype: 'form', bodyCssClass: 't_boot', itemId: 'form', border: false, labelWidth: 200, items: [
       {xtype: 'box', html: '<fieldset><legend>App Details</legend></fieldset>'},
-      {xtype: 'textfield', itemId: 'name', fieldLabel: 'App Name', listeners: {scope: this, 'change': this.field_change}},
-      {xtype: 'textfield', fieldLabel: 'Domains (Comma Separated)', listeners: {scope: this, 'change': this.field_change}},
-      {xtype: 'textfield', fieldLabel: 'Help Email', listeners: {scope: this, 'change': this.field_change}},
-      {xtype: 'combo', fieldLabel: 'Root Jurisdiction', listeners: {scope: this, 'change': this.field_change}},
-      {xtype: 'textarea', fieldLabel: 'Sign-in text (raw HTML)', height: 400, width: 500, listeners: {scope: this, 'change': this.field_change}},
+      {xtype: 'textfield', itemId: 'name', name: 'app[name]', fieldLabel: 'App Name', listeners: {scope: this, 'change': this.field_change}},
+      {xtype: 'textfield', itemId: 'domains', name: 'app[domains]', fieldLabel: 'Domains (Comma Separated)', listeners: {scope: this, 'change': this.field_change}},
+      {xtype: 'textfield', itemId: 'help_email', name: 'app[help_email]', fieldLabel: 'Help Email', listeners: {scope: this, 'change': this.field_change}},
+      {xtype: 'combo', itemId: 'root_jurisdiction_id', name: 'app[root_jurisdiction_id]', editable: true, forceSelection: true, valueNotFoundText: '', fieldLabel: 'Root Jurisdiction', 
+        displayField: 'name', valueField: 'id', listeners: {scope: this, 'change': this.field_change}, mode: 'local', typeAhead: true, store: new Ext.data.JsonStore({
+        fields: ['name', 'id'],
+        root: 'jurisdictions',
+        restful: true,
+        url: '/jurisdictions.json',
+        baseParams: {admin_mode: 1},
+        autoLoad: true,
+        listeners: {
+          scope: this,
+          'load': this._jurisdiction_load
+        }
+      })},
+      {xtype: 'textarea', itemId: 'login_text', name: 'app[login_text]', fieldLabel: 'Login text (raw HTML)', height: 400, width: 500, listeners: {scope: this, 'change': this.field_change}},
     ]};
     
     Talho.Admin.Apps.view.Details.superclass.initComponent.apply(this, arguments);
-    
-    this.ownerCt.on('loadcomplete', this.load_data, this);
   },
   
-  load_data: function(data){
-    this.getComponent('form').getComponent('name').setValue(data.name)
+  _jurisdiction_load: function(){
+    if(this.data && this.data.root_jurisdiction_id){
+      this.getComponent('form').getComponent('root_jurisdiction_id').setValue(this.data.root_jurisdiction_id);
+    }
   }
 });

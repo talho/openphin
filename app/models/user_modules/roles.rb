@@ -41,16 +41,16 @@ module UserModules
     
     def is_super_admin?(app = "")
       return true if is_sysadmin?
-      conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
+      conditions = app.blank? ? {} : {"apps.name" => app}
+      return role_memberships.joins(:apps).where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
     end
      
     def is_admin?(app = "")
       # TODO: Should be app agnostic
       return true if is_sysadmin?
       return true if is_super_admin?(app)
-      conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
+      conditions = app.blank? ? {} : {"apps.name" => app}
+      return role_memberships.joins(:apps).count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
     end
     
     def is_admin_for?(other, app = "")
@@ -71,11 +71,7 @@ module UserModules
     end
   
     def has_role?(role_sym, app = '')
-      roles.any? { |r| r.name.to_s.titleize == role_sym.to_s.titleize && (app == '' || r.application.to_s.titleize == app.to_s.titleize) }
-    end
-  
-    def has_application?(app_sym)
-      roles.any? { |r| r.application.to_s.titleize == app_sym.to_s.titleize }
+      self.roles.joins(:app).where("roles.name" => role_sym.to_s).where(app != "" ? {"apps.name" => app.to_s} : "").exists?
     end
   
     def enabled_applications
@@ -99,9 +95,10 @@ module UserModules
     end
   
     def has_app?(app)
-      self.roles.for_app(app).size > 0
+      self.roles.joins(:app).where("apps.name" => app.to_s).exists?
     end
-  
+    alias_method :has_application?, :has_app?
+    
     def apps
       return self.roles.map(&:application).uniq
     end

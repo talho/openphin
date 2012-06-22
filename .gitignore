@@ -74,4 +74,5 @@ config/mongo_database.yml
 config/phone.yml
 config/sphinx.yml
 config/swn.yml
+public/system
 

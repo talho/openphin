@@ -72,8 +72,12 @@ Openphin::Application.routes.draw do
       get :user_batch, :on => :member
     end
     resources :delayed_job_checks
-    resources :app, defaults: {format: :json}
-    resources :roles, only: [:index, :create, :edit, :update, :destroy]
+    resources :app, defaults: {format: :json} do
+      member do 
+        put :upload
+      end
+    end
+    resources :roles, except: [:new, :show, :edit], defaults: {format: :json}
   end
   resources :role_assignments, :controller => 'admin/role_assignments'
   

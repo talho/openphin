@@ -45,12 +45,23 @@ Talho.Admin.Apps.Controller = Ext.extend(Ext.util.Observable, {
   show_app: function(name, id){
     var layout = this.getPanel();
     // Open a show app tab with the newly created app.
-    layout.add(new Talho.Admin.Apps.view.Show({id: 'app-' + id, appId: id, title: 'App Details: ' + name}));
+    layout.add(new Talho.Admin.Apps.view.Show({id: 'app-' + id, appId: id, title: 'App Details: ' + name, listeners: {
+      scope: this,
+      'change': this._detail_change
+    }}));
     layout.setActiveTab(layout.items.length - 1);
   },
     
   _detail_change: function(id, name, val){
     // make an update call to the server
+    var parms = {};
+    parms[name] = val;
+    
+    Ext.Ajax.request({
+      url: '/admin/app/' + id,
+      method: 'PUT',
+      params: parms
+    });
   }
 });
 
