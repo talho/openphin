@@ -187,7 +187,7 @@ class DashboardController < ApplicationController
   end
 
   def about
-    DashboardController.app_toolbar "application"
+    
   end
 
   def about_talhophin  # stub for about_talhophin path used in toolbar and set in domain.yml

@@ -19,7 +19,7 @@ Talho.Admin.Apps.view.Assets = Ext.extend(Talho.Admin.Apps.view.Helper, {
       ]}, form_config),
       {xtype: 'component', itemId: 'tiny_logo_thumb_url', html: '<div></div>', tpl:new Ext.Template(['<div><img src="{loc}"/></div>']), setValue: this._thumb_set_value },
       Ext.apply({xtype: 'form', itemId: 'tinylogo', items: [
-        {xtype: 'component', itemId: 'btn', autoEl: {tag: 'input', name: 'app[tiny_logo]', type: 'file'}, fieldLabel: 'Tiny Logo (for dashboard, will be scaled to 28px tall)', listeners: {scope: this, 'afterrender': this.afterUploadRender}}
+        {xtype: 'component', itemId: 'btn', autoEl: {tag: 'input', name: 'app[tiny_logo]', type: 'file'}, fieldLabel: 'Tiny Logo (for dashboard, will be scaled to 55px wide, 28px tall)', listeners: {scope: this, 'afterrender': this.afterUploadRender}}
       ]}, form_config),
     ];
     

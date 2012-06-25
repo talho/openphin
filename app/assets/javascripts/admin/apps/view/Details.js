@@ -13,6 +13,8 @@ Talho.Admin.Apps.view.Details = Ext.extend(Talho.Admin.Apps.view.Helper, {
       {xtype: 'box', html: '<fieldset><legend>App Details</legend></fieldset>'},
       {xtype: 'textfield', itemId: 'name', name: 'app[name]', fieldLabel: 'App Name', listeners: {scope: this, 'change': this.field_change}},
       {xtype: 'textfield', itemId: 'domains', name: 'app[domains]', fieldLabel: 'Domains (Comma Separated)', listeners: {scope: this, 'change': this.field_change}},
+      {xtype: 'checkbox', itemId: 'is_default', name: 'app[is_default]', boxLabel: 'Is the default app', listeners: {scope: this, 'change': this.field_change} },
+      {xtype: 'textfield', itemId: 'new_user_path', name: 'app[new_user_path]', fieldLabel: 'New User Path (when redefined)', listeners: {scope: this, 'change': this.field_change}},
       {xtype: 'textfield', itemId: 'help_email', name: 'app[help_email]', fieldLabel: 'Help Email', listeners: {scope: this, 'change': this.field_change}},
       {xtype: 'combo', itemId: 'root_jurisdiction_id', name: 'app[root_jurisdiction_id]', editable: true, forceSelection: true, valueNotFoundText: '', fieldLabel: 'Root Jurisdiction', 
         displayField: 'name', valueField: 'id', listeners: {scope: this, 'change': this.field_change}, mode: 'local', typeAhead: true, store: new Ext.data.JsonStore({

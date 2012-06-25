@@ -24,7 +24,7 @@
   <div id="header">
     <div id="portal_toolbar">
 
-      <%= link_to raw('<img src="' + domain_config['logo_image'] + '">'), root_path %>
+      <%= link_to raw(%{<img src="#{current_app.tiny_logo.url}">}), root_path %>
       <ul class="apps">
         
       </ul>
@@ -43,7 +43,7 @@
   		<%- else -%>
   			<ul>
   			  <li><%= link_to s('Sign Up'), new_user_path %></li>
-  				<li><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'] %></li>
+  				<li><%= link_to s(current_app.about_label), about_dashboard_path %></li>
   			</ul>
   		<%- end -%>
     </div>
@@ -77,7 +77,7 @@
     </ul>
   </div>
   </div>
-  <div class='help'>Need help?  Email <%= link_to domain_config['help_email'], "mailto:" + domain_config['help_email'] %></div>
+  <div class='help'>Need help?  Email <%= link_to current_app.help_email, "mailto:#{ current_app.help_email}" %></div>
   
 	
 </div>

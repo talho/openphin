@@ -47,7 +47,7 @@ class Role < ActiveRecord::Base
                                             {:conditions => conditions, :joins => :app} }
   
   def self.find_or_create_by_name_and_application(name, app, &block)
-    r = Role.joins(:app).where("apps.name" => app, "roles.name" => name).first
+    r = Role.select("roles.*").joins(:app).where("apps.name" => app, "roles.name" => name).first
     unless r
       r = Role.create_by_name(name) &block
       r.app = App.where(name: name)
@@ -57,7 +57,7 @@ class Role < ActiveRecord::Base
   end
   
   def self.find_by_name_and_application(name, app, &block)
-    r = Role.joins(:app).where("apps.name" => app, "roles.name" => name).first
+    r = Role.select("roles.*").joins(:app).where("apps.name" => app, "roles.name" => name).first
   end
   
   def self.latest_in_secs

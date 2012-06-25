@@ -185,10 +185,8 @@ class UsersController < Clearance::UsersController
   protected
 
   def redirect_to_plugin_signup
-    request_full_domain = (request.subdomains.push(request.domain)).join('.')
-    domain_config = DOMAIN_CONFIG.has_key?(request_full_domain) ? DOMAIN_CONFIG[request_full_domain] : DOMAIN_CONFIG['default']
-    unless domain_config['new_user_path'].blank?
-      redirect_to domain_config['new_user_path'].to_sym
+    unless current_app.new_user_path.blank?
+      current_app.new_user_path.to_sym
     end
   end
   

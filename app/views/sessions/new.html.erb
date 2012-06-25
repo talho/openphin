@@ -1,4 +1,9 @@
-<%= render 'sessions/' + domain_config['sign_in_partial'] %>
+<img src="<%= current_app.logo.url %>">
+
+<br />    <br />
+<div class="details">
+  <%= raw(current_app.login_text) %>
+</div>
 
 <div class="aside">
   <h2>Sign In to Your Account</h2>

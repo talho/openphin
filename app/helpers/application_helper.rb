@@ -1,9 +1,4 @@
 module ApplicationHelper
-  def current_user
-    user = super
-    present user if user
-  end
-
   def s(str, options=nil)
     content_tag :span, str, options
   end
@@ -21,11 +16,6 @@ module ApplicationHelper
     options = options.merge(:builder => TaggedBuilder)
     args = (args << options)
     form_for(name, *args, &block)
-  end
-
-  def domain_config
-    request_full_domain = (request.subdomains.push(request.domain)).join('.')
-    DOMAIN_CONFIG.has_key?(request_full_domain) ? DOMAIN_CONFIG[request_full_domain] : DOMAIN_CONFIG['default']
   end
 
   def tab_me(paths)

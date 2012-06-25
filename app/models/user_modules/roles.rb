@@ -42,7 +42,7 @@ module UserModules
     def is_super_admin?(app = "")
       return true if is_sysadmin?
       conditions = app.blank? ? {} : {"apps.name" => app}
-      return role_memberships.joins(:apps).where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
+      return role_memberships.joins(:role => :app).where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
     end
      
     def is_admin?(app = "")
@@ -50,7 +50,7 @@ module UserModules
       return true if is_sysadmin?
       return true if is_super_admin?(app)
       conditions = app.blank? ? {} : {"apps.name" => app}
-      return role_memberships.joins(:apps).count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
+      return role_memberships.joins(:role => :app).count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
     end
     
     def is_admin_for?(other, app = "")
