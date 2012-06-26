@@ -11,7 +11,7 @@ phin = App.find_or_create_by_name('phin')
 phin.help_email = 'admins@talho.org' if phin.help_email.blank?
 phin.root_jurisdiction = Jurisdiction.find_by_name("Texas") if phin.root_jurisdiction.blank? #if this isn't defined, no worries
 phin.login_text = %Q{<p>The TALHO Public Health Information Network (TALHO Phin) is an online portal containing a collection of applications which provide users with a range of functions to carry out public health preparedness goals and duties. <a href="/tutorials/Registering_and_Navigating_The_PHIN_-_Manual.pdf">Click here</a> for a tutorial on registering and navigating the PHIN, and <a href="/tutorials/Health_Alert_Network_Training_-_Manual.pdf">here</a> for Health Alert Network (HAN) training.</p>
-<p>To learn more about TALHO Phin, please visit <%= link_to current_app.about_label, about_dashboard_path %></p>"} if phin.login_text.blank?
+<p>To learn more about TALHO Phin, please visit <a href="/about">About OpenPHIN</a></p>} if phin.login_text.blank?
 phin.logo = File.open(Rails.root.join('app','assets','images','talho_phin','talho_phin_title.jpg')) if phin.logo_file_name.blank?
 phin.tiny_logo = File.open(Rails.root.join('app','assets','images','images','talho_header_logo.png')) if phin.tiny_logo_file_name.blank?
 phin.about_label = 'About OpenPHIN' if phin.about_label.blank?

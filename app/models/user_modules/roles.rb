@@ -138,7 +138,7 @@ module UserModules
             role_request.requester = current_user
             role_request.user = self
             if role_request.valid? && role_request.save
-              RoleRequestMailer.user_notification_of_role_request(role_request).deliver if !role_request.approved?
+              
             else
               result = "failure"
               rq_errors.concat(role_request.errors.full_messages)

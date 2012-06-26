@@ -17,7 +17,7 @@ Talho.Admin.Apps.view.Roles = Ext.extend(Talho.Admin.Apps.view.Helper, {
         autoDestroy: true,
         url: '/admin/roles',
         restful: true,
-        params: { app_id: this.ownerCt.appId },
+        baseParams: { app_id: this.ownerCt.appId },
         fields: ['name', 'id', 'description', 'approval_required', 'alerter', 'user_role', 'public']
       }), columns: [
         {header: 'Name', dataIndex: 'name', id: 'name'},

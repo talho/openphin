@@ -266,7 +266,7 @@ private
 
   def find_current_app
     full_domain = (request.subdomains + [request.domain]).join('.')
-    query_string = "#{request.subdomains.blank? ? '' : 'name IN :subdomains OR'} domains LIKE :full_domain OR is_default = true"
+    query_string = "#{request.subdomains.blank? ? '' : 'name IN (:subdomains) OR'} domains LIKE :full_domain OR is_default = true"
     App.where(query_string, subdomains: request.subdomains, full_domain: "%#{full_domain}%").order("is_default ASC").first
   end
 

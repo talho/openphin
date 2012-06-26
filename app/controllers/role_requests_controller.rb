@@ -15,7 +15,6 @@ class RoleRequestsController < ApplicationController
         if @role_request.approved?
           flash[:notice] = "You have been granted the #{@role_request.role.name} role in #{@role_request.jurisdiction.name}"
         else
-          RoleRequestMailer.user_notification_of_role_request(@role_request).deliver
           flash[:notice] = "Your request to be a #{@role_request.role.name} in #{@role_request.jurisdiction.name} has been submitted"
         end
         format.html { redirect_to new_role_request_path }

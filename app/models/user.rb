@@ -315,7 +315,7 @@ class User < ActiveRecord::Base
   end
 
   def to_iphone_results
-    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}.sort[0..1]
+    rm = role_memberships.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"}.sort[0..1]
     {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
       'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}]
@@ -323,8 +323,8 @@ class User < ActiveRecord::Base
   end
 
   def to_json_results(for_admin=false)
-    rm = role_memberships.map{|rm| "#{rm.role.name} in #{rm.jurisdiction.name}"}
-    rq = (for_admin) ? role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} : []
+    rm = role_memberships.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"}
+    rq = (for_admin) ? role_requests.unapproved.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"} : []
     {
       'user_id' => id, 'display_name' => display_name, 'first_name'=>first_name, 'last_name'=>last_name,
       'email'=>email, 'role_memberships'=>rm, 'role_requests'=>rq, 'photo' => photo.url(:tiny)

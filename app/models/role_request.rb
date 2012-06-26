@@ -47,6 +47,7 @@ class RoleRequest < ActiveRecord::Base
   after_create :auto_approve_if_public_role
   after_create :auto_approve_if_approver_is_specified
   after_create :auto_approve_if_requester_is_jurisdiction_admin
+  after_create :notify_of_role_request
 
   def approved?
     true if approver
@@ -93,6 +94,10 @@ class RoleRequest < ActiveRecord::Base
   end
   
   private
+  
+  def notify_of_role_request
+    RoleRequestMailer.user_notification_of_role_request(self).deliver if !approved?
+  end
 
   def auto_approve_if_public_role
     approve!(user) unless role.approval_required?
