@@ -37,7 +37,7 @@ class Role < ActiveRecord::Base
   scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
 
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
-  scope :for_app, lambda { |app| { :conditions => { "apps.name" => app }, :joins => :app } }
+  scope :for_app, lambda { |app| { :conditions => { "apps.name" => (app.is_a?(App) ? app.name : app) }, :joins => :app } }
   
   scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
                                        conditions["apps.name"] = app.to_s unless app.blank?
@@ -100,7 +100,7 @@ class Role < ActiveRecord::Base
     app.name
   end
 
-  scope :user_roles, :conditions => { :user_role => true }
+  scope :user_roles, :conditions => { user_role: true, public: false }
   scope :approval_roles, :conditions => { :approval_required => true }
 
   validates_uniqueness_of :name, :scope => :app_id

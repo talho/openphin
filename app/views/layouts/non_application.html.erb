@@ -5,7 +5,7 @@
   <%- if protect_against_forgery? -%>
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
-  <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
+  <title><%= current_app.name.titleize %>: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', 'master', 'redesign/bootstrap.css' %>
   <%= javascript_include_tag 'jquery', 'application' %>
 

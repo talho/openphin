@@ -142,7 +142,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     );
 
     this.startScreen = new Ext.Panel ({
-      html: '<div style=" padding: 20px;"><span style="font-size: 200%;">TxPHIN Search</span><br >Use the form at left to get started.</div>'
+      html: '<div style=" padding: 20px;"><span style="font-size: 200%;">Search</span><br >Use the form at left to get started.</div>'
     });
 
     this.noResultsScreen = new Ext.Panel ({

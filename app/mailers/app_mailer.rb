@@ -31,7 +31,7 @@ class AppMailer < ActionMailer::Base
     @message = message
     
     mail(:to => email,
-         :subject => "TxPhin:  User batching error")
+         :subject => "OpenPhin:  User batching error")
   end
 
   def user_delete_error(requester_email, message="")

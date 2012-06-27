@@ -28,17 +28,15 @@ en_signup_create:
             template:
                 header:
                     one: "1 error prohibited your signup."
-                    other: "{{count}} errors prohibited your signup."
+                    other: "%{count} errors prohibited your signup."
                 body: "There were problems with the following items:"
             models:
                 user:
                     attributes:
                         role_requests:
-                            invalid: "^You must select a home jurisdiction.  You must also select a role if you are a health professional."
+                            invalid: "^You must select a home jurisdiction and role."
                 role_request:        
                     attributes:
-                        role_requests_role:
-                            blank: "^Role needs to be selected."
                         role_requests_jurisdiction:
                             blank: "^Home Jurisdiction needs to be selected."   
                         role:

@@ -56,7 +56,7 @@ class Jurisdiction < ActiveRecord::Base
   end
 
   def super_admins(app = '')
-    users.with_roles(Role.superadmins(app))
+    users.where("role_memberships.role_id" => Role.admins(app).map(&:id) ).includes(:role_memberships)
   end
 
   def alerting_users

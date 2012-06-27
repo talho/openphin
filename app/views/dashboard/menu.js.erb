@@ -53,7 +53,7 @@ Application.menuConfig = [ '<img height="28" src="<%= current_app.tiny_logo.url 
     ]}
 
   <% else %>
-    {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_dashboard_path %>'}},
+    {name: '<%= current_app.about_label %>', tab: {id: 'about_phin', title:'<%= current_app.about_label %>', url:'<%= about_dashboard_path %>'}},
     {name:  'Sign Up', redirect: '<%= new_user_path %>'},
     {name: 'Sign In', redirect: '<%= sign_in_path %>'}
   <% end %>

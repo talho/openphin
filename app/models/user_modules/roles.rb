@@ -159,41 +159,9 @@ module UserModules
     private
     
     def assign_public_role
-      # bail out if they have any roles/rolerequests for application other than phin
-      return unless ( role_requests.map(&:role) + role_memberships.map(&:role) ).map(&:application).uniq.reject{|a| a=='phin'}.blank?
-  
-      public_role = Role.public
-      if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-        if(role_requests.blank? && role_memberships.blank?)
-          role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.nonforeign.first) unless Jurisdiction.state.nonforeign.empty?
-        else
-          rr = role_requests
-          rr.each do |request|
-            role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-            request.destroy if request.role == public_role
-          end unless role_requests.nil? || role_memberships.public_roles.count != 0
-          role_memberships.each do |request|
-            role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-          end if role_memberships.public_roles.count == 0
-        end
-  
-        role_requests.find_all_by_role_id(public_role).each do |request|
-          if request.approver.nil?
-            role_memberships.create!(
-              :role => public_role,
-              :jurisdiction => request.jurisdiction
-            )
-          end
-          request.destroy
-        end
-  
-        if self.role_requests.any?
-          self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
-            public_role.id,
-            self.role_requests.first.jurisdiction.id
-          )
-        end
-      end
+      # If they don't have the phin public role for their home_jurisdiciton, then add it. Rely on the user creator or the "get more apps" manager to add public roles for other apps.
+      pub = Role.where(public: true, app_id: App.find_by_name('phin').id).first
+      self.role_memberships.create(role_id: pub.id, jurisdiction_id: self.home_jurisdiction.id)
     end
   end
 end

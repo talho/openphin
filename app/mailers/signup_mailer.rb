@@ -7,7 +7,7 @@ class SignupMailer < ActionMailer::Base
     else
       @set_pw_link = edit_user_password_url(user, :token => user.confirmation_token, :escape => false)
       mail(:to => user.email,
-           :subject => "TxPhin: Welcome & Password setting")
+           :subject => "OpenPhin: Welcome & Password setting")
     end
   end
   
