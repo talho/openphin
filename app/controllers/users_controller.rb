@@ -54,6 +54,10 @@ class UsersController < Clearance::UsersController
     @user.role_requests.build role_id: params[:role_id], jurisdiction_id: @user.home_jurisdiction_id unless params[:role_id].blank?
     
     if @user.save
+      # Add a public role for the current app. There should only be one, but if the setup didn't happen correctly, there may be none. Also ensure that we don't add a role that's already there
+      app_role = current_app.roles.where(public: true).first
+      @user.role_memberships.create role_id: app_role.id, jurisdiction_id: @user.home_jurisdiction_id unless app_role.nil? || @user.role_memberships.where(role_id: app_role.id).exists?
+      
       sign_in @user
       redirect_to :root
     else
