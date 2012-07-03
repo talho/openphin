@@ -8,7 +8,7 @@
 #  phin_oid          :string(255)
 #  created_at        :datetime
 #  updated_at        :datetime
-#  approval_required :boolean(1)
+#  public            :boolean(1)
 #  alerter           :boolean(1)
 #  user_role         :boolean(1)      default(TRUE)
 #

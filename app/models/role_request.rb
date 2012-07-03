@@ -18,8 +18,8 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :user, :if => lambda { |rr| !rr.new_record? }
   validate :on => :create do |req|
     unless req.user.blank?
-      req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
-      req.errors.add("You do not have permission to request that role") unless req.role.approval_required == false || Role.for_app("phin").include?(req.role) || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
+      req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.where(role_id: req.role_id, jurisdiction_id: req.jurisdiction_id).exists?
+      req.errors.add("You do not have permission to request that role") unless req.role.is_public? || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
     end
   end
   validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.",
@@ -100,7 +100,7 @@ class RoleRequest < ActiveRecord::Base
   end
 
   def auto_approve_if_public_role
-    approve!(user) unless role.approval_required?
+    approve!(user) if role.public?
   end
 
   def auto_approve_if_requester_is_jurisdiction_admin

@@ -8,7 +8,7 @@
 #  phin_oid          :string(255)
 #  created_at        :datetime
 #  updated_at        :datetime
-#  approval_required :boolean(1)
+#  public            :boolean(1)
 #  alerter           :boolean(1)
 #  user_role         :boolean(1)      default(TRUE)
 #  app_id            :string(255)
@@ -23,9 +23,7 @@ class Role < ActiveRecord::Base
 
   scope :alerters, :conditions => {:alerter => true}
   scope :alphabetical, :order => 'name'
-  scope :public, :conditions => {:approval_required => false}
-  scope :non_public, :conditions => {:approval_required => true}
-
+  
   Defaults = {
     :sysadmin => 'SysAdmin',
     :superadmin => 'SuperAdmin',
@@ -37,7 +35,7 @@ class Role < ActiveRecord::Base
   scope :recent, lambda{|limit| {:limit => limit, :order => "updated_at DESC"}}
 
   #stopgap solution for role permissions - to be killed when a comprehensive security model is implemented
-  scope :for_app, lambda { |app| { :conditions => { "apps.name" => (app.is_a?(App) ? app.name : app) }, :joins => :app } }
+  scope :for_app, lambda { |app| { :conditions => { "apps.#{app.is_a?(App) || (app.is_a?(Array) && app.first.is_a?(App)) ?  "id" : "name"}" => app}, :joins => :app } }
   
   scope :admins, ->(app = nil) { conditions = {:name => Defaults[:admin]}
                                        conditions["apps.name"] = app.to_s unless app.blank?
@@ -65,29 +63,25 @@ class Role < ActiveRecord::Base
   end
 
   def self.admin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:admin],app) do |r| 
-        r.approval_required = true
+      find_or_create_by_name_and_application(Defaults[:admin],app) do |r|
         r.user_role = false
       end
   end
   
   def self.org_admin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:org_admin],app) do |r| 
-        r.approval_required = true
+      find_or_create_by_name_and_application(Defaults[:org_admin],app) do |r|
         r.user_role = false
       end
   end
 
   def self.superadmin(app = "phin")
-      find_or_create_by_name_and_application(Defaults[:superadmin],app) do |r| 
-        r.approval_required = true
+      find_or_create_by_name_and_application(Defaults[:superadmin],app) do |r|
         r.user_role = false
       end
   end
 
   def self.sysadmin
-    find_or_create_by_name_and_application(Defaults[:sysadmin],"system") do |r| 
-      r.approval_required = true
+    find_or_create_by_name_and_application(Defaults[:sysadmin],"system") do |r|
       r.user_role = false
     end
   end
@@ -101,22 +95,12 @@ class Role < ActiveRecord::Base
   end
 
   scope :user_roles, :conditions => { user_role: true, public: false }
-  scope :approval_roles, :conditions => { :approval_required => true }
+  scope :approval_roles, :conditions => { public: false }
 
   validates_uniqueness_of :name, :scope => :app_id
 
-  def is_public?
-    if name == Defaults[:public]
-      return true
-    end
-    false
-  end
-
   def self.is_public?(role)
-    if(role.name == Defaults[:public])
-      return true
-    end
-    false
+    role.public?
   end
 
   def display_name

@@ -19,7 +19,7 @@ Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: ap
   roles.each do |r|
     application = application.blank? ? r.to_s == 'SysAdmin' ? 'system' : 'phin' : application
     role_obj = Role.find_or_create_by_name_and_application(r.to_s, application) do |ro|
-      ro.approval_required = r.to_s == "Public" ? false : true
+      ro.public = r.to_s == "Public"
     end
     unless r == "Public" && jur_obj.name == "Texas"
       unless RoleMembership.already_exists?(user, role_obj, jur_obj)
@@ -167,7 +167,7 @@ Given /^"([^\"]*)" has been approved for the role "([^\"]*)"$/ do |user_email, r
 end
 
 Given "a user in a non-public role" do
-  role = FactoryGirl.create(:role, :approval_required => true)
+  role = FactoryGirl.create(:role, public: false)
   # the role membership factory also builds a user
   FactoryGirl.create(:role_membership, :role => role ).user
 end

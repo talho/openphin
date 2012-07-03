@@ -59,11 +59,11 @@ Given 'a child jurisdiction named $name' do |name|
 end
 
 Given /^a[n]? role named (.*)$/ do |name|
-  Role.find_by_name_and_application(name,"phin") || FactoryGirl.create(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => "phin")
+  Role.find_by_name_and_application(name,"phin") || FactoryGirl.create(:role, :name => name, :public => "Public" == name, :application => "phin")
 end
 
 Given /^a[n]? application role named (.*) for (.*)$/ do |name, app|
-  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => ("Public" == name ? nil : true), :application => app)
+  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :public => "Public" == name, :application => app)
 end
 
 Given /^a[n]? organization type named (.*)$/ do |name|
@@ -71,17 +71,17 @@ Given /^a[n]? organization type named (.*)$/ do |name|
 end
 
 Given /^a[n]? approval role named (.*)$/ do |name|
-  Role.approval_roles.find_by_name(name) || FactoryGirl.create(:role, :name => name, :approval_required => true)
+  Role.approval_roles.find_by_name(name) || FactoryGirl.create(:role, :name => name, :public => false)
 end
 Given /^a[n]? application approval role named (.*) for (.*)$/ do |name, app|
-  Role.approval_roles.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => true, :application => app)
+  Role.approval_roles.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :public => false, :application => app)
 end
 
 Given /^a[n]? system role named (.*)$/ do |name|
-  r = Role.approval_roles.find_by_name_and_application(name, "phin") || FactoryGirl.create(:role, :name => name, :approval_required => true, :user_role => false, :application => "phin")
+  r = Role.approval_roles.find_by_name_and_application(name, "phin") || FactoryGirl.create(:role, :name => name, :public => false, :user_role => false, :application => "phin")
 end
 Given /^a[n]? application system role named (.*) for (.*)$/ do |name, app|
-  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :approval_required => true, :user_role => false, :application => app)
+  Role.find_by_name_and_application(name,app) || FactoryGirl.create(:role, :name => name, :public => false, :user_role => false, :application => app)
 end
 
 Given /^the role "([^\"]*)" is for the "([^\"]*)" application$/ do |role, app|

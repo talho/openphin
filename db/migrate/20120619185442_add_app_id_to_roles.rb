@@ -6,8 +6,13 @@ class AddAppIdToRoles < ActiveRecord::Migration
   def up
     change_table :roles do |t|
       t.integer :app_id
-      t.boolean :public, default: false
     end
+    
+    rename_column :roles, :approval_required, :public
+    change_column :roles, :public, :boolean, :default => false
+    
+    execute("UPDATE roles
+             SET public = NOT public")
     
     apps = execute("SELECT DISTINCT application FROM roles").column_values(0)
     apps.each do |app|
@@ -24,6 +29,13 @@ class AddAppIdToRoles < ActiveRecord::Migration
   end
   
   def down
+    
+    execute("UPDATE roles
+             SET public = NOT public")
+             
+    rename_column :roles, :public, :approval_required
+    change_column :roles, :approval_required, :default => true
+             
     change_table :roles do |t|
       t.string :application
     end

@@ -78,7 +78,7 @@ class UsersController < Clearance::UsersController
         elsif r['id'].nil?
           pr = Role.find(r["role_id"])
           pj =  r['jurisdiction_id'].nil? ? Jurisdiction.find(r["jurisdiction_id"]) : nil
-          if pr.approval_required?
+          unless pr.public?
             flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
             rr=RoleRequest.new
             rr.role=pr

@@ -91,6 +91,9 @@ Openphin::Application.routes.draw do
   resources :role_requests, :only => [:new, :create]
   resources :devices, :only => [:create, :destroy]
   resources :favorites, :only => [:create, :index, :destroy]
+  resources :apps, :only => [:index, :update] do
+    get :available, :on => :collection
+  end
   
   resources :documents, :controller => 'doc/documents', :except => [:index] do
     collection do

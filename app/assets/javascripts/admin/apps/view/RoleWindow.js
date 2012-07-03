@@ -30,7 +30,6 @@ Talho.Admin.Apps.view.RoleWindow = Ext.extend(Ext.Window, {
       {xtype: 'textfield', itemId: 'name', name: 'role[name]', anchor: '100%', fieldLabel: 'Name'},
       {xtype: 'checkbox', itemId: 'public', name: 'role[public]', boxLabel: 'Public'},
       {xtype: 'checkbox', itemId: 'user_role', name: 'role[user_role]', boxLabel: 'User selectable'},
-      {xtype: 'checkbox', itemId: 'approval_required', name: 'role[approval_required]', boxLabel: 'Approval required'},
       {xtype: 'checkbox', itemId: 'alerter', name: 'role[alerter]', boxLabel: 'Able to send alerts'},
       {xtype: 'textarea', itemId: 'description', name: 'role[description]', fieldLabel: 'Description', anchor: '100%', height: 100}
     ]}, form_opts);

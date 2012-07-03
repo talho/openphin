@@ -1,5 +1,4 @@
 class RolesController < ApplicationController
-	app_toolbar "han"
 	
   before_filter :non_public_role_required, :except => [:index]
   before_filter :admin_required, :except => [:index]

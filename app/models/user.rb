@@ -131,10 +131,16 @@ class User < ActiveRecord::Base
     { :conditions => ["users.id = ?", user.id]}
   }
   scope :with_apps, lambda{|apps|  #apps is an array of string app names
-    { :conditions => ["id in (select user_id from role_memberships where role_id in (select id from roles where application IN (?)))", apps ] }
+    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
+              JOIN roles r ON r.id = rm.role_id
+              JOIN apps a ON r.app_id = a.id",
+      conditions: {"a.id" => apps} }
   }
   scope :without_apps, lambda{|apps|  #apps is an array of string app names
-    { :conditions => ["id NOT IN (select user_id from role_memberships where role_id IN (select id from roles where application IN (?)))", apps ] }
+    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
+              JOIN roles r ON r.id = rm.role_id
+              JOIN apps a ON r.app_id = a.id",
+      conditions: ["a.id NOT IN (?)", apps] }
   }
 
 #  scope :acknowledged_alert, lamda {|alert|

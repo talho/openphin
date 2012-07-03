@@ -7,6 +7,8 @@ module UserModules
       base.accepts_nested_attributes_for :role_requests, :organization_membership_requests
       base.has_many :roles, :through => :role_memberships, :uniq => true
       
+      base.has_many :apps, :through => :roles, :uniq => true, :conditions => "apps.name != 'system'"
+      
       base.validates_associated :role_requests
       base.validates_associated :role_memberships
       
@@ -98,13 +100,9 @@ module UserModules
       self.roles.joins(:app).where("apps.name" => app.to_s).exists?
     end
     alias_method :has_application?, :has_app?
-    
-    def apps
-      return self.roles.map(&:application).uniq
-    end
-  
+      
     def visible_actors  #this is an ugly solution - returns every user in the system that a given user has rights to see.
-      return User.without_role("SysAdmin").without_apps( Role.all.map(&:application).uniq - apps )
+      return User.without_role("SysAdmin").without_apps( App.all - apps )
     end
         
     def alerter?

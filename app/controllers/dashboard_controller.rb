@@ -228,15 +228,16 @@ class DashboardController < ApplicationController
        @han_menu = eval($menu_config[:han]) unless $menu_config[:han].nil?
     end if current_user.has_app?('phin')
     
-    if current_user.has_non_public_role?
-      plugin_config_items = []
+    plugin_config_items = []
     
+    if current_user.has_non_public_role?
       $menu_config.each do |app, val|
           plugin_config_items << eval(val) if app != :han && current_user.has_app?(app.to_s) && !val.nil?
       end unless $menu_config.nil?
-      
-      @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
     end
+    
+    plugin_config_items << "{name: 'Get More Apps', tab: {title: 'Manage Apps', initializer: 'Talho.Dashboard.Apps'}}"    
+    @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}"
     
     respond_to do |format|
       format.js {}

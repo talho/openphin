@@ -55,7 +55,7 @@ describe RoleRequest do
         @user = FactoryGirl.create(:user)
         @admin_role = Role.admin
         @role_membership = FactoryGirl.create(:role_membership, :role => @admin_role, :jurisdiction => @jurisdiction, :user => @admin)
-        @role = FactoryGirl.create(:role, :name => "Foobar", :approval_required => true)
+        @role = FactoryGirl.create(:role, :name => "Foobar", public: false)
         @request = Factory.build(:role_request, :user => @user, :requester => @admin, :jurisdiction => @jurisdiction, :role => @role, :approver => nil)
         @admin.reload
         @user.reload
@@ -83,7 +83,7 @@ describe RoleRequest do
     end
     
     it "should set approver to the passed-in user" do
-      role = FactoryGirl.create(:role, :approval_required => true)
+      role = FactoryGirl.create(:role, :public: false)
       request = FactoryGirl.create(:role_request, :role => role, :requester => @approver, :user => @approver)
       request.approve!(@approver)
       request.approver.should == @approver
@@ -119,7 +119,7 @@ describe RoleRequest do
 
       it "should only create a single role membership" do
         user=FactoryGirl.create(:user)
-        role=FactoryGirl.create(:role, :approval_required => true)
+        role=FactoryGirl.create(:role, public: false)
         request=FactoryGirl.create(:role_request, :user => user, :requester => user, :jurisdiction => @jurisdiction, :role => role)
         user.reload
         request.approve!(@approver)
@@ -134,7 +134,7 @@ describe RoleRequest do
           user=FactoryGirl.create(:user)
           user.role_memberships.create(:role => Role.admin, :jurisdiction => jur)
         
-          role=FactoryGirl.create(:role, :approval_required => true)
+          role=FactoryGirl.create(:role, public: false)
           request=FactoryGirl.create(:role_request, :user => user, :requester => user, :jurisdiction => jur, :role => role)
           request.approve!(@approver)
           user.role_memberships.size.should == 2

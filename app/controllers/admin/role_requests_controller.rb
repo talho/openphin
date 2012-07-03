@@ -5,7 +5,7 @@ class Admin::RoleRequestsController < ApplicationController
   # GET /role_requests
   # GET /role_requests.xml
   def index
-    apps = current_user.roles.map(&:application).uniq
+    apps = current_user.apps.map(&:name)
     if current_user.is_admin_for? Jurisdiction.state.nonforeign.first
       @role_requests = RoleRequest.unapproved.for_apps(apps)
     else
