@@ -198,9 +198,7 @@ class DashboardController < ApplicationController
     @user = current_user
     require 'will_paginate/array'
     per_page = ( params[:per_page].to_i > 0 ? params[:per_page].to_i : 10 )
-    @alerts = (defined?(current_user.recent_han_alerts) && current_user.recent_han_alerts.size > 0) ? 
-                current_user.recent_han_alerts.paginate(:page => params[:page], :per_page => per_page) : 
-                (defined?(HanAlert) ? [HanAlert.default_alert] : []).paginate(:page => 1)
+    @alerts = ([Alert.default_alert]).paginate(:page => 1)
     respond_to do |format|
       format.html
       format.ext
@@ -216,28 +214,20 @@ class DashboardController < ApplicationController
       end
     end
   end
-  
-	def faqs
+
+  def faqs
     DashboardController.app_toolbar "faqs"
   end
 
   def menu
     @report_menu = "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}" if defined? REPORT_DB && current_user.has_non_public_role?
-    
-    Phin::Application.eval_if_plugin_present(:han) do
-       @han_menu = eval($menu_config[:han]) unless $menu_config[:han].nil?
-    end if current_user.has_app?('phin')
-    
-    if current_user.has_non_public_role?
-      plugin_config_items = []
-    
-      $menu_config.each do |app, val|
-          plugin_config_items << eval(val) if app != :han && current_user.has_app?(app.to_s) && !val.nil?
-      end unless $menu_config.nil?
-      
-      @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
-    end
-    
+    plugin_config_items = []
+    $menu_config.each do |app, val|
+      plugin_config_items << eval(val) if current_user.has_app?(app.to_s) && !val.nil?
+    end unless $menu_config.nil?
+
+    @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}" unless plugin_config_items.blank?
+
     respond_to do |format|
       format.js {}
     end

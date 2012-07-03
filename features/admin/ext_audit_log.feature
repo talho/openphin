@@ -120,11 +120,11 @@ Feature: Audit Log
     And I click model-selector-list-item "Devices"
     When I click model-selector-list-item "Role Memberships"
     And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see "TEST USER, Lackey in Dallas County" in column "Descriptor" within "grid-version-results"
+    Then I should see "TEST USER, Phin: Lackey in Dallas County" in column "Descriptor" within "grid-version-results"
     And I click model-selector-list-item "Role Memberships"
     When I click model-selector-list-item "Role Requests"
     And I wait for the "Loading..." mask to go away for 1 second
-    Then I should see "TEST USER for Sous Chef in Lubbock County" in column "Descriptor" within "grid-version-results"
+    Then I should see "TEST USER for Phin: Sous Chef in Lubbock County" in column "Descriptor" within "grid-version-results"
 
 #  Scenario: Audit log for Documents
 #    pending #document step definitions are working
