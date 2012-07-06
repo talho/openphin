@@ -13,7 +13,7 @@ group :default do
   gem "rack-raw-upload"
   gem "pg", ">= 0.11"
   gem "paper_trail", ">= 2"
-  gem "wicked_pdf", "0.7.0"
+  gem "wicked_pdf", "0.7.9"
   gem "mongo", "1.6.2"
     gem 'bson_ext', '1.6.2'
     
