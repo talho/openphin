@@ -425,7 +425,7 @@ Scenario: Results can be sorted by name, verify blank photo present and can foll
 Scenario: User cannot search for users in a different app
   Given the following users exist:
     | Notin Myapp | notinmyapp@example.com | Public | Dallas County | vms |
-  And "notinmyapp@example.com" is not public in "Texas"
+  And "notinmyapp@example.com" is not public in app "phin"
   And delayed jobs are processed
 
   When I am logged in as "tex.admin@example.com"

@@ -81,11 +81,11 @@ module UserModules
     end
   
     def has_non_public_role?
-      self.roles.non_public.size > 0
+      self.roles.where(public: false).exists?
     end
   
     def has_public_role?
-      self.roles.public.size > 0
+      self.roles.where(public: true).exists?
     end
   
     def has_public_role_in?(jurisdiction)
@@ -102,7 +102,7 @@ module UserModules
     alias_method :has_application?, :has_app?
       
     def visible_actors  #this is an ugly solution - returns every user in the system that a given user has rights to see.
-      return User.without_role("SysAdmin").without_apps( App.all - apps )
+      return User.without_role("SysAdmin").with_apps( roles.where(name: [Role::Defaults[:admin], Role::Defaults[:superadmin]]).map(&:app).uniq )
     end
         
     def alerter?
@@ -158,8 +158,8 @@ module UserModules
     
     def assign_public_role
       # If they don't have the phin public role for their home_jurisdiciton, then add it. Rely on the user creator or the "get more apps" manager to add public roles for other apps.
-      pub = Role.where(public: true, app_id: App.find_by_name('phin').id).first
-      self.role_memberships.create(role_id: pub.id, jurisdiction_id: self.home_jurisdiction.id)
+      pub = Role.joins(:app).where(public: true, "apps.name" => 'phin').first
+      self.role_memberships.create(role_id: pub.id, jurisdiction_id: (self.home_jurisdiction || pub.app.root_jurisdiction || Jurisdiction.first).id)
     end
   end
 end

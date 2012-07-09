@@ -94,6 +94,7 @@ group :cucumber do
 end
  
 group :production do
+  gem "airbrake"
   gem "unicorn"
   gem "clamav", "0.4.1"
 end

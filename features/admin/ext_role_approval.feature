@@ -8,7 +8,7 @@ Feature: Approving users for roles
       | Organization  | Red Cross      |      |
       | Jurisdiction  | Dallas County  |      |
       | Jurisdiction  | Potter County  |      |
-      | approval role | Health Officer | phin |
+      | Role | Health Officer | phin |
     And the following administrators exist:
       | admin@dallas.gov | Dallas County |
       | admin@potter.gov | Potter County |

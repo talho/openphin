@@ -18,8 +18,8 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :user, :if => lambda { |rr| !rr.new_record? }
   validate :on => :create do |req|
     unless req.user.blank?
-      req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.where(role_id: req.role_id, jurisdiction_id: req.jurisdiction_id).exists?
-      req.errors.add("You do not have permission to request that role") unless req.role.is_public? || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
+      req.errors.add("User is already a member of this role and jurisdiction") if req.user.role_memberships.where(role_id: req.role_id, jurisdiction_id: req.jurisdiction_id).exists?
+      req.errors.add("You do not have permission to request that role") unless req.role.public? || req.requester.apps.include?(req.role.app) || req.requester.is_sysadmin?
     end
   end
   validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.",
@@ -40,8 +40,8 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions],
      :include => [:user, :role, :jurisdiction]}
   }
-  scope :for_apps, lambda { |applications|
-    {:include => [:user, :role], :conditions => ["roles.application in (?)", applications]}
+  scope :for_apps, lambda { |apps|
+    {:include => [:user, :role], :conditions => ["roles.app_id in (?)", apps.map(&:id)]}
   }
   before_create :set_requester_if_nil
   after_create :auto_approve_if_public_role

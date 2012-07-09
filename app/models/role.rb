@@ -47,14 +47,16 @@ class Role < ActiveRecord::Base
   def self.find_or_create_by_name_and_application(name, app, &block)
     r = Role.select("roles.*").joins(:app).where("apps.name" => app, "roles.name" => name).first
     unless r
-      r = Role.create_by_name(name) &block
-      r.app = App.where(name: name)
+      r = Role.new(name: name) do |role|
+        yield role
+      end
+      r.app = App.where(name: app).first
       r.save!
     end
     r
   end
   
-  def self.find_by_name_and_application(name, app, &block)
+  def self.find_by_name_and_application(name, app)
     r = Role.select("roles.*").joins(:app).where("apps.name" => app, "roles.name" => name).first
   end
   
@@ -87,14 +89,17 @@ class Role < ActiveRecord::Base
   end
 
   def self.public(app = "phin")
-    find_or_create_by_name_and_application(Defaults[:public],app) {|r| r.user_role = true }
+    find_or_create_by_name_and_application(Defaults[:public],app) do |r| 
+      r.user_role = true 
+      r.public = true
+    end
   end
 
   def application
     app.name
   end
 
-  scope :user_roles, :conditions => { user_role: true, public: false }
+  scope :user_roles, :conditions => { user_role: true }
   scope :approval_roles, :conditions => { public: false }
 
   validates_uniqueness_of :name, :scope => :app_id

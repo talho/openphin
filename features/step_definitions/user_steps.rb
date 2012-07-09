@@ -8,30 +8,21 @@ Given 'a user with the email "$email"' do |email|
   User.find_by_email(email) || FactoryGirl.create(:user, :email => email)
 end
 
-Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: application "([^"]*)")? in "([^"]*)"$/ do |name, email, role, application, jurisdiction|
+Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: application "([^"]*)")? in "([^"]*)"$/ do |name, email, role, app, jurisdiction|
   first_name, last_name = name.split
   jur_obj = Jurisdiction.find_or_create_by_name(jurisdiction.to_s)
   unless (user = User.find_by_email(email))
     #create the user.  this results in a Public role in the requested jurisdiction, and a role request for 'role'
-    user = FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name, :email => email)#, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )
+    user = FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name, :email => email, :home_jurisdiction_id => jur_obj.id)#, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )
   end
   roles = role.split(',').map(&:strip)
   roles.each do |r|
-    application = application.blank? ? r.to_s == 'SysAdmin' ? 'system' : 'phin' : application
-    role_obj = Role.find_or_create_by_name_and_application(r.to_s, application) do |ro|
-      ro.public = r.to_s == "Public"
-    end
-    unless r == "Public" && jur_obj.name == "Texas"
-      unless RoleMembership.already_exists?(user, role_obj, jur_obj)
-        # do this manually, it's potentially faster than the factory method.
-        RoleMembership.create :role_id => role_obj.id, :jurisdiction_id => jur_obj.id, :user_id => user.id
-        #force creation of the role membership.  this leaves the request dangling.
-        # FactoryGirl.create(:role_membership, :role => role_obj, :jurisdiction => jur_obj, :user=> user )
-        # if (r_request = user.role_requests.find_by_role_id_and_jurisdiction_id(role_obj.id,jur_obj.id))
-          # #remove the request.
-          # r_request.delete
-        # end
-      end
+    app = app.blank? ? r.to_s == 'SysAdmin' ? 'system' : 'phin' : app
+    app = step %Q{an app named "#{app}"}
+    role_obj = Role.find_by_name_and_app_id(role,app.id) || FactoryGirl.create(:role, :name => role, :public => r.to_s == "Public", :application => app.name)
+    unless RoleMembership.already_exists?(user, role_obj, jur_obj)
+      # do this manually, it's potentially faster than the factory method.
+      RoleMembership.create :role_id => role_obj.id, :jurisdiction_id => jur_obj.id, :user_id => user.id
     end
   end
 end
@@ -178,6 +169,13 @@ Given /^"([^\"]*)" is not public in "([^\"]*)"$/ do |user_email, jurisdiction_na
   jurisdiction=Jurisdiction.find_by_name!(jurisdiction_name)
   role_membership=user.role_memberships.find_by_role_id_and_jurisdiction_id(role.id,jurisdiction.id)
   role_membership.destroy if !role_membership.nil?
+end
+
+Given /^"([^\"]*)" is not public in app "([^\"]*)"$/ do |user_email, app|
+  user=User.find_by_email(user_email)
+  role=Role.public(app)
+  role_memberships = user.role_memberships.where(role_id: role)
+  role_memberships.each(&:destroy)
 end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|

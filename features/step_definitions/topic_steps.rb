@@ -15,9 +15,11 @@ When /^I prepare for topic tests$/ do
     | admin@dallas.gov | Dallas County |
   })  
   step %Q{the following users exist:}, table(%{
-    | Hank Hill       | hhill@example.com     | User | Dallas County  |
-    | Steve McAwesome | sawesome@example.com  | User | Dallas County  |
-    | Mr Moderator    | moderator@example.com | User | Dallas County  |
+    | Hank Hill       | hhill@example.com     | User   | Dallas County  |
+    | Steve McAwesome | sawesome@example.com  | User   | Dallas County  |
+    | Steve McAwesome | sawesome@example.com  | Public | Texas          |
+    | Mr Moderator    | moderator@example.com | User   | Dallas County  |
+    | Mr Moderator    | moderator@example.com | Public | Texas          |
   })  
   admin = User.find_by_email("admin@dallas.gov")
   FactoryGirl.create(:forum, :name => 'ILI Tracking', :owner_id => admin.id, 

@@ -44,7 +44,7 @@ Feature: Dashboard Administration
     Then I should see "Edit Dashboards"
     When I press "Edit Dashboards"
     Then the "Edit Dashboards" tab should be open
-     And I should not see "Welcome to openPHIN" within ".portlet"
+     And I should not see "Welcome to openPHIN" within ".admin-dashboard-portal"
 
   Scenario: Creating new dashboard
     Given I am logged in as "bartleby@example.com"
@@ -344,12 +344,12 @@ Feature: Dashboard Administration
     And I load ExtJs
     And I wait for 4 seconds
     And I maliciously try to create a dashboard
-    Then The maliciousness response should contain "TXPhin: sessions/new"
+    Then The maliciousness response should contain "Phin: sessions/new"
     # Newest firefox adds a modal when the server reidrects after a PUT or DELETE. This causes these tests to fail in an unrecoverable way
     #And I maliciously try to edit a dashboard
-    #Then The maliciousness response should contain "TXPhin: sessions/new"
+    #Then The maliciousness response should contain "Phin: sessions/new"
     #And I maliciously try to delete a dashboard
-    #Then The maliciousness response should contain "TXPhin: sessions/new"
+    #Then The maliciousness response should contain "Phin: sessions/new"
     # And I try to post the server while logged in as public for an app default dashboard
     Given the following users exist:
       | Abel Magwitch | magwitch@example.com | Public | Texas |

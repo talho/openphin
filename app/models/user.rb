@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
     indexes title,          :sortable => true
     has id,          :as => :user_id
     has roles(:id),         :as => :role_ids
-    has "array_to_string(array_agg(DISTINCT CRC32(roles.application)), ',')", :type => :multi, :as => :applications
+    has apps(:id),          :as => :app_ids
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed

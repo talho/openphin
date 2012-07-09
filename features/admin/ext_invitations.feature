@@ -9,6 +9,7 @@ Feature: Invitation System
       | Jurisdiction | Texas         |
       | Organization | DSHS          |
       | Organization | TORCH         |
+    And "Texas" is the root jurisdiction of app "phin"
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
     And I am logged in as "joe.smith@example.com"
@@ -45,9 +46,7 @@ Feature: Invitation System
       | Preferred name                          | Jane Smith             |
       | Home Jurisdiction                       | Texas                  |
       | Preferred language                      | English                |
-      | Are you with any of these organizations | DSHS                   |
-      | Are you a public health professional?   | <checked>              |
-    And "jane.smith@example.com" clicks the confirmation link in the email
+    And I sign out
     And I am logged in as "joe.smith@example.com"
     And I navigate to the invitations page
     And I select the "DSHS" grid cell

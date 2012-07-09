@@ -191,10 +191,8 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, select
 end
 
 Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  if selector
-    page.should have_no_selector(selector, :text => text, :visible => true)
-  else
-    page.should have_no_xpath("//text()[contains(., '#{text}')]", :visible => true)
+  with_scope(selector) do
+    page.should have_no_content(text)
   end
 end
 

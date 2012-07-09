@@ -172,10 +172,10 @@ private
   
   # We're rewriting the file content type after a create because rack raw upload delivers a temp file without a proper naming
   def rewrite_file_content_type
-    file = File.open(self.file.path)
-    if(self.file_content_type != file.content_type.to_s)
-      self.file.instance_variable_set('@_file_content_type', file.content_type.to_s)
-      self.file_content_type = file.content_type.to_s
+    mime = MIME::Types.type_for(file_file_name).first 
+    if(mime && self.file_content_type != mime.content_type)
+      self.file.instance_variable_set('@_file_content_type', mime.content_type)
+      self.file_content_type = mime.content_type
       self.save
     end
   end

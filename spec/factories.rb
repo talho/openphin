@@ -58,6 +58,10 @@ FactoryGirl.define do
   end
 
   factory :role do
+    ignore do
+      application true
+    end
+    
     sequence(:name) {|r| "role#{r}"}
     public {true}
     after :build do |role, evaluator|

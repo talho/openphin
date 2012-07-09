@@ -39,7 +39,6 @@ FeatureHelpers
        "First Name"=> "John",
        "Last Name"=> "Smith",
        "Preferred name"=> "Jonathan Smith",
-       "Are you a public health professional?" => '<unchecked>',
        "Preferred language"=> "English"
       }
       
@@ -54,31 +53,10 @@ FeatureHelpers
       fields.each do |field, value|
         value = "" if value == "<blank>"
         case field
-        when 'Email', 'Password', 'Password Confirmation', 'First Name', 'Last Name', 'Preferred name', 'Street', 'City', 'State', 'Zip', 'Organization', 'Office Phone', 'Mobile Phone', 'Home Phone', 'Phone', 'Fax', 'Description', 'Please describe your role', 'Distribution Email', 'Name', 'Email Address', 'Phone Number'
+        when 'Email', 'Password', 'Password Confirmation', 'First Name', 'Last Name', 'Preferred name'
           fill_in field, :with => value
-        when 'Preferred language'
+        when 'Preferred language', "Home Jurisdiction", "Role"
           find_field(field).select(value.strip)
-        when 'What is your primary role',
-          'Are you with any of these organizations', 'Organization Type'
-          page.check("health_professional")
-          find_field(field).select(value.strip)
-        when /Jurisdiction of Operation/
-          field = find_field("organization_jurisdiction_ids")
-          value.split(',').each do |id|
-            field.select(id.strip)
-          end
-        when "Are you a public health professional?"
-          id = "health_professional"
-          if value == "<unchecked>"
-            page.uncheck(id) if find(:css, "##{id}").selected?
-          else
-            page.check(id) if !find(:css, "##{id}").selected?
-          end
-        when "Home Jurisdiction"
-          value = "" if value.nil?
-          find_field("user_role_requests_attributes_0_jurisdiction_id").select(value)
-        when "State Jurisdiction"
-          find_field(Jurisdiction.find_by_name(value).name).click
         else
           raise "Unknown field: #{field}: Please update this step if you intended to use this field."
         end
