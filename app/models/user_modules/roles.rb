@@ -42,7 +42,7 @@ module UserModules
     def is_super_admin?(app = "")
       return true if is_sysadmin?
       conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
+      return role_memberships.where(['role_id in (?)', Role.superadmins.all(:conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
     end
      
     def is_admin?(app = "")
@@ -50,7 +50,7 @@ module UserModules
       return true if is_sysadmin?
       return true if is_super_admin?(app)
       conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
+      return role_memberships.count( :conditions => { :role_id => Role.admins.all(:conditions => conditions).map(&:id)} ) > 0
     end
     
     def is_admin_for?(other, app = "")
@@ -167,7 +167,7 @@ module UserModules
   
       public_role = Role.public
       if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-        if(role_requests.blank? && role_memberships.blank?)
+        if role_requests.blank? && role_memberships.blank?
           role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.nonforeign.first) unless Jurisdiction.state.nonforeign.empty?
         else
           rr = role_requests

@@ -101,7 +101,7 @@ class Role < ActiveRecord::Base
 
   def display_name
     begin
-      return "#{application.titleize}: #{name}" unless user_role?
+      return "#{application.titleize}: #{name}"
     rescue
     end
     name

@@ -87,7 +87,7 @@ When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
   waiter do
     step %Q{I press "#{tb_button}"}
   end
-
+  sleep 0.1
   menu_array.each do |menu|
     waiter do
       step %Q{I click x-menu-item "#{menu}"}

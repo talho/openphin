@@ -90,8 +90,8 @@ Feature: Creating groups
     And I select "Personal" from ext combo "Scope"
     And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
-      | name           | type |
-      | Health Officer | Role |
+      | name                 | type |
+      | Phin: Health Officer | Role |
     And I press "Save"
     Then I should see the following group summary:
       | group_name               | Health Officer Group |
@@ -112,25 +112,25 @@ Feature: Creating groups
       | Potter County |
     When I click x-accordion-hd "Roles"
     Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
+      | Phin: Health Officer |
+      | Phin: Epidemiologist |
+      | Phin: Public         |
     When I fill in "Group Name" with "Dallas County Health Officer Group"
     And I select "Personal" from ext combo "Scope"
     And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
+      | name                 | type         |
+      | Dallas County        | Jurisdiction |
+      | Phin: Health Officer | Role         |
     And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Group |
       | group_owner_jurisdiction | Potter County                      |
       | group_scope              | Personal                           |
     And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
+      | name                  | type         |
+      | Dallas County         | Jurisdiction |
+      | Phin: Health Officer  | Role         |
 
   Scenario: adding a user group with individual users
     Given I am logged in as "jill.smith@example.com"
@@ -167,25 +167,25 @@ Feature: Creating groups
       | Potter County |
     When I click x-accordion-hd "Roles"
     Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
+      | Phin: Health Officer |
+      | Phin: Epidemiologist |
+      | Phin: Public         |
     When I fill in "Group Name" with "Dallas County Health Officer Group"
     And I select "Jurisdiction" from ext combo "Scope"
     And I select "Wise County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
+      | name                 | type         |
+      | Dallas County        | Jurisdiction |
+      | Phin: Health Officer | Role         |
     Then I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Group |
       | group_owner_jurisdiction | Wise County                        |
       | group_scope              | Jurisdiction                       |
     And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
+      | name                  | type         |
+      | Dallas County         | Jurisdiction |
+      | Phin: Health Officer  | Role         |
 
   Scenario Outline: adding a personal scoped group should not be viewable by others
     Given I am logged in as "jill.smith@example.com"
@@ -197,25 +197,25 @@ Feature: Creating groups
       | Potter County |
     When I click x-accordion-hd "Roles"
     Then I should see the following roles in an ext grid:
-      | Health Officer |
-      | Epidemiologist |
-      | Public         |
+      | Phin: Health Officer |
+      | Phin: Epidemiologist |
+      | Phin: Public         |
     When I fill in "Group Name" with "Dallas County Health Officer Group"
     And I select "<scope>" from ext combo "Scope"
     And I select "Potter County" from ext combo "Owner Jurisdiction"
     And I select the following in the audience panel:
-      | name           | type         |
-      | Dallas County  | Jurisdiction |
-      | Health Officer | Role         |
+      | name                 | type         |
+      | Dallas County        | Jurisdiction |
+      | Phin: Health Officer | Role         |
     And I press "Save"
     Then I should see the following group summary:
       | group_name               | Dallas County Health Officer Group |
       | group_owner_jurisdiction | Potter County                      |
       | group_scope              | <scope>                            |
     And I should see the following audience breakdown
-      | name            | type         |
-      | Dallas County   | Jurisdiction |
-      | Health Officer  | Role         |
+      | name                  | type         |
+      | Dallas County         | Jurisdiction |
+      | Phin: Health Officer  | Role         |
     #get around sign-in page redirection
     Given I am on the ext dashboard page
     And I am logged in as "<other_login>"

@@ -101,15 +101,15 @@ end
 
 When /^I enter the edit forum data and save$/ do
   step %Q{I edit forum with name "Dallas Discussion" and with audience:}, table(%{
-      | name                    | type |
-      | Animal Control Director | Role |
+      | name                          | type |
+      | Phin: Animal Control Director | Role |
   })
 end
 
 When /^I manage the forum and save$/ do
   step %Q{I select the following in the audience panel:}, table(%Q{
-    | name                 | type |
-    | Chief Epidemiologist | Role |
+    | name                       | type |
+    | Phin: Chief Epidemiologist | Role |
   })
   step %Q{I press "Save"}
 end

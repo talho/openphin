@@ -53,8 +53,11 @@ Given /^(\d+) users exist like$/ do |mob_count, table|
   #               | jurisdiction | [jurisdiction] |
   mobber = 0
   while mobber < mob_count.to_i do
-    step %Q{the user "mobuser #{table.rows_hash["role"]+ mobber.to_s}" with the email "#{table.rows_hash["role"] + mobber.to_s}@example.com" has the role "#{table.rows_hash["role"]}" in "#{table.rows_hash["jurisdiction"]}"}
-    mobber += 1 
+    user_name = "mobuser #{table.rows_hash["role"]+ mobber.to_s}"
+    user_email = "#{table.rows_hash["role"] + mobber.to_s}@example.com"
+    application = table.rows_hash['application'].blank? ? '' : " application \"#{table.rows_hash['application']}\""
+    step %Q{the user "#{user_name}" with the email "#{user_email}" has the role "#{table.rows_hash["role"]}"#{application} in "#{table.rows_hash["jurisdiction"]}"}
+    mobber += 1
   end
 end
 
@@ -148,12 +151,13 @@ Given /^"([^\"]*)" is an unconfirmed user$/ do |email|
 end
 
 Given /^(.*) has the following administrators:$/ do |jurisdiction_name, table|
-  role = Role.admin
   jurisdiction = Jurisdiction.find_by_name!(jurisdiction_name)
   table.raw.each do |row|
+    app = row[2].blank? ? 'phin' : row[2]
+    role = Role.admin(app)
     first_name, last_name = row.first.split(/\s+/)
-    user = FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name, :email => row.last)
-    user.role_memberships.create :role => Role.public, :jurisdiction => jurisdiction, :user => user
+    user = FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name, :email => row[1])
+    user.role_memberships.create :role => Role.public(app), :jurisdiction => jurisdiction, :user => user
     membership = user.role_memberships.create :role => role, :jurisdiction => jurisdiction, :user => user
     user.reload.role_memberships.should include(membership)
   end

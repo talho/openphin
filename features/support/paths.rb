@@ -30,22 +30,10 @@ module NavigationHelpers
         admin_role_requests_path
       when /the new alert page/i
         new_alert_path
-      when /the new HAN alert page/i
-        new_han_alert_path
       when /the alerts acknowledge page/i
         alerts_acknowledge_path
       when /the roles requests page for an admin/
         admin_role_requests_path
-      when /the HAN alert log/i
-        han_alerts_path
-      when /cancel the HAN alert/
-        edit_han_alert_path(HanAlert.last, :_action => "cancel")
-      when /update the HAN alert/
-        edit_han_alert_path(HanAlert.last, :_action => "update")
-      when /the update HAN alert page/i
-        url_for(:controller => "han_alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "update", :only_path => true)
-      when /the cancel HAN alert page/i
-        url_for(:controller => "han_alerts", :action => "edit", :id => Alert.find_by_title(arg), :_action => "cancel", :only_path => true)
       when /the HAN/i
         hud_path
       when /the user edit page/i
