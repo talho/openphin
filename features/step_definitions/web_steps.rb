@@ -191,8 +191,11 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, select
 end
 
 Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    page.should have_no_content(text)
+  begin
+    with_scope(selector) do
+      page.should have_no_content(text)
+    end
+  rescue Capybara::ElementNotFound => e
   end
 end
 

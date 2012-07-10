@@ -1,5 +1,4 @@
 //= require ./GMapInfoWindow
-//= require ./GMapStyledMarker
 //= require_self
 
 /*!
@@ -14,8 +13,8 @@
  * @author Shea Frederick
  */
  
- // use dominoes to load google maps. give a callback to application.js
- dominoes('https://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
+// use dominoes to load google maps. give a callback to application.js
+dominoes('https://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
  
 Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     constructor: function(){

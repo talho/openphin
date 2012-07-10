@@ -73,7 +73,7 @@ module UserModules
     end
   
     def has_role?(role_sym, app = '')
-      self.roles.joins(:app).where("roles.name" => role_sym.to_s).where(app != "" ? {"apps.name" => app.to_s} : "").exists?
+      self.roles.joins(:app).where("roles.name ~* ?", role_sym.to_s.titleize).where(app != "" ? {"apps.name" => app.to_s} : "").exists?
     end
   
     def enabled_applications

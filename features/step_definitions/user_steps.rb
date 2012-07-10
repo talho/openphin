@@ -8,7 +8,7 @@ Given 'a user with the email "$email"' do |email|
   User.find_by_email(email) || FactoryGirl.create(:user, :email => email)
 end
 
-Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: application "([^"]*)")? in "([^"]*)"$/ do |name, email, role, app, jurisdiction|
+Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: application "([^"]*)")? in "([^"]*)"$/ do |name, email, role, app_name, jurisdiction|
   first_name, last_name = name.split
   jur_obj = Jurisdiction.find_or_create_by_name(jurisdiction.to_s)
   unless (user = User.find_by_email(email))
@@ -16,10 +16,10 @@ Given /^the user "([^"]*)" with the email "([^"]*)" has the role "([^"]*)"(?: ap
     user = FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name, :email => email, :home_jurisdiction_id => jur_obj.id)#, :role_requests_attributes => [{:jurisdiction_id => jur_obj.id, :role_id => role_obj.id }] )
   end
   roles = role.split(',').map(&:strip)
+  app_name = app_name.blank? ? 'phin' : app_name
   roles.each do |r|
-    app = app.blank? ? r.to_s == 'SysAdmin' ? 'system' : 'phin' : app
-    app = step %Q{an app named "#{app}"}
-    role_obj = Role.find_by_name_and_app_id(role,app.id) || FactoryGirl.create(:role, :name => role, :public => r.to_s == "Public", :application => app.name)
+    app = step %Q{an app named "#{r.to_s == 'SysAdmin' ? 'system' : app_name}"}
+    role_obj = Role.find_by_name_and_app_id(r.to_s,app.id) || FactoryGirl.create(:role, :name => r.to_s, :public => r.to_s == "Public", :application => app.name)
     unless RoleMembership.already_exists?(user, role_obj, jur_obj)
       # do this manually, it's potentially faster than the factory method.
       RoleMembership.create :role_id => role_obj.id, :jurisdiction_id => jur_obj.id, :user_id => user.id

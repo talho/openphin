@@ -8,6 +8,11 @@ Given '$role is a non public role' do |role_name|
   role.update_attributes(:public => false)
 end
 
+Given /^"(.*?)" is a public role$/ do |role_name|
+  role = Role.find_by_name(role_name)
+  role.update_attributes(:public => true)
+end
+
 Given /^the role "([^\"]*)" is an alerter$/ do |role|
   Role.find_by_name(role).update_attributes! :alerter => true
 end

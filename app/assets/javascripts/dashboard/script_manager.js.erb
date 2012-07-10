@@ -19,7 +19,7 @@ Ext.ns("Talho");
     dominoes.rule('ProfileBase', '(( $css($(css)/redesign/profile.css) )) $(js)/profile/ProfileBase.js');
     dominoes.rule('BatchUsers', '(( $css($(css)/ux/fileuploadfield/fileuploadfield.css) $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/FileUploadField.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
     dominoes.rule('EditUsers', '(( $css($(css)/ux/RowEditor.css) )) $(ext_extensions)/xActionColumn.js $(ext_extensions)/RowEditor.js $(js)/ext/src/widgets/grid/EditorGrid.js');
-    dominoes.rule('GMap', '<%= javascript_dominoes_paths("ext_extensions/GMapPanel") %>');
+    dominoes.rule('GMap', '<%= javascript_dominoes_paths("ext_extensions/GMapPanel") %> ');
     dominoes.rule('Portlets', '<%= javascript_dominoes_paths("dashboard/cms/portlet") %>');
 
     var regList = {
