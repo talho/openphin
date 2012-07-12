@@ -303,6 +303,16 @@ Then /^"([^"]*)" should be confirmed$/ do |email|
   User.find_by_email(email).email_confirmed?.should be_true
 end
 
+Given /^I am logged in as a sysadmin/ do
+  step %Q{the following entities exists:}, table([
+    %w{ Jurisdiction Texas}
+  ])
+  step %Q{the following users exist:}, table(%{
+    | Its Me |  me@example.com | SysAdmin | Texas |
+  })
+  step %Q{I am logged in as "me@example.com"}  
+end
+
 Given /^I am logged in as a superadmin$/ do
   step %Q{the following entities exists:}, table([
     %w{ Jurisdiction Texas}
@@ -323,6 +333,16 @@ Given /^I am logged in as an admin$/ do
   step %Q{I am logged in as "me@example.com"}  
 end
 
+Given /^I am logged in as a public user/ do
+  step %Q{the following entities exists:}, table([
+    %w{ Jurisdiction Texas}
+  ])
+  step %Q{the following users exist:}, table(%{
+    | Its Me |  me@example.com | Public | Texas |
+  })
+  
+  step %Q{I am logged in as "me@example.com"}  
+end
 
 Given /^a few users with various roles$/ do
   3.times do |i|

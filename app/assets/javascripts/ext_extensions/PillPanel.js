@@ -31,7 +31,7 @@ Ext.ux.PillPanel = Ext.extend(Ext.TabPanel, {
     this.body.addClass('x-tab-panel-body-' + this.tabPosition);
 
     if(!this.itemTpl) {
-      var tt = new Ext.Template('<li class="{cls}" id="{id}">', '<a class="" href="#">{text}</a>', '</li>');
+      var tt = new Ext.Template('<li class="x-boot-pill {cls}" id="{id}">', '<a class="" href="#">{text}</a>', '</li>');
       tt.disableFormats = true;
       tt.compile();
       Ext.ux.PillPanel.prototype.itemTpl = tt;

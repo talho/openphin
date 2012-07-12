@@ -130,3 +130,12 @@ When /^I click ([0-9a-zA-Z\-]*) number ([0-9]*)$/ do |cls, index|
   btns.reject!{|btn| !btn.visible? }
   btns[index.to_i - 1].click
 end
+
+Then /^"(.*?)" should (not )?be an option for select "(.*?)"$/ do |opt, neg, select|
+  field = find_field(select)
+  unless neg
+    field.should have_xpath ".//option[text() = '#{opt}']"
+  else
+    field.should have_no_xpath ".//option[text() = '#{opt}']"    
+  end
+end

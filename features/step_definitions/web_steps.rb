@@ -195,7 +195,7 @@ Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selecto
     with_scope(selector) do
       page.should have_no_content(text)
     end
-  rescue Capybara::ElementNotFound => e
+  rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::StaleElementReferenceError => e
   end
 end
 

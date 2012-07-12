@@ -15,7 +15,7 @@ Talho.Admin.Apps.view.Index = Ext.extend(Ext.Panel, {
     // add grid
     this.items = [
       {xtype: 'box', cls: 't_boot', html: '<fieldset><legend>Apps</legend></fieldset>'},
-      {xtype: 'grid', itemId: 'grid', store: new Ext.data.JsonStore({
+      {xtype: 'grid', itemId: 'grid', cls: 'app-grid', store: new Ext.data.JsonStore({
         fields: ['name', 'id', 'domains'],
         url: '/admin/app',
         restful: true,
@@ -24,7 +24,7 @@ Talho.Admin.Apps.view.Index = Ext.extend(Ext.Panel, {
       }), columns: [
         {id: 'name', dataIndex: 'name', header: "Name"},
         {id: 'domains', dataIndex: 'domains', header: "Domains"},
-        {xtype: 'xactioncolumn', icon: '/assets/images/cross-circle.png', handler: this.deleteApp, scope: this }
+        {xtype: 'xactioncolumn', icon: '/assets/images/cross-circle.png', iconCls: 'app-delete-icon', handler: this.deleteApp, scope: this }
       ], autoExpandColumn: 'domains', loadMask: true, height: 400, width: 500, listeners: {
         scope: this,
         'rowclick': this._row_click

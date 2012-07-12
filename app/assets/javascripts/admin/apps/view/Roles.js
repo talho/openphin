@@ -24,8 +24,8 @@ Talho.Admin.Apps.view.Roles = Ext.extend(Talho.Admin.Apps.view.Helper, {
         {header: 'Public', dataIndex: 'public', width: 50},
         {header: 'User Selectable', dataIndex: 'user_role'},
         {xtype: 'xactioncolumn', items: [
-          {icon: '/assets/images/pencil.png', handler: this.editRole, scope: this},
-          {icon: '/assets/images/cross-circle.png', handler: this.deleteRole, scope: this}
+          {icon: '/assets/images/pencil.png', iconCls: 'role-edit-icon', handler: this.editRole, scope: this},
+          {icon: '/assets/images/cross-circle.png', iconCls: 'role-delete-icon', handler: this.deleteRole, scope: this}
         ]}
       ], autoExpandColumn: 'name',
       buttons: [
@@ -49,6 +49,7 @@ Talho.Admin.Apps.view.Roles = Ext.extend(Talho.Admin.Apps.view.Helper, {
     // Show the new role window
     var win = new Talho.Admin.Apps.view.RoleWindow({
       state: 'new',
+      appId: this.ownerCt.appId,
       listeners: {
         scope: this,
         'save': this.reloadGrid

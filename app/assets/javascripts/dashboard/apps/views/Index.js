@@ -18,7 +18,7 @@ Talho.Dashboard.Apps.view.Index = Ext.extend(Ext.Panel, {
       { xtype: 'container', region: 'center', closable: true, itemId: 'container', layout: 'hbox',
         layoutConfig: { defaultMargins: '5 20 0 0', pack: 'center' },
         items: [
-          {xtype: 'grid', width: 400, height: 300, title: 'My Apps', itemId: 'myapps', loadMask: true, store: new Ext.data.JsonStore({
+          {xtype: 'grid', width: 400, height: 300, title: 'My Apps', itemId: 'myapps', cls: 'my-apps-grid', loadMask: true, store: new Ext.data.JsonStore({
             fields: ['name', 'id'],
             url: '/apps.json',
             restful: true,
@@ -27,7 +27,7 @@ Talho.Dashboard.Apps.view.Index = Ext.extend(Ext.Panel, {
           }), columns: [
             {header: 'Name', dataIndex: 'name', id: 'name'}
           ], autoExpandColumn: 'name'},
-          {xtype: 'grid', width: 400, height: 337, title: 'New Apps', itemId: 'allapps', loadMask: true, store: new Ext.data.JsonStore({
+          {xtype: 'grid', width: 400, height: 337, title: 'New Apps', itemId: 'allapps', cls: 'new-apps-grid', loadMask: true, store: new Ext.data.JsonStore({
             fields: ['name', 'id'],
             url: '/apps/available.json',
             restful: true,
