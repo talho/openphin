@@ -5,7 +5,7 @@ class ReportMailer < ActionMailer::Base
     @report_name = report_name
     
     mail(bcc: email,
-         subject: "TxPhin: Report \"#{report_name}\" has been generated")
+         subject: "OpenPhin: Report \"#{report_name}\" has been generated")
   end
 
   def report_error(email, report_name, exception_message, message="")
@@ -14,7 +14,7 @@ class ReportMailer < ActionMailer::Base
     @message = message
     
     mail(to: email,
-         subject: "TxPhin:  Report \"#{report_name}\" failed to generate")
+         subject: "OpenPhin:  Report \"#{report_name}\" failed to generate")
   end
 
 end

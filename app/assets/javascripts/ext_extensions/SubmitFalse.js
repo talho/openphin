@@ -28,12 +28,15 @@ Ext.ux.form.SubmitFalse = Ext.extend(function(config){
                         this.uncheckedHiddenElement = null;
                     }
                 }
-                else {
+                else if(this.el) {
                     this.uncheckedHiddenElement = buildInputElement(this.el, this.getName());
+                }
+                else{
+                  this.on('afterrender', function(){this.uncheckedHiddenElement = buildInputElement(this.el, this.getName());}, this, {delay: 1, once: true});
                 }
             }
         });
     }
 });
 
-Ext.reg('checkboxsubmitfalse', Ext.ux.form.SubmitFalse);
+Ext.preg('checkboxsubmitfalse', Ext.ux.form.SubmitFalse);

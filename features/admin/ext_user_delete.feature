@@ -4,11 +4,12 @@ Feature: An admin deleting users
   I can delete users
 
   Background:
-    Given an organization named Red Cross
+    Given an organization named "Red Cross"
     And the following entities exist:
       | Jurisdiction | Texas            |
       | Jurisdiction | Dallas County    |
       | Role         | Medical Director |
+    And "Texas" is the root jurisdiction of app "phin"
     And Texas is the parent jurisdiction of:
       | Dallas County  |
       | Briscoe County |
@@ -19,8 +20,7 @@ Feature: An admin deleting users
       | Bob Jones      | bob.jones@example.com      |
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
-    And a role named Public
-    And an approval role named Health Alert and Communications Coordinator
+    And a role named "Health Alert and Communications Coordinator"
     And I am logged in as "bob.jones@example.com"
     And delayed jobs are processed
 

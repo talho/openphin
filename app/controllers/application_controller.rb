@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
 
   helper :all # include all helpers, all the time
-  helper_method :toolbar
+  helper_method :toolbar, :current_user, :current_app
   #protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   before_filter :authorize, :set_locale, :except => :options
@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
 
   cattr_accessor :applications
   @@applications=HashWithIndifferentAccess.new
+
+  def current_app
+    @current_app || @current_app = find_current_app || @current_app = App.first
+  end
 
   def phin_oid_prefix
     "#{PHIN_PARTNER_OID}.#{PHIN_APP_OID}.#{PHIN_ENV_OID}"
@@ -150,6 +154,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sys_admin_required
+    unless current_user.role_memberships.where(:role_id => Role.sysadmin).count > 0
+      message = "That resource does not exist or you do not have access to it."
+      if request.xhr?
+        respond_to do |format|
+          format.html {render :text => message, :status => 404}
+          format.json {render :json => {:message => message}, :status => 404}
+        end
+      else
+        flash[:error] = message
+        redirect_to root_path
+      end
+      false
+    end
+  end
+
   def non_public_role_required
     unless current_user.has_non_public_role?
       if request.xhr?
@@ -241,15 +261,13 @@ private
   def sign_in(user)
     user.update_attribute(:last_signed_in_at, Time.now)
 
-    # send user to ext if they've got the cookie set
-    # TODO: remove after beta period
-    if (request.cookies["phin2beta"] == "true")
-      session[:return_to] = "/ext/"
-    end
-    
     super user
   end
 
-#TODO: Re-enable airbrake notifier
+  def find_current_app
+    full_domain = (request.subdomains + [request.domain]).join('.')
+    query_string = "#{request.subdomains.blank? ? '' : 'name IN (:subdomains) OR'} domains LIKE :full_domain OR is_default = true"
+    App.where(query_string, subdomains: request.subdomains, full_domain: "%#{full_domain}%").order("is_default ASC").first
+  end
 
 end

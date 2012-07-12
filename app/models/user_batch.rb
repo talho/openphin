@@ -18,9 +18,9 @@ class UserBatch
   
   def file_data=(file_data)
     @file_data = file_data
-    @original_filename = file_data.original_filename
+    @original_filename = file_data.respond_to?(:original_filename) ? file_data.original_filename : ''
     @file_size = file_data.size
-    @content_type = file_data.content_type
+    @content_type = file_data.respond_to?(:content_type) ? file_data.content_type : 'text/csv'
   end
   
   def valid

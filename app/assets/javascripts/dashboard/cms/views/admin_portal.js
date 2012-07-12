@@ -1,6 +1,8 @@
 Ext.ns('Talho.Dashboard.CMS.Views');
 
 Talho.Dashboard.CMS.Views.AdminPortal = Ext.extend(Talho.Dashboard.CMS.Views.ViewPortal, {
+  cls: 'admin-dashboard-portal',
+  
   listeners: {
     beforedrop: function(dropEvent) {
       dropEvent.panel.column = dropEvent.columnIndex + 1;

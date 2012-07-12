@@ -18,8 +18,8 @@ class RoleRequest < ActiveRecord::Base
   validates_presence_of :user, :if => lambda { |rr| !rr.new_record? }
   validate :on => :create do |req|
     unless req.user.blank?
-      req.errors.add("User is already a member of this role and jurisdiction") unless req.user.role_memberships.find_by_role_id_and_jurisdiction_id(req.role_id, req.jurisdiction_id).nil?
-      req.errors.add("You do not have permission to request that role") unless req.role.approval_required == false || Role.for_app("phin").include?(req.role) || req.requester.apps.include?(req.role.application) || req.requester.is_sysadmin?
+      req.errors.add("User is already a member of this role and jurisdiction") if req.user.role_memberships.where(role_id: req.role_id, jurisdiction_id: req.jurisdiction_id).exists?
+      req.errors.add("You do not have permission to request that role") unless req.role.public? || req.requester.apps.include?(req.role.app) || req.requester.is_sysadmin?
     end
   end
   validates_uniqueness_of :role_id, :scope => [:jurisdiction_id, :user_id], :message => "has already been requested for this jurisdiction.",
@@ -40,13 +40,14 @@ class RoleRequest < ActiveRecord::Base
     {:conditions => ["jurisdiction_id in (?)", jurisdictions],
      :include => [:user, :role, :jurisdiction]}
   }
-  scope :for_apps, lambda { |applications|
-    {:include => [:user, :role], :conditions => ["roles.application in (?)", applications]}
+  scope :for_apps, lambda { |apps|
+    {:include => [:user, :role], :conditions => ["roles.app_id in (?)", apps.map(&:id)]}
   }
   before_create :set_requester_if_nil
   after_create :auto_approve_if_public_role
   after_create :auto_approve_if_approver_is_specified
   after_create :auto_approve_if_requester_is_jurisdiction_admin
+  after_create :notify_of_role_request
 
   def approved?
     true if approver
@@ -93,9 +94,13 @@ class RoleRequest < ActiveRecord::Base
   end
   
   private
+  
+  def notify_of_role_request
+    RoleRequestMailer.user_notification_of_role_request(self).deliver if !approved?
+  end
 
   def auto_approve_if_public_role
-    approve!(user) unless role.approval_required?
+    approve!(user) if role.public?
   end
 
   def auto_approve_if_requester_is_jurisdiction_admin

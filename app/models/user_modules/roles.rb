@@ -7,6 +7,8 @@ module UserModules
       base.accepts_nested_attributes_for :role_requests, :organization_membership_requests
       base.has_many :roles, :through => :role_memberships, :uniq => true
       
+      base.has_many :apps, :through => :roles, :uniq => true, :conditions => "apps.name != 'system'"
+      
       base.validates_associated :role_requests
       base.validates_associated :role_memberships
       
@@ -41,16 +43,16 @@ module UserModules
     
     def is_super_admin?(app = "")
       return true if is_sysadmin?
-      conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.where(['role_id in (?)', Role.superadmins.all(:conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
+      conditions = app.blank? ? {} : {"apps.name" => app}
+      return role_memberships.joins(:role => :app).where(['role_id in (?)', Role.superadmins.find(:all, :conditions => conditions).map(&:id)]).count(:conditions => {  } ) > 0
     end
      
     def is_admin?(app = "")
       # TODO: Should be app agnostic
       return true if is_sysadmin?
       return true if is_super_admin?(app)
-      conditions = app.blank? ? {} : {:application => app}
-      return role_memberships.count( :conditions => { :role_id => Role.admins.all(:conditions => conditions).map(&:id)} ) > 0
+      conditions = app.blank? ? {} : {"apps.name" => app}
+      return role_memberships.joins(:role => :app).count( :conditions => { :role_id => Role.admins.find(:all, :conditions => conditions).map(&:id)} ) > 0
     end
     
     def is_admin_for?(other, app = "")
@@ -71,11 +73,7 @@ module UserModules
     end
   
     def has_role?(role_sym, app = '')
-      roles.any? { |r| r.name.to_s.titleize == role_sym.to_s.titleize && (app == '' || r.application.to_s.titleize == app.to_s.titleize) }
-    end
-  
-    def has_application?(app_sym)
-      roles.any? { |r| r.application.to_s.titleize == app_sym.to_s.titleize }
+      self.roles.joins(:app).where("roles.name ~* ?", role_sym.to_s.titleize).where(app != "" ? {"apps.name" => app.to_s} : "").exists?
     end
   
     def enabled_applications
@@ -83,11 +81,11 @@ module UserModules
     end
   
     def has_non_public_role?
-      self.roles.non_public.size > 0
+      self.roles.where(public: false).exists?
     end
   
     def has_public_role?
-      self.roles.public.size > 0
+      self.roles.where(public: true).exists?
     end
   
     def has_public_role_in?(jurisdiction)
@@ -99,15 +97,12 @@ module UserModules
     end
   
     def has_app?(app)
-      self.roles.for_app(app).size > 0
+      self.roles.joins(:app).where("apps.name" => app.to_s).exists?
     end
-  
-    def apps
-      return self.roles.map(&:application).uniq
-    end
-  
+    alias_method :has_application?, :has_app?
+      
     def visible_actors  #this is an ugly solution - returns every user in the system that a given user has rights to see.
-      return User.without_role("SysAdmin").without_apps( Role.all.map(&:application).uniq - apps )
+      return User.without_role("SysAdmin").with_apps( roles.where(name: [Role::Defaults[:admin], Role::Defaults[:superadmin]]).map(&:app).uniq )
     end
         
     def alerter?
@@ -141,7 +136,7 @@ module UserModules
             role_request.requester = current_user
             role_request.user = self
             if role_request.valid? && role_request.save
-              RoleRequestMailer.user_notification_of_role_request(role_request).deliver if !role_request.approved?
+              
             else
               result = "failure"
               rq_errors.concat(role_request.errors.full_messages)
@@ -162,41 +157,9 @@ module UserModules
     private
     
     def assign_public_role
-      # bail out if they have any roles/rolerequests for application other than phin
-      return unless ( role_requests.map(&:role) + role_memberships.map(&:role) ).map(&:application).uniq.reject{|a| a=='phin'}.blank?
-  
-      public_role = Role.public
-      if (role_requests.blank? && role_memberships.blank?) || (!role_requests.map(&:role_id).flatten.include?(public_role.id) && !role_memberships.map(&:role_id).flatten.include?(public_role.id))
-        if role_requests.blank? && role_memberships.blank?
-          role_memberships.create!(:role => public_role, :jurisdiction => Jurisdiction.state.nonforeign.first) unless Jurisdiction.state.nonforeign.empty?
-        else
-          rr = role_requests
-          rr.each do |request|
-            role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-            request.destroy if request.role == public_role
-          end unless role_requests.nil? || role_memberships.public_roles.count != 0
-          role_memberships.each do |request|
-            role_memberships.create!(:role => public_role, :jurisdiction => request.jurisdiction)
-          end if role_memberships.public_roles.count == 0
-        end
-  
-        role_requests.find_all_by_role_id(public_role).each do |request|
-          if request.approver.nil?
-            role_memberships.create!(
-              :role => public_role,
-              :jurisdiction => request.jurisdiction
-            )
-          end
-          request.destroy
-        end
-  
-        if self.role_requests.any?
-          self.role_memberships.find_or_create_by_role_id_and_jurisdiction_id(
-            public_role.id,
-            self.role_requests.first.jurisdiction.id
-          )
-        end
-      end
+      # If they don't have the phin public role for their home_jurisdiciton, then add it. Rely on the user creator or the "get more apps" manager to add public roles for other apps.
+      pub = Role.joins(:app).where(public: true, "apps.name" => 'phin').first
+      self.role_memberships.create(role_id: pub.id, jurisdiction_id: (self.home_jurisdiction || pub.app.root_jurisdiction || Jurisdiction.first).id)
     end
   end
 end

@@ -1,3 +1,8 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/BootstrapBreadcrumbContainer
+//= require_tree ./view
+//= require_self
+
 Ext.ns("Talho.Forums");
 
 Talho.Forums.Controller = Ext.extend(Ext.util.Observable, {

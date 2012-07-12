@@ -1,3 +1,7 @@
+//= require audience/AudienceDisplayPanel
+//= require ext_extensions/xActionColumn
+//= require_tree ./view
+//= require_self
 
 Ext.ns('Talho');
 

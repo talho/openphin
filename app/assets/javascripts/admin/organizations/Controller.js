@@ -1,3 +1,8 @@
+//= require ext_extensions/xActionColumn
+//= require ext_extensions/BootstrapBreadcrumbContainer
+//= require_tree ./view
+//= require_self
+
 Ext.ns("Talho.Admin.Organizations");
 
 Talho.Admin.Organizations.Controller = Ext.extend(Ext.util.Observable, {

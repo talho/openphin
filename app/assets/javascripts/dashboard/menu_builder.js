@@ -1,3 +1,8 @@
+//= require utility
+//= require ext_extensions/ToolBarNav
+//= require ext_extensions/NavigableTabPanel
+//= require_self
+
 /**
  * Builds up a menu by recursively calling buildMenu to get each Ext.MenuItem that's been specified
  * @constructor

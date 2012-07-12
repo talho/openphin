@@ -14,6 +14,7 @@ Feature: Preventing malicious attempts to gain access to role applications
       | Sys Admin        | sysadmin@example.com        | SysAdmin     | Texas |          |
       | Phin Admin       | phinadmin@example.com       | Admin        | Texas |          |
       | Phin SuperAdmin  | phinsuperadmin@example.com  | SuperAdmin   | Texas |          |
+      | Han SuperAdmin   | hansuperadmin@example.com   | SuperAdmin   | Texas | han      |
       | Phin User        | phinuser@example.com        | Average Guy  | Texas | phin     |
       | Rollcall Nurse   | rollcallnurse@example.com   | School Nurse | Texas | rollcall |
       | Patrick Stewart  | numberone@example.com       | Hamlet       | Texas | stage    |
@@ -55,7 +56,7 @@ Feature: Preventing malicious attempts to gain access to role applications
     And I sign out
     And I should see "Sign In to Your Account"
 
-    When I am logged in as "phinsuperadmin@example.com"
+    When I am logged in as "hansuperadmin@example.com"
     And I visit the url for the last audit action by "numberone@example.com"
     Then I should see "You do not have permission"
     And I sign out

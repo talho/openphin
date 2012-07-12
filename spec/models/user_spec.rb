@@ -89,7 +89,7 @@ describe User do
         jurisdiction = FactoryGirl.create(:jurisdiction)
         user = Factory.build(:user)
         user.role_requests = [Factory.build(:role_request, 
-            :role => FactoryGirl.create(:role, :approval_required => true), 
+            :role => FactoryGirl.create(:role, public: false), 
             :jurisdiction => jurisdiction, :user => user, :requester => user)]
         user.save!
         user.reload

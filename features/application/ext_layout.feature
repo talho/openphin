@@ -28,8 +28,6 @@ Feature: Application layout should have communications, portal & application too
   Scenario: Viewing the portal and comm toolbar as a user
     Given I am logged in as "martin@example.com"
     Then I should see the following toolbar items in "top_toolbar":
-      | HAN                  |
-#      | FAQs                 |
       | Tutorials            |
       | Martin Fowler        |
       | About                |
@@ -87,10 +85,10 @@ Feature: Application layout should have communications, portal & application too
     Given I am logged in as "martin@example.com"
     Then I should not see "Admin" within "#top_toolbar"
 
-  Scenario: Public-only members should not see advanced search or Apps
+  Scenario: Public-only members should not see advanced search but can now see Apps
     Given the user "publico publican" with the email "public@example.com" has the role "Public" in "Texas"
     Given I am logged in as "public@example.com"
     Then I should not see "Find People" within "#top_toolbar"
-    And I should not see "Apps" within "#top_toolbar"
+    And I should see "Apps" within "#top_toolbar"
 
 

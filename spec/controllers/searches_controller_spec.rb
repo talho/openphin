@@ -6,7 +6,7 @@ describe SearchesController do
     @jurisdiction2 = FactoryGirl.create(:jurisdiction)
     @jurisdiction2.move_to_child_of(@jurisdiction1)
     user = FactoryGirl.create(:user)
-    FactoryGirl.create(:role_membership, :user => user, :role => FactoryGirl.create(:role, :approval_required => true), :jurisdiction => @jurisdiction2)
+    FactoryGirl.create(:role_membership, :user => user, :role => FactoryGirl.create(:role, public: false), :jurisdiction => @jurisdiction2)
     login_as(user)
   end
   

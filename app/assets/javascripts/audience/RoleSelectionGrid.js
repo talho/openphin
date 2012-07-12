@@ -1,3 +1,7 @@
+//= require ext_extensions/FilterableCheckboxSelectionModel
+//= require ./BaseSelectionGrid
+//= require_self
+
 Ext.ns('Talho.ux'); // using Talho.ux to not overly polute the Talho namespace, used primarily for declaring tab initializers
 
 Talho.ux.RoleSelectionGrid = Ext.extend(Talho.ux.BaseSelectionGrid, {

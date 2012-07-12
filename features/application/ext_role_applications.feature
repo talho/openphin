@@ -15,7 +15,9 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
       | Sys Admin        | sysadmin@example.com        | SysAdmin     | Texas |          |
       | Phin Admin       | phinadmin@example.com       | Admin        | Texas |          |
       | Phin SuperAdmin  | phinsuperadmin@example.com  | SuperAdmin   | Texas |          |
+      | Han SuperAdmin   | hansuperadmin@example.com   | SuperAdmin   | Texas | han      |
       | Phin User        | phinuser@example.com        | Average Guy  | Texas | phin     |
+      | Han User         | hanuser@example.com         | Average Guy  | Texas | han      |
       | Rollcall Nurse   | rollcallnurse@example.com   | School Nurse | Texas | rollcall |
       | Patrick Stewart  | numberone@example.com       | Hamlet       | Texas | stage    |
 
@@ -54,22 +56,22 @@ Feature: Sort-Of-RBAC.  Role and user visibility determined by role application
     And I should see "School Nurse" within ".x-combo-list"
     And I should see "Hamlet" within ".x-combo-list"
 
-  Scenario: Phin Superadmin in audit log cannot see actions taken by users with rollcall role
+  Scenario: Han Superadmin in audit log cannot see actions taken by users with rollcall role
     Given I am logged in as "rollcallnurse@example.com"
     And I navigate to "Rollcall Nurse > Edit My Account"
     And I fill in "2134567890" for "Office phone"
     And I press "Apply Changes"
     And I wait for the "Loading..." mask to go away
     Then I should see "Profile information saved."
-    And I am logged in as "phinuser@example.com"
-    And I navigate to "Phin User > Edit My Account"
+    And I am logged in as "hanuser@example.com"
+    And I navigate to "Han User > Edit My Account"
     And I fill in "2134567890" for "Office phone"
     And I press "Apply Changes"
     And I wait for the "Loading..." mask to go away
     Then I should see "Profile information saved."
-    When I am logged in as "phinsuperadmin@example.com"
+    When I am logged in as "hansuperadmin@example.com"
     And I navigate to "Admin > Audit Log"
-    Then I should see "Phin User" within ".x-grid3-cell-inner"
+    Then I should see "Han User" within ".x-grid3-cell-inner"
     And I should not see "Rollcall Nurse" within ".x-grid3-cell-inner"
 
   Scenario: SysAdmin in audit log can see all actions.

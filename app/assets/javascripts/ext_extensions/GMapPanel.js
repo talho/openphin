@@ -1,3 +1,6 @@
+//= require ./GMapInfoWindow
+//= require_self
+
 /*!
  * Ext JS Library 3.3.1
  * Copyright(c) 2006-2010 Sencha Inc.
@@ -10,8 +13,8 @@
  * @author Shea Frederick
  */
  
- // use dominoes to load google maps. give a callback to application.js
- dominoes('https://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
+// use dominoes to load google maps. give a callback to application.js
+dominoes('https://maps.google.com/maps/api/js?sensor=true&callback=Application.mapReady')
  
 Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
     constructor: function(){

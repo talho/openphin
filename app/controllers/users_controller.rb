@@ -1,6 +1,8 @@
 class UsersController < Clearance::UsersController
   #app_toolbar "han"
 
+  respond_to :html, :xml
+
   before_filter(:only => [:edit, :update, :destroy]) do |controller|
     controller.admin_or_self_required(:id)
   end
@@ -31,14 +33,7 @@ class UsersController < Clearance::UsersController
   # GET /users/new
   # GET /users/new.xml
   def new
-    @user = User.new
-    @selected_role = Role.public.id
-    @selected_org = params[:organization].to_i unless params[:organization].blank? || Organization.non_foreign.find(:first, :conditions => ["id=#{params[:organization]}"]).nil?
-    params[:health_professional] = "1" if @selected_org
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @user }
-    end
+    respond_with(@user = User.new)
   end
 
   # GET /users/1/edit
@@ -51,36 +46,22 @@ class UsersController < Clearance::UsersController
   # POST /users.xml
   def create
     I18n.locale = "#{I18n.locale}_signup_create"
-
-    if params[:user][:organization_membership_requests_attributes].blank? || params[:user][:organization_membership_requests_attributes]["0"].blank? || params[:user][:organization_membership_requests_attributes]["0"]["organization_id"].blank?
-      params[:user].delete("organization_membership_requests_attributes")
-    else
-      @selected_org = params[:user][:organization_membership_requests_attributes]["0"][:organization_id].to_i
-    end
-
-    unless params[:health_professional]
-      params[:user][:role_requests_attributes]['0']['role_id'] = Role.public.id
-      params[:user].delete("organization_membership_requests_attributes")
-      params[:user].delete("description")
-    end
-
-    remove_blank_role_requests
-    
-    if (defined? params[:user][:role_requests_attributes]['0']['role_id']).nil? && (defined? params[:user][:role_requests_attributes]['0']['jurisdiction_id']).nil?
-      params[:user].delete(:role_requests_attributes)
-    end
+    @selected_role = params[:role_id]
+    @selected_jurisdiction = params[:user][:home_jurisdiction_id]
 
     @user = User.new params[:user]
     @user.email = @user.email.downcase
-    respond_to do |format|
-      if @user.save
-        sign_in(@user)
-        format.html { redirect_to :root }
-      else
-        @selected_role = params[:user][:role_requests_attributes]['0']['role_id'].to_i if defined? params[:user][:role_requests_attributes]['0']['role_id']
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
+    @user.role_requests.build role_id: params[:role_id], jurisdiction_id: @user.home_jurisdiction_id unless params[:role_id].blank?
+    
+    if @user.save
+      # Add a public role for the current app. There should only be one, but if the setup didn't happen correctly, there may be none. Also ensure that we don't add a role that's already there
+      app_role = current_app.roles.where(public: true).first
+      @user.role_memberships.create role_id: app_role.id, jurisdiction_id: @user.home_jurisdiction_id unless app_role.nil? || @user.role_memberships.where(role_id: app_role.id).exists?
+      
+      sign_in @user
+      redirect_to :root
+    else
+      respond_with @user
     end
   end
 
@@ -97,7 +78,7 @@ class UsersController < Clearance::UsersController
         elsif r['id'].nil?
           pr = Role.find(r["role_id"])
           pj =  r['jurisdiction_id'].nil? ? Jurisdiction.find(r["jurisdiction_id"]) : nil
-          if pr.approval_required?
+          unless pr.public?
             flash[:notice] = "Requested role requires approval.  Your request has been logged and will be looked at by an administrator.<br/>"
             rr=RoleRequest.new
             rr.role=pr
@@ -185,10 +166,8 @@ class UsersController < Clearance::UsersController
   protected
 
   def redirect_to_plugin_signup
-    request_full_domain = (request.subdomains.push(request.domain)).join('.')
-    domain_config = DOMAIN_CONFIG.has_key?(request_full_domain) ? DOMAIN_CONFIG[request_full_domain] : DOMAIN_CONFIG['default']
-    unless domain_config['new_user_path'].blank?
-      redirect_to domain_config['new_user_path'].to_sym
+    unless current_app.new_user_path.blank?
+      current_app.new_user_path.to_sym
     end
   end
   

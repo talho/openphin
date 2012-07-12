@@ -5,7 +5,7 @@ Feature: An admin managing users
   I can manage user accounts
   
   Background:
-    Given an organization named Red Cross
+    Given an organization named "Red Cross"
     And the following entities exist:
       | Jurisdiction | Texas         |
       | Jurisdiction | Dallas County |
@@ -20,9 +20,8 @@ Feature: An admin managing users
     And Texas has the following administrators:
       | Joe Smith      | joe.smith@example.com      |
     And "jonas.brothers@example.com" is not public in "Texas"
-    And a role named Public
     And jonas.brothers@example.com has a public profile
-    And an approval role named Health Alert and Communications Coordinator
+    And a role named "Health Alert and Communications Coordinator"
     And the role "Health Alert and Communications Coordinator" is for the "phin" application
     And delayed jobs are processed
   
@@ -129,6 +128,7 @@ Feature: An admin managing users
 
   Scenario: Not permitting a second user to be created with the same case-folded e-mail
     Given I am logged in as "bob.jones@example.com"
+    When I go to the dashboard page
     When I fill in the add user form with:
       | Email address  | jane.smith@example.com |
       | First name     | Jane                   |
@@ -141,4 +141,4 @@ Feature: An admin managing users
     And I request the org "Red Cross" in the OrgsControl
     And I press "Apply Changes"
     And delayed jobs are processed
-    Then I should see "Email address is already being used on another user account"
+    Then I should see "Email has already been taken"

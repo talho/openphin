@@ -1,3 +1,8 @@
+//= require ./MaxWidthHBox
+//= require ./HtmlFormPanel
+//= require_self
+//= require ./CenteredAjaxPanel
+
 /**
  * @constructor
  * @param {object}    config        the Panel configuration

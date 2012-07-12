@@ -1,3 +1,7 @@
+//= require ./portlet
+//= require ./views/view_portal
+//= require_self
+
 Ext.ns('Talho.Dashboard.CMS');
 
 Talho.Dashboard.CMS.ViewController = Ext.extend(Ext.util.Observable, {

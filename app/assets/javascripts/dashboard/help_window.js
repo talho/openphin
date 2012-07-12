@@ -15,7 +15,7 @@ Talho.HelpWindow = Ext.extend(Ext.Window, {
     this.talhoEmailButton = new Ext.Button({
       text: 'Email TALHO Support',
       handler: function(){
-        window.location = 'mailto:phin@talho.org?body=\'TxPHIN help request\'';
+        window.location = 'mailto:phin@talho.org?body=\'OpenPHIN help request\'';
       }
     });
 

@@ -424,11 +424,9 @@ p.error                                             {background: #FBE3E4; color:
 p.notice                                            {background: #FFF6BF; color: #514721; border-color: #FFD324; }
 p.instructions                                      {background: #CCFFFF; color: #264409; border-color: #33FFFF; }
 
-/* Error explanation */
-.errorExplanation                                   {border: 1px solid #fbc2c4;margin-top: 1em; padding: 1em; padding-left: 1em;}
-.errorExplanation h2                                {color: #800;font-size: 1.2em; margin-top: 0; padding: 0;}
-.errorExplanation li                                {margin-left: 2em;}
-.short_message                                      {margin-bottom: 15px;}
+/* Form errors */
+:not(.clearfix).error { color: #B94A48; }
+:not(.clearfix).error input, :not(.clearfix).error textarea { border-color: #EE5F5B; color: #B94A48; }
 
 a.faq                                               {font-weight:bold; font-size: 18px;}
 div.answer                                          {padding:20px; font-size:14px;}

@@ -124,3 +124,6 @@ end
 set :pivotal_tracker_project_id, 19881
 set :pivotal_tracker_token, '55a509fe5dfcd133b30ee38367acebfa'
 
+
+        require './config/boot'
+        require 'airbrake/capistrano'

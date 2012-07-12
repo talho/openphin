@@ -47,6 +47,8 @@ class User < ActiveRecord::Base
 
   include UserModules::Roles
   
+  belongs_to :home_jurisdiction, :class_name => "Jurisdiction"
+  
   has_many :jurisdictions, :through => :role_memberships, :uniq => true
   def alerting_jurisdictions    
     Jurisdiction.joins(:role_memberships => [:role, :user]).where(:roles => {:alerter => true}, :users => {:id => self.id})
@@ -94,22 +96,18 @@ class User < ActiveRecord::Base
   has_many :reports, :class_name => 'Report::Report', :foreign_key => "author_id"
   has_many :recipes
 
-  validates_presence_of     :email
   validates_presence_of     :first_name
   validates_presence_of     :last_name
-  validates_length_of       :password, :minimum => 6, :too_short => "must be at least 6 characters long", :if => :password_required?
+  validates_length_of       :password, :minimum => 6, :if => :password_required?
   validates_format_of       :password, :with => /(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]/, :message => "does not meet minimum complexity requirements\nPassword must contain at least one upper case letter, one lower case letter, and one digit", :if => :password_required?
-  validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
-  validates_format_of       :email, :with => %r{[^\.]$}
-  validates_uniqueness_of   :email, :case_sensitive => false,
-    :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click the Forgot password? link."
-  validates_presence_of     :password, :if => :password_required?
+ # validates_format_of       :email, :with => %r{^(?:[a-zA-Z0-9_'^&amp;/+-])+(?:\.(?:[a-zA-Z0-9_'^&amp;/+-])+)*@(?:(?:\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]?)|(?:[a-zA-Z0-9-]+\.)+(?:[a-zA-Z]){2,}\.?)$}
+  #validates_uniqueness_of   :email, :case_sensitive => false, :message => "address is already being used on another user account.  If you have forgotten your password, please visit the sign in page and click \"Forgot password?\""
   validates_confirmation_of :password, :if => :password_required?
 
   attr_accessible :first_name, :last_name, :display_name, :description, :preferred_language, :title, 
     :organization_ids, :organization_membership_requests_attributes, :credentials, 
     :bio, :experience, :employer, :photo_file_name, :photo_content_type, :public, :photo_file_size, :photo_updated_at, 
-    :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id, :email, :password, :password_confirmation
+    :home_phone, :mobile_phone, :phone, :fax, :lock_version, :dashboard_id, :email, :password, :password_confirmation, :home_jurisdiction_id
     
   has_attached_file :photo, :styles => { :medium => "200x200>",  :thumb => "100x100>", :tiny => "50x50>"  }, :default_url => '/assets/missing_:style.jpg'
 
@@ -133,10 +131,16 @@ class User < ActiveRecord::Base
     { :conditions => ["users.id = ?", user.id]}
   }
   scope :with_apps, lambda{|apps|  #apps is an array of string app names
-    { :conditions => ["id in (select user_id from role_memberships where role_id in (select id from roles where application IN (?)))", apps ] }
+    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
+              JOIN roles r ON r.id = rm.role_id
+              JOIN apps a ON r.app_id = a.id",
+      conditions: {"a.id" => apps} }
   }
   scope :without_apps, lambda{|apps|  #apps is an array of string app names
-    { :conditions => ["id NOT IN (select user_id from role_memberships where role_id IN (select id from roles where application IN (?)))", apps ] }
+    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
+              JOIN roles r ON r.id = rm.role_id
+              JOIN apps a ON r.app_id = a.id",
+      conditions: ["a.id NOT IN (?)", apps] }
   }
 
 #  scope :acknowledged_alert, lamda {|alert|
@@ -157,7 +161,7 @@ class User < ActiveRecord::Base
     indexes title,          :sortable => true
     has id,          :as => :user_id
     has roles(:id),         :as => :role_ids
-    has "array_to_string(array_agg(DISTINCT CRC32(roles.application)), ',')", :type => :multi, :as => :applications
+    has apps(:id),          :as => :app_ids
     has jurisdictions(:id), :as => :jurisdiction_ids
     where                   "deleted_at IS NULL"
     set_property :delta =>  :delayed
@@ -315,7 +319,7 @@ class User < ActiveRecord::Base
   end
 
   def to_iphone_results
-    rm = role_memberships.map{|rm| "#{rm.role.to_s} in #{rm.jurisdiction.name}"}.sort[0..1]
+    rm = role_memberships.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"}.sort[0..1]
     {'header'=> {'first_name'=>first_name, 'last_name'=>last_name},
       'preview'=> {'pair'=>[{'key'=>email},{'key'=>rm[0]},{'key'=>rm[1]}]},
       'phone' => [{'officePhone'=>phone},{'mobilePhone'=>mobile_phone}]
@@ -323,8 +327,8 @@ class User < ActiveRecord::Base
   end
 
   def to_json_results(for_admin=false)
-    rm = role_memberships.map{|rm| "#{rm.role.to_s} in #{rm.jurisdiction.name}"}
-    rq = (for_admin) ? role_requests.unapproved.map{|rq| "#{rq.role.name} in #{rq.jurisdiction.name}"} : []
+    rm = role_memberships.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"}
+    rq = (for_admin) ? role_requests.unapproved.map{|r| "#{r.role.name} in #{r.jurisdiction.name}"} : []
     {
       'user_id' => id, 'display_name' => display_name, 'first_name'=>first_name, 'last_name'=>last_name,
       'email'=>email, 'role_memberships'=>rm, 'role_requests'=>rq, 'photo' => photo.url(:tiny)

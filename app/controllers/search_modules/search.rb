@@ -61,7 +61,7 @@ module SearchModules
     end
 
     def current_user_applications
-      current_user.roles.map{|r| r.application.to_crc32 }
+      current_user.apps.map(&:id)
     end
 
     def normalize_search_params(params)
@@ -70,7 +70,7 @@ module SearchModules
       prevent_email_in_name(params)
       sanitize(params[:conditions])
       params[:with] = Hash.new if !params.has_key?(:with)
-      params[:with][:applications] = current_user_applications
+      params[:with][:app_ids] = current_user_applications
       if params[:admin_mode] == "1"
         if !params[:with].has_key?(:jurisdiction_ids)
           params[:with][:jurisdiction_ids] = Array.new
@@ -89,7 +89,7 @@ module SearchModules
       prevent_email_in_name(params)
       sanitize(params[:conditions])
       params[:with] = Hash.new if !params.has_key?(:with)
-      params[:with][:applications] = current_user_applications
+      params[:with][:app_ids] = current_user_applications
       clean_phone_number(params[:conditions])
       params.merge!(build_options(params))
     end

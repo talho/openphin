@@ -5,13 +5,13 @@
   <%- if protect_against_forgery? -%>
     <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
   <%- end -%>
-  <title>TXPhin: <%= controller.controller_name %>/<%= controller.action_name %></title>
+  <title><%= current_app.name.titleize %>: <%= controller.controller_name %>/<%= controller.action_name %></title>
   <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', 'master', 'redesign/bootstrap.css' %>
   <%= javascript_include_tag 'jquery', 'application' %>
 
 </head>
 <body>
-<div id="application">
+<div id="application" class="t_boot">
   <div id="header">
 
 
@@ -19,9 +19,9 @@
       <div class="topbar" data-dropdown="dropdown">
         <div class="topbar-inner">
           <div class="container">
-            <%= link_to raw(%{<img src="#{asset_path(domain_config['logo_image'])}">}), root_path %>
+            <%= link_to raw(%{<img src="#{current_app.tiny_logo.url}">}), root_path %>
             <ul class="nav secondary-nav">
-              <li><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'] %></li><li>&nbsp;|&nbsp;</li>
+              <li><%= link_to s(current_app.about_label), about_dashboard_path %></li><li>&nbsp;|&nbsp;</li>
               <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
               <li><%= link_to s('Sign In'), sign_in_path %></li>
             </ul>
@@ -30,16 +30,6 @@
       </div><!-- /topbar -->
     </div>
 
-
-
-    <!-- <div id="portal_toolbar">
-      <%= link_to '<img src="' + domain_config['logo_image'] + '">', root_path %>
-      <ul class="actions">
-        <li><%= link_to s(domain_config['about_button_label']), domain_config['about_button_url'] %></li><li>&nbsp;|&nbsp;</li>
-        <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
-        <li><%= link_to s('Sign In'), sign_in_path %></li>
-      </ul>
-    </div> -->
   </div>
   <div id="wrapper">
     <div id="content">

@@ -58,9 +58,19 @@ FactoryGirl.define do
   end
 
   factory :role do
+    ignore do
+      application true
+    end
+    
     sequence(:name) {|r| "role#{r}"}
-    approval_required {false}
-    application "phin"
+    public {true}
+    after :build do |role, evaluator|
+      role.app = App.where(name: evaluator.application || 'phin').first || create(:app, name: evaluator.application || 'phin')
+    end
+  end
+
+  factory :app do
+    sequence(:name) {|n| 'app #{n}'}
   end
 
   factory :alert do

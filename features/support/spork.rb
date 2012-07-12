@@ -48,7 +48,9 @@ Spork.each_run do
     end
 
     # load application-wide fixtures
-    Dir[File.join(Rails.root.to_s, "features/fixtures", '*.rb')].sort.each { |fixture| load fixture }
+    load Rails.root.join 'features/fixtures/apps.rb'
+    load Rails.root.join 'features/fixtures/jurisdictions.rb'
+    load Rails.root.join 'features/fixtures/roles.rb'
   end
 
   After do

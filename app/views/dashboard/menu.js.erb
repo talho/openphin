@@ -4,7 +4,7 @@ Application.rails_environment = '<%= Rails.env %>';
 Application.current_user = <%= current_user.id %>;
 Application.default_dashboard = <%= current_user.default_dashboard.blank? ? 'undefined' : current_user.default_dashboard.id %>;
 
-Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions'][0] %>" height="<%= domain_config['logo_image_dimensions'][1] %>" src="<%= asset_path(domain_config['logo_image']) %>">', 
+Application.menuConfig = [ '<img height="28" src="<%= current_app.tiny_logo.url %>">', 
   <%= @app_menu + ',' if defined? @app_menu %>
   <%= @report_menu + ',' if defined? @report_menu %>
   {name: 'Tutorials', items:[
@@ -34,10 +34,13 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
           , {name: 'Manage Organizations', tab: {id: 'manage_org', title: 'Manage Organizations', initializer: 'Talho.Admin.Organizations'}}
           , {name: 'Audit Log', tab: {id: 'audit_log', title:'Audit Log', url:'', initializer: 'Talho.AuditLog'}}
       <% end %>
+      <% if current_user.is_sysadmin? %>
+          , {name: 'Manage Apps', tab: {id: 'manage_apps', title: 'Manage Apps', initializer: 'Talho.Admin.Apps'}}
+      <% end %>
       ]},
     <% end %>
 
-    {name: '<%= domain_config['about_button_label'] %>', tab: {id: 'about_phin', title:'<%= domain_config['about_button_label'] %>', url:'<%= domain_config['about_button_url'] %>'}},
+    {name: '<%= current_app.about_label %>', tab: {id: 'about_phin', title:'<%= current_app.about_label %>', url:'<%= about_dashboard_path %>'}},
     {name: '<%= current_user.display_name %>', itemId: 'My Account', items:[
       {name:'View My Profile', tab:{id: 'user_profile_for_<%= current_user.id %>', title:'My Profile', user_id: <%= current_user.id %>, initializer: 'Talho.ShowProfile'}},
       {name:'Edit My Account', tab:{id: 'edit_profile', title:'Edit My Account', url:'<%= user_profile_path(current_user) %>', user_id: <%= current_user.id %>, initializer: 'Talho.EditProfile'}},
@@ -49,7 +52,7 @@ Application.menuConfig = [ '<img width="<%= domain_config['logo_image_dimensions
     ]}
 
   <% else %>
-    {name: 'About TXPHIN', tab: {id: 'about_phin', title:'About TXPHIN', url:'<%= about_dashboard_path %>'}},
+    {name: '<%= current_app.about_label %>', tab: {id: 'about_phin', title:'<%= current_app.about_label %>', url:'<%= about_dashboard_path %>'}},
     {name:  'Sign Up', redirect: '<%= new_user_path %>'},
     {name: 'Sign In', redirect: '<%= sign_in_path %>'}
   <% end %>
@@ -62,7 +65,7 @@ Application.bbarConfig = [
   {name: 'Forums', tab: {id: 'forums', title:'Forums', url:'<%= forums_path %>', initializer: 'Talho.Forums'}},
   {name: 'Links', tab: {id: 'links', title:'Links', url:'/links.htm'}},
   '->',
-  'Need Help? Email: <a style="color: #ffffff; text-decoration: none;" href="mailto:<%= domain_config['help_email'] %>" target="_blank"><%= domain_config['help_email'] %></a>'
+  'Need Help? Email: <a style="color: #ffffff; text-decoration: none;" href="mailto:<%= current_app.help_email %>" target="_blank"><%= current_app.help_email %></a>'
 ];
                   
 
