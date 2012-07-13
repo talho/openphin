@@ -23,6 +23,6 @@
   <%= f.label :home_jurisdiction_id,  "Home Jurisdiction" %> <b>(Choose your primary jurisdiction from the dropdown.)</b><br/>
   <%= f.collection_select( :home_jurisdiction_id,  current_app.root_jurisdiction.self_and_descendants, :id, :name, {:include_blank => false, selected: @selected_jurisdiction}, {:class => "home_jurisdiction"}) %> <span class="label warning">Required</span>
   <%= label_tag :role_id, "Role" %> <b>(If you are a health official, please indicate which role you fill. If you are a member of the public, you can leave this blank.)</b><br/>
-  <%= select_tag :role_id, options_from_collection_for_select(Role.for_app(current_app).where(user_role: true, public: false), :id, :display_name), {:include_blank => true, :selected => @selected_role} %>
+  <%= select_tag :role_id, options_from_collection_for_select(Role.for_app(current_app).where(user_role: true, public: false), :id, :name), {:include_blank => true, :selected => @selected_role} %>
   
 </div>
