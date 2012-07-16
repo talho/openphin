@@ -89,8 +89,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.public(app = "phin")
-    find_or_create_by_name_and_application(Defaults[:public],app) do |r| 
-      r.user_role = true 
+    find_or_create_by_name_and_application(Defaults[:public],app) do |r|
       r.public = true
     end
   end

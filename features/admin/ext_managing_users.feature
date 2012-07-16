@@ -23,6 +23,7 @@ Feature: An admin managing users
     And jonas.brothers@example.com has a public profile
     And a role named "Health Alert and Communications Coordinator"
     And the role "Health Alert and Communications Coordinator" is for the "phin" application
+    And "Texas" is the root jurisdiction of app "phin"
     And delayed jobs are processed
   
   Scenario: Creating a user

@@ -81,6 +81,12 @@ Openphin::Application.routes.draw do
   end
   resources :role_assignments, :controller => 'admin/role_assignments'
   
+  resources :alerts, :only => [:show, :update] do
+    get :recent_alerts, :on => :collection
+  end
+  match '/alerts/:id/show_with_token/:token(.:format)' => 'alerts#show_with_token', :as => :alert_with_token, :method => :get
+  match '/alerts/:id/update_with_token/:token(.:format)' => 'alerts#update_with_token', :as => :update_alert_with_token, :method => :put
+  
   resources :organizations, :only => [:index]
   resources :role_requests, :only => [:new, :create]
   resources :devices, :only => [:create, :destroy]

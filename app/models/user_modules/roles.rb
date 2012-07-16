@@ -80,8 +80,10 @@ module UserModules
       return current_user.roles.map(&:application).flatten
     end
   
-    def has_non_public_role?
-      self.roles.where(public: false).exists?
+    def has_non_public_role?(app = '')
+      res = self.roles.where(public: false)
+      res = res.joins(:app).where('apps.name' => app.to_s) unless app.blank?
+      res.exists?
     end
   
     def has_public_role?
