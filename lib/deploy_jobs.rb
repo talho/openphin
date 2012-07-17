@@ -23,7 +23,7 @@ namespace :backgroundrb do
 
   desc "start backgroundrb"
   task :start, :roles => :jobs do
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} bundle exec script/backgroundrb start" unless rails_env == "test"
+    run "cd #{current_path}; BUNDLE_GEMFILE=#{bundle_gemfile} RAILS_ENV=#{rails_env} bundle exec script/backgroundrb start" unless rails_env == "test"
   end
 
   desc "restart backgroundrb"
@@ -35,7 +35,7 @@ end
 require 'thinking_sphinx/deploy/capistrano'
 namespace :sphinx do
   task :stop, :roles => [:app] do
-     run "cd #{current_path}; RAILS_ENV=#{rails_env} bundle exec rake thinking_sphinx:stop", :env => {"BUNDLE_GEMFILE" => "Gemfile"}
+     run "cd #{current_path}; RAILS_ENV=#{rails_env} bundle exec rake thinking_sphinx:stop"
   end
   
   task :symlink_sphinx_indexes, :roles => [:app] do

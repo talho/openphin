@@ -13,6 +13,7 @@ set :user, 'apache'
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
 set :root_path, "/var/www"
+set :bundle_gemfile, "Gemfile"
 set :normalize_asset_timestamps, false
 
 set :rvm_ruby_string, 'ruby-1.9.3-p194'                     # Or:
@@ -79,7 +80,7 @@ before 'deploy:setup', 'app:install_requirements'
 before 'deploy:setup', 'rvm:install_ruby'
 after 'deploy:setup', 'app:link_www'
 after 'deploy:setup', 'app:install_yml'
-before 'deploy:update_code', 'sphinx:stop'
+after 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:symlinks'
 after "deploy:update_code", "deploy:cleanup"
 after 'deploy:restart', 'sphinx:start'

@@ -10,7 +10,7 @@ class MoveRolesToHanApp < ActiveRecord::Migration
   
   def up
     # ensure the han app exists
-    app = App.find_or_create_by_name('han')
+    app = MoveRolesToHanApp::App.find_or_create_by_name('han')
     
     # re-app 'phin' roles that aren't admin, superadmin, orgadmin, or public
     execute "
@@ -23,7 +23,7 @@ class MoveRolesToHanApp < ActiveRecord::Migration
     "
     
     # add han public roles to users with han roles
-    han_public = Role.find_or_create_by_name_and_app_id('Public', app.id) do |r|
+    han_public = MoveRolesToHanApp::Role.find_or_create_by_name_and_app_id('Public', app.id) do |r|
       r.public = true
     end
     
@@ -37,10 +37,10 @@ class MoveRolesToHanApp < ActiveRecord::Migration
     "
     
     # add han admin/superadmin roles to users with phin admin/superadmin roles
-    han_admin = Role.find_or_create_by_name_and_app_id('Admin', app.id) do |r|
+    han_admin = MoveRolesToHanApp::Role.find_or_create_by_name_and_app_id('Admin', app.id) do |r|
       r.user_role = false
     end    
-    han_superadmin = Role.find_or_create_by_name_and_app_id('SuperAdmin', app.id) do |r|
+    han_superadmin = MoveRolesToHanApp::Role.find_or_create_by_name_and_app_id('SuperAdmin', app.id) do |r|
       r.user_role = false
     end
     
@@ -77,8 +77,8 @@ class MoveRolesToHanApp < ActiveRecord::Migration
         AND roles.name IN ('Public', 'Admin', 'SuperAdmin')
     "
     
-    phin = App.find_by_name('phin')
-    han = App.find_by_name('han')
+    phin = MoveRolesToHanApp::App.find_by_name('phin')
+    han = MoveRolesToHanApp::App.find_by_name('han')
     
     # re-app 'han' roles
     execute "
