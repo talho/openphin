@@ -10,6 +10,9 @@ class MoveRolesToHanApp < ActiveRecord::Migration
   
   def up
     # ensure the han app exists
+    MoveRolesToHanApp::App.reset_column_information
+    MoveRolesToHanApp::Role.reset_column_information
+    
     app = MoveRolesToHanApp::App.find_or_create_by_name('han')
     
     # re-app 'phin' roles that aren't admin, superadmin, orgadmin, or public
