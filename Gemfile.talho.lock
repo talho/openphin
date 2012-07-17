@@ -90,7 +90,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/vms
-  revision: 353cac6ba3a566b4b91f61578516a3ff73258c3c
+  revision: 53002c00e7de63d1d215bc50e4e50915b86673c0
   branch: master
   specs:
     vms (0.0.1)
