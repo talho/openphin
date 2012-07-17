@@ -69,7 +69,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/facho
-  revision: 69ddbbe7b7d116317aa602f2a7de5c04afda36a8
+  revision: b36a73a7be6c84f8e714387f12a62df249d6d2e7
   branch: master
   specs:
     facho (0.0.1)
