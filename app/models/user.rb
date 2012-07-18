@@ -256,7 +256,7 @@ class User < ActiveRecord::Base
   end
  
   def formatted_email
-    "#{name} <#{email}>"
+    %{"#{name}" <#{email}>}
   end
   
   def cascade_alerts

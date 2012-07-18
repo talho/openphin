@@ -78,7 +78,7 @@ class Document < ActiveRecord::Base
 
   def validate_mime
     # uses unix utility 'file' will not work on windows
-    file_content_type = %x(file --mime-type -b #{file.queued_for_write[:original].path}).chomp
+    file_content_type = %x(file --mime-type -b "#{file.queued_for_write[:original].path}").chomp
     unless CONTENT_TYPES.include? file_content_type
       errors.add("file"," Filetype not permitted. (#{file_content_type}) ")
     end
