@@ -3,3 +3,8 @@
 
 en:
   hello: "Hello world"
+  clearance:
+    controllers:
+      passwords:
+        blank_password: "Password is requied. Minimum length: 7. 1 uppercase and 1 numeral required."
+      
