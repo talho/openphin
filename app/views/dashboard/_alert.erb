@@ -15,7 +15,6 @@
   <div class="extended preview">
     <div class="details">
       <p class="brief"><strong>Alert ID:</strong> <%=h alert.identifier %></p>
-
       <p class="brief sensitive"><strong>Sensitive:</strong> <%=h alert.sensitive? ? 'Yes' : 'No' %></p>
       <p class="brief acknowledge alertResponse"><strong>Acknowledge:</strong> <%=
         if alert.acknowledge?
@@ -45,12 +44,12 @@
           <% elsif alert.call_down_messages["1"] == "Please press one to acknowledge this alert." %>
             <%= acknowledge_alert_button(alert) %>
           <% else %>
-            <%= form_for :alert_attempt, :url=>acknowledge_han_alert_path(alert.id), :html => {:method => :put} do |form| %>
-              <%= form.label "call_down_response", "Alert Response" %>
-              <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{ :prompt => true }) %>
-              <p><%= form.submit "Acknowledge" %></p>
-            <% end %>
+            <%= form_tag update_alert_path(alert.id), :method => :put do  %>
+              <%= label_tag "response", "Alert Response" %>
+              <%= select_tag("response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{ :prompt => "Select a response" }) %>
+            <p><%= submit_tag "Acknowledge" %></p>
           <% end %>
+    <% end %>
         <% end %>
       </p>
 

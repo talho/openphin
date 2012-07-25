@@ -110,7 +110,7 @@ class QuerySwnForAcknowledgmentsWorker < BackgrounDRb::MetaWorker
         end
         unless alert_attempt.acknowledged?
           ack_time = contact['deliveryTimestamp'].to_time + time_offset
-          if alert_attempt.acknowledge! :ack_device => device, :ack_response => contact['gwbRespIndex'], :ack_time => ack_time
+          if alert_attempt.acknowledge! :device => device, :response => contact['gwbRespIndex'], :ack_time => ack_time
             SWN_LOGGER.info "Rcpt id #{rcptStatus['id']} has been acknowledged"
           else
             SWN_LOGGER.info "Could not acknowledge alert attempt #{alert_attempt.id} for Rcpt id #{rcptStatus['id']}"

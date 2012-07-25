@@ -53,7 +53,7 @@ class AlertAttempt < ActiveRecord::Base
 
   after_create :update_alert_type
   before_create :generate_acknowledgment_token
-     
+
   def deliver
     if jurisdiction.nil? && organization.nil?
       user.devices.all(:conditions => {:type => alert.device_types}).each do |device|
@@ -93,31 +93,21 @@ class AlertAttempt < ActiveRecord::Base
   def acknowledged?
     acknowledged_at || false
   end
-  
-  def acknowledge! options = {} # accepted options: ack_device, ack_response, ack_time
-    unless self.acknowledged?
-      unless alert.expired?
-        if alert.acknowledge?
-          #TODO: narrow range of allowed responses to the number on that alert
-          if !(1..5).include? options[:ack_response].to_i || options[:ack_response].blank?
-            errors.add('acknowledgement','You must select a response before acknowledging this alert.')
-            return
-          else
-            ack_response = options[:ack_response]
-          end
-        end
-        ack_device = options[:ack_device].blank? ? "Device::ConsoleDevice" : options[:ack_device]
-        ack_time = options[:ack_time].blank? ? Time.zone.now : options[:ack_time]
-        update_attributes(
-          :acknowledged_alert_device_type_id => AlertDeviceType.find_by_alert_id_and_device(alert.id, ack_device ).id,
-          :acknowledged_at => ack_time,
-          :call_down_response => ack_response.to_i)
-        alert.update_statistics(:device => ack_device, :jurisdiction => user.jurisdictions, :response => ack_response)
-      else
-        errors.add("acknowledgement", "This Alert has expired and can no longer be acknowledged.")
+
+  def acknowledge!(options = {})
+    if acknowledged_at.nil?
+      response = options[:call_down_response] = options.delete(:response)
+      options[:acknowledged_at] = options[:acknowledged_at] || Time.zone.now
+      device = options.delete(:device) || "Device::ConsoleDevice"
+      options[:acknowledged_alert_device_type_id] = AlertDeviceType.find_by_alert_id_and_device(alert.id, device).id
+      if ( status = update_attributes(options) )
+        alert.update_statistics(:device => device, :jurisdiction => user.jurisdictions, :response => response)
       end
+      status
+    elsif alert.expired?
+      raise "This Alert has expired and can no longer be acknowledged."
     else
-      errors.add("acknowledgement", "This Alert was previously acknowledged.  Please check the Alert for details.")
+      raise "You may have already acknowledged the alert."
     end
   end
 
@@ -137,11 +127,13 @@ class AlertAttempt < ActiveRecord::Base
   end
 
   protected
+
   def generate_acknowledgment_token
     self.token = SecureRandom.hex
   end
 
   private
+
   def update_alert_type
     update_attribute('alert_type', alert.class.to_s)
   end

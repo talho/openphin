@@ -176,7 +176,8 @@ class Alert < ActiveRecord::Base
 
   def update_statistics(options)
     aa_size = nil
-    
+
+    return unless respond_to? :call_down_messages
     if options[:response] && options[:response].to_i > 0
       response = options[:response]
       ack = ack_logs.find_by_item_type_and_item("alert_response", call_down_messages[options[:response]])

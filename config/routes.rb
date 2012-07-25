@@ -80,13 +80,16 @@ Openphin::Application.routes.draw do
     resources :roles, except: [:new, :show, :edit], defaults: {format: :json}
   end
   resources :role_assignments, :controller => 'admin/role_assignments'
-  
+
   resources :alerts, :only => [:show, :update] do
     get :recent_alerts, :on => :collection
   end
   match '/alerts/:id/show_with_token/:token(.:format)' => 'alerts#show_with_token', :as => :alert_with_token, :method => :get
   match '/alerts/:id/update_with_token/:token(.:format)' => 'alerts#update_with_token', :as => :update_alert_with_token, :method => :put
-  
+  match "/alerts/:id/update(.:format)" => "alerts#update", :as => :update_alert, :method => :put
+# CORS requirement for iPhone
+  match "/alerts/:id/update(.:format)", :to => "application#options", :via => [:options]
+
   resources :organizations, :only => [:index]
   resources :role_requests, :only => [:new, :create]
   resources :devices, :only => [:create, :destroy]

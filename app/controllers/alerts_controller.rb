@@ -33,19 +33,41 @@ class AlertsController < ApplicationController
   
   def update
     respond_to do |format|
-      if @alert_attempt.update_attributes :acknowledged_at => Time.now, :call_down_response => params[:response].to_i
+      options = {:response => params[:response].to_i}
+      options.merge(params[:device_id]) if params[:device_id]
+      if @alert_attempt.acknowledge! options
         format.json { render :json => {:success => true} }
+        format.html do
+          flash[:notice] = "Successfully acknowledged alert: #{@alert.title}"
+          redirect_to hud_path
+        end
       else
-        format.json { render :json => {:success => false, :errors => @alert_update.errors}, :status => 400 }
+        format.json { render :json => {:success => false, :errors => @alert_attempt.errors.messages}, :status => 400 }
+        format.html do
+          flash[:error] = "Alert was not acknowledged: #{@alert.title}"
+          redirect_to hud_path
+        end
       end
     end
   end
-  
+
   def update_with_token
     @alert_attempt = AlertAttempt.find_by_alert_id_and_token(@alert.id, params[:token])
     @current_user = @alert_attempt.user
-    
-    self.update
+    if @alert.respond_to?(:sensitive) && @alert.sensitive?
+      error = "That resource does not exist or you do not have access to it."
+      if request.xhr?
+        respond_to do |format|
+          format.html {render :text => error, :status => 404}
+          format.json {render :json => {:message => error}, :status => 404}
+        end
+      else
+        flash[:error] = error
+        redirect_to root_path
+      end
+    else
+      self.update
+    end
   end
   
   def recent_alerts
@@ -57,7 +79,7 @@ class AlertsController < ApplicationController
   end
   
   private
-  
+
   def set_view_variables
     @console_message = Service::Talho::Console::Message.new(:message => MessageApi.parse(@alert.to_xml), :user => @current_user)
     if @alert.acknowledge && @alert.respond_to?(:call_downs)
