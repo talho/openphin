@@ -17,10 +17,10 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   dateFormatParse: d3.time.format("%Y-%m-%d").parse,
   
   //TODO pull in D3 Graphs from ux on rollcall  
-  initComponent: function (config) {
-    config.width = config.width - 40;
-    config.xScale = d3.time.scale().range([0, config.width]);
-    config.yScale = d3.scale.linear().range([config.height, 0]);
+  initComponent: function () {
+    this.width = this.width - 40;
+    this.xScale = d3.time.scale().range([0, this.width]);
+    this.yScale = d3.scale.linear().range([this.height, 0]);
     
     Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);
     
