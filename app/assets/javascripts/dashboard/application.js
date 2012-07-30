@@ -12,10 +12,10 @@
         },
         
         mapReady: function(){
-          this.fireEvent('mapready');
+          window.Application.fireEvent('mapready');
         }
     });
     window.Application = new appClass();
     
-    Ext.apply(Application, orig_application_config);
+    Ext.apply(window.Application, orig_application_config);
 })();
