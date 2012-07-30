@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
   
   has_many :organization_membership_requests, :dependent => :delete_all
 
-  include UserModules::Roles
+  include User::RolesModule
   
   belongs_to :home_jurisdiction, :class_name => "Jurisdiction"
   
@@ -59,8 +59,8 @@ class User < ActiveRecord::Base
 #  has_many :viewable_alerts, :through => :alert_attempts, :source => "alert", :order => "alerts.created_at DESC"
   has_many :groups, :foreign_key => "owner_id", :source => "user"
 
-  include UserModules::Dashboard
-  include UserModules::Forum
+  include User::DashboardModule
+  include User::ForumModule
   
   has_many :documents, :foreign_key => 'owner_id' do
     def inbox
