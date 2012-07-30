@@ -20,6 +20,7 @@ module Openphin
       #{Rails.root.to_s}/app/observers
       #{Rails.root.to_s}/app/presenters
       #{Rails.root.to_s}/app/xml
+      #{Rails.root.to_s}/app/modules
     ) 
   
     config.filter_parameters += [:password, :confirm_password]
