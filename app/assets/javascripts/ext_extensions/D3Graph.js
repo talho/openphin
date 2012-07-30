@@ -23,8 +23,8 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     this.yScale = d3.scale.linear().range([this.height, 0]);
     
     Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);
-    
-    this.drawGraph();
+        
+    this.on('afterrender', this.drawGraph, this);
   },
   
   drawGraph: function () {
@@ -40,7 +40,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       .x(function(d) { return this.xScale(d.x); })
       .y(function(d) { return this.yScale(d.y); });
       
-    this.svg = d3.select(this.dom)
+    this.svg = d3.select('#' + this.id)
       .append("svg:svg")
         .attr("width", this.width + (this.padding[1] * 2))
         .attr("height", this.height + (this.padding[0] * 2))
@@ -189,12 +189,14 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   },
   
   _addCircles: function () {
+    var xScale = this.xScale;
+    var yScale = this.yScale;
     this.svg.selectAll(".line")
       .data(this.data).enter()
       .append("svg:circle")
         .attr("class", "line")
-        .attr("cx", function(d) { return this.xScale(d.x) })
-        .attr("cy", function(d) { return this.yScale(d.y) })
+        .attr("cx", function(d) { return xScale(d.x) })
+        .attr("cy", function(d) { return yScale(d.y) })
         .attr("ext:qtip", function(d) {
           return '<table><tr><td>Report Date:&nbsp;&nbsp;</td><td>'+d.x.format('M d, Y')+'&nbsp;&nbsp;</td></tr>'+
                  '<tr><td>Total Absent:&nbsp;&nbsp;</td><td>'+d.y+'&nbsp;&nbsp;</td></tr>'+
