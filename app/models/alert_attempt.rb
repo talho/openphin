@@ -97,6 +97,7 @@ class AlertAttempt < ActiveRecord::Base
   def acknowledge!(options = {})
     if acknowledged_at.nil?
       response = options[:call_down_response] = options.delete(:response)
+      return false unless response.present?
       options[:acknowledged_at] = options[:acknowledged_at] || Time.zone.now
       device = options.delete(:device) || "Device::ConsoleDevice"
       options[:acknowledged_alert_device_type_id] = AlertDeviceType.find_by_alert_id_and_device(alert.id, device).id
