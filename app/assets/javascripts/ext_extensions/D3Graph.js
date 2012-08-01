@@ -14,11 +14,12 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     bottom: 20,
     left: 40
   },
-  dateFormatParse: d3.time.format("%Y-%m-%d").parse,
+  dateFormatParse: d3.time.format("%m-%d-%Y").parse,
+  cls: 'ux-d3-graph',
   
   //TODO pull in D3 Graphs from ux on rollcall  
   initComponent: function () {
-    this.width = this.width - 40;
+    this.width = this.width;
     this.xScale = d3.time.scale().range([0, this.width]);
     this.yScale = d3.scale.linear().range([this.height, 0]);
     
@@ -28,8 +29,51 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   },
   
   drawGraph: function () {
+    // var data = [];
+//     
+    // this.store.each( function (record) {
+      // data.push({
+        // x: d3.time.format("%m-%d-%Y").parse(record.get('report_date')),
+        // y: record.get('total')
+      // });
+    // });
+//     
+    // var x = d3.time.scale().domain([data[0].x, data[data.length - 1].x]).range([0, this.width - 10]);
+    // var y = d3.scale.linear().domain([0, d3.max(data, function(d) { return d.y; })]).range([0, this.height]);
+//     
+    // var line = d3.svg.line()
+      // .x(function (d) { 
+        // return x(d.x); 
+      // })
+      // .y(function (d) { 
+        // return y(d.y); 
+      // });
+//       
+    // var graph = d3.select('#' + this.id)
+      // .append("svg:svg")
+        // .attr("width", this.width)
+        // .attr("height", this.height)
+      // .append("svg:g")
+        // .attr("transform","translate(20)")
+// 
+    // var xAxis = d3.svg.axis().scale(x).orient("bottom");
+//     
+    // graph.append("svg:g")
+      // .attr("class", "x axis")      
+      // .call(xAxis);
+//       
+    // var yAxis = d3.svg.axis().scale(y).ticks(4).orient("left");
+//     
+    // graph.append("svg:g")
+      // .attr("class", "y axis")      
+      // .call(yAxis);
+//       
+    // graph.append("svg:path")
+      // .attr("class", "line")
+      // .attr("d", line(data));      
+    
     this._getD3GraphData();
-    this._getLinesFromData();
+    this._getLinesFromData();    
     
     this.area = d3.svg.area().interpolate("monotone")
       .x(function(d) { return this.xScale(d.x); })
@@ -42,10 +86,10 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       
     this.svg = d3.select('#' + this.id)
       .append("svg:svg")
-        .attr("width", this.width + (this.padding[1] * 2))
-        .attr("height", this.height + (this.padding[0] * 2))
+        .attr("width", this.width + (this.padding.right * 2))
+        .attr("height", this.height + (this.padding.top * 2))
       .append("svg:g")
-        .attr("transform", "translate(" + (this.padding[0] + 10) + "," +this.padding[0] - 15 + ")");
+        .attr("transform", "translate(" + (this.padding.top + 10) + "," + (this.padding.top - 15) + ")");
         
     this._buildSVG();
     this._addCircles();
@@ -54,7 +98,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   
   _getD3GraphData: function () {
     var loopData = new Array();
-    this.store.each( function (record) {
+    this.store.each(function (record) {
       loopData.push({
         x:  record.get('report_date'),
         y:  record.get('total'),
@@ -81,7 +125,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         'e'
       ]);
     }
-    if ("a" in this.data[0])
+    if ("a" in this.data[0] && this.data[0].a != undefined)
     {
       this.lines.push([
         d3.svg.line()
@@ -90,7 +134,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         'a'
       ]);
     }
-    if ("a3" in this.data[0])
+    if ("a3" in this.data[0] && this.data[0].a3 != undefined)
     {
       this.lines.push([
         d3.svg.line()
@@ -99,7 +143,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         'a3'
       ]);
     }
-    if ("a6" in this.data[0])
+    if ("a6" in this.data[0] && this.data[0].a6 != undefined)
     {
       this.lines.push([
         d3.svg.line()
@@ -108,7 +152,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         'a6'
       ]);
     }
-    if ("d" in this.data[0])
+    if ("d" in this.data[0] && this.data[0].d != undefined)
     {
       this.lines.push([
         d3.svg.line()
@@ -117,7 +161,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         'd'
       ]);
     }
-    if ("c" in this.data[0])
+    if ("c" in this.data[0] && this.data[0].c != undefined)
     {
       this.lines.push([
         d3.svg.line()
@@ -153,8 +197,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       .call(this._getXAxis());
     
     this.svg.append("svg:g")
-      .attr("class", "y axis")
-      .attr("transform", "translate(-5,0)")
+      .attr("class", "y axis")      
       .call(this._getYAxis());
       
     this.svg.append("svg:path")
