@@ -1,95 +1,52 @@
-//TODO: Get file dependencies
 
-Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
-  height: 175,
+Talho.ux.D3Graph = Ext.extend(Ext.Container, {
+  height: 190,
   padding: {
-    top: 20,
-    right: 50,
-    bottom: 20,
-    left: 50
-  },
-  margin: {
-    top: 20,
-    right: 40,
+    top: 10,
+    right: 10,
     bottom: 20,
     left: 40
   },
   dateFormatParse: d3.time.format("%m-%d-%Y").parse,
   cls: 'ux-d3-graph',
+  style: {
+    overflow: 'visible'
+  },
   
   //TODO pull in D3 Graphs from ux on rollcall  
-  initComponent: function () {
-    this.width = this.width;
-    this.xScale = d3.time.scale().range([0, this.width]);
-    this.yScale = d3.scale.linear().range([this.height, 0]);
-    
+  initComponent: function () {  
     Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);
         
     this.on('afterrender', this.drawGraph, this);
   },
   
   drawGraph: function () {
-    // var data = [];
-//     
-    // this.store.each( function (record) {
-      // data.push({
-        // x: d3.time.format("%m-%d-%Y").parse(record.get('report_date')),
-        // y: record.get('total')
-      // });
-    // });
-//     
-    // var x = d3.time.scale().domain([data[0].x, data[data.length - 1].x]).range([0, this.width - 10]);
-    // var y = d3.scale.linear().domain([0, d3.max(data, function(d) { return d.y; })]).range([0, this.height]);
-//     
-    // var line = d3.svg.line()
-      // .x(function (d) { 
-        // return x(d.x); 
-      // })
-      // .y(function (d) { 
-        // return y(d.y); 
-      // });
-//       
-    // var graph = d3.select('#' + this.id)
-      // .append("svg:svg")
-        // .attr("width", this.width)
-        // .attr("height", this.height)
-      // .append("svg:g")
-        // .attr("transform","translate(20)")
-// 
-    // var xAxis = d3.svg.axis().scale(x).orient("bottom");
-//     
-    // graph.append("svg:g")
-      // .attr("class", "x axis")      
-      // .call(xAxis);
-//       
-    // var yAxis = d3.svg.axis().scale(y).ticks(4).orient("left");
-//     
-    // graph.append("svg:g")
-      // .attr("class", "y axis")      
-      // .call(yAxis);
-//       
-    // graph.append("svg:path")
-      // .attr("class", "line")
-      // .attr("d", line(data));      
+    this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
+    this.h = this.height - this.padding.top - this.padding.bottom;    
+    this.xScale = d3.time.scale().range([0, this.w]);
+    this.yScale = d3.scale.linear().range([this.h, 0]);
     
-    this._getD3GraphData();
-    this._getLinesFromData();    
+    this._getD3GraphData();      
+    this._getLinesFromData();
     
-    this.area = d3.svg.area().interpolate("monotone")
-      .x(function(d) { return this.xScale(d.x); })
-      .y0(this.height)
-      .y1(function(d) { return this.yScale(d.y); });
-      
+    // this.area = d3.svg.area().interpolate("monotone")
+      // .x(function(d) { return this.xScale(d.x); })
+      // .y0(this.height)
+      // .y1(function(d) { return this.yScale(d.y); });
+    var x = this.xScale;
+    var y = this.yScale;
+    
     this.line = d3.svg.line()
-      .x(function(d) { return this.xScale(d.x); })
-      .y(function(d) { return this.yScale(d.y); });
+      .x(function(d) { return x(d.x); })
+      .y(function(d) { return y(d.y); });
       
     this.svg = d3.select('#' + this.id)
       .append("svg:svg")
-        .attr("width", this.width + (this.padding.right * 2))
-        .attr("height", this.height + (this.padding.top * 2))
+        .datum(this.data)
+        .attr("width", 1000)
+        .attr("height", 300)
       .append("svg:g")
-        .attr("transform", "translate(" + (this.padding.top + 10) + "," + (this.padding.top - 15) + ")");
+        .attr("transform", "translate(" + this.padding.left + "," + this.padding.top + ")");
         
     this._buildSVG();
     this._addCircles();
@@ -178,44 +135,31 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     this.data.forEach(function(d) {
       d.x = parser(d.x);
       d.y = +d.y;
-    });
-    
-    this.svg
-      .append("svg:clipPath")
-        .attr("id", "clip")
-      .append("svg:rect")
-        .attr("width", this.width)
-        .attr("height", this.height);
-    
-    this.svg.append("svg:path")
-      .attr("class", "area")
-      .attr("clip-path", "url(#clip)")
-      .attr("d", this.area(this.data));            
+    });           
       
     this.svg.append("svg:g")
       .attr("class", "x axis")
+      .attr("transform", "translate(0,"+ this.h + ")") 
       .call(this._getXAxis());
     
     this.svg.append("svg:g")
-      .attr("class", "y axis")      
+      .attr("class", "y axis")          
       .call(this._getYAxis());
       
     this.svg.append("svg:path")
       .attr("class", "line")
-      .attr("clip-path", "url(#clip)")
-      .attr("d", this.line(this.data));
+      .attr("d", this.line);
       
     //TODO: Add axis labels
   },
   
   _getXAxis: function () {
-    min = this.data[0].x;
-    max = this.data[this.data.length - 1].x;
+    var min = this.data[0].x;
+    var max = this.data[this.data.length - 1].x;
     
     xAxis = d3.svg.axis()
-      .scale(this.xScale.domain([min, max]))
-      .tickSubdivide(true)
-      .orient("bottom");      
+      .scale(this.xScale.domain([min, max]))      
+      .tickSubdivide(true);
     
     return xAxis;
   },
@@ -225,7 +169,6 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     
     yAxis =  d3.svg.axis()
       .scale(this.yScale.domain([0, max]).nice())
-      .ticks(4)
       .orient("left");      
       
     return yAxis;
@@ -283,7 +226,6 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         }
         this.svg.append("svg:path")
           .attr('class', line_class)
-          .attr("clip-path","url(#clip)")
           .attr("d", lines[c][0](this.data));
         this.svg.selectAll(line_class)
           .data(this.data).enter()

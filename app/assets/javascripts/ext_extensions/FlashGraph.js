@@ -1,9 +1,7 @@
-//TODO: Get file dependencies
 
 Talho.ux.FlashGraph = Ext.extend(Ext.Container, {
   height: 175,
   
-  //TODO pull in Flash Graphs from rollcall
   initComponent: function () {
    
     this.items = [
