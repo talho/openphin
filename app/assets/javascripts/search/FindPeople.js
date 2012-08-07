@@ -28,7 +28,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       fields: [ 'user_id', 'display_name','first_name', 'last_name', 'email', 'role_memberships', 'role_requests', 'photo' ],
       autoLoad: false,
       remoteSort: true,
-      baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
+      baseParams: {'limit': this.RESULTS_PAGE_SIZE},
       listeners: {
         scope: this,
         'load': this.handleResults,
@@ -170,7 +170,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
             if (id != "yes") return;
             var delete_params = new Object;
             Ext.each(selected_records, function(record,i){ delete_params["users[user_ids][]"] = record.get('user_id'); });
-            var json_auth = Ext.apply({'authenticity_token': FORM_AUTH_TOKEN}, delete_params);
+            var json_auth = Ext.apply({}, delete_params);
             Ext.Ajax.request({ url: "/admin/users/deactivate.json", method: "POST", params: json_auth,
               success: function(response){this.ajax_success_cb(response)},
               failure: function(response){this.ajax_err_cb(response)}, scope: this });

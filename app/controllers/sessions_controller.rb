@@ -18,8 +18,7 @@ class SessionsController < Clearance::SessionsController
         # iPhone app
         format.json {
           headers["Access-Control-Allow-Origin"] = "*"
-          render :json => {:token => form_authenticity_token,
-            :cookie => "#{ActionController::Base.session_options[:key]}=#{ActiveSupport::MessageVerifier.new(ActionController::Base.session_options[:secret], 'SHA1').generate(session.to_hash)}"
+          render :json => {:cookie => "#{ActionController::Base.session_options[:key]}=#{ActiveSupport::MessageVerifier.new(ActionController::Base.session_options[:secret], 'SHA1').generate(session.to_hash)}"
              }
         }
       end

@@ -88,7 +88,6 @@ Talho.NewInvitation = Ext.extend(Talho.NewInvitationBase, {
               afterrender: function() {
                 this.uploadForm = new Ext.form.BasicForm(importUsersPanel.getEl(),{
                   url: this.url + '/import.html',
-                  baseParams: {'authenticity_token': FORM_AUTH_TOKEN},
                   fileUpload: true
                 });
                 this.uploadForm.add(importUsersPanel.getComponent('myfileuploadfield'));

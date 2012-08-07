@@ -110,7 +110,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
 
     this.grid.on('afterrender', function(){
       this.uploadForm = new Ext.form.BasicForm(this.grid.getTopToolbar().getComponent('testForm').getEl(),
-        {url: '/admin/user_batch/import.html', method: "PUT", baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, fileUpload: true});
+        {url: '/admin/user_batch/import.html', method: "PUT", fileUpload: true});
       this.uploadForm.add(this.grid.getTopToolbar().getComponent('testForm').getComponent('usersuploadfield'));
     }, this, {delay: 10});
 
@@ -146,7 +146,7 @@ Talho.BatchUsers = Ext.extend(Talho.ProfileBase, {
         {xtype: 'container', layout: 'hbox', defaults:{padding:'10'}, items: [
           {xtype: 'container', layout: 'form', labelAlign: 'left', items: [
             {xtype: 'form', name: 'main_form', labelAlign: 'left', url: '/admin/user_batch.json', method: "POST", border: false,
-             baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, listeners: {scope: this,
+              listeners: {scope: this,
               'beforeaction': function(){ panel.loadMask.show() },
               'actioncomplete': function(f,a){ this.form_submit_success(f,a); this.store.removeAll(); },
               'actionfailed': this.form_submit_failure},
