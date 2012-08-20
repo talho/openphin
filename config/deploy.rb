@@ -9,10 +9,9 @@ set :rails_env, 'production'
 set :scm, :git  # override default of subversion
 set :branch, 'master'
 set :use_sudo, false
-set :user, 'apache'
+set :user, 'talho'
 set :ssh_options, {:forward_agent => true}
 set :deploy_via, :remote_cache
-set :root_path, "/var/www"
 set :bundle_gemfile, "Gemfile"
 set :normalize_asset_timestamps, false
 
@@ -22,25 +21,11 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "#{root_path}/#{application}"
-
-task :production do
-  set :phin_plugins, [:han]
-  role :app, "txphin.texashan.org"
-  role :web, "txphin.texashan.org"
-  role :jobs, "jobs.texashan.org"
-  role :db,  "jobs.texashan.org", :primary => true
-end
-
-task :staging do
-  set :phin_plugins, [:han]
-  role :app, '192.168.30.97' #"staging.txphin.org"
-  role :web, '192.168.30.97' #"staging.txphin.org"
-  role :jobs, '192.168.30.97' #"staging.txphin.org"
-  role :db, '192.168.30.97', :primary => true #"staging.txphin.org"
-end
+set :deploy_to, "#{application}"
  
 task :talhostaging do
+  set :user, 'apache'
+  set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
@@ -51,6 +36,8 @@ task :talhostaging do
 end 
 
 task :talhoapps_production do
+  set :user, 'apache'
+  set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
@@ -60,17 +47,16 @@ task :talhoapps_production do
   role :db,  "talhoapps.talho.org", :primary => true  
 end
 
-task :cloudtest do
+task :newtalhostaging do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  set :root_path, "/home/ubuntu"
-  set :user, 'ubuntu'
-  role :app, '192.168.1.99'
-  role :web, '192.168.1.99'
-  role :jobs, '192.168.1.99'
-  role :db, '192.168.1.99', :primary => true
-end
+  role :app, "192.168.30.54"
+  role :web, "192.168.30.54"
+  role :jobs, "192.168.30.54"
+  role :db,  "192.168.30.54", :primary => true
+end 
+
 
 require 'bundler/capistrano'
 
@@ -78,7 +64,6 @@ require 'bundler/capistrano'
 before 'deploy:setup', 'rvm:install_rvm'
 before 'deploy:setup', 'app:install_requirements'
 before 'deploy:setup', 'rvm:install_ruby'
-after 'deploy:setup', 'app:link_www'
 after 'deploy:setup', 'app:install_yml'
 after 'deploy:update_code', 'sphinx:stop'
 after 'deploy:update_code', 'app:symlinks'

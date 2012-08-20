@@ -39,12 +39,6 @@ namespace :app do
     }
   end
 
-  desc "link the ~/openphin directory to /var/www"
-  task :link_www, :roles => [:app, :web, :jobs] do
-    run "sudo mkdir -p /var/www"
-    run "sudo ln -fs #{application} /var/www/#{application}"
-  end
-
   desc "copy the yml files that we're going to be using to configure this server"
   task :install_yml, :roles => [:app, :web, :jobs] do
     upload "config/initializers/smtp.rb.example", "#{shared_path}/smtp.rb" unless file_exists?("#{shared_path}/smtp.rb")
@@ -66,7 +60,7 @@ namespace :app do
       upload "config/initializers/cascade.yml.example", "#{shared_path}/cascade.yml" unless file_exists?("#{shared_path}/cascade.yml")
     }
     if_plugin_present(:rollcall) {
-      uplode "config/interface_fields.yml", "#{shared_path}/interface_fields.yml" unless file_exists?("#{shared_path}/interface_fields.yml")
+      upload "config/interface_fields.yml", "#{shared_path}/interface_fields.yml" unless file_exists?("#{shared_path}/interface_fields.yml")
     }
         
     run "mkdir -p #{shared_path}/vendor/cache" unless dir_exists?("#{shared_path}/vendor/cache")
