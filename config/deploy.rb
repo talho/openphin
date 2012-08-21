@@ -28,7 +28,7 @@ task :talhostaging do
   set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
-  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  set :default_environment, {"BUNDLE_GEMFILE" => "Gemfile.talho"}
   role :app, "talhostaging.talho.org"
   role :web, "talhostaging.talho.org"
   role :jobs, "talhostaging.talho.org"
@@ -40,7 +40,7 @@ task :talhoapps_production do
   set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
-  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  set :default_environment, {"BUNDLE_GEMFILE" => "Gemfile.talho"}
   role :app, "talhoapps.talho.org"
   role :web, "talhoapps.talho.org"
   role :jobs, "talhoapps.talho.org"
@@ -50,7 +50,7 @@ end
 task :newtalhostaging do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
-  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  set :default_environment, {"BUNDLE_GEMFILE" => "Gemfile.talho"}
   role :app, "192.168.30.54"
   role :web, "192.168.30.54"
   role :jobs, "192.168.30.54"
