@@ -47,10 +47,13 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
         .attr("height", 300)
       .append("svg:g")
         .attr("transform", "translate(" + this.padding.left + "," + this.padding.top + ")");
-        
-    this._buildSVG();
-    this._addCircles();
-    this._formatLines();
+       
+    if (this.data.length > 0)
+    {    
+      this._buildSVG();
+      this._addCircles();
+      this._formatLines();
+    }
   },
   
   _getD3GraphData: function () {
@@ -73,7 +76,9 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
   _getLinesFromData: function () {
     this.lines = new Array();
     
-    if (this.data[0].e > 0)
+    if (this.data.length < 1) { return; }
+    
+    if ("e" in this.data[0] && this.data[0].e != undefined)
     {
       this.lines.push([
         d3.svg.line()
