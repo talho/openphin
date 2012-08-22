@@ -64,7 +64,7 @@ group :development do
   gem 'rails-dev-tweaks', '~> 0.6.1'
   
   gem "jslint_on_rails"
-  gem "capistrano-unicorn"
+  gem "capistrano-unicorn", :git => 'git://github.com/talho/capistrano-unicorn.git'
 end
 
 group :assets do

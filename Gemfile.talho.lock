@@ -29,6 +29,13 @@ GIT
     caching_presenter (0.8.0)
 
 GIT
+  remote: git://github.com/talho/capistrano-unicorn.git
+  revision: 0c2767844759c0df0359e2eca6bb36400c2b0d47
+  specs:
+    capistrano-unicorn (0.1.6)
+      capistrano
+
+GIT
   remote: git://github.com/talho/happymapper.git
   revision: 0453583977a70170fbe94039f5d03d78cfb63ca4
   specs:
@@ -145,14 +152,12 @@ GEM
     bson_ext (1.6.2)
       bson (~> 1.6.2)
     builder (3.0.0)
-    capistrano (2.12.0)
+    capistrano (2.13.3)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
-    capistrano-unicorn (0.1.6)
-      capistrano
     capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -412,7 +417,7 @@ DEPENDENCIES
   bson_ext (= 1.6.2)
   caching_presenter!
   capistrano
-  capistrano-unicorn
+  capistrano-unicorn!
   capybara
   childprocess
   chromedriver-helper

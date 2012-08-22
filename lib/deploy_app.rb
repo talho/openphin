@@ -54,6 +54,7 @@ namespace :app do
     
     run "mkdir #{shared_path}/tutorials" unless dir_exists?("#{shared_path}/tutorials")
     run "mkdir #{shared_path}/attachments" unless dir_exists?("#{shared_path}/attachments")
+    run "mkdir #{shared_path}/sphinx" unless dir_exists?("#{shared_path}/sphinx")
     run "mkdir #{shared_path}/phin_plugins" unless dir_exists?("#{shared_path}/phin_plugins")
     
     if_plugin_present(:han){
