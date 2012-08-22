@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] = "production"
 env = ENV["RACK_ENV"]
-working_directory '/var/www/openphin/current'
+working_directory '~/openphin/current'
 
 # 16 workers and 1 master
 worker_processes (env == 'production' ? 16 : 4)
@@ -15,9 +15,9 @@ timeout 30
 # Listen on a Unix data socket
 listen '0.0.0.0:8080', :backlog => 2048
 
-stderr_path "/var/www/openphin/current/log/unicorn.stderr.log"
+stderr_path "~/openphin/current/log/unicorn.stderr.log"
 
-pid "/var/www/openphin/current/tmp/pids/unicorn.pid"
+pid "~/openphin/current/tmp/pids/unicorn.pid"
 
 ##
 # REE
@@ -40,7 +40,7 @@ before_fork do |server, worker|
   #
   # Using this method we get 0 downtime deploys.
 
-  old_pid = '/var/www/openphin/current/tmp/pids/unicorn.pid.oldbin'
+  old_pid = '~/openphin/current/tmp/pids/unicorn.pid.oldbin'
   if File.exists?(old_pid) && server.pid != old_pid
     begin
       Process.kill("QUIT", File.read(old_pid).to_i)

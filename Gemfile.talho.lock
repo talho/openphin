@@ -30,7 +30,7 @@ GIT
 
 GIT
   remote: git://github.com/talho/capistrano-unicorn.git
-  revision: 5a15aaa520e3fd339dafd015af67c760652b98ad
+  revision: f62708ca533ea97732de3eac4cd679d3b968e44c
   specs:
     capistrano-unicorn (0.1.6)
       capistrano
