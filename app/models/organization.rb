@@ -58,6 +58,7 @@ class Organization < ActiveRecord::Base
   def users
     group.recipients
   end
+  alias :members :users  
   
   def has_user?(user)
     !user.audiences.find(self.id).nil?

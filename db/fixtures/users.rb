@@ -27,7 +27,6 @@ u = User.find_by_email("rboldway@talho.org") || User.new(
 if u.new_record? && u.save
   u.confirm_email!
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id, :role_id => Role.admin.id)
-  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Bell').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
 end
@@ -45,7 +44,6 @@ u = User.find_by_email("eddie@talho.org") || User.new(
 if u.new_record? && u.save
   u.confirm_email!
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
-  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
 end
 
@@ -62,7 +60,6 @@ u = User.find_by_email("channa@texashan.org") || User.new(
 if u.new_record? && u.save
   u.confirm_email!
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.superadmin.id)
-  u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Starr').id, :role_id => Role.find_by_name('Health Alert and Communications Coordinator').id)
   u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Texas').id, :role_id => Role.sysadmin.id)
 end
 
@@ -95,6 +92,5 @@ unless Rails.env.strip.downcase == "production"
   
   if u.new_record? && u.save
     u.confirm_email!
-    u.role_memberships.create(:jurisdiction_id => Jurisdiction.find_by_name('Potter').id, :role_id => Role.find_by_name('Health Officer').id)
   end
 end
