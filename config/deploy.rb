@@ -21,7 +21,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "$HOME/#{application}"
+set :deploy_to, Proc.new { "#{(capture "echo $HOME").delete("\\\n")}/#{application}"}
  
 task :talhostaging do
   set :user, 'apache'
@@ -57,6 +57,15 @@ task :newtalhostaging do
   role :db,  "192.168.30.54", :primary => true
 end 
 
+task :newtalhoproduction do
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
+  set :bundle_gemfile, "Gemfile.talho"
+  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  role :app, "192.168.30.52"
+  role :web, "192.168.30.52"
+  role :jobs, "192.168.30.52"
+  role :db,  "192.168.30.52", :primary => true
+end 
 
 require 'bundler/capistrano'
 
