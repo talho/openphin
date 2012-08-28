@@ -44,7 +44,6 @@
 #
 
 class Alert < ActiveRecord::Base
-  acts_as_MTI
 
   serialize :call_down_messages, Hash
 

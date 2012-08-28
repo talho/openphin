@@ -26,7 +26,7 @@ group :default do
     gem 'ts-delayed-delta', :require => 'thinking_sphinx/deltas/delayed_delta'
   gem "feedzirra", "0.0.23"
   gem 'sinatra'
-  gem 'pin_cushion', :git => 'git://github.com/talho/pin_cushion.git'
+  gem 'pin_cushion', :path => '~/projects/pin_cushion' # :git => 'git://github.com/talho/pin_cushion.git'
   gem "happymapper", :git => 'git://github.com/talho/happymapper.git' #"0.3.2"
   gem "base32-crockford", "0.1.0"
   
