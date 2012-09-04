@@ -5,8 +5,8 @@ Application.current_user = <%= current_user.id %>;
 Application.default_dashboard = <%= current_user.default_dashboard.blank? ? 'undefined' : current_user.default_dashboard.id %>;
 
 Application.menuConfig = [ '<img height="28" src="<%= current_app.tiny_logo.url %>">', 
-  <%= @app_menu + ',' if defined? @app_menu %>
-  <%= @report_menu + ',' if defined? @report_menu %>
+  <%= @app_menu.html_safe + ',' if defined? @app_menu %>
+  <%= @report_menu.html_safe + ',' if defined? @report_menu %>
   {name: 'Tutorials', items:[
     {name: 'PHIN', tab:{id: 'tutorials', title:'PHIN Tutorials', url:'<%= tutorials_path %>', anchor: 'PHIN', initializer: 'Talho.Tutorials'}},
     {name: 'Documents Panel', tab:{id: 'tutorials', title:'Documents Tutorial', url:'<%= tutorials_path %>', anchor: 'Documents', initializer: 'Talho.Tutorials'}
