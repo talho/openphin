@@ -148,7 +148,7 @@ Ext.ns('Talho.ux.Documents');
               ];
                        
               win = new Ext.Window({width: 470, height: 120, title: 'Replace Document', modal: true,
-                  items:[{itemId: 'upload_form', xtype: 'form', fileUpload: true, padding: '5', labelWidth: 30, baseParams: {'authenticity_token': FORM_AUTH_TOKEN}, items: fields,
+                  items:[{itemId: 'upload_form', xtype: 'form', fileUpload: true, padding: '5', labelWidth: 30, items: fields,
                       buttons: [
                           {text: 'Save', scope: this, handler: function(){
                               var form = win.getComponent('upload_form').getForm();

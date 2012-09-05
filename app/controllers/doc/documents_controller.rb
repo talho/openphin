@@ -1,9 +1,7 @@
 class Doc::DocumentsController < ApplicationController
   before_filter :non_public_role_required
   before_filter :can_edit_document, :only => [:edit, :move, :destroy]
-  
-  skip_before_filter :verify_authenticity_token, :only => [:create]
-  
+    
   def show
     @document = Document.find(params[:id]).viewable_by(current_user)
 

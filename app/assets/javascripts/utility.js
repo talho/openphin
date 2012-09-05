@@ -47,4 +47,11 @@ if(Ext)
             else return null;
         }
     });
+    
+    Ext.namespace("Talho.Detection");
+
+    Talho.Detection.SVG = function () {
+      return (document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0"))
+    }
 }
+

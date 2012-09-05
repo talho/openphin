@@ -21,7 +21,7 @@ Talho.Reports = Ext.extend(Ext.util.Observable, {
       fields: [ 'id','recipe','report_path','dataset_updated_at','rendering_updated_at','rendering_file_size','incomplete' ],
       autoLoad: true,
       remoteSort: true,
-      baseParams: {'limit': this.RESULTS_PAGE_SIZE, 'authenticity_token': FORM_AUTH_TOKEN},
+      baseParams: {'limit': this.RESULTS_PAGE_SIZE},
       listeners: {
         scope: this,
         'exception': function(){this.handleError;},

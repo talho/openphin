@@ -137,7 +137,7 @@ When /^I upload the file "([^"]*)"$/ do |file|
   if Capybara.current_driver == :selenium_with_chrome
     page.execute_script("
       var win = Ext.WindowMgr.getActive();
-      win.insert(0, {id: 'chrome_upload_hack', xtype: 'form', fileUpload: true, padding: '5', method:'POST', url:'/documents.json', labelWidth: 30, baseParams: {'authenticity_token': FORM_AUTH_TOKEN, folder_id: win.folder_id}, items: [
+      win.insert(0, {id: 'chrome_upload_hack', xtype: 'form', fileUpload: true, padding: '5', method:'POST', url:'/documents.json', labelWidth: 30, baseParams: {folder_id: win.folder_id}, items: [
         {xtype: 'textfield', inputType: 'file', fieldLabel: 'File', name: 'file', anchor: '100%'}
       ]});
       win.doLayout();
