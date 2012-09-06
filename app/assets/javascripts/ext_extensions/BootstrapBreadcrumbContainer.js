@@ -3,10 +3,12 @@
   Ext.ns('Ext.ux')
   
   var bodyTemplate = new Ext.XTemplate('<div class="t_boot" style="background: white;">',
-    '<div class="container row" style="padding-top: 10px;">',
-      '<ul class="breadcrumb offset4 span7">',
-        '<li>&nbsp;</li>',
-      '</ul>',
+    '<div class="t_boot container" style="padding-top: 10px;">',
+      '<div class="t_boot row" >',
+        '<ul class="t_boot breadcrumb offset4 span7">',
+          '<li>&nbsp;</li>',
+        '</ul>',
+      '</div>',
     '</div>',
   '</div>', {
     compiled: true
