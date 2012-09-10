@@ -2,7 +2,7 @@
 //= require ext_extensions/FlashGraph
 
 Talho.ux.Graph = Ext.extend(Ext.Container, {
-  height: 190,
+  boxMinHeight: 190,
   boxMinWidth: 320,
   cls: 'ux-graph-container',
   

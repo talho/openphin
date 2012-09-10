@@ -1,6 +1,6 @@
+//= require d3/d3.v2.min.js
 
 Talho.ux.D3Graph = Ext.extend(Ext.Container, {
-  height: 190,
   padding: {
     top: 10,
     right: 10,
@@ -22,7 +22,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
   
   drawGraph: function () {
     this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
-    this.h = this.height - this.padding.top - this.padding.bottom;    
+    this.h = this.ownerCt.getHeight() - this.padding.top - this.padding.bottom;    
     this.xScale = d3.time.scale().range([0, this.w]);
     this.yScale = d3.scale.linear().range([this.h, 0]);
     
@@ -43,8 +43,8 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     this.svg = d3.select('#' + this.id)
       .append("svg:svg")
         .datum(this.data)
-        .attr("width", 1000)
-        .attr("height", 300)
+        .attr("width", this.w)
+        .attr("height", this.h)
       .append("svg:g")
         .attr("transform", "translate(" + this.padding.left + "," + this.padding.top + ")");
        
