@@ -17,7 +17,7 @@
 #
 
 class AlertAttempt < ActiveRecord::Base
-  belongs_to :alert, :polymorphic => true
+  belongs_to :alert
   belongs_to :user, :include => [:devices, :role_memberships]
   belongs_to :organization
   belongs_to :jurisdiction
