@@ -1,6 +1,6 @@
 //= require d3/d3.v2.min.js
 
-Talho.ux.D3Graph = Ext.extend(Ext.Container, {
+Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   padding: {
     top: 10,
     right: 10,
@@ -9,9 +9,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
   },
   dateFormatParse: d3.time.format("%m-%d-%Y").parse,
   cls: 'ux-d3-graph',
-  style: {
-    overflow: 'visible'
-  },
+  layout: 'auto',
   
   //TODO pull in D3 Graphs from ux on rollcall  
   initComponent: function () {  
@@ -22,7 +20,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
   
   drawGraph: function () {
     this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
-    this.h = this.ownerCt.getHeight() - this.padding.top - this.padding.bottom;    
+    this.h = this.height - this.padding.top - this.padding.bottom;    
     this.xScale = d3.time.scale().range([0, this.w]);
     this.yScale = d3.scale.linear().range([this.h, 0]);
     
@@ -43,8 +41,8 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     this.svg = d3.select('#' + this.id)
       .append("svg:svg")
         .datum(this.data)
-        .attr("width", this.w)
-        .attr("height", this.h)
+        .attr("width", this.w + this.padding.left + this.padding.right)
+        .attr("height", this.h + this.padding.top + this.padding.bottom)
       .append("svg:g")
         .attr("transform", "translate(" + this.padding.left + "," + this.padding.top + ")");
        
@@ -143,8 +141,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     });           
       
     this.svg.append("svg:g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0,"+ this.h + ")") 
+      .attr("class", "x axis")      
       .call(this._getXAxis());
     
     this.svg.append("svg:g")
@@ -163,8 +160,9 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     var max = this.data[this.data.length - 1].x;
     
     xAxis = d3.svg.axis()
-      .scale(this.xScale.domain([min, max]))      
-      .tickSubdivide(true);
+      .scale(this.xScale.domain([min, max]))
+      .orient('bottom')      
+      .ticks(d3.time.days, 10);
     
     return xAxis;
   },

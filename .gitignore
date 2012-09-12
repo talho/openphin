@@ -35,7 +35,6 @@ test
 spec/fixtures/*.yml
 files
 db/development_structure.sql
-public/tutorials
 config/initializers/smtp.rb
 .bundle
 vendor/cache
