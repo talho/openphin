@@ -62,17 +62,16 @@ GIT
     option_attrs (0.1)
 
 GIT
-  remote: git://github.com/talho/pin_cushion.git
-  revision: dcbbc9e67278f8ffb877c04acaf5bcd31c72a823
-  specs:
-    pin_cushion (0.1)
-
-GIT
   remote: git://github.com/talho/rails_sql_views.git
   revision: 27a643be6ca5963298896c26ebb5accfd1c086b2
   specs:
     rails_sql_views (0.8.2)
       activerecord
+
+PATH
+  remote: ~/projects/pin_cushion
+  specs:
+    pin_cushion (0.1)
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/facho

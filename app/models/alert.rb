@@ -44,7 +44,7 @@
 #
 
 class Alert < ActiveRecord::Base
-  acts_as_MTI
+  self.inheritance_column = 'alert_type'
 
   serialize :call_down_messages, Hash
 
@@ -54,7 +54,7 @@ class Alert < ActiveRecord::Base
   has_many :audiences, :through => :targets, :include => [:roles, :jurisdictions, :users]
 
   has_many :alert_device_types, :foreign_key => :alert_id, :dependent => :delete_all
-  has_many :alert_attempts, :foreign_key => :alert_id, :dependent => :destroy, :include => [:user, :acknowledged_alert_device_type, :jurisdiction, :organization, :devices], :as => :alert
+  has_many :alert_attempts, :foreign_key => :alert_id, :dependent => :destroy, :include => [:user, :acknowledged_alert_device_type, :jurisdiction, :organization, :devices]
   has_many :deliveries, :through => :alert_attempts
   has_many :attempted_users, :through => :alert_attempts, :source => :user, :uniq => true
   has_many :acknowledged_users,
@@ -69,7 +69,7 @@ class Alert < ActiveRecord::Base
            :conditions => ["alert_attempts.acknowledged_at IS NULL"]
 
   has_many :ack_logs, :class_name => 'AlertAckLog'
-  has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_type=\'Alert\' AND targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
+  has_many :recipients, :class_name => "User", :finder_sql => proc{"SELECT users.* FROM users, targets, targets_users WHERE targets.item_id=#{id} AND targets_users.target_id=targets.id AND targets_users.user_id=users.id"}
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
   after_create :create_console_alert_device_type
@@ -82,7 +82,6 @@ class Alert < ActiveRecord::Base
       :conditions => "alerts.id=#{object_id}"
   }
   scope :has_acknowledge, :conditions => ['acknowledge = ?', true]
-  before_create :set_alert_type
 
   def self.default_alert
     title = "Example Alert - please click More to see the alert contents"
@@ -320,9 +319,5 @@ class Alert < ActiveRecord::Base
       end
     end
   end
-
-  private
-  def set_alert_type
-    self[:alert_type] = "Alert"
-  end
+  
 end
