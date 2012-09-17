@@ -7,8 +7,8 @@ Talho.ux.Graph = Ext.extend(Ext.Container, {
   
   initComponent: function () {
     if (Talho.Detection.SVG) {
-      // this.items = [new Talho.ux.FlashGraph({store: this.store})];
-      this.items = [new Talho.ux.D3Graph({store: this.store, height: this.height})];
+      this.items = [new Talho.ux.FlashGraph({store: this.store, series: this.series, height: this.height})];
+      //this.items = [new Talho.ux.D3Graph({store: this.store, height: this.height})];
     }
     else {
       this.items = [new Talho.ux.FlashGraph({store: this.store, height: this.height})];

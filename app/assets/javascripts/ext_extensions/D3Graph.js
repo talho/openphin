@@ -3,34 +3,29 @@
 Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   padding: {
     top: 10,
-    right: 10,
-    bottom: 20,
-    left: 40
+    right: 15,
+    bottom: 30,
+    left: 27
   },
   dateFormatParse: d3.time.format("%m-%d-%Y").parse,
-  cls: 'ux-d3-graph',
   layout: 'auto',
   
   //TODO pull in D3 Graphs from ux on rollcall  
   initComponent: function () {  
-    Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);
-        
+    Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);       
+    
     this.on('afterrender', this.drawGraph, this);
   },
   
   drawGraph: function () {
-    this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
-    this.h = this.height - this.padding.top - this.padding.bottom;    
-    this.xScale = d3.time.scale().range([0, this.w]);
-    this.yScale = d3.scale.linear().range([this.h, 0]);
-    
     this._getD3GraphData();      
     this._getLinesFromData();
     
-    // this.area = d3.svg.area().interpolate("monotone")
-      // .x(function(d) { return this.xScale(d.x); })
-      // .y0(this.height)
-      // .y1(function(d) { return this.yScale(d.y); });
+    this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
+    this.h = this.height - this.padding.top - this.padding.bottom;   
+    this.xScale = d3.time.scale().range([0, this.w]);
+    this.yScale = d3.scale.linear().range([this.h, 0]);         
+    
     var x = this.xScale;
     var y = this.yScale;
     
@@ -138,16 +133,20 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     this.data.forEach(function(d) {
       d.x = parser(d.x);
       d.y = +d.y;
-    });           
-      
-    this.svg.append("svg:g")
-      .attr("class", "x axis")      
-      .call(this._getXAxis());
+    });
+    
+    var min = this.data[0].x;
+    var max = this.data[this.data.length - 1].x;
+    this.xScale = this.xScale.domain([min,max]);
     
     this.svg.append("svg:g")
       .attr("class", "y axis")          
-      .call(this._getYAxis());
+      .call(this._getYAxis());                       
       
+    this.svg.append("svg:g")
+      .attr("transform", "translate(0," + this.h + ")") 
+      .call(this._getXAxis());
+    
     this.svg.append("svg:path")
       .attr("class", "line")
       .attr("d", this.line);
@@ -155,14 +154,11 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     //TODO: Add axis labels
   },
   
-  _getXAxis: function () {
-    var min = this.data[0].x;
-    var max = this.data[this.data.length - 1].x;
-    
+  _getXAxis: function () {        
     xAxis = d3.svg.axis()
-      .scale(this.xScale.domain([min, max]))
-      .orient('bottom')      
-      .ticks(d3.time.days, 10);
+      .scale(this.xScale)
+      .orient("bottom")
+      .ticks(d3.time.months, 1);
     
     return xAxis;
   },
@@ -187,9 +183,9 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
         .attr("cx", function(d) { return xScale(d.x) })
         .attr("cy", function(d) { return yScale(d.y) })
         .attr("ext:qtip", function(d) {
-          return '<table><tr><td>Report Date:&nbsp;&nbsp;</td><td>'+d.x.format('M d, Y')+'&nbsp;&nbsp;</td></tr>'+
-                 '<tr><td>Total Absent:&nbsp;&nbsp;</td><td>'+d.y+'&nbsp;&nbsp;</td></tr>'+
-                 '<tr><td>Total Enrolled:&nbsp;&nbsp;</td><td>'+d.e+'&nbsp;&nbsp;</td></tr></table>'
+          return '<table><tr><td>Report Date:&nbsp;&nbsp;</td><td>' + d3.time.format('%m-%d-%y')(d.x) + '&nbsp;&nbsp;</td></tr>' +
+                 '<tr><td>Total Absent:&nbsp;&nbsp;</td><td>' + d.y + '&nbsp;&nbsp;</td></tr>'+
+                 '<tr><td>Total Enrolled:&nbsp;&nbsp;</td><td>' + d.e + '&nbsp;&nbsp;</td></tr></table>'
         })
         .attr("r", 3.5);
   },

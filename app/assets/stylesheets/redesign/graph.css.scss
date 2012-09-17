@@ -1,0 +1,95 @@
+path.line {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+path.area {
+  fill: #e7e7e7;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+// .x.axis path {
+  // display: none;
+// }
+
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.x.axis line {
+  stroke: #eee;
+  shape-rendering: crispEdges;
+}
+
+.x line.axis {
+  stroke: #000;
+}
+
+.line, .line2{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.line-avg{
+  fill: none;
+  stroke: #ff6600;
+  stroke-width: 1.5px;
+}
+
+.line-avg-30{
+  fill: none;
+  stroke: #0666FF;
+  stroke-width: 1.5px;
+}
+
+.line-avg-60{
+  fill: none;
+  stroke: #660066;
+  stroke-width: 1.5px;
+}
+
+.line-deviation{
+  fill: none;
+  stroke: #006600;
+  stroke-width: 1.5px;
+}
+
+.line-cusum{
+  fill: none;
+  stroke: #ff0066;
+  stroke-width: 1.5px;
+}
+
+circle.line {
+  fill: #fff;
+}
+
+circle.line-avg{
+  fill: #FF6600;
+}
+
+circle.line-avg-30{
+  fill: #0666FF;
+}
+
+circle.line-avg-60{
+  fill: #660066;
+}
+
+circle.line-deviation{
+  fill: #00600;
+}
+
+circle.line-cusum{
+  fill: #ff0066;
+}
