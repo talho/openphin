@@ -1,7 +1,7 @@
 class RemoveLockVersionFromAlerts < ActiveRecord::Migration
   def up
     begin
-      RemoveMTIFor(HanAlert, {:superclass_name => 'Alert', :supertable_name => 'alerts', :table_name => 'han_alerts'})
+      RemoveMTIFor("HanAlert", {:superclass_name => 'Alert', :supertable_name => 'alerts', :table_name => 'han_alerts'})
     rescue #eat this one, HanAlert is a mess, causes a mess, becomes a mess
     end
     
