@@ -1,5 +1,5 @@
 require 'thinking_sphinx/deploy/capistrano'
-load 'lib/testjour.rb'
+#load 'lib/testjour.rb'
 load 'lib/deploy_app.rb'
 load 'lib/deploy_jobs.rb'
 
@@ -23,7 +23,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # via the :deploy_to variable:
 set :deploy_to, Proc.new { "#{(capture "echo $HOME").delete("\\\n")}/#{application}"}
  
-task :talhostaging do
+task :oldtalhostaging do
   set :user, 'apache'
   set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
@@ -35,7 +35,7 @@ task :talhostaging do
   role :db,  "talhostaging.talho.org", :primary => true
 end 
 
-task :talhoapps_production do
+task :oldtalhoapps_production do
   set :user, 'apache'
   set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
@@ -47,7 +47,7 @@ task :talhoapps_production do
   role :db,  "talhoapps.talho.org", :primary => true  
 end
 
-task :newtalhostaging do
+task :talhostaging do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
@@ -57,7 +57,7 @@ task :newtalhostaging do
   role :db,  "192.168.30.54", :primary => true
 end 
 
-task :newtalhoproduction do
+task :talhoproduction do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"

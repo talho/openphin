@@ -63,10 +63,10 @@ GIT
 
 GIT
   remote: git://github.com/talho/pin_cushion.git
-  revision: aca8642afe47ff40f07baf4d72898db85b44ded3
+  revision: 4457dfdc6c541e679a3d8559fac7d915eaecee18
   branch: db_agnostic
   specs:
-    pin_cushion (0.1)
+    pin_cushion (2.0)
 
 GIT
   remote: git://github.com/talho/rails_sql_views.git
