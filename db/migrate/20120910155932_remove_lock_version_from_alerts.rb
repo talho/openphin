@@ -1,7 +1,8 @@
 class RemoveLockVersionFromAlerts < ActiveRecord::Migration
   def up
-    Phin::Application.eval_if_plugin_present :han do
-      RemoveMTIFor(HanAlert, {:superclass_name => 'Alert', :supertable_name => 'alerts', :table_name => 'han_alerts'})
+    begin
+      RemoveMTIFor("HanAlert", {:superclass_name => 'Alert', :supertable_name => 'alerts', :table_name => 'han_alerts'})
+    rescue #eat this one, HanAlert is a mess, causes a mess, becomes a mess
     end
     
     Phin::Application.eval_if_plugin_present :vms do
