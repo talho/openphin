@@ -406,8 +406,7 @@ Ext.chart.Chart.proxyFunction = {};
  * @static
  * @type String
  */
-Ext.chart.Chart.CHART_URL = 'http:/' + '/yui.yahooapis.com/2.8.0/build/charts/assets/charts.swf';
-
+Ext.chart.Chart.CHART_URL = 'ext3-3-charts.swf';
 /**
  * @class Ext.chart.PieChart
  * @extends Ext.chart.Chart

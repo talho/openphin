@@ -1,11 +1,13 @@
 
 Talho.ux.FlashGraph = Ext.extend(Ext.Container, {
   height: 175,
+  layout: 'fit',
   
   initComponent: function () {
    
     this.items = [
       {xtype: 'columnchart', store: this.store, xField: 'report_date',
+        url: 'ext3-3-charts.swf',
         chartStyle: {
           padding: 10, animationEnabled: true,
           font: {name: 'Tahoma', color: 0x444444, size: 11 },
