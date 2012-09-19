@@ -3,9 +3,9 @@
 Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   padding: {
     top: 10,
-    right: 15,
+    right: 20,
     bottom: 30,
-    left: 27
+    left: 40
   },
   dateFormatParse: d3.time.format("%m-%d-%Y").parse,
   layout: 'auto',
@@ -151,14 +151,19 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       .attr("class", "line")
       .attr("d", this.line);
       
-    //TODO: Add axis labels
+    this.svg.append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", -38)
+      .attr("dy", ".75em")
+      .attr("transform", "rotate(-90)")
+      .text("Absences");
   },
   
   _getXAxis: function () {        
     xAxis = d3.svg.axis()
-      .scale(this.xScale)
-      .orient("bottom")
-      .ticks(d3.time.months, 1);
+      .scale(this.xScale.nice())
+      .tickFormat(d3.time.format('%m-%d-%y'));
     
     return xAxis;
   },

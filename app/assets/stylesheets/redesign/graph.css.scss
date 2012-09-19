@@ -8,6 +8,10 @@ path.area {
   fill: #e7e7e7;
 }
 
+path.domain {
+  fill: none;
+}
+
 .axis {
   shape-rendering: crispEdges;
 }
@@ -16,9 +20,9 @@ path.area {
   stroke-opacity: .5;
 }
 
-// .x.axis path {
-  // display: none;
-// }
+.x.axis path {
+  display: none;
+}
 
 .y.axis line, .y.axis path {
   fill: none;
