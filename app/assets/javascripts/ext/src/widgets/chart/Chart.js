@@ -407,6 +407,7 @@ Ext.chart.Chart.proxyFunction = {};
  * @type String
  */
 Ext.chart.Chart.CHART_URL = 'ext3-3-charts.swf';
+
 /**
  * @class Ext.chart.PieChart
  * @extends Ext.chart.Chart

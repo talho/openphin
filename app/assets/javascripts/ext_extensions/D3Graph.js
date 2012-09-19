@@ -1,38 +1,31 @@
+//= require d3.v2
 
-Talho.ux.D3Graph = Ext.extend(Ext.Container, {
-  height: 190,
+Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   padding: {
     top: 10,
-    right: 10,
-    bottom: 20,
+    right: 20,
+    bottom: 30,
     left: 40
   },
   dateFormatParse: d3.time.format("%m-%d-%Y").parse,
-  cls: 'ux-d3-graph',
-  style: {
-    overflow: 'visible'
-  },
+  layout: 'auto',
   
   //TODO pull in D3 Graphs from ux on rollcall  
   initComponent: function () {  
-    Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);
-        
+    Talho.ux.D3Graph.superclass.initComponent.apply(this, arguments);       
+    
     this.on('afterrender', this.drawGraph, this);
   },
   
   drawGraph: function () {
-    this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
-    this.h = this.height - this.padding.top - this.padding.bottom;    
-    this.xScale = d3.time.scale().range([0, this.w]);
-    this.yScale = d3.scale.linear().range([this.h, 0]);
-    
     this._getD3GraphData();      
     this._getLinesFromData();
     
-    // this.area = d3.svg.area().interpolate("monotone")
-      // .x(function(d) { return this.xScale(d.x); })
-      // .y0(this.height)
-      // .y1(function(d) { return this.yScale(d.y); });
+    this.w = this.ownerCt.getWidth() - this.padding.left - this.padding.right;
+    this.h = this.height - this.padding.top - this.padding.bottom;   
+    this.xScale = d3.time.scale().range([0, this.w]);
+    this.yScale = d3.scale.linear().range([this.h, 0]);         
+    
     var x = this.xScale;
     var y = this.yScale;
     
@@ -43,8 +36,8 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     this.svg = d3.select('#' + this.id)
       .append("svg:svg")
         .datum(this.data)
-        .attr("width", 1000)
-        .attr("height", 300)
+        .attr("width", this.w + this.padding.left + this.padding.right)
+        .attr("height", this.h + this.padding.top + this.padding.bottom)
       .append("svg:g")
         .attr("transform", "translate(" + this.padding.left + "," + this.padding.top + ")");
        
@@ -140,31 +133,37 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
     this.data.forEach(function(d) {
       d.x = parser(d.x);
       d.y = +d.y;
-    });           
-      
-    this.svg.append("svg:g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0,"+ this.h + ")") 
-      .call(this._getXAxis());
+    });
+    
+    var min = this.data[0].x;
+    var max = this.data[this.data.length - 1].x;
+    this.xScale = this.xScale.domain([min,max]);
     
     this.svg.append("svg:g")
       .attr("class", "y axis")          
-      .call(this._getYAxis());
+      .call(this._getYAxis());                       
       
+    this.svg.append("svg:g")
+      .attr("transform", "translate(0," + this.h + ")") 
+      .call(this._getXAxis());
+    
     this.svg.append("svg:path")
       .attr("class", "line")
       .attr("d", this.line);
       
-    //TODO: Add axis labels
+    this.svg.append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", -38)
+      .attr("dy", ".75em")
+      .attr("transform", "rotate(-90)")
+      .text("Absences");
   },
   
-  _getXAxis: function () {
-    var min = this.data[0].x;
-    var max = this.data[this.data.length - 1].x;
-    
+  _getXAxis: function () {        
     xAxis = d3.svg.axis()
-      .scale(this.xScale.domain([min, max]))      
-      .tickSubdivide(true);
+      .scale(this.xScale.nice())
+      .tickFormat(d3.time.format('%m-%d-%y'));
     
     return xAxis;
   },
@@ -189,9 +188,9 @@ Talho.ux.D3Graph = Ext.extend(Ext.Container, {
         .attr("cx", function(d) { return xScale(d.x) })
         .attr("cy", function(d) { return yScale(d.y) })
         .attr("ext:qtip", function(d) {
-          return '<table><tr><td>Report Date:&nbsp;&nbsp;</td><td>'+d.x.format('M d, Y')+'&nbsp;&nbsp;</td></tr>'+
-                 '<tr><td>Total Absent:&nbsp;&nbsp;</td><td>'+d.y+'&nbsp;&nbsp;</td></tr>'+
-                 '<tr><td>Total Enrolled:&nbsp;&nbsp;</td><td>'+d.e+'&nbsp;&nbsp;</td></tr></table>'
+          return '<table><tr><td>Report Date:&nbsp;&nbsp;</td><td>' + d3.time.format('%m-%d-%y')(d.x) + '&nbsp;&nbsp;</td></tr>' +
+                 '<tr><td>Total Absent:&nbsp;&nbsp;</td><td>' + d.y + '&nbsp;&nbsp;</td></tr>'+
+                 '<tr><td>Total Enrolled:&nbsp;&nbsp;</td><td>' + d.e + '&nbsp;&nbsp;</td></tr></table>'
         })
         .attr("r", 3.5);
   },

@@ -54,7 +54,7 @@ group :default do
   gem 'jbuilder', :git => 'git://github.com/rails/jbuilder.git'
   gem "dynamic_form"
   gem "rails_sql_views", :git => 'git://github.com/talho/rails_sql_views.git'
-  
+  gem "d3_rails"
   gem "yajl-ruby", :require => ['yajl', 'yajl/json_gem']
 end
 
