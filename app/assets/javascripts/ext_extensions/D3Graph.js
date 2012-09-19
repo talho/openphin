@@ -1,4 +1,4 @@
-//= require d3/d3.v2.min.js
+//= require d3.v2
 
 Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
   padding: {
