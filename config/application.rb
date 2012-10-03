@@ -37,8 +37,8 @@ module Openphin
     config.assets.enabled = true
     config.assets.version = '1.0'
     
-    console do
-     ActiveRecord::Base.logger = nil
-    end
+    # console do
+     # ActiveRecord::Base.logger = nil
+    # end
   end
 end

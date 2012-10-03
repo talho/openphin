@@ -138,4 +138,26 @@
     return output;
   };
 
+  Ext.override(Ext.data.Store, {
+    max: function(fields){
+      return Ext.max(this._getFieldArray(fields));
+    },
+    
+    min: function(fields){
+      return Ext.min(this._getFieldArray(fields));
+    },
+    
+    _getFieldArray: function(fields){    
+      if(!Ext.isArray(fields)){
+        fields = [fields];
+      }
+      
+      var arr = [];
+      Ext.each(fields, function(f){
+        arr = arr.concat(this.collect(f));
+      }, this);
+      
+      return arr;
+    }
+  });
 })();

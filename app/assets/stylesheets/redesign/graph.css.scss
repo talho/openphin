@@ -10,90 +10,47 @@ path.area {
 
 path.domain {
   fill: none;
+  stroke: #DADADA
 }
 
-.axis {
+.axis, .rule line {
   shape-rendering: crispEdges;
+}
+
+g.legend line {
+  shape-rendering: crispEdges;
+  stroke-width: 9px;
 }
 
 .x.axis .minor {
   stroke-opacity: .5;
 }
 
-.x.axis path {
-  display: none;
-}
-
-.y.axis line, .y.axis path {
+.rule line {
   fill: none;
-  stroke: #000;
+  stroke: #EEE;
 }
 
-.x.axis line {
-  stroke: #eee;
-  shape-rendering: crispEdges;
-}
-
-.x line.axis {
-  stroke: #000;
-}
-
-.line, .line2{
+.x.axis line, .x.axis path, .y.axis line, .y.axis path {
   fill: none;
-  stroke: steelblue;
+  stroke: #999;
+} 
+
+
+path.trace, circle.point{
+  fill: none;
   stroke-width: 1.5px;
 }
 
-.line-avg{
-  fill: none;
-  stroke: #ff6600;
-  stroke-width: 1.5px;
+circle.point{
+  fill: white;
 }
 
-.line-avg-30{
-  fill: none;
-  stroke: #0666FF;
-  stroke-width: 1.5px;
+.d3-tip-row{
+  display: table-row;
 }
 
-.line-avg-60{
-  fill: none;
-  stroke: #660066;
-  stroke-width: 1.5px;
-}
-
-.line-deviation{
-  fill: none;
-  stroke: #006600;
-  stroke-width: 1.5px;
-}
-
-.line-cusum{
-  fill: none;
-  stroke: #ff0066;
-  stroke-width: 1.5px;
-}
-
-circle.line {
-  fill: #fff;
-}
-
-circle.line-avg{
-  fill: #FF6600;
-}
-
-circle.line-avg-30{
-  fill: #0666FF;
-}
-
-circle.line-avg-60{
-  fill: #660066;
-}
-
-circle.line-deviation{
-  fill: #00600;
-}
-
-circle.line-cusum{
-  fill: #ff0066;
+.d3-tip-row span{
+  display: table-cell;
+  padding: 0px 1px;
 }
