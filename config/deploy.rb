@@ -48,7 +48,7 @@ task :oldtalhoapps_production do
 end
 
 task :talhostaging do
-  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "192.168.30.54"
@@ -58,7 +58,7 @@ task :talhostaging do
 end 
 
 task :talhoproduction do
-  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "192.168.30.52"
