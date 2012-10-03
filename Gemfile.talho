@@ -5,4 +5,4 @@ gem 'rollcall', git: "ssh://git@git.talho.org/home/git/repositories/rollcall", b
 gem 'vms', git: "ssh://git@git.talho.org/home/git/repositories/vms", branch: 'master'
 gem 'talho', git: "ssh://git@git.talho.org/home/git/repositories/talho", branch: 'master'
 gem 'facho', git: "ssh://git@git.talho.org/home/git/repositories/facho", branch: 'master'
-gem 'facho', git: "ssh://git@git.talho.org/home/git/repositories/epi.git", branch: 'master'
+gem 'epi', git: "ssh://git@git.talho.org/home/git/repositories/epi.git", branch: 'master'

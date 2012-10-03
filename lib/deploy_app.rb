@@ -108,7 +108,7 @@ namespace :app do
       run "sudo apt-get install -qy build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion"
       
       # Openphin requirements
-      run "sudo apt-get install -qy clamav libclamav6 libclamav-dev libcurl3 libcurl3-gnutls libcurl4-openssl-dev libpq-dev nodejs sphinxsearch imagemagick"
+      run "sudo apt-get install -qy clamav libclamav6 libclamav-dev libcurl3 libcurl3-gnutls libcurl4-openssl-dev libpq-dev nodejs sphinxsearch imagemagick freetds-bin freetds-common freetds-dev"
       
       unless file_exists?("/usr/local/bin/wkhtmltopdf")
         run "sudo wget http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-amd64.tar.bz2"
