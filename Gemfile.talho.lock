@@ -76,7 +76,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/epi.git
-  revision: a7eea6778ecde0f1e12a17b80263ae7863742edf
+  revision: a99c7c3b913b377000db1049099bf2a7efc424e2
   branch: master
   specs:
     epi (0.0.1)
