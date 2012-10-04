@@ -76,6 +76,7 @@ namespace :app do
     
     run "ln -fs #{shared_path}/backgroundrb.yml #{release_path}/config/backgroundrb.yml"
     run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
+    run "ln -fs #{shared_path}/epi_connections.yml #{release_path}/config/epi_connections.yml"
     run "ln -fs #{shared_path}/domain.yml #{release_path}/config/domain.yml"
     run "ln -fs #{shared_path}/email.yml #{release_path}/config/email.yml"
     run "ln -fs #{shared_path}/mongo_database.yml #{release_path}/config/mongo_database.yml"
