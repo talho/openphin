@@ -140,21 +140,19 @@ class Organization < ActiveRecord::Base
   # 1. Locating the folder by name, if one exists, creating one if not
   # 1. Ensuring that the audience holds the organization's audience and the contact is set as an admin
   def ensure_folder
-    if folder.nil?
-      folder = Folder.new
-    end
+    self.folder = Folder.new unless self.folder
     
-    folder.audience = Audience.new if folder.audience.nil?
-    folder.audience.sub_audiences << self.group unless folder.audience.sub_audiences.include?(self.group)
+    self.folder.audience = Audience.new if self.folder.audience.nil?
+    self.folder.audience.sub_audiences << self.group unless self.folder.audience.sub_audiences.include?(self.group)
     
-    folder.name = self.name
+    self.folder.name = self.name
     
     if self.contact
-      folder.audience.users << self.contact unless folder.audience.user_ids.include?(self.contact.id)
-      folder.folder_permissions.build(:user_id => self.contact.id, :permission => ::FolderPermission::PERMISSION_TYPES[:admin]) unless folder.admins.include?(self.contact)
+      self.folder.audience.users << self.contact unless self.folder.audience.user_ids.include?(self.contact.id)
+      self.folder.folder_permissions.build(:user_id => self.contact.id, :permission => ::FolderPermission::PERMISSION_TYPES[:admin]) unless self.folder.admins.include?(self.contact)
     end
     
-    folder.save
+    self.folder.save
     true
   end
 end
