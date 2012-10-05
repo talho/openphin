@@ -35,6 +35,7 @@ class Organization < ActiveRecord::Base
   
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
+  has_one :folder
   belongs_to :contact, :class_name => "User", :foreign_key => :user_id
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
@@ -44,7 +45,6 @@ class Organization < ActiveRecord::Base
   validates_presence_of :locality, :message => "City can't be blank"
   
   before_create :set_token, :create_group
-  before_save :set_before_save_var
   after_save :ensure_folder
   
   scope :with_user, lambda {|user|
@@ -135,16 +135,11 @@ class Organization < ActiveRecord::Base
   def create_group
     self.group = Group.create!(:scope => "Organization", :name => self.name)
   end
-  
-  def set_before_save_var
-    @bs_name = self.name
-  end
-  
+    
   # Ensure that there is a folder associated with this organization by
   # 1. Locating the folder by name, if one exists, creating one if not
   # 1. Ensuring that the audience holds the organization's audience and the contact is set as an admin
   def ensure_folder
-    folder = Folder.first(:conditions => {:name => self.name == @bs_name ? self.name : @bs_name, :user_id => nil})
     if folder.nil?
       folder = Folder.new
     end

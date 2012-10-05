@@ -30,10 +30,11 @@ class Folder < ActiveRecord::Base
     end
   end
 
-  validates_uniqueness_of :name, :scope => [:parent_id, :user_id]
+  validates_uniqueness_of :name, :scope => [:parent_id, :user_id, :organization_id]
 
   belongs_to :owner, :class_name => 'User', :foreign_key => 'user_id'
   belongs_to :audience, :class_name => 'Audience'
+  belongs_to :organization
   has_many :folder_permissions
   has_many :authors, :through => :folder_permissions, :source => 'user', :conditions => proc{"permission = 1"}
   has_many :admins, :through => :folder_permissions, :source => 'user', :conditions => proc{'permission = 2'}
@@ -42,11 +43,11 @@ class Folder < ActiveRecord::Base
   attr_accessor :level, :ftype, :is_owner, :is_author, :leaf
 
   def users
-    self.audience.recipients
+    self.audience ? self.audience.recipients : []
     #User.scoped :joins => ', folders', :conditions => ['folders.audience_id IN (select * from sp_audiences_for_user(users.id)) and folders.id = ?', self.id]
   end
 
-  acts_as_nested_set :scope => :user_id
+  acts_as_nested_set :scope => [:user_id, :organization_id]
   
   accepts_nested_attributes_for :audience
 
