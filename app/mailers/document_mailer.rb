@@ -39,14 +39,14 @@ class DocumentMailer < ActionMailer::Base
   
   def document_update(document, user)
     users = document.audience.recipients.reject{|u| u.roles.length == 1 && u.roles.include?(Role.public)}
-    users << document.folder.owner
+    users << document.folder.owner unless document.folder.owner.nil?
     users.delete(user)
 
     @document = document
     @share = document.folder
     @current_user = user
     
-    mail(bcc: users.map(&:formatted_email).compact,
+    mail(bcc: users.compact.map(&:formatted_email).compact,
          subject: %Q{The document "#{document.file_file_name}" has been updated.})
   end
 
