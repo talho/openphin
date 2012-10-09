@@ -207,7 +207,7 @@ Ext.ns('Talho.ux.Documents');
             var win = new Ext.Window({width: 350, height: 100, title: mode == 'copy' ? 'Copy': 'Move ' + (type == 'folder' ? 'Folder' : 'File'), modal: true,
                 items: {itemId: 'move_form', xtype: 'form', border: false, padding: '5', items:[
                     {xtype: 'combo', fieldLabel: 'Move to', mode: 'local', triggerAction: 'all', hiddenName: 'parent_id', valueField: 'id', displayField: 'name', editable: false, allowBlank: false, store: new Ext.data.JsonStore({
-                        url: '/folders/target_folders' + (type == 'folder' ? '?folder_id=' + sel.get('id') : ''),
+                        url: '/folders/target_folders' + (type == 'folder' || type == 'organization' || type == 'share' ? '?folder_id=' + sel.get('id') : ''),
                         fields: ['name', 'id'],
                         idProperty: 'id',
                         autoLoad: true

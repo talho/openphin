@@ -23,8 +23,7 @@ class Doc::FoldersController < ApplicationController
   end
 
   def create
-    params[:folder][:parent_id] = nil if params[:folder][:parent_id].blank? || params[:folder][:parent_id] == '0' || params[:folder][:parent_id] == 'null'
-
+    params[:folder][:parent_id] = nil if params[:folder][:parent_id].blank? || params[:folder][:parent_id] == '0' || params[:folder][:parent_id] == 'null'    
     if params[:folder][:parent_id].nil?
       owner = current_user
     else
@@ -37,8 +36,13 @@ class Doc::FoldersController < ApplicationController
         return
       end
       owner = parent.owner
+      
+      #Ensure folders under organization maintain a nil user and the organization id
+      if parent.organization_id.present?
+        params[:folder][:organization_id] = parent.organization_id
+      end
     end
-
+    
     params[:folder][:user_id] = owner.id unless owner.nil?
     
     folder = Folder.new params[:folder]
@@ -121,14 +125,26 @@ class Doc::FoldersController < ApplicationController
   end
 
   def target_folders
-    folders = current_user.folders
-
-    unless params[:folder_id].nil?
-      current_folder = Folder.find(params[:folder_id]);
+    if params[:folder_id].present?
+      current_folder = Folder.find(params[:folder_id])
+      if current_folder.user_id == current_user.id
+        folders = current_user.folders
+      elsif current_folder.user_id.present?            
+        folders = Folder.joins(:folder_permissions).where("folder_permissions.user_id = ? and folder_permissions.permission = ? and folders.user_id = ? ", current_user.id, FolderPermission::PERMISSION_TYPES[:admin], current_folder.user_id)
+      else
+        if current_folder.organization.contact.id == current_user.id
+          folders = Folder.where(organization_id: current_folder.organization_id) 
+        else
+          folders = Folder.joins(:folder_permissions).where("folder_permissions.user_id = ? and folder_permissions.permission = ? and folders.organization_id = ? ", current_user.id, FolderPermission::PERMISSION_TYPES[:admin], current_folder.organization_id)
+        end
+      end
       folders = folders - current_folder.self_and_descendants
+    else
+      folders = Folder.joins(:folder_permissions).where("folder_permissions.user_id = ? and folder_permissions.permission in (?)", current_user.id, [FolderPermission::PERMISSION_TYPES[:admin], FolderPermission::PERMISSION_TYPES[:author]])
+      folders += current_user.folders
     end
-
-    folders_json = [{:name => 'My Documents', :id => nil }] + folders.map { |folder| folder.as_json(:only => [:name, :id]) }
+    
+    folders_json = (current_folder.user_id.present? ? [{:name => 'My Documents', :id => nil }] : []) + folders.map { |folder| folder.as_json(:only => [:name, :id]) }
     respond_to do |format|
       format.json { render :json => folders_json }
     end

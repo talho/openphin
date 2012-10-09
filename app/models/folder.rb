@@ -66,19 +66,11 @@ class Folder < ActiveRecord::Base
   end
 
   def owner? (user)
-    if self.owner == user
-      true
-    else
-      !self.permissions.first(:conditions => {:user_id => user.id, :permission => FolderPermission::PERMISSION_TYPES[:admin]}).nil?
-    end
+    self.owner == user || !self.permissions.first(:conditions => {:user_id => user.id, :permission => FolderPermission::PERMISSION_TYPES[:admin]}).nil? || (organization.nil? ? false : self.organization.contact == user)
   end
 
   def author? (user)
-    if self.owner == user
-      true
-    else
-      !self.permissions.first(:conditions => {:user_id => user.id, :permission => [FolderPermission::PERMISSION_TYPES[:admin], FolderPermission::PERMISSION_TYPES[:author]]}).nil?
-    end
+    self.owner == user || !self.permissions.first(:conditions => {:user_id => user.id, :permission => [FolderPermission::PERMISSION_TYPES[:admin], FolderPermission::PERMISSION_TYPES[:author]]}).nil? || (organization.nil? ? false : self.organization.contact == user)   
   end
 
   def self.new( attributes = {}, options = {} )
@@ -147,7 +139,7 @@ class Folder < ActiveRecord::Base
       folders << folder
     end
     folders << Folder.new({name: "My Documents", id: nil, parent_id: nil, level: 0, ftype: 'folder', is_owner: true, leaf: folders.empty? })
-    folders.sort{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
+    folders.sort{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }    
   end
 
   def self.get_formatted_shares(current_user)
@@ -164,7 +156,22 @@ class Folder < ActiveRecord::Base
         shares << Folder.new({:name => share.owner.display_name, :owner => share.owner, :id => nil, :parent_id => nil, :ftype => 'share', :level => 0})
       end
     end
-    shares.sort{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
+    shares.sort!{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
+    shares.each_with_index do |folder, index|
+      child_flag = false
+      if !folder.leaf?
+        shares.slice(index + 1..shares.count).each do |child|                     
+          if child.parent_id == folder.id
+            child_flag = true
+            break
+          end          
+        end
+        if !child_flag
+          folder.leaf = true
+        end
+      end
+    end
+    shares
   end
 
   def permissions= (permission_attributes)
@@ -220,4 +227,5 @@ class Folder < ActiveRecord::Base
       end
     end
   end
+  
 end
