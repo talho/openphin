@@ -26,14 +26,14 @@ class DocumentMailer < ActionMailer::Base
 
   def document_addition(document, user)
     users = document.audience.nil? ? [] : document.audience.recipients.reject{|u| u.roles.length == 1 && u.roles.include?(Role.public)}
-    users << document.folder.owner
+    users << document.folder.owner unless document.folder.owner.nil?
     users.delete(user)
 
     @share = document.folder
     @document = document
     @current_user = user
     
-    mail(bcc: users.map(&:formatted_email).compact,
+    mail(bcc: users.compact.map(&:formatted_email).compact,
          subject: %Q{A document has been added to the shared folder "#{document.folder.name}"})
   end
   
