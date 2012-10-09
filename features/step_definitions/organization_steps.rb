@@ -92,9 +92,11 @@ Then /^my organization should have some recipients$/ do
 end
 
 Then /^my organization should have a folder$/ do
-  folder = Folder.find_by_name(Organization.order('updated_at').last.name)
+  org = Organization.order('updated_at').last
+  folder = Folder.find_by_organization_id(org.id)
+  org.name.should eql folder.name 
   folder.should_not be_nil
-  (folder.audience.recipients - Organization.order('updated_at').last.group.recipients).should be_empty
+  (folder.audience.recipients - org.group.recipients).should be_empty
 end
 
 Then /^the required organization fields should be invalid$/ do
