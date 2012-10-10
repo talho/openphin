@@ -66,7 +66,9 @@ class Folder < ActiveRecord::Base
   end
 
   def owner? (user)
-    self.owner == user || !self.permissions.first(:conditions => {:user_id => user.id, :permission => FolderPermission::PERMISSION_TYPES[:admin]}).nil? || (organization.nil? ? false : self.organization.contact == user)
+    self.user_id == user.id || 
+    !self.permissions.first(:conditions => {:user_id => user.id, :permission => FolderPermission::PERMISSION_TYPES[:admin]}).nil? ||
+    (organization.nil? ? false : self.organization.contact == user)
   end
 
   def author? (user)
@@ -195,10 +197,8 @@ class Folder < ActiveRecord::Base
   end
 
   def permissions
-    perms = []
-    if share_status == 'shared'
-      perms = folder_permissions
-    elsif share_status == 'inherited'
+    perms = folder_permissions
+    if share_status == 'inherited'
       #find the parent that we have inherited from
       folder = parent
       while(!folder.nil? && folder.share_status == 'inherited')

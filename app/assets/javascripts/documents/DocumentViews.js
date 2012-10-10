@@ -217,7 +217,7 @@ Ext.ns('Talho.ux.Documents');
                     {text: 'Save', scope: this, handler: function(){
                         var form = win.getComponent('move_form').getForm();
                         form.waitMsgTarget = win.getLayoutTarget();
-                        var url = type == 'folder' ? '/folders/' + sel.get('id') + '/move.json' : '/documents/' + sel.get('id') + '/' + (mode == 'copy' ? 'copy' : 'move') + '.json';
+                        var url = (type == 'folder' || type == 'organization' || type == 'share' ? '/folders/' + sel.get('id') + '/move.json' : '/documents/' + sel.get('id') + '/' + (mode == 'copy' ? 'copy' : 'move') + '.json');
                         form.submit({waitMsg: 'Saving...', url: url, scope: this,
                         success: function(){this.refresh(); win.close();},
                         failure: function(){
@@ -270,6 +270,7 @@ Ext.ns('Talho.ux.Documents');
             }
 
             var type = sel.get('type');
+            if (type == 'folder' || type == 'organization' || type == 'share') {type = 'folder'}
             Ext.Msg.confirm("Delete " + (type == 'folder' ? "Folder" : "File"), "Are you sure you would like to delete this " + (type == 'folder' ? "folder" : "file") + ".",
                     function(btn)
                     {

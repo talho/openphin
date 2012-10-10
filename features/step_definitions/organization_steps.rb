@@ -167,3 +167,9 @@ Then /^the organization request should be deleted$/ do
   omr.should be_nil
 end
 
+Then /^"([^"]*)" has "([^"]*)" as the contact$/ do |orgname, contact|
+  org = Organization.find_by_name(orgname)
+  org.contact = User.find_by_email(contact)
+  org.save!
+end
+
