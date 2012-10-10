@@ -50,6 +50,7 @@ end
 task :talhostaging do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
   set :bundle_gemfile, "Gemfile.talho"
+  set :branch, 'organization_documents'
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "192.168.30.54"
   role :web, "192.168.30.54"

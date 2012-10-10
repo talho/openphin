@@ -62,7 +62,7 @@ GIT
 
 GIT
   remote: git://github.com/talho/pin_cushion.git
-  revision: 4457dfdc6c541e679a3d8559fac7d915eaecee18
+  revision: 08d76da0fe25a090a6f166685f44b9188b622d57
   branch: db_agnostic
   specs:
     pin_cushion (2.0)
