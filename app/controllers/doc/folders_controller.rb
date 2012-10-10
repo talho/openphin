@@ -144,7 +144,9 @@ class Doc::FoldersController < ApplicationController
       folders += current_user.folders
     end
     
-    folders_json = (current_folder.user_id.present? ? [{:name => 'My Documents', :id => nil }] : []) + folders.map { |folder| folder.as_json(:only => [:name, :id]) }
+    folders << Folder.new(name: "My Documents") if current_folder.nil? || current_folder.user_id.present? # show my documents if there was no folder_id provided OR if the folder was under the user's document tree. 
+    
+    folders_json = folders.map { |folder| folder.as_json(:only => [:name, :id]) }
     respond_to do |format|
       format.json { render :json => folders_json }
     end
