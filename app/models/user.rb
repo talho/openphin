@@ -84,11 +84,15 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :audiences, :finder_sql => proc { "SELECT a.* FROM audiences a JOIN sp_audiences_for_user(#{self.id}) sp ON a.id = sp.id"}
 
   def shares
-    Folder.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder_permissions)
+    Folder.includes(:owner, :folder_permissions).joins("LEFT JOIN organizations ON folders.organization_id = organizations.id")
+          .where("(folders.organization_id IS NOT NULL AND organizations.user_id = ?) OR 
+                  (folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?))", self.id, self.id, self.id)
   end
 
   def shared_documents
-    Document.where('folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?)', self.id, self.id).includes(:owner, :folder)
+    Document.includes(:owner).joins(:folder).joins("LEFT JOIN organizations ON folders.organization_id = organizations.id")
+            .where("(folders.organization_id IS NOT NULL AND organizations.user_id = ?) OR
+                    (folders.audience_id IN (SELECT * FROM sp_audiences_for_user(?)) and (folders.user_id IS NULL OR folders.user_id != ?))", self.id, self.id, self.id)
   end
 
   has_many :favorites
