@@ -303,10 +303,12 @@ Ext.ux.AudiencePanel = Ext.extend(Ext.Container, {
                             cgrid = this.jurisdictionTree;
                             this.jurisdictionTree.clearFilter();
                         }
-                        else if(type === 'role')
-                            cgrid = this.roleSelectionGrid;
-                        else if(type === 'group')
-                            cgrid = this.groupSelectionGrid;
+                        else if(type === 'role'){
+                          cgrid = this.roleSelectionGrid;
+                        }
+                        else if(type === 'group' || type === 'organization'){
+                          cgrid = this.groupSelectionGrid;
+                        }
                         
                         var sm;
                         if(cgrid && cgrid.rendered && (sm = cgrid.getSelectionModel()) && sm.grid) {
