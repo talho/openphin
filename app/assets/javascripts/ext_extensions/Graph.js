@@ -5,6 +5,18 @@ Talho.ux.Graph = Ext.extend(Ext.Container, {
   layout: 'fit',
   cls: 'ux-graph-container',
   
+  // constructor: function(){
+    // var cls;
+    // if(Talho.Detection.SVG){
+      // cls = Talho.ux.D3Graph;
+    // }
+    // else{
+      // cls = Talho.ux.FlashGraph;
+    // }
+    // Ext.apply(this, cls.prototype);
+    // cls.constructor.apply(this, arguments);
+  // }
+//   
   initComponent: function () {
     if (Talho.Detection.SVG) {
       //this.items = [new Talho.ux.FlashGraph({store: this.store, height: this.height,  series: this.series})];

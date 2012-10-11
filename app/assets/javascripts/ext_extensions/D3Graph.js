@@ -36,7 +36,11 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     }
     Ext.each(this.series, function(s){s.style = s.style || {}}, this);
     
-    this.on('afterrender', this.draw, this, {delay: 1});    
+    this.store.on('load', this.draw, this);
+    this.on('resize', this.draw, this);
+    if(this.store.getCount() > 0){
+      this.on('afterrender', this.draw, this, {delay: 1});
+    }    
   },
   
   draw: function(){    
