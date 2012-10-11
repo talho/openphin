@@ -394,7 +394,7 @@ Talho.Documents = Ext.extend(function(){}, {
             else if(selections.length == 1){ // we have exactly one selection. Let's work with it.
                 var sel = selections[0];
                 var show = [];
-                if(folderSelections[0] && folderSelections[0].get('type') == 'share'){
+                if(folderSelections[0] && folderSelections[0].get('type').match(/share|organization/)){
                     if(folderSelections[0].get('is_owner')){
                         show.push('base_actions');
                         this._add_folder_button.show();

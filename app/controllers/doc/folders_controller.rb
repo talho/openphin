@@ -18,7 +18,7 @@ class Doc::FoldersController < ApplicationController
 
     @documents = (folder.nil? ? current_user.documents.inbox : folder.documents).order('file_file_name')
     @folders = (folder.nil? ? current_user.folders.rootsm : folder.children).order('name')
-    @folders.select! { |f| f.owner == current_user || f.users.include?(current_user) }
+    @folders.select! { |f| f.owner == current_user || f.users.include?(current_user) || (f.organization_id.present? && f.organization.user_id == current_user.id) }
     respond_with(@documents, @folders)
   end
 
