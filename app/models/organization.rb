@@ -35,7 +35,7 @@ class Organization < ActiveRecord::Base
   
   has_many :alert_attempts
   has_many :deliveries, :through => :alert_attempts
-  has_one :folder
+  has_many :folders
   belongs_to :contact, :class_name => "User", :foreign_key => :user_id
   has_paper_trail :meta => { :item_desc  => Proc.new { |x| x.to_s } }
 
@@ -140,19 +140,20 @@ class Organization < ActiveRecord::Base
   # 1. Locating the folder by name, if one exists, creating one if not
   # 1. Ensuring that the audience holds the organization's audience and the contact is set as an admin
   def ensure_folder
-    self.folder = Folder.new unless self.folder
+    f = self.folders.where(parent_id: nil).first # Find the root organization folder. This means I have to re-run tests :(.
+    f = self.folders.build if f.nil?
     
-    self.folder.audience = Audience.new if self.folder.audience.nil?
-    self.folder.audience.sub_audiences << self.group unless self.folder.audience.sub_audiences.include?(self.group)
+    f.audience = Audience.new if f.audience.nil?
+    f.audience.sub_audiences << self.group unless f.audience.sub_audiences.include?(self.group)
     
-    self.folder.name = self.name
+    f.name = self.name
     
     if self.contact
-      self.folder.audience.users << self.contact unless self.folder.audience.user_ids.include?(self.contact.id)
-      self.folder.folder_permissions.build(:user_id => self.contact.id, :permission => ::FolderPermission::PERMISSION_TYPES[:admin]) unless self.folder.admins.include?(self.contact)
+      f.audience.users << self.contact unless f.audience.user_ids.include?(self.contact.id)
+      f.folder_permissions.build(:user_id => self.contact.id, :permission => ::FolderPermission::PERMISSION_TYPES[:admin]) unless f.admins.include?(self.contact)
     end
     
-    self.folder.save
+    f.save
     true
   end
 end
