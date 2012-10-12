@@ -146,11 +146,11 @@ class Folder < ActiveRecord::Base
 
   def self.get_formatted_shares(current_user)
     shares = []
-    Folder.each_with_level(current_user.shares) do |share, level|
+    Folder.each_with_level(current_user.shares.order(:user_id, :organization_id, :lft)) do |share, level|
       share.is_owner = share.owner?(current_user)
       share.is_author = share.author?(current_user)
       share.ftype = share.owner.nil? ? 'organization' : 'share'
-      share.level = level + (share.ftype == 'share' ? 1 : 0)
+      share.level = level + (share.ftype == 'share' ? 1 : 0) 
       
       shares << share
       
@@ -159,19 +159,9 @@ class Folder < ActiveRecord::Base
       end
     end
     shares.sort!{|a, b| a.level == b.level ? a.name <=> b.name : a.level <=> b.level }
-    shares.each_with_index do |folder, index|
-      child_flag = false
-      if !folder.leaf?
-        shares.slice(index + 1..shares.count).each do |child|                     
-          if child.parent_id == folder.id
-            child_flag = true
-            break
-          end          
-        end
-        if !child_flag
-          folder.leaf = true
-        end
-      end
+    pars = shares.map(&:parent_id).uniq.compact
+    shares.each do |folder, index|
+      folder.leaf = true unless folder.leaf? || pars.include?(folder.id)
     end
     shares
   end
