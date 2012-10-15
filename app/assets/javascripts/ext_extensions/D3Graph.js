@@ -50,17 +50,18 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     
     var y_fields = Ext.pluck(this.series, "yField"), 
         x_field = this.xField || this.series[0].xField,
+        y_max = this.yMax || this.store.max(y_fields),      
         h = this.getHeight(),
         w = this.getWidth(),
         padding = {
           top: 7 + (this.showLegend ? 15 : 0),
           right: 20,
           bottom: 20 + (this.xLabel ? 15 : 0),
-          left: 35 + (this.yLabel ? 15 : 0)
+          left: ((Math.log(y_max) / Math.LN10 | 0) + 1)*10 + 5 + (this.yLabel ? 15 : 0)
         },
         count = this.store.getCount(),
         x = this._getTimeScale([this.store.min(x_field), this.store.max(x_field)], [padding.left, w - padding.right]),
-        y = this._getLinearScale([this.yMin || 0, this.yMax || this.store.max(y_fields)], [h - padding.bottom, padding.top]);
+        y = this._getLinearScale([this.yMin || 0, y_max], [h - padding.bottom, padding.top]);
     
     var old_svg = d3.select("#" + this.id).select("svg");
     if(old_svg){old_svg.remove();}

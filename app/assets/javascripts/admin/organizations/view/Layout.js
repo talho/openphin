@@ -3,9 +3,7 @@ Ext.ns("Talho.Admin.Organizations.view");
 
 Talho.Admin.Organizations.view.Layout = Ext.extend(Ext.Panel, {
   layout: 'border',
-  layoutConfig: {
-    extraCls: 'white-border-layout-body'
-  },
+  bodyCssClass: 'white-border-layout-body',
   closable: true,
   initComponent: function(){
     var items = this.items;
