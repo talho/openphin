@@ -131,7 +131,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     svg.append("svg:g")
       .attr("class", "x axis")
       .call(
-        d3.svg.axis().scale(x).orient('bottom').ticks(x_ticks || 10).tickFormat(d3.time.format('%m-%d'))
+        d3.svg.axis().scale(x).orient('bottom').ticks(x_ticks || 10).tickFormat(d3.time.format.utc('%m-%d'))
       )
       .attr("transform", "translate(0," + (this.getHeight() - padding.bottom).toString() + ")");
       
