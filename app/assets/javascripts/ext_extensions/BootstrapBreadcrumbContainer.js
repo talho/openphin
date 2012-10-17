@@ -2,7 +2,7 @@
 (function(){
   Ext.ns('Ext.ux')
   
-  var bodyTemplate = new Ext.XTemplate('<div class="t_boot" style="background: white;">',
+  var bodyTemplate = new Ext.XTemplate('<div class="t_boot">',
     '<div class="t_boot container" style="padding-top: 10px;">',
       '<div class="t_boot row" >',
         '<ul class="t_boot breadcrumb offset4 span7">',
