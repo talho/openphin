@@ -161,7 +161,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       .attr("r", 3.5)
       .attr("ext:qtip", series.qtip || function(d){
         var x_val = d.get(x_field);
-        return '<div class="d3-tip-row"><span>' + (this.xDisplayName || x_field) + ':</span><span>' + (Ext.isDate(x_val) ? d3.time.format('%m-%d-%y')(x_val) : x_val) + '</span></div>' +
+        return '<div class="d3-tip-row"><span>' + (this.xDisplayName || x_field) + ':</span><span>' + (Ext.isDate(x_val) ? d3.time.format.utc('%m-%d-%y')(x_val) : x_val) + '</span></div>' +
                '<div class="d3-tip-row"><span>' + (series.displayName || series.yField) + ':</span><span>' + d.get(series.yField) + '</span></div>'; 
        }.createDelegate(this));
   },
