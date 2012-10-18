@@ -63,7 +63,7 @@ task :talhoproduction do
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
   role :app, "192.168.30.52"
   role :web, "192.168.30.52"
-  role :jobs, "192.168.30.52"
+  role :jobs, "talhoapps.talho.org"
   role :db,  "192.168.30.52", :primary => true
 end 
 
