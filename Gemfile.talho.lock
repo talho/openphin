@@ -76,7 +76,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/epi.git
-  revision: a99c7c3b913b377000db1049099bf2a7efc424e2
+  revision: b24462cbd1a01b8906e956d254f22d9e09b21fa6
   branch: master
   specs:
     epi (0.0.1)
@@ -93,7 +93,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/rollcall
-  revision: f371fe97cb5753855e661a76172b8d65bbae9df1
+  revision: 21e1efee0ec99aabcab6ef945af9c18efa3299e5
   branch: master
   specs:
     rollcall (0.0.1)
@@ -162,7 +162,7 @@ GEM
     bson (1.6.4)
     bson_ext (1.6.2)
       bson (~> 1.6.2)
-    builder (3.0.3)
+    builder (3.0.4)
     capistrano (2.13.4)
       highline
       net-scp (>= 1.0.0)
@@ -398,7 +398,7 @@ GEM
     thor (0.16.0)
     tilt (1.3.3)
     tiny_tds (0.5.1)
-    treetop (1.4.10)
+    treetop (1.4.11)
       polyglot
       polyglot (>= 0.3.1)
     ts-delayed-delta (1.1.3)
