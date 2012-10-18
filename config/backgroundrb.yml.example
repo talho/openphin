@@ -19,3 +19,6 @@
   :document_daily_cleanup_worker:
     :clean:
       :trigger_args: 0 0 0 * * * *
+  :rollcall_status_updater:
+    :mail_status:
+      :trigger_args: 0 0 9 * * * *
