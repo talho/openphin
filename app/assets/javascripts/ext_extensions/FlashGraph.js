@@ -1,5 +1,5 @@
 
-Talho.ux.FlashGraph = Ext.extend(Ext.Panel, {
+Talho.ux.FlashGraph = Ext.extend(Ext.Container, {
   height: 175,
   layout: 'fit',
   

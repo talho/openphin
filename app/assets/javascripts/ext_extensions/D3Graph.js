@@ -36,7 +36,11 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     }
     Ext.each(this.series, function(s){s.style = s.style || {}}, this);
     
-    this.on('afterrender', this.draw, this, {delay: 1});    
+    this.store.on('load', this.draw, this);
+    this.on('resize', this.draw, this);
+    if(this.store.getCount() > 0){
+      this.on('afterrender', this.draw, this, {delay: 1});
+    }    
   },
   
   draw: function(){    
@@ -46,17 +50,18 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     
     var y_fields = Ext.pluck(this.series, "yField"), 
         x_field = this.xField || this.series[0].xField,
+        y_max = this.yMax || this.store.max(y_fields),      
         h = this.getHeight(),
         w = this.getWidth(),
         padding = {
           top: 7 + (this.showLegend ? 15 : 0),
           right: 20,
           bottom: 20 + (this.xLabel ? 15 : 0),
-          left: 35 + (this.yLabel ? 15 : 0)
+          left: ((Math.log(y_max) / Math.LN10 | 0) + 1)*10 + 5 + (this.yLabel ? 15 : 0)
         },
         count = this.store.getCount(),
         x = this._getTimeScale([this.store.min(x_field), this.store.max(x_field)], [padding.left, w - padding.right]),
-        y = this._getLinearScale([this.yMin || 0, this.yMax || this.store.max(y_fields)], [h - padding.bottom, padding.top]);
+        y = this._getLinearScale([this.yMin || 0, y_max], [h - padding.bottom, padding.top]);
     
     var old_svg = d3.select("#" + this.id).select("svg");
     if(old_svg){old_svg.remove();}
@@ -126,7 +131,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
     svg.append("svg:g")
       .attr("class", "x axis")
       .call(
-        d3.svg.axis().scale(x).orient('bottom').ticks(x_ticks || 10).tickFormat(d3.time.format('%m-%d'))
+        d3.svg.axis().scale(x).orient('bottom').ticks(x_ticks || 10).tickFormat(d3.time.format.utc('%m-%d'))
       )
       .attr("transform", "translate(0," + (this.getHeight() - padding.bottom).toString() + ")");
       
@@ -156,7 +161,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
       .attr("r", 3.5)
       .attr("ext:qtip", series.qtip || function(d){
         var x_val = d.get(x_field);
-        return '<div class="d3-tip-row"><span>' + (this.xDisplayName || x_field) + ':</span><span>' + (Ext.isDate(x_val) ? d3.time.format('%m-%d-%y')(x_val) : x_val) + '</span></div>' +
+        return '<div class="d3-tip-row"><span>' + (this.xDisplayName || x_field) + ':</span><span>' + (Ext.isDate(x_val) ? d3.time.format.utc('%m-%d-%y')(x_val) : x_val) + '</span></div>' +
                '<div class="d3-tip-row"><span>' + (series.displayName || series.yField) + ':</span><span>' + d.get(series.yField) + '</span></div>'; 
        }.createDelegate(this));
   },
