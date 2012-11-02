@@ -84,7 +84,7 @@ group :cucumber do
    
   gem "cucumber-rails"#, "1.3.0"
   gem "capybara" #, "0.4.1.2"
-  gem "database_cleaner"#, "0.5.0"
+  gem "database_cleaner", "~> 0.8.0"
   gem "spork"#, "0.8.4"
  
   gem "childprocess"

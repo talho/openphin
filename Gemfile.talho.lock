@@ -203,7 +203,7 @@ GEM
     d3_rails (2.10.3)
       railties (>= 3.1.0)
     daemons (1.1.9)
-    database_cleaner (0.9.1)
+    database_cleaner (0.8.0)
     delayed_job (3.0.3)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.3)
@@ -443,7 +443,7 @@ DEPENDENCIES
   cucumber-rails
   d3_rails
   daemons
-  database_cleaner
+  database_cleaner (~> 0.8.0)
   delayed_job (~> 3.0.1)
   delayed_job_active_record (~> 0.3)
   dynamic_form
