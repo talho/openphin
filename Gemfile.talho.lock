@@ -76,7 +76,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/epi.git
-  revision: b7948275278b6e8bcc39d9a8010ac9b5af2110dc
+  revision: 824a321b4f303f31ca3ae0ea4da71875e82ce29e
   branch: master
   specs:
     epi (0.0.1)
@@ -257,7 +257,7 @@ GEM
     mime-types (1.19)
     mongo (1.6.2)
       bson (~> 1.6.2)
-    multi_json (1.3.6)
+    multi_json (1.3.7)
     multi_xml (0.5.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
