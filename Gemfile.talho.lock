@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: git://github.com/rails/jbuilder.git
-  revision: edb87dfdba59933db986130a03521eed5636445b
+  revision: bf8c1e4c44a286f2d466de751f9791ae1d2e1a84
   specs:
-    jbuilder (0.8.0)
+    jbuilder (0.8.2)
       activesupport (>= 3.0.0)
 
 GIT
@@ -76,7 +76,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/epi.git
-  revision: b24462cbd1a01b8906e956d254f22d9e09b21fa6
+  revision: b7948275278b6e8bcc39d9a8010ac9b5af2110dc
   branch: master
   specs:
     epi (0.0.1)
@@ -93,7 +93,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/rollcall
-  revision: 641632a3465fd7938e6da6b936e75c61275e2f99
+  revision: 1baf245d2fbe49d547383853600cb9b509ee74a5
   branch: master
   specs:
     rollcall (0.0.1)
@@ -148,7 +148,7 @@ GEM
     acts-as-taggable-on (2.2.2)
       rails (~> 3.0)
     addressable (2.3.2)
-    airbrake (3.1.4)
+    airbrake (3.1.6)
       builder
       girl_friday
     akami (1.2.0)
@@ -163,20 +163,20 @@ GEM
     bson_ext (1.6.2)
       bson (~> 1.6.2)
     builder (3.0.4)
-    capistrano (2.13.4)
+    capistrano (2.13.5)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
-    capybara (1.1.2)
+    capybara (1.1.3)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    childprocess (0.3.5)
+    childprocess (0.3.6)
       ffi (~> 1.0, >= 1.0.6)
     chromedriver-helper (0.0.5)
       nokogiri
@@ -186,7 +186,7 @@ GEM
     clearance (0.16.3)
       diesel (~> 0.1.5)
       rails (>= 3.0)
-    cocaine (0.3.2)
+    cocaine (0.4.2)
     columnize (0.3.6)
     connection_pool (0.9.2)
     crack (0.1.8)
@@ -200,10 +200,10 @@ GEM
       cucumber (>= 1.1.8)
       nokogiri (>= 1.5.0)
     curb (0.8.1)
-    d3_rails (2.10.2)
+    d3_rails (2.10.3)
       railties (>= 3.1.0)
     daemons (1.1.9)
-    database_cleaner (0.8.0)
+    database_cleaner (0.9.1)
     delayed_job (3.0.3)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.3)
@@ -226,7 +226,7 @@ GEM
       nokogiri (> 0.0.0)
       sax-machine (>= 0.0.12)
     ffi (1.1.5)
-    gherkin (2.11.2)
+    gherkin (2.11.5)
       json (>= 1.4.6)
     girl_friday (0.10.0)
       connection_pool (~> 0.9.0)
@@ -242,7 +242,6 @@ GEM
       multi_xml
     i18n (0.6.1)
     journey (1.0.4)
-    jruby-pageant (1.1.1)
     jslint_on_rails (1.1.1)
     json (1.7.5)
     kgio (2.7.4)
@@ -264,8 +263,7 @@ GEM
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
       net-ssh (>= 2.0.9)
-    net-ssh (2.4.0)
-      jruby-pageant (>= 1.0.2)
+    net-ssh (2.6.1)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
     no_peeping_toms (1.1.0)
@@ -277,11 +275,11 @@ GEM
     paper_trail (2.6.3)
       activerecord (~> 3.0)
       railties (~> 3.0)
-    paperclip (3.2.0)
+    paperclip (3.3.1)
       activemodel (>= 3.0.0)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
-      cocaine (>= 0.0.2)
+      cocaine (~> 0.4.0)
       mime-types
     perftools.rb (2.0.0)
     pg (0.14.1)
@@ -339,7 +337,7 @@ GEM
     rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.3)
-    rspec-rails (2.11.0)
+    rspec-rails (2.11.4)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -398,17 +396,17 @@ GEM
     thor (0.16.0)
     tilt (1.3.3)
     tiny_tds (0.5.1)
-    treetop (1.4.11)
+    treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
     ts-delayed-delta (1.1.3)
       delayed_job (>= 2.0.4)
       thinking-sphinx (>= 1.3.6)
-    tzinfo (0.3.33)
+    tzinfo (0.3.34)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
-    unicorn (4.3.1)
+    unicorn (4.4.0)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -463,7 +461,7 @@ DEPENDENCIES
   libxml-ruby (~> 2.3)
   linecache19!
   mongo (= 1.6.2)
-  net-ssh (~> 2.4.0)
+  net-ssh
   no_peeping_toms (~> 1.1.0)
   option_attrs!
   packet (= 0.1.15)
