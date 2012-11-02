@@ -23,17 +23,29 @@ module User::RolesModule
       role = role.is_a?(Role) ? role : Role.find_by_name(role)
       { :conditions => [ "users.id not in (select user_id from role_memberships where role_id = ?)", role.id ], :include => :role_memberships}
     }
+    
+    base.extend(ClassMethods)
   end
 
-  def self.assign_role(role, jurisdiction, users)
-    users.each do |u|
-      u.role_memberships.create(:role => role, :jurisdiction => jurisdiction) unless u.role_memberships.map(&:role_id).include?(role.id) && u.role_memberships.map(&:jurisdiction_id).include?(jurisdiction.id)
+  module ClassMethods
+    def assign_role(role, jurisdiction, users)
+      users.each do |u|
+        u.role_memberships.create(:role => role, :jurisdiction => jurisdiction) unless u.role_memberships.map(&:role_id).include?(role.id) && u.role_memberships.map(&:jurisdiction_id).include?(jurisdiction.id)
+      end
     end
-  end
-  
-  def self.with_roles(roles)
-    roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
-    where(["role_memberships.role_id in (?)", roles.map(&:id)]).includes(:role_memberships)
+    
+    def with_roles(roles)
+      roles = roles.map{|role| role.is_a?(Role) ? role : Role.find_by_name(role)}
+      where(["role_memberships.role_id in (?)", roles.map(&:id)]).includes(:role_memberships)
+    end
+    
+    def with_apps(app_in)
+      app_arr = app_in.is_a?(Array) ? app_in : [app_in]
+      app_arr = app_arr.map{|app| app.is_a?(App) ? app : App.find_by_name(app)}
+
+      self.joins(:apps).where("apps.id" => app_arr)
+    end
+    alias_method :with_app, :with_apps
   end
   
   def is_sysadmin?

@@ -134,18 +134,6 @@ class User < ActiveRecord::Base
   scope :with_user?, lambda {|user|
     { :conditions => ["users.id = ?", user.id]}
   }
-  scope :with_apps, lambda{|apps|  #apps is an array of string app names
-    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
-              JOIN roles r ON r.id = rm.role_id
-              JOIN apps a ON r.app_id = a.id",
-      conditions: {"a.id" => apps} }
-  }
-  scope :without_apps, lambda{|apps|  #apps is an array of string app names
-    { joins: "JOIN role_memberships rm ON users.id = rm.user_id
-              JOIN roles r ON r.id = rm.role_id
-              JOIN apps a ON r.app_id = a.id",
-      conditions: ["a.id NOT IN (?)", apps] }
-  }
 
 #  scope :acknowledged_alert, lamda {|alert|
 #	  { :include => :alert_attempts, :conditions => ["alert_attempts.acknowledged_at is not null"] }
