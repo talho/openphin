@@ -227,7 +227,8 @@ class DashboardController < ApplicationController
       plugin_config_items << eval(val) if current_user.has_app?(app.to_s) && !val.nil?
     end unless $menu_config.nil?
     
-    plugin_config_items << "{name: 'Get More Apps', tab: {title: 'Manage Apps', initializer: 'Talho.Dashboard.Apps'}}"    
+    plugin_config_items << "{name: 'Get More Apps', tab: {title: 'Manage Apps', initializer: 'Talho.Dashboard.Apps'}}"
+    plugin_config_items.reject!(&:blank?)  
     @app_menu = "{name: 'Apps', items: [#{plugin_config_items.join(',')}]}"
     
     respond_to do |format|
