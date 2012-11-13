@@ -67,6 +67,16 @@ task :talhoproduction do
   role :db,  "192.168.30.52", :primary => true
 end 
 
+task :talhodemo do
+  set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
+  set :bundle_gemfile, "Gemfile.talho"
+  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
+  role :app, "192.168.30.55"
+  role :web, "192.168.30.55"
+  role :jobs, "192.168.30.55"
+  role :db,  "192.168.30.55", :primary => true
+end 
+
 require 'bundler/capistrano'
 
 # Setup dependencies
