@@ -1,9 +1,12 @@
-dominoes('http://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js')
+dominoes('http://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js');
 
-Ext.ux.YouTubePlayer = Ext.extend(Ext.panel, {
+Ext.ux.YouTubePlayer = Ext.extend(Ext.Panel, {
   autoPlay: true,
   playerHeight: 500,
   playerWidth: 500,
+  height: 500,
+  width: 500,
+  cls: 'youtubeplayer',
   
   initComponent: function () {    
     this.playerId = 'player' + Math.floor((Math.random()*10000) + 1);
