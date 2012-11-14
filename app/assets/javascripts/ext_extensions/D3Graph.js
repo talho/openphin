@@ -57,7 +57,7 @@ Talho.ux.D3Graph = Ext.extend(Ext.BoxComponent, {
           top: 7 + (this.showLegend ? 15 : 0),
           right: 20,
           bottom: 20 + (this.xLabel ? 15 : 0),
-          left: ((Math.log(y_max) / Math.LN10 | 0) + 1)*10 + 5 + (this.yLabel ? 15 : 0)
+          left: ((y_max > 5) ? (Math.log(y_max) / Math.LN10 | 0) + 1 : 3)*10 + 5 + (this.yLabel ? 15 : 0)
         },
         count = this.store.getCount(),
         x = this._getTimeScale([this.store.min(x_field), this.store.max(x_field)], [padding.left, w - padding.right]),
