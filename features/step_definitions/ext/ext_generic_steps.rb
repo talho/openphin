@@ -74,7 +74,7 @@ When /^I explicitly click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ 
 end
 
 When /^I wait until I have (\d*) ext menus$/ do |number|
-  wait_until { page.all('.x-menu').length == number.to_i }
+  waiter { page.all('.x-menu').length == number.to_i }
 end
 
 When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|

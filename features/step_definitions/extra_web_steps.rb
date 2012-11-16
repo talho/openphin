@@ -7,7 +7,7 @@ When /^I will confirm on next step$/ do
 end
 
 Then /^I should see "([^\"]*)" within the alert box$/ do |msg|
-  message = wait_until do
+  message = waiter do
     evaluate_script("window.alert_message")
   end
   if message.nil?

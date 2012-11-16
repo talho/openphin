@@ -173,7 +173,7 @@ end
 Then /^The maliciousness response should contain (?:\/([^\/]*)\/|"([^"]*)")$/ do |resp_text, resp_text2|
   resp_text ||= resp_text2
   resp = nil
-  wait_until do
+  waiter do
     resp = page.evaluate_script('window.responseText')
   end
   page.execute_script('delete window.responseText')
