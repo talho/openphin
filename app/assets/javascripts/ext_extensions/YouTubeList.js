@@ -3,9 +3,14 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
   channel: 'googledevelopers',  
   autoScroll: true,
   cls: 'youtubelist',
+  layoutConfig: {
+    align: 'center'
+  },
   
   initComponent: function () {
-    this.addListener('afterrender', this.loadVideos) 
+    this.addListener('afterrender', this.loadVideos)
+    this.addEvents('loadvideo');
+    if (this.getBubbleTarget) { this.enableBubble('loadvideo'); }
         
     Ext.ux.YouTubeList.superclass.initComponent.call(this);
   },
@@ -26,27 +31,35 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
     var feed = data.feed;
     var entries = feed.entry || [];
     var list = Ext.getCmp(this.context.id)
-    var itemsPerRow = Math.floor(this.context.dom.clientWidth / 280);
-    if (itemsPerRow == 0) { itemsPerRow = 1 } 
+    var columns = Math.floor(this.context.dom.clientWidth / 280);
+    if (columns == 0) { itemsPerRow = 1 }         
     
-    var html = "<table style='margin-left: auto;margin-right: auto;'>";
+    var items = [];
+    var first = '';
     Ext.each(entries, function (entry, index) {
       var title = entry.title.$t;
       var thumbnail = entry.media$group.media$thumbnail[0].url;
       var url = entry.media$group.media$content[0].url;
       
-      if ((index + 1) % itemsPerRow == 1 || itemsPerRow == 1) { html += "<tr>"; }
-        
-      html += "<td width=280 height=220 style='vertical-align:top;'>" + 
-              "<div style='text-align: center;'><img width=240, height=180, src='" + 
-              thumbnail + "' /><p width=240 style='font-weight: bolder;'>" + title + 
-              "</p></div></td>";
-              
-      if ((index + 1) % itemsPerRow == 0 || itemsPerRow == 1) { html += "</tr>"; }
+      if (index == 0) { first = url; }
+      
+      var item = new Ext.Panel({width: 240, height: 240, border: false, cls: 'youtubelistitem',
+        html: "<div style='text-align: center;'><img width=240, height=180, src='" + thumbnail + "' /><p width=240 style='font-weight: bolder;'>" + title + "</p></div>",
+        url: url
+      });
+      item.on('render', function (c) { c.el.on('click', function(c) { this.fireEvent('loadvideo', this.url, true) }, this); });
+      item.getBubbleTarget(list);
+      item.addEvents('loadvideo');
+      item.enableBubble('loadvideo');      
+      
+      items.push(item);
     });
-    html += "</table>";
-        
-    list.update(html);
+    
+    var table = new Ext.Panel({layout: 'table', cls: 'youtubeplayertable', defaults: { bodyStyle: 'padding:20px' }, layoutConfig: { columns: columns }, items: items, border: false });
+    
+    list.add(table);
+    list.doLayout();
+    list.fireEvent('loadvideo', first, false)
   }
 });
 
