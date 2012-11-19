@@ -98,6 +98,8 @@ Openphin::Application.routes.draw do
     get :available, :on => :collection
   end
   
+  match "/info", :to => "apps#info"
+  
   resources :documents, :controller => 'doc/documents', :except => [:index] do
     collection do
       get :search

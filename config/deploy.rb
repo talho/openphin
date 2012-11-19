@@ -41,10 +41,10 @@ task :oldtalhoapps_production do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  role :app, "talhoapps.talho.org"
-  role :web, "talhoapps.talho.org"
-  role :jobs, "talhoapps.talho.org"
-  role :db,  "talhoapps.talho.org", :primary => true  
+  role :app, "192.168.30.102"
+  role :web, "192.168.30.102"
+  role :jobs, "192.168.30.102"
+  role :db,  "192.168.30.102", :primary => true  
 end
 
 task :talhostaging do
