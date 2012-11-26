@@ -13,16 +13,19 @@
   <%= f.text_field(:display_name) %> <span class="label warning">Required</span>
   <%= f.label(:email, "Email address") %>
   <%= f.text_field(:email) %> <span class="label warning">Required</span>
-  <%= f.label :password, "Password" %> <b>(6 chars minimum, no special characters, at least 1 digit, and at least 1 capital letter.)</b>
+  <%= f.label :password, "Password" %>
   <%= f.password_field(:password) %> <span class="label warning">Required</span>
+  <span class="help-block">(6 chars minimum, no special characters, at least 1 digit, and at least 1 capital letter.)</span>
   <%= f.label(:password_confirmation,"Password Confirmation") %>
   <%= f.password_field(:password_confirmation) %> <span class="label warning">Required</span>
   <%= f.label(:preferred_language, "Preferred language") %>
   <%= f.select(:preferred_language, ["English","Spanish"]) %>
 
-  <%= f.label :home_jurisdiction_id,  "Home Jurisdiction" %> <b>(Choose your primary jurisdiction from the dropdown.)</b><br/>
+  <%= f.label :home_jurisdiction_id,  "Home Jurisdiction" %>
+  <span class="help-block">(Choose your primary jurisdiction from the dropdown.)</span>
   <%= f.collection_select( :home_jurisdiction_id,  current_app.root_jurisdiction.self_and_descendants, :id, :name, {:include_blank => false, selected: @selected_jurisdiction}, {:class => "home_jurisdiction"}) %> <span class="label warning">Required</span>
-  <%= label_tag :role_id, "Role" %> <b>(If you are a health official, please indicate which role you fill. If you are a member of the public, you can leave this blank.)</b><br/>
+  <%= label_tag :role_id, "Role" %>
   <%= select_tag :role_id, options_from_collection_for_select(Role.for_app(current_app).where(user_role: true, public: false), :id, :name), {:include_blank => true, :selected => @selected_role} %>
+  <span class="help-block">(If you are a health official, please indicate which role you fill. If you are a member of the public, you can leave this blank.)</span>
   
 </div>

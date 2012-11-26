@@ -35,6 +35,6 @@ class AppsController < ApplicationController
   end
   
   def info
-    render current_app.info_path.blank? ? 'apps/info' : current_app.info_path, :layout => false
+    render current_app.info_path.blank? ? 'apps/info' : current_app.info_path
   end
 end

@@ -1,7 +1,6 @@
 class AddInfoPathToApp < ActiveRecord::Migration
   def change
-    change_table :apps do |t|
-      t.string :info_path
-    end
+    add_column :apps, :info_path, :string
+    add_column :apps, :title, :string
   end
 end
