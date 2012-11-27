@@ -5,7 +5,7 @@
     <%- if protect_against_forgery? -%>
       <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
     <%- end -%>
-    <title><%= current_app.title.blank? ? current_app.name.titleize : current_app.title %></title>
+    <title><%= current_app.title.blank? ? current_app.name.titleize : current_app.title %>: <%= controller.controller_name %>/<%= controller.action_name %></title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>

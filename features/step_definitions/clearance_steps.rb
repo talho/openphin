@@ -101,7 +101,7 @@ When /^I sign in( with "remember me")? as "(.*)\/(.*)"$/ do |remember, email, pa
   step %{I go to the sign in page}
   step %{I fill in "Email" with "#{email}"}
   step %{I fill in "Password" with "#{password}"}
-  step %{I check "Remember me"} if remember
+  step %{I check "session_remember_me"} if remember
   step %{I press "Sign in"}
 end
 
