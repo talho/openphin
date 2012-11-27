@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 group :default do
   #temp fix because the net-ssh guys introduced an issue
-  gem "net-ssh", '~> 2.4.0'
+  gem "net-ssh"
   
   # These are the gems required for phin to boot
   gem "rails", "~> 3.2.0"
@@ -49,7 +49,7 @@ group :default do
     gem 'delayed_job_active_record', "~> 0.3"
   gem 'backgroundrb-rails3', :require => 'backgroundrb', :git => 'git://github.com/talho/backgroundrb-rails3.git'
     gem "packet", "0.1.15"
-    gem "chronic", "0.2.3"
+    gem "chronic", ">= 0.2.3"
   gem "no_peeping_toms", "~> 1.1.0"  # 2.x versions require rails3
   gem 'jbuilder', :git => 'git://github.com/rails/jbuilder.git'
   gem "dynamic_form"
@@ -83,8 +83,8 @@ group :cucumber do
   gem "factory_girl"#, "1.3.3", :require => "factory_girl"
    
   gem "cucumber-rails"#, "1.3.0"
-  gem "capybara" #, "0.4.1.2"
-  gem "database_cleaner"#, "0.5.0"
+  gem "capybara" , "1.1.3"
+  gem "database_cleaner", "~> 0.8.0"
   gem "spork"#, "0.8.4"
  
   gem "childprocess"

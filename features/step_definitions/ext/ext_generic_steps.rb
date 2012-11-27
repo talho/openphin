@@ -74,7 +74,7 @@ When /^I explicitly click ([a-zA-Z0-9\-_]*) "([^\"]*)"(?: within "([^\"]*)")?$/ 
 end
 
 When /^I wait until I have (\d*) ext menus$/ do |number|
-  wait_until { page.all('.x-menu').length == number.to_i }
+  waiter { page.all('.x-menu').length == number.to_i }
 end
 
 When /^I navigate to "([^\"]*)"$/ do |menu_navigation_list|
@@ -99,7 +99,7 @@ When /^(?:|I )navigate to ([^\"].*)$/ do |path|
   path_lookup = {
     "the ext dashboard page".to_sym => "",
     "the rollcall dashboard page".to_sym => "Rollcall > Main",
-    "the rollcall ADST page".to_sym => "Rollcall > ADST",
+    "the rollcall Graphing page".to_sym => "Rollcall > Graphing",
     "the new invitation page".to_sym => "Admin > Manage Invitations > Invite Users",
     "the invitations page".to_sym => "Admin > Manage Invitations > View Invitations",
     "the manage organizations tab".to_sym => "Admin > Manage Organizations",

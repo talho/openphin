@@ -46,7 +46,7 @@ end
 
 When /^I wait for the audience calculation to finish$/ do
   begin
-    wait_until do (!page.find('.working-notice')) end
+    waiter do (!page.find('.working-notice')) end
   rescue Capybara::ElementNotFound
     assert true
   end

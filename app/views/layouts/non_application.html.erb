@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <%- if protect_against_forgery? -%>
-    <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
-  <%- end -%>
-  <title><%= current_app.name.titleize %>: <%= controller.controller_name %>/<%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'jquery.crossSelect','jquery.ui.autocomplete', 'master', 'redesign/bootstrap.css' %>
-  <%= javascript_include_tag 'jquery', 'application' %>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <%- if protect_against_forgery? -%>
+      <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
+    <%- end -%>
+    <title><%= current_app.title.blank? ? current_app.name.titleize : current_app.title %>: <%= controller.controller_name %>/<%= controller.action_name %></title>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <style>
+      .nav li a{
+        outline: 0px;
+      }
+      
+      #main_content{
+        padding: 40px 10px 60px;
+      }
+      
+      #background{
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        background-image: linear-gradient(to right, #EEE 0%, #FFFFFF 20%, #FFFFFF 80%, #EEE 100%);
+        z-index: -1;
+      }
+      #content_background{
+        box-shadow: 0px 1px 10px rgba(0,0,0,0.1);
+        background-color: #FFF;
+        height: 100%;
+      }
+    </style>
 
-</head>
-<body>
-<div id="application" class="t_boot">
-  <div id="header">
-
-
-    <div class="topbar-wrapper" style="z-index: 5;">
-      <div class="topbar" data-dropdown="dropdown">
-        <div class="topbar-inner">
-          <div class="container">
-            <%= link_to raw(%{<img src="#{current_app.tiny_logo.url}">}), root_path %>
-            <ul class="nav secondary-nav">
-              <li><%= link_to s(current_app.about_label), about_dashboard_path %></li><li>&nbsp;|&nbsp;</li>
-              <li><%= link_to s('Sign Up'), new_user_path %></li><li>&nbsp;|&nbsp;</li>
-              <li><%= link_to s('Sign In'), sign_in_path %></li>
+  </head>
+  <body>    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <span class="nav">
+            <a class="brand" href="http://www.talho.org">TALHO</a>
+          </span>
+          <span class="nav pull-right">
+            <ul class="nav">
+              <li><a href="/">User Dashboard</a></li>
+              <li><a href="mailto:admins@talho.org">More Information</a></li>
             </ul>
-          </div>
-        </div><!-- /topbar-inner -->
-      </div><!-- /topbar -->
+          </span>
+        </div>
+      </div>
     </div>
-
-  </div>
-  <div id="wrapper">
-    <div id="content">
+    
+    <div id="main_content" class="container">      
       <div class="flash">
         <% flash.each do |key, value| -%>
           <div class="alert-message block-message <%= key %>"><%= value %></div>
@@ -40,7 +60,23 @@
       </div>
       <%= yield %>
     </div>
-  </div>
-</div>
-</body>
+  
+    <div class="navbar navbar-fixed-bottom">
+      <div class="navbar-inner">
+        <div class="container">
+          <span class="nav">
+            <p class="navbar-text">For more information email <a href="mailto:admins@talho.org">admins@talho.org</a></p>
+          </span>
+          <span class="nav pull-right">
+            <a href="http://www.talho.org" class="brand">&copy; 2012 TALHO <img src="/assets/logo tiny.png"/></a>
+          </span>
+        </div>
+      </div>      
+    </div>
+    
+    
+    <div id="background">
+      <div id="content_background" class="container"></div>
+    </div>
+  </body>
 </html>

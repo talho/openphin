@@ -1,6 +1,9 @@
 class AppsController < ApplicationController
-  respond_to :json
+  respond_to :json, :except => [:info]
+  respond_to :html, :only => [:info]
 
+  skip_before_filter :authorize, :only => [:info]
+  
   ##
   # Return all apps that a user currently has access to
   ##
@@ -29,5 +32,9 @@ class AppsController < ApplicationController
         format.any { render 'application/failure'}
       end
     end
+  end
+  
+  def info
+    render current_app.info_path.blank? ? 'apps/info' : current_app.info_path
   end
 end

@@ -1,0 +1,22 @@
+
+<style>
+  .masthead{
+    padding: 20px;
+  }
+</style>
+
+<div class="masthead">
+  <h1><%= current_app.title.blank? ? current_app.name.titleize : current_app.title %></h1>
+</div>
+
+<div class="tabbable">
+  <ul class="nav nav-tabs">
+    <span class="pull-left">&nbsp;</span>
+    <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active container-fluid" id="home">
+      <%= raw(current_app.about_text) %>
+    </div>          
+  </div>
+</div> 

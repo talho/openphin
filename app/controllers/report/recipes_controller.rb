@@ -1,7 +1,6 @@
 class Report::RecipesController < ApplicationController
 
 	before_filter :non_public_role_required
-  caches_action :index
 
 	# GET /report/recipes
 	# GET /report/recipes.json

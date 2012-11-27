@@ -1,9 +1,10 @@
-<div class="t_boot">
+
+<div class="container-fluid">
   <h2>New User</h2>
   <%= form_for @user, :html => {:class => "form-stacked"}  do |f| %>
     <%= render 'new_user_form', :f => f, :user => @user %>
     <div>
-      <%= f.submit 'Sign Up', 'data-disable-with' => "Please wait...", :class => "btn large primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn large" %>
+      <%= f.submit 'Sign Up', 'data-disable-with' => "Please wait...", :class => "btn btn-large btn-primary" %> or <%= link_to 'Cancel', sign_in_path, :class => "btn btn-large" %>
     </div>
   <% end %>
 </div>

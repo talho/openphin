@@ -98,6 +98,8 @@ Openphin::Application.routes.draw do
     get :available, :on => :collection
   end
   
+  match "/info", :to => "apps#info"
+  
   resources :documents, :controller => 'doc/documents', :except => [:index] do
     collection do
       get :search
@@ -161,7 +163,7 @@ Openphin::Application.routes.draw do
     end
   end
   root :to => 'dashboard#index', :format => 'ext'
-  match '/about' => 'dashboard#about', :as => :about_dashboard
+  match '/about' => 'apps#info', :as => :about_dashboard
   match '/about_talhophin' => 'dashboard#about_talhophin', :as => :about_talhophin
   match '/han(.:format)' => 'dashboard#hud', :as => :hud
   match '/ext' => 'dashboard#index', :as => :ext, :format => 'ext'
