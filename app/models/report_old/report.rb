@@ -1,4 +1,4 @@
-class Report::Report < ActiveRecord::Base
+class ReportOld::Report < ActiveRecord::Base
   require 'csv'
 
   self.table_name = "report_reports"
