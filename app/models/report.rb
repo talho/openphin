@@ -11,6 +11,12 @@ class Report < ActiveRecord::Base
   
   before_destroy :destroy_mongo_entry
         
+  def self.build_report(params)
+    r = self.new
+    r.params = params
+    r
+  end
+  
   protected
   
   def collection
