@@ -11,8 +11,8 @@ class Report < ActiveRecord::Base
   
   before_destroy :destroy_mongo_entry
         
-  def self.build_report(params)
-    r = self.new
+  def self.build_report(user_id, params)
+    r = self.new user_id: user_id
     r.params = params
     r
   end
