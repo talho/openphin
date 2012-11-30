@@ -1,6 +1,8 @@
 
 Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
-  channel: 'googledevelopers',  
+  playlistId: 'PLIsSzqPkjhhw81AEm4ic0MDptK7-zzVVq', 
+  channel: 'texaslocalhealth',
+  mode: 'playlist',
   autoScroll: true,
   cls: 'youtubelist',
   layoutConfig: {
@@ -17,7 +19,12 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
   },
   
   loadVideos: function () {
-    var url = 'http://gdata.youtube.com/feeds/users/' + this.channel + '/uploads?alt=json-in-script&callback=?';
+    if (this.mode == 'channel') {
+      var url = 'http://gdata.youtube.com/feeds/users/' + this.channel + '/uploads?alt=json-in-script&callback=?';
+    }
+    else if (this.mode == 'playlist') {
+      var url = 'http://gdata.youtube.com/feeds/playlists/' + this.playlistId + '?alt=json-in-script&callback=?';
+    }
     
     $.ajax({ 
       url: url,
@@ -37,6 +44,11 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
     
     var items = [];
     var first = '';
+    
+    if (entries.length == 0) {
+      items.push(new Ext.Panel({html: '<h2>No videos in this ' + list.mode + '</h2>'}));
+    }
+    
     Ext.each(entries, function (entry, index) {
       var title = entry.title.$t;
       var thumbnail = entry.media$group.media$thumbnail[0].url;
