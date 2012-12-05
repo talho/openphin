@@ -11,7 +11,7 @@ Ext.ux.YouTubePlayer = Ext.extend(Ext.Panel, {
     this.height = this.playerHeight;
     this.width = this.playerWidth;    
     
-    dominoes('http://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js');
+    dominoes('https://swfobject.googlecode.com/svn/trunk/swfobject/swfobject.js');
     Ext.ux.YouTubePlayer.superclass.initComponent.call(this);
   },
   

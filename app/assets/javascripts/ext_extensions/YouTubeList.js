@@ -20,10 +20,10 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
   
   loadVideos: function () {
     if (this.mode == 'channel') {
-      var url = 'http://gdata.youtube.com/feeds/users/' + this.channel + '/uploads?alt=json-in-script&callback=?';
+      var url = 'https://gdata.youtube.com/feeds/users/' + this.channel + '/uploads?alt=json-in-script&callback=?';
     }
     else if (this.mode == 'playlist') {
-      var url = 'http://gdata.youtube.com/feeds/playlists/' + this.playlistId + '?alt=json-in-script&callback=?';
+      var url = 'https://gdata.youtube.com/feeds/playlists/' + this.playlistId + '?alt=json-in-script&callback=?';
     }
     
     $.ajax({ 
