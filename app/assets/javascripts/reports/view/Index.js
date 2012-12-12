@@ -18,24 +18,25 @@ Talho.Reports.view.Index = Ext.extend(Ext.Panel, {
   },
   initComponent: function(){
     this.items = [
-      {xtype: 'dataview', itemId: 'dataview', region: 'center', store: new Ext.data.JsonStore({
+      {xtype: 'dataview', itemId: 'dataview', region: 'center', margins: '5', store: new Ext.data.JsonStore({
         restful: true,
         url: '/reports.json',
         root: 'reports',
-        fields: ['id', 'name', 'date'],
+        fields: ['id', 'name', {name:'date', type: 'date'}],
         autoDestroy: true,
         autoLoad: true
       }), tpl: new Ext.XTemplate(
         '<tpl for=".">',
           '<div class="report-dataview">',
-            '<span>{name} - {date}</span>',
+            '<span>{name} - {[values.date.format("M j, Y, g:i a")]}</span>',
             '<span style="float:right;">',
               '<a href="/reports/{id}.html" target="_blank">html</a> ',
               '<!--<a href="/reports/{id}.pdf" target="_blank">pdf</a>-->',
               '<span class="spanBtn removeBtn">&nbsp;</span>',
             '</span>',
           '</div>',
-        '</tpl>'
+        '</tpl>',
+        {compiled: true}
       ), itemSelector: 'div.report-dataview', loadingText: 'loading', listeners: {
         scope: this,
         'click': this.dataview_click

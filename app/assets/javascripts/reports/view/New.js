@@ -16,7 +16,7 @@ Talho.Reports.view.New = Ext.extend(Ext.Panel, {
   },
   initComponent: function(){
     this.items = [
-      {xtype: 'panel', layout: 'form', itemId: 'holder-panel', labelAlign: 'top', items: [
+      {xtype: 'panel', padding: 5, border: false, layout: 'form', itemId: 'holder-panel', labelAlign: 'top', items: [
         {xtype: 'combo', itemId: 'report-combo', fieldLabel: 'Select Report Type', store: new Ext.data.JsonStore({
           restful: true,
           autoLoad: true,
