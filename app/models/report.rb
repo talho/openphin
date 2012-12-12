@@ -1,4 +1,8 @@
 class Report < ActiveRecord::Base
+  class_attribute :view, :run_detached
+  
+  self.run_detached = false
+  
   attr_accessible :type, :user_id
   
   attr_accessor :params
@@ -17,6 +21,10 @@ class Report < ActiveRecord::Base
     r
   end
   
+  def self.user_can_run?(user_id)
+    true
+  end
+    
   protected
   
   def collection
