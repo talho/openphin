@@ -1,4 +1,5 @@
 Openphin::Application.routes.draw do
+
   resources :roles
   resources :jurisdictions do
     collection do
@@ -137,15 +138,7 @@ Openphin::Application.routes.draw do
     end
   end
 
-  namespace :report do
-    resources :reports do
-      member do
-        get :filters
-        post :reduce
-      end
-    end
-    resources :recipes, :only => [:index, :show]
-  end
+  resources :reports
 
   resources :audits do
     get :models, :on => :collection

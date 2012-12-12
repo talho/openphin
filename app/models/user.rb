@@ -97,8 +97,7 @@ class User < ActiveRecord::Base
 
   has_many :favorites
 
-  has_many :reports, :class_name => 'Report::Report', :foreign_key => "author_id"
-  has_many :recipes
+  has_many :reports
 
   validates_presence_of     :first_name
   validates_presence_of     :last_name

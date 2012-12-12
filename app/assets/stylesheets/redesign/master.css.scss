@@ -144,6 +144,12 @@ body{
   background-image: image-url("arrow_down.png") !important;
   background-position: center;
 }
+.spanBtn{
+  height:16px;
+  width:16px;
+  display:inline-block;
+  cursor:pointer;
+}
 .removeBtn{
   background-image: image-url("cross-circle.png") !important;
   background-position: center;
