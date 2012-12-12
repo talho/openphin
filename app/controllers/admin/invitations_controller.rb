@@ -2,7 +2,6 @@ class Admin::InvitationsController < ApplicationController
   require 'csv'
   #before_filter :admin_required
   # before_filter :force_json_as_html, :only => :import
-  include Report::CreateDataSet
   #extend ActiveSupport::Memoizable
 
   def index

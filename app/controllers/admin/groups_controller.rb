@@ -1,7 +1,6 @@
 class Admin::GroupsController < ApplicationController
   before_filter :admin_required
   app_toolbar "admin"
-  include Report::CreateDataSet
 
   def index
     page = params[:page].blank? ? "1" : params[:page]
