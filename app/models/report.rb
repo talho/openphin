@@ -2,6 +2,7 @@ class Report < ActiveRecord::Base
   class_attribute :view, :run_detached
   
   self.run_detached = false
+  @@db_config = YAML::load(File.read(File.join(Rails.root,'config','mongo_database.yml')))[Rails.env]
   
   attr_accessible :type, :user_id
   
@@ -27,8 +28,17 @@ class Report < ActiveRecord::Base
     
   protected
   
+  def report_db
+    config = @@db_config.symbolize_keys
+    conn = Mongo::Connection.new(config[:host],config[:port],(config[:options]||{}))
+    db = conn.db(config[:database])
+    db.authenticate(config[:database],config[:password]) if config[:password]
+    
+    db
+  end
+  
   def collection
-    @collection ||= REPORT_DB.collection('reports')
+    @collection ||= report_db.collection('reports')
   end
   
   def load_params_from_mongo

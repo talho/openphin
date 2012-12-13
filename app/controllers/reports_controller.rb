@@ -23,6 +23,7 @@ class ReportsController < ApplicationController
   def create
     begin
       report_class = params[:report].constantize
+      throw "You must select a report" unless report_class.superclass == Report
     rescue
       respond_with(@errors = {msg: "#{params[:report]} type not found."}) do |format|
         format.any { render 'application/failure', status: 404}

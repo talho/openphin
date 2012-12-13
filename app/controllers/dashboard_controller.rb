@@ -220,7 +220,7 @@ class DashboardController < ApplicationController
   end
 
   def menu
-    @report_menu = "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}" if defined? REPORT_DB && current_user.has_non_public_role?
+    @report_menu = "{name: 'Reports', tab:{id: 'reports', title:'Reports', initializer: 'Talho.Reports'}}" if current_user.has_non_public_role?
 
     plugin_config_items = []    
     $menu_config.each do |app, val|
