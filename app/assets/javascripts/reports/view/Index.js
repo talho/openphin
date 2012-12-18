@@ -22,7 +22,7 @@ Talho.Reports.view.Index = Ext.extend(Ext.Panel, {
         restful: true,
         url: '/reports.json',
         root: 'reports',
-        fields: ['id', 'name', {name:'date', type: 'date'}],
+        fields: ['id', 'name', {name:'date', type: 'date', dateFormat: "c"}], 
         autoDestroy: true,
         autoLoad: true
       }), tpl: new Ext.XTemplate(
