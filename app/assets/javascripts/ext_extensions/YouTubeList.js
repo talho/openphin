@@ -10,8 +10,7 @@ Ext.ux.YouTubeList = Ext.extend(Ext.Panel, {
   },
   
   initComponent: function () {
-    this.addListener('afterrender', this.loadVideos)
-    this.addListener('resize', this.loadVideos)
+    this.addListener('afterrender', this.loadVideos);
     this.addEvents('loadvideo');
     if (this.getBubbleTarget) { this.enableBubble('loadvideo'); }
     Ext.ux.YouTubeList.superclass.initComponent.call(this);
