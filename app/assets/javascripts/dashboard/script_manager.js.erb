@@ -51,7 +51,12 @@ Ext.ns("Talho");
       'Talho.Admin.Apps': {js: '$css($(css)/VerticalTabPanel/Ext.ux.tot2ivn.VrTabPanel.css) $css($(css)/ux/fileuploadfield/fileuploadfield.css) <%= javascript_dominoes_paths("admin/apps/Controller") %>'},
       'Talho.Dashboard.Apps': {js: '<%= javascript_dominoes_paths("dashboard/apps/Controller") %> '}
     };
-
+    
+    //Load D3 if the browser supports it's requirements
+    if (document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0")) {
+      dominoes('<%= javascript_dominoes_paths("d3.v2.min.js") %>');
+    }
+    
     // These are rules that are intended to be loaded on their own through the loadOtherLibrary method call
     dominoes.rule('AjaxPanel', '<%= javascript_dominoes_paths("ext_extensions/AjaxPanel") %>');
     dominoes.rule('Favorites', '<%= javascript_dominoes_paths("dashboard/favorites.js") %>');

@@ -1,5 +1,3 @@
-//= require d3.v2
-
 Ext.ns('Talho.ux');
 
 /*
