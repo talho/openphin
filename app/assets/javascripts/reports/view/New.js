@@ -17,10 +17,9 @@ Talho.Reports.view.New = Ext.extend(Ext.Panel, {
   initComponent: function(){
     this.items = [
       {xtype: 'panel', padding: 5, border: false, layout: 'form', itemId: 'holder-panel', labelAlign: 'top', items: [
-        {xtype: 'combo', itemId: 'report-combo', fieldLabel: 'Select Report Type', store: new Ext.data.JsonStore({
+        {xtype: 'combo', itemId: 'report-combo', fieldLabel: 'Select Report Type', anchor: '100%', store: new Ext.data.JsonStore({
           restful: true,
           autoLoad: true,
-          anchor: '100%',
           fields: ['name', 'type'],
           root: 'reports',
           url: '/reports/new.json',
@@ -30,7 +29,7 @@ Talho.Reports.view.New = Ext.extend(Ext.Panel, {
         {text: 'Run Report', handler: function(){ this.fireEvent('runreport', this.getComponent('holder-panel').getComponent('report-combo').getValue());}, scope: this}
       ]}
     ]
-    
+
     Talho.Reports.view.New.superclass.initComponent.apply(this, arguments);
   }
 });

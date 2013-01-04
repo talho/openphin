@@ -1,5 +1,4 @@
 Openphin::Application.routes.draw do
-
   resources :roles
   resources :jurisdictions do
     collection do
@@ -74,7 +73,7 @@ Openphin::Application.routes.draw do
     end
     resources :delayed_job_checks
     resources :app, defaults: {format: :json} do
-      member do 
+      member do
         put :upload
       end
     end
@@ -98,9 +97,9 @@ Openphin::Application.routes.draw do
   resources :apps, :only => [:index, :update] do
     get :available, :on => :collection
   end
-  
+
   match "/info", :to => "apps#info"
-  
+
   resources :documents, :controller => 'doc/documents', :except => [:index] do
     collection do
       get :search
@@ -139,6 +138,7 @@ Openphin::Application.routes.draw do
   end
 
   resources :reports
+  resources :report_schedules, :only => [:index, :show, :update, :create]#, :id => /[^\/]+/
 
   resources :audits do
     get :models, :on => :collection

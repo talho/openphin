@@ -1,10 +1,10 @@
 class ReportsController < ApplicationController
-  
+
   respond_to :json, :except => :show
   respond_to :html, :pdf, :only => :show
-  
+
   layout 'report', :only => :show
-  
+
   def index
     respond_with(@reports = current_user.reports)
   end
@@ -30,7 +30,7 @@ class ReportsController < ApplicationController
       end
       return
     end
-    
+
     if report_class.user_can_run?(current_user.id)
       r = report_class.build_report(current_user.id)
       if r.save
@@ -57,14 +57,14 @@ class ReportsController < ApplicationController
 
   def destroy
     @report = current_user.reports.find(params[:id]);
-    
+
     if @report.nil?
       respond_with(@errors = {msg: "Report not found."}) do |format|
         format.any { render 'application/failure', status: 404}
       end
       return
     end
-    
+
     if @report.destroy
       respond_with() do |format|
           format.any {render 'application/success'}
