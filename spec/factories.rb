@@ -1,7 +1,7 @@
 =begin
-    OpenPHIN is an opensource implementation of the CDC guidelines for 
+    OpenPHIN is an opensource implementation of the CDC guidelines for
     a public health information network.
-    
+
     Copyright (C) 2009  Texas Association of Local Health Officials
 
     This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ FactoryGirl.define do
     ignore do
       application true
     end
-    
+
     sequence(:name) {|r| "role#{r}"}
     public {true}
     after :build do |role, evaluator|
@@ -198,15 +198,6 @@ FactoryGirl.define do
   factory :favorite, :class => Favorite do
     tab_config  "{:id => 'test_favorite', :title =>'Test Favorite'}"
     association :user
-  end
-
-  factory :report_recipe, :class => RecipeExternal do
-  end
-
-  factory :report_report, :class => Report::Report do
-    association :author, :factory => :user
-    recipe "Report::RecipeExternal"
-    incomplete :true
   end
 
   factory :dashboard do
