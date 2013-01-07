@@ -12,6 +12,7 @@ group :default do
   gem "clearance", "~> 0.16.0"
   gem "rack-raw-upload"
   gem "pg", ">= 0.11"
+  gem 'postgres_ext'
   gem "paper_trail", ">= 2"
   gem "wicked_pdf", "0.7.9"
   gem "mongo", "1.6.2"

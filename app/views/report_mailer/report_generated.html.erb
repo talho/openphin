@@ -1,11 +1,6 @@
-Please do not reply to this email.  Replies to this message will not be read or responded to.
-
-Your Report <%= @report_name %> generation has completed.
-
-To view this document, log in to the PHIN and then navigate to the Reports Tab.
-
-
-
-
-
-
+<html>
+  <body>
+    <p>The report <%= @report.class.name %> was generated at <%= l @report.created_at %></p>
+    <p>You can view this report via the TALHO Dashboard or directly access it at: <%= link_to "#{@report.class.name} - #{l @report.created_at}", report_url(@report) %></p>
+  </body>
+</html>

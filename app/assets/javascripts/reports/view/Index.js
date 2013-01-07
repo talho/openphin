@@ -6,8 +6,9 @@ Talho.Reports.view.Index = Ext.extend(Ext.Panel, {
   layout: 'border',
   constructor: function(){
     Talho.Reports.view.Index.superclass.constructor.apply(this, arguments);
-    this.addEvents('newreport', 'deletereport');
+    this.addEvents('newreport', 'deletereport', 'showreportschedules');
     this.enableBubble('newreport');
+    this.enableBubble('showreportschedules');
     this.enableBubble('deletereport');
   },
   getBubbleTarget: function(){
@@ -41,18 +42,21 @@ Talho.Reports.view.Index = Ext.extend(Ext.Panel, {
         scope: this,
         'click': this.dataview_click
       }},
-      {xtype: 'button', text: 'Run New Report', region: 'south', scope: this, handler: function(){this.fireEvent('newreport');}}
+      {xtype: 'container', layout: 'anchor', region: 'south', items: [
+        {xtype: 'button', text: 'Run New Report', anchor: '100%', handler: this.fireEvent.createDelegate(this, ['newreport'])},
+        {xtype: 'button', text: 'Scheduled Reports', anchor: '100%', handler: this.fireEvent.createDelegate(this, ['showreportschedules'])}
+      ]}
     ]
-    
+
     Talho.Reports.view.Index.superclass.initComponent.apply(this, arguments);
   },
-  
+
   dataview_click: function(dv, i, node, e){
     if(e.getTarget('.removeBtn')){
       this.fireEvent('deletereport', dv.getStore().getAt(i));
     }
   },
-  
+
   refresh: function(){
     this.getComponent('dataview').getStore().load();
   }

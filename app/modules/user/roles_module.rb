@@ -71,7 +71,7 @@ module User::RolesModule
     return true if self.is_sysadmin? || self.is_super_admin?
     if other.class == Jurisdiction
       return true if role_memberships.find(:all, :conditions => {:role_id => Role.admins(app).map(&:id)}).detect{|r| other.is_or_is_descendant_of?(r.jurisdiction)}
-    elsif other.class == Array || other.class == ActiveRecord::NamedScope::Scope
+    elsif other.respond_to?(:each)
       other.each do |jurisdiction|
         return true if role_memberships.find(:all, :conditions => {:role_id => Role.admins(app).map(&:id)}).detect{|r| jurisdiction.is_or_is_descendant_of?(r.jurisdiction)}
       end

@@ -1,6 +1,6 @@
 Ext.ns("Talho");
 
-// We're going to create a singleton manager here that is an observable 
+// We're going to create a singleton manager here that is an observable
 (function(){
     dominoes.property('ext_extensions', '/assets/ext_extensions');
     dominoes.property('js', '/assets');
@@ -10,7 +10,7 @@ Ext.ns("Talho");
     dominoes.property('forums', '$(js)/forums');
     dominoes.property('forums_view', '$(forums)/view/forums');
     dominoes.property('topics_view', '$(forums)/view/topics');
-        
+
     dominoes.rule('RowActions', '(( $css($(css)/redesign/Ext.ux.grid.RowActions.css) )) $(ext_extensions)/Ext.ux.grid.RowActions.js');
     dominoes.rule('TreeGrid', '(( $css($(css)/TreeGrid/css/TreeGrid.css) $css($(css)/TreeGrid/css/TreeGridLevels.css) )) $(ext_extensions)/TreeGrid/TreeGrid.js > $(ext_extensions)/TreeGrid/Overrides.js');
     dominoes.rule('AudiencePanel', 'TreeGrid <%= javascript_dominoes_paths("audience/AudiencePanel") %>');
@@ -26,7 +26,7 @@ Ext.ns("Talho");
       'Talho.FindPeople': {js:'<%= javascript_dominoes_paths("search/FindPeople") %>'},
       'Talho.ManageGroups': {js:'AudiencePanel > <%= javascript_dominoes_paths("groups/ManageGroups") %>'},
       'Talho.Tutorials': {js: '<%= javascript_dominoes_paths("dashboard/tutorials") %>'},
-      'Talho.Forums': {js: 'AudiencePanel <%= javascript_dominoes_paths("forums/Controller") %>'},      
+      'Talho.Forums': {js: 'AudiencePanel <%= javascript_dominoes_paths("forums/Controller") %>'},
       'Talho.EditProfile': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/EditProfile") %>'},
       'Talho.ShowProfile': {js:'<%= javascript_dominoes_paths("profile/ShowProfile") %>'},
       'Talho.EditPassword': {js:'ProfileBase > <%= javascript_dominoes_paths("profile/EditPassword") %>'},
@@ -43,7 +43,7 @@ Ext.ns("Talho");
       'Talho.PendingRoleRequests': {js: '<%= javascript_dominoes_paths("admin/PendingRoleRequests") %>'},
       'Talho.AuditLog': {js: '<%= javascript_dominoes_paths("admin/AuditLog") %>'},
       'Talho.ReportView': {js:'<%= javascript_dominoes_paths("reports/ReportView") %>'},
-      'Talho.Reports': {js:'<%= javascript_dominoes_paths("reports/Controller") %> '},
+      'Talho.Reports': {js:'<%= javascript_dominoes_paths("reports/Controller") %>'},
       'Talho.HelpWindow': {js:'<%= javascript_dominoes_paths("dashboard/help_window") %>'},
       'Talho.Dashboard.CMS.Admin': {js: 'AudiencePanel <%= javascript_dominoes_paths("dashboard/cms/admin_controller") %>'},
       'Talho.Admin.Organizations': {js: 'AudiencePanel <%= javascript_dominoes_paths("admin/organizations/Controller") %>'},
