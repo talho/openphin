@@ -2,7 +2,7 @@ class Report < ActiveRecord::Base
   class_attribute :view, :run_detached
 
   self.run_detached = false
-  @@db_config = YAML::load(File.read(File.join(Rails.root,'config','mongo_database.yml')))[Rails.env]
+  @@db_config = YAML::load(File.read(File.join(Rails.root,'config','mongo_database.yml'))).symbolize_keys[Rails.env.to_sym]
 
   attr_accessible :type, :user_id
 
