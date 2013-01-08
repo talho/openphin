@@ -93,7 +93,7 @@ GIT
 
 GIT
   remote: ssh://git@git.talho.org/home/git/repositories/rollcall
-  revision: 0c7cd2f63589777ea7f61b9e7a6a13bce719328a
+  revision: 23792c350115db5fbbf10fa97203468137d198ed
   branch: master
   specs:
     rollcall (0.0.1)
