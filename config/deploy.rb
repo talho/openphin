@@ -35,7 +35,7 @@ task :oldtalhostaging do
   role :db,  "talhostaging.talho.org", :primary => true
 end
 
-task :oldtalhoapps_production do
+task :talhojobs do
   set :user, 'apache'
   set :deploy_to, "/var/www/#{application}"
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
