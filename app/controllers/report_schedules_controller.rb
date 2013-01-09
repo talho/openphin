@@ -10,6 +10,7 @@ class ReportSchedulesController < ApplicationController
   end
 
   def create
+    params[:report_schedule] ||= {}
     params[:report_schedule][:days_of_week] = Array.new(7).map.with_index{ |a, i| (params[:report_schedule][:days_of_week] || {})[i.to_s]}
     @report_schedule = ReportSchedule.new params[:report_schedule]
     @report_schedule.user = current_user
@@ -20,6 +21,7 @@ class ReportSchedulesController < ApplicationController
   end
 
   def update
+    params[:report_schedule] ||= {}
     params[:report_schedule][:days_of_week] = Array.new(7).map.with_index{ |a, i| (params[:report_schedule][:days_of_week] || {})[i.to_s]}
     @report_schedule = ReportSchedule.where(report_type: params[:id], user_id: current_user.id).first_or_create
     @report_schedule.update_attributes params[:report_schedule]
