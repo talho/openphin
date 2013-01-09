@@ -22,7 +22,7 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
 set :deploy_to, Proc.new { "#{(capture "echo $HOME").delete("\\\n")}/#{application}"}
- 
+
 task :oldtalhostaging do
   set :user, 'apache'
   set :deploy_to, "/var/www/#{application}"
@@ -33,7 +33,7 @@ task :oldtalhostaging do
   role :web, "talhostaging.talho.org"
   role :jobs, "talhostaging.talho.org"
   role :db,  "talhostaging.talho.org", :primary => true
-end 
+end
 
 task :oldtalhoapps_production do
   set :user, 'apache'
@@ -41,10 +41,8 @@ task :oldtalhoapps_production do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  role :app, "192.168.30.102"
-  role :web, "192.168.30.102"
-  role :jobs, "192.168.30.102"
-  role :db,  "192.168.30.102", :primary => true  
+  #role :app, "192.168.30.102"
+  role :jobs, "192.168.30.102", :primary => true
 end
 
 task :talhostaging do
@@ -55,7 +53,7 @@ task :talhostaging do
   role :web, "192.168.30.54"
   role :jobs, "192.168.30.54"
   role :db,  "192.168.30.54", :primary => true
-end 
+end
 
 task :talhoproduction do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
@@ -65,7 +63,7 @@ task :talhoproduction do
   role :web, "192.168.30.52"
   role :jobs, "192.168.30.52"
   role :db,  "192.168.30.52", :primary => true
-end 
+end
 
 task :talhodemo do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
@@ -75,7 +73,7 @@ task :talhodemo do
   role :web, "192.168.30.55"
   role :jobs, "192.168.30.55"
   role :db,  "192.168.30.55", :primary => true
-end 
+end
 
 require 'bundler/capistrano'
 
@@ -112,7 +110,7 @@ after 'deploy:restart', 'delayed_job:restart'
 after 'deploy:migrate', :seed
 after 'deploy:migrate', 'app:phin_plugins_migrate'
 desc "seed. for seed-fu"
-task :seed, :roles => :db, :only => {:primary => true} do 
+task :seed, :roles => :db, :only => {:primary => true} do
   run "cd #{release_path}; RAILS_ENV=#{rails_env} #{rake} db:seed"
 end
 

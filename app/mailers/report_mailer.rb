@@ -5,7 +5,7 @@ class ReportMailer < ActionMailer::Base
     @report = report
 
     mail(bcc: report.user.formatted_email,
-         subject: "OpenPhin: Report \"#{report.class.name}\" has been generated on #{I18n.l Report.first.created_at}")
+         subject: "OpenPhin: Report \"#{report.class.name}\" has been generated on #{I18n.l report.created_at}")
   end
 
   def report_error(email, report_name, exception_message, message="")
