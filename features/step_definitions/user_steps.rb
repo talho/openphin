@@ -2,7 +2,7 @@ Given "a user named $name" do |name|
   first_name, last_name = name.split
   User.find_by_first_name_and_last_name(first_name, last_name) ||
     FactoryGirl.create(:user, :first_name => first_name, :last_name => last_name)
-end 
+end
 
 Given 'a user with the email "$email"' do |email|
   User.find_by_email(email) || FactoryGirl.create(:user, :email => email)
@@ -85,8 +85,8 @@ Given /^"([^\"]*)" has the home phone "([^\"]*)"$/ do |email, value|
 end
 
 Given /^I am logged in as "([^\"]*)"$/ do |email|
-  user = User.find_by_email!(email)  
-  login_as user  
+  user = User.find_by_email!(email)
+  login_as user
   step %Q{I am logged in}
 end
 
@@ -184,9 +184,9 @@ end
 
 When /^I sign up for an account as "([^\"]*)"$/ do |email|
   visit new_user_path
-  fill_in_user_signup_form("Email" => email, 
-    "Home Jurisdiction" => "Texas", 
-    "What is your primary role" => "Health Alert and Communications Coordinator", 
+  fill_in_user_signup_form("Email" => email,
+    "Home Jurisdiction" => "Texas",
+    "What is your primary role" => "Health Alert and Communications Coordinator",
     "Are you a public health professional?" => "checked"
   )
   click_button "Sign Up"
@@ -201,7 +201,7 @@ end
 When 'I signup for an account with the following info:' do |table|
   step %Q{I sign out}
   visit new_user_path
-  fill_in_user_signup_form(table)  
+  fill_in_user_signup_form(table)
   click_button 'Sign Up'
 end
 
@@ -314,7 +314,7 @@ Given /^I am logged in as a sysadmin/ do
   step %Q{the following users exist:}, table(%{
     | Its Me |  me@example.com | SysAdmin | Texas |
   })
-  step %Q{I am logged in as "me@example.com"}  
+  step %Q{I am logged in as "me@example.com"}
 end
 
 Given /^I am logged in as a superadmin$/ do
@@ -324,7 +324,7 @@ Given /^I am logged in as a superadmin$/ do
   step %Q{the following users exist:}, table(%{
     | Its Me |  me@example.com | SuperAdmin | Texas |
   })
-  step %Q{I am logged in as "me@example.com"}  
+  step %Q{I am logged in as "me@example.com"}
 end
 
 Given /^I am logged in as an admin$/ do
@@ -334,7 +334,7 @@ Given /^I am logged in as an admin$/ do
   step %Q{the following users exist:}, table(%{
     | Its Me |  me@example.com | Admin | Texas |
   })
-  step %Q{I am logged in as "me@example.com"}  
+  step %Q{I am logged in as "me@example.com"}
 end
 
 Given /^I am logged in as a public user/ do
@@ -344,14 +344,26 @@ Given /^I am logged in as a public user/ do
   step %Q{the following users exist:}, table(%{
     | Its Me |  me@example.com | Public | Texas |
   })
-  
-  step %Q{I am logged in as "me@example.com"}  
+
+  step %Q{I am logged in as "me@example.com"}
+end
+
+Given /^I am logged in as a nonpublic user/ do
+  step %Q{the following entities exists:}, table([
+    %w{ Jurisdiction Texas},
+    %w{ Role Nonpublic }
+  ])
+  step %Q{the following users exist:}, table(%{
+    | Its Me |  me@example.com | Nonpublic | Texas |
+  })
+
+  step %Q{I am logged in as "me@example.com"}
 end
 
 Given /^a few users with various roles$/ do
   3.times do |i|
     u = FactoryGirl.create(:user)
-    u.role_memberships << RoleMembership.new(:role => Role.for_app('phin').all[i], :jurisdiction => Jurisdiction.all[i]) 
+    u.role_memberships << RoleMembership.new(:role => Role.for_app('phin').all[i], :jurisdiction => Jurisdiction.all[i])
     u.save
   end
   step "delayed jobs are processed"
