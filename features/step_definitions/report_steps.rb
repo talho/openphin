@@ -1,94 +1,87 @@
-Then /^the report database system is ready$/ do
-  REPORT_DB.should be_an_instance_of Mongo::DB
-  REPORT_DB.collection("test").should be_an_instance_of Mongo::Collection
+
+Given /^I have navigated to the Reports tab$/ do
+  step %Q{I am logged in as a nonpublic user}
+  step %Q{I navigate to "Reports"}
 end
 
-Given 'the report derived from recipe "$recipe" by the author with email "$email"' do |recipe, email|
-  author = User.find_by_email(email)
-  report_recipe = "#{recipe}"
-  FactoryGirl.create(:report_report, :author => author, :recipe => report_recipe)
+When /^I run a TestReport$/ do
+  step %{I press "Run New Report"}
+  step %{I select "TestReport" from ext combo "Select Report Type"}
+  step %{I press "Run Report"}
 end
 
-Given /^reports derived from the following recipes and authored by exist:$/ do |table|
-  table.raw.each do |row|
-    step %Q(the report derived from recipe "#{row[0]}" by the author with email "#{row[1]}")
-  end
+Then /^my TestReport should exist$/ do
+  TestReport.where(user_id: current_user.id).first.should_not be_nil
+  step %{I should see "TestReport - #{I18n.l Date.today, :format => :short}"}
 end
 
-When 'the system registers the report recipes' do
-#  "Report::Recipe".constantize.register_recipes
+Given /^I have a TestReport$/ do
+  r = TestReport.build_report(current_user.id)
+  r.save
+  step %{I close the active tab}
+  step %{I navigate to "Reports"}
 end
 
-Given 'the system builds all the user roles' do
-  require File.expand_path(File.join(File.dirname(__FILE__),"..","..","db","fixtures","roles"))
+When /^I view the TestReport$/ do
+  visit report_path(TestReport.where(user_id: current_user.id).first)
 end
 
-Given 'the system builds all the user jurisdictions' do
-  require File.expand_path(File.join(File.dirname(__FILE__),"..","..","db","fixtures","jurisdictions"))
+Then /^I should see my TestReport details$/ do
+  step %{I should see "Test Report"}
+  step %{I should see "Result: success"}
 end
 
-When /^I generate "([^"]*)" report on "([^"]*)" (titled|named) "([^"]*)"$/ do |recipe, model, where_gherkin, parameter|
-  where = where_gherkin.sub(/d$/,'')
-  id = model.constantize.where(where=>parameter).pluck(:id).first
-  criteria = {:recipe=>recipe,:model=>model,:method=>:find_by_id,:params=>id}
-  report = current_user.reports.create!(:recipe=>recipe,:criteria=>criteria,:incomplete=>true)
-  Reporters::Reporter.new(:report_id=>report[:id]).perform
-  @report = current_user.reports.find_by_id(id)
-  raise unless @report && @report.rendering.path
+When /^I delete the TestReport$/ do
+  step %{I click removeBtn ""}
 end
 
-When /^I generate "([^"]*)" report$/ do |recipe|
-  report = current_user.reports.create!(:recipe=>recipe,:incomplete=>true)
-  Reporters::Reporter.new(:report_id=>report.id).perform
-  @report = current_user.reports.find_by_id(report.id)
-  raise unless @report && @report.rendering.path
+Then /^my TestReport should not exist$/ do
+  TestReport.where(user_id: current_user.id).first.should_not be_nil
 end
 
-When /^I inspect the generated rendering$/ do
-  @rendering = File.read(@report.rendering.path)
+Given /^I have opened the Scheduled Reports section$/ do
+  step %{I press "Scheduled Reports"}
 end
 
-Then /^I should (not )?see "([^\"]*)" in the rendering$/ do |inversion, text|
-  if inversion
-    @rendering.should_not include(text)
-  else
-    @rendering.should include(text)
-  end
+When /^I schedule TestReport$/ do
+  step %{I press "Schedule New Report"}
+  step %{I select "TestReport" from ext combo "Report Type"}
+  step %{I check "Monday"}
+  step %{I check "Thursday"}
+  step %{I press "Save Schedule"}
 end
 
-When /^I inspect the generated pdf$/ do
-  @pdf = WickedPdf.new.pdf_from_string(File.read(@report.rendering.path,:encoding=>'ascii-8bit'))
+Then /^TestReport should be on my schedule$/ do
+  rs = ReportSchedule.where(user_id: current_user.id, report_type: "TestReport").first
+  rs.should_not be_nil
+  rs.days_of_week.should eq([nil, true, nil, nil, true, nil, nil])
 end
 
-Then /^I should (not )?see "([^\"]*)" in the pdf$/ do |inversion, text|
-  unless @pdf_text
-    Tempfile.open('pdf',:encoding => 'ascii-8bit') do |temp_pdf|
-      temp_pdf << @pdf
-      Tempfile.open(['txt','.html'],:encoding => 'ascii-8bit') do |temp_txt|
-        `pdftohtml -i -c -noframes #{temp_pdf.path} #{temp_txt.path}`
-        # remove html tags and replace one or more newlines with a single space
-        @pdf_text = File.read(temp_txt.path,:encoding => 'ascii-8bit').gsub(%r{</?[^>]+?>}, '').gsub(/[\n]+|&#160;/,' ')
-      end
-    end
-  end
-  if inversion
-    @pdf_text.should_not include(text)
-  else
-    @pdf_text.should include(text)
-  end
+Given /^I have scheduled TestReport$/ do
+  ReportSchedule.create(user_id: current_user.id, report_type: "TestReport", days_of_week: [true, true, true, true, true, true, true])
 end
 
-When /^I inspect the generated csv$/ do
-  @csv = @report.to_csv
+When /^I modify TestReport$/ do
+  step %{I click report-dataview "TestReport"}
+  step %{I uncheck "Monday"}
+  step %{I uncheck "Tuesday"}
 end
 
-Then /^I should (not )?see "([^\"]*)" in the csv$/ do |inversion, text|
-  if inversion
-    @csv.should_not include(text)
-  else
-    @csv.should include(text)
-  end
+Then /^TestReport should be on a new schedule$/ do
+  rs = ReportSchedule.where(user_id: current_user.id, report_type: "TestReport").first
+  rs.should_not be_nil
+  rs.days_of_week.should eq([true, nil, nil, true, true, true, true])
 end
 
+Then /^I should only have one TestReport scheduled$/ do
+  ReportSchedule.where(user_id: current_user.id, report_type: "TestReport").count.should eq(1)
+end
 
+When /^backgroundrb runs report_worker$/ do
+  require Rails.root.join('lib', 'workers', 'report_schedule_worker.rb')
+  rw =  ReportScheduleWorker.new
+  rw.run
 
+  step %{I close the active tab}
+  step %{I navigate to "Reports"}
+end

@@ -5,10 +5,10 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
   layout: 'hbox',
   layoutConfig: {pack: 'center'},
   autoScroll: true,
-  
+
   initComponent: function(){
     this.addEvents('back');
-    
+
     this.group_detail_panel = new Ext.Panel({
       layout: 'form',
       border: false,
@@ -21,7 +21,6 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
         new Ext.ux.AudienceDisplayPanel({itemId: 'group_audience_panel', hideLabel: true, anchor: '100%', height: 400})
       ],
       buttons: [
-        {xtype: 'button', text:'Create Report', scope: this, handler: function(button){this.create_report(button);}},
         {xtype: 'button', text: 'Back to Groups', scope: this, handler: function(){this.fireEvent('back');}}
       ]
     });
@@ -38,35 +37,8 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
     });
 
     this.items = [this.group_detail_panel];
-    
+
     Talho.Groups.View.Detail.superclass.initComponent.apply(this, arguments);
-  },
-
-//  criteria = {:model=>"Group",:method=>:find_by_id,:params=>@group[:id]}
-//  report = create_data_set("Report::GroupWithRecipientsRecipeInternal",criteria)
-
-  create_report: function(button){
-    button.disable();
-    var criteria = {'recipe': 'RecipeInternal::GroupWithRecipientsRecipe', 'model': 'Group', 'method': 'find_by_id', 'params': this.group_id};
-    Ext.Ajax.request({
-      url: '/report/reports.json',
-      method: 'POST',
-      params: Ext.encode({'criteria': criteria}),
-      headers: {"Content-Type":"application/json","Accept":"application/json"},
-      scope:  this,
-      success: function(responseObj, options){
-        var response = Ext.decode(responseObj.responseText);
-        this.report_msg(response.report['name']);
-        button.enable();
-      },
-      failure: function(){this.ajax_err_cb();}
-    });
-  },
-
-  report_msg: function(response, opts) {
-    var msg = '<br><b>Report: ' + response + '</b><br><br>' +
-      '<div style="height:80px;">' + 'has been scheduled. Please check the Reports panel or your email for status.' + '<\div>';
-    Ext.Msg.show({title: 'Information', msg: msg, minWidth: 420, maxWidth: 420, buttons: Ext.Msg.OK, icon: Ext.Msg.INFO});
   },
 
   /**
@@ -82,7 +54,7 @@ Talho.Groups.View.Detail = Ext.extend(Ext.Container, {
 
     this.group_detail_panel.getComponent('group_audience_panel').load(group);
   },
-  
+
     /**
        * Shows the group detail form
        * @param   {Object/Int}    group   Either an object representation of the group or the group ID that we will be looking up

@@ -20,7 +20,7 @@ Talho.Invitations = Ext.extend(function(){}, {
       idProperty: 'id',
       fields: ['id','name']
     });
-    
+
     var item_list = [{
       xtype: 'grid',
       store: store,
@@ -64,7 +64,7 @@ Talho.Invitations = Ext.extend(function(){}, {
                         organization = organizationContainer.getComponent('invitationOrganization');
                         org = newstore.reader.jsonData["invitation"]["organization"];
                         if(org) organization.update("<b>Default Organization:</b>&nbsp;" + org);
-                        
+
                         bodyContainer.add(new Ext.form.DisplayField({width: 550, html: newstore.reader.jsonData["invitation"]["body"]}));
 
                         complete_percentage = newstore.reader.jsonData["invitation"]["complete_percentage"];
@@ -309,8 +309,7 @@ Talho.Invitations = Ext.extend(function(){}, {
           pack: 'center'
         },
         items: [
-          header,
-          {xtype: 'button', text:'Generate Report', style: 'padding-left:10px', scope: this, handler: function(){this.generate_report();}}
+          header
         ]
       },{
         xtype: 'box',
@@ -400,62 +399,8 @@ Talho.Invitations = Ext.extend(function(){}, {
     this.getPanel = function(){ return panel };
     this.getCenterPanel = function(){ return centerPanel};
     this.getSidePanel = function(){ return sidePanel};
-    
+
     Talho.Invitations.superclass.constructor.call(this, config);
-  },
-
-  generate_report: function(){
-    var win = new Ext.Window({
-      title: "Generate Report",
-      layout: 'form',
-      labelAlign: 'top',
-      padding: '10',
-      width: 450,
-      modal: true,
-      items: [
-          {xtype: 'combo', itemId:'recipeSelection', fieldLabel: 'Report Recipe', name: 'recipe[id]', editable: false, value: 'Select...', anchor: '100%',
-            triggerAction: 'all', store: this.recipesStore, displayField: 'name_humanized', valueField: 'id', mode: 'local'},
-          {xtype: 'displayfield', itemId: 'recipeDisplay', value: '', name: 'report_name'}
-      ],
-      buttons: [
-        {text: 'Generate', itemId: 'generate', scope: this, width:'auto', disabled: true, handler: function(){ this.request_report(win); }},
-        {text: 'Cancel', itemId: 'cancel', scope: this, width:'auto', handler: function(){ win.close(); } }
-      ]
-    });
-    win.show();
-    win.getComponent('recipeSelection').on('select', function(view,nodes){
-      if (win.getComponent('recipeSelection').selectedIndex > -1) {
-        win.getFooterToolbar().getComponent('generate').enable();
-      }
-    })
-  },
-
-  request_report: function(win){
-    var recipe_id = win.getComponent('recipeSelection').getValue();
-    var criteria = {'recipe': recipe_id, 'model': 'Invitation', 'method': 'find_by_id', 'params': this.currentInvitationId};
-    Ext.Ajax.request({
-      url: '/report/reports.json',
-      method: 'POST',
-      params: Ext.encode({'criteria': criteria}),
-      headers: {"Content-Type":"application/json","Accept":"application/json"},
-      scope:  this,
-      success: function(responseObj, options){
-        var footer = win.getFooterToolbar();
-        footer.getComponent('generate').hide();
-        footer.getComponent('cancel').setText('OK');
-        var response = Ext.decode(responseObj.responseText);
-        win.getComponent('recipeDisplay').setValue(this.report_msg(response.report['name']));
-      },
-      failure: function(responseObj){
-        var response = Ext.decode(responseObj.responseText);
-        win.getComponent('recipeDisplay').setValue(this.ajax_err_cb(response));
-      }
-    });
-  },
-
-  report_msg: function(report_name, opts) {
-    return '<br><b>Report: ' + report_name + '</b><br><br>' +
-      '<div style="height:80px;">' + 'has been scheduled. Please check the Reports panel or your email for status.' + '<\div>';
   },
 
   ajax_err_cb: function(response, opts) {

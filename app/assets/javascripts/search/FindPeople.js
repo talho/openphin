@@ -121,8 +121,7 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       buttonAlign : 'center',
       buttons: [
         {text: 'Reset', scope: this, handler: this.resetSearchSidebar},
-        {text: 'Search', scope: this, handler: this.displaySearchResults },
-        {xtype: 'button', text:'Report', scope: this, handler: function(button){this.generateReportResults(button);}}
+        {text: 'Search', scope: this, handler: this.displaySearchResults }
       ],
         keys: [{key: Ext.EventObject.RETURN, shift: false, fn: this.displaySearchResults, scope: this}]
     });
@@ -215,17 +214,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       })
     });
 
-    this.createDocument = function(button) {
-      Ext.Ajax.request({
-         url: '/report/reports.json',
-         method: 'POST',
-         scope:  this,
-         params: { 'document_format': button.text, 'report_url': this.url },
-         success: function(){},
-         failure: function(){this.mask("Server error.  Please try again.");}
-      });
-    };
-
     this.searchResultsContainer = new Ext.Panel({
       region: 'center',
       layout: 'card',
@@ -315,14 +303,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
     return true;
   },
 
-  reportSearchResults: function(form, action) {
-    var searchData = this.searchSidebar.getForm().getValues();
-    this.applyFilters(searchData);
-    for (var derp in searchData ){
-      this.searchResults.store.setBaseParam( derp, searchData[derp] );
-    }
-  },
-
   displaySearchResults: function(form, action) {
     var searchData = this.searchSidebar.getForm().getValues();
     this.applyFilters(searchData);
@@ -382,30 +362,6 @@ Talho.FindPeople = Ext.extend(Ext.util.Observable, {
       msg += '<\div>';
     }
     Ext.Msg.show({title: 'Error', msg: msg, minWidth: w, maxWidth: w, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
-  },
-
-  generateReportResults: function(button) {
-    button.setText('Scheduled').disable();
-    var criteria = this.searchSidebar.getForm().getValues();
-    this.applyFilters(criteria);
-    criteria['recipe_id'] = 'Recipe::UserAllWithinJurisdictionsRecipe';
-  	Ext.Ajax.request({
-  	   url: '/report/reports.json',
-  	   method: 'POST',
-  	   scope:  this,
-       params: criteria,
-       success: function(responseObj, options){
-         var response = Ext.decode(responseObj.responseText);
-         this.report_msg(response.report['name']);
-         button.setText('Report').enable();},
-  	   failure: function(){this.ajax_err_cb();}
-  	});
-  },
-
-  report_msg: function(response, opts) {
-    var msg = '<br><b>Report: ' + response + '</b><br><br>' +
-      '<div style="height:80px;">' + 'has been scheduled. Please check the Reports panel or your email for status.' + '<\div>';
-    Ext.Msg.show({title: 'Information', msg: msg, minWidth: 420, maxWidth: 420, buttons: Ext.Msg.OK, icon: Ext.Msg.INFO});
   }
 
 });
