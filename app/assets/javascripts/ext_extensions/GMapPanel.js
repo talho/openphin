@@ -61,7 +61,7 @@ Ext.ux.GMapPanel = Ext.extend(Ext.Panel, {
         this.geocoder = new google.maps.Geocoder();
         var opts = {
           zoom: this.zoomLevel,
-          center: new google.maps.LatLng(0,0),
+          center: new google.maps.LatLng(30.2669, -97.7428),
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.gmap = new google.maps.Map(this.body.dom, opts);
