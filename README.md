@@ -1,4 +1,5 @@
 # OpenPHIN
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/talho/openphin)
 
 OpenPHIN is a portal and framework for public health related projects.
 
@@ -28,7 +29,7 @@ and takes some significant time to complete. You may need to install xvfb.
 
     sudo apt-get install xvfb
     RAILS_ENV=cucumber rake db:create && rake db:migrate
-  
+
 #### Running tests
 
     cucumber
