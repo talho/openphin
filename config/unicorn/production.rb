@@ -10,7 +10,7 @@ worker_processes (env == 'production' ? 16 : 4)
 preload_app true
 
 # Restart any workers that haven't responded in 30 seconds
-timeout 30
+timeout 60
 
 # Listen on a Unix data socket
 listen '0.0.0.0:8080', :backlog => 2048
@@ -85,4 +85,3 @@ after_fork do |server, worker|
   #  end
   #end
 end
-
