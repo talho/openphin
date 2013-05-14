@@ -23,18 +23,6 @@ require "rvm/capistrano"                               # Load RVM's capistrano p
 # via the :deploy_to variable:
 set :deploy_to, Proc.new { "#{(capture "echo $HOME").delete("\\\n")}/#{application}"}
 
-task :oldtalhostaging do
-  set :user, 'apache'
-  set :deploy_to, "/var/www/#{application}"
-  set :phin_plugins, [:talho, :vms, :rollcall, :facho]
-  set :bundle_gemfile, "Gemfile.talho"
-  default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  role :app, "talhostaging.talho.org"
-  role :web, "talhostaging.talho.org"
-  role :jobs, "talhostaging.talho.org"
-  role :db,  "talhostaging.talho.org", :primary => true
-end
-
 task :talhojobs do
   set :user, 'apache'
   set :deploy_to, "/var/www/#{application}"
@@ -49,10 +37,10 @@ task :talhostaging do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  role :app, "192.168.30.54"
-  role :web, "192.168.30.54"
-  role :jobs, "192.168.30.54"
-  role :db,  "192.168.30.54", :primary => true
+  role :app, "192.168.30.64"
+  role :web, "192.168.30.64"
+  role :jobs, "192.168.30.64"
+  role :db,  "192.168.30.64", :primary => true
 end
 
 task :talhoproduction do
