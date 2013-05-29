@@ -47,10 +47,10 @@ task :talhoproduction do
   set :phin_plugins, [:talho, :vms, :rollcall, :facho, :epi]
   set :bundle_gemfile, "Gemfile.talho"
   default_environment["BUNDLE_GEMFILE"] = "Gemfile.talho"
-  role :app, "192.168.30.52"
-  role :web, "192.168.30.52"
-  role :jobs, "192.168.30.52"
-  role :db,  "192.168.30.52", :primary => true
+  role :app, "192.168.30.62"
+  role :web, "192.168.30.62"
+  role :jobs, "192.168.30.62"
+  role :db,  "192.168.30.62", :primary => true
 end
 
 task :talhodemo do
