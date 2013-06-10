@@ -1,43 +1,44 @@
 permitted_mimes:
     - image/jpeg
     - image/pjpeg
-    - image/gif 
+    - image/gif
     - image/png
-    - image/x-png 
+    - image/x-png
     - image/tiff
     - image/svg+xml
-    - image/x-icon 
-    - image/bmp 
-    - application/pdf 
+    - image/x-icon
+    - image/bmp
+    - application/pdf
     - application/rtf
-    - text/plain 
-    - text/richtext 
+    - text/plain
+    - text/richtext
     - text/csv
     - text/html
-    - application/x-compressed 
-    - application/x-gzip 
-    - application/x-stuffit 
+    - application/x-compressed
+    - application/x-gzip
+    - application/x-stuffit
     - application/x-tar
     - application/x-rar
     - application/zip
-    - audio/mid 
-    - audio/wav 
+    - audio/mid
+    - audio/wav
     - audio/x-wav
-    - audio/mpeg 
-    - video/mpeg 
-    - video/quicktime 
-    - video/x-ms-asf 
-    - video/msvideo 
+    - audio/mpeg
+    - video/mpeg
+    - video/quicktime
+    - video/x-ms-asf
+    - video/msvideo
     - video/dv
     - video/h264
     - video/mp4
     - application/dxf
-    - application/msword 
-    - application/vnd.ms-excel 
-    - application/vnd.ms-outlook 
+    - application/msword
+    - application/vnd.ms-word
+    - application/vnd.ms-excel
+    - application/vnd.ms-outlook
     - application/vnd.ms-office
     - application/vnd.ms-powerpoint
-    - application/vnd.ms-works 
+    - application/vnd.ms-works
     - application/x-mswrite
     - application/vnd.openxmlformats-officedocument.presentationml.presentation
     - application/vnd.openxmlformats-officedocument.wordprocessingml.template
