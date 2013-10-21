@@ -1,8 +1,8 @@
 
 self.instance_eval(Bundler.read_file("Gemfile"))
 
-gem 'rollcall', git: "ssh://git@git.talho.org/home/git/repositories/rollcall", branch: 'master'
-gem 'vms', git: "ssh://git@git.talho.org/home/git/repositories/vms", branch: 'master'
-gem 'talho', git: "ssh://git@git.talho.org/home/git/repositories/talho", branch: 'master'
-gem 'facho', git: "ssh://git@git.talho.org/home/git/repositories/facho", branch: 'master'
-gem 'epi', git: "ssh://git@git.talho.org/home/git/repositories/epi.git", branch: 'master'
+gem 'rollcall', git: "git://github.com/talho/rollcall.git", branch: 'master'
+gem 'vms', git: "git://github.com/talho/vms.git", branch: 'master'
+gem 'talho', git: "git://github.com/talho/talho.git", branch: 'master'
+gem 'facho', git: "git://github.com/talho/facho.git", branch: 'master'
+gem 'epi', git: "git://github.com/talho/epi.git", branch: 'master'
